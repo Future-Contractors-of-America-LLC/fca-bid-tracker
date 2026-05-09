@@ -1,0 +1,89 @@
+name: Auricrux Engine (Scheduler)
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"  # every 5 minutes (UTC)
+  workflow_dispatch: {}
+
+jobs:
+  run-engine:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Auricrux Engine tick
+        env:
+          API_BASE: "https://auricrux-bid-api-f8gmebevgkhggzb9.centralus-01.azurewebsites.net/api/bids"
+        run: |
+          node <<'NODE'
+          const API = process.env.API_BASE;
+
+          async function http(method, url, body) {
+            const res = await fetch(url, {
+              method,
+              headers: body ? { "Content-Type": "application/json" } : undefined,
+              body: body ? JSON.stringify(body) : undefined,
+            });
+            const text = await res.text();
+            let json = null;
+            try { json = text ? JSON.parse(text) : null; } catch {}
+            return { ok: res.ok, status: res.status, json, text };
+          }
+
+          function readiness(b) {
+            const vals = Object.values((b && b.checklist) || {});
+            if (!vals.length) return 0;
+            return Math.round((vals.filter(Boolean).length / vals.length) * 100);
+          }
+
+          function executeStep(bid) {
+            const updated = { ...bid, checklist: { ...(bid.checklist || {}) } };
+
+            if (updated.nextAction === "Finalize subs and alternates") {
+              updated.checklist.quotes = true;
+              updated.subs = ["Electrical", "Plumbing", "HVAC"];
+              updated.alternates = ["Alt Lighting", "Alt Feed"];
+              updated.nextAction = "Complete proposal";
+            } else if (updated.nextAction === "Complete proposal") {
+              updated.checklist.proposal = true;
+              updated.nextAction = "Submit proposal";
+            } else if (updated.nextAction === "Submit proposal") {
+              updated.status = "Quoted";
+              updated.nextAction = "Follow up";
+            } else if (!updated.nextAction) {
+              updated.nextAction = "Finalize subs and alternates";
+            }
+
+            updated.updatedAt = new Date().toISOString();
+            return updated;
+          }
+
+          (async () => {
+            console.log(`[Auricrux] Tick @ ${new Date().toISOString()}`);
+
+            const get = await http("GET", API);
+            if (!get.ok) {
+              console.log(`[Auricrux] GET failed ${get.status}: ${get.text}`);
+              process.exit(1);
+            }
+
+            const bids = Array.isArray(get.json) ? get.json : [];
+            if (!bids.length) {
+              console.log("[Auricrux] No bids available.");
+              return;
+            }
+
+            const ranked = [...bids].sort((a,b) => readiness(a) - readiness(b));
+            const target = ranked[0];
+
+            const before = target.nextAction || "(none)";
+            const updated = executeStep(target);
+            const after = updated.nextAction || "(none)";
+
+            const post = await http("POST", API, { op: "update", bid: updated });
+            if (!post.ok) {
+              console.log(`[Auricrux] UPDATE failed ${post.status}: ${post.text}`);
+              process.exit(1);
+            }
+
+            console.log(`[Auricrux] Executed ${target.company || target.id}: ${before} -> ${after}`);
+          })();
+          NODE
