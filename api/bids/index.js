@@ -1,41 +1,5 @@
 const https = require("https");
 
-function callApi(url, method, body) {
-  return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
-
-    const options = {
-      hostname: parsedUrl.hostname,
-      path: parsedUrl.pathname + parsedUrl.search,
-      method: method,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    };
-
-    const req = https.request(options, res => {
-      let data = "";
-
-      res.on("data", chunk => data += chunk);
-
-      res.on("end", () => {
-        resolve({
-          status: res.statusCode,
-          body: data
-        });
-      });
-    });
-
-    req.on("error", reject);
-
-    if (body) {
-      req.write(JSON.stringify(body));
-    }
-
-    req.end();
-  });
-}
-
 module.exports = async function (context, req) {
 
   const base = process.env.BID_API_BASE;
@@ -44,26 +8,49 @@ module.exports = async function (context, req) {
   const url = `${base}?code=${encodeURIComponent(key)}`;
 
   try {
-    const result = await callApi(url, req.method, req.body);
+    const options = new URL(url);
 
-    let parsed;
+    const apiReq = https.request(options, response => {
+      let data = "";
 
-    try {
-      parsed = JSON.parse(result.body);
-    } catch {
-      parsed = [];
+      response.on("data", chunk => data += chunk);
+
+      response.on("end", () => {
+        try {
+          const parsed = JSON.parse(data);
+
+          context.res = {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+            body: parsed
+          };
+
+        } catch (err) {
+          context.res = {
+            status: 500,
+            body: "Invalid JSON from backend"
+          };
+        }
+      });
+    });
+
+    apiReq.on("error", err => {
+      context.res = {
+        status: 500,
+        body: err.toString()
+      };
+    });
+
+    if (req.body) {
+      apiReq.write(JSON.stringify(req.body));
     }
 
-    context.res = {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-      body: parsed
-    };
+    apiReq.end();
 
   } catch (err) {
     context.res = {
       status: 500,
-      body: { error: err.toString() }
+      body: err.toString()
     };
   }
 };
