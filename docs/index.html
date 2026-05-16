@@ -1,5 +1,3 @@
-<a href="/.auth/login/aad">Login</a> |
-<a href="/.auth/logout">Logout</a>
 <!doctype html>
 <html>
 <head>
@@ -18,13 +16,33 @@
 
 <p id="msg"></p>
 
+<hr>
+
+<h3>Submitted Bids</h3>
+<div id="bids"></div>
+
 <script>
+
+// ✅ Get logged in user
+async function getUser() {
+  let res = await fetch("/.auth/me");
+  let data = await res.json();
+  return data?.clientPrincipal?.userDetails || "unknown";
+}
+
+// ✅ Submit new bid
 async function submitBid() {
+
+  let user = await getUser();
+
   let data = {
+    id: new Date().toISOString(),   // unique ID
     company: "Tyler Construction",
+    user: user,
     project: document.getElementById("project").value,
     client: document.getElementById("client").value,
-    amount: document.getElementById("amount").value
+    amount: document.getElementById("amount").value,
+    status: "Active"
   };
 
   let res = await fetch("/api/bids", {
@@ -35,8 +53,33 @@ async function submitBid() {
 
   document.getElementById("msg").innerText =
     res.ok ? "✅ Bid submitted" : "❌ Error";
+
+  loadBids(); // refresh list
 }
+
+
+// ✅ Load all bids
+async function loadBids() {
+  let res = await fetch("/api/bids");
+  let bids = await res.json();
+
+  let container = document.getElementById("bids");
+  container.innerHTML = "";
+
+  bids.forEach(b => {
+    container.innerHTML += `
+      <div style="margin-bottom:10px;">
+        <b>${b.project}</b> — ${b.client} — $${b.amount} — ${b.status}
+      </div>
+    `;
+  });
+}
+
+// ✅ Run when page loads
+loadBids();
+
 </script>
 
 </body>
 </html>
+``
