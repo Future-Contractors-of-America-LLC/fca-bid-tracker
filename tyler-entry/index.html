@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Tyler Construction Bid Entry</title>
+</head>
+<body>
+
+<h2>Tyler Construction Bid Entry</h2>
+
+<input id="project" placeholder="Project Name"><br><br>
+<input id="client" placeholder="Client"><br><br>
+<input id="amount" placeholder="Amount"><br><br>
+
+<button onclick="submitBid()">Submit Bid</button>
+
+<p id="msg"></p>
+
+<script>
+const API_BASE = "https://auricrux-bid-live-1778933236.azurewebsites.net/api/bids";
+const API_KEY = prompt("Enter Access Key");  // temporary safe input
+
+async function submitBid() {
+  let data = {
+    company: "Tyler Construction",
+    project: document.getElementById("project").value,
+    client: document.getElementById("client").value,
+    amount: document.getElementById("amount").value
+  };
+
+  let res = await fetch(API_BASE + "?code=" + API_KEY, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(data)
+  });
+
+  document.getElementById("msg").innerText =
+    res.ok ? "✅ Submitted" : "❌ Error";
+}
+</script>
+
+</body>
+</html>
