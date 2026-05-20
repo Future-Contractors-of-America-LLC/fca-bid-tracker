@@ -395,13 +395,13 @@
         const searchable = normalizeSearch([
           bid.id,
           bid.customerId,
-          bid.customerName,
+          safeText(bid.customerName, bid.company || "Unknown Customer"),
           bid.company,
-          bid.projectName,
-          bid.trade,
-          bid.location,
-          bid.status,
-          bid.auricruxRisk,
+          safeText(bid.projectName, "Unnamed Project"),
+          safeText(bid.trade, "Trade not specified"),
+          safeText(bid.location, "Location not specified"),
+          safeText(bid.status, "new"),
+          safeText(bid.auricruxRisk, "pending"),
           bid.nextAction,
           bid.auricruxNarrative
         ].join(" "));
@@ -425,15 +425,15 @@
         <article class="card">
           <div class="card-header">
             <div>
-              <h2>${safeText(bid.projectName, "Unnamed Project")}</h2>
+              <h2>${safeText(safeText(bid.projectName, "Unnamed Project"), "Unnamed Project")}</h2>
               <div class="meta">
-                ${safeText(bid.customerName, bid.company || "Unknown Customer")} · ${safeText(bid.trade, "Trade not specified")} · ${safeText(bid.location, "Location not specified")}
+                ${safeText(safeText(bid.customerName, bid.company || "Unknown Customer"), bid.company || "Unknown Customer")} · ${safeText(safeText(bid.trade, "Trade not specified"), "Trade not specified")} · ${safeText(safeText(bid.location, "Location not specified"), "Location not specified")}
               </div>
             </div>
 
             <div class="badge-row">
-              <span class="badge ${statusBadgeClass(bid.status)}">${safeText(bid.status, "new")}</span>
-              <span class="badge ${riskBadgeClass(bid.auricruxRisk)}">Risk: ${safeText(bid.auricruxRisk, "pending")}</span>
+              <span class="badge ${statusBadgeClass(bid.status)}">${safeText(safeText(bid.status, "new"), "new")}</span>
+              <span class="badge ${riskBadgeClass(bid.auricruxRisk)}">Risk: ${safeText(safeText(bid.auricruxRisk, "pending"), "pending")}</span>
               <span class="badge">Score: ${Number(bid.auricruxScore || 0)}/100</span>
             </div>
           </div>
@@ -442,7 +442,7 @@
             <div class="facts">
               <div class="fact">
                 <strong>Customer</strong>
-                <span>${safeText(bid.customerName, bid.company || "N/A")}</span>
+                <span>${safeText(safeText(bid.customerName, bid.company || "Unknown Customer"), bid.company || "N/A")}</span>
               </div>
 
               <div class="fact">
@@ -533,3 +533,4 @@
   </script>
 </body>
 </html>
+
