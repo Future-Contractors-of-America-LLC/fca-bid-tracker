@@ -333,8 +333,8 @@
               </div>
 
               <div class="fact">
-                <strong>Bid ID</strong>
-                <span>${safeText(bid.id, "N/A")}</span>
+                <strong>Customer</strong>
+                <span>${safeText(bid.customerName, bid.company || "N/A")}</span>
               </div>
             </div>
 
@@ -395,5 +395,6 @@
   </script>
 </body>
 </html>
+
 
 

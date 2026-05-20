@@ -326,6 +326,14 @@
       smallStatus.textContent = "";
     }
 
+    function slugifyCustomer(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "default-customer";
+    }
+
     form.addEventListener("submit", async function (event) {
       event.preventDefault();
       clearStatus();
@@ -334,10 +342,14 @@
       smallStatus.textContent = "Submitting...";
 
       const now = Date.now();
+      const companyName = document.getElementById("company").value.trim();
+      const customerId = slugifyCustomer(companyName);
 
       const payload = {
         id: "bid-" + now,
-        company: document.getElementById("company").value.trim(),
+        customerId: customerId,
+        customerName: companyName,
+        company: companyName,
         projectName: document.getElementById("projectName").value.trim(),
         contactName: document.getElementById("contactName").value.trim(),
         contactEmail: document.getElementById("contactEmail").value.trim(),
@@ -397,6 +409,7 @@
   </script>
 </body>
 </html>
+
 
 
 
