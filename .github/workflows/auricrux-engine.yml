@@ -15,12 +15,68 @@ jobs:
           echo "[Auricrux] Tick..."
           echo "[Auricrux] API_BASE=$API_BASE"
 
-          RESPONSE=$(curl -sS "$API_BASE")
-          echo "[Auricrux] Response:"
-          echo "$RESPONSE"
+          node <<'NODE'
+          const API = process.env.API_BASE;
 
-          if [ "$RESPONSE" = "[]" ]; then
-            echo "[Auricrux] No bids available."
-          else
-            echo "[Auricrux] Bids received."
-          fi
+          async function main() {
+            console.log("[Auricrux] Fetching bids...");
+
+            const getResponse = await fetch(API);
+
+            if (!getResponse.ok) {
+              throw new Error(`GET failed: ${getResponse.status}`);
+            }
+
+            const bids = await getResponse.json();
+
+            console.log("[Auricrux] Response:");
+            console.log(JSON.stringify(bids, null, 2));
+
+            if (!Array.isArray(bids) || bids.length === 0) {
+              console.log("[Auricrux] No bids available.");
+              return;
+            }
+
+            console.log(`[Auricrux] ${bids.length} bid(s) received.`);
+
+            for (const bid of bids) {
+              const nextAction =
+                bid.auricruxRecommendation ||
+                "Auricrux review complete. Prepare next bid action.";
+
+              const updatedBid = {
+                ...bid,
+                status: "auricrux-reviewed",
+                nextAction
+              };
+
+              console.log(`[Auricrux] Updating bid ${bid.id}...`);
+
+              const postResponse = await fetch(API, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedBid)
+              });
+
+              if (!postResponse.ok) {
+                const errorText = await postResponse.text();
+                throw new Error(`POST failed for ${bid.id}: ${postResponse.status} ${errorText}`);
+              }
+
+              const saved = await postResponse.json();
+
+              console.log("[Auricrux] Updated bid:");
+              console.log(JSON.stringify(saved, null, 2));
+            }
+
+            console.log("[Auricrux] Scheduler update complete.");
+          }
+
+          main().catch((error) => {
+            console.error("[Auricrux] Scheduler failed:");
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
