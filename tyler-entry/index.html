@@ -372,7 +372,17 @@
 
         setStatus("success", "Bid submitted successfully. Auricrux analysis is attached.");
         resultBox.className = "result show";
-        resultBox.textContent = JSON.stringify(saved, null, 2);
+        const naturalAnalysis =
+          "Auricrux Analysis\n\n" +
+          (saved.auricruxNarrative || saved.auricruxRecommendation || "Auricrux review completed.") +
+          "\n\n" +
+          "Bid ID: " + saved.id + "\n" +
+          "Status: " + saved.status + "\n" +
+          "Risk: " + saved.auricruxRisk + "\n" +
+          "Score: " + saved.auricruxScore + "/100\n" +
+          "Next Action: " + saved.nextAction;
+
+        resultBox.textContent = naturalAnalysis;
 
         form.reset();
         document.getElementById("company").value = "Tyler Construction";
@@ -386,3 +396,4 @@
   </script>
 </body>
 </html>
+
