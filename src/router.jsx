@@ -1,5 +1,3 @@
-import React from "react";
-
 import Home from "./pages/website/Home";
 import PortalHome from "./pages/portal/PortalHome";
 import AcademyHome from "./pages/academy/AcademyHome";
