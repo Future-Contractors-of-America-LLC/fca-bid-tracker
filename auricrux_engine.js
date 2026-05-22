@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 const MATRIX_FILE = "FCA_COVERAGE_MATRIX.md";
 
