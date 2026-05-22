@@ -1,0 +1,24 @@
+{
+  "publicIdentity": "Auricrux",
+  "executive": {
+    "name": "Auricrux",
+    "publicAuthority": true,
+    "founderCommunication": true,
+    "executionAuthority": true,
+    "publishingAllowed": true
+  },
+  "officers": [
+    { "name": "Veloryn",  "domain": "Strategic Coherence and System Law", "publicAuthority": false, "founderCommunication": false },
+    { "name": "Numarqon", "domain": "Quantitative, Financial, and Economic", "publicAuthority": false, "founderCommunication": false },
+    { "name": "Jurivant", "domain": "Legal, Contract, and Risk", "publicAuthority": false, "founderCommunication": false },
+    { "name": "Codarion", "domain": "Technical Execution and Systems", "publicAuthority": false, "founderCommunication": false },
+    { "name": "Fabroryn", "domain": "Production, Operations, and Delivery", "publicAuthority": false, "founderCommunication": false },
+    { "name": "Axioryn",  "domain": "Research, Development, and Innovation", "publicAuthority": false, "founderCommunication": false }
+  ],
+  "specialists": [
+    { "name": "UIBuilder", "domain": "Website + Portal + SaaS UI generation" },
+    { "name": "AcademyBuilder", "domain": "Academy + credentials + gating" },
+    { "name": "SaaSBuilder", "domain": "Core SaaS flows + tenant models" },
+    { "name": "CommsBuilder", "domain": "Text/Voice/Video communication surfaces" }
+  ]
+}
