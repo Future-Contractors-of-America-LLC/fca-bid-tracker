@@ -1,26 +1,23 @@
 import fs from "fs";
-import path from "path";
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, "utf-8"));
 }
 
-function getCommandFromIssueEvent() {
-  try {
-    const eventPath = process.env.GITHUB_EVENT_PATH;
-    const eventName = process.env.GITHUB_EVENT_NAME;
-    if (!eventPath || !fs.existsSync(eventPath)) return "";
-    const payload = readJson(eventPath);
+function getCommand() {
+  // 1) workflow_dispatch input
+  const direct = (process.env.AURICRUX_COMMAND || "").trim();
+  if (direct) return direct;
 
-    if (eventName === "issues" && payload.issue) {
-      const title = String(payload.issue.title || "");
-      const body = String(payload.issue.body || "");
-      // Accept either title "AURICRUX: <command>" or body starting with "AURICRUX:"
-      const combined = `${title}\n${body}`.trim();
-      const m = combined.match(/AURICRUX:\s*(.+)/i);
-      return m ? m[1].trim() : "";
-    }
-    return "";
+  // 2) GitHub Issues: title/body "AURICRUX: <command>"
+  try {
+    if (process.env.GITHUB_EVENT_NAME !== "issues") return "";
+    const payload = readJson(process.env.GITHUB_EVENT_PATH);
+    const title = String(payload.issue?.title || "");
+    const body = String(payload.issue?.body || "");
+    const combined = `${title}\n${body}`;
+    const m = combined.match(/AURICRUX:\s*(.+)/i);
+    return m ? m[1].trim() : "";
   } catch {
     return "";
   }
@@ -37,8 +34,50 @@ function copyDir(src, dest) {
   return true;
 }
 
+function writeDigest(command, lines) {
+  ensureDir("auricrux/outputs/digests");
+  const stamp = new Date().toISOString().slice(0, 10);
+  const file = `auricrux/outputs/digests/daily-${stamp}.md`;
+
+  const out = [
+    "# Auricrux Daily Execution Digest",
+    "",
+    `- Command: ${command || "(none)"}`,
+    "",
+    ...lines
+  ].join("\n") + "\n";
+
+  fs.writeFileSync(file, out, "utf-8");
+  return file;
+}
+
+function addHomeLinks() {
+  const home = "src/pages/website/Home.jsx";
+  if (!fs.existsSync(home)) return false;
+
+  const src = fs.readFileSync(home, "utf-8");
+  if (src.includes("/tyler-entry/") || src.includes("/tyler-status/")) return true;
+
+  // Inject links right after the first paragraph (safe, deterministic)
+  const injected = src.replace(
+    "</p>",
+    `</p>
+
+      <div style={{ marginTop: "20px" }}>
+        /tyler-entry/Open Bid Entry (Product UI)</a>
+      </div>
+      <div style={{ marginTop: "10px" }}>
+        /tyler-status/Open Bid Status (Product UI)</a>
+      </div>`
+  );
+
+  fs.writeFileSync(home, injected, "utf-8");
+  return true;
+}
+
 function publishLegacyPages() {
-  // Copy legacy UI folders into /public so Vite includes them in dist/ and SWA serves them again.
+  // These are the folders you built earlier that looked like a product,
+  // but Vite stopped deploying them because they are not under /public.
   const pairs = [
     ["tyler-entry", "public/tyler-entry"],
     ["tyler-status", "public/tyler-status"],
@@ -51,58 +90,34 @@ function publishLegacyPages() {
     if (copyDir(src, dest)) copied++;
   }
 
-  // Add obvious links on the Home page so you can reach the product UI immediately
-  const homePath = "src/pages/website/Home.jsx";
-  if (fs.existsSync(homePath)) {
-    const home = fs.readFileSync(homePath, "utf-8");
-    if (!home.includes("/tyler-entry/")) {
-      const injected = home.replace(
-        "</p>",
-        `</p>
-      <div style={{ marginTop: "20px" }}>
-        <a href="/tyler-entry/">Open Bid Entry (Product UI)</a>
-      </div>
-      <div style={{ marginTop: "10px" }}>
-        <a href="/tyler-status/">Open Bid Status (Product UI)</a>
-      </div>`
-      );
-      fs.writeFileSync(homePath, injected, "utf-8");
-    }
-  }
-
-  return { copiedFolders: copied };
-}
-
-function writeDigest(lines) {
-  ensureDir("auricrux/outputs/digests");
-  const stamp = new Date().toISOString().slice(0, 10);
-  const file = `auricrux/outputs/digests/daily-${stamp}.md`;
-  fs.writeFileSync(file, lines.join("\n") + "\n", "utf-8");
-  return file;
+  const linked = addHomeLinks();
+  return { copied, linked };
 }
 
 async function main() {
-  const cmd = (process.env.AURICRUX_COMMAND || "").trim() || getCommandFromIssueEvent();
-  const digest = [];
-  digest.push("# Auricrux Daily Execution Digest");
-  digest.push("");
-  digest.push(`- Command: ${cmd || "(none)"}`);
-  digest.push("");
+  const command = getCommand();
 
-  // Minimal command set to stop wasting time and restore product immediately
-  if (/publish legacy pages|restore ui|restore product ui/i.test(cmd)) {
-    const result = publishLegacyPages();
-    digest.push("## Execution");
-    digest.push(`- Restored legacy product UI into /public (folders copied: ${result.copiedFolders})`);
-    digest.push(`- Home links added to /tyler-entry/ and /tyler-status/ (if Home.jsx exists)`);
+  const notes = [];
+  if (/publish legacy pages|restore ui|restore product ui/i.test(command)) {
+    const r = publishLegacyPages();
+    notes.push("## Execution");
+    notes.push(`- Restored legacy product UI into /public (folders copied: ${r.copied})`);
+    notes.push(`- Added navigation links on Home.jsx: ${r.linked ? "yes" : "no"}`);
+    notes.push("");
+    notes.push("## Expected Result");
+    notes.push("- You can reach the product UI at:");
+    notes.push("  - /tyler-entry/");
+    notes.push("  - /tyler-status/");
   } else {
-    digest.push("## Execution");
-    digest.push("- No build command matched. Use: `AURICRUX: publish legacy pages`");
+    notes.push("## Execution");
+    notes.push("- No matching build command.");
+    notes.push("- Use one of these exact commands:");
+    notes.push("  - AURICRUX: publish legacy pages");
   }
 
-  const file = writeDigest(digest);
+  const digestFile = writeDigest(command, notes);
   console.log("AURICRUX_EXEC_COMPLETE");
-  console.log("DIGEST_FILE:", file);
+  console.log("DIGEST_FILE:", digestFile);
 }
 
 main().catch((e) => {
