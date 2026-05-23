@@ -1,28 +1,14 @@
 name: Auricrux Autonomous Build System
 
 on:
+  issues:
+    types: [opened]
   workflow_dispatch:
     inputs:
       command:
         description: "Auricrux command (optional)"
         required: false
         default: ""
-  issues:
-    types: [opened]
-  push:
-    branches: [main]
-    paths:
-      - "auricrux/**"
-      - "auricrux_engine.js"
-      - "src/**"
-      - "public/**"
-      - "tyler-entry/**"
-      - "tyler-status/**"
-      - "fca-customer-entry/**"
-      - "fca-customer-status/**"
-      - "bid-db/**"
-      - "router.jsx"
-      - "index.html"
 
 permissions:
   contents: write
@@ -49,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
-      - name: Run Auricrux Engine (command from issue or manual dispatch)
+      - name: Run Auricrux Engine
         env:
           AURICRUX_COMMAND: ${{ github.event.inputs.command }}
           GITHUB_EVENT_PATH: ${{ github.event_path }}
