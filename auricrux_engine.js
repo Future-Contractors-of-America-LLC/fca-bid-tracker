@@ -391,4 +391,34 @@ async function main() {
   console.log("PIPELINE_UPDATED:", PIPELINE_PATH);
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+main(// ========================================
+// AUTONOMOUS EXECUTIVE EXPANSION
+// ========================================
+
+function expandSystem() {
+  const expansionDir = "auricrux/expansion";
+  ensureDir(expansionDir);
+
+  const filename = `${expansionDir}/expansion-${Date.now()}.json`;
+
+  writeJson(filename, {
+    createdUtc: nowUtc(),
+
+    nextObjectives: [
+      "Expand Projects system into real job tracking",
+      "Expand Files system into document ingestion + analysis",
+      "Expand Academy into training + credential mapping",
+      "Improve onboarding workflow automation",
+      "Expand revenue system with Starter + future offers",
+      "Improve customer experience surfaces"
+    ],
+
+    mandate: "Expand FCA ecosystem across ALL modules simultaneously with no dependency on human input."
+  });
+
+  return filename;
+}
+
+const expansionFile = expandSystem();
+console.log("EXPANSION_GENERATED:", expansionFile);
+).catch(e => { console.error(e); process.exit(1); });
