@@ -3,7 +3,13 @@ name: Auricrux Autonomous Build System
 on:
   schedule:
     - cron: "0 */6 * * *"
+
   workflow_dispatch:
+    inputs:
+      command:
+        description: "Command sent from AuricruxDock"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -15,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # ✅ ensures latest state
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -26,10 +34,12 @@ jobs:
           if [ -f package-lock.json ]; then
             npm ci
           else
-            echo "No lockfile, skipping npm ci"
+            npm install
           fi
 
       - name: Run Auricrux Engine
+        env:
+          AURICRUX_COMMAND: ${{ github.event.inputs.command }}
         run: node auricrux_engine.js
 
       - name: Commit generated files
