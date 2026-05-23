@@ -1,28 +1,45 @@
 name: Auricrux Autonomous Build System
 
 on:
-  schedule:
-    - cron: "0 */6 * * *"
-
   workflow_dispatch:
     inputs:
       command:
-        description: "Command sent from AuricruxDock"
+        description: "Auricrux command (optional)"
         required: false
         default: ""
+  issues:
+    types: [opened]
+  push:
+    branches: [main]
+    paths:
+      - "auricrux/**"
+      - "auricrux_engine.js"
+      - "src/**"
+      - "public/**"
+      - "tyler-entry/**"
+      - "tyler-status/**"
+      - "fca-customer-entry/**"
+      - "fca-customer-status/**"
+      - "bid-db/**"
+      - "router.jsx"
+      - "index.html"
 
 permissions:
   contents: write
+  issues: write
+
+concurrency:
+  group: auricrux-main
+  cancel-in-progress: true
 
 jobs:
   auricrux:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # ✅ ensures latest state
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -30,19 +47,16 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install
-          fi
+        run: npm ci || npm install
 
-      - name: Run Auricrux Engine
+      - name: Run Auricrux Engine (command from issue or manual dispatch)
         env:
           AURICRUX_COMMAND: ${{ github.event.inputs.command }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
         run: node auricrux_engine.js
 
-      - name: Commit generated files
+      - name: Commit and push changes
         run: |
           git config user.name "auricrux"
           git config user.email "auricrux@ai.system"
