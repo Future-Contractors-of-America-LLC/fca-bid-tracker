@@ -1,0 +1,53 @@
+name: Auricrux Executive Operator
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Executive command override (optional)"
+        required: false
+        default: ""
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: auricrux-executive
+  cancel-in-progress: true
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run Auricrux Executive Engine
+        env:
+          AURICRUX_COMMAND: ${{ github.event.inputs.command }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+        run: node auricrux/exec/index.mjs
+
+      - name: Create/Update PR (autonomous ship)
+        uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "Auricrux: ship system advancement"
+          title: "Auricrux: ship system advancement"
+          body: "Autonomous system advancement by Auricrux (executive operator)."
+          branch: "auricrux/executive"
+          base: "main"
+          labels: "auricrux-automerge"
