@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "system_state": {
+    "modules": {
+      "projects": false,
+      "files": false,
+      "academy": false,
+      "customer_portal": true,
+      "bid_system": true
+    },
+    "last_actions": [],
+    "next_priorities": [
+      "projects",
+      "files",
+      "academy"
+    ]
+  }
+}
