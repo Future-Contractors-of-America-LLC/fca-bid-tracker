@@ -33,7 +33,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
 
-          # ✅ Correct locations for your repo (Vite + React in repo root)
+          # ✅ THESE 3 LINES ARE THE FIX
           app_location: "/"
           api_location: "api"
           output_location: "dist"
