@@ -34,7 +34,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
 
-          # ✅ CRITICAL — DO NOT CHANGE THESE
           app_location: "/"
           api_location: "api"
           output_location: "dist"
@@ -51,4 +50,3 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_VICTORIOUS_MUD_09E11AA0F }}
           action: "close"
-``
