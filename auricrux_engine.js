@@ -117,3 +117,11 @@ try {
   console.error(e);
   process.exit(1);
 }
+// =============================
+// TRIGGER BID WORKER (EXECUTION LAYER)
+// =============================
+const execFile = ".github/dispatch.txt";
+
+if (!fs.existsSync(execFile)) {
+  fs.writeFileSync(execFile, "trigger bid worker");
+}
