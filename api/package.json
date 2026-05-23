@@ -1,6 +1,7 @@
 {
-  "name": "fca-bid-api",
+  "name": "api",
   "version": "1.0.0",
-  "main": "bids/index.js",
-  "dependencies": {}
+  "dependencies": {
+    "@azure/functions": "^4.0.0"
+  }
 }
