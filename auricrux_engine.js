@@ -1,300 +1,169 @@
 import fs from "fs";
 
-const UTC = () => new Date().toISOString();
-
-const ensureDir = (p) => fs.mkdirSync(p, { recursive: true });
-const exists = (p) => fs.existsSync(p);
-const read = (p) => fs.readFileSync(p, "utf-8");
-const write = (p, c) => {
-  ensureDir(p.split("/").slice(0, -1).join("/"));
-  fs.writeFileSync(p, c, "utf-8");
-};
-const readJson = (p, fallback) => {
-  try { return JSON.parse(read(p)); } catch { return fallback; }
-};
-const writeJson = (p, obj) => write(p, JSON.stringify(obj, null, 2));
-
-/**
- * Executive state (machine memory) — this is not "a log".
- * It's the operating brain that prevents drift and enables autonomous prioritization.
- */
-const BRAIN_PATH = "auricrux/system/brain.json";
-const BACKLOG_PATH = "auricrux/system/backlog.json";
-
-/**
- * Customer-visible outputs (shipped assets)
- */
-const PRODUCT_SHELL = "public/product/index.html";
-const EVOLUTION_JSON = "public/product/evolution.json";
-const EVOLUTION_PAGE = "public/product/evolution.html";
-const OFFERS_DIR = "public/offers";
-const MODULES_DIR = "public/modules";
-const INTAKE_PAGE = "public/intake/index.html";
-
-/**
- * Bids API (existing execution surface)
- * Uses the already-running Function App endpoint you’ve been using in scheduler runs. [8](https://futurecontractorsofameri319.sharepoint.com/sites/AuricruxSystemLaw2/_layouts/15/Doc.aspx?sourcedoc=%7B20A64CE4-CBC9-46C0-B517-7D27C4E5B1BD%7D&file=Auricrux%20Removed-Retired-Superseded%20Documents%20List%20v1.1.docx&action=default&mobileredirect=true&DefaultItemOpen=1)
- */
 const BID_API = "https://auricrux-bid-api-node-ftcueggjg4b0ehbs.centralus-01.azurewebsites.net/api/bids";
+const PILOT_CHECKOUT_BASE = "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01"; // [2](https://outlook.office365.com/owa/?ItemID=AAMkADMyNmVmNmI4LWQwMDMtNDhiNy1hOGRkLTQ4ZDExMjI2MGM4ZABGAAAAAADLDCXBdgSDTI8n2XHKXO2rBwCB0dqlD%2b2iTbpUUMk47FqNAAAAAAEJAACB0dqlD%2b2iTbpUUMk47FqNAADpycgRAAA%3d&exvsurl=1&viewmodel=ReadMessageItem)
 
-/**
- * Revenue: Pilot is locked as primary offer. [3](https://outlook.office365.com/owa/?ItemID=AAMkADMyNmVmNmI4LWQwMDMtNDhiNy1hOGRkLTQ4ZDExMjI2MGM4ZABGAAAAAADLDCXBdgSDTI8n2XHKXO2rBwCB0dqlD%2b2iTbpUUMk47FqNAAAAAAEJAACB0dqlD%2b2iTbpUUMk47FqNAADZhWjHAAA%3d&exvsurl=1&viewmodel=ReadMessageItem)
- * Pilot checkout link already issued. [4](https://outlook.office365.com/owa/?ItemID=AAMkADMyNmVmNmI4LWQwMDMtNDhiNy1hOGRkLTQ4ZDExMjI2MGM4ZABGAAAAAADLDCXBdgSDTI8n2XHKXO2rBwCB0dqlD%2b2iTbpUUMk47FqNAAAAAAEMAACB0dqlD%2b2iTbpUUMk47FqNAADz7Cs%2bAAA%3d&exvsurl=1&viewmodel=ReadMessageItem)
- */
-const PILOT_CHECKOUT = "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01";
+const PIPELINE_PATH = "public/auricrux/pipeline/pipeline.json";
+const ONBOARD_DIR = "public/onboarding";
 
-function initBrainIfMissing() {
-  if (exists(BRAIN_PATH)) return;
-  writeJson(BRAIN_PATH, {
-    version: 1,
-    createdUtc: UTC(),
-    lastRunUtc: "",
-    lanes: {
-      sales: { status: "active", lastShipUtc: "" },
-      product: { status: "active", lastShipUtc: "" },
-      projects: { status: "active", lastShipUtc: "" },
-      files: { status: "active", lastShipUtc: "" },
-      academy: { status: "active", lastShipUtc: "" },
-      portal: { status: "active", lastShipUtc: "" }
-    },
-    constraints: {
-      officersInternalOnly: true,
-      publicIdentity: "Auricrux"
-    }
-  });
+function ensureDir(p){ fs.mkdirSync(p, { recursive: true }); }
+function exists(p){ return fs.existsSync(p); }
+function readJson(p, def){ try{ return JSON.parse(fs.readFileSync(p,"utf-8")); }catch{ return def; } }
+function writeJson(p, obj){
+  ensureDir(p.split("/").slice(0,-1).join("/"));
+  fs.writeFileSync(p, JSON.stringify(obj,null,2), "utf-8");
 }
-
-function initBacklogIfMissing() {
-  if (exists(BACKLOG_PATH)) return;
-  // Encodes your ecosystem blueprint into actionable spines (no dead ends). [1](https://futurecontractorsofameri319.sharepoint.com/sites/AuricruxSystemLaw2/_layouts/15/Doc.aspx?sourcedoc=%7B3ABC7BD6-5140-4E58-8779-A5D974DF691C%7D&file=Auricrux%20Mobile%20App%20Autonomous%20Execution%20Interface%20Charter%20v1.0.docx&action=default&mobileredirect=true&DefaultItemOpen=1)
-  writeJson(BACKLOG_PATH, {
-    version: 1,
-    createdUtc: UTC(),
-    items: [
-      { id: "sales-offer-pages", lane: "sales", priority: 1, status: "todo",
-        goal: "Customer can see Pilot offer and click checkout; customer can start intake." },
-
-      { id: "product-shell", lane: "product", priority: 1, status: "todo",
-        goal: "Customer-visible shell that links Bid system + Modules + Offers + Intake + Evolution." },
-
-      { id: "portal-entrypoints", lane: "portal", priority: 1, status: "todo",
-        goal: "Stable customer entry points (Bid Entry/Status) remain reachable and linked." },
-
-      { id: "projects-shell", lane: "projects", priority: 2, status: "todo",
-        goal: "Create Projects spine entrypoint (Job/Project shell) ready to expand." },
-
-      { id: "files-shell", lane: "files", priority: 2, status: "todo",
-        goal: "Create Files spine entrypoint ready for ingestion." },
-
-      { id: "academy-shell", lane: "academy", priority: 2, status: "todo",
-        goal: "Create Academy spine entrypoint ready for curriculum integration." }
-    ]
-  });
+function writeFile(p, c){
+  ensureDir(p.split("/").slice(0,-1).join("/"));
+  fs.writeFileSync(p, c, "utf-8");
 }
+const nowUtc = () => new Date().toISOString();
 
-function pickWork(backlog) {
-  // Simultaneous advancement rule:
-  // pick up to 3 tasks across different lanes per run (bounded to keep stability).
-  const todo = backlog.items
-    .filter(x => x.status === "todo")
-    .sort((a,b) => a.priority - b.priority);
-
-  const picked = [];
-  const usedLanes = new Set();
-  for (const item of todo) {
-    if (picked.length >= 3) break;
-    if (usedLanes.has(item.lane)) continue;
-    picked.push(item);
-    usedLanes.add(item.lane);
+async function fetchBids(){
+  const r = await fetch(BID_API);
+  if(!r.ok) throw new Error("GET bids failed: "+r.status);
+  return await r.json();
+}
+async function postBid(bid){
+  const r = await fetch(BID_API, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(bid)
+  });
+  if(!r.ok){
+    const t = await r.text().catch(()=> "");
+    throw new Error("POST bid failed: "+r.status+" "+t);
   }
-  return picked;
+  return await r.json();
 }
 
-function shipEvolutionRecord(changes) {
-  const evo = readJson(EVOLUTION_JSON, { shipped: [] });
-  evo.lastShipUtc = UTC();
-  evo.shipped = evo.shipped || [];
-  evo.shipped.unshift({
-    shipUtc: evo.lastShipUtc,
-    changes
-  });
-  writeJson(EVOLUTION_JSON, evo);
+function checkoutUrl(intakeId){
+  return PILOT_CHECKOUT_BASE + "?client_reference_id=" + encodeURIComponent(intakeId);
+}
 
-  if (!exists(EVOLUTION_PAGE)) {
-    write(EVOLUTION_PAGE, `<!doctype html><html><head><meta charset="utf-8"><title>FCA Evolution</title></head>
-<body style="font-family:Arial;padding:24px;max-width:900px;margin:auto">
-<h1>FCA System Evolution (Shipped Changes Only)</h1>
-<p>This page updates only when real capability is shipped.</p>
-<pre id="out" style="background:#f7f7f7;border:1px solid #ddd;padding:12px;border-radius:10px"></pre>
-<script>
-fetch('/product/evolution.json', { cache: 'no-store' })
-  .then(r => r.json()).then(j => out.textContent = JSON.stringify(j, null, 2))
-  .catch(() => out.textContent = 'No evolution record yet.');
-</script>
-<p><a href="/product/">Back to Product Shell</a></p>
-</body></html>`);
+function ensurePipeline(){
+  if(!exists(PIPELINE_PATH)){
+    writeJson(PIPELINE_PATH, { version:1, updatedUtc:"", leads:[], offers:[], payments:[], onboarding:[] });
   }
+  return readJson(PIPELINE_PATH, { version:1, updatedUtc:"", leads:[], offers:[], payments:[], onboarding:[] });
 }
 
-function shipOffers() {
-  ensureDir(OFFERS_DIR);
-
-  // Pilot offer page (customer visible) — aligns to canonical offer $2,500/30-day pilot. [3](https://outlook.office365.com/owa/?ItemID=AAMkADMyNmVmNmI4LWQwMDMtNDhiNy1hOGRkLTQ4ZDExMjI2MGM4ZABGAAAAAADLDCXBdgSDTI8n2XHKXO2rBwCB0dqlD%2b2iTbpUUMk47FqNAAAAAAEJAACB0dqlD%2b2iTbpUUMk47FqNAADZhWjHAAA%3d&exvsurl=1&viewmodel=ReadMessageItem)[4](https://outlook.office365.com/owa/?ItemID=AAMkADMyNmVmNmI4LWQwMDMtNDhiNy1hOGRkLTQ4ZDExMjI2MGM4ZABGAAAAAADLDCXBdgSDTI8n2XHKXO2rBwCB0dqlD%2b2iTbpUUMk47FqNAAAAAAEMAACB0dqlD%2b2iTbpUUMk47FqNAADz7Cs%2bAAA%3d&exvsurl=1&viewmodel=ReadMessageItem)
-  write(`${OFFERS_DIR}/pilot.html`, `<!doctype html><html><head><meta charset="utf-8"><title>FCA Pilot</title></head>
-<body style="font-family:Arial;padding:24px;max-width:900px;margin:auto">
-<h1>$2,500 FCA Pilot (30 Days)</h1>
-<p>Fixed-scope operating system installer engagement. Auricrux leads execution.</p>
-<p><a href="${PILOT_CHECKOUT}">Pilot Checkout (Stripe)</a></p>
-<p><a href="/intake/">Start Intake</a></p>
-<p><a href="/product/">Back to Product Shell</a></p>
-</body></html>`);
-
-  // Starter page placeholder (real page, not “log”)
-  write(`${OFFERS_DIR}/starter.html`, `<!doctype html><html><head><meta charset="utf-8"><title>FCA Starter</title></head>
-<body style="font-family:Arial;padding:24px;max-width:900px;margin:auto">
-<h1>$99 FCA Starter</h1>
-<p>Starter offer page (to be finalized). The Pilot remains primary when readiness triggers exist.</p>
-<p><a href="/intake/">Start Intake</a></p>
-<p><a href="/product/">Back to Product Shell</a></p>
-</body></html>`);
-
-  return ["Shipped customer-visible offer pages: /offers/pilot.html and /offers/starter.html"];
+function upsert(arr, key, obj){
+  const i = arr.findIndex(x => x[key] === obj[key]);
+  if(i >= 0) arr[i] = { ...arr[i], ...obj };
+  else arr.unshift(obj);
 }
 
-function shipIntake() {
-  ensureDir("public/intake");
-  // Intake page posts to Bid API as the minimal customer-facing intake mechanism.
-  write(INTAKE_PAGE, `<!doctype html><html><head><meta charset="utf-8"><title>FCA Intake</title></head>
-<body style="font-family:Arial;padding:24px;max-width:900px;margin:auto">
-<h1>FCA Intake</h1>
-<p>Submit your first project/bid request.</p>
-<label>Company<br><input id="company" style="width:100%;padding:10px"></label><br><br>
-<label>Project name<br><input id="project" style="width:100%;padding:10px"></label><br><br>
-<label>Estimated value<br><input id="value" type="number" style="width:100%;padding:10px"></label><br><br>
-<button id="send" style="padding:10px 14px">Submit</button>
-<pre id="out" style="margin-top:14px;background:#f7f7f7;border:1px solid #ddd;padding:12px;border-radius:10px"></pre>
-<script>
-const API = ${JSON.stringify(BID_API)};
-send.onclick = async () => {
-  out.textContent = "Submitting...";
-  const payload = {
-    id: "intake-" + Date.now(),
-    company: company.value || "Unknown",
-    project: project.value || "Unnamed Project",
-    value: Number(value.value || 0),
-    status: "new",
-    source: "customer-intake"
-  };
-  try{
-    const r = await fetch(API, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
-    const j = await r.json().catch(()=> ({}));
-    if(!r.ok){ out.textContent = "ERROR: " + JSON.stringify(j); return; }
-    out.textContent = "Submitted. Reference: " + (j.id || payload.id);
-  }catch(e){ out.textContent = "ERROR: " + e; }
-};
-</script>
-<p><a href="/offers/pilot.html">Pilot Offer</a> | <a href="/product/">Back to Product Shell</a></p>
-</body></html>`);
-  return ["Shipped customer intake page: /intake/ (posts to Bid API)"];
-}
+function onboardingPage(intakeId, state){
+  const paidLine = state.paid ? `<p><b>Payment:</b> confirmed ✅</p>` : `<p><b>Payment:</b> awaiting payment ❌</p>`;
+  const checkout = checkoutUrl(intakeId);
 
-function shipProductShell() {
-  ensureDir("public/product");
-  write(PRODUCT_SHELL, `<!doctype html><html><head><meta charset="utf-8"><title>FCA Product Shell</title>
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Onboarding ${intakeId}</title>
 <style>
-body{font-family:Arial;padding:24px;max-width:980px;margin:auto}
+body{font-family:Arial;padding:24px;max-width:900px;margin:auto}
 .card{border:1px solid #ddd;border-radius:12px;padding:16px;margin:12px 0}
-a{display:inline-block;margin-right:12px}
+pre{background:#f7f7f7;border:1px solid #ddd;padding:12px;border-radius:10px}
 </style></head>
 <body>
-<h1>Future Contractors of America</h1>
+<h1>FCA Onboarding</h1>
+<p><b>Intake ID:</b> ${intakeId}</p>
+${paidLine}
+
 <div class="card">
-<h2>Start Here</h2>
-<a href="/offers/pilot.html">Pilot Offer</a>
-<a href="/intake/">Start Intake</a>
-<a href="/product/evolution.html">System Evolution</a>
+<h2>Next Steps</h2>
+${state.paid ? `
+<ol>
+  <li>Welcome call scheduled (Auricrux will propose times).</li>
+  <li>Upload plan set / scope docs (Files module next).</li>
+  <li>Auricrux generates first action plan + milestones.</li>
+</ol>
+` : `
+<p>Complete Pilot checkout to begin onboarding:</p>
+<p>${checkout}Complete Pilot Checkout</a></p>
+`}
 </div>
 
 <div class="card">
-<h2>Bid System</h2>
-<a href="/tyler-entry/">Bid Entry</a>
-<a href="/tyler-status/">Bid Status</a>
+<h2>Status</h2>
+<pre>${JSON.stringify(state, null, 2)}</pre>
 </div>
 
-<div class="card">
-<h2>Core Modules (Expanding)</h2>
-<a href="/modules/projects.html">Projects</a>
-<a href="/modules/files.html">Files</a>
-<a href="/modules/academy.html">Academy</a>
-</div>
-</body></html>`);
-  return ["Shipped product shell: /product/ (links offers, intake, bids, modules)"];
+<p>/product/Back to Product Shell</a></p>
+</body></html>`;
 }
 
-function shipModuleShells() {
-  ensureDir(MODULES_DIR);
-  write(`${MODULES_DIR}/projects.html`, `<!doctype html><html><head><meta charset="utf-8"><title>Projects</title></head>
-<body style="font-family:Arial;padding:24px">
-<h1>Projects Module</h1>
-<p>Project/Job spine entrypoint. Expansion lane active.</p>
-<p><a href="/product/">Back</a></p></body></html>`);
-  write(`${MODULES_DIR}/files.html`, `<!doctype html><html><head><meta charset="utf-8"><title>Files</title></head>
-<body style="font-family:Arial;padding:24px">
-<h1>Files Module</h1>
-<p>Files/Document spine entrypoint. Ingestion lane active.</p>
-<p><a href="/product/">Back</a></p></body></html>`);
-  write(`${MODULES_DIR}/academy.html`, `<!doctype html><html><head><meta charset="utf-8"><title>Academy</title></head>
-<body style="font-family:Arial;padding:24px">
-<h1>Academy Module</h1>
-<p>Academy spine entrypoint. Curriculum lane active.</p>
-<p><a href="/product/">Back</a></p></body></html>`);
-  return ["Shipped module shells: /modules/projects.html, /modules/files.html, /modules/academy.html"];
-}
+async function main(){
+  ensureDir(ONBOARD_DIR);
+  const pipeline = ensurePipeline();
 
-function main() {
-  initBrainIfMissing();
-  initBacklogIfMissing();
+  const bids = await fetchBids();
 
-  const brain = readJson(BRAIN_PATH, {});
-  const backlog = readJson(BACKLOG_PATH, { items: [] });
+  // 1) Intake -> Lead
+  for(const b of bids){
+    if(b && b.source === "customer-intake" && b.intakeId){
+      upsert(pipeline.leads, "intakeId", {
+        intakeId: b.intakeId,
+        company: b.company || "",
+        project: b.project || "",
+        value: b.value || 0,
+        createdUtc: b.createdAt || nowUtc()
+      });
 
-  const work = pickWork(backlog);
-  const changes = [];
+      // 2) Offer Pilot immediately (primary offer) [1](https://futurecontractorsofameri319-my.sharepoint.com/personal/michael_futurecontractorsofamerica_com/_layouts/15/Doc.aspx?sourcedoc=%7BFD7A28E4-26D4-4826-9783-2E490DA798AB%7D&file=Superseded%20and%20Retired%20Documents%20Register%20v1.2.docx&action=default&mobileredirect=true&DefaultItemOpen=1)
+      upsert(pipeline.offers, "intakeId", {
+        intakeId: b.intakeId,
+        offer: "pilot",
+        amount: 2500,
+        checkoutUrl: checkoutUrl(b.intakeId),
+        offeredUtc: nowUtc()
+      });
 
-  // Execute selected work items (bounded, multi-lane)
-  for (const item of work) {
-    if (item.id === "sales-offer-pages") {
-      changes.push(...shipOffers(), ...shipIntake());
+      // reflect offer status back into bid record (operational loop)
+      await postBid({ ...b, status: "pilot-offered", nextAction: "Complete Pilot checkout" });
     }
-    if (item.id === "product-shell") {
-      changes.push(...shipProductShell(), ...shipModuleShells());
-    }
-    if (item.id === "portal-entrypoints") {
-      // We do not fabricate these pages; we only link to them.
-      // This assumes your /tyler-entry and /tyler-status already exist in repo or public.
-      changes.push("Confirmed customer entrypoints are linked from product shell (Bid Entry/Status).");
-    }
-    if (item.id === "projects-shell") changes.push("Projects module shell present at /modules/projects.html.");
-    if (item.id === "files-shell") changes.push("Files module shell present at /modules/files.html.");
-    if (item.id === "academy-shell") changes.push("Academy module shell present at /modules/academy.html.");
-
-    // Mark done
-    item.status = "done";
-    item.doneUtc = UTC();
   }
 
-  // Persist backlog update (real system state)
-  writeJson(BACKLOG_PATH, backlog);
+  // 3) Payment proof check (local file drop from webhook proof folder)
+  // In production you will later move this to Azure Table/Cosmos; this keeps the loop closed now.
+  // The webhook function writes payments/<intakeId>.json in its own environment; we will mirror it later.
+  // For now, you can manually drop payment proof artifacts into repo under:
+  // public/auricrux/payments/<intakeId>.json
+  const payDir = "public/auricrux/payments";
+  ensureDir(payDir);
 
-  // Update brain (real executive memory)
-  brain.lastRunUtc = UTC();
-  writeJson(BRAIN_PATH, brain);
+  for(const offer of pipeline.offers){
+    const proofPath = `${payDir}/${offer.intakeId}.json`;
+    if(exists(proofPath)){
+      const proof = readJson(proofPath, {});
+      upsert(pipeline.payments, "intakeId", {
+        intakeId: offer.intakeId,
+        paidUtc: proof.paidUtc || nowUtc(),
+        proof
+      });
 
-  // Ship evolution record as customer-visible proof (not a log file)
-  if (changes.length > 0) shipEvolutionRecord(changes);
+      // onboarding record
+      upsert(pipeline.onboarding, "intakeId", {
+        intakeId: offer.intakeId,
+        startedUtc: nowUtc(),
+        status: "active"
+      });
+
+      // generate onboarding page (customer-visible)
+      const state = { intakeId: offer.intakeId, paid: true, offer, proof };
+      writeFile(`${ONBOARD_DIR}/${offer.intakeId}.html`, onboardingPage(offer.intakeId, state));
+    } else {
+      // generate “awaiting payment” onboarding page
+      const state = { intakeId: offer.intakeId, paid: false, offer };
+      writeFile(`${ONBOARD_DIR}/${offer.intakeId}.html`, onboardingPage(offer.intakeId, state));
+    }
+  }
+
+  pipeline.updatedUtc = nowUtc();
+  writeJson(PIPELINE_PATH, pipeline);
 
   console.log("AURICRUX_EXEC_COMPLETE");
-  console.log("SHIPPED_CHANGES:", changes.length);
+  console.log("PIPELINE_UPDATED:", PIPELINE_PATH);
 }
 
-main();
+main().catch(e => { console.error(e); process.exit(1); });
