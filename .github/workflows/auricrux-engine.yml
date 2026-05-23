@@ -2,6 +2,10 @@
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [auricrux_bid_cycle]
+  schedule:
+    - cron: "*/15 * * * *"
 
 jobs:
   auricrux-engine-tick:
