@@ -33,6 +33,6 @@ jobs:
         run: |
           git config user.name "auricrux"
           git config user.email "auricrux@ai.system"
-          git add public/product
+          git add .
           git commit -m "Auricrux: ship advancement" || echo "No changes"
           git push
