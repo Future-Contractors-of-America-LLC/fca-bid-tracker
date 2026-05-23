@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FCA Onboarding</title>
+<style>
+body{font-family:Arial;padding:24px;max-width:900px;margin:auto}
+input{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px}
+button{padding:10px 14px;border:1px solid #222;border-radius:10px;background:#fff;cursor:pointer;margin-top:10px}
+pre{background:#f7f7f7;border:1px solid #ddd;padding:12px;border-radius:10px}
+</style>
+</head>
+<body>
+<h1>FCA Onboarding</h1>
+<p>Enter your Intake ID to open your onboarding page.</p>
+<input id="iid" placeholder="intake-1234567890">
+<button id="go">Open Onboarding</button>
+<pre id="out">Ready.</pre>
+<script>
+go.onclick = () => {
+  const v = (iid.value || "").trim();
+  if (!v) { out.textContent = "Enter an Intake ID."; return; }
+  location.href = "/onboarding/" + encodeURIComponent(v) + ".html";
+};
+</script>
+<p>Back to product shell: /product/</p>
+</body>
+</html>
