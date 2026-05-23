@@ -1,22 +1,23 @@
 import fs from "fs";
 
-import { advise as veloryn } from "./agents/officers/veloryn.mjs";
-import { advise as numarqon } from "./agents/officers/numarqon.mjs";
-import { advise as jurivant } from "./agents/officers/jurivant.mjs";
-import { advise as codarion } from "./agents/officers/codarion.mjs";
-import { advise as fabroryn } from "./agents/officers/fabroryn.mjs";
-import { advise as axioryn } from "./agents/officers/axioryn.mjs";
+export async function runAuricrux() {
+  const outDir = "auricrux/outputs/digests";
+  fs.mkdirSync(outDir, { recursive: true });
 
-import { build as uiBuild } from "./agents/specialists/ui-builder.mjs";
-import { build as academyBuild } from "./agents/specialists/academy-builder.mjs";
-import { build as saasBuild } from "./agents/specialists/saas-builder.mjs";
-import { build as commsBuild } from "./agents/specialists/comms-builder.mjs";
+  const stamp = new Date().toISOString().slice(0, 10);
+  const file = `${outDir}/daily-${stamp}.md`;
 
-const MATRIX = "FCA_COVERAGE_MATRIX.md";
+  const content = [
+    "# Auricrux Daily Execution Digest",
+    "",
+    "- Status: engine online",
+    "- Multi-agent system staging active",
+    "- Next phase: full agent orchestration",
+    ""
+  ].join("\n");
 
-function parsePendingFeatures(text) {
-  const blocks = text.split("FEATURE:").slice(1);
-  return blocks
-    .map(b => b.split("\n")[0].trim())
-    .filter(Boolean);
+  fs.writeFileSync(file, content, "utf-8");
+
+  console.log("AURICRUX_EXEC_COMPLETE");
+  console.log("DIGEST_FILE:", file);
 }
