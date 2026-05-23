@@ -1,28 +1,22 @@
-name: Auricrux Autonomous Build System
+name: Auricrux Continuous Advancement Engine
 
 on:
-  issues:
-    types: [opened]
   workflow_dispatch:
-    inputs:
-      command:
-        description: "Auricrux command (optional)"
-        required: false
-        default: ""
+  schedule:
+    - cron: "*/15 * * * *"
 
 permissions:
   contents: write
-  issues: write
 
 concurrency:
-  group: auricrux-main
+  group: auricrux-advancement
   cancel-in-progress: true
 
 jobs:
-  auricrux:
+  advance:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -32,20 +26,13 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install dependencies
-        run: npm ci || npm install
-
-      - name: Run Auricrux Engine
-        env:
-          AURICRUX_COMMAND: ${{ github.event.inputs.command }}
-          GITHUB_EVENT_PATH: ${{ github.event_path }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
+      - name: Run advancement engine
         run: node auricrux_engine.js
 
-      - name: Commit and push changes
+      - name: Commit shipped changes
         run: |
           git config user.name "auricrux"
           git config user.email "auricrux@ai.system"
-          git add .
-          git commit -m "Auricrux autonomous system build" || echo "No changes"
+          git add public/product
+          git commit -m "Auricrux: ship advancement" || echo "No changes"
           git push
