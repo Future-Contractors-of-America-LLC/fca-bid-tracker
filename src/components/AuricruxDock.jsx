@@ -27,44 +27,15 @@ export default function AuricruxDock() {
   }
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        right: 16,
-        bottom: 16,
-        width: 320,
-        background: "#fff",
-        border: "1px solid #ddd",
-        borderRadius: 12,
-        padding: 12,
-        boxShadow: "0 10px 30px rgba(0,0,0,.12)",
-        zIndex: 9999
-      }}
-    >
-      <div style={{ fontWeight: 700, marginBottom: 8 }}>Auricrux™</div>
-
-      <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+    <div style={{ position: "fixed", right: 16, bottom: 16, zIndex: 9999, background: "#fff", padding: 12, border: "1px solid #ddd", borderRadius: 12 }}>
+      <strong>Auricrux™</strong>
+      <div style={{ marginTop: 8 }}>
         <button onClick={speak}>Voice</button>
         <button onClick={video}>Video</button>
       </div>
-
-      <div style={{ display: "flex", gap: 8 }}>
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Message Auricrux…"
-          style={{ flex: 1 }}
-        />
+      <div style={{ marginTop: 8 }}>
+        <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Message Auricrux…" />
         <button onClick={send}>Send</button>
-      </div>
-
-      <div style={{ marginTop: 8, maxHeight: 160, overflow: "auto", fontSize: 12 }}>
-        {log.map((x, i) => (
-          <div key={i} style={{ borderTop: "1px solid #eee", paddingTop: 6, marginTop: 6 }}>
-            <div style={{ opacity: 0.6 }}>{x.t}</div>
-            <div>{x.m}</div>
-          </div>
-        ))}
       </div>
     </div>
   );
