@@ -394,7 +394,6 @@ async function main() {
 main(// ========================================
 // AUTONOMOUS EXECUTIVE EXPANSION
 // ========================================
-
 function expandSystem() {
   const expansionDir = "auricrux/expansion";
   ensureDir(expansionDir);
@@ -403,7 +402,6 @@ function expandSystem() {
 
   writeJson(filename, {
     createdUtc: nowUtc(),
-
     nextObjectives: [
       "Expand Projects system into real job tracking",
       "Expand Files system into document ingestion + analysis",
@@ -412,12 +410,21 @@ function expandSystem() {
       "Expand revenue system with Starter + future offers",
       "Improve customer experience surfaces"
     ],
-
     mandate: "Expand FCA ecosystem across ALL modules simultaneously with no dependency on human input."
   });
 
   return filename;
+}
 
-const expansionFile = expandSystem();
-console.log("EXPANSION_GENERATED:", expansionFile);
-).catch(e => { console.error(e); process.exit(1); });
+// Run the executive loop, then generate an expansion artifact.
+// (If you want expansion generated even when main fails, move expandSystem() into a finally-style pattern.)
+main()
+  .then(() => {
+    const expansionFile = expandSystem();
+    console.log("EXPANSION_GENERATED:", expansionFile);
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exitCode = 1;
+  });
+
