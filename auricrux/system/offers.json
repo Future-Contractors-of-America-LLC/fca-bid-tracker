@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "updatedUtc": "2026-05-24T01:45:35.557Z",
+  "offers": [
+    {
+      "id": "pilot",
+      "name": "FCA Pilot (30 Days)",
+      "priceUsd": 2500,
+      "priority": 1,
+      "checkoutBase": "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01",
+      "status": "active",
+      "notes": "Primary offer when readiness triggers exist."
+    },
+    {
+      "id": "starter",
+      "name": "FCA Starter",
+      "priceUsd": 99,
+      "priority": 2,
+      "checkoutBase": "",
+      "status": "draft",
+      "notes": "Downsell only when forced by price resistance or exploratory intent."
+    }
+  ]
+}

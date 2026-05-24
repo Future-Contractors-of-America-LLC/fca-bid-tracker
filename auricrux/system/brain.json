@@ -14,5 +14,12 @@
       "files",
       "academy"
     ]
-  }
+  },
+  "lastRunUtc": "2026-05-24T01:45:36.328Z",
+  "lastShipped": [
+    "Customer offers pages shipped (/offers/*)",
+    "Customer intake shipped (/intake/)",
+    "Onboarding pages shipped (/onboarding/<intakeId>.html)",
+    "Pipeline state shipped (/auricrux/pipeline/pipeline.json)"
+  ]
 }
