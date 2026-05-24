@@ -417,7 +417,6 @@ function expandSystem() {
   });
 
   return filename;
-}
 
 const expansionFile = expandSystem();
 console.log("EXPANSION_GENERATED:", expansionFile);
