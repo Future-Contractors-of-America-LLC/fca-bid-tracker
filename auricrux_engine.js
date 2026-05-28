@@ -107,6 +107,10 @@ function checkoutUrl(offer, intakeId) {
   );
 }
 
+function navLink(href, label) {
+  return `<a href="${href}">${label}</a>`;
+}
+
 // =====================
 // CUSTOMER SURFACES (SHELL + MODULES)
 // =====================
@@ -135,28 +139,28 @@ a{display:inline-block;margin-right:12px;margin-top:6px}
 
 <div class="card">
   <h2>Offers</h2>
-  /offers/pilot.htmlPilot</a>
-  /offers/starter.htmlStarter</a>
+  ${navLink("/offers/pilot.html", "Pilot")}
+  ${navLink("/offers/starter.html", "Starter")}
 </div>
 
 <div class="card">
   <h2>Start</h2>
-  /intake/Start Intake</a>
-  /onboarding/Onboarding Lookup</a>
-  /pipeline/Pipeline</a>
+  ${navLink("/intake/", "Start Intake")}
+  ${navLink("/onboarding/", "Onboarding Lookup")}
+  ${navLink("/pipeline/", "Pipeline")}
 </div>
 
 <div class="card">
   <h2>Bid System</h2>
-  /tyler-entry/Bid Entry</a>
-  /tyler-status/Bid Status</a>
+  ${navLink("/tyler-entry", "Bid Entry")}
+  ${navLink("/tyler-status", "Bid Status")}
 </div>
 
 <div class="card">
   <h2>Core Modules (Expanding)</h2>
-  /modules/projects.htmlProjects</a>
-  /modules/files.htmlFiles</a>
-  /modules/academy.htmlAcademy</a>
+  ${navLink("/modules/projects.html", "Projects")}
+  ${navLink("/modules/files.html", "Files")}
+  ${navLink("/modules/academy.html", "Academy")}
 </div>
 </body></html>`
     );
@@ -178,7 +182,7 @@ a{display:inline-block;margin-right:12px;margin-top:6px}
 <body style="font-family:Arial;padding:24px;max-width:900px;margin:auto">
 <h1>${title}</h1>
 <p>${desc}</p>
-<p>/product/Back to Product Shell</a></p>
+<p>${navLink("/product/", "Back to Product Shell")}</p>
 </body></html>`
       );
     }
@@ -203,7 +207,7 @@ go.onclick = () => {
   location.href = "/onboarding/" + encodeURIComponent(v) + ".html";
 };
 </script>
-<p>/product/Back to Product Shell</a></p>
+<p>${navLink("/product/", "Back to Product Shell")}</p>
 </body></html>`
     );
   }
@@ -223,7 +227,7 @@ fetch('/auricrux/pipeline/pipeline.json', { cache:'no-store' })
   .then(r=>r.json()).then(j=>out.textContent=JSON.stringify(j,null,2))
   .catch(()=>out.textContent="Pipeline not generated yet.");
 </script>
-<p>/product/Back to Product Shell</a></p>
+<p>${navLink("/product/", "Back to Product Shell")}</p>
 </body></html>`
     );
   }
@@ -249,8 +253,8 @@ function shipOfferPages(offersRegistry) {
 <body style="font-family:Arial;padding:24px;max-width:900px;margin:auto">
 <h1>$${pilot.priceUsd} ${pilot.name}</h1>
 <p>Primary offer when readiness triggers exist.</p>
-<p>Checkout (requires Intake ID): Start at /intake//intake/</a>.</p>
-<p>/product/Back to Product Shell</a></p>
+<p>Checkout (requires Intake ID): Start at ${navLink("/intake/", "/intake/")}.</p>
+<p>${navLink("/product/", "Back to Product Shell")}</p>
 </body></html>`
   );
 
@@ -261,8 +265,8 @@ function shipOfferPages(offersRegistry) {
 <h1>$${starter.priceUsd} ${starter.name}</h1>
 <p>Status: ${starter.status}</p>
 <p>This offer is present and will be finalized. Pilot remains primary.</p>
-<p>/intake/Start Intake</a></p>
-<p>/product/Back to Product Shell</a></p>
+<p>${navLink("/intake/", "Start Intake")}</p>
+<p>${navLink("/product/", "Back to Product Shell")}</p>
 </body></html>`
   );
 }
@@ -317,7 +321,7 @@ ${
 `
     : `
 <p>Complete Pilot checkout to begin onboarding:</p>
-<p>${checkout}Complete Pilot Checkout</a></p>
+<p>${checkout ? navLink(checkout, "Complete Pilot Checkout") : "Checkout link unavailable."}</p>
 `
 }
 </div>
@@ -327,7 +331,7 @@ ${
 <pre>${JSON.stringify(state, null, 2)}</pre>
 </div>
 
-<p>/product/Back to Product Shell</a></p>
+<p>${navLink("/product/", "Back to Product Shell")}</p>
 </body></html>`;
 }
 
@@ -512,5 +516,3 @@ main()
     console.error(e);
     process.exitCode = 1;
   });
-
-
