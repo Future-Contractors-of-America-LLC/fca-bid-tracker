@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "updatedUtc": "2026-05-28T04:05:00.131Z",
+  "items": [
+    {
+      "id": "ship-product-shell",
+      "lane": "product",
+      "priority": 1,
+      "status": "todo"
+    },
+    {
+      "id": "ship-offers-intake",
+      "lane": "revenue",
+      "priority": 1,
+      "status": "todo"
+    },
+    {
+      "id": "ship-pipeline-onboarding",
+      "lane": "ops",
+      "priority": 1,
+      "status": "todo"
+    },
+    {
+      "id": "ship-core-modules",
+      "lane": "platform",
+      "priority": 2,
+      "status": "todo"
+    }
+  ]
+}
