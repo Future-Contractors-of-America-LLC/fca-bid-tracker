@@ -15,11 +15,15 @@
       "academy"
     ]
   },
-  "lastRunUtc": "2026-05-28T21:17:48.117Z",
+  "lastRunUtc": "2026-05-29T10:56:37.234Z",
   "lastShipped": [
     "Customer offers pages shipped (/offers/*)",
     "Customer intake shipped (/intake/)",
     "Onboarding pages shipped (/onboarding/<intakeId>.html)",
     "Pipeline state shipped (/auricrux/pipeline/pipeline.json)"
+  ],
+  "lastShip": [
+    "Shipped /offers/pilot.html",
+    "Shipped /offers/starter.html"
   ]
 }
