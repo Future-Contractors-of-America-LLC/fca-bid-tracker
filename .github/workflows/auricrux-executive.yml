@@ -2,42 +2,64 @@ name: Auricrux Executive Operator
 
 on:
   workflow_dispatch:
+    inputs:
+      command:
+        description: Optional executive command override
+        required: false
+        type: string
   issues:
     types: [opened, edited, reopened]
 
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 concurrency:
   group: auricrux-executive
   cancel-in-progress: true
 
+env:
+  GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+
 jobs:
   execute:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: npm
+
+      - name: Verify executive engine exists
+        run: |
+          test -f auricrux/exec/index.mjs
 
       - name: Run Auricrux Executive Engine
         env:
           AURICRUX_COMMAND: ${{ github.event.inputs.command }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_PATH: ${{ github.event_path }}
-          GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
         run: node auricrux/exec/index.mjs
 
+      - name: Detect repository changes
+        id: repo_changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create or Update PR
+        if: steps.repo_changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
@@ -47,3 +69,13 @@ jobs:
           branch: "auricrux/executive"
           base: "main"
           labels: "auricrux-automerge"
+
+      - name: Publish workflow summary
+        run: |
+          {
+            echo "## Auricrux Executive Operator"
+            echo
+            echo "Event: ${{ github.event_name }}"
+            echo "Repository changes detected: ${{ steps.repo_changes.outputs.changed }}"
+            echo "Mode: executive orchestration"
+          } >> "$GITHUB_STEP_SUMMARY"
