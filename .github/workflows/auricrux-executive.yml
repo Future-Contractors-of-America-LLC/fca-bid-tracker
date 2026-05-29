@@ -2,21 +2,26 @@ name: Auricrux Executive Operator
 
 on:
   workflow_dispatch:
+    inputs:
+      command:
+        description: Optional executive command override
+        required: false
+        type: string
   issues:
     types: [opened, edited, reopened]
 
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 concurrency:
-  group: auricrux-executive
+  group: auricrux-executive-${{ github.ref }}-${{ github.event.issue.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
   execute:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - name: Checkout
@@ -31,7 +36,7 @@ jobs:
 
       - name: Run Auricrux Executive Engine
         env:
-          AURICRUX_COMMAND: ${{ github.event.inputs.command }}
+          AURICRUX_COMMAND: ${{ github.event.inputs.command || '' }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_PATH: ${{ github.event_path }}
           GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
@@ -43,7 +48,24 @@ jobs:
           token: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
           commit-message: "Auricrux: system advancement"
           title: "Auricrux: system advancement"
-          body: "Autonomous system advancement executed by Auricrux."
+          body: |
+            Autonomous system advancement executed by Auricrux.
+
+            Trigger:
+            - Event: `${{ github.event_name }}`
+            - Issue: `${{ github.event.issue.number || 'n/a' }}`
+            - Run: `${{ github.run_id }}`
           branch: "auricrux/executive"
           base: "main"
           labels: "auricrux-automerge"
+
+      - name: Workflow Summary
+        if: always()
+        run: |
+          {
+            echo "## Auricrux Executive Run"
+            echo "- Event: ${{ github.event_name }}"
+            echo "- Issue: ${{ github.event.issue.number || 'n/a' }}"
+            echo "- Ref: ${{ github.ref }}"
+            echo "- Run ID: ${{ github.run_id }}"
+          } >> "$GITHUB_STEP_SUMMARY"
