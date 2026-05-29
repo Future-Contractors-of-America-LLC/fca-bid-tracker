@@ -2,21 +2,26 @@ name: Auricrux Executive Operator
 
 on:
   workflow_dispatch:
+    inputs:
+      command:
+        description: Optional executive command override
+        required: false
+        type: string
   issues:
     types: [opened, edited, reopened]
 
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 concurrency:
-  group: auricrux-executive
+  group: auricrux-executive-${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.issue.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
   execute:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -29,21 +34,52 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Validate executive engine presence
+        run: test -f auricrux/exec/index.mjs
+
       - name: Run Auricrux Executive Engine
         env:
-          AURICRUX_COMMAND: ${{ github.event.inputs.command }}
+          AURICRUX_COMMAND: ${{ inputs.command || '' }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_PATH: ${{ github.event_path }}
           GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
         run: node auricrux/exec/index.mjs
 
+      - name: Detect repository changes
+        id: changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create or Update PR
+        if: steps.changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
           commit-message: "Auricrux: system advancement"
           title: "Auricrux: system advancement"
-          body: "Autonomous system advancement executed by Auricrux."
+          body: |
+            Autonomous system advancement executed by Auricrux.
+
+            Trigger:
+            - Event: `${{ github.event_name }}`
+            - Issue: `${{ github.event.issue.number || 'n/a' }}`
+            - Run: `${{ github.run_id }}`
           branch: "auricrux/executive"
           base: "main"
           labels: "auricrux-automerge"
+
+      - name: Workflow Summary
+        if: always()
+        run: |
+          {
+            echo "## Auricrux Executive Run"
+            echo "- Event: ${{ github.event_name }}"
+            echo "- Issue: ${{ github.event.issue.number || 'n/a' }}"
+            echo "- Ref: ${{ github.ref }}"
+            echo "- Run ID: ${{ github.run_id }}"
+            echo "- Repository changed: ${{ steps.changes.outputs.changed || 'false' }}"
+          } >> "$GITHUB_STEP_SUMMARY"
