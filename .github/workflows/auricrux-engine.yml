@@ -1,4 +1,4 @@
-﻿name: Auricrux Engine (Scheduler)
+name: Auricrux Engine (Scheduler)
 
 on:
   workflow_dispatch:
@@ -7,9 +7,17 @@ on:
   schedule:
     - cron: "*/15 * * * *"
 
+permissions:
+  contents: read
+
+concurrency:
+  group: auricrux-engine-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   auricrux-engine-tick:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Run Auricrux Engine tick
@@ -23,8 +31,11 @@ jobs:
           const API = process.env.API_BASE;
 
           async function main() {
-            console.log("[Auricrux] Fetching bids...");
+            if (!API) {
+              throw new Error("API_BASE is required");
+            }
 
+            console.log("[Auricrux] Fetching bids...");
             const getResponse = await fetch(API);
 
             if (!getResponse.ok) {
@@ -33,49 +44,57 @@ jobs:
 
             const bids = await getResponse.json();
 
-            console.log("[Auricrux] Response:");
-            console.log(JSON.stringify(bids, null, 2));
-
             if (!Array.isArray(bids) || bids.length === 0) {
               console.log("[Auricrux] No bids available.");
               return;
             }
 
-            console.log(`[Auricrux] ${bids.length} bid(s) received.`);
+            const actionable = bids.filter((bid) => {
+              if (!bid || typeof bid !== "object") return false;
+              const status = String(bid.status || "").toLowerCase();
+              return status !== "auricrux-reviewed";
+            });
 
-            for (const bid of bids) {
+            console.log(`[Auricrux] ${bids.length} total bid(s), ${actionable.length} actionable.`);
+
+            if (actionable.length === 0) {
+              console.log("[Auricrux] Nothing to update.");
+              return;
+            }
+
+            let updatedCount = 0;
+
+            for (const bid of actionable) {
+              const bidId = bid.id || bid.intakeId || "unknown";
               const nextAction =
                 bid.auricruxRecommendation ||
+                bid.nextAction ||
                 "Auricrux review complete. Prepare next bid action.";
 
               const updatedBid = {
                 ...bid,
                 status: "auricrux-reviewed",
-                nextAction
+                nextAction,
+                auricruxReviewedAt: new Date().toISOString(),
               };
 
-              console.log(`[Auricrux] Updating bid ${bid.id}...`);
+              console.log(`[Auricrux] Updating bid ${bidId}...`);
 
               const postResponse = await fetch(API, {
                 method: "POST",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify(updatedBid)
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedBid),
               });
 
               if (!postResponse.ok) {
                 const errorText = await postResponse.text();
-                throw new Error(`POST failed for ${bid.id}: ${postResponse.status} ${errorText}`);
+                throw new Error(`POST failed for ${bidId}: ${postResponse.status} ${errorText}`);
               }
 
-              const saved = await postResponse.json();
-
-              console.log("[Auricrux] Updated bid:");
-              console.log(JSON.stringify(saved, null, 2));
+              updatedCount += 1;
             }
 
-            console.log("[Auricrux] Scheduler update complete.");
+            console.log(`[Auricrux] Scheduler update complete. Updated ${updatedCount} bid(s).`);
           }
 
           main().catch((error) => {
