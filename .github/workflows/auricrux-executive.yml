@@ -2,21 +2,27 @@ name: Auricrux Executive Operator
 
 on:
   workflow_dispatch:
+    inputs:
+      command:
+        description: "Optional executive command for this run"
+        required: false
+        type: string
+        default: ""
   issues:
     types: [opened, edited, reopened]
 
 permissions:
   contents: write
   pull-requests: write
-  issues: write
 
 concurrency:
-  group: auricrux-executive
+  group: auricrux-executive-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   execute:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -31,13 +37,14 @@ jobs:
 
       - name: Run Auricrux Executive Engine
         env:
-          AURICRUX_COMMAND: ${{ github.event.inputs.command }}
+          AURICRUX_COMMAND: ${{ github.event.inputs.command || '' }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_PATH: ${{ github.event_path }}
           GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
         run: node auricrux/exec/index.mjs
 
       - name: Create or Update PR
+        if: success()
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
