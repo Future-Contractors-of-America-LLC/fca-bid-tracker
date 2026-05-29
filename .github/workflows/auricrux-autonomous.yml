@@ -9,17 +9,21 @@ permissions:
   contents: write
 
 concurrency:
-  group: auricrux-advancement
+  group: auricrux-advancement-${{ github.workflow }}-${{ github.ref_name || github.event.repository.default_branch }}
   cancel-in-progress: true
 
 jobs:
   advance:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TARGET_BRANCH: ${{ github.ref_name || github.event.repository.default_branch }}
     steps:
-      - name: Checkout
+      - name: Checkout target branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ env.TARGET_BRANCH }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -29,10 +33,16 @@ jobs:
       - name: Run advancement engine
         run: node auricrux_engine.js
 
-      - name: Commit shipped changes
+      - name: Commit and push shipped changes
         run: |
           git config user.name "auricrux"
           git config user.email "auricrux@ai.system"
-          git add .
-          git commit -m "Auricrux: ship advancement" || echo "No changes"
-          git push
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "Auricrux: ship advancement"
+          git push origin HEAD:${TARGET_BRANCH}
