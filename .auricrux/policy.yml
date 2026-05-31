@@ -1,0 +1,45 @@
+schema_version: "1.0.0"
+authority_mode: "continuous_automation"
+
+global_rules:
+  one_system_required: true
+  auricrux_visible_everywhere: true
+  human_prompt_required: false
+  human_approval_required: false
+  artifact_generation_required: true
+  audit_log_required: true
+
+exceptions:
+  - founder_reserved_authority
+  - explicit_system_law_reservations
+
+defect_conditions:
+  - human_dependency
+  - developer_dependency
+  - operator_dependency
+  - admin_dependency
+  - manual_interpretation_dependency
+
+intent_resolution:
+  direct_mapping_required: true
+  fallback: compose_existing_runtime_actions
+  catalog_gap_action: RA00
+
+runtime_actions:
+  RA00: extend_runtime_action_catalog
+  RA01: define_or_modify_fca_system_structure
+  RA02: generate_update_or_ratify_canonical_artifacts
+  RA03: execute_operational_workflows_do_mode
+  RA04: teach_any_executed_capability_teach_mode
+  RA05: provision_configure_and_use_tools
+  RA06: generate_negotiate_and_bind_agreements
+  RA07: price_package_and_sell_offerings
+  RA08: record_decisions_and_rationale
+  RA09: detect_errors_and_classify_failures
+  RA10: correct_patterns_and_update_behavior
+  RA11: replicate_scale_or_parallelize_execution
+
+build_priority:
+  stage_1: full_system_shell
+  stage_2: one_complete_workflow
+  stage_3: expansion_from_workflow_spine
