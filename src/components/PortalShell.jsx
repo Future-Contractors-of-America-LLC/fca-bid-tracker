@@ -1,6 +1,7 @@
 import ShellHeader from "./ShellHeader";
 import ShellFooter from "./ShellFooter";
-import { portalJourney, portalModules } from "../portalShell";
+import ProjectSpineBar from "./ProjectSpineBar";
+import { currentProject, portalJourney, portalModules, portalTenant } from "../portalShell";
 
 const shellStyle = {
   padding: 40,
@@ -77,6 +78,8 @@ export default function PortalShell({
           journey={portalJourney}
           currentJourney={currentJourney}
         />
+
+        <ProjectSpineBar tenant={portalTenant} project={currentProject} />
 
         <div style={bannerStyle}>
           <div>

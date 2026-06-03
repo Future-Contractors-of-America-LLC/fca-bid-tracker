@@ -1,5 +1,5 @@
 import PortalShell from "../../components/PortalShell";
-import { portalFiles } from "../../portalShell";
+import { currentProject, portalFiles } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -19,6 +19,16 @@ export default function PortalFiles() {
       primaryHref="/portal/messages"
       primaryLabel="Open Messages"
     >
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0 }}>File Spine Context</h2>
+        <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
+          <div><strong>Project:</strong> {currentProject.name}</div>
+          <div><strong>Project ID:</strong> {currentProject.id}</div>
+          <div><strong>File set:</strong> {currentProject.fileSetLabel}</div>
+          <div>{currentProject.fileSpineStatus}</div>
+        </div>
+      </div>
+
       <div style={{ display: "grid", gap: 16 }}>
         {portalFiles.map((file) => (
           <div key={file.name} style={cardStyle}>
@@ -27,7 +37,8 @@ export default function PortalFiles() {
                 <h3 style={{ marginTop: 0, marginBottom: 8 }}>{file.name}</h3>
                 <div style={{ color: "#4b5563", lineHeight: 1.6 }}>
                   Category: {file.category}<br />
-                  Updated: {file.updated}
+                  Updated: {file.updated}<br />
+                  Linked project: {currentProject.id}
                 </div>
               </div>
               <div style={{ alignSelf: "center", fontWeight: 700 }}>{file.action}</div>

@@ -1,5 +1,5 @@
 import PortalShell from "../../components/PortalShell";
-import { auricruxActions, portalMessages } from "../../portalShell";
+import { auricruxActions, currentProject, portalMessages } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -35,7 +35,7 @@ export default function PortalMessages() {
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Communication continuity</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Every message should move the customer forward</h2>
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
-          This route works best when it clearly points to the next commercial or operational step. Messages should lead into billing readiness, training continuity, and founder-demo conversion instead of acting like a dead-end inbox.
+          This route works best when it clearly points to the next commercial or operational step. Messages should lead into billing readiness, training continuity, and production-rollout conversion instead of acting like a dead-end inbox.
         </p>
         <div>
           <a href="/portal/billing" style={ctaStyle}>Continue to Billing</a>
@@ -59,7 +59,11 @@ export default function PortalMessages() {
           ))}
         </div>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Auricrux Escalation Queue</h2>
+          <h2 style={{ marginTop: 0 }}>Audit Context</h2>
+          <div style={{ color: "#4b5563", lineHeight: 1.8, marginBottom: 12 }}>
+            <div><strong>Project ID:</strong> {currentProject.id}</div>
+            <div><strong>Audit state:</strong> {currentProject.auditLabel}</div>
+          </div>
           <ul style={{ paddingLeft: 20, lineHeight: 1.9 }}>
             {auricruxActions.map((action) => (
               <li key={action}>{action}</li>

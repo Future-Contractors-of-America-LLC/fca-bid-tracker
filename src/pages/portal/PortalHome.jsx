@@ -1,5 +1,5 @@
 import PortalShell from "../../components/PortalShell";
-import { auricruxActions, portalMessages, portalMetrics, portalProjects } from "../../portalShell";
+import { auricruxActions, currentProject, portalMessages, portalMetrics, portalProjects, portalTenant } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -45,14 +45,13 @@ export default function PortalHome() {
           </ul>
         </div>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Message Preview</h2>
-          {portalMessages.map((message) => (
-            <div key={message.subject} style={{ marginBottom: 12 }}>
-              <strong>{message.from}</strong>
-              <div style={{ color: "#4b5563" }}>{message.subject}</div>
-              <div style={{ color: "#6b7280", fontSize: 14 }}>{message.time}</div>
-            </div>
-          ))}
+          <h2 style={{ marginTop: 0 }}>Active Context</h2>
+          <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
+            <div><strong>Tenant:</strong> {portalTenant.name}</div>
+            <div><strong>Project:</strong> {currentProject.name}</div>
+            <div><strong>Project ID:</strong> {currentProject.id}</div>
+            <div><strong>Current stage:</strong> {currentProject.stage}</div>
+          </div>
         </div>
       </div>
 
@@ -76,6 +75,17 @@ export default function PortalHome() {
             </div>
           ))}
         </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Recent Workspace Signals</h2>
+        {portalMessages.map((message) => (
+          <div key={message.subject} style={{ marginBottom: 12 }}>
+            <strong>{message.from}</strong>
+            <div style={{ color: "#4b5563" }}>{message.subject}</div>
+            <div style={{ color: "#6b7280", fontSize: 14 }}>{message.time}</div>
+          </div>
+        ))}
       </div>
     </PortalShell>
   );

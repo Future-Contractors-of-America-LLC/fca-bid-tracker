@@ -1,3 +1,22 @@
+export const portalTenant = {
+  id: "TEN-FCA-001",
+  name: "FCA Pilot Customer",
+  roleSummary: "Owner/Admin workspace with customer portal, billing visibility, and academy continuity enabled.",
+};
+
+export const currentProject = {
+  id: "PRJ-A117",
+  name: "FCA Pilot Customer Tenant Improvement",
+  customer: "FCA Pilot Customer",
+  stage: "Estimating → Execution Handoff",
+  fileSetLabel: "18 linked files and onboarding artifacts",
+  fileSpineStatus: "Bid package summary, onboarding roster, and closeout checklist are attached to the same project context.",
+  auditLabel: "Auricrux action log active",
+  auditStatus: "Customer actions, billing transitions, and academy continuity cues are expected to write into one auditable timeline.",
+  auricruxMode: "Context-aware workspace guidance",
+  auricruxSummary: "Auricrux is reading the current tenant, project, stage, and next-action state from this shared shell context.",
+};
+
 export const portalMetrics = [
   {
     label: "Active Projects",

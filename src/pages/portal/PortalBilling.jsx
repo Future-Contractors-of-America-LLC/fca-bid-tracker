@@ -1,5 +1,5 @@
 import PortalShell from "../../components/PortalShell";
-import { portalBilling } from "../../portalShell";
+import { currentProject, portalBilling } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -44,6 +44,15 @@ export default function PortalBilling() {
         </div>
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0 }}>Billing Spine Context</h2>
+        <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
+          <div><strong>Project:</strong> {currentProject.name}</div>
+          <div><strong>Project ID:</strong> {currentProject.id}</div>
+          <div>{currentProject.auditStatus}</div>
+        </div>
+      </div>
+
       <div style={{ display: "grid", gap: 16 }}>
         {portalBilling.map((row) => (
           <div key={row.invoice} style={cardStyle}>
@@ -52,7 +61,8 @@ export default function PortalBilling() {
                 <h3 style={{ marginTop: 0, marginBottom: 8 }}>{row.invoice}</h3>
                 <div style={{ color: "#4b5563", lineHeight: 1.6 }}>
                   Customer: {row.customer}<br />
-                  Amount: {row.amount}
+                  Amount: {row.amount}<br />
+                  Linked project: {currentProject.id}
                 </div>
               </div>
               <div style={{ alignSelf: "center", fontWeight: 700, color: "#2563eb" }}>{row.status}</div>

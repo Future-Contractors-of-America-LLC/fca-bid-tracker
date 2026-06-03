@@ -1,5 +1,5 @@
 import PortalShell from "../../components/PortalShell";
-import { portalProjects } from "../../portalShell";
+import { currentProject, portalProjects } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -19,6 +19,16 @@ export default function PortalProjects() {
       primaryHref="/portal/files"
       primaryLabel="Open Files"
     >
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0 }}>Current Project Root</h2>
+        <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
+          <div><strong>{currentProject.name}</strong></div>
+          <div>Project ID: {currentProject.id}</div>
+          <div>Current stage: {currentProject.stage}</div>
+          <div>{currentProject.auditStatus}</div>
+        </div>
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>Project Lifecycle</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
