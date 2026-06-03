@@ -6,6 +6,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -25,6 +26,24 @@ const moduleStyle = {
   padding: 14,
   background: "#f8fafc",
 };
+
+const loginContinuityItems = [
+  {
+    label: "Entry flow",
+    value: "Login now inherits shell continuity",
+    detail: "Workspace entry now carries the same operating strip used across the public shell so the handoff into product state feels deliberate.",
+  },
+  {
+    label: "Post-login path",
+    value: "Portal, platform, and academy remain visible",
+    detail: "The route now keeps downstream workspace destinations obvious before entry rather than hiding the next move behind a generic form feel.",
+  },
+  {
+    label: "Conversion posture",
+    value: "Operational walkthrough remains active",
+    detail: "This route still supports workspace entry while keeping live dashboard review and rollout guidance accessible.",
+  },
+];
 
 export default function Login() {
   return (
@@ -65,6 +84,21 @@ export default function Login() {
           ctaHref="/portal"
           ctaLabel="Continue to workspace"
         />
+
+        <div style={{ marginBottom: 24 }}>
+          <PublicOperationsStrip
+            eyebrow="Workspace continuity strip"
+            title="Login now behaves like a guided handoff into the working shell"
+            detail="The entry route now shares the same continuity strip used across the public conversion shell so customers can see the operating path before entering FCA."
+            statusLabel="Entry posture"
+            statusValue="Workspace handoff active"
+            items={loginContinuityItems}
+            primaryHref="/portal"
+            primaryLabel="Continue to workspace"
+            secondaryHref="/portal/platform"
+            secondaryLabel="Open platform dashboard"
+          />
+        </div>
 
         <div style={twoColumnGridStyle}>
           <div style={cardStyle}>

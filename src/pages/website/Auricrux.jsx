@@ -7,6 +7,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { auricruxCapabilities, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -15,6 +16,24 @@ const operatingSteps = [
   "Surface the current recommended action and blocker so customers and teams can see what should happen next.",
   "Maintain continuity as users move between platform dashboard, portal routes, academy, support, and admin.",
   "Keep the experience feeling active, guided, and operational rather than static or brochure-like.",
+];
+
+const auricruxContinuityItems = [
+  {
+    label: "Guidance layer",
+    value: "Auricrux now mirrors public-shell continuity",
+    detail: "The route now explicitly carries the same operating strip used on other conversion surfaces so guidance feels embedded in the product story.",
+  },
+  {
+    label: "System role",
+    value: "Public explanation tied to live state",
+    detail: "Auricrux framing now stays anchored to platform, portal, academy, and founder-review motion instead of reading like isolated brand copy.",
+  },
+  {
+    label: "Next move",
+    value: "Review dashboard or rollout path",
+    detail: "The route closes toward live workspace inspection or rollout planning so customer guidance remains actionable.",
+  },
 ];
 
 export default function AuricruxPage() {
@@ -54,6 +73,21 @@ export default function AuricruxPage() {
       />
 
       <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Open unified platform state" />
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicOperationsStrip
+          eyebrow="Auricrux continuity strip"
+          title="Auricrux now carries the same continuity posture as the rest of the shell"
+          detail="This route now explicitly shares the same operating strip used across public conversion pages so the guidance layer feels connected to live product state and rollout motion."
+          statusLabel="Guidance posture"
+          statusValue="System continuity active"
+          items={auricruxContinuityItems}
+          primaryHref="/portal/platform"
+          primaryLabel="Open live platform state"
+          secondaryHref="/pricing"
+          secondaryLabel="Review rollout planning"
+        />
+      </div>
 
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel

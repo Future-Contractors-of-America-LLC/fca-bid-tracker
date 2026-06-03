@@ -3,6 +3,7 @@ import PortalShell from "../../components/PortalShell";
 import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { auricruxActions, portalMessages, portalMetrics, portalProjects } from "../../portalShell";
 import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -20,6 +21,24 @@ const metricStyle = {
   fontWeight: 700,
   margin: "6px 0",
 };
+
+const portalEntryContinuityItems = [
+  {
+    label: "Workspace state",
+    value: "Portal entry now bridges from public shell",
+    detail: "The main portal route now makes the handoff from home, login, and platform pages explicit instead of assuming users already understand the system state.",
+  },
+  {
+    label: "Operational focus",
+    value: "Projects, files, billing, and academy stay linked",
+    detail: "The overview route now reinforces that execution, communication, revenue, and training remain part of one workspace flow.",
+  },
+  {
+    label: "Next action",
+    value: "Review project flow or live dashboard",
+    detail: "Portal entry keeps both execution routing and executive state review immediately accessible.",
+  },
+];
 
 export default function PortalHome() {
   const { state, refreshSyncStamp } = useWorkspaceState();
@@ -54,6 +73,21 @@ export default function PortalHome() {
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
         </div>
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicOperationsStrip
+          eyebrow="Portal entry strip"
+          title="Portal overview now completes the public-to-workspace continuity loop"
+          detail="The main portal route now uses the same continuity strip pattern as the public shell so entry, live operations, and rollout guidance read as one connected product experience."
+          statusLabel="Workspace posture"
+          statusValue="Portal continuity active"
+          items={portalEntryContinuityItems}
+          primaryHref="/portal/projects"
+          primaryLabel="Open project flow"
+          secondaryHref="/portal/platform"
+          secondaryLabel="Review platform dashboard"
+        />
       </div>
 
       <WorkspaceQuickActions

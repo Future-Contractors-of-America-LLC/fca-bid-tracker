@@ -7,9 +7,28 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
 import { cardStyle, pageShellStyle } from "../../publicShellStyles";
+
+const homeContinuityItems = [
+  {
+    label: "Customer path",
+    value: "Home now leads into live product state",
+    detail: "The first route now keeps workspace entry, platform state, and rollout review visible instead of acting like a standalone brochure page.",
+  },
+  {
+    label: "Narrative continuity",
+    value: "Platform, Auricrux, and Academy stay linked",
+    detail: "The home page now reinforces one connected system story across product explanation, operations, and training follow-through.",
+  },
+  {
+    label: "Next action",
+    value: "Clear conversion motion remains active",
+    detail: "Visitors can move directly into workspace, platform review, or rollout planning without losing context.",
+  },
+];
 
 export default function Home() {
   return (
@@ -51,6 +70,21 @@ export default function Home() {
         ctaHref={publicHomeMessaging.journey.ctaHref}
         ctaLabel={publicHomeMessaging.journey.ctaLabel}
       />
+
+      <div style={{ marginTop: 24 }}>
+        <PublicOperationsStrip
+          eyebrow="Home continuity strip"
+          title="Home now opens the same operating story used deeper in FCA"
+          detail="The public entry route now carries the same continuity posture as platform, pricing, contact, and billing so the product story starts in a live operational direction."
+          statusLabel="Entry posture"
+          statusValue="Unified shell continuity active"
+          items={homeContinuityItems}
+          primaryHref="/login"
+          primaryLabel="Open workspace entry"
+          secondaryHref="/portal/platform"
+          secondaryLabel="Review live platform state"
+        />
+      </div>
 
       <PublicCtaRow actions={publicBodyCtaSets.home} />
 
