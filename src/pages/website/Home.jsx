@@ -63,19 +63,19 @@ export default function Home() {
         </div>
         <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
           <h3 style={{ marginTop: 0 }}>FCA Bid Product</h3>
-          <p>FCA and Auricrux branded bid entry and bid status tools remain available for customer use.</p>
+          <p>Use the canonical FCA bid routes first for demos and customer flow continuity.</p>
           <div style={{ marginTop: 10 }}>
-            <a href="/bid-entry/">Bid Entry</a>
+            <a href="/bid-entry/">Open Bid Entry</a>
             <span style={{ margin: "0 8px" }}>•</span>
-            <a href="/bid-status/">Bid Status</a>
+            <a href="/bid-status/">Open Bid Status</a>
           </div>
           <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.6 }}>
-            Direct FCA customer tool links are also available for deployment validation.
+            Legacy customer links remain available only for compatibility and redirect continuity.
           </p>
           <div style={{ marginTop: 8 }}>
-            <a href="/fca-customer-entry/index.html">FCA customer intake</a>
+            <a href="/fca-customer-entry/index.html">Legacy intake route</a>
             <span style={{ margin: "0 8px" }}>•</span>
-            <a href="/fca-customer-status/index.html">FCA customer status</a>
+            <a href="/fca-customer-status/index.html">Legacy status route</a>
           </div>
         </div>
         <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>

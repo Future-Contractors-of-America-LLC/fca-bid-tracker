@@ -43,7 +43,7 @@ export default function ShellFooter() {
         </div>
 
         <div>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Demo Links</div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Canonical Demo Routes</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             <a href="/login" style={linkStyle}>Enter Demo Workspace</a>
             <a href="/portal" style={linkStyle}>Customer Portal</a>
@@ -54,14 +54,14 @@ export default function ShellFooter() {
         </div>
 
         <div>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Customer Bid Tools</div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Compatibility Routes</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            FCA customer bid intake and status tools remain available as FCA and
-            Auricrux branded customer-facing surfaces.
+            Legacy customer intake and status surfaces remain available for continuity,
+            but the canonical FCA shell routes above should be used first.
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <a href="/fca-customer-entry/index.html" style={linkStyle}>Open FCA customer intake</a>
-            <a href="/fca-customer-status/index.html" style={linkStyle}>Open FCA customer status</a>
+            <a href="/fca-customer-entry/index.html" style={linkStyle}>Legacy intake route</a>
+            <a href="/fca-customer-status/index.html" style={linkStyle}>Legacy status route</a>
           </div>
         </div>
 
