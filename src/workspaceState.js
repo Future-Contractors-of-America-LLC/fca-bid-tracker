@@ -116,6 +116,28 @@ export const routeStateOverlays = {
     auricruxRole: "Coach and align",
     auricruxDetail: "Auricrux uses operational state to recommend learning actions and align workforce readiness to live work.",
   },
+  support: {
+    title: "Support route state",
+    summary: "Support specializes the shared state around continuity recovery, escalation handling, and customer help inside the same shell.",
+    status: "Support state active",
+    primaryFocus: "Escalation continuity",
+    primaryDetail: "This route keeps support requests attached to project, audit, and next-action context instead of leaving them isolated.",
+    dependency: "Message and audit visibility",
+    dependencyDetail: "Support depends on current blocker visibility, prior actions, and cross-route context staying available.",
+    auricruxRole: "Recover and route",
+    auricruxDetail: "Auricrux identifies the cleanest recovery path and sends the user to the next operational surface.",
+  },
+  admin: {
+    title: "Admin route state",
+    summary: "Admin specializes the shared state around tenant rollout, seat readiness, governance visibility, and production posture.",
+    status: "Admin state active",
+    primaryFocus: "Control and rollout",
+    primaryDetail: "This route begins the broader platform spine for tenant-level administration inside the same shell.",
+    dependency: "Tenant, project, and governance context",
+    dependencyDetail: "Admin depends on persistent tenant identity, route continuity, and visible Auricrux governance state.",
+    auricruxRole: "Govern and monitor",
+    auricruxDetail: "Auricrux keeps administrative state legible and tied to live workspace readiness rather than detached settings.",
+  },
 };
 
 export const projectAuditEvents = [

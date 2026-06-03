@@ -10,6 +10,8 @@ import PortalBids from "./pages/portal/PortalBids";
 import PortalFiles from "./pages/portal/PortalFiles";
 import PortalMessages from "./pages/portal/PortalMessages";
 import PortalBilling from "./pages/portal/PortalBilling";
+import PortalSupport from "./pages/portal/PortalSupport";
+import PortalAdmin from "./pages/portal/PortalAdmin";
 import AcademyHome from "./pages/academy/AcademyHome";
 
 export default function Router() {
@@ -26,6 +28,8 @@ export default function Router() {
   if (path === "/portal/files") return <PortalFiles />;
   if (path === "/portal/messages") return <PortalMessages />;
   if (path === "/portal/billing") return <PortalBilling />;
+  if (path === "/portal/support") return <PortalSupport />;
+  if (path === "/portal/admin") return <PortalAdmin />;
   if (path === "/portal/academy") return <AcademyHome />;
   if (path === "/academy") return <AcademyHome />;
 

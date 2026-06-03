@@ -19,7 +19,7 @@ export const portalMetrics = [
   {
     label: "Auricrux Status",
     value: "Online",
-    detail: "Monitoring bid status, portal requests, and academy handoff",
+    detail: "Monitoring bid status, portal requests, academy handoff, and support escalation",
   },
 ];
 
@@ -177,6 +177,16 @@ export const portalModules = [
     label: "Academy",
     description: "Training continuity tied to the same customer journey",
   },
+  {
+    href: "/portal/support",
+    label: "Support",
+    description: "Escalation, recovery, and continuity support",
+  },
+  {
+    href: "/portal/admin",
+    label: "Admin",
+    description: "Tenant control, rollout status, and governance visibility",
+  },
 ];
 
 export const portalJourney = [
@@ -184,6 +194,6 @@ export const portalJourney = [
   { key: "bid", label: "Bid / Estimate", href: "/portal/bids" },
   { key: "job", label: "Project / Job", href: "/portal/projects" },
   { key: "coordination", label: "Files + Messages", href: "/portal/files" },
-  { key: "finance", label: "Billing", href: "/portal/billing" },
-  { key: "academy", label: "Academy", href: "/portal/academy" },
+  { key: "finance", label: "Billing / Admin", href: "/portal/billing" },
+  { key: "academy", label: "Academy / Support", href: "/portal/academy" },
 ];
