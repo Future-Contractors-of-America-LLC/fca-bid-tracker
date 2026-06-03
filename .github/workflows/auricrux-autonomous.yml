@@ -31,8 +31,14 @@ jobs:
 
       - name: Commit shipped changes
         run: |
+          set -euo pipefail
           git config user.name "auricrux"
           git config user.email "auricrux@ai.system"
           git add .
           git commit -m "Auricrux: ship advancement" || echo "No changes"
-          git push
+          if ! git push; then
+            {
+              echo "## Push Warning"
+              echo "Advancement engine produced changes locally but push failed. The run completed in degraded mode."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
