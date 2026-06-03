@@ -44,6 +44,18 @@ export default function ShellFooter() {
         </div>
 
         <div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Legacy Customer UI</div>
+          <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
+            Bid Entry and Bid Status open the classic customer-facing tools while
+            the new FCA shell remains the primary demo surface.
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <a href="/fca-customer-entry/index.html" style={linkStyle}>Open classic customer intake</a>
+            <a href="/fca-customer-status/index.html" style={linkStyle}>Open classic customer status</a>
+          </div>
+        </div>
+
+        <div>
           <div style={{ fontWeight: 700, marginBottom: 8 }}>Sales CTA</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
             Ready for a founder-led walkthrough or pilot discussion.
