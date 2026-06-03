@@ -20,7 +20,7 @@ export default function PortalHome() {
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <ShellHeader
           eyebrow="Customer Portal Demo"
-          title="Tyler Construction Workspace"
+          title="FCA Customer Workspace"
           subtitle="Active pilot with Auricrux-guided next actions, communication visibility, and training continuity."
           primaryHref="/academy"
           primaryLabel="Open Academy"

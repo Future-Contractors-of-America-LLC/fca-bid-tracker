@@ -38,20 +38,20 @@ export default function ShellFooter() {
             <a href="/login" style={linkStyle}>Enter Demo Workspace</a>
             <a href="/portal" style={linkStyle}>Customer Portal</a>
             <a href="/academy" style={linkStyle}>FCA Academy</a>
-            <a href="/tyler-entry/" style={linkStyle}>Bid Entry</a>
-            <a href="/tyler-status/" style={linkStyle}>Bid Status</a>
+            <a href="/bid-entry/" style={linkStyle}>Bid Entry</a>
+            <a href="/bid-status/" style={linkStyle}>Bid Status</a>
           </div>
         </div>
 
         <div>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Legacy Customer UI</div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Customer Bid Tools</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            Bid Entry and Bid Status open the classic customer-facing tools while
-            the new FCA shell remains the primary demo surface.
+            FCA customer bid intake and status tools remain available as FCA and
+            Auricrux branded customer-facing surfaces.
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <a href="/fca-customer-entry/index.html" style={linkStyle}>Open classic customer intake</a>
-            <a href="/fca-customer-status/index.html" style={linkStyle}>Open classic customer status</a>
+            <a href="/fca-customer-entry/index.html" style={linkStyle}>Open FCA customer intake</a>
+            <a href="/fca-customer-status/index.html" style={linkStyle}>Open FCA customer status</a>
           </div>
         </div>
 

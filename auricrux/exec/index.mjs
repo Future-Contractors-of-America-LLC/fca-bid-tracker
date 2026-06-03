@@ -13,16 +13,9 @@ const readJson = (p, fallback) => {
 };
 const writeJson = (p, obj) => write(p, JSON.stringify(obj, null, 2));
 
-/**
- * Executive memory as auditable artifact (required: “memory as evidence,” not opaque state). 
- */
 const BRAIN = "auricrux/system/brain.json";
 const BACKLOG = "auricrux/system/backlog.json";
 const OFFERS = "auricrux/system/offers.json";
-
-/**
- * Customer-visible operational surfaces (not “logs”)
- */
 const PRODUCT = "public/product/index.html";
 const PIPELINE = "public/auricrux/pipeline/pipeline.json";
 const PAYMENTS_DIR = "public/auricrux/payments";
@@ -32,15 +25,7 @@ const MODULES_DIR = "public/modules";
 const INTAKE = "public/intake/index.html";
 const PIPELINE_VIEW = "public/pipeline/index.html";
 const ONBOARD_INDEX = "public/onboarding/index.html";
-
-/**
- * Existing execution surface: bids API (already used by your scheduler worker). 
- */
 const BID_API = "https://auricrux-bid-api-node-ftcueggjg4b0ehbs.centralus-01.azurewebsites.net/api/bids";
-
-/**
- * Canonical revenue: Pilot primary, Starter secondary. 
- */
 const PILOT_CHECKOUT_BASE = "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01";
 
 function initIfMissing() {
@@ -72,6 +57,8 @@ function initIfMissing() {
   ensureDir("public/product");
   ensureDir("public/auricrux/pipeline");
   ensureDir("public/pipeline");
+  ensureDir("public/bid-entry");
+  ensureDir("public/bid-status");
 }
 
 function upsert(arr, key, obj) {
@@ -86,8 +73,7 @@ function checkoutUrl(offer, intakeId) {
 }
 
 function shipCustomerShell() {
-  if (!exists(PRODUCT)) {
-    write(PRODUCT, `<!doctype html><html><head><meta charset="utf-8"><title>FCA Product</title>
+  write(PRODUCT, `<!doctype html><html><head><meta charset="utf-8"><title>FCA Product</title>
 <style>
 body{font-family:Arial;padding:24px;max-width:980px;margin:auto}
 .card{border:1px solid #ddd;border-radius:12px;padding:16px;margin:12px 0}
@@ -101,9 +87,9 @@ a{display:inline-block;margin-right:12px;margin-top:6px}
 <a href="/onboarding/">Onboarding</a>
 <a href="/pipeline/">Pipeline</a>
 </div>
-<div class="card"><h2>Bid System</h2>
-<a href="/tyler-entry/">Bid Entry</a>
-<a href="/tyler-status/">Bid Status</a>
+<div class="card"><h2>FCA Bid System</h2>
+<a href="/bid-entry/">Bid Entry</a>
+<a href="/bid-status/">Bid Status</a>
 </div>
 <div class="card"><h2>Core Modules</h2>
 <a href="/modules/projects.html">Projects</a>
@@ -111,9 +97,11 @@ a{display:inline-block;margin-right:12px;margin-top:6px}
 <a href="/modules/academy.html">Academy</a>
 </div>
 </body></html>`);
-    return ["Shipped /product/ (customer shell)"];
-  }
-  return [];
+
+  write("public/bid-entry/index.html", `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=../fca-customer-entry/index.html"><title>Redirecting to FCA Customer Bid Intake</title></head><body><p>Redirecting to FCA Customer Bid Intake...</p><p><a href="../fca-customer-entry/index.html">Open FCA Customer Bid Intake</a></p></body></html>`);
+  write("public/bid-status/index.html", `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=../fca-customer-status/index.html"><title>Redirecting to FCA Customer Bid Status</title></head><body><p>Redirecting to FCA Customer Bid Status...</p><p><a href="../fca-customer-status/index.html">Open FCA Customer Bid Status</a></p></body></html>`);
+
+  return ["Shipped /product/ (customer shell)"];
 }
 
 function shipModules() {
@@ -178,7 +166,7 @@ submit.onclick=async ()=>{
   const j=await r.json().catch(()=>({}));
   if(!r.ok){out.textContent="ERROR: "+JSON.stringify(j);return;}
   const url=CHECKOUT+"?client_reference_id="+encodeURIComponent(intakeId);
-  out.textContent="Submitted. Intake ID: "+intakeId+"\\n\\nCheckout: "+url+"\\n\\nOnboarding: "+location.origin+"/onboarding/"+intakeId+".html";
+  out.textContent="Submitted. Intake ID: "+intakeId+"\n\nCheckout: "+url+"\n\nOnboarding: "+location.origin+"/onboarding/"+intakeId+".html";
 };
 </script>
 <p><a href="/product/">Back</a></p></body></html>`);
@@ -267,19 +255,15 @@ async function runExecutive() {
   const pipeline = readJson(PIPELINE, { version:1, updatedUtc:"", leads:[], offers:[], payments:[], onboarding:[] });
   const bids = await fetchBids();
 
-  // Intake → Lead + Offer Pilot
   for (const b of bids) {
     if (b && b.source === "customer-intake" && b.intakeId) {
       upsert(pipeline.leads, "intakeId", { intakeId: b.intakeId, company: b.company||"", project: b.project||"", value: b.value||0, createdUtc: b.createdAt || UTC() });
       const url = checkoutUrl(pilot, b.intakeId);
       upsert(pipeline.offers, "intakeId", { intakeId: b.intakeId, offer:"pilot", amount:2500, checkoutUrl:url, offeredUtc: UTC() });
-
-      // update bid operationally
       await postBid({ ...b, status:"pilot-offered", nextAction:"Complete Pilot checkout", checkoutUrl: url });
     }
   }
 
-  // Payment proof (repo-based; can be automated later)
   for (const off of pipeline.offers) {
     const proofPath = `${PAYMENTS_DIR}/${off.intakeId}.json`;
     if (exists(proofPath)) {
@@ -296,14 +280,10 @@ async function runExecutive() {
   pipeline.updatedUtc = UTC();
   writeJson(PIPELINE, pipeline);
 
-  // Executive memory update (evidence artifact)
   const brain = readJson(BRAIN, {});
   brain.lastRunUtc = UTC();
   brain.lastShip = changes.length ? changes : ["No new surface shipped this run"];
   writeJson(BRAIN, brain);
-
-  // Advancement-only rule: if nothing changed AND no pipeline moved, open a blocker issue would be next step.
-  // We keep this minimal here to avoid blocking execution.
 
   console.log("AURICRUX_EXEC_COMPLETE");
   console.log("SHIPPED:", changes.length);

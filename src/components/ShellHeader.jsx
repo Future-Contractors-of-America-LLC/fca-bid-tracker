@@ -48,8 +48,8 @@ export default function ShellHeader({
         <a href="/login" style={linkStyle}>Login</a>
         <a href="/portal" style={linkStyle}>Portal</a>
         <a href="/academy" style={linkStyle}>Academy</a>
-        <a href="/tyler-entry/" style={linkStyle}>Bid Entry</a>
-        <a href="/tyler-status/" style={linkStyle}>Bid Status</a>
+        <a href="/bid-entry/" style={linkStyle}>Bid Entry</a>
+        <a href="/bid-status/" style={linkStyle}>Bid Status</a>
         {secondaryHref && secondaryLabel ? (
           <a href={secondaryHref} style={linkStyle}>{secondaryLabel}</a>
         ) : null}

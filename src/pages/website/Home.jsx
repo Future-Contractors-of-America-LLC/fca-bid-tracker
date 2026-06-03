@@ -49,20 +49,20 @@ export default function Home() {
           <a href="/academy">View academy demo</a>
         </div>
         <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
-          <h3 style={{ marginTop: 0 }}>Bid Product</h3>
-          <p>Existing product UI remains available for bid entry and bid status review.</p>
+          <h3 style={{ marginTop: 0 }}>FCA Bid Product</h3>
+          <p>FCA and Auricrux branded bid entry and bid status tools remain available for customer use.</p>
           <div style={{ marginTop: 10 }}>
-            <a href="/tyler-entry/">Bid Entry</a>
+            <a href="/bid-entry/">Bid Entry</a>
             <span style={{ margin: "0 8px" }}>•</span>
-            <a href="/tyler-status/">Bid Status</a>
+            <a href="/bid-status/">Bid Status</a>
           </div>
           <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.6 }}>
-            These routes open the classic customer-facing bid tools. Direct classic links are also available for deployment validation.
+            Direct FCA customer tool links are also available for deployment validation.
           </p>
           <div style={{ marginTop: 8 }}>
-            <a href="/fca-customer-entry/index.html">Classic intake</a>
+            <a href="/fca-customer-entry/index.html">FCA customer intake</a>
             <span style={{ margin: "0 8px" }}>•</span>
-            <a href="/fca-customer-status/index.html">Classic status</a>
+            <a href="/fca-customer-status/index.html">FCA customer status</a>
           </div>
         </div>
       </div>

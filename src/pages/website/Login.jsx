@@ -33,10 +33,10 @@ export default function Login() {
 
         <div style={{ maxWidth: 520, ...cardStyle }}>
           <label>Work Email</label>
-          <input style={fieldStyle} defaultValue="pilot@tylerconstruction.com" />
+          <input style={fieldStyle} defaultValue="pilot@fca-demo.com" />
 
           <label>Company</label>
-          <input style={fieldStyle} defaultValue="Tyler Construction" />
+          <input style={fieldStyle} defaultValue="FCA Pilot Customer" />
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
             <a href="/portal" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#111827", color: "#fff", fontWeight: 700 }}>
