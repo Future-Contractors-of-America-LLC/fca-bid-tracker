@@ -1,12 +1,78 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="refresh" content="0; url=../fca-customer-entry/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Redirecting to FCA Customer Bid Intake</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+    }
+    .eyebrow {
+      color: #2563eb;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.2px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 28px;
+    }
+    p {
+      line-height: 1.7;
+      color: #475569;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    a {
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-weight: 700;
+    }
+    .primary {
+      background: #111827;
+      color: #ffffff;
+    }
+    .secondary {
+      background: #f1f5f9;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+    }
+  </style>
 </head>
 <body>
-  <p>Redirecting to FCA Customer Bid Intake...</p>
-  <p><a href="../fca-customer-entry/index.html">Open FCA Customer Bid Intake</a></p>
+  <div class="card">
+    <div class="eyebrow">FCA Legacy Route Continuity</div>
+    <h1>Redirecting to FCA Customer Bid Intake</h1>
+    <p>
+      This legacy route is preserved for compatibility and now forwards into the canonical FCA customer intake experience.
+    </p>
+    <div class="actions">
+      <a class="primary" href="../fca-customer-entry/index.html">Open FCA Customer Bid Intake</a>
+      <a class="secondary" href="../bid-entry/">Open Bid Entry Shell</a>
+    </div>
+  </div>
 </body>
 </html>
