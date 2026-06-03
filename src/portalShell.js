@@ -143,6 +143,11 @@ export const auricruxActions = [
 
 export const portalModules = [
   {
+    href: "/portal/platform",
+    label: "Platform",
+    description: "Unified executive and customer shell summary",
+  },
+  {
     href: "/portal",
     label: "Overview",
     description: "Customer account summary and next actions",

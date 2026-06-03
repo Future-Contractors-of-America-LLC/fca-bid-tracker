@@ -4,6 +4,7 @@ import AuricruxPage from "./pages/website/Auricrux";
 import Pricing from "./pages/website/Pricing";
 import Contact from "./pages/website/Contact";
 import Login from "./pages/website/Login";
+import PlatformDashboard from "./pages/portal/PlatformDashboard";
 import PortalHome from "./pages/portal/PortalHome";
 import PortalProjects from "./pages/portal/PortalProjects";
 import PortalBids from "./pages/portal/PortalBids";
@@ -23,6 +24,7 @@ export default function Router() {
   if (path === "/contact") return <Contact />;
   if (path === "/login") return <Login />;
   if (path === "/portal") return <PortalHome />;
+  if (path === "/portal/platform") return <PlatformDashboard />;
   if (path === "/portal/projects") return <PortalProjects />;
   if (path === "/portal/bids") return <PortalBids />;
   if (path === "/portal/files") return <PortalFiles />;

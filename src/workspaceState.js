@@ -39,6 +39,17 @@ export const auricruxRail = {
 };
 
 export const routeStateOverlays = {
+  platform: {
+    title: "Unified platform dashboard state",
+    summary: "This route summarizes the whole operating shell in one place so portal operations, academy continuity, support posture, admin readiness, and Auricrux state can be reviewed together.",
+    status: "Platform state active",
+    primaryFocus: "Executive and customer summary",
+    primaryDetail: "This route is the clearest single-surface view of current tenant, project, readiness, and operating continuity.",
+    dependency: "Shared route-state integrity",
+    dependencyDetail: "The platform view depends on all specialized routes staying attached to the same tenant, project, file, audit, and Auricrux state.",
+    auricruxRole: "Summarize and direct",
+    auricruxDetail: "Auricrux uses this route to present system state clearly and direct the user into the next operational surface.",
+  },
   overview: {
     title: "Workspace overview state",
     summary: "Overview emphasizes account-level continuity, active next actions, and readiness to move the customer into deeper operational routes.",
