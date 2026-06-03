@@ -1,16 +1,73 @@
-# React + Vite
+# FCA Bid Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+`fca-bid-tracker` is the primary customer-facing shell for the FCA system.
+It carries the highest-leverage public website, portal, academy, comms, and bid-workspace continuity paths.
 
-Currently, two official plugins are available:
+## Canonical Governance Source
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This repository should align to the canonical governance artifacts in `Future-Contractors-of-America-LLC/auricrux-central`:
 
-## React Compiler
+- `FCA_SYSTEM_LAW.md`
+- `FCA_BUILD_SEQUENCE.md`
+- `FCA_RUNTIME_TRIGGER_CATALOG.md`
+- `FCA_COVERAGE_MATRIX.md`
+- `FCA_SYSTEM_INVENTORY.md`
+- `FCA_REPO_ALIGNMENT.md` in this repo for shell-specific alignment notes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Repo Role
 
-## Expanding the ESLint configuration
+This repo is the main execution surface for:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- public website conversion routes
+- platform and portal continuity
+- bid workspace UX
+- academy integration
+- customer messaging and support continuity
+- embedded Auricrux operating surfaces
+
+## Development
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the local dev server:
+
+```bash
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+Run lint:
+
+```bash
+npm run lint
+```
+
+If present in `package.json`, use the repo-standard validation command:
+
+```bash
+npm run build:system
+```
+
+## Execution Priority
+
+The highest-value implementation direction in this repo is continuity-first work, especially:
+
+1. customer-friendly public messaging
+2. route and CTA consistency
+3. project / job anchoring
+4. file / evidence readiness
+5. academy and portal continuity
+6. customer-visible state clarity across platform surfaces
+
+## Rule
+
+If a change improves appearance but weakens continuity, routing clarity, traceability, or customer comprehension, it should be re-scoped before merge.
