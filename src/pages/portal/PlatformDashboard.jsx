@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
+import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
 import { auricruxActions, portalMessages, portalMetrics } from "../../portalShell";
 import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -22,7 +23,7 @@ export default function PlatformDashboard() {
   const { state, refreshSyncStamp } = useWorkspaceState();
 
   useEffect(() => {
-    refreshSyncStamp();
+    refreshSyncStamp("Persisted platform dashboard state active");
   }, [refreshSyncStamp]);
 
   return (
@@ -44,6 +45,15 @@ export default function PlatformDashboard() {
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
         </div>
       </div>
+
+      <WorkspaceQuickActions
+        actions={[
+          { label: "Portal Overview", href: "/portal", variant: "primary" },
+          { label: "Open Support", href: "/portal/support", variant: "secondary" },
+          { label: "Open Admin", href: "/portal/admin", variant: "secondary" },
+          { label: "Open Academy", href: "/academy", variant: "light" },
+        ]}
+      />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
         {portalMetrics.map((metric) => (

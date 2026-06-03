@@ -52,12 +52,12 @@ export default function useWorkspaceState() {
   const api = useMemo(
     () => ({
       state,
-      refreshSyncStamp() {
+      refreshSyncStamp(source = "Persisted workspace state active") {
         setState((prev) => ({
           ...prev,
           meta: {
             ...prev.meta,
-            persistenceState: "Persisted workspace state active",
+            persistenceState: source,
             lastSyncedAt: new Date().toISOString(),
           },
         }));

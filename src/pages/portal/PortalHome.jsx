@@ -1,6 +1,9 @@
+import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
-import { auricruxActions, currentProject, portalMessages, portalMetrics, portalProjects, portalTenant } from "../../portalShell";
+import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
+import { auricruxActions, portalMessages, portalMetrics, portalProjects } from "../../portalShell";
 import { routeStateOverlays } from "../../workspaceState";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -17,6 +20,12 @@ const metricStyle = {
 };
 
 export default function PortalHome() {
+  const { state, refreshSyncStamp } = useWorkspaceState();
+
+  useEffect(() => {
+    refreshSyncStamp("Persisted portal overview state active");
+  }, [refreshSyncStamp]);
+
   return (
     <PortalShell
       title="FCA Customer Workspace"
@@ -27,6 +36,25 @@ export default function PortalHome() {
       primaryHref="/portal/projects"
       primaryLabel="Open Project Flow"
     >
+      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted overview state</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Workspace overview now reads from the shared backing source</h2>
+        <div style={{ color: "#334155", lineHeight: 1.7 }}>
+          <div><strong>Source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
+          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
+        </div>
+      </div>
+
+      <WorkspaceQuickActions
+        actions={[
+          { label: "Open Projects", href: "/portal/projects", variant: "primary" },
+          { label: "Review Files", href: "/portal/files", variant: "secondary" },
+          { label: "Check Billing", href: "/portal/billing", variant: "secondary" },
+          { label: "Open Academy", href: "/portal/academy", variant: "light" },
+        ]}
+      />
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
         {portalMetrics.map((metric) => (
           <div key={metric.label} style={cardStyle}>
@@ -49,10 +77,10 @@ export default function PortalHome() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Active Context</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div><strong>Tenant:</strong> {portalTenant.name}</div>
-            <div><strong>Project:</strong> {currentProject.name}</div>
-            <div><strong>Project ID:</strong> {currentProject.id}</div>
-            <div><strong>Current stage:</strong> {currentProject.stage}</div>
+            <div><strong>Tenant:</strong> {state.tenant.name}</div>
+            <div><strong>Project:</strong> {state.project.name}</div>
+            <div><strong>Project ID:</strong> {state.project.id}</div>
+            <div><strong>Current stage:</strong> {state.project.stage}</div>
           </div>
         </div>
       </div>
