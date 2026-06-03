@@ -3,6 +3,7 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
+import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import { shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -52,6 +53,14 @@ export default function Login() {
             This route now carries the same visual rhythm as the rest of the public shell while keeping the strongest conversion path focused on entering the FCA workspace and unified platform dashboard.
           </p>
         </div>
+
+        <FounderJourneyStrip
+          currentJourney="workspace"
+          title="Workspace login is now clearly positioned inside the founder journey"
+          detail="This route makes it explicit that login is not a dead-end form. It is the bridge from public framing into portal continuity, academy readiness, and founder review."
+          ctaHref="/portal"
+          ctaLabel="Continue to workspace"
+        />
 
         <div style={twoColumnGridStyle}>
           <div style={cardStyle}>

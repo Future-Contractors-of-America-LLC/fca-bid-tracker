@@ -3,6 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
+import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import { auricruxCapabilities, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -40,6 +41,14 @@ export default function AuricruxPage() {
           This public surface now frames Auricrux as the active system layer that keeps tenant, project, route, and next-action context visible as the user moves through the FCA experience.
         </p>
       </div>
+
+      <FounderJourneyStrip
+        currentJourney="platform"
+        title="Auricrux should narrate the same founder journey visible across the shell"
+        detail="This route now reinforces the canonical path from public framing into workspace, portal continuity, academy readiness, and founder review while Auricrux explains state along the way."
+        ctaHref="/portal/platform"
+        ctaLabel="Open live platform state"
+      />
 
       <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Open unified platform state" />
 

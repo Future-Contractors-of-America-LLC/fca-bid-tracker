@@ -5,6 +5,7 @@ import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
+import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import { pricingTiers, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroButtonRowStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -50,6 +51,14 @@ export default function Pricing() {
           <a href="/login" style={ctaLightStyle}>Open FCA Workspace</a>
         </div>
       </div>
+
+      <FounderJourneyStrip
+        currentJourney="conversion"
+        title="Pricing now sits inside the same founder journey as the rest of the shell"
+        detail="This route no longer behaves like a detached price sheet. It shows where pricing fits in the path from public framing into workspace continuity, platform visibility, and founder review."
+        ctaHref="/contact"
+        ctaLabel="Convert to founder review"
+      />
 
       <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel="Convert to founder review" />
 

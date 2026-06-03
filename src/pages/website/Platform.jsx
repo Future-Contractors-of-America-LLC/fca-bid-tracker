@@ -3,6 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
+import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import { platformModules, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -31,6 +32,14 @@ export default function Platform() {
           The current shell is designed for founder-led sales conversations and believable customer walkthroughs. It shows how FCA can carry a contractor from public entry into login, portal operations, bid visibility, academy continuity, and Auricrux-guided next actions without fragmenting the experience.
         </p>
       </div>
+
+      <FounderJourneyStrip
+        currentJourney="platform"
+        title="Platform framing should pull the founder straight into the operating path"
+        detail="This route now shows the same canonical founder journey used across public conversion pages so platform framing leads naturally into workspace, portal, academy, and founder review."
+        ctaHref="/login"
+        ctaLabel="Continue to workspace login"
+      />
 
       <ExecutiveSignalBar mode="public" nextHref="/portal" nextLabel="Enter customer workspace" />
 

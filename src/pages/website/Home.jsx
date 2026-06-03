@@ -3,6 +3,7 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
+import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import { shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
@@ -44,6 +45,14 @@ export default function Home() {
         <FcaBrandMark />
         <AuricruxBrandMark />
       </div>
+
+      <FounderJourneyStrip
+        currentJourney="public"
+        title="Start the FCA founder walkthrough from one canonical entry path"
+        detail="Public entry now frames the exact path into platform story, workspace login, portal continuity, academy readiness, and founder review without switching narratives."
+        ctaHref="/login"
+        ctaLabel="Enter FCA workspace"
+      />
 
       <div style={{ marginTop: 20 }}>
         <a href="/login" style={{ ...ctaPrimaryStyle, marginRight: 12, marginTop: 12 }}>Enter FCA Workspace</a>

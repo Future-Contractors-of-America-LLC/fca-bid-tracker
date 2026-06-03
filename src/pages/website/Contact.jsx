@@ -4,6 +4,7 @@ import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
+import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import { contactPaths, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -32,6 +33,14 @@ export default function Contact() {
       <div style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}>
         <FcaBrandMark compact />
       </div>
+
+      <FounderJourneyStrip
+        currentJourney="conversion"
+        title="Founder review now closes the same journey opened on public entry"
+        detail="This route makes the conversion path explicit so founder review feels like the natural outcome of platform framing, workspace continuity, and live operating-state validation."
+        ctaHref="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request"
+        ctaLabel="Send founder review request"
+      />
 
       <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Review live operating state" />
 
