@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { brandIdentity } from "../brandIdentity";
-
-const fallbackResponses = [
-  "Auricrux continuity mode: I can guide the next customer action from this shell.",
-  "Auricrux continuity mode: The portal and academy are aligned for onboarding continuity.",
-  "Auricrux continuity mode: One approval is ready and two learners need assignment.",
-];
+import {
+  auricruxRail,
+  currentProject,
+  portalTenant,
+  routeStateOverlays,
+  workspaceContext,
+} from "../workspaceState";
 
 const quickPrompts = [
   "What is the next customer action?",
@@ -33,7 +34,8 @@ function modeMeta(mode) {
       tone: auricruxColors.ink,
       bg: auricruxColors.primarySoft,
       border: "#e8c46a",
-      summary: "Fallback guidance is preserving shell continuity while backend connectivity is restored.",
+      summary:
+        "Fallback guidance is preserving shell continuity while backend connectivity is restored.",
     };
   }
 
@@ -45,6 +47,44 @@ function modeMeta(mode) {
     summary: "Prepared to narrate next actions and customer state.",
   };
 }
+
+function routePromptReply(command) {
+  const normalized = command.toLowerCase();
+
+  if (normalized.includes("next customer action")) {
+    return `Auricrux continuity mode: Next customer action is to ${workspaceContext.currentNextAction.toLowerCase()}. Owner: ${workspaceContext.nextActionOwner}. Open /portal/messages or /portal/billing to continue.`;
+  }
+
+  if (normalized.includes("training continuity")) {
+    return `Auricrux continuity mode: Training continuity is active. ${routeStateOverlays.academy.primaryDetail} Next move: assign the two pending learners from /academy so workforce readiness stays attached to ${currentProject.id}.`;
+  }
+
+  if (normalized.includes("blocking revenue")) {
+    return `Auricrux continuity mode: Revenue is blocked by ${auricruxRail.currentBlocker.toLowerCase()}. Impact: ${auricruxRail.blockerImpact} Clear the approval path in /portal/bids and then advance /portal/billing.`;
+  }
+
+  if (normalized.includes("connected")) {
+    return `Auricrux continuity mode: The shell is available and preserving state for ${portalTenant.name}. Live backend connectivity is degraded, so I am narrating next actions from shared workspace continuity instead of live API responses.`;
+  }
+
+  return `Auricrux continuity mode: ${auricruxRail.nextRecommendedAction}. ${auricruxRail.recommendationReason}`;
+}
+
+function connectivityLabel(message) {
+  if (message === "Failed to fetch") {
+    return "Backend connectivity degraded. Shell continuity fallback engaged.";
+  }
+
+  return `Backend continuity notice: ${message}`;
+}
+
+const continuityActions = [
+  { href: "/portal/platform", label: "Platform state" },
+  { href: "/portal/messages", label: "Messages" },
+  { href: "/portal/billing", label: "Billing" },
+  { href: "/academy", label: "Academy" },
+  { href: "/portal/support", label: "Support" },
+];
 
 export default function AuricruxDock() {
   const [text, setText] = useState("");
@@ -101,15 +141,15 @@ export default function AuricruxDock() {
       ]);
     } catch (err) {
       setMode("fallback");
-      const reply = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+      const continuityReply = routePromptReply(cmd);
       setLog((prev) => [
         {
           t: new Date().toISOString(),
-          m: `AURICRUX: ${reply}`,
+          m: `AURICRUX: ${continuityReply}`,
         },
         {
           t: new Date().toISOString(),
-          m: `CONTINUITY: ${err.message}`,
+          m: `CONTINUITY: ${connectivityLabel(err.message)}`,
         },
         ...prev,
       ]);
@@ -143,7 +183,7 @@ export default function AuricruxDock() {
         position: "fixed",
         right: 16,
         bottom: 16,
-        width: open ? 368 : 220,
+        width: open ? 392 : 220,
         zIndex: 9999,
         borderRadius: 18,
         overflow: "hidden",
@@ -202,6 +242,32 @@ export default function AuricruxDock() {
               Use Auricrux to narrate next actions, explain customer state, and preserve continuity across portal and academy routes.
             </div>
 
+            <div
+              style={{
+                marginTop: 12,
+                border: "1px solid #e5d3a1",
+                borderRadius: 12,
+                padding: 12,
+                background: "#fffaf0",
+                display: "grid",
+                gap: 10,
+              }}
+            >
+              <div>
+                <div style={{ fontSize: 11, letterSpacing: 0.3, fontWeight: 700, color: "#8a6a14", textTransform: "uppercase" }}>
+                  Customer state
+                </div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#111827", marginTop: 4 }}>{portalTenant.name}</div>
+                <div style={{ fontSize: 12, color: "#475569", marginTop: 4 }}>{portalTenant.roleSummary}</div>
+              </div>
+              <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#1f2937" }}>
+                <div><strong>Project:</strong> {currentProject.id} · {currentProject.stage}</div>
+                <div><strong>Next action:</strong> {workspaceContext.currentNextAction}</div>
+                <div><strong>Revenue blocker:</strong> {auricruxRail.currentBlocker}</div>
+                <div><strong>Training:</strong> Two learners need assignment to preserve academy continuity.</div>
+              </div>
+            </div>
+
             <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
               <button onClick={speak} style={buttonStyle("secondary")}>Voice</button>
               <button onClick={video} style={buttonStyle("secondary")}>Video</button>
@@ -243,6 +309,17 @@ export default function AuricruxDock() {
               <button onClick={() => send()} disabled={loading} style={buttonStyle("primary")}>
                 {loading ? "..." : "Send"}
               </button>
+            </div>
+
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: auricruxColors.ink, marginBottom: 8 }}>Continuity routes</div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {continuityActions.map((action) => (
+                  <a key={action.href} href={action.href} style={routeLinkStyle}>
+                    {action.label}
+                  </a>
+                ))}
+              </div>
             </div>
 
             <div
@@ -323,3 +400,14 @@ function buttonStyle(kind) {
     cursor: "pointer",
   };
 }
+
+const routeLinkStyle = {
+  textDecoration: "none",
+  border: "1px solid #e5d3a1",
+  background: "#fffaf0",
+  color: "#8a6a14",
+  borderRadius: 999,
+  padding: "8px 10px",
+  fontSize: 12,
+  fontWeight: 700,
+};
