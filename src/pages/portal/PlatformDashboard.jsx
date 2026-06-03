@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
+import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import { auricruxActions, portalMessages, portalMetrics } from "../../portalShell";
 import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -37,8 +39,16 @@ export default function PlatformDashboard() {
       primaryLabel="Open Project Flow"
     >
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted workspace state</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Platform dashboard now reads from a backing source</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted workspace state</div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Platform dashboard now reads from a branded operating source</h2>
+          </div>
+          <div style={{ display: "grid", gap: 10 }}>
+            <FcaBrandMark compact />
+            <AuricruxBrandMark compact />
+          </div>
+        </div>
         <div style={{ color: "#334155", lineHeight: 1.7 }}>
           <div><strong>Source:</strong> {state.meta.backingSource}</div>
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>

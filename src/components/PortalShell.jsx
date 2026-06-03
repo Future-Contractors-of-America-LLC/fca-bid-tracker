@@ -4,6 +4,8 @@ import ProjectSpineBar from "./ProjectSpineBar";
 import WorkspaceContextBar from "./WorkspaceContextBar";
 import AuricruxStatusRail from "./AuricruxStatusRail";
 import RouteStateOverlay from "./RouteStateOverlay";
+import FcaBrandMark from "./FcaBrandMark";
+import AuricruxBrandMark from "./AuricruxBrandMark";
 import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../portalShell";
 
 const shellStyle = {
@@ -82,6 +84,24 @@ export default function PortalShell({
           journey={portalJourney}
           currentJourney={currentJourney}
         />
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+            alignItems: "center",
+            marginBottom: 18,
+            padding: "14px 16px",
+            border: "1px solid #dbe3ef",
+            borderRadius: 18,
+            background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)",
+          }}
+        >
+          <FcaBrandMark compact />
+          <AuricruxBrandMark compact />
+        </div>
 
         <ProjectSpineBar tenant={portalTenant} project={currentProject} />
         <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />

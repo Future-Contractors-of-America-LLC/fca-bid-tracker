@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
+import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import { auricruxActions, portalMessages, portalMetrics, portalProjects } from "../../portalShell";
 import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -37,8 +39,16 @@ export default function PortalHome() {
       primaryLabel="Open Project Flow"
     >
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted overview state</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Workspace overview now reads from the shared backing source</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted overview state</div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Workspace overview now reads from the shared branded backbone</h2>
+          </div>
+          <div style={{ display: "grid", gap: 10 }}>
+            <FcaBrandMark compact />
+            <AuricruxBrandMark compact />
+          </div>
+        </div>
         <div style={{ color: "#334155", lineHeight: 1.7 }}>
           <div><strong>Source:</strong> {state.meta.backingSource}</div>
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
@@ -67,7 +77,7 @@ export default function PortalHome() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Auricrux Next Actions</h2>
+          <h2 style={{ marginTop: 0 }}>Auricrux next actions</h2>
           <ul style={{ paddingLeft: 20, lineHeight: 1.8 }}>
             {auricruxActions.map((action) => (
               <li key={action}>{action}</li>
@@ -75,7 +85,7 @@ export default function PortalHome() {
           </ul>
         </div>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Active Context</h2>
+          <h2 style={{ marginTop: 0 }}>Active context</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
             <div><strong>Tenant:</strong> {state.tenant.name}</div>
             <div><strong>Project:</strong> {state.project.name}</div>
@@ -87,7 +97,7 @@ export default function PortalHome() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Connected Workspace Flow</h2>
+          <h2 style={{ marginTop: 0 }}>Connected workspace flow</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
             <li>Start on the public shell and enter through <a href="/login">workspace entry</a>.</li>
             <li>Use this portal overview to frame account status and Auricrux guidance.</li>
@@ -97,7 +107,7 @@ export default function PortalHome() {
           </ol>
         </div>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Project Snapshot</h2>
+          <h2 style={{ marginTop: 0 }}>Project snapshot</h2>
           {portalProjects.map((project) => (
             <div key={project.id} style={{ marginBottom: 14 }}>
               <div style={{ fontWeight: 700 }}>{project.id} · {project.customer}</div>
@@ -108,7 +118,7 @@ export default function PortalHome() {
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Recent Workspace Signals</h2>
+        <h2 style={{ marginTop: 0 }}>Recent workspace signals</h2>
         {portalMessages.map((message) => (
           <div key={message.subject} style={{ marginBottom: 12 }}>
             <strong>{message.from}</strong>
