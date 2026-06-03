@@ -9,6 +9,18 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const ctaStyle = {
+  display: "inline-block",
+  textDecoration: "none",
+  background: "#111827",
+  color: "#fff",
+  padding: "10px 14px",
+  borderRadius: 10,
+  fontWeight: 700,
+  marginTop: 12,
+  marginRight: 10,
+};
+
 export default function PortalMessages() {
   return (
     <PortalShell
@@ -18,6 +30,19 @@ export default function PortalMessages() {
       primaryHref="/portal/billing"
       primaryLabel="Open Billing"
     >
+      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Communication continuity</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Every message should move the customer forward</h2>
+        <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
+          This route works best when it clearly points to the next commercial or operational step. Messages should lead into billing readiness, training continuity, and founder-demo conversion instead of acting like a dead-end inbox.
+        </p>
+        <div>
+          <a href="/portal/billing" style={ctaStyle}>Continue to Billing</a>
+          <a href="/portal/academy" style={{ ...ctaStyle, background: "#e5e7eb", color: "#111827" }}>Open Academy</a>
+          <a href="/contact" style={{ ...ctaStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>Request Demo</a>
+        </div>
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Recent Conversations</h2>
