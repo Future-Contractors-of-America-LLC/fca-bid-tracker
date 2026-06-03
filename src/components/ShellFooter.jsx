@@ -26,9 +26,19 @@ export default function ShellFooter() {
             FCA Demo Conversion Path
           </div>
           <div style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Use this shell to pitch the full contractor lifecycle: entry,
-            portal visibility, academy enablement, and Auricrux-guided next
-            actions.
+            Use this shell to pitch the full contractor lifecycle: public entry,
+            platform framing, portal visibility, academy enablement, and
+            Auricrux-guided next actions.
+          </div>
+        </div>
+
+        <div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Public Pages</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <a href="/platform" style={linkStyle}>Platform</a>
+            <a href="/auricrux" style={linkStyle}>Auricrux</a>
+            <a href="/pricing" style={linkStyle}>Pricing</a>
+            <a href="/contact" style={linkStyle}>Contact</a>
           </div>
         </div>
 
@@ -62,7 +72,7 @@ export default function ShellFooter() {
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <a
-              href="/login"
+              href="/contact"
               style={{
                 textDecoration: "none",
                 background: "#111827",
@@ -72,7 +82,7 @@ export default function ShellFooter() {
                 fontWeight: 700,
               }}
             >
-              Start Demo
+              Request Demo
             </a>
             <a
               href="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Demo%20Request"
@@ -86,7 +96,7 @@ export default function ShellFooter() {
                 border: "1px solid #d1d5db",
               }}
             >
-              Request Demo
+              Email FCA
             </a>
           </div>
         </div>

@@ -45,6 +45,10 @@ export default function ShellHeader({
         }}
       >
         <a href="/" style={linkStyle}>Home</a>
+        <a href="/platform" style={linkStyle}>Platform</a>
+        <a href="/auricrux" style={linkStyle}>Auricrux</a>
+        <a href="/pricing" style={linkStyle}>Pricing</a>
+        <a href="/contact" style={linkStyle}>Contact</a>
         <a href="/login" style={linkStyle}>Login</a>
         <a href="/portal" style={linkStyle}>Portal</a>
         <a href="/academy" style={linkStyle}>Academy</a>

@@ -1,4 +1,8 @@
 import Home from "./pages/website/Home";
+import Platform from "./pages/website/Platform";
+import AuricruxPage from "./pages/website/Auricrux";
+import Pricing from "./pages/website/Pricing";
+import Contact from "./pages/website/Contact";
 import Login from "./pages/website/Login";
 import PortalHome from "./pages/portal/PortalHome";
 import PortalProjects from "./pages/portal/PortalProjects";
@@ -11,6 +15,10 @@ import AcademyHome from "./pages/academy/AcademyHome";
 export default function Router() {
   const path = window.location.pathname.replace(/\/$/, "") || "/";
 
+  if (path === "/platform") return <Platform />;
+  if (path === "/auricrux") return <AuricruxPage />;
+  if (path === "/pricing") return <Pricing />;
+  if (path === "/contact") return <Contact />;
   if (path === "/login") return <Login />;
   if (path === "/portal") return <PortalHome />;
   if (path === "/portal/projects") return <PortalProjects />;

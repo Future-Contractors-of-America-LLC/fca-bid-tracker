@@ -1,0 +1,82 @@
+export const platformModules = [
+  {
+    title: "Lead to Bid",
+    detail: "Capture opportunities, structure estimating workflows, and guide approvals with Auricrux visibility.",
+  },
+  {
+    title: "Project Delivery",
+    detail: "Carry awarded work into project coordination, documents, billing, and closeout from one workspace.",
+  },
+  {
+    title: "Customer Portal",
+    detail: "Give customers live visibility into projects, files, messages, and next actions without disconnected tools.",
+  },
+  {
+    title: "Academy Continuity",
+    detail: "Move onboarding and workforce enablement into FCA Academy as part of the same lifecycle.",
+  },
+];
+
+export const pricingTiers = [
+  {
+    name: "Pilot Workspace",
+    price: "Founder-guided",
+    detail: "Best for early FCA pilot customers who want a live walkthrough, configured shell access, and close execution support.",
+    includes: [
+      "Customer workspace shell",
+      "Bid and project flow walkthrough",
+      "Auricrux-guided next actions",
+      "Academy continuity demo",
+    ],
+  },
+  {
+    name: "Growth Platform",
+    price: "Custom scope",
+    detail: "For contractors who need deeper operational rollout across portal, documents, communications, and training.",
+    includes: [
+      "Expanded portal modules",
+      "Customer communication structure",
+      "Billing and account continuity",
+      "Training rollout planning",
+    ],
+  },
+  {
+    name: "Enterprise Rollout",
+    price: "Strategic engagement",
+    detail: "For larger organizations adopting FCA as a unified contractor lifecycle operating system.",
+    includes: [
+      "Multi-team rollout planning",
+      "Auricrux operating visibility",
+      "Cross-module workflow design",
+      "Foundational integration planning",
+    ],
+  },
+];
+
+export const auricruxCapabilities = [
+  "Surfaces next actions across customer-facing workflows",
+  "Maintains continuity between portal, communications, and academy",
+  "Acts as a visible operating layer inside the shell",
+  "Strengthens founder demo clarity by explaining workflow state",
+];
+
+export const contactPaths = [
+  {
+    title: "Founder Demo",
+    detail: "Walk through the shell live and show how FCA can support a contractor from first touch through delivery and training.",
+    cta: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Demo%20Request",
+    label: "Request Founder Demo",
+  },
+  {
+    title: "Pilot Discussion",
+    detail: "Discuss pilot scope, customer fit, and where the current workspace can create immediate value.",
+    cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Pilot%20Discussion",
+    label: "Start Pilot Conversation",
+  },
+  {
+    title: "Platform Review",
+    detail: "Review portal, bid, academy, and Auricrux operating surfaces for a broader rollout conversation.",
+    cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Platform%20Review",
+    label: "Schedule Platform Review",
+  },
+];
