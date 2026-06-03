@@ -10,7 +10,7 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { homeCtaSets, publicBodyCtaSets, publicRouteCtas, publicSurfaceLinks, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
-import { cardStyle, pageShellStyle } from "../../publicShellStyles";
+import { cardStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
 const homeContinuityItems = [
   {
@@ -109,7 +109,7 @@ export default function Home() {
           <div key={item.key} style={cardStyle}>
             <h3 style={{ marginTop: 0 }}>{item.title}</h3>
             <p>{item.detail}</p>
-            <a href={item.href} style={{ display: "inline-block" }}>{item.ctaLabel}</a>
+            <a href={item.href} style={ctaPrimaryStyle}>{item.ctaLabel}</a>
           </div>
         ))}
 
