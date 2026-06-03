@@ -13,7 +13,7 @@ export default function Platform() {
         title="One contractor lifecycle operating system"
         subtitle="FCA is being shaped as a unified operating surface for sales, portal visibility, project follow-through, workforce enablement, and Auricrux-guided execution."
         primaryHref="/login"
-        primaryLabel="Open Demo Workspace"
+        primaryLabel="Open FCA Workspace"
         secondaryHref="/pricing"
         secondaryLabel="View Pricing"
         journey={shellJourney}
@@ -27,7 +27,7 @@ export default function Platform() {
         </div>
         <h2 style={{ marginTop: 0 }}>Built to feel like one connected system</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>
-          The current shell is designed for founder-led sales conversations and believable customer demos. It shows how FCA can carry a contractor from public entry into login, portal operations, bid visibility, academy continuity, and Auricrux-guided next actions without fragmenting the experience.
+          The current shell is designed for founder-led sales conversations and believable customer walkthroughs. It shows how FCA can carry a contractor from public entry into login, portal operations, bid visibility, academy continuity, and Auricrux-guided next actions without fragmenting the experience.
         </p>
       </div>
 
@@ -42,10 +42,10 @@ export default function Platform() {
 
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Current founder demo path</h2>
+          <h2 style={{ marginTop: 0 }}>Current founder walkthrough</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
             <li>Start on the public home page and frame the FCA platform story.</li>
-            <li>Enter through <a href="/login">demo login</a>.</li>
+            <li>Enter through <a href="/login">workspace login</a>.</li>
             <li>Show the <a href="/portal">customer portal</a> and module continuity.</li>
             <li>Transition into <a href="/portal/academy">academy continuity</a>.</li>
             <li>Open the <a href="/portal/platform">platform dashboard</a> to summarize tenant, project, support, and admin state in one view.</li>

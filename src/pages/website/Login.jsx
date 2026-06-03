@@ -56,10 +56,10 @@ export default function Login() {
         <div style={twoColumnGridStyle}>
           <div style={cardStyle}>
             <label>Work Email</label>
-            <input style={fieldStyle} defaultValue="pilot@fca-demo.com" />
+            <input style={fieldStyle} defaultValue="workspace@futurecontractorsofamerica.com" />
 
             <label>Company</label>
-            <input style={fieldStyle} defaultValue="FCA Pilot Customer" />
+            <input style={fieldStyle} defaultValue="Future Contractors of America Pilot Workspace" />
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
               <a href="/portal" style={ctaPrimaryStyle}>

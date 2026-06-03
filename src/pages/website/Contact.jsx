@@ -17,10 +17,10 @@ export default function Contact() {
     <div style={pageShellStyle}>
       <ShellHeader
         eyebrow="FCA Contact"
-        title="Move from interest to founder demo"
-        subtitle="This contact surface is structured around the immediate sales objective: converting interest into a founder-led walkthrough, pilot conversation, or broader platform review."
+        title="Move from interest to founder review"
+        subtitle="This contact surface is structured around the immediate sales objective: converting interest into a founder-led review, pilot conversation, or broader platform assessment."
         primaryHref="/login"
-        primaryLabel="Open Demo Workspace"
+        primaryLabel="Open FCA Workspace"
         secondaryHref="/pricing"
         secondaryLabel="Pricing"
         journey={shellJourney}
@@ -34,14 +34,14 @@ export default function Contact() {
       <div style={twoColumnGridStyle}>
         <div style={{ display: "grid", gap: 16 }}>
           <WorkspaceSnapshotCard
-            title="Founder demo starts from real shell state"
-            detail="This conversion page now reinforces that the demo is not a disconnected pitch deck flow. Tenant, project, and Auricrux continuity already exist before the walkthrough begins."
+            title="Founder review starts from real shell state"
+            detail="This conversion page now reinforces that the review is not a disconnected pitch deck flow. Tenant, project, and Auricrux continuity already exist before the walkthrough begins."
             ctaHref="/portal/platform"
             ctaLabel="Open unified platform dashboard"
           />
 
           <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
-            <h2 style={{ marginTop: 0 }}>What happens in the founder demo</h2>
+            <h2 style={{ marginTop: 0 }}>What happens in the founder review</h2>
             <ol style={checklistStyle}>
               <li>Frame the FCA platform story from the public shell.</li>
               <li>Show persisted workspace continuity before entry.</li>
@@ -68,12 +68,12 @@ export default function Contact() {
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Immediate founder CTA</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 12 }}>
-          For this stage of the product, the strongest conversion path is still a direct founder-led walkthrough. This page supports that motion while the underlying platform continues to harden.
+          For this stage of the product, the strongest conversion path is still a direct founder-led review. This page supports that motion while the underlying platform continues to harden.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-          <a href="/login" style={ctaPrimaryStyle}>Open Demo Workspace</a>
+          <a href="/login" style={ctaPrimaryStyle}>Open FCA Workspace</a>
           <a href="/portal/platform" style={ctaSecondaryStyle}>Open Platform Dashboard</a>
-          <a href="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Demo%20Request" style={ctaLightStyle}>Request Founder Demo</a>
+          <a href="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request" style={ctaLightStyle}>Request Founder Review</a>
         </div>
       </div>
 

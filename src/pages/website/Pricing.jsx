@@ -45,7 +45,7 @@ export default function Pricing() {
         <div style={heroButtonRowStyle}>
           <a href="/contact" style={ctaPrimaryStyle}>Request Founder Review</a>
           <a href="/portal/platform" style={ctaSecondaryStyle}>Open Platform Dashboard</a>
-          <a href="/login" style={ctaLightStyle}>Open Demo Workspace</a>
+          <a href="/login" style={ctaLightStyle}>Open FCA Workspace</a>
         </div>
       </div>
 

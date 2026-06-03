@@ -57,15 +57,15 @@ export const auricruxCapabilities = [
   "Surfaces next actions across customer-facing workflows",
   "Maintains continuity between portal, communications, and academy",
   "Acts as a visible operating layer inside the shell",
-  "Strengthens founder demo clarity by explaining workflow state",
+  "Strengthens founder walkthrough clarity by explaining workflow state",
 ];
 
 export const contactPaths = [
   {
-    title: "Founder Demo",
-    detail: "Walk through the shell live and show how FCA can support a contractor from first touch through delivery and training.",
-    cta: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Demo%20Request",
-    label: "Request Founder Demo",
+    title: "Founder Review",
+    detail: "Walk through the live FCA workspace and show how FCA can support a contractor from first touch through delivery and training.",
+    cta: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request",
+    label: "Request Founder Review",
   },
   {
     title: "Pilot Discussion",
@@ -87,7 +87,7 @@ export const shellJourney = [
   { key: "workspace", label: "Workspace Login", href: "/login" },
   { key: "portal", label: "Portal Flow", href: "/portal" },
   { key: "academy", label: "Academy Continuity", href: "/academy" },
-  { key: "conversion", label: "Demo Conversion", href: "/contact" },
+  { key: "conversion", label: "Founder Review", href: "/contact" },
 ];
 
 export const shellPrimaryNav = [
