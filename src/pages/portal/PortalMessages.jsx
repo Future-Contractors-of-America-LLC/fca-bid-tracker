@@ -1,5 +1,6 @@
 import PortalShell from "../../components/PortalShell";
-import { auricruxActions, currentProject, portalMessages } from "../../portalShell";
+import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
+import { auricruxActions, currentProject, portalFiles, portalMessages, projectAuditEvents } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -71,6 +72,8 @@ export default function PortalMessages() {
           </ul>
         </div>
       </div>
+
+      <ProjectFileAuditPanel project={currentProject} files={portalFiles} auditEvents={projectAuditEvents} />
     </PortalShell>
   );
 }

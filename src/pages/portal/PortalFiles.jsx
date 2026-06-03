@@ -1,5 +1,6 @@
 import PortalShell from "../../components/PortalShell";
-import { currentProject, portalFiles } from "../../portalShell";
+import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
+import { currentProject, portalFiles, projectAuditEvents } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -29,23 +30,7 @@ export default function PortalFiles() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gap: 16 }}>
-        {portalFiles.map((file) => (
-          <div key={file.name} style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-              <div>
-                <h3 style={{ marginTop: 0, marginBottom: 8 }}>{file.name}</h3>
-                <div style={{ color: "#4b5563", lineHeight: 1.6 }}>
-                  Category: {file.category}<br />
-                  Updated: {file.updated}<br />
-                  Linked project: {currentProject.id}
-                </div>
-              </div>
-              <div style={{ alignSelf: "center", fontWeight: 700 }}>{file.action}</div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <ProjectFileAuditPanel project={currentProject} files={portalFiles} auditEvents={projectAuditEvents} />
     </PortalShell>
   );
 }

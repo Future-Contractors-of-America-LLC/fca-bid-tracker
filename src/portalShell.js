@@ -17,6 +17,24 @@ export const currentProject = {
   auricruxSummary: "Auricrux is reading the current tenant, project, stage, and next-action state from this shared shell context.",
 };
 
+export const projectAuditEvents = [
+  {
+    time: "Today · 8:10 AM",
+    action: "Auricrux validated bid completeness",
+    detail: "Package A-117 was checked for missing scope fields before customer approval routing.",
+  },
+  {
+    time: "Today · 9:25 AM",
+    action: "Customer document set linked",
+    detail: "Bid package summary and onboarding roster were attached to project PRJ-A117 for shared visibility.",
+  },
+  {
+    time: "Today · 11:05 AM",
+    action: "Billing readiness advanced",
+    detail: "Invoice review path and academy continuity prompts were prepared from the same project context.",
+  },
+];
+
 export const portalMetrics = [
   {
     label: "Active Projects",

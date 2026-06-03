@@ -1,5 +1,6 @@
 import PortalShell from "../../components/PortalShell";
-import { currentProject, portalBilling } from "../../portalShell";
+import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
+import { currentProject, portalBilling, portalFiles, projectAuditEvents } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -70,6 +71,8 @@ export default function PortalBilling() {
           </div>
         ))}
       </div>
+
+      <ProjectFileAuditPanel project={currentProject} files={portalFiles} auditEvents={projectAuditEvents} />
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Why this matters</h2>
