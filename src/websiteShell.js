@@ -73,6 +73,34 @@ export const publicFallbackCtaCards = [
   },
 ];
 
+export const auricruxWalkthroughPath = [
+  {
+    step: 1,
+    href: publicActionCatalog.platformOverview.href,
+    label: publicActionCatalog.platformOverview.label,
+  },
+  {
+    step: 2,
+    href: publicActionCatalog.workspace.href,
+    label: publicActionCatalog.workspace.label,
+  },
+  {
+    step: 3,
+    href: publicActionCatalog.platform.href,
+    label: publicActionCatalog.platform.label,
+  },
+  {
+    step: 4,
+    href: publicActionCatalog.portal.href,
+    label: publicActionCatalog.portal.label,
+  },
+  {
+    step: 5,
+    href: publicActionCatalog.academy.href,
+    label: publicActionCatalog.academy.label,
+  },
+];
+
 export const platformModules = [
   {
     title: "Lead to Bid",

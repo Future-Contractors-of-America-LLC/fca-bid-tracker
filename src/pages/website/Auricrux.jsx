@@ -9,7 +9,13 @@ import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDec
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { auricruxCapabilities, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import {
+  auricruxCapabilities,
+  auricruxWalkthroughPath,
+  publicBodyCtaSets,
+  publicRouteCtas,
+  shellJourney,
+} from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
@@ -169,11 +175,15 @@ export default function AuricruxPage() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Suggested walkthrough path</h2>
           <div style={{ display: "grid", gap: 12 }}>
-            <a href="/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>1. Platform Overview</a>
-            <a href="/login" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>2. Open FCA Workspace</a>
-            <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>3. Open Platform Dashboard</a>
-            <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>4. Open Portal Workspace</a>
-            <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>5. Open Academy</a>
+            {auricruxWalkthroughPath.map((item) => (
+              <a
+                key={item.step}
+                href={item.href}
+                style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}
+              >
+                {item.step}. {item.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>
