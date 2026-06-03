@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Home from "./pages/website/Home";
 import Platform from "./pages/website/Platform";
 import AuricruxPage from "./pages/website/Auricrux";
@@ -14,9 +15,14 @@ import PortalBilling from "./pages/portal/PortalBilling";
 import PortalSupport from "./pages/portal/PortalSupport";
 import PortalAdmin from "./pages/portal/PortalAdmin";
 import AcademyHome from "./pages/academy/AcademyHome";
+import { syncDocumentMetadata } from "./siteMetadata";
 
 export default function Router() {
   const path = window.location.pathname.replace(/\/$/, "") || "/";
+
+  useEffect(() => {
+    syncDocumentMetadata(path);
+  }, [path]);
 
   if (path === "/platform") return <Platform />;
   if (path === "/auricrux") return <AuricruxPage />;
