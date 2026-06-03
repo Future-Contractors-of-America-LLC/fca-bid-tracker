@@ -215,8 +215,7 @@ function onboardingPage(intakeId, state) {
 </head><body>
 <h1>FCA Onboarding</h1><p><b>Intake ID:</b> ${intakeId}</p>${paidLine}
 <div class="card"><h2>Next Steps</h2>
-${state.paid ? `<ol><li>Welcome call scheduling</li><li>Upload plan set/scope docs</li><li>First action plan + milestones</li></ol>`
-: `<p>Complete Pilot checkout:</p><p><a href="${checkout}">Complete Pilot Checkout</a></p>`}
+${state.paid ? `<ol><li>Welcome call scheduling</li><li>Upload plan set/scope docs</li><li>First action plan + milestones</li></ol>` : `<p>Complete Pilot checkout:</p><p><a href="${checkout}">Complete Pilot Checkout</a></p>`}
 </div>
 <div class="card"><h2>Status</h2><pre>${JSON.stringify(state,null,2)}</pre></div>
 <p><a href="/product/">Back</a></p></body></html>`;
@@ -270,7 +269,6 @@ async function runExecutive() {
       const proof = readJson(proofPath, {});
       upsert(pipeline.payments, "intakeId", { intakeId: off.intakeId, paidUtc: proof.paidUtc || UTC(), proof });
       upsert(pipeline.onboarding, "intakeId", { intakeId: off.intakeId, startedUtc: UTC(), status:"active" });
-
       write(`${ONBOARD_DIR}/${off.intakeId}.html`, onboardingPage(off.intakeId, { intakeId: off.intakeId, paid:true, offer:off, proof, checkoutUrl: off.checkoutUrl }));
     } else {
       write(`${ONBOARD_DIR}/${off.intakeId}.html`, onboardingPage(off.intakeId, { intakeId: off.intakeId, paid:false, offer:off, checkoutUrl: off.checkoutUrl }));

@@ -47,7 +47,6 @@ async function submitBid() {
 async function loadBids() {
   try {
     let res = await fetch("/api/bids");
-
     let raw = await res.text();
     let bids = [];
 
@@ -72,7 +71,6 @@ async function loadBids() {
         </div>
       `;
     });
-
   } catch (err) {
     document.getElementById("bids").innerHTML = "Error loading bids";
     console.error(err);
