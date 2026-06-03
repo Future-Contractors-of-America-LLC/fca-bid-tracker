@@ -46,6 +46,33 @@ export const publicActionCatalog = {
   },
 };
 
+export const publicFallbackCtaCards = [
+  {
+    title: "Return Home",
+    detail: "Go back to the FCA public shell and restart from the main guided entry point.",
+    href: "/",
+    label: "Return Home",
+  },
+  {
+    title: publicActionCatalog.workspace.label,
+    detail: "Move directly into the FCA workspace entry flow instead of stopping at an invalid route.",
+    href: publicActionCatalog.workspace.href,
+    label: publicActionCatalog.workspace.label,
+  },
+  {
+    title: publicActionCatalog.platformOverview.label,
+    detail: "Use the platform route to continue through the supported product shell and customer journey.",
+    href: publicActionCatalog.platformOverview.href,
+    label: publicActionCatalog.platformOverview.label,
+  },
+  {
+    title: publicActionCatalog.portal.label,
+    detail: "Jump into the portal shell if you were trying to reach a workspace surface.",
+    href: publicActionCatalog.portal.href,
+    label: publicActionCatalog.portal.label,
+  },
+];
+
 export const platformModules = [
   {
     title: "Lead to Bid",

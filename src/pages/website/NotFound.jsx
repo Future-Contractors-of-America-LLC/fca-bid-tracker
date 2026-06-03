@@ -1,7 +1,7 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicActionRail from "../../components/PublicActionRail";
-import { publicRouteCtas, shellJourney } from "../../websiteShell";
+import { publicFallbackCtaCards, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
 export default function NotFound({ requestedPath = "/unknown-route" }) {
@@ -45,26 +45,13 @@ export default function NotFound({ requestedPath = "/unknown-route" }) {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 24 }}>
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Return Home</h3>
-          <p>Go back to the FCA public shell and restart from the main guided entry point.</p>
-          <a href="/" style={ctaPrimaryStyle}>Return Home</a>
-        </div>
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Open Workspace</h3>
-          <p>Move directly into the FCA workspace entry flow instead of stopping at an invalid route.</p>
-          <a href="/login" style={ctaPrimaryStyle}>Open FCA Workspace</a>
-        </div>
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>View Platform</h3>
-          <p>Use the platform route to continue through the supported product shell and customer journey.</p>
-          <a href="/platform" style={ctaPrimaryStyle}>Platform Overview</a>
-        </div>
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Open Portal</h3>
-          <p>Jump into the portal shell if you were trying to reach a workspace surface.</p>
-          <a href="/portal" style={ctaPrimaryStyle}>Open Portal Workspace</a>
-        </div>
+        {publicFallbackCtaCards.map((card) => (
+          <div key={card.href} style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>{card.title}</h3>
+            <p>{card.detail}</p>
+            <a href={card.href} style={ctaPrimaryStyle}>{card.label}</a>
+          </div>
+        ))}
       </div>
 
       <PublicActionRail
