@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
-import { auricruxActions, currentProject, portalMessages, portalMetrics, portalTenant } from "../../portalShell";
+import { auricruxActions, portalMessages, portalMetrics } from "../../portalShell";
 import { routeStateOverlays } from "../../workspaceState";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -17,6 +19,12 @@ const metricStyle = {
 };
 
 export default function PlatformDashboard() {
+  const { state, refreshSyncStamp } = useWorkspaceState();
+
+  useEffect(() => {
+    refreshSyncStamp();
+  }, [refreshSyncStamp]);
+
   return (
     <PortalShell
       title="FCA Unified Platform Dashboard"
@@ -27,6 +35,16 @@ export default function PlatformDashboard() {
       primaryHref="/portal/projects"
       primaryLabel="Open Project Flow"
     >
+      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted workspace state</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Platform dashboard now reads from a backing source</h2>
+        <div style={{ color: "#334155", lineHeight: 1.7 }}>
+          <div><strong>Source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
+          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
+        </div>
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
         {portalMetrics.map((metric) => (
           <div key={metric.label} style={cardStyle}>
@@ -41,14 +59,18 @@ export default function PlatformDashboard() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Executive workspace summary</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div><strong>Tenant:</strong> {portalTenant.name}</div>
-            <div><strong>Project:</strong> {currentProject.name}</div>
-            <div><strong>Project ID:</strong> {currentProject.id}</div>
-            <div><strong>Current stage:</strong> {currentProject.stage}</div>
+            <div><strong>Tenant:</strong> {state.tenant.name}</div>
+            <div><strong>Project:</strong> {state.project.name}</div>
+            <div><strong>Project ID:</strong> {state.project.id}</div>
+            <div><strong>Current stage:</strong> {state.project.stage}</div>
           </div>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Auricrux next actions</h2>
+          <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
+            <div><strong>Recommendation:</strong> {state.auricrux.nextRecommendedAction}</div>
+            <div><strong>Blocker:</strong> {state.auricrux.currentBlocker}</div>
+          </div>
           <ul style={{ paddingLeft: 20, lineHeight: 1.8, marginBottom: 0 }}>
             {auricruxActions.map((action) => (
               <li key={action}>{action}</li>
