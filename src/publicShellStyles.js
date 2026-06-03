@@ -26,6 +26,26 @@ export const sectionGridStyle = {
   gap: 16,
 };
 
+export const responsiveGrid = (minWidth = 280) => ({
+  display: "grid",
+  gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, ${minWidth}px), 1fr))`,
+  gap: 16,
+});
+
+export const twoColumnGridStyle = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+  gap: 16,
+  alignItems: "start",
+};
+
+export const heroButtonRowStyle = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: 12,
+  marginTop: 12,
+};
+
 export const ctaPrimaryStyle = {
   display: "inline-block",
   textDecoration: "none",

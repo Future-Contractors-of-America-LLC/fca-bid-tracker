@@ -2,7 +2,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { contactPaths, shellJourney } from "../../websiteShell";
-import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, pageShellStyle } from "../../publicShellStyles";
+import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const checklistStyle = {
   margin: 0,
@@ -26,7 +26,7 @@ export default function Contact() {
         currentJourney="conversion"
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, alignItems: "start" }}>
+      <div style={twoColumnGridStyle}>
         <div style={{ display: "grid", gap: 16 }}>
           <WorkspaceSnapshotCard
             title="Founder demo starts from real shell state"

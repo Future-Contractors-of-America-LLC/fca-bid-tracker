@@ -2,7 +2,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { auricruxCapabilities, shellJourney } from "../../websiteShell";
-import { cardStyle, heroCardStyle, pageShellStyle } from "../../publicShellStyles";
+import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
   "Read persisted tenant, project, and workspace state rather than treating pages as disconnected views.",
@@ -34,7 +34,7 @@ export default function AuricruxPage() {
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, alignItems: "start" }}>
+      <div style={{ ...twoColumnGridStyle, marginTop: 0 }}>
         <div style={{ display: "grid", gap: 16 }}>
           <div style={cardStyle}>
             <h2 style={{ marginTop: 0 }}>What Auricrux is doing in this shell</h2>
@@ -65,7 +65,7 @@ export default function AuricruxPage() {
         />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 24 }}>
+      <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Visible operating surfaces</h2>
           <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>

@@ -2,7 +2,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { pricingTiers, shellJourney } from "../../websiteShell";
-import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroCardStyle, pageShellStyle } from "../../publicShellStyles";
+import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroButtonRowStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const rolloutSteps = [
   "Confirm contractor fit, pilot scope, and current operating friction.",
@@ -32,14 +32,14 @@ export default function Pricing() {
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
           The strongest motion here is not a static price sheet. It is a guided production conversation that ties scope to the live shell, platform dashboard, portal continuity, academy readiness, and Auricrux-guided next actions.
         </p>
-        <div>
-          <a href="/contact" style={{ ...ctaPrimaryStyle, marginRight: 10, marginTop: 12 }}>Request Founder Review</a>
-          <a href="/portal/platform" style={{ ...ctaSecondaryStyle, marginRight: 10, marginTop: 12 }}>Open Platform Dashboard</a>
-          <a href="/login" style={{ ...ctaLightStyle, marginTop: 12 }}>Open Demo Workspace</a>
+        <div style={heroButtonRowStyle}>
+          <a href="/contact" style={ctaPrimaryStyle}>Request Founder Review</a>
+          <a href="/portal/platform" style={ctaSecondaryStyle}>Open Platform Dashboard</a>
+          <a href="/login" style={ctaLightStyle}>Open Demo Workspace</a>
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 16, marginBottom: 24, alignItems: "start" }}>
+      <div style={{ ...twoColumnGridStyle, marginBottom: 24 }}>
         <div style={{ ...cardStyle, background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)" }}>
           <h2 style={{ marginTop: 0 }}>Founder rollout checklist</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8, marginBottom: 0, color: "#334155" }}>
@@ -57,7 +57,7 @@ export default function Pricing() {
         />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+      <div style={responsiveGrid(260)}>
         {pricingTiers.map((tier) => (
           <div key={tier.name} style={cardStyle}>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>{tier.name}</div>
@@ -72,7 +72,7 @@ export default function Pricing() {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 24 }}>
+      <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>How to position the tiers</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>

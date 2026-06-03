@@ -2,7 +2,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { platformModules, shellJourney } from "../../websiteShell";
-import { cardStyle, heroCardStyle, pageShellStyle } from "../../publicShellStyles";
+import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 export default function Platform() {
   return (
@@ -27,7 +27,7 @@ export default function Platform() {
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 28 }}>
+      <div style={{ ...responsiveGrid(220), marginTop: 28 }}>
         {platformModules.map((module) => (
           <div key={module.title} style={cardStyle}>
             <h3 style={{ marginTop: 0 }}>{module.title}</h3>
@@ -36,7 +36,7 @@ export default function Platform() {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 16, marginTop: 24 }}>
+      <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Current founder demo path</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
@@ -58,7 +58,7 @@ export default function Platform() {
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Linked product surfaces</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+        <div style={{ ...responsiveGrid(220), gap: 12 }}>
           <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Customer Portal Workspace</a>
           <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Unified Platform Dashboard</a>
           <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>FCA Academy</a>

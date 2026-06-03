@@ -2,7 +2,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { shellJourney } from "../../websiteShell";
-import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroCardStyle, pageShellStyle } from "../../publicShellStyles";
+import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const fieldStyle = {
   width: "100%",
@@ -43,7 +43,7 @@ export default function Login() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 520px) 1fr", gap: 20, alignItems: "start" }}>
+        <div style={twoColumnGridStyle}>
           <div style={cardStyle}>
             <label>Work Email</label>
             <input style={fieldStyle} defaultValue="pilot@fca-demo.com" />
@@ -74,7 +74,7 @@ export default function Login() {
 
             <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
               <h2 style={{ marginTop: 0 }}>What opens after entry</h2>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+              <div style={responsiveGrid(180)}>
                 {[
                   ["Projects", "Execution visibility and stage continuity"],
                   ["Bids", "Approval queue and pipeline context"],
