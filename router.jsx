@@ -20,7 +20,7 @@ import PortalAdmin from "./src/pages/portal/PortalAdmin";
 
 import AcademyHome from "./src/pages/academy/AcademyHome";
 
-const routes = {
+export const routes = {
   "/": Home,
   "/platform": Platform,
   "/login": Login,
