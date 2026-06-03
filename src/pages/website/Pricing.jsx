@@ -10,7 +10,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { pricingTiers, publicActionCatalog, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { pricingTiers, publicActionCatalog, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -46,10 +46,10 @@ export default function Pricing() {
         eyebrow={publicPricingMessaging.header.eyebrow}
         title={publicPricingMessaging.header.title}
         subtitle={publicPricingMessaging.header.subtitle}
-        primaryHref={publicRouteCtas.conversion.primaryHref}
-        primaryLabel={publicRouteCtas.conversion.primaryLabel}
-        secondaryHref={publicRouteCtas.conversion.secondaryHref}
-        secondaryLabel={publicRouteCtas.conversion.secondaryLabel}
+        primaryHref={shellHeaderCtaSets.conversion.primaryHref}
+        primaryLabel={shellHeaderCtaSets.conversion.primaryLabel}
+        secondaryHref={shellHeaderCtaSets.conversion.secondaryHref}
+        secondaryLabel={shellHeaderCtaSets.conversion.secondaryLabel}
         journey={shellJourney}
         currentJourney="conversion"
       />

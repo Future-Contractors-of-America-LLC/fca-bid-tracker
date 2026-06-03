@@ -10,7 +10,7 @@ import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDec
 import PublicCtaRow from "../../components/PublicCtaRow";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
-import { academyCtaSets, publicBodyCtaSets, shellJourney } from "../../websiteShell";
+import { academyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxRail, currentProject, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../workspaceState";
 import { portalFiles } from "../../portalShell";
@@ -43,10 +43,10 @@ export default function AcademyHome() {
         eyebrow={academyContinuityMessaging.header.eyebrow}
         title={academyContinuityMessaging.header.title}
         subtitle={academyContinuityMessaging.header.subtitle}
-        primaryHref="/portal"
-        primaryLabel="Open Portal Workspace"
-        secondaryHref="/contact"
-        secondaryLabel="Open Contact & Rollout"
+        primaryHref={shellHeaderCtaSets.academy.primaryHref}
+        primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
+        secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
+        secondaryLabel={shellHeaderCtaSets.academy.secondaryLabel}
         journey={shellJourney}
         currentJourney="academy"
       />

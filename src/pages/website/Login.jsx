@@ -7,7 +7,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const fieldStyle = {
@@ -53,10 +53,10 @@ export default function Login() {
           eyebrow="Auricrux Guided Entry"
           title="Access FCA Workspace"
           subtitle="This workspace entry routes customers into the unified FCA shell for portal operations, lifecycle visibility, academy continuity, and guided next steps."
-          primaryHref={publicRouteCtas.workspace.primaryHref}
-          primaryLabel={publicRouteCtas.workspace.primaryLabel}
-          secondaryHref={publicRouteCtas.workspace.secondaryHref}
-          secondaryLabel={publicRouteCtas.workspace.secondaryLabel}
+          primaryHref={shellHeaderCtaSets.workspace.primaryHref}
+          primaryLabel={shellHeaderCtaSets.workspace.primaryLabel}
+          secondaryHref={shellHeaderCtaSets.workspace.secondaryHref}
+          secondaryLabel={shellHeaderCtaSets.workspace.secondaryLabel}
           journey={shellJourney}
           currentJourney="workspace"
         />

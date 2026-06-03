@@ -342,6 +342,27 @@ export const platformDashboardCtaSets = {
   ],
 };
 
+export const shellHeaderCtaSets = {
+  workspace: {
+    primaryHref: publicRouteCtas.workspace.primaryHref,
+    primaryLabel: publicRouteCtas.workspace.primaryLabel,
+    secondaryHref: publicRouteCtas.workspace.secondaryHref,
+    secondaryLabel: publicRouteCtas.workspace.secondaryLabel,
+  },
+  conversion: {
+    primaryHref: publicRouteCtas.conversion.primaryHref,
+    primaryLabel: publicRouteCtas.conversion.primaryLabel,
+    secondaryHref: publicRouteCtas.conversion.secondaryHref,
+    secondaryLabel: publicRouteCtas.conversion.secondaryLabel,
+  },
+  academy: {
+    primaryHref: publicActionCatalog.portal.href,
+    primaryLabel: publicActionCatalog.portal.label,
+    secondaryHref: publicActionCatalog.contact.href,
+    secondaryLabel: publicActionCatalog.contact.label,
+  },
+};
+
 export const platformModules = [
   {
     title: "Lead to Bid",
