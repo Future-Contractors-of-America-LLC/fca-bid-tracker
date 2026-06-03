@@ -1,31 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
-import { auricruxRail, currentProject, portalTenant, workspaceContext } from "../workspaceState";
-
-const STORAGE_KEY = "fca_workspace_state_v1";
-
-const defaultState = {
-  tenant: portalTenant,
-  project: currentProject,
-  workspace: workspaceContext,
-  auricrux: auricruxRail,
-  meta: {
-    backingSource: "localStorage",
-    persistenceState: "Seeded from canonical shell state",
-    lastSyncedAt: null,
-  },
-};
+import { defaultWorkspaceState, STORAGE_KEY } from "../systemState";
 
 export default function useWorkspaceState() {
-  const [state, setState] = useState(defaultState);
+  const [state, setState] = useState(defaultWorkspaceState);
 
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (!raw) {
         const seeded = {
-          ...defaultState,
+          ...defaultWorkspaceState,
           meta: {
-            ...defaultState.meta,
+            ...defaultWorkspaceState.meta,
             lastSyncedAt: new Date().toISOString(),
           },
         };
@@ -37,7 +23,7 @@ export default function useWorkspaceState() {
       const parsed = JSON.parse(raw);
       setState(parsed);
     } catch {
-      setState(defaultState);
+      setState(defaultWorkspaceState);
     }
   }, []);
 
