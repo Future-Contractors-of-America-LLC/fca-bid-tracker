@@ -1,4 +1,5 @@
 import ShellHeader from "../../components/ShellHeader";
+import ShellFooter from "../../components/ShellFooter";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -85,6 +86,8 @@ export default function PortalHome() {
             <li>Transition to the <a href="/academy">academy workspace</a> to show training continuity.</li>
           </ol>
         </div>
+
+        <ShellFooter />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import ShellHeader from "../../components/ShellHeader";
+import ShellFooter from "../../components/ShellFooter";
 
 const ctaStyle = {
   display: "inline-block",
@@ -57,6 +58,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <ShellFooter />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import ShellHeader from "../../components/ShellHeader";
+import ShellFooter from "../../components/ShellFooter";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -64,6 +65,8 @@ export default function AcademyHome() {
             FCA is not just a bid tool. The academy view proves the system can carry a customer from sales and onboarding into workforce enablement, compliance visibility, and long-term operational support.
           </p>
         </div>
+
+        <ShellFooter />
       </div>
     </div>
   );

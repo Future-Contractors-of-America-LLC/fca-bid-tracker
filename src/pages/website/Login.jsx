@@ -1,4 +1,5 @@
 import ShellHeader from "../../components/ShellHeader";
+import ShellFooter from "../../components/ShellFooter";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -46,6 +47,8 @@ export default function Login() {
             </a>
           </div>
         </div>
+
+        <ShellFooter />
       </div>
     </div>
   );
