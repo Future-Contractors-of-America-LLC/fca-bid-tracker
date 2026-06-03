@@ -363,6 +363,33 @@ export const shellHeaderCtaSets = {
   },
 };
 
+export const executiveSignalCtaSets = {
+  publicPlatform: {
+    href: publicActionCatalog.portal.href,
+    label: "Enter customer workspace",
+  },
+  publicAuricrux: {
+    href: publicActionCatalog.platform.href,
+    label: publicActionCatalog.platform.label,
+  },
+  conversion: {
+    href: publicActionCatalog.contact.href,
+    label: publicActionCatalog.contact.label,
+  },
+  contact: {
+    href: publicActionCatalog.platform.href,
+    label: publicActionCatalog.platform.label,
+  },
+  academy: {
+    href: publicActionCatalog.messages.href,
+    label: "Preserve follow-through",
+  },
+  portal: {
+    href: portalShellCtas.executiveSignal.href,
+    label: portalShellCtas.executiveSignal.label,
+  },
+};
+
 export const platformModules = [
   {
     title: "Lead to Bid",

@@ -10,7 +10,7 @@ import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDec
 import PublicCtaRow from "../../components/PublicCtaRow";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
-import { academyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxRail, currentProject, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../workspaceState";
 import { portalFiles } from "../../portalShell";
@@ -73,7 +73,7 @@ export default function AcademyHome() {
       <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
       <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
       <RouteStateOverlay overlay={routeStateOverlays.academy} />
-      <ExecutiveSignalBar mode="academy" nextHref="/portal/messages" nextLabel="Preserve follow-through" />
+      <ExecutiveSignalBar mode="academy" nextHref={executiveSignalCtaSets.academy.href} nextLabel={executiveSignalCtaSets.academy.label} />
 
       <div style={{ marginBottom: 24 }}>
         <BuildExpansionCommandDeck

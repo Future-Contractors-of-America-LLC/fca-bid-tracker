@@ -9,6 +9,7 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import {
+  executiveSignalCtaSets,
   platformJourneyPath,
   platformLinkedProductAreas,
   platformModules,
@@ -71,7 +72,7 @@ export default function Platform() {
         ctaLabel="Continue to workspace login"
       />
 
-      <ExecutiveSignalBar mode="public" nextHref="/portal" nextLabel="Enter customer workspace" />
+      <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.publicPlatform.href} nextLabel={executiveSignalCtaSets.publicPlatform.label} />
 
       <div style={{ marginTop: 24 }}>
         <PublicOperationsStrip

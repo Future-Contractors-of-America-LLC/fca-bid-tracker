@@ -12,6 +12,7 @@ import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import {
   auricruxCapabilities,
   auricruxWalkthroughPath,
+  executiveSignalCtaSets,
   publicBodyCtaSets,
   publicRouteCtas,
   shellJourney,
@@ -80,7 +81,7 @@ export default function AuricruxPage() {
         ctaLabel="Open Platform Dashboard"
       />
 
-      <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Open Platform Dashboard" />
+      <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.publicAuricrux.href} nextLabel={executiveSignalCtaSets.publicAuricrux.label} />
 
       <div style={{ marginBottom: 24 }}>
         <PublicOperationsStrip

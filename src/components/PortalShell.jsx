@@ -7,7 +7,7 @@ import RouteStateOverlay from "./RouteStateOverlay";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxBrandMark from "./AuricruxBrandMark";
 import ExecutiveSignalBar from "./ExecutiveSignalBar";
-import { portalShellCtas } from "../websiteShell";
+import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
 import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../systemState";
 
 const shellStyle = {
@@ -109,7 +109,7 @@ export default function PortalShell({
         <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
         <RouteStateOverlay overlay={routeOverlay} />
-        <ExecutiveSignalBar mode="portal" nextHref={portalShellCtas.executiveSignal.href} nextLabel={portalShellCtas.executiveSignal.label} />
+        <ExecutiveSignalBar mode="portal" nextHref={executiveSignalCtaSets.portal.href} nextLabel={executiveSignalCtaSets.portal.label} />
 
         <div style={bannerStyle}>
           <div>

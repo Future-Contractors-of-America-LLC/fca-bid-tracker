@@ -9,7 +9,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { contactPaths, publicActionCatalog, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { contactPaths, executiveSignalCtaSets, publicActionCatalog, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
 import { cardStyle, pageShellStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
@@ -65,7 +65,7 @@ export default function Contact() {
         ctaLabel={publicActionCatalog.walkthrough.label}
       />
 
-      <ExecutiveSignalBar mode="public" nextHref={publicActionCatalog.platform.href} nextLabel="Open Platform Dashboard" />
+      <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.contact.href} nextLabel={executiveSignalCtaSets.contact.label} />
 
       <div style={{ marginBottom: 24 }}>
         <PublicOperationsStrip

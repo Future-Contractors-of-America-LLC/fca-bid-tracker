@@ -90,6 +90,7 @@ const shellHrefSources = [
   websiteShellModule.portalEntryCtaSets,
   websiteShellModule.platformDashboardCtaSets,
   websiteShellModule.shellHeaderCtaSets,
+  websiteShellModule.executiveSignalCtaSets,
   websiteShellModule.shellJourney,
   websiteShellModule.shellPrimaryNav,
   websiteShellModule.shellWorkspaceRoutes,
