@@ -1,0 +1,45 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="90" y1="40" x2="1110" y2="590" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FBFF"/>
+      <stop offset="1" stop-color="#EAF1FF"/>
+    </linearGradient>
+    <linearGradient id="fcaBlue" x1="180" y1="118" x2="404" y2="378" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8CB2FF"/>
+      <stop offset="0.5" stop-color="#4F7CFF"/>
+      <stop offset="1" stop-color="#3157D7"/>
+    </linearGradient>
+    <linearGradient id="fcaBlueDark" x1="220" y1="208" x2="368" y2="398" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3F6BEE"/>
+      <stop offset="1" stop-color="#2445B3"/>
+    </linearGradient>
+    <linearGradient id="auricruxGold" x1="924" y1="110" x2="1010" y2="196" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE9A6"/>
+      <stop offset="0.45" stop-color="#D49A22"/>
+      <stop offset="1" stop-color="#B77912"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>
+  <rect x="42" y="42" width="1116" height="546" rx="30" fill="#FFFFFF" stroke="#DCE6FF" stroke-width="2"/>
+
+  <path d="M250 104L394 186V347L325 386V224L250 177L175 224V386L106 347V186L250 104Z" fill="url(#fcaBlue)"/>
+  <path d="M250 104V177L325 224L394 186L250 104Z" fill="#A8C4FF"/>
+  <path d="M175 224L250 177V104L106 186L175 224Z" fill="#73A0FF"/>
+  <path d="M175 224V386L250 340V264L175 224Z" fill="url(#fcaBlueDark)"/>
+  <path d="M325 224V386L250 340V264L325 224Z" fill="#4874F5" fill-opacity="0.92"/>
+  <path d="M203 253L250 225L297 253V295L250 323L203 295V253Z" fill="#0B1322"/>
+
+  <text x="450" y="215" fill="#111827" font-family="Arial, Helvetica, sans-serif" font-size="110" font-weight="900" letter-spacing="6">FCA</text>
+  <text x="455" y="280" fill="#334155" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" letter-spacing="4">FUTURE CONTRACTORS OF AMERICA</text>
+  <text x="455" y="366" fill="#111827" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700">Contractor operating system</text>
+  <text x="455" y="423" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="500">Portal continuity, bid visibility, academy readiness, and Auricrux-guided execution.</text>
+
+  <g transform="translate(920 104)">
+    <path d="M60 18L74 24L84 36V51C84 66 73 78 60 84C47 78 36 66 36 51V36L46 24L60 18Z" fill="url(#auricruxGold)" stroke="#6B450C" stroke-width="4"/>
+    <path d="M60 34L68 38L72 46V55C72 63 66 70 60 73C54 70 48 63 48 55V46L52 38L60 34Z" fill="#5B2A07" fill-opacity="0.92"/>
+    <path d="M22 48L10 44L18 58L10 72L26 66L40 72L34 58L40 44L22 48Z" fill="url(#auricruxGold)" stroke="#6B450C" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M98 48L110 44L102 58L110 72L94 66L80 72L86 58L80 44L98 48Z" fill="url(#auricruxGold)" stroke="#6B450C" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+  <text x="1038" y="188" fill="#7C5313" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="800" letter-spacing="2">AURICRUX</text>
+  <text x="920" y="232" fill="#6B7280" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="600">Embedded operating layer</text>
+</svg>

@@ -1,7 +1,9 @@
 const SITE_ORIGIN = "https://futurecontractorsofamerica.com";
+const SITE_NAME = "Future Contractors of America";
 const DEFAULT_TITLE = "Future Contractors of America | FCA Operating System";
 const DEFAULT_DESCRIPTION =
   "Future Contractors of America is the operating system for contractor growth, bid execution, project visibility, and Auricrux-guided workflow continuity.";
+const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/social-card.svg`;
 
 const routeMetadata = {
   "/": {
@@ -100,26 +102,48 @@ function ensureTag(selector, createTag) {
   return node;
 }
 
+function ensureMetaByName(name) {
+  return ensureTag(`meta[name="${name}"]`, () => {
+    const meta = document.createElement("meta");
+    meta.name = name;
+    return meta;
+  });
+}
+
+function ensureMetaByProperty(property) {
+  return ensureTag(`meta[property="${property}"]`, () => {
+    const meta = document.createElement("meta");
+    meta.setAttribute("property", property);
+    return meta;
+  });
+}
+
 export function syncDocumentMetadata(pathname) {
   const cleanPath = pathname?.replace(/\/$/, "") || "/";
   const metadata = routeMetadata[cleanPath] || routeMetadata["/"];
+  const title = metadata.title || DEFAULT_TITLE;
+  const descriptionText = metadata.description || DEFAULT_DESCRIPTION;
+  const url = cleanPath === "/" ? SITE_ORIGIN : `${SITE_ORIGIN}${cleanPath}`;
 
-  document.title = metadata.title || DEFAULT_TITLE;
+  document.title = title;
 
-  const description = ensureTag('meta[name="description"]', () => {
-    const meta = document.createElement("meta");
-    meta.name = "description";
-    return meta;
-  });
-  description.setAttribute("content", metadata.description || DEFAULT_DESCRIPTION);
+  ensureMetaByName("description").setAttribute("content", descriptionText);
+  ensureMetaByName("twitter:card").setAttribute("content", "summary_large_image");
+  ensureMetaByName("twitter:title").setAttribute("content", title);
+  ensureMetaByName("twitter:description").setAttribute("content", descriptionText);
+  ensureMetaByName("twitter:image").setAttribute("content", DEFAULT_OG_IMAGE);
+
+  ensureMetaByProperty("og:type").setAttribute("content", "website");
+  ensureMetaByProperty("og:site_name").setAttribute("content", SITE_NAME);
+  ensureMetaByProperty("og:title").setAttribute("content", title);
+  ensureMetaByProperty("og:description").setAttribute("content", descriptionText);
+  ensureMetaByProperty("og:url").setAttribute("content", url);
+  ensureMetaByProperty("og:image").setAttribute("content", DEFAULT_OG_IMAGE);
 
   const canonical = ensureTag('link[rel="canonical"]', () => {
     const link = document.createElement("link");
     link.rel = "canonical";
     return link;
   });
-  canonical.setAttribute(
-    "href",
-    cleanPath === "/" ? SITE_ORIGIN : `${SITE_ORIGIN}${cleanPath}`
-  );
+  canonical.setAttribute("href", url);
 }
