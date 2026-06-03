@@ -7,7 +7,7 @@ import RouteStateOverlay from "./RouteStateOverlay";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxBrandMark from "./AuricruxBrandMark";
 import ExecutiveSignalBar from "./ExecutiveSignalBar";
-import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../portalShell";
+import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../systemState";
 
 const shellStyle = {
   padding: 40,

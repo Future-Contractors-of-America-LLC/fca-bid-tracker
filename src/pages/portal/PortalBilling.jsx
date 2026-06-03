@@ -1,6 +1,6 @@
 import PortalShell from "../../components/PortalShell";
-import { portalBilling } from "../../portalShell";
-import { auricruxRail, routeStateOverlays, workspaceContext } from "../../workspaceState";
+import SystemStateSummary from "../../components/SystemStateSummary";
+import { auricruxRail, portalBilling, portalTenant, currentProject, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -48,6 +48,17 @@ export default function PortalBilling() {
       primaryHref="/portal/admin"
       primaryLabel="Open Admin"
     >
+      <div style={{ marginBottom: 24 }}>
+        <SystemStateSummary
+          tenant={portalTenant}
+          project={currentProject}
+          workspace={workspaceContext}
+          auricrux={auricruxRail}
+          title="Billing now reads from the canonical operating state"
+          detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, and blocker module as the other portal routes."
+        />
+      </div>
+
       <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Revenue continuity focus</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Billing now echoes the same approval and training state as the rest of the shell</h2>
@@ -89,7 +100,7 @@ export default function PortalBilling() {
           <div>
             <a href="/academy" style={actionLinkStyle}>Continue to Academy</a>
             <a href="/pricing" style={{ ...actionLinkStyle, background: "#e5e7eb", color: "#111827" }}>Open Pricing</a>
-            <a href="/contact" style={{ ...actionLinkStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>Request Founder Review</a>
+            <a href="/contact" style={{ ...actionLinkStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>Request Rollout Review</a>
           </div>
         </div>
         <div style={cardStyle}>

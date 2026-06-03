@@ -1,7 +1,7 @@
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
-import { currentProject, portalFiles, projectAuditEvents } from "../../portalShell";
-import { routeStateOverlays } from "../../workspaceState";
+import SystemStateSummary from "../../components/SystemStateSummary";
+import { auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -22,6 +22,17 @@ export default function PortalFiles() {
       primaryHref="/portal/messages"
       primaryLabel="Open Messages"
     >
+      <div style={{ marginBottom: 16 }}>
+        <SystemStateSummary
+          tenant={portalTenant}
+          project={currentProject}
+          workspace={workspaceContext}
+          auricrux={auricruxRail}
+          title="File route now reads from the same canonical state"
+          detail="Document context, next action, and blocker visibility stay attached to the shared system module rather than separate wrapper exports."
+        />
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>File Spine Context</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>

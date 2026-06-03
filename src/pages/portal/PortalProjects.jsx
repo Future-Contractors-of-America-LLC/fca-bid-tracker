@@ -1,6 +1,6 @@
 import PortalShell from "../../components/PortalShell";
-import { currentProject, portalProjects } from "../../portalShell";
-import { routeStateOverlays } from "../../workspaceState";
+import SystemStateSummary from "../../components/SystemStateSummary";
+import { currentProject, portalProjects, portalTenant, routeStateOverlays, workspaceContext, auricruxRail } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -21,6 +21,17 @@ export default function PortalProjects() {
       primaryHref="/portal/files"
       primaryLabel="Open Files"
     >
+      <div style={{ marginBottom: 16 }}>
+        <SystemStateSummary
+          tenant={portalTenant}
+          project={currentProject}
+          workspace={workspaceContext}
+          auricrux={auricruxRail}
+          title="Project route is anchored to the canonical system state"
+          detail="Project execution visibility now reads from the same tenant, project, next-action, and blocker source as the rest of the FCA shell."
+        />
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>Current Project Root</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>

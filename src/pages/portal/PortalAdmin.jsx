@@ -1,8 +1,8 @@
 import PortalShell from "../../components/PortalShell";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
-import { currentProject, portalTenant } from "../../portalShell";
-import { routeStateOverlays } from "../../workspaceState";
+import SystemStateSummary from "../../components/SystemStateSummary";
+import { auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -23,6 +23,17 @@ export default function PortalAdmin() {
       primaryHref="/pricing"
       primaryLabel="Open Rollout Planning"
     >
+      <div style={{ marginBottom: 24 }}>
+        <SystemStateSummary
+          tenant={portalTenant}
+          project={currentProject}
+          workspace={workspaceContext}
+          auricrux={auricruxRail}
+          title="Admin route now reads from the canonical control state"
+          detail="Tenant rollout, governance visibility, and next-action context now come from the same shared system module as the rest of the FCA shell."
+        />
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>

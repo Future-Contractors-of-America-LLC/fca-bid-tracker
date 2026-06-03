@@ -1,6 +1,6 @@
 import PortalShell from "../../components/PortalShell";
-import { currentProject, portalBids } from "../../portalShell";
-import { auricruxRail, routeStateOverlays, workspaceContext } from "../../workspaceState";
+import SystemStateSummary from "../../components/SystemStateSummary";
+import { auricruxRail, currentProject, portalBids, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -39,6 +39,17 @@ export default function PortalBids() {
       primaryHref="/bid-entry/"
       primaryLabel="Open Bid Entry"
     >
+      <div style={{ marginBottom: 16 }}>
+        <SystemStateSummary
+          tenant={portalTenant}
+          project={currentProject}
+          workspace={workspaceContext}
+          auricrux={auricruxRail}
+          title="Bid route now reads from the canonical operating state"
+          detail="Bid approval, next action, and execution blocker data are now sourced from the shared system module rather than split wrapper files."
+        />
+      </div>
+
       <div style={{ ...continuityCardStyle, marginBottom: 16 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Approval continuity focus</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux is using bid state to govern the next operating move</h2>
