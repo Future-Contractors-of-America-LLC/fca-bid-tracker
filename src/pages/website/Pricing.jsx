@@ -8,12 +8,13 @@ import CommercialReadinessPanel from "../../components/CommercialReadinessPanel"
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import { pricingTiers, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const rolloutSteps = [
   "Confirm contractor fit, pilot scope, and current operating friction.",
-  "Walk the live FCA shell from public entry through workspace, platform dashboard, portal, academy, and bid continuity.",
+  "Walk the live FCA experience from public entry through workspace, platform dashboard, portal, academy, and bid continuity.",
   "Select the rollout tier that matches readiness, team size, and continuity needs.",
   "Close on the next deployment action and rollout planning path.",
 ];
@@ -24,7 +25,7 @@ export default function Pricing() {
       <ShellHeader
         eyebrow="FCA Plans & Rollout"
         title="Production rollout planning"
-        subtitle="This page supports a real rollout conversation: pilot scope, operating readiness, guided setup, and the next production action inside the FCA shell."
+        subtitle="This page supports a real rollout conversation: pilot scope, operating readiness, guided setup, and the next production action inside FCA."
         primaryHref={publicRouteCtas.conversion.primaryHref}
         primaryLabel={publicRouteCtas.conversion.primaryLabel}
         secondaryHref={publicRouteCtas.conversion.secondaryHref}
@@ -45,7 +46,7 @@ export default function Pricing() {
           </div>
         </div>
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
-          This is more than a static price sheet. It is a guided rollout conversation that ties scope to the live shell, platform dashboard, portal continuity, academy readiness, and Auricrux-guided next actions.
+          This is more than a static price sheet. It is a guided rollout conversation that ties scope to the live product experience, project visibility, team readiness, and next steps.
         </p>
         <PublicCtaRow actions={publicBodyCtaSets.pricingHero} />
       </div>
@@ -53,12 +54,34 @@ export default function Pricing() {
       <FounderJourneyStrip
         currentJourney="conversion"
         title="Plans should connect directly to rollout decisions"
-        detail="This route does not behave like a detached price sheet. It shows where plans fit in the path from public framing into workspace continuity, platform visibility, and rollout planning."
+        detail="This route shows where plans fit in the path from public framing into workspace continuity, platform visibility, and rollout planning."
         ctaHref="/contact"
         ctaLabel="Schedule a walkthrough"
       />
 
       <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel="Schedule a walkthrough" />
+
+      <div style={{ marginBottom: 24 }}>
+        <CustomerTrustPanel
+          eyebrow="Choose the right rollout path"
+          title="Pricing is organized around readiness, not guesswork"
+          detail="The goal is to match your team to the right rollout pace, support level, and operating visibility based on current needs."
+          items={[
+            {
+              title: "Pilot quickly",
+              detail: "Start with guided setup and a practical walkthrough of the workspace and portal flows.",
+            },
+            {
+              title: "Expand with confidence",
+              detail: "Add communication, billing, and training continuity as your team grows into the platform.",
+            },
+            {
+              title: "Plan a broader rollout",
+              detail: "Use a larger rollout path when multiple teams, workflows, or operating units need to stay aligned.",
+            },
+          ]}
+        />
+      </div>
 
       <CommercialReadinessPanel
         title="Rollout planning reflects live system state"
@@ -80,7 +103,7 @@ export default function Pricing() {
         </div>
 
         <WorkspaceSnapshotCard
-          title="Pricing references live shell state"
+          title="Pricing references live workspace state"
           detail="This planning surface points directly at persisted tenant, project, and Auricrux continuity so rollout conversations stay attached to the operating workspace."
           ctaHref="/portal/platform"
           ctaLabel="Review platform state before your call"

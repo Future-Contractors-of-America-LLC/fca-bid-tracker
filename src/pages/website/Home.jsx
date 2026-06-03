@@ -6,6 +6,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import { publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, pageShellStyle } from "../../publicShellStyles";
 
@@ -45,7 +46,7 @@ export default function Home() {
       <FounderJourneyStrip
         currentJourney="public"
         title="Start with a clear customer path"
-        detail="Public entry now guides visitors into platform overview, workspace access, customer portal visibility, academy readiness, and rollout planning without switching narratives."
+        detail="Public entry guides visitors into platform overview, workspace access, customer portal visibility, academy readiness, and rollout planning without switching narratives."
         ctaHref="/login"
         ctaLabel="Enter FCA workspace"
       />
@@ -53,6 +54,13 @@ export default function Home() {
       <PublicCtaRow actions={publicBodyCtaSets.home} />
 
       <div style={{ marginTop: 28 }}>
+        <CustomerTrustPanel
+          title="Built to support day-to-day contractor work"
+          detail="FCA helps teams keep customers informed, organize delivery, and make the next step clear across bids, projects, communications, and training."
+        />
+      </div>
+
+      <div style={{ marginTop: 24 }}>
         <WorkspaceSnapshotCard
           title="See how the workspace stays connected"
           detail="The home page previews the same tenant, project, and Auricrux state that carries through the platform dashboard and portal routes."

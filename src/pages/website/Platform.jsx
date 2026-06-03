@@ -5,6 +5,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
+import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import { platformModules, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -25,12 +26,12 @@ export default function Platform() {
 
       <div style={heroCardStyle}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
-          <div style={{ color: "#2563eb", fontWeight: 700 }}>Platform story</div>
+          <div style={{ color: "#2563eb", fontWeight: 700 }}>Platform overview</div>
           <FcaBrandMark compact />
         </div>
         <h2 style={{ marginTop: 0 }}>Built to feel like one connected system</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>
-          FCA helps contractor teams move from public entry into workspace access, portal operations, bid visibility, academy continuity, and guided next actions without fragmenting the experience.
+          FCA helps contractor teams move from opportunity to delivery with better visibility into bids, customer updates, files, billing steps, and workforce readiness.
         </p>
       </div>
 
@@ -43,6 +44,28 @@ export default function Platform() {
       />
 
       <ExecutiveSignalBar mode="public" nextHref="/portal" nextLabel="Enter customer workspace" />
+
+      <div style={{ marginTop: 24 }}>
+        <CustomerTrustPanel
+          eyebrow="Why teams use FCA"
+          title="A clearer path from bids to delivery"
+          detail="The platform is organized to help contractor teams stay aligned, reduce follow-up work, and give customers better visibility into what is happening next."
+          items={[
+            {
+              title: "Track work in one place",
+              detail: "Keep opportunities, projects, files, and customer communication connected instead of scattered across separate tools.",
+            },
+            {
+              title: "Stay ahead of blockers",
+              detail: "See approvals, billing readiness, and next steps before they turn into delays.",
+            },
+            {
+              title: "Support rollout and training",
+              detail: "Tie onboarding, academy access, and field readiness into the same operating flow.",
+            },
+          ]}
+        />
+      </div>
 
       <div style={{ ...responsiveGrid(220), marginTop: 28 }}>
         {platformModules.map((module) => (
@@ -57,7 +80,7 @@ export default function Platform() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>How customers move through FCA</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Start on the public home page and review the FCA platform story.</li>
+            <li>Start on the public home page and review the FCA platform overview.</li>
             <li>Enter through <a href="/login">workspace login</a>.</li>
             <li>Open the <a href="/portal">customer portal</a> for visibility into projects, files, and communications.</li>
             <li>Continue into <a href="/portal/academy">academy continuity</a> for onboarding and workforce readiness.</li>
@@ -67,14 +90,14 @@ export default function Platform() {
         </div>
         <WorkspaceSnapshotCard
           title="Public proof of workspace continuity"
-          detail="The public platform page previews live shell context so the site narrative stays connected to the working portal experience."
+          detail="The public platform page previews live workspace context so the site narrative stays connected to the working portal experience."
           ctaHref="/portal/platform"
           ctaLabel="Open unified platform dashboard"
         />
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Linked product surfaces</h2>
+        <h2 style={{ marginTop: 0 }}>Linked product areas</h2>
         <div style={{ ...responsiveGrid(220), gap: 12 }}>
           <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Customer Portal Workspace</a>
           <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Unified Platform Dashboard</a>
