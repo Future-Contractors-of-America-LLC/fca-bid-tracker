@@ -1,5 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { shellJourney } from "../../websiteShell";
 
 const ctaStyle = {
@@ -19,6 +20,12 @@ const secondaryStyle = {
   background: "#f3f4f6",
   color: "#111827",
   border: "1px solid #d1d5db",
+};
+
+const cardStyle = {
+  padding: 18,
+  border: "1px solid #e5e7eb",
+  borderRadius: 12,
 };
 
 export default function Home() {
@@ -43,28 +50,37 @@ export default function Home() {
         <a href="/pricing" style={secondaryStyle}>Production Planning</a>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 36 }}>
-        <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
+      <div style={{ marginTop: 28 }}>
+        <WorkspaceSnapshotCard
+          title="Public entry now reflects real workspace continuity"
+          detail="The home page now previews the same persisted tenant, project, and Auricrux state that carries through the platform dashboard and portal routes."
+          ctaHref="/login"
+          ctaLabel="Enter workspace with continuity"
+        />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 24 }}>
+        <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>Platform Story</h3>
           <p>Show FCA as one connected operating system instead of a standalone tool.</p>
           <a href="/platform">View platform page</a>
         </div>
-        <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
+        <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>Auricrux Layer</h3>
           <p>Frame the intelligence layer that keeps next actions and continuity visible across the shell.</p>
           <a href="/auricrux">View Auricrux page</a>
         </div>
-        <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
+        <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>Customer Portal</h3>
           <p>Projects, files, notifications, billing follow-through, and customer-facing visibility.</p>
           <a href="/portal">Open customer workspace</a>
         </div>
-        <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
+        <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>FCA Academy</h3>
           <p>Training pathways, certification progress, and workforce readiness tied to the same customer journey.</p>
           <a href="/academy">Open academy workspace</a>
         </div>
-        <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
+        <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>FCA Bid Product</h3>
           <p>Use the canonical FCA bid routes first for customer continuity and production rollout planning.</p>
           <div style={{ marginTop: 10 }}>
@@ -81,7 +97,7 @@ export default function Home() {
             <a href="/fca-customer-status/index.html">Legacy status route</a>
           </div>
         </div>
-        <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
+        <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>Production Conversion</h3>
           <p>Move from shell visibility into rollout planning, founder review, and production implementation.</p>
           <div style={{ marginTop: 10 }}>
