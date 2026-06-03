@@ -1,7 +1,10 @@
 import PortalShell from "../../components/PortalShell";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import { ctaLightStyle, ctaPrimaryStyle } from "../../publicShellStyles";
+import { publicBodyCtaSets } from "../../websiteShell";
 import { auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
@@ -10,18 +13,6 @@ const cardStyle = {
   padding: 18,
   background: "#fff",
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-};
-
-const actionStyle = {
-  display: "inline-block",
-  textDecoration: "none",
-  background: "#111827",
-  color: "#fff",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
-  marginTop: 12,
-  marginRight: 10,
 };
 
 export default function PortalSupport() {
@@ -33,7 +24,7 @@ export default function PortalSupport() {
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.support}
       primaryHref="/contact"
-      primaryLabel="Open Support Contact"
+      primaryLabel="Open Contact & Rollout"
     >
       <div style={{ marginBottom: 24 }}>
         <SystemStateSummary
@@ -44,6 +35,10 @@ export default function PortalSupport() {
           title="Support route is attached to the canonical operating state"
           detail="Escalation and recovery context now read from the same system module as portal execution, billing, and academy continuity."
         />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
@@ -71,9 +66,9 @@ export default function PortalSupport() {
             <div><strong>Project ID:</strong> {currentProject.id}</div>
             <div><strong>Current issue pattern:</strong> approval delay, onboarding coordination, billing readiness</div>
           </div>
-          <div>
-            <a href="/portal/messages" style={actionStyle}>Review Messages</a>
-            <a href="/portal/billing" style={{ ...actionStyle, background: "#e5e7eb", color: "#111827" }}>Open Billing</a>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
+            <a href="/portal/messages" style={ctaPrimaryStyle}>Open Messages</a>
+            <a href="/portal/billing" style={ctaLightStyle}>Open Billing</a>
           </div>
         </div>
         <div style={cardStyle}>

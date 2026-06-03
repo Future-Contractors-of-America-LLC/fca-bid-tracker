@@ -299,4 +299,9 @@ export const publicBodyCtaSets = {
     publicActionCatalog.platform,
     publicActionCatalog.contact,
   ],
+  portalCoordination: [
+    { ...publicActionCatalog.platform, variant: "primary" },
+    publicActionCatalog.portal,
+    publicActionCatalog.contact,
+  ],
 };

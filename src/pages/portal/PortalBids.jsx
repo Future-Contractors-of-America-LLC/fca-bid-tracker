@@ -1,5 +1,8 @@
 import PortalShell from "../../components/PortalShell";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import { ctaLightStyle, ctaPrimaryStyle } from "../../publicShellStyles";
+import { publicBodyCtaSets } from "../../websiteShell";
 import { auricruxRail, currentProject, portalBids, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
@@ -14,18 +17,6 @@ const continuityCardStyle = {
   ...cardStyle,
   background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)",
   border: "1px solid #e5d3a1",
-};
-
-const actionLinkStyle = {
-  display: "inline-block",
-  textDecoration: "none",
-  background: "#111827",
-  color: "#fff",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
-  marginTop: 12,
-  marginRight: 10,
 };
 
 export default function PortalBids() {
@@ -48,6 +39,10 @@ export default function PortalBids() {
           title="Bid route now reads from the canonical operating state"
           detail="Bid approval, next action, and execution blocker data are now sourced from the shared system module rather than split wrapper files."
         />
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <div style={{ ...continuityCardStyle, marginBottom: 16 }}>
@@ -87,9 +82,9 @@ export default function PortalBids() {
           This shell lets FCA show that bidding is not a disconnected tool. Auricrux can surface the approval queue, explain blockers,
           and move directly from estimate visibility into project execution, communications, and onboarding.
         </p>
-        <div>
-          <a href="/portal/messages" style={actionLinkStyle}>Open Messages</a>
-          <a href="/portal/billing" style={{ ...actionLinkStyle, background: "#e5e7eb", color: "#111827" }}>Continue to Billing</a>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
+          <a href="/portal/messages" style={ctaPrimaryStyle}>Open Messages</a>
+          <a href="/portal/billing" style={ctaLightStyle}>Open Billing</a>
         </div>
       </div>
     </PortalShell>

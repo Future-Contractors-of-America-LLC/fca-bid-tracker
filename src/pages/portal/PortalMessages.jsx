@@ -1,6 +1,9 @@
 import PortalShell from "../../components/PortalShell";
 import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import { portalMessages } from "../../portalShell";
+import { ctaLightStyle, ctaPrimaryStyle } from "../../publicShellStyles";
+import { publicBodyCtaSets } from "../../websiteShell";
 import { portalMessagesMessaging } from "../../systemContinuity";
 import { auricruxRail, currentProject, routeStateOverlays, workspaceContext } from "../../workspaceState";
 
@@ -18,18 +21,6 @@ const highlightCardStyle = {
   border: "1px solid #e5d3a1",
 };
 
-const ctaStyle = {
-  display: "inline-block",
-  textDecoration: "none",
-  background: "#111827",
-  color: "#fff",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
-  marginTop: 12,
-  marginRight: 10,
-};
-
 export default function PortalMessages() {
   return (
     <PortalShell
@@ -39,7 +30,7 @@ export default function PortalMessages() {
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.messages}
       primaryHref="/portal/billing"
-      primaryLabel="Continue to Billing"
+      primaryLabel="Open Billing"
     >
       <div style={{ ...highlightCardStyle, marginBottom: 24 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Continuity signal</div>
@@ -57,10 +48,14 @@ export default function PortalMessages() {
           title={portalMessagesMessaging.expansion.title}
           detail={portalMessagesMessaging.expansion.detail}
           primaryHref="/portal/billing"
-          primaryLabel="Advance to billing"
+          primaryLabel="Open Billing"
           secondaryHref="/academy"
-          secondaryLabel="Preserve training continuity"
+          secondaryLabel="Open Academy"
         />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <div style={cardStyle}>
@@ -73,10 +68,10 @@ export default function PortalMessages() {
             <div style={{ color: "#6b7280", fontSize: 14, marginTop: 4 }}>{message.time}</div>
           </div>
         ))}
-        <div>
-          <a href="/portal/billing" style={ctaStyle}>Continue to Billing</a>
-          <a href="/academy" style={{ ...ctaStyle, background: "#e5e7eb", color: "#111827" }}>Open Academy</a>
-          <a href="/contact" style={{ ...ctaStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>Request Rollout Review</a>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
+          <a href="/portal/billing" style={ctaPrimaryStyle}>Open Billing</a>
+          <a href="/academy" style={ctaLightStyle}>Open Academy</a>
+          <a href="/contact" style={ctaLightStyle}>Open Contact & Rollout</a>
         </div>
       </div>
     </PortalShell>

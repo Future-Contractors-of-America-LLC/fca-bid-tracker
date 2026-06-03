@@ -1,6 +1,8 @@
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import { publicBodyCtaSets } from "../../websiteShell";
 import { auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
@@ -31,6 +33,10 @@ export default function PortalFiles() {
           title="File route now reads from the same canonical state"
           detail="Document context, next action, and blocker visibility stay attached to the shared system module rather than separate wrapper exports."
         />
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 16 }}>
