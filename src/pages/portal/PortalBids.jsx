@@ -1,5 +1,5 @@
 import PortalShell from "../../components/PortalShell";
-import { portalBids } from "../../portalShell";
+import { currentProject, portalBids } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -13,12 +13,21 @@ export default function PortalBids() {
   return (
     <PortalShell
       title="Bid Pipeline and Approval Readiness"
-      subtitle="Bid-facing shell for demo and sales conversations, tied directly to project conversion and customer action."
+      subtitle="Bid-facing shell for production conversations, tied directly to project conversion and customer action."
       activeHref="/portal/bids"
       currentJourney="bid"
       primaryHref="/bid-entry/"
       primaryLabel="Open Bid Entry"
     >
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0 }}>Bid-to-Project Context</h2>
+        <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
+          <div><strong>Active project root:</strong> {currentProject.name}</div>
+          <div><strong>Project ID:</strong> {currentProject.id}</div>
+          <div>{currentProject.auricruxSummary}</div>
+        </div>
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
         {portalBids.map((bid) => (
           <div key={bid.package} style={cardStyle}>

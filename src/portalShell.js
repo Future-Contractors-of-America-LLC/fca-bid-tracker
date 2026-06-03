@@ -17,6 +17,15 @@ export const currentProject = {
   auricruxSummary: "Auricrux is reading the current tenant, project, stage, and next-action state from this shared shell context.",
 };
 
+export const workspaceContext = {
+  currentStageLabel: "Estimating to execution handoff",
+  stageSummary: "The current workspace is positioned between customer approval, operational setup, and billing-path continuity.",
+  currentNextAction: "Approve revised scope and release onboarding packet",
+  nextActionOwner: "Estimator Team + Customer Success coordination",
+  auditStatusLabel: "Shared timeline active",
+  auditSummary: "Auricrux, customer-facing actions, and workspace transitions should resolve into one audit spine for PRJ-A117.",
+};
+
 export const projectAuditEvents = [
   {
     time: "Today · 8:10 AM",
