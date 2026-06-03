@@ -1,6 +1,6 @@
 import PortalShell from "../../components/PortalShell";
 import { portalBilling } from "../../portalShell";
-import { routeStateOverlays } from "../../workspaceState";
+import { auricruxRail, routeStateOverlays, workspaceContext } from "../../workspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -8,6 +8,12 @@ const cardStyle = {
   padding: 18,
   background: "#fff",
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+};
+
+const continuityCardStyle = {
+  ...cardStyle,
+  background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)",
+  border: "1px solid #e5d3a1",
 };
 
 const invoiceStyle = {
@@ -42,6 +48,17 @@ export default function PortalBilling() {
       primaryHref="/portal/admin"
       primaryLabel="Open Admin"
     >
+      <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Revenue continuity focus</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Billing now echoes the same approval and training state as the rest of the shell</h2>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Revenue blocker:</strong> {auricruxRail.currentBlocker}</div>
+          <div><strong>Business impact:</strong> {auricruxRail.blockerImpact}</div>
+          <div><strong>Commercial next step:</strong> Convert {workspaceContext.currentNextAction.toLowerCase()} into invoice follow-through.</div>
+          <div><strong>Training continuity:</strong> Billing remains tied to learner assignment so onboarding and revenue stay visible together.</div>
+        </div>
+      </div>
+
       <div style={cardStyle}>
         <h2 style={{ marginTop: 0 }}>Billing queue</h2>
         <div style={{ color: "#6b7280", fontSize: 14, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
@@ -70,7 +87,7 @@ export default function PortalBilling() {
             customer communications, and training completion so commercial follow-through remains visible.
           </p>
           <div>
-            <a href="/portal/academy" style={actionLinkStyle}>Continue to Academy</a>
+            <a href="/academy" style={actionLinkStyle}>Continue to Academy</a>
             <a href="/pricing" style={{ ...actionLinkStyle, background: "#e5e7eb", color: "#111827" }}>Open Pricing</a>
             <a href="/contact" style={{ ...actionLinkStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>Request Founder Review</a>
           </div>
