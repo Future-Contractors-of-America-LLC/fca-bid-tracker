@@ -3,6 +3,8 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
+import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
+import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import { pricingTiers, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroButtonRowStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -49,7 +51,18 @@ export default function Pricing() {
         </div>
       </div>
 
-      <div style={{ ...twoColumnGridStyle, marginBottom: 24 }}>
+      <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel="Convert to founder review" />
+
+      <CommercialReadinessPanel
+        title="Rollout pricing now reflects live commercial state"
+        detail="Pricing is now framed as a continuity-aware rollout surface that keeps approval, revenue risk, and deployment readiness visible before a founder conversation."
+        primaryHref="/contact"
+        primaryLabel="Request Founder Review"
+        secondaryHref="/portal/platform"
+        secondaryLabel="Review Live Workspace State"
+      />
+
+      <div style={{ ...twoColumnGridStyle, marginBottom: 24, marginTop: 24 }}>
         <div style={{ ...cardStyle, background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)" }}>
           <h2 style={{ marginTop: 0 }}>Founder rollout checklist</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8, marginBottom: 0, color: "#334155" }}>

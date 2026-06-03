@@ -2,6 +2,8 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
+import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
+import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import { contactPaths, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -31,7 +33,18 @@ export default function Contact() {
         <FcaBrandMark compact />
       </div>
 
-      <div style={twoColumnGridStyle}>
+      <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Review live operating state" />
+
+      <CommercialReadinessPanel
+        title="Founder review begins from real operating context"
+        detail="Contact is now framed as a conversion surface that inherits the same approval, revenue, and rollout readiness state shown across Auricrux, platform, portal, and academy routes."
+        primaryHref="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request"
+        primaryLabel="Send Founder Review Request"
+        secondaryHref="/portal/platform"
+        secondaryLabel="Open Platform Dashboard"
+      />
+
+      <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={{ display: "grid", gap: 16 }}>
           <WorkspaceSnapshotCard
             title="Founder review starts from real shell state"
