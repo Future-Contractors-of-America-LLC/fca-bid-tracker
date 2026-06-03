@@ -5,6 +5,8 @@ import WorkspaceContextBar from "../../components/WorkspaceContextBar";
 import AuricruxStatusRail from "../../components/AuricruxStatusRail";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import RouteStateOverlay from "../../components/RouteStateOverlay";
+import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import { shellJourney } from "../../websiteShell";
 import { auricruxRail, currentProject, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../workspaceState";
 import { portalFiles } from "../../portalShell";
@@ -51,14 +53,40 @@ export default function AcademyHome() {
           currentJourney="academy"
         />
 
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+            alignItems: "center",
+            marginBottom: 18,
+            padding: "14px 16px",
+            border: "1px solid #dbe3ef",
+            borderRadius: 18,
+            background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)",
+          }}
+        >
+          <FcaBrandMark compact />
+          <AuricruxBrandMark compact />
+        </div>
+
         <ProjectSpineBar tenant={portalTenant} project={currentProject} />
         <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
         <RouteStateOverlay overlay={routeStateOverlays.academy} />
 
         <div style={{ ...actionCardStyle, marginBottom: 24 }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy continuity</div>
-          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Academy now participates in the same workspace state</h2>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+            <div>
+              <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy continuity</div>
+              <h2 style={{ marginTop: 0, marginBottom: 10 }}>Academy now participates in the same branded workspace state</h2>
+            </div>
+            <div style={{ display: "grid", gap: 10 }}>
+              <FcaBrandMark compact />
+              <AuricruxBrandMark compact />
+            </div>
+          </div>
           <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
             The academy is no longer a side destination. It now reads the same tenant, project, workspace, audit,
             and Auricrux state that powers the customer portal so workforce readiness stays attached to the same operational record.
@@ -71,17 +99,17 @@ export default function AcademyHome() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 28 }}>
           <div style={cardStyle}>
-            <div style={{ color: "#6b7280" }}>Learners Enrolled</div>
+            <div style={{ color: "#6b7280" }}>Learners enrolled</div>
             <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>24</div>
             <div>Across onboarding, safety, and estimating tracks</div>
           </div>
           <div style={cardStyle}>
-            <div style={{ color: "#6b7280" }}>Certifications In Progress</div>
+            <div style={{ color: "#6b7280" }}>Certifications in progress</div>
             <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>9</div>
             <div>OSHA, field readiness, and platform onboarding</div>
           </div>
           <div style={cardStyle}>
-            <div style={{ color: "#6b7280" }}>Completion Rate</div>
+            <div style={{ color: "#6b7280" }}>Completion rate</div>
             <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>87%</div>
             <div>Workspace KPI for rollout confidence</div>
           </div>
@@ -89,7 +117,7 @@ export default function AcademyHome() {
 
         <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 16, marginTop: 24 }}>
           <div style={cardStyle}>
-            <h2 style={{ marginTop: 0 }}>Recommended Learning Path</h2>
+            <h2 style={{ marginTop: 0 }}>Recommended learning path</h2>
             <ol style={{ paddingLeft: 20, lineHeight: 1.9 }}>
               <li>Welcome to FCA Workspace</li>
               <li>Customer Portal Navigation</li>
@@ -99,7 +127,7 @@ export default function AcademyHome() {
             </ol>
           </div>
           <div style={cardStyle}>
-            <h2 style={{ marginTop: 0 }}>Auricrux Coaching Notes</h2>
+            <h2 style={{ marginTop: 0 }}>Auricrux coaching notes</h2>
             <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
               <div>• Two new learners are ready for onboarding assignment.</div>
               <div>• One certification expires in 14 days.</div>

@@ -1,4 +1,6 @@
 import PortalShell from "../../components/PortalShell";
+import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import { currentProject, portalTenant } from "../../portalShell";
 import { routeStateOverlays } from "../../workspaceState";
 
@@ -21,6 +23,22 @@ export default function PortalAdmin() {
       primaryHref="/pricing"
       primaryLabel="Open Rollout Planning"
     >
+      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Governance continuity</div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA administration now reads as a branded control surface</h2>
+          </div>
+          <div style={{ display: "grid", gap: 10 }}>
+            <FcaBrandMark compact />
+            <AuricruxBrandMark compact />
+          </div>
+        </div>
+        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
+          Tenant rollout posture, seat readiness, and governance visibility remain inside the same FCA workspace, with Auricrux maintaining execution awareness rather than handing control off to a separate admin product.
+        </p>
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Tenant</div>

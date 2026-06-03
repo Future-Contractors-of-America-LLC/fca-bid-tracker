@@ -1,4 +1,6 @@
 import PortalShell from "../../components/PortalShell";
+import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import { currentProject, portalTenant } from "../../portalShell";
 import { routeStateOverlays } from "../../workspaceState";
 
@@ -33,6 +35,22 @@ export default function PortalSupport() {
       primaryHref="/contact"
       primaryLabel="Open Support Contact"
     >
+      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Support continuity</div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA support now presents as part of the same operating shell</h2>
+          </div>
+          <div style={{ display: "grid", gap: 10 }}>
+            <FcaBrandMark compact />
+            <AuricruxBrandMark compact />
+          </div>
+        </div>
+        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
+          Customer help, escalation handling, and recovery guidance remain attached to the same tenant, project, and Auricrux state as the rest of FCA rather than appearing as a disconnected support tool.
+        </p>
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Active support context</h2>
