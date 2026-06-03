@@ -33,10 +33,10 @@ export default function Login() {
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <ShellHeader
           eyebrow="Auricrux Guided Entry"
-          title="Sign in to FCA Workspace"
-          subtitle="Demo login for customer portal and academy walkthroughs. This route is intentionally lightweight for pitch and shell validation."
+          title="Access FCA Workspace"
+          subtitle="This workspace entry routes customers into the unified FCA shell for portal operations, lifecycle visibility, academy continuity, and Auricrux-guided execution."
           primaryHref="/portal"
-          primaryLabel="Continue to Portal"
+          primaryLabel="Continue to Workspace"
           journey={shellJourney}
           currentJourney="workspace"
         />
@@ -51,16 +51,16 @@ export default function Login() {
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
               <a href="/portal" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#111827", color: "#fff", fontWeight: 700 }}>
-                Continue to Portal
+                Continue to Workspace
               </a>
               <a href="/academy" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#e5e7eb", color: "#111827", fontWeight: 700 }}>
-                Open Academy Demo
+                Open Academy
               </a>
             </div>
           </div>
 
           <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
-            <h2 style={{ marginTop: 0 }}>What opens after login</h2>
+            <h2 style={{ marginTop: 0 }}>What opens after entry</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
               {[
                 ["Projects", "Execution visibility and stage continuity"],

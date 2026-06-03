@@ -23,11 +23,11 @@ export default function ShellFooter() {
       >
         <div>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>
-            FCA Demo Conversion Path
+            FCA Conversion Path
           </div>
           <div style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Use this shell to pitch the full contractor lifecycle: public entry,
-            platform framing, portal visibility, academy enablement, and
+            Use this shell to present the full contractor lifecycle: public entry,
+            platform framing, workspace visibility, academy enablement, and
             Auricrux-guided next actions.
           </div>
         </div>
@@ -43,9 +43,9 @@ export default function ShellFooter() {
         </div>
 
         <div>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Canonical Demo Routes</div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Canonical Workspace Routes</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <a href="/login" style={linkStyle}>Enter Demo Workspace</a>
+            <a href="/login" style={linkStyle}>Enter Workspace</a>
             <a href="/portal" style={linkStyle}>Customer Portal</a>
             <a href="/academy" style={linkStyle}>FCA Academy</a>
             <a href="/bid-entry/" style={linkStyle}>Bid Entry</a>
@@ -66,9 +66,9 @@ export default function ShellFooter() {
         </div>
 
         <div>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Sales CTA</div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Production Next Step</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            Ready for a founder-led walkthrough or pilot discussion.
+            Ready for a founder-led rollout conversation, pilot implementation, or production planning discussion.
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <a
@@ -82,10 +82,10 @@ export default function ShellFooter() {
                 fontWeight: 700,
               }}
             >
-              Request Demo
+              Start Rollout
             </a>
             <a
-              href="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Demo%20Request"
+              href="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Production%20Rollout"
               style={{
                 textDecoration: "none",
                 background: "#f3f4f6",

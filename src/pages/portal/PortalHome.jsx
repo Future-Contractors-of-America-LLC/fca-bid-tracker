@@ -19,7 +19,7 @@ export default function PortalHome() {
   return (
     <PortalShell
       title="FCA Customer Workspace"
-      subtitle="Active pilot with Auricrux-guided next actions, communication visibility, billing readiness, and academy continuity."
+      subtitle="Live workspace shell with Auricrux-guided next actions, communication visibility, billing readiness, and academy continuity."
       activeHref="/portal"
       currentJourney="lead"
       primaryHref="/portal/projects"
@@ -58,9 +58,9 @@ export default function PortalHome() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Connected Demo Flow</h2>
+          <h2 style={{ marginTop: 0 }}>Connected Workspace Flow</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Start on the public shell and enter through <a href="/login">demo login</a>.</li>
+            <li>Start on the public shell and enter through <a href="/login">workspace entry</a>.</li>
             <li>Use this portal overview to frame account status and Auricrux guidance.</li>
             <li>Open <a href="/portal/projects">Projects</a> to show execution continuity.</li>
             <li>Open <a href="/portal/files">Files</a> and <a href="/portal/messages">Messages</a> to show coordination.</li>

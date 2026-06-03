@@ -33,13 +33,13 @@ export default function AcademyHome() {
     <div style={{ padding: 40, fontFamily: "Arial", background: "#f8fafc", minHeight: "100vh" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <ShellHeader
-          eyebrow="FCA Academy Demo"
+          eyebrow="FCA Academy"
           title="Training, Certification, and Workforce Readiness"
           subtitle="Academy shell connected to the same customer journey shown in the portal, so onboarding and training remain part of one operating flow."
           primaryHref="/portal"
           primaryLabel="Return to Portal"
           secondaryHref="/contact"
-          secondaryLabel="Request Demo"
+          secondaryLabel="Request Rollout"
           journey={shellJourney}
           currentJourney="academy"
         />
@@ -52,7 +52,7 @@ export default function AcademyHome() {
           </p>
           <div>
             <a href="/portal/academy" style={actionLinkStyle}>Open Portal Academy Route</a>
-            <a href="/pricing" style={{ ...actionLinkStyle, background: "#e5e7eb", color: "#111827" }}>View Pricing</a>
+            <a href="/pricing" style={{ ...actionLinkStyle, background: "#e5e7eb", color: "#111827" }}>Production Planning</a>
           </div>
         </div>
 
@@ -70,7 +70,7 @@ export default function AcademyHome() {
           <div style={cardStyle}>
             <div style={{ color: "#6b7280" }}>Completion Rate</div>
             <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>87%</div>
-            <div>Demo KPI for customer rollout confidence</div>
+            <div>Workspace KPI for rollout confidence</div>
           </div>
         </div>
 
@@ -106,16 +106,16 @@ export default function AcademyHome() {
             </div>
           </div>
           <div style={cardStyle}>
-            <h2 style={{ marginTop: 0 }}>Founder pitch close</h2>
+            <h2 style={{ marginTop: 0 }}>Production close</h2>
             <p style={{ lineHeight: 1.7, color: "#4b5563" }}>
               Use this screen to prove FCA is not just a bid tool. The same customer can move from sales and portal visibility into workforce enablement, compliance readiness, and long-term support.
             </p>
-            <a href="/contact" style={actionLinkStyle}>Book Founder Walkthrough</a>
+            <a href="/contact" style={actionLinkStyle}>Book Production Review</a>
           </div>
         </div>
 
         <div style={{ marginTop: 24, ...cardStyle }}>
-          <h2 style={{ marginTop: 0 }}>Why this matters in the pitch</h2>
+          <h2 style={{ marginTop: 0 }}>Why this matters in rollout</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
             FCA is not just a bid tool. The academy view proves the system can carry a customer from sales and onboarding into workforce enablement, compliance visibility, and long-term operational support.
           </p>

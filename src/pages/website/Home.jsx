@@ -29,7 +29,7 @@ export default function Home() {
         title="Future Contractors of America"
         subtitle="Unified contractor lifecycle platform for sales, portal operations, bid visibility, workforce readiness, and Auricrux-guided execution."
         primaryHref="/login"
-        primaryLabel="Enter Demo Workspace"
+        primaryLabel="Enter FCA Workspace"
         secondaryHref="/platform"
         secondaryLabel="Explore Platform"
         journey={shellJourney}
@@ -37,10 +37,10 @@ export default function Home() {
       />
 
       <div style={{ marginTop: 20 }}>
-        <a href="/login" style={ctaStyle}>Enter Demo Workspace</a>
+        <a href="/login" style={ctaStyle}>Enter FCA Workspace</a>
         <a href="/platform" style={secondaryStyle}>Platform Overview</a>
         <a href="/auricrux" style={secondaryStyle}>Meet Auricrux</a>
-        <a href="/pricing" style={secondaryStyle}>Pricing</a>
+        <a href="/pricing" style={secondaryStyle}>Production Planning</a>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 36 }}>
@@ -57,16 +57,16 @@ export default function Home() {
         <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
           <h3 style={{ marginTop: 0 }}>Customer Portal</h3>
           <p>Projects, files, notifications, billing follow-through, and customer-facing visibility.</p>
-          <a href="/portal">View portal demo</a>
+          <a href="/portal">Open customer workspace</a>
         </div>
         <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
           <h3 style={{ marginTop: 0 }}>FCA Academy</h3>
           <p>Training pathways, certification progress, and workforce readiness tied to the same customer journey.</p>
-          <a href="/academy">View academy demo</a>
+          <a href="/academy">Open academy workspace</a>
         </div>
         <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
           <h3 style={{ marginTop: 0 }}>FCA Bid Product</h3>
-          <p>Use the canonical FCA bid routes first for demos and customer flow continuity.</p>
+          <p>Use the canonical FCA bid routes first for customer continuity and production rollout planning.</p>
           <div style={{ marginTop: 10 }}>
             <a href="/bid-entry/">Open Bid Entry</a>
             <span style={{ margin: "0 8px" }}>•</span>
@@ -82,10 +82,10 @@ export default function Home() {
           </div>
         </div>
         <div style={{ padding: 18, border: "1px solid #e5e7eb", borderRadius: 12 }}>
-          <h3 style={{ marginTop: 0 }}>Pricing and Contact</h3>
-          <p>Support founder-led sales motion with pitch-ready pricing language and direct demo requests.</p>
+          <h3 style={{ marginTop: 0 }}>Production Conversion</h3>
+          <p>Move from shell visibility into rollout planning, founder review, and production implementation.</p>
           <div style={{ marginTop: 10 }}>
-            <a href="/pricing">Pricing</a>
+            <a href="/pricing">Planning</a>
             <span style={{ margin: "0 8px" }}>•</span>
             <a href="/contact">Contact</a>
           </div>

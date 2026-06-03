@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 
-const demoResponses = [
-  "Auricrux demo mode: I can guide the next customer action from this shell.",
-  "Auricrux demo mode: The portal and academy are aligned for onboarding continuity.",
-  "Auricrux demo mode: One approval is ready and two learners need assignment.",
+const fallbackResponses = [
+  "Auricrux continuity mode: I can guide the next customer action from this shell.",
+  "Auricrux continuity mode: The portal and academy are aligned for onboarding continuity.",
+  "Auricrux continuity mode: One approval is ready and two learners need assignment.",
 ];
 
 const quickPrompts = [
@@ -19,17 +19,17 @@ function modeMeta(mode) {
       tone: "#166534",
       bg: "#dcfce7",
       border: "#86efac",
-      summary: "Connected to live bid intake behavior.",
+      summary: "Connected to active bid-intake behavior.",
     };
   }
 
-  if (mode === "demo") {
+  if (mode === "fallback") {
     return {
-      label: "Demo Fallback",
+      label: "Continuity Mode",
       tone: "#9a3412",
       bg: "#ffedd5",
       border: "#fdba74",
-      summary: "Safe fallback for founder demo continuity.",
+      summary: "Fallback guidance is preserving shell continuity while backend connectivity is restored.",
     };
   }
 
@@ -96,8 +96,8 @@ export default function AuricruxDock() {
         ...prev,
       ]);
     } catch (err) {
-      setMode("demo");
-      const reply = demoResponses[Math.floor(Math.random() * demoResponses.length)];
+      setMode("fallback");
+      const reply = fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
       setLog((prev) => [
         {
           t: new Date().toISOString(),
@@ -105,7 +105,7 @@ export default function AuricruxDock() {
         },
         {
           t: new Date().toISOString(),
-          m: `DEMO FALLBACK: ${err.message}`,
+          m: `CONTINUITY: ${err.message}`,
         },
         ...prev,
       ]);
@@ -127,7 +127,7 @@ export default function AuricruxDock() {
         audio: true,
       });
       stream.getTracks().forEach((t) => t.stop());
-      alert("Video capability available for founder demo.");
+      alert("Video capability available for workspace review.");
     } catch {
       alert("Video capability blocked by browser policy or permissions.");
     }
@@ -195,7 +195,7 @@ export default function AuricruxDock() {
         {open ? (
           <>
             <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.5 }}>
-              Use Auricrux to narrate next actions, explain customer state, and preserve demo continuity across portal and academy routes.
+              Use Auricrux to narrate next actions, explain customer state, and preserve continuity across portal and academy routes.
             </div>
 
             <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
@@ -254,7 +254,7 @@ export default function AuricruxDock() {
             >
               {log.length === 0 ? (
                 <div style={{ color: "#64748b", fontSize: 12, lineHeight: 1.6 }}>
-                  Ask Auricrux for the next action, a customer update, training guidance, or a founder-demo narration cue.
+                  Ask Auricrux for the next action, a customer update, training guidance, or a production-rollout narration cue.
                 </div>
               ) : (
                 log.map((l, i) => (
@@ -275,7 +275,7 @@ export default function AuricruxDock() {
           </>
         ) : (
           <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.5 }}>
-            Tap open to access prompts, voice, video, and live/demo activity.
+            Open Auricrux to access prompts, voice, video, and continuity activity.
           </div>
         )}
       </div>
