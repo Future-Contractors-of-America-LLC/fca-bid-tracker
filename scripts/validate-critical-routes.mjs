@@ -79,6 +79,7 @@ for (const route of requiredAppRoutes) {
 
 const shellHrefSources = [
   websiteShellModule.publicActionCatalog,
+  websiteShellModule.publicFallbackCtaCards,
   websiteShellModule.shellJourney,
   websiteShellModule.shellPrimaryNav,
   websiteShellModule.shellWorkspaceRoutes,
