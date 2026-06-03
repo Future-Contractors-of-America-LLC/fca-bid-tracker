@@ -1,3 +1,5 @@
+import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
@@ -36,8 +38,16 @@ export default function Login() {
         />
 
         <div style={{ ...heroCardStyle, marginBottom: 20 }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Workspace continuity</div>
-          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Entry now feels like part of the operating shell</h2>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
+            <div>
+              <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Workspace continuity</div>
+              <h2 style={{ marginTop: 0, marginBottom: 10 }}>Entry now feels like part of the operating shell</h2>
+            </div>
+            <div style={{ display: "grid", gap: 10 }}>
+              <FcaBrandMark compact />
+              <AuricruxBrandMark compact />
+            </div>
+          </div>
           <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
             This route now carries the same visual rhythm as the rest of the public shell while keeping the strongest conversion path focused on entering the FCA workspace and unified platform dashboard.
           </p>

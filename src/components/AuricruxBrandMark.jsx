@@ -1,5 +1,8 @@
+import { brandIdentity } from "../brandIdentity";
+
 export default function AuricruxBrandMark({ compact = false, showLabel = true }) {
   const iconSize = compact ? 44 : 54;
+  const { colors } = brandIdentity.auricrux;
 
   return (
     <div
@@ -19,8 +22,8 @@ export default function AuricruxBrandMark({ compact = false, showLabel = true })
       >
         <defs>
           <linearGradient id="auricruxGold" x1="19" y1="18" x2="101" y2="102" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#FFE89A" />
-            <stop offset="0.45" stopColor="#F6C44C" />
+            <stop stopColor="#FFE9A6" />
+            <stop offset="0.45" stopColor={colors.primary} />
             <stop offset="1" stopColor="#B77912" />
           </linearGradient>
         </defs>
@@ -31,7 +34,7 @@ export default function AuricruxBrandMark({ compact = false, showLabel = true })
       </svg>
       {showLabel ? (
         <div>
-          <div style={{ fontWeight: 900, letterSpacing: "0.08em", color: "#7c5313", textTransform: "uppercase" }}>
+          <div style={{ fontWeight: 900, letterSpacing: "0.1em", color: colors.primaryDark, textTransform: "uppercase" }}>
             Auricrux
           </div>
           <div style={{ color: "#6b7280", fontSize: compact ? 11 : 12 }}>

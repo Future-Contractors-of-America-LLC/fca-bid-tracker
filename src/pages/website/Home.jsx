@@ -1,3 +1,5 @@
+import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
@@ -24,6 +26,24 @@ export default function Home() {
         journey={shellJourney}
         currentJourney="public"
       />
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 16,
+          flexWrap: "wrap",
+          alignItems: "center",
+          marginTop: 8,
+          padding: "14px 16px",
+          border: "1px solid #dbe3ef",
+          borderRadius: 18,
+          background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)",
+        }}
+      >
+        <FcaBrandMark />
+        <AuricruxBrandMark />
+      </div>
 
       <div style={{ marginTop: 20 }}>
         <a href="/login" style={{ ...ctaPrimaryStyle, marginRight: 12, marginTop: 12 }}>Enter FCA Workspace</a>

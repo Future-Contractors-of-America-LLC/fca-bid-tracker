@@ -1,3 +1,4 @@
+import FcaBrandMark from "../../components/FcaBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
@@ -25,6 +26,10 @@ export default function Contact() {
         journey={shellJourney}
         currentJourney="conversion"
       />
+
+      <div style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}>
+        <FcaBrandMark compact />
+      </div>
 
       <div style={twoColumnGridStyle}>
         <div style={{ display: "grid", gap: 16 }}>

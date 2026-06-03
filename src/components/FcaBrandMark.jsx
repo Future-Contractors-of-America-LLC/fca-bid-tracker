@@ -1,6 +1,9 @@
+import { brandIdentity } from "../brandIdentity";
+
 export default function FcaBrandMark({ compact = false, showTagline = true }) {
   const iconSize = compact ? 46 : 62;
   const wordmarkSize = compact ? 28 : 38;
+  const { colors } = brandIdentity.fca;
 
   return (
     <div
@@ -21,9 +24,9 @@ export default function FcaBrandMark({ compact = false, showTagline = true }) {
       >
         <defs>
           <linearGradient id="fcaBrandBlue" x1="22" y1="12" x2="98" y2="108" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#7AA5FF" />
-            <stop offset="0.5" stopColor="#4F7CFF" />
-            <stop offset="1" stopColor="#3157D7" />
+            <stop stopColor="#8CB2FF" />
+            <stop offset="0.48" stopColor={colors.primary} />
+            <stop offset="1" stopColor={colors.primaryDark} />
           </linearGradient>
           <linearGradient id="fcaBrandBlueDark" x1="38" y1="48" x2="88" y2="108" gradientUnits="userSpaceOnUse">
             <stop stopColor="#3F6BEE" />
@@ -31,11 +34,11 @@ export default function FcaBrandMark({ compact = false, showTagline = true }) {
           </linearGradient>
         </defs>
         <path d="M60 10L104 35V84L83 96V46L60 32L37 46V96L16 84V35L60 10Z" fill="url(#fcaBrandBlue)" />
-        <path d="M60 10V32L83 46L104 35L60 10Z" fill="#8EB3FF" fillOpacity="0.96" />
-        <path d="M37 46L60 32V10L16 35L37 46Z" fill="#5E8FFF" fillOpacity="0.95" />
+        <path d="M60 10V32L83 46L104 35L60 10Z" fill="#A8C4FF" fillOpacity="0.98" />
+        <path d="M37 46L60 32V10L16 35L37 46Z" fill="#73A0FF" fillOpacity="0.95" />
         <path d="M37 46V96L60 82V59L37 46Z" fill="url(#fcaBrandBlueDark)" fillOpacity="0.97" />
         <path d="M83 46V96L60 82V59L83 46Z" fill="#4874F5" fillOpacity="0.9" />
-        <path d="M45 55L60 46L75 55V68L60 77L45 68V55Z" fill="#F8FAFC" fillOpacity="0.14" />
+        <path d="M45 55L60 46L75 55V68L60 77L45 68V55Z" fill="#091221" fillOpacity="0.96" />
       </svg>
 
       <div>
@@ -44,8 +47,8 @@ export default function FcaBrandMark({ compact = false, showTagline = true }) {
             fontSize: wordmarkSize,
             lineHeight: 1,
             fontWeight: 900,
-            letterSpacing: "0.04em",
-            color: "#111827",
+            letterSpacing: "0.05em",
+            color: colors.ink,
           }}
         >
           FCA
@@ -55,7 +58,7 @@ export default function FcaBrandMark({ compact = false, showTagline = true }) {
             style={{
               marginTop: 6,
               fontSize: compact ? 10 : 12,
-              letterSpacing: "0.12em",
+              letterSpacing: "0.13em",
               textTransform: "uppercase",
               fontWeight: 800,
               color: "#334155",

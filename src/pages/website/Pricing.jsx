@@ -1,3 +1,5 @@
+import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
@@ -27,8 +29,16 @@ export default function Pricing() {
       />
 
       <div style={{ ...heroCardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Production planning flow</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Move from pricing into rollout readiness</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Production planning flow</div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Move from pricing into rollout readiness</h2>
+          </div>
+          <div style={{ display: "grid", gap: 10 }}>
+            <FcaBrandMark compact />
+            <AuricruxBrandMark compact />
+          </div>
+        </div>
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
           The strongest motion here is not a static price sheet. It is a guided production conversation that ties scope to the live shell, platform dashboard, portal continuity, academy readiness, and Auricrux-guided next actions.
         </p>

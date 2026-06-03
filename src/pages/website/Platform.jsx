@@ -1,3 +1,4 @@
+import FcaBrandMark from "../../components/FcaBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
@@ -20,7 +21,10 @@ export default function Platform() {
       />
 
       <div style={heroCardStyle}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Platform story</div>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
+          <div style={{ color: "#2563eb", fontWeight: 700 }}>Platform story</div>
+          <FcaBrandMark compact />
+        </div>
         <h2 style={{ marginTop: 0 }}>Built to feel like one connected system</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>
           The current shell is designed for founder-led sales conversations and believable customer demos. It shows how FCA can carry a contractor from public entry into login, portal operations, bid visibility, academy continuity, and Auricrux-guided next actions without fragmenting the experience.
