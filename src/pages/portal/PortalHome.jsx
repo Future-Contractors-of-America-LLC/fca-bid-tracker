@@ -1,11 +1,12 @@
-import ShellHeader from "../../components/ShellHeader";
-import ShellFooter from "../../components/ShellFooter";
+import PortalShell from "../../components/PortalShell";
+import { auricruxActions, portalMessages, portalMetrics, portalProjects } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
   borderRadius: 14,
   padding: 18,
   background: "#fff",
+  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
 const metricStyle = {
@@ -16,79 +17,65 @@ const metricStyle = {
 
 export default function PortalHome() {
   return (
-    <div style={{ padding: 40, fontFamily: "Arial", background: "#f8fafc", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-        <ShellHeader
-          eyebrow="Customer Portal Demo"
-          title="FCA Customer Workspace"
-          subtitle="Active pilot with Auricrux-guided next actions, communication visibility, and training continuity."
-          primaryHref="/academy"
-          primaryLabel="Open Academy"
-        />
+    <PortalShell
+      title="FCA Customer Workspace"
+      subtitle="Active pilot with Auricrux-guided next actions, communication visibility, billing readiness, and academy continuity."
+      activeHref="/portal"
+      primaryHref="/portal/projects"
+      primaryLabel="Open Project Flow"
+    >
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+        {portalMetrics.map((metric) => (
+          <div key={metric.label} style={cardStyle}>
+            <div style={{ color: "#6b7280" }}>{metric.label}</div>
+            <div style={metricStyle}>{metric.value}</div>
+            <div>{metric.detail}</div>
+          </div>
+        ))}
+      </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 28 }}>
-          <div style={cardStyle}>
-            <div style={{ color: "#6b7280" }}>Active Projects</div>
-            <div style={metricStyle}>4</div>
-            <div>2 in estimating, 1 in execution, 1 in closeout</div>
-          </div>
-          <div style={cardStyle}>
-            <div style={{ color: "#6b7280" }}>Unread Messages</div>
-            <div style={metricStyle}>7</div>
-            <div>Sales, project coordination, and onboarding updates</div>
-          </div>
-          <div style={cardStyle}>
-            <div style={{ color: "#6b7280" }}>Documents Ready</div>
-            <div style={metricStyle}>18</div>
-            <div>Bids, permits, onboarding forms, and training docs</div>
-          </div>
-          <div style={cardStyle}>
-            <div style={{ color: "#6b7280" }}>Auricrux Status</div>
-            <div style={metricStyle}>Online</div>
-            <div>Monitoring bid status, portal requests, and academy handoff</div>
-          </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 16, marginTop: 24 }}>
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Auricrux Next Actions</h2>
+          <ul style={{ paddingLeft: 20, lineHeight: 1.8 }}>
+            {auricruxActions.map((action) => (
+              <li key={action}>{action}</li>
+            ))}
+          </ul>
         </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 16, marginTop: 24 }}>
-          <div style={cardStyle}>
-            <h2 style={{ marginTop: 0 }}>Auricrux Next Actions</h2>
-            <ul style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-              <li>Review pending customer approval for Bid Package A-117.</li>
-              <li>Send onboarding packet to 2 newly assigned field users.</li>
-              <li>Confirm safety certification progress before project mobilization.</li>
-              <li>Follow up on one open RFI blocking subcontractor pricing.</li>
-            </ul>
-          </div>
-          <div style={cardStyle}>
-            <h2 style={{ marginTop: 0 }}>Message Preview</h2>
-            <div style={{ marginBottom: 12 }}>
-              <strong>Estimator Team</strong>
-              <div style={{ color: "#4b5563" }}>Bid review updated 18 minutes ago.</div>
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Message Preview</h2>
+          {portalMessages.map((message) => (
+            <div key={message.subject} style={{ marginBottom: 12 }}>
+              <strong>{message.from}</strong>
+              <div style={{ color: "#4b5563" }}>{message.subject}</div>
+              <div style={{ color: "#6b7280", fontSize: 14 }}>{message.time}</div>
             </div>
-            <div style={{ marginBottom: 12 }}>
-              <strong>Customer Success</strong>
-              <div style={{ color: "#4b5563" }}>Training seats confirmed for Monday onboarding.</div>
-            </div>
-            <div>
-              <strong>Auricrux</strong>
-              <div style={{ color: "#4b5563" }}>One customer action is ready for approval.</div>
-            </div>
-          </div>
+          ))}
         </div>
+      </div>
 
-        <div style={{ marginTop: 24, ...cardStyle }}>
-          <h2 style={{ marginTop: 0 }}>Demo Walkthrough Path</h2>
-          <p style={{ marginBottom: 8 }}>Use this portal view to show the founder shell flow:</p>
+      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16, marginTop: 24 }}>
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Connected Demo Flow</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Enter from <a href="/login">demo login</a>.</li>
-            <li>Show customer metrics and Auricrux next actions.</li>
-            <li>Open the Auricrux dock and send a sample message.</li>
-            <li>Transition to the <a href="/academy">academy workspace</a> to show training continuity.</li>
+            <li>Start on the public shell and enter through <a href="/login">demo login</a>.</li>
+            <li>Use this portal overview to frame account status and Auricrux guidance.</li>
+            <li>Open <a href="/portal/projects">Projects</a> to show execution continuity.</li>
+            <li>Open <a href="/portal/files">Files</a> and <a href="/portal/messages">Messages</a> to show coordination.</li>
+            <li>Finish in <a href="/portal/academy">Academy</a> to prove workforce and training follow-through.</li>
           </ol>
         </div>
-
-        <ShellFooter />
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Project Snapshot</h2>
+          {portalProjects.map((project) => (
+            <div key={project.id} style={{ marginBottom: 14 }}>
+              <div style={{ fontWeight: 700 }}>{project.id} · {project.customer}</div>
+              <div style={{ color: "#4b5563" }}>{project.stage} · Next: {project.nextAction}</div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </PortalShell>
   );
 }
