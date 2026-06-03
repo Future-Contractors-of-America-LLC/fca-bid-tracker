@@ -79,6 +79,16 @@ export const publicActionCatalog = {
     href: "/portal/files",
     variant: "light",
   },
+  support: {
+    label: "Open Support",
+    href: "/portal/support",
+    variant: "secondary",
+  },
+  admin: {
+    label: "Open Admin",
+    href: "/portal/admin",
+    variant: "secondary",
+  },
   legacyIntake: {
     label: "Legacy intake route",
     href: "/fca-customer-entry/index.html",
@@ -253,6 +263,83 @@ export const portalShellCtas = {
     href: publicActionCatalog.projects.href,
     label: "View Project Flow",
   },
+};
+
+export const portalEntryCtaSets = {
+  quickActions: [
+    { label: "Open Projects", href: publicActionCatalog.projects.href, variant: "primary" },
+    { label: "Review Files", href: publicActionCatalog.files.href, variant: "secondary" },
+    { label: "Check Billing", href: publicActionCatalog.billing.href, variant: "secondary" },
+    { label: "Open Academy", href: publicActionCatalog.academyContinuity.href, variant: "light" },
+  ],
+  connectedWorkspaceFlow: [
+    {
+      step: 1,
+      prefix: "Start on the public shell and enter through",
+      href: publicActionCatalog.workspace.href,
+      label: "Open FCA Workspace",
+      suffix: ".",
+    },
+    {
+      step: 3,
+      prefix: "Open",
+      href: publicActionCatalog.projects.href,
+      label: "Projects",
+      suffix: "to show execution continuity.",
+    },
+    {
+      step: 4,
+      prefix: "Open",
+      href: publicActionCatalog.files.href,
+      label: "Files",
+      suffix: "and",
+      secondaryHref: publicActionCatalog.messages.href,
+      secondaryLabel: "Messages",
+      trailing: "to show coordination.",
+    },
+    {
+      step: 5,
+      prefix: "Finish in",
+      href: publicActionCatalog.academyContinuity.href,
+      label: "Open Academy",
+      suffix: "to prove workforce and training follow-through.",
+    },
+  ],
+};
+
+export const platformDashboardCtaSets = {
+  quickActions: [
+    { label: publicActionCatalog.portal.label, href: publicActionCatalog.portal.href, variant: "primary" },
+    { label: publicActionCatalog.support.label, href: publicActionCatalog.support.href, variant: "secondary" },
+    { label: publicActionCatalog.admin.label, href: publicActionCatalog.admin.href, variant: "secondary" },
+    { label: publicActionCatalog.academy.label, href: publicActionCatalog.academy.href, variant: "light" },
+  ],
+  operationalCards: [
+    {
+      title: "Portal operations",
+      detail: "Project visibility, files, messages, and billing continuity remain attached to one tenant and project spine.",
+      href: publicActionCatalog.portal.href,
+      label: publicActionCatalog.portal.label,
+    },
+    {
+      title: "Academy continuity",
+      detail: "Workforce readiness, learner assignment, and certification visibility now participate in the same shell state.",
+      href: publicActionCatalog.academy.href,
+      label: publicActionCatalog.academy.label,
+    },
+    {
+      title: "Support posture",
+      detail: "Escalations, continuity recovery, and customer help remain inside the operating shell rather than outside it.",
+      href: publicActionCatalog.support.href,
+      label: publicActionCatalog.support.label,
+    },
+    {
+      title: "Admin readiness",
+      detail: "Tenant rollout, seat readiness, governance visibility, and production posture are summarized in one control surface.",
+      href: publicActionCatalog.admin.href,
+      label: publicActionCatalog.admin.label,
+    },
+  ],
 };
 
 export const platformModules = [

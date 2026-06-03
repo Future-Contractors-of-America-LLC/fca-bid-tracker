@@ -6,7 +6,7 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { auricruxActions, portalMessages, portalMetrics, portalProjects } from "../../portalShell";
-import { publicBodyCtaSets } from "../../websiteShell";
+import { portalEntryCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 
@@ -94,14 +94,7 @@ export default function PortalHome() {
 
       <PublicCtaRow actions={publicBodyCtaSets.portalEntry} style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }} />
 
-      <WorkspaceQuickActions
-        actions={[
-          { label: "Open Projects", href: "/portal/projects", variant: "primary" },
-          { label: "Review Files", href: "/portal/files", variant: "secondary" },
-          { label: "Check Billing", href: "/portal/billing", variant: "secondary" },
-          { label: "Open Academy", href: "/portal/academy", variant: "light" },
-        ]}
-      />
+      <WorkspaceQuickActions actions={portalEntryCtaSets.quickActions} />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
         {portalMetrics.map((metric) => (
@@ -137,11 +130,13 @@ export default function PortalHome() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Connected workspace flow</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Start on the public shell and enter through <a href="/login">Open FCA Workspace</a>.</li>
+            {portalEntryCtaSets.connectedWorkspaceFlow.map((item) => (
+              <li key={item.step}>
+                {item.prefix} <a href={item.href}>{item.label}</a>
+                {item.secondaryHref ? <> {item.suffix} <a href={item.secondaryHref}>{item.secondaryLabel}</a> {item.trailing}</> : ` ${item.suffix}`}
+              </li>
+            ))}
             <li>Use this portal overview to frame account status and Auricrux guidance.</li>
-            <li>Open <a href="/portal/projects">Projects</a> to show execution continuity.</li>
-            <li>Open <a href="/portal/files">Files</a> and <a href="/portal/messages">Messages</a> to show coordination.</li>
-            <li>Finish in <a href="/portal/academy">Open Academy</a> to prove workforce and training follow-through.</li>
           </ol>
         </div>
         <div style={cardStyle}>

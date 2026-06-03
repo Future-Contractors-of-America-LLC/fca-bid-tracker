@@ -5,7 +5,7 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import { auricruxActions, portalMessages, portalMetrics } from "../../portalShell";
-import { publicBodyCtaSets } from "../../websiteShell";
+import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { ctaPrimaryStyle } from "../../publicShellStyles";
@@ -60,14 +60,7 @@ export default function PlatformDashboard() {
         <PublicCtaRow actions={publicBodyCtaSets.portalEntry} />
       </div>
 
-      <WorkspaceQuickActions
-        actions={[
-          { label: "Open Portal Workspace", href: "/portal", variant: "primary" },
-          { label: "Open Support", href: "/portal/support", variant: "secondary" },
-          { label: "Open Admin", href: "/portal/admin", variant: "secondary" },
-          { label: "Open Academy", href: "/academy", variant: "light" },
-        ]}
-      />
+      <WorkspaceQuickActions actions={platformDashboardCtaSets.quickActions} />
 
       <div style={{ ...cardStyle, marginTop: 24, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Executive continuity focus</div>
@@ -126,34 +119,13 @@ export default function PlatformDashboard() {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 24 }}>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Portal operations</h2>
-          <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Project visibility, files, messages, and billing continuity remain attached to one tenant and project spine.
-          </p>
-          <a href="/portal" style={ctaPrimaryStyle}>Open Portal Workspace</a>
-        </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Academy continuity</h2>
-          <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Workforce readiness, learner assignment, and certification visibility now participate in the same shell state.
-          </p>
-          <a href="/academy" style={ctaPrimaryStyle}>Open Academy</a>
-        </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Support posture</h2>
-          <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Escalations, continuity recovery, and customer help remain inside the operating shell rather than outside it.
-          </p>
-          <a href="/portal/support" style={ctaPrimaryStyle}>Open Support</a>
-        </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Admin readiness</h2>
-          <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Tenant rollout, seat readiness, governance visibility, and production posture are summarized in one control surface.
-          </p>
-          <a href="/portal/admin" style={ctaPrimaryStyle}>Open Admin</a>
-        </div>
+        {platformDashboardCtaSets.operationalCards.map((item) => (
+          <div key={item.href} style={cardStyle}>
+            <h2 style={{ marginTop: 0 }}>{item.title}</h2>
+            <p style={{ color: "#4b5563", lineHeight: 1.7 }}>{item.detail}</p>
+            <a href={item.href} style={ctaPrimaryStyle}>{item.label}</a>
+          </div>
+        ))}
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
