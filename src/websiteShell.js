@@ -44,6 +44,21 @@ export const publicActionCatalog = {
     href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
     variant: "light",
   },
+  bidEntry: {
+    label: "Open Bid Entry",
+    href: "/bid-entry/",
+    variant: "secondary",
+  },
+  bidStatus: {
+    label: "Open Bid Status",
+    href: "/bid-status/",
+    variant: "light",
+  },
+  academyContinuity: {
+    label: "Academy Continuity",
+    href: "/portal/academy",
+    variant: "light",
+  },
 };
 
 export const publicFallbackCtaCards = [
@@ -99,6 +114,52 @@ export const auricruxWalkthroughPath = [
     href: publicActionCatalog.academy.href,
     label: publicActionCatalog.academy.label,
   },
+];
+
+export const platformJourneyPath = [
+  {
+    step: 1,
+    prefix: "Start on the public home page and review the",
+    href: publicActionCatalog.platformOverview.href,
+    label: publicActionCatalog.platformOverview.label,
+    suffix: ".",
+  },
+  {
+    step: 2,
+    prefix: "Enter through",
+    href: publicActionCatalog.workspace.href,
+    label: "workspace login",
+    suffix: ".",
+  },
+  {
+    step: 3,
+    prefix: "Open the",
+    href: publicActionCatalog.portal.href,
+    label: "customer portal",
+    suffix: "for visibility into projects, files, and communications.",
+  },
+  {
+    step: 4,
+    prefix: "Continue into",
+    href: publicActionCatalog.academyContinuity.href,
+    label: "academy continuity",
+    suffix: "for onboarding and workforce readiness.",
+  },
+  {
+    step: 5,
+    prefix: "Use the",
+    href: publicActionCatalog.platform.href,
+    label: "platform dashboard",
+    suffix: "to summarize tenant, project, support, and admin state in one view.",
+  },
+];
+
+export const platformLinkedProductAreas = [
+  publicActionCatalog.portal,
+  publicActionCatalog.platform,
+  publicActionCatalog.academy,
+  publicActionCatalog.bidEntry,
+  publicActionCatalog.bidStatus,
 ];
 
 export const platformModules = [

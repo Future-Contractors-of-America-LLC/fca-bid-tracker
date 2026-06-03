@@ -8,7 +8,14 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { platformModules, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import {
+  platformJourneyPath,
+  platformLinkedProductAreas,
+  platformModules,
+  publicBodyCtaSets,
+  publicRouteCtas,
+  shellJourney,
+} from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const platformContinuityItems = [
@@ -116,11 +123,11 @@ export default function Platform() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>How customers move through FCA</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Start on the public home page and review the FCA platform overview.</li>
-            <li>Enter through <a href="/login">workspace login</a>.</li>
-            <li>Open the <a href="/portal">customer portal</a> for visibility into projects, files, and communications.</li>
-            <li>Continue into <a href="/portal/academy">academy continuity</a> for onboarding and workforce readiness.</li>
-            <li>Use the <a href="/portal/platform">platform dashboard</a> to summarize tenant, project, support, and admin state in one view.</li>
+            {platformJourneyPath.map((item) => (
+              <li key={item.step}>
+                {item.prefix} <a href={item.href}>{item.label}</a>{item.suffix ? ` ${item.suffix}` : null}
+              </li>
+            ))}
             <li>Follow Auricrux guidance to keep next actions visible across the system.</li>
           </ol>
         </div>
@@ -135,11 +142,11 @@ export default function Platform() {
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Linked product areas</h2>
         <div style={{ ...responsiveGrid(220), gap: 12 }}>
-          <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Portal Workspace</a>
-          <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Platform Dashboard</a>
-          <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Academy</a>
-          <a href="/bid-entry/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Bid Entry</a>
-          <a href="/bid-status/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Bid Status</a>
+          {platformLinkedProductAreas.map((item) => (
+            <a key={item.href} href={item.href} style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>
+              {item.label}
+            </a>
+          ))}
         </div>
       </div>
 
