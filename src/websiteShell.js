@@ -294,4 +294,9 @@ export const publicBodyCtaSets = {
     publicActionCatalog.portal,
     publicActionCatalog.academy,
   ],
+  academyEntry: [
+    { ...publicActionCatalog.portal, variant: "primary" },
+    publicActionCatalog.platform,
+    publicActionCatalog.contact,
+  ],
 };

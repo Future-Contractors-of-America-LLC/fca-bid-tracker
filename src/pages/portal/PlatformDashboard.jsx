@@ -3,9 +3,12 @@ import PortalShell from "../../components/PortalShell";
 import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import { auricruxActions, portalMessages, portalMetrics } from "../../portalShell";
+import { publicBodyCtaSets } from "../../websiteShell";
 import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import { ctaPrimaryStyle } from "../../publicShellStyles";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -49,16 +52,17 @@ export default function PlatformDashboard() {
             <AuricruxBrandMark compact />
           </div>
         </div>
-        <div style={{ color: "#334155", lineHeight: 1.7 }}>
+        <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
           <div><strong>Source:</strong> {state.meta.backingSource}</div>
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
         </div>
+        <PublicCtaRow actions={publicBodyCtaSets.portalEntry} />
       </div>
 
       <WorkspaceQuickActions
         actions={[
-          { label: "Portal Overview", href: "/portal", variant: "primary" },
+          { label: "Open Portal Workspace", href: "/portal", variant: "primary" },
           { label: "Open Support", href: "/portal/support", variant: "secondary" },
           { label: "Open Admin", href: "/portal/admin", variant: "secondary" },
           { label: "Open Academy", href: "/academy", variant: "light" },
@@ -127,28 +131,28 @@ export default function PlatformDashboard() {
           <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
             Project visibility, files, messages, and billing continuity remain attached to one tenant and project spine.
           </p>
-          <a href="/portal">Open portal overview</a>
+          <a href="/portal" style={ctaPrimaryStyle}>Open Portal Workspace</a>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Academy continuity</h2>
           <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
             Workforce readiness, learner assignment, and certification visibility now participate in the same shell state.
           </p>
-          <a href="/academy">Open academy</a>
+          <a href="/academy" style={ctaPrimaryStyle}>Open Academy</a>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Support posture</h2>
           <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
             Escalations, continuity recovery, and customer help remain inside the operating shell rather than outside it.
           </p>
-          <a href="/portal/support">Open support</a>
+          <a href="/portal/support" style={ctaPrimaryStyle}>Open Support</a>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Admin readiness</h2>
           <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
             Tenant rollout, seat readiness, governance visibility, and production posture are summarized in one control surface.
           </p>
-          <a href="/portal/admin">Open admin</a>
+          <a href="/portal/admin" style={ctaPrimaryStyle}>Open Admin</a>
         </div>
       </div>
 
