@@ -7,7 +7,7 @@ import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import { pricingTiers, shellJourney } from "../../websiteShell";
+import { pricingTiers, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroButtonRowStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const rolloutSteps = [
@@ -24,10 +24,10 @@ export default function Pricing() {
         eyebrow="FCA Production Planning"
         title="Production rollout planning"
         subtitle="This page is structured to support a real rollout conversation: pilot scope, operating readiness, founder review, and the next production action inside the FCA shell."
-        primaryHref="/contact"
-        primaryLabel="Request Founder Review"
-        secondaryHref="/platform"
-        secondaryLabel="Platform Overview"
+        primaryHref={publicRouteCtas.conversion.primaryHref}
+        primaryLabel={publicRouteCtas.conversion.primaryLabel}
+        secondaryHref={publicRouteCtas.conversion.secondaryHref}
+        secondaryLabel={publicRouteCtas.conversion.secondaryLabel}
         journey={shellJourney}
         currentJourney="conversion"
       />

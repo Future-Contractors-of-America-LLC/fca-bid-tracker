@@ -106,9 +106,10 @@ export default function ShellFooter() {
         </div>
 
         <div>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Production Next Step</div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Standardized Next Actions</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            Ready for a founder-led rollout conversation, pilot implementation, or production planning discussion.
+            Every public shell route now closes on the same canonical actions: open workspace,
+            open unified platform state, or request founder review.
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             {shellProductionActions.map((action) => (

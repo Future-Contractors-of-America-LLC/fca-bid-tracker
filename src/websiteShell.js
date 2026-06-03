@@ -117,8 +117,8 @@ export const shellCompatibilityRoutes = [
 
 export const shellProductionActions = [
   {
-    label: "Start Rollout",
-    href: "/contact",
+    label: "Open FCA Workspace",
+    href: "/login",
     variant: "primary",
   },
   {
@@ -127,8 +127,41 @@ export const shellProductionActions = [
     variant: "secondary",
   },
   {
-    label: "Email FCA",
-    href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Production%20Rollout",
+    label: "Request Founder Review",
+    href: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request",
     variant: "light",
   },
 ];
+
+export const publicRouteCtas = {
+  public: {
+    primaryHref: "/login",
+    primaryLabel: "Open FCA Workspace",
+    secondaryHref: "/platform",
+    secondaryLabel: "Platform Overview",
+  },
+  platform: {
+    primaryHref: "/login",
+    primaryLabel: "Open FCA Workspace",
+    secondaryHref: "/portal/platform",
+    secondaryLabel: "Open Platform Dashboard",
+  },
+  auricrux: {
+    primaryHref: "/portal/platform",
+    primaryLabel: "Open Platform Dashboard",
+    secondaryHref: "/portal",
+    secondaryLabel: "Open Portal Workspace",
+  },
+  workspace: {
+    primaryHref: "/portal",
+    primaryLabel: "Open Portal Workspace",
+    secondaryHref: "/portal/platform",
+    secondaryLabel: "Open Platform Dashboard",
+  },
+  conversion: {
+    primaryHref: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request",
+    primaryLabel: "Request Founder Review",
+    secondaryHref: "/portal/platform",
+    secondaryLabel: "Open Platform Dashboard",
+  },
+};

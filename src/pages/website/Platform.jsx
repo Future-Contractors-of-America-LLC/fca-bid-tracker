@@ -5,7 +5,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import { platformModules, shellJourney } from "../../websiteShell";
+import { platformModules, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 export default function Platform() {
@@ -15,10 +15,10 @@ export default function Platform() {
         eyebrow="FCA Platform"
         title="One contractor lifecycle operating system"
         subtitle="FCA is being shaped as a unified operating surface for sales, portal visibility, project follow-through, workforce enablement, and Auricrux-guided execution."
-        primaryHref="/login"
-        primaryLabel="Open FCA Workspace"
-        secondaryHref="/pricing"
-        secondaryLabel="View Pricing"
+        primaryHref={publicRouteCtas.platform.primaryHref}
+        primaryLabel={publicRouteCtas.platform.primaryLabel}
+        secondaryHref={publicRouteCtas.platform.secondaryHref}
+        secondaryLabel={publicRouteCtas.platform.secondaryLabel}
         journey={shellJourney}
         currentJourney="platform"
       />

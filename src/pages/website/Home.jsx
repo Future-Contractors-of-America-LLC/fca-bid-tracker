@@ -5,7 +5,7 @@ import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import { shellJourney } from "../../websiteShell";
+import { publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
 const secondaryStyle = {
@@ -21,10 +21,10 @@ export default function Home() {
         eyebrow="FCA + Auricrux Unified Shell"
         title="Future Contractors of America"
         subtitle="Unified contractor lifecycle platform for sales, portal operations, bid visibility, workforce readiness, and Auricrux-guided execution."
-        primaryHref="/login"
-        primaryLabel="Enter FCA Workspace"
-        secondaryHref="/platform"
-        secondaryLabel="Explore Platform"
+        primaryHref={publicRouteCtas.public.primaryHref}
+        primaryLabel={publicRouteCtas.public.primaryLabel}
+        secondaryHref={publicRouteCtas.public.secondaryHref}
+        secondaryLabel={publicRouteCtas.public.secondaryLabel}
         journey={shellJourney}
         currentJourney="public"
       />

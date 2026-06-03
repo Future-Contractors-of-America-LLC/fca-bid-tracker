@@ -5,7 +5,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import { auricruxCapabilities, shellJourney } from "../../websiteShell";
+import { auricruxCapabilities, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
@@ -22,10 +22,10 @@ export default function AuricruxPage() {
         eyebrow="Auricrux Embedded Operating Layer"
         title="Auricrux stays active across the FCA shell"
         subtitle="Auricrux is presented here as the visible operating layer that reads state, explains continuity, recommends next actions, and keeps the public shell connected to the working FCA workspace."
-        primaryHref="/portal/platform"
-        primaryLabel="Open Platform Dashboard"
-        secondaryHref="/portal"
-        secondaryLabel="Open Portal Workspace"
+        primaryHref={publicRouteCtas.auricrux.primaryHref}
+        primaryLabel={publicRouteCtas.auricrux.primaryLabel}
+        secondaryHref={publicRouteCtas.auricrux.secondaryHref}
+        secondaryLabel={publicRouteCtas.auricrux.secondaryLabel}
         journey={shellJourney}
         currentJourney="platform"
       />

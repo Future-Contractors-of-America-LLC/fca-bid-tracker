@@ -6,7 +6,7 @@ import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import { contactPaths, shellJourney } from "../../websiteShell";
+import { contactPaths, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const checklistStyle = {
@@ -23,10 +23,10 @@ export default function Contact() {
         eyebrow="FCA Contact"
         title="Move from interest to founder review"
         subtitle="This contact surface is structured around the immediate sales objective: converting interest into a founder-led review, pilot conversation, or broader platform assessment."
-        primaryHref="/login"
-        primaryLabel="Open FCA Workspace"
-        secondaryHref="/pricing"
-        secondaryLabel="Pricing"
+        primaryHref={publicRouteCtas.conversion.primaryHref}
+        primaryLabel={publicRouteCtas.conversion.primaryLabel}
+        secondaryHref={publicRouteCtas.conversion.secondaryHref}
+        secondaryLabel={publicRouteCtas.conversion.secondaryLabel}
         journey={shellJourney}
         currentJourney="conversion"
       />
