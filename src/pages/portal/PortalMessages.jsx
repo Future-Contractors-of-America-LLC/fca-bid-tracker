@@ -1,6 +1,6 @@
 import PortalShell from "../../components/PortalShell";
 import { portalMessages } from "../../portalShell";
-import { routeStateOverlays } from "../../workspaceState";
+import { auricruxRail, currentProject, routeStateOverlays, workspaceContext } from "../../workspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -8,6 +8,12 @@ const cardStyle = {
   padding: 18,
   background: "#fff",
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+};
+
+const highlightCardStyle = {
+  ...cardStyle,
+  background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)",
+  border: "1px solid #e5d3a1",
 };
 
 const ctaStyle = {
@@ -33,6 +39,17 @@ export default function PortalMessages() {
       primaryHref="/portal/billing"
       primaryLabel="Continue to Billing"
     >
+      <div style={{ ...highlightCardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Continuity signal</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux is keeping communication tied to execution state</h2>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Next customer action:</strong> {workspaceContext.currentNextAction}</div>
+          <div><strong>Revenue blocker:</strong> {auricruxRail.currentBlocker}</div>
+          <div><strong>Training continuity:</strong> Two learners still need assignment under {currentProject.id}.</div>
+          <div><strong>Recommended route:</strong> Clear approval in /portal/bids, then advance /portal/billing.</div>
+        </div>
+      </div>
+
       <div style={cardStyle}>
         <h2 style={{ marginTop: 0 }}>Message stream</h2>
         {portalMessages.map((message) => (
@@ -45,7 +62,7 @@ export default function PortalMessages() {
         ))}
         <div>
           <a href="/portal/billing" style={ctaStyle}>Continue to Billing</a>
-          <a href="/portal/academy" style={{ ...ctaStyle, background: "#e5e7eb", color: "#111827" }}>Open Academy</a>
+          <a href="/academy" style={{ ...ctaStyle, background: "#e5e7eb", color: "#111827" }}>Open Academy</a>
           <a href="/contact" style={{ ...ctaStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>Request Founder Review</a>
         </div>
       </div>

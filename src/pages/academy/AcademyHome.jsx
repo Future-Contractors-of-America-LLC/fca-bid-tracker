@@ -25,6 +25,12 @@ const actionCardStyle = {
   border: "1px solid #dbe3ef",
 };
 
+const continuityCardStyle = {
+  ...cardStyle,
+  background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)",
+  border: "1px solid #e5d3a1",
+};
+
 const actionLinkStyle = {
   display: "inline-block",
   textDecoration: "none",
@@ -94,6 +100,28 @@ export default function AcademyHome() {
           <div>
             <a href="/portal/academy" style={actionLinkStyle}>Open Portal Academy Route</a>
             <a href="/pricing" style={{ ...actionLinkStyle, background: "#e5e7eb", color: "#111827" }}>Production Planning</a>
+          </div>
+        </div>
+
+        <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
+          <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Operational continuity focus</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7 }}>
+            <div>
+              <strong>Assignment need</strong>
+              <div>Two learners are ready for onboarding assignment.</div>
+            </div>
+            <div>
+              <strong>Dependency</strong>
+              <div>{routeStateOverlays.academy.dependencyDetail}</div>
+            </div>
+            <div>
+              <strong>Commercial blocker</strong>
+              <div>{auricruxRail.blockerImpact}</div>
+            </div>
+            <div>
+              <strong>Coordinated next move</strong>
+              <div>Assign learners here, then preserve follow-through in messages and billing.</div>
+            </div>
           </div>
         </div>
 

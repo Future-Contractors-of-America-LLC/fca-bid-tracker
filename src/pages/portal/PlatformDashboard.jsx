@@ -65,7 +65,29 @@ export default function PlatformDashboard() {
         ]}
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+      <div style={{ ...cardStyle, marginTop: 24, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
+        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Executive continuity focus</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7 }}>
+          <div>
+            <strong>Next action</strong>
+            <div>{state.workspace.currentNextAction}</div>
+          </div>
+          <div>
+            <strong>Revenue blocker</strong>
+            <div>{state.auricrux.currentBlocker}</div>
+          </div>
+          <div>
+            <strong>Training continuity</strong>
+            <div>Two learners remain ready for assignment in the academy flow.</div>
+          </div>
+          <div>
+            <strong>Operating move</strong>
+            <div>Advance approval through bids, preserve follow-through in messages, then convert in billing.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 24 }}>
         {portalMetrics.map((metric) => (
           <div key={metric.label} style={cardStyle}>
             <div style={{ color: "#6b7280" }}>{metric.label}</div>
