@@ -1,5 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { platformModules, shellJourney } from "../../websiteShell";
 
 const heroCardStyle = {
@@ -58,17 +59,26 @@ export default function Platform() {
             <li>Enter through <a href="/login">demo login</a>.</li>
             <li>Show the <a href="/portal">customer portal</a> and module continuity.</li>
             <li>Transition into <a href="/portal/academy">academy continuity</a>.</li>
+            <li>Open the <a href="/portal/platform">platform dashboard</a> to summarize tenant, project, support, and admin state in one view.</li>
             <li>Use the Auricrux dock to narrate next actions and system visibility.</li>
           </ol>
         </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Linked product surfaces</h2>
-          <div style={{ display: "grid", gap: 12 }}>
-            <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Customer Portal Workspace</a>
-            <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>FCA Academy</a>
-            <a href="/bid-entry/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Bid Entry Tool</a>
-            <a href="/bid-status/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Bid Status Tool</a>
-          </div>
+        <WorkspaceSnapshotCard
+          title="Public proof of workspace continuity"
+          detail="The public platform page now previews live shell context so the sales narrative stays connected to the working portal experience."
+          ctaHref="/portal/platform"
+          ctaLabel="Open unified platform dashboard"
+        />
+      </div>
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Linked product surfaces</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+          <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Customer Portal Workspace</a>
+          <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Unified Platform Dashboard</a>
+          <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>FCA Academy</a>
+          <a href="/bid-entry/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Bid Entry Tool</a>
+          <a href="/bid-status/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Bid Status Tool</a>
         </div>
       </div>
 

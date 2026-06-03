@@ -1,5 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { shellJourney } from "../../websiteShell";
 
 const cardStyle = {
@@ -53,28 +54,40 @@ export default function Login() {
               <a href="/portal" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#111827", color: "#fff", fontWeight: 700 }}>
                 Continue to Workspace
               </a>
+              <a href="/portal/platform" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#eff6ff", color: "#1d4ed8", fontWeight: 700, border: "1px solid #bfdbfe" }}>
+                Open Platform Dashboard
+              </a>
               <a href="/academy" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#e5e7eb", color: "#111827", fontWeight: 700 }}>
                 Open Academy
               </a>
             </div>
           </div>
 
-          <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
-            <h2 style={{ marginTop: 0 }}>What opens after entry</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
-              {[
-                ["Projects", "Execution visibility and stage continuity"],
-                ["Bids", "Approval queue and pipeline context"],
-                ["Files", "Bid packages, permits, and onboarding docs"],
-                ["Messages", "Auricrux-guided customer communications"],
-                ["Billing", "Invoice readiness and account follow-through"],
-                ["Academy", "Workforce training continuity"],
-              ].map(([title, detail]) => (
-                <div key={title} style={moduleStyle}>
-                  <div style={{ fontWeight: 700, marginBottom: 6 }}>{title}</div>
-                  <div style={{ color: "#4b5563", lineHeight: 1.5 }}>{detail}</div>
-                </div>
-              ))}
+          <div style={{ display: "grid", gap: 16 }}>
+            <WorkspaceSnapshotCard
+              title="Workspace continuity before login"
+              detail="Customers can see that tenant, project, and Auricrux state already exist before entering the portal, reinforcing one continuous operating shell."
+              ctaHref="/portal"
+              ctaLabel="Continue into portal workspace"
+            />
+
+            <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+              <h2 style={{ marginTop: 0 }}>What opens after entry</h2>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+                {[
+                  ["Projects", "Execution visibility and stage continuity"],
+                  ["Bids", "Approval queue and pipeline context"],
+                  ["Files", "Bid packages, permits, and onboarding docs"],
+                  ["Messages", "Auricrux-guided customer communications"],
+                  ["Billing", "Invoice readiness and account follow-through"],
+                  ["Academy", "Workforce training continuity"],
+                ].map(([title, detail]) => (
+                  <div key={title} style={moduleStyle}>
+                    <div style={{ fontWeight: 700, marginBottom: 6 }}>{title}</div>
+                    <div style={{ color: "#4b5563", lineHeight: 1.5 }}>{detail}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
