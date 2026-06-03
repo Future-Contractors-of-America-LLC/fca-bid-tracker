@@ -79,6 +79,16 @@ export const publicActionCatalog = {
     href: "/portal/files",
     variant: "light",
   },
+  legacyIntake: {
+    label: "Legacy intake route",
+    href: "/fca-customer-entry/index.html",
+    variant: "light",
+  },
+  legacyStatus: {
+    label: "Legacy status route",
+    href: "/fca-customer-status/index.html",
+    variant: "light",
+  },
 };
 
 export const publicFallbackCtaCards = [
@@ -216,6 +226,17 @@ export const academyCtaSets = {
   ],
   productionClose: [
     { ...publicActionCatalog.contact, variant: "primary" },
+  ],
+};
+
+export const homeCtaSets = {
+  bidProduct: [
+    { ...publicActionCatalog.bidEntry, variant: "primary" },
+    publicActionCatalog.bidStatus,
+  ],
+  legacyCompatibility: [
+    publicActionCatalog.legacyIntake,
+    publicActionCatalog.legacyStatus,
   ],
 };
 
@@ -377,8 +398,8 @@ export const shellWorkspaceRoutes = [
 ];
 
 export const shellCompatibilityRoutes = [
-  { label: "Legacy intake route", href: "/fca-customer-entry/index.html" },
-  { label: "Legacy status route", href: "/fca-customer-status/index.html" },
+  { label: publicActionCatalog.legacyIntake.label, href: publicActionCatalog.legacyIntake.href },
+  { label: publicActionCatalog.legacyStatus.label, href: publicActionCatalog.legacyStatus.href },
 ];
 
 export const shellProductionActions = [

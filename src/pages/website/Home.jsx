@@ -8,9 +8,9 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { publicBodyCtaSets, publicRouteCtas, publicSurfaceLinks, shellJourney } from "../../websiteShell";
+import { homeCtaSets, publicBodyCtaSets, publicRouteCtas, publicSurfaceLinks, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
-import { cardStyle, ctaLightStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
+import { cardStyle, pageShellStyle } from "../../publicShellStyles";
 
 const homeContinuityItems = [
   {
@@ -109,24 +109,18 @@ export default function Home() {
           <div key={item.key} style={cardStyle}>
             <h3 style={{ marginTop: 0 }}>{item.title}</h3>
             <p>{item.detail}</p>
-            <a href={item.href} style={ctaPrimaryStyle}>{item.ctaLabel}</a>
+            <a href={item.href} style={{ display: "inline-block" }}>{item.ctaLabel}</a>
           </div>
         ))}
 
         <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>FCA Bid Product</h3>
           <p>Use the canonical FCA bid routes first for customer continuity and production rollout planning.</p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 10 }}>
-            <a href="/bid-entry/" style={ctaPrimaryStyle}>Open Bid Entry</a>
-            <a href="/bid-status/" style={ctaLightStyle}>Open Bid Status</a>
-          </div>
+          <PublicCtaRow actions={homeCtaSets.bidProduct} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 10 }} />
           <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.6 }}>
             Legacy customer links remain available only for compatibility and redirect continuity.
           </p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 8 }}>
-            <a href="/fca-customer-entry/index.html" style={ctaLightStyle}>Legacy intake route</a>
-            <a href="/fca-customer-status/index.html" style={ctaLightStyle}>Legacy status route</a>
-          </div>
+          <PublicCtaRow actions={homeCtaSets.legacyCompatibility} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 8 }} />
         </div>
       </div>
 
