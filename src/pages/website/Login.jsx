@@ -1,5 +1,6 @@
+import ShellHeader from "../../components/ShellHeader";
+
 const cardStyle = {
-  maxWidth: 520,
   border: "1px solid #e5e7eb",
   borderRadius: 16,
   padding: 24,
@@ -19,28 +20,31 @@ const fieldStyle = {
 
 export default function Login() {
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
-      <div style={cardStyle}>
-        <p style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Auricrux Guided Entry</p>
-        <h1 style={{ marginTop: 0 }}>Sign in to FCA Workspace</h1>
-        <p style={{ color: "#4b5563", lineHeight: 1.5 }}>
-          Demo login for customer portal and academy walkthroughs. This route is intentionally lightweight for pitch and shell validation.
-        </p>
+    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
+      <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+        <ShellHeader
+          eyebrow="Auricrux Guided Entry"
+          title="Sign in to FCA Workspace"
+          subtitle="Demo login for customer portal and academy walkthroughs. This route is intentionally lightweight for pitch and shell validation."
+          primaryHref="/portal"
+          primaryLabel="Continue to Portal"
+        />
 
-        <label>Work Email</label>
-        <input style={fieldStyle} defaultValue="pilot@tylerconstruction.com" />
+        <div style={{ maxWidth: 520, ...cardStyle }}>
+          <label>Work Email</label>
+          <input style={fieldStyle} defaultValue="pilot@tylerconstruction.com" />
 
-        <label>Company</label>
-        <input style={fieldStyle} defaultValue="Tyler Construction" />
+          <label>Company</label>
+          <input style={fieldStyle} defaultValue="Tyler Construction" />
 
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
-          <a href="/portal" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#111827", color: "#fff", fontWeight: 700 }}>
-            Continue to Portal
-          </a>
-          <a href="/academy" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#e5e7eb", color: "#111827", fontWeight: 700 }}>
-            Open Academy Demo
-          </a>
-          <a href="/" style={{ alignSelf: "center" }}>Back to Home</a>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
+            <a href="/portal" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#111827", color: "#fff", fontWeight: 700 }}>
+              Continue to Portal
+            </a>
+            <a href="/academy" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#e5e7eb", color: "#111827", fontWeight: 700 }}>
+              Open Academy Demo
+            </a>
+          </div>
         </div>
       </div>
     </div>

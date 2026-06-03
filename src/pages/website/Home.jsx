@@ -1,3 +1,5 @@
+import ShellHeader from "../../components/ShellHeader";
+
 const ctaStyle = {
   display: "inline-block",
   marginRight: 12,
@@ -19,16 +21,14 @@ const secondaryStyle = {
 
 export default function Home() {
   return (
-    <div style={{ padding: 40, fontFamily: "Arial", maxWidth: 960 }}>
-      <p style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>
-        FCA + Auricrux Unified Shell
-      </p>
-      <h1 style={{ marginBottom: 12 }}>Future Contractors of America</h1>
-
-      <p style={{ fontSize: 18, lineHeight: 1.5, maxWidth: 760 }}>
-        Unified construction platform for sales, customer portal operations,
-        workforce training, and Auricrux-guided execution.
-      </p>
+    <div style={{ padding: 40, fontFamily: "Arial", maxWidth: 1120, margin: "0 auto" }}>
+      <ShellHeader
+        eyebrow="FCA + Auricrux Unified Shell"
+        title="Future Contractors of America"
+        subtitle="Unified construction platform for sales, customer portal operations, workforce training, and Auricrux-guided execution."
+        primaryHref="/login"
+        primaryLabel="Enter Demo Workspace"
+      />
 
       <div style={{ marginTop: 20 }}>
         <a href="/login" style={ctaStyle}>Enter Demo Workspace</a>
