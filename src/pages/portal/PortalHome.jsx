@@ -21,6 +21,7 @@ export default function PortalHome() {
       title="FCA Customer Workspace"
       subtitle="Active pilot with Auricrux-guided next actions, communication visibility, billing readiness, and academy continuity."
       activeHref="/portal"
+      currentJourney="lead"
       primaryHref="/portal/projects"
       primaryLabel="Open Project Flow"
     >

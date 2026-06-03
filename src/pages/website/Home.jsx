@@ -1,5 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import { shellJourney } from "../../websiteShell";
 
 const ctaStyle = {
   display: "inline-block",
@@ -31,6 +32,8 @@ export default function Home() {
         primaryLabel="Enter Demo Workspace"
         secondaryHref="/platform"
         secondaryLabel="Explore Platform"
+        journey={shellJourney}
+        currentJourney="public"
       />
 
       <div style={{ marginTop: 20 }}>

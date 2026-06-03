@@ -27,6 +27,7 @@ export default function PortalBilling() {
       title="Billing and Revenue Follow-Through"
       subtitle="Account shell showing that FCA can carry approved work into invoicing, review, and customer financial visibility."
       activeHref="/portal/billing"
+      currentJourney="finance"
       primaryHref="/portal/academy"
       primaryLabel="Open Academy Continuity"
     >

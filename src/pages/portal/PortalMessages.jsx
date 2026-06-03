@@ -27,6 +27,7 @@ export default function PortalMessages() {
       title="Messages, Notifications, and Auricrux Follow-Through"
       subtitle="Communication shell so customer actions never disappear into a dead end and every stage has a visible update path."
       activeHref="/portal/messages"
+      currentJourney="coordination"
       primaryHref="/portal/billing"
       primaryLabel="Open Billing"
     >

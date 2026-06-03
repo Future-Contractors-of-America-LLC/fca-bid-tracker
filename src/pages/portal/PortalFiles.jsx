@@ -15,6 +15,7 @@ export default function PortalFiles() {
       title="Files, Plans, and Customer Documents"
       subtitle="Document shell proving that bids, permits, onboarding packets, and project artifacts live in one connected workspace."
       activeHref="/portal/files"
+      currentJourney="coordination"
       primaryHref="/portal/messages"
       primaryLabel="Open Messages"
     >

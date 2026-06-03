@@ -1,6 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
-import { auricruxCapabilities } from "../../websiteShell";
+import { auricruxCapabilities, shellJourney } from "../../websiteShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -21,6 +21,8 @@ export default function AuricruxPage() {
         primaryLabel="See Auricrux in Portal"
         secondaryHref="/platform"
         secondaryLabel="View Platform"
+        journey={shellJourney}
+        currentJourney="platform"
       />
 
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>

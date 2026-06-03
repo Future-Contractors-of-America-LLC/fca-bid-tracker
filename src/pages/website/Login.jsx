@@ -1,5 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import { shellJourney } from "../../websiteShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -36,6 +37,8 @@ export default function Login() {
           subtitle="Demo login for customer portal and academy walkthroughs. This route is intentionally lightweight for pitch and shell validation."
           primaryHref="/portal"
           primaryLabel="Continue to Portal"
+          journey={shellJourney}
+          currentJourney="workspace"
         />
 
         <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 520px) 1fr", gap: 20, alignItems: "start" }}>

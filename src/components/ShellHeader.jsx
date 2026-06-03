@@ -1,3 +1,5 @@
+import JourneyStrip from "./JourneyStrip";
+
 const linkStyle = {
   textDecoration: "none",
   color: "#111827",
@@ -12,6 +14,8 @@ export default function ShellHeader({
   primaryLabel,
   secondaryHref,
   secondaryLabel,
+  journey,
+  currentJourney,
 }) {
   return (
     <div
@@ -34,6 +38,7 @@ export default function ShellHeader({
             {subtitle}
           </p>
         ) : null}
+        <JourneyStrip items={journey} current={currentJourney} />
       </div>
 
       <div

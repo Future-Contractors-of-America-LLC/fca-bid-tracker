@@ -80,3 +80,12 @@ export const contactPaths = [
     label: "Schedule Platform Review",
   },
 ];
+
+export const shellJourney = [
+  { key: "public", label: "Public Entry", href: "/" },
+  { key: "platform", label: "Platform Framing", href: "/platform" },
+  { key: "workspace", label: "Workspace Login", href: "/login" },
+  { key: "portal", label: "Portal Flow", href: "/portal" },
+  { key: "academy", label: "Academy Continuity", href: "/academy" },
+  { key: "conversion", label: "Demo Conversion", href: "/contact" },
+];

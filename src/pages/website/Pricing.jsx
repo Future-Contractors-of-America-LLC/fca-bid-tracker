@@ -1,6 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
-import { pricingTiers } from "../../websiteShell";
+import { pricingTiers, shellJourney } from "../../websiteShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -33,6 +33,8 @@ export default function Pricing() {
         primaryLabel="Request Demo"
         secondaryHref="/platform"
         secondaryLabel="Platform Overview"
+        journey={shellJourney}
+        currentJourney="conversion"
       />
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>

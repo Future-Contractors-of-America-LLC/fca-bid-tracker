@@ -1,6 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
-import { contactPaths } from "../../websiteShell";
+import { contactPaths, shellJourney } from "../../websiteShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -21,6 +21,8 @@ export default function Contact() {
         primaryLabel="Open Demo Workspace"
         secondaryHref="/pricing"
         secondaryLabel="Pricing"
+        journey={shellJourney}
+        currentJourney="conversion"
       />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>

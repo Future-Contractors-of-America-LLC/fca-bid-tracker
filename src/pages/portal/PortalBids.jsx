@@ -15,6 +15,7 @@ export default function PortalBids() {
       title="Bid Pipeline and Approval Readiness"
       subtitle="Bid-facing shell for demo and sales conversations, tied directly to project conversion and customer action."
       activeHref="/portal/bids"
+      currentJourney="bid"
       primaryHref="/bid-entry/"
       primaryLabel="Open Bid Entry"
     >

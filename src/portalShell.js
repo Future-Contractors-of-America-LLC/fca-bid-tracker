@@ -176,3 +176,12 @@ export const portalModules = [
     description: "Training continuity tied to the same customer journey",
   },
 ];
+
+export const portalJourney = [
+  { key: "lead", label: "Lead / Intake", href: "/login" },
+  { key: "bid", label: "Bid / Estimate", href: "/portal/bids" },
+  { key: "job", label: "Project / Job", href: "/portal/projects" },
+  { key: "coordination", label: "Files + Messages", href: "/portal/files" },
+  { key: "finance", label: "Billing", href: "/portal/billing" },
+  { key: "academy", label: "Academy", href: "/portal/academy" },
+];

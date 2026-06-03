@@ -1,6 +1,6 @@
 import ShellHeader from "./ShellHeader";
 import ShellFooter from "./ShellFooter";
-import { portalModules } from "../portalShell";
+import { portalJourney, portalModules } from "../portalShell";
 
 const shellStyle = {
   padding: 40,
@@ -58,6 +58,7 @@ export default function PortalShell({
   title,
   subtitle,
   activeHref,
+  currentJourney,
   children,
   primaryHref = "/portal/messages",
   primaryLabel = "Open Messages",
@@ -73,6 +74,8 @@ export default function PortalShell({
           primaryLabel={primaryLabel}
           secondaryHref="/academy"
           secondaryLabel="Academy Workspace"
+          journey={portalJourney}
+          currentJourney={currentJourney}
         />
 
         <div style={bannerStyle}>

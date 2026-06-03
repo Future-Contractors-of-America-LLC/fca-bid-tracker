@@ -1,6 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
-import { platformModules } from "../../websiteShell";
+import { platformModules, shellJourney } from "../../websiteShell";
 
 const heroCardStyle = {
   border: "1px solid #dbe3ef",
@@ -29,6 +29,8 @@ export default function Platform() {
         primaryLabel="Open Demo Workspace"
         secondaryHref="/pricing"
         secondaryLabel="View Pricing"
+        journey={shellJourney}
+        currentJourney="platform"
       />
 
       <div style={heroCardStyle}>

@@ -1,5 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import { shellJourney } from "../../websiteShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -39,6 +40,8 @@ export default function AcademyHome() {
           primaryLabel="Return to Portal"
           secondaryHref="/contact"
           secondaryLabel="Request Demo"
+          journey={shellJourney}
+          currentJourney="academy"
         />
 
         <div style={{ ...actionCardStyle, marginBottom: 24 }}>

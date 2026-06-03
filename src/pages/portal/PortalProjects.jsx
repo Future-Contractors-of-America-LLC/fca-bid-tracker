@@ -15,6 +15,7 @@ export default function PortalProjects() {
       title="Project Flow and Customer Visibility"
       subtitle="Execution-stage shell showing how FCA carries a customer from awarded work into delivery, accountability, and closeout."
       activeHref="/portal/projects"
+      currentJourney="job"
       primaryHref="/portal/files"
       primaryLabel="Open Files"
     >
