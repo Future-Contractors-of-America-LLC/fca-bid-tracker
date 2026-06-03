@@ -26,6 +26,18 @@ export const workspaceContext = {
   auditSummary: "Auricrux, customer-facing actions, and workspace transitions should resolve into one audit spine for PRJ-A117.",
 };
 
+export const auricruxRail = {
+  systemState: "Auricrux online and context-aware",
+  nextRecommendedAction: "Release approval request for Package A-117",
+  recommendationReason: "Customer approval is the cleanest path to unlock project setup, file continuity, and billing progression.",
+  currentBlocker: "Open scope approval pending",
+  blockerImpact: "Execution handoff and invoice readiness stay constrained until the customer decision is recorded.",
+  lastAction: "Validated bid completeness and linked onboarding artifacts",
+  lastActionResult: "The shared workspace now reflects bid, file, and continuity state under PRJ-A117.",
+  readinessState: "Production shell ready / backend spine in progress",
+  readinessSummary: "The shell is positioned for permanent workspace use while deeper project, file, and audit persistence continue to harden behind it.",
+};
+
 export const projectAuditEvents = [
   {
     time: "Today · 8:10 AM",

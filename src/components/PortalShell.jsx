@@ -2,7 +2,8 @@ import ShellHeader from "./ShellHeader";
 import ShellFooter from "./ShellFooter";
 import ProjectSpineBar from "./ProjectSpineBar";
 import WorkspaceContextBar from "./WorkspaceContextBar";
-import { currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../portalShell";
+import AuricruxStatusRail from "./AuricruxStatusRail";
+import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../portalShell";
 
 const shellStyle = {
   padding: 40,
@@ -82,6 +83,7 @@ export default function PortalShell({
 
         <ProjectSpineBar tenant={portalTenant} project={currentProject} />
         <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
+        <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
 
         <div style={bannerStyle}>
           <div>
