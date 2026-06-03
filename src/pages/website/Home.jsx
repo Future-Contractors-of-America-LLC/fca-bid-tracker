@@ -8,15 +8,16 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import { publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { publicHomeMessaging } from "../../systemContinuity";
 import { cardStyle, pageShellStyle } from "../../publicShellStyles";
 
 export default function Home() {
   return (
     <div style={pageShellStyle}>
       <ShellHeader
-        eyebrow="FCA Contractor Workspace"
-        title="Future Contractors of America"
-        subtitle="A connected workspace for bids, customer updates, project visibility, workforce readiness, and guided next steps."
+        eyebrow={publicHomeMessaging.header.eyebrow}
+        title={publicHomeMessaging.header.title}
+        subtitle={publicHomeMessaging.header.subtitle}
         primaryHref={publicRouteCtas.public.primaryHref}
         primaryLabel={publicRouteCtas.public.primaryLabel}
         secondaryHref={publicRouteCtas.public.secondaryHref}
@@ -45,39 +46,39 @@ export default function Home() {
 
       <FounderJourneyStrip
         currentJourney="public"
-        title="Start with a clear customer path"
-        detail="Public entry guides visitors into platform overview, workspace access, customer portal visibility, academy readiness, and rollout planning without switching narratives."
-        ctaHref="/login"
-        ctaLabel="Enter FCA workspace"
+        title={publicHomeMessaging.journey.title}
+        detail={publicHomeMessaging.journey.detail}
+        ctaHref={publicHomeMessaging.journey.ctaHref}
+        ctaLabel={publicHomeMessaging.journey.ctaLabel}
       />
 
       <PublicCtaRow actions={publicBodyCtaSets.home} />
 
       <div style={{ marginTop: 28 }}>
         <CustomerTrustPanel
-          title="Built to support day-to-day contractor work"
-          detail="FCA helps teams keep customers informed, organize delivery, and make the next step clear across bids, projects, communications, and training."
+          title={publicHomeMessaging.trust.title}
+          detail={publicHomeMessaging.trust.detail}
         />
       </div>
 
       <div style={{ marginTop: 24 }}>
         <WorkspaceSnapshotCard
-          title="See how the workspace stays connected"
-          detail="The home page previews the same tenant, project, and Auricrux state that carries through the platform dashboard and portal routes."
+          title={publicHomeMessaging.snapshot.title}
+          detail={publicHomeMessaging.snapshot.detail}
           ctaHref="/login"
-          ctaLabel="Enter workspace with continuity"
+          ctaLabel={publicHomeMessaging.snapshot.ctaLabel}
         />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>Platform Overview</h3>
-          <p>See how FCA brings bids, delivery, communication, and training into one connected system.</p>
+          <p>See how FCA keeps bids, project visibility, communication, and training connected in one operating system.</p>
           <a href="/platform">View platform page</a>
         </div>
         <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>Auricrux Guidance</h3>
-          <p>See how the operating layer keeps next actions and continuity visible across the workspace.</p>
+          <p>See how the operating layer keeps next steps, customer visibility, and execution continuity clear.</p>
           <a href="/auricrux">View Auricrux page</a>
         </div>
         <div style={cardStyle}>
@@ -119,8 +120,8 @@ export default function Home() {
       </div>
 
       <PublicActionRail
-        title="Take the next step with FCA"
-        detail="This shared rail keeps workspace entry, platform visibility, academy continuity, and guided walkthrough options visible at the bottom of each route so the next step stays clear."
+        title={publicHomeMessaging.actionRail.title}
+        detail={publicHomeMessaging.actionRail.detail}
       />
 
       <ShellFooter />

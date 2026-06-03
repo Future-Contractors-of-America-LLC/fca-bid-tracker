@@ -10,6 +10,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import { pricingTiers, publicActionCatalog, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { publicPricingMessaging } from "../../systemContinuity";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const rolloutSteps = [
@@ -23,9 +24,9 @@ export default function Pricing() {
   return (
     <div style={pageShellStyle}>
       <ShellHeader
-        eyebrow="FCA Plans & Rollout"
-        title="Production rollout planning"
-        subtitle="This page supports a real rollout conversation: pilot scope, operating readiness, guided setup, and the next production action inside FCA."
+        eyebrow={publicPricingMessaging.header.eyebrow}
+        title={publicPricingMessaging.header.title}
+        subtitle={publicPricingMessaging.header.subtitle}
         primaryHref={publicRouteCtas.conversion.primaryHref}
         primaryLabel={publicRouteCtas.conversion.primaryLabel}
         secondaryHref={publicRouteCtas.conversion.secondaryHref}
@@ -38,7 +39,7 @@ export default function Pricing() {
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
           <div>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Production planning flow</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Move from pricing into rollout readiness</h2>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>{publicPricingMessaging.hero.title}</h2>
           </div>
           <div style={{ display: "grid", gap: 10 }}>
             <FcaBrandMark compact />
@@ -46,15 +47,15 @@ export default function Pricing() {
           </div>
         </div>
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
-          This is more than a static price sheet. It is a guided rollout conversation that ties scope to the live product experience, project visibility, team readiness, and next steps.
+          {publicPricingMessaging.hero.detail}
         </p>
         <PublicCtaRow actions={publicBodyCtaSets.pricingHero} />
       </div>
 
       <FounderJourneyStrip
         currentJourney="conversion"
-        title="Plans should connect directly to rollout decisions"
-        detail="This route shows where plans fit in the path from public framing into workspace continuity, platform visibility, and rollout planning."
+        title={publicPricingMessaging.journey.title}
+        detail={publicPricingMessaging.journey.detail}
         ctaHref="/contact"
         ctaLabel={publicActionCatalog.walkthrough.label}
       />
@@ -63,9 +64,9 @@ export default function Pricing() {
 
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel
-          eyebrow="Choose the right rollout path"
-          title="Pricing is organized around readiness, not guesswork"
-          detail="The goal is to match your team to the right rollout pace, support level, and operating visibility based on current needs."
+          eyebrow={publicPricingMessaging.trust.eyebrow}
+          title={publicPricingMessaging.trust.title}
+          detail={publicPricingMessaging.trust.detail}
           items={[
             {
               title: "Pilot quickly",
@@ -103,10 +104,10 @@ export default function Pricing() {
         </div>
 
         <WorkspaceSnapshotCard
-          title="Pricing references live workspace state"
-          detail="This planning surface points directly at persisted tenant, project, and Auricrux continuity so rollout conversations stay attached to the operating workspace."
+          title={publicPricingMessaging.snapshot.title}
+          detail={publicPricingMessaging.snapshot.detail}
           ctaHref={publicActionCatalog.platform.href}
-          ctaLabel="Review platform state before your call"
+          ctaLabel={publicPricingMessaging.snapshot.ctaLabel}
         />
       </div>
 
@@ -139,8 +140,8 @@ export default function Pricing() {
       </div>
 
       <PublicActionRail
-        title="Finish planning with a clear next step"
-        detail="Pricing closes with the same shared action rail as the rest of the public site so rollout planning, workspace entry, academy continuity, and walkthrough options remain aligned."
+        title={publicPricingMessaging.actionRail.title}
+        detail={publicPricingMessaging.actionRail.detail}
       />
 
       <ShellFooter />

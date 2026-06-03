@@ -9,6 +9,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import { contactPaths, publicActionCatalog, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { publicContactMessaging } from "../../systemContinuity";
 import { cardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const checklistStyle = {
@@ -22,9 +23,9 @@ export default function Contact() {
   return (
     <div style={pageShellStyle}>
       <ShellHeader
-        eyebrow="FCA Contact"
-        title="Talk with FCA about your rollout"
-        subtitle="This page helps customers move from interest into a walkthrough, pilot conversation, or broader rollout assessment."
+        eyebrow={publicContactMessaging.header.eyebrow}
+        title={publicContactMessaging.header.title}
+        subtitle={publicContactMessaging.header.subtitle}
         primaryHref={publicRouteCtas.conversion.primaryHref}
         primaryLabel={publicRouteCtas.conversion.primaryLabel}
         secondaryHref={publicRouteCtas.conversion.secondaryHref}
@@ -39,8 +40,8 @@ export default function Contact() {
 
       <FounderJourneyStrip
         currentJourney="conversion"
-        title="A walkthrough should feel like the natural next step"
-        detail="This route makes the next step explicit so a live conversation feels like the natural outcome of platform framing, workspace continuity, and operating-state validation."
+        title={publicContactMessaging.journey.title}
+        detail={publicContactMessaging.journey.detail}
         ctaHref={publicActionCatalog.walkthrough.href}
         ctaLabel={publicActionCatalog.walkthrough.label}
       />
@@ -49,9 +50,9 @@ export default function Contact() {
 
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel
-          eyebrow="Start with clarity"
-          title="Know what to expect from a walkthrough"
-          detail="A customer conversation should quickly show how FCA fits your workflow, where it reduces friction, and what rollout path makes sense next."
+          eyebrow={publicContactMessaging.trust.eyebrow}
+          title={publicContactMessaging.trust.title}
+          detail={publicContactMessaging.trust.detail}
           items={[
             {
               title: "See the real workspace",
@@ -81,10 +82,10 @@ export default function Contact() {
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={{ display: "grid", gap: 16 }}>
           <WorkspaceSnapshotCard
-            title="Walkthroughs start from real workspace state"
-            detail="This page reinforces that the review is not a disconnected pitch flow. Tenant, project, and Auricrux continuity already exist before the walkthrough begins."
+            title={publicContactMessaging.snapshot.title}
+            detail={publicContactMessaging.snapshot.detail}
             ctaHref={publicActionCatalog.platform.href}
-            ctaLabel="Open unified platform dashboard"
+            ctaLabel={publicContactMessaging.snapshot.ctaLabel}
           />
 
           <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
@@ -93,7 +94,7 @@ export default function Contact() {
               <li>Review the FCA platform story from the public site.</li>
               <li>Show persisted workspace continuity before entry.</li>
               <li>Open the platform dashboard to summarize tenant, project, support, academy, and admin state.</li>
-              <li>Transition into portal, academy, and bid routes based on your team&apos;s fit.</li>
+              <li>Transition into portal, academy, and bid routes based on your team's fit.</li>
               <li>Close on pilot scope, rollout path, and the next production action.</li>
             </ol>
           </div>
@@ -113,16 +114,16 @@ export default function Contact() {
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Immediate next step</h2>
+        <h2 style={{ marginTop: 0 }}>{publicContactMessaging.immediate.title}</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 12 }}>
-          The strongest conversion path is still a direct walkthrough of the live FCA workspace. This page keeps that option visible while the platform continues to harden.
+          {publicContactMessaging.immediate.detail}
         </p>
         <PublicCtaRow actions={publicBodyCtaSets.contactImmediate} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <PublicActionRail
-        title="Close with the same shared next steps"
-        detail="Even at the conversion endpoint, the route preserves the same workspace, platform, academy, and walkthrough actions as the rest of the site so the experience stays unified."
+        title={publicContactMessaging.actionRail.title}
+        detail={publicContactMessaging.actionRail.detail}
       />
 
       <ShellFooter />

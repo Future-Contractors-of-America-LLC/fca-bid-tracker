@@ -10,6 +10,7 @@ import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDec
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import { shellJourney } from "../../websiteShell";
+import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxRail, currentProject, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../workspaceState";
 import { portalFiles } from "../../portalShell";
 
@@ -50,9 +51,9 @@ export default function AcademyHome() {
     <div style={{ padding: 40, fontFamily: "Arial", background: "#f8fafc", minHeight: "100vh" }}>
       <div style={{ maxWidth: 1120, margin: "0 auto" }}>
         <ShellHeader
-          eyebrow="FCA Academy"
-          title="Training, Certification, and Workforce Readiness"
-          subtitle="Academy shell connected to the same customer journey shown in the portal, so onboarding and training remain part of one operating flow."
+          eyebrow={academyContinuityMessaging.header.eyebrow}
+          title={academyContinuityMessaging.header.title}
+          subtitle={academyContinuityMessaging.header.subtitle}
           primaryHref="/portal"
           primaryLabel="Return to Portal"
           secondaryHref="/contact"
@@ -87,8 +88,8 @@ export default function AcademyHome() {
 
         <div style={{ marginBottom: 24 }}>
           <BuildExpansionCommandDeck
-            title="Academy is now part of the build expansion spine"
-            detail="Training and certification are now framed as part of the same governed system expansion as validation automation, SaaS shell continuity, public conversion routes, and communications follow-through."
+            title={academyContinuityMessaging.expansion.title}
+            detail={academyContinuityMessaging.expansion.detail}
             primaryHref="/portal/academy"
             primaryLabel="Open academy route in portal"
             secondaryHref="/portal/messages"
@@ -100,7 +101,7 @@ export default function AcademyHome() {
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
             <div>
               <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy continuity</div>
-              <h2 style={{ marginTop: 0, marginBottom: 10 }}>Academy now participates in the same branded workspace state</h2>
+              <h2 style={{ marginTop: 0, marginBottom: 10 }}>{academyContinuityMessaging.continuity.title}</h2>
             </div>
             <div style={{ display: "grid", gap: 10 }}>
               <FcaBrandMark compact />
@@ -108,8 +109,7 @@ export default function AcademyHome() {
             </div>
           </div>
           <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
-            The academy is no longer a side destination. It now reads the same tenant, project, workspace, audit,
-            and Auricrux state that powers the customer portal so workforce readiness stays attached to the same operational record.
+            {academyContinuityMessaging.continuity.detail}
           </p>
           <div>
             <a href="/portal/academy" style={actionLinkStyle}>Open Portal Academy Route</a>
@@ -200,9 +200,9 @@ export default function AcademyHome() {
         </div>
 
         <div style={{ marginTop: 24, ...cardStyle }}>
-          <h2 style={{ marginTop: 0 }}>Why this matters in rollout</h2>
+          <h2 style={{ marginTop: 0 }}>{academyContinuityMessaging.rollout.title}</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-            FCA Academy now participates in the same operational shell state as the portal. That moves the product closer to one true tenant, project, file, audit, route-state, and Auricrux-driven system.
+            {academyContinuityMessaging.rollout.detail}
           </p>
         </div>
 

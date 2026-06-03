@@ -5,6 +5,7 @@ import AuricruxPage from "./pages/website/Auricrux";
 import Pricing from "./pages/website/Pricing";
 import Contact from "./pages/website/Contact";
 import Login from "./pages/website/Login";
+import NotFound from "./pages/website/NotFound";
 import PlatformDashboard from "./pages/portal/PlatformDashboard";
 import PortalHome from "./pages/portal/PortalHome";
 import PortalProjects from "./pages/portal/PortalProjects";
@@ -24,6 +25,7 @@ export default function Router() {
     syncDocumentMetadata(path);
   }, [path]);
 
+  if (path === "/") return <Home />;
   if (path === "/platform") return <Platform />;
   if (path === "/auricrux") return <AuricruxPage />;
   if (path === "/pricing") return <Pricing />;
@@ -41,5 +43,5 @@ export default function Router() {
   if (path === "/portal/academy") return <AcademyHome />;
   if (path === "/academy") return <AcademyHome />;
 
-  return <Home />;
+  return <NotFound requestedPath={path} />;
 }
