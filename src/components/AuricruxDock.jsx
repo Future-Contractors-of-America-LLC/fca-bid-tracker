@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { brandIdentity } from "../brandIdentity";
 
 const fallbackResponses = [
   "Auricrux continuity mode: I can guide the next customer action from this shell.",
@@ -11,6 +12,9 @@ const quickPrompts = [
   "Show training continuity.",
   "What is blocking revenue right now?",
 ];
+
+const auricruxColors = brandIdentity.auricrux.colors;
+const fcaColors = brandIdentity.fca.colors;
 
 function modeMeta(mode) {
   if (mode === "live") {
@@ -26,18 +30,18 @@ function modeMeta(mode) {
   if (mode === "fallback") {
     return {
       label: "Continuity Mode",
-      tone: "#9a3412",
-      bg: "#ffedd5",
-      border: "#fdba74",
+      tone: auricruxColors.ink,
+      bg: auricruxColors.primarySoft,
+      border: "#e8c46a",
       summary: "Fallback guidance is preserving shell continuity while backend connectivity is restored.",
     };
   }
 
   return {
     label: "Ready",
-    tone: "#1d4ed8",
-    bg: "#dbeafe",
-    border: "#93c5fd",
+    tone: auricruxColors.ink,
+    bg: auricruxColors.primarySoft,
+    border: "#e8c46a",
     summary: "Prepared to narrate next actions and customer state.",
   };
 }
@@ -143,30 +147,30 @@ export default function AuricruxDock() {
         zIndex: 9999,
         borderRadius: 18,
         overflow: "hidden",
-        border: "1px solid #cbd5e1",
+        border: `1px solid ${open ? auricruxColors.primary : "#d6b25e"}`,
         boxShadow: "0 20px 50px rgba(15, 23, 42, 0.2)",
         background: "#ffffff",
         fontFamily: "Arial",
-        transition: "width 160ms ease",
+        transition: "width 160ms ease, border-color 160ms ease",
       }}
     >
       <div
         style={{
           padding: 14,
-          background: "linear-gradient(135deg, #111827 0%, #1e3a8a 100%)",
+          background: `linear-gradient(135deg, ${auricruxColors.primaryDark} 0%, ${auricruxColors.primary} 100%)`,
           color: "#fff",
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
           <div>
             <div style={{ fontWeight: 700, letterSpacing: 0.2 }}>Auricrux</div>
-            <div style={{ fontSize: 12, opacity: 0.82 }}>Executive operating layer</div>
+            <div style={{ fontSize: 12, opacity: 0.9 }}>Executive operating layer</div>
           </div>
           <button
             onClick={() => setOpen((v) => !v)}
             style={{
               border: "1px solid rgba(255,255,255,0.25)",
-              background: "rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.12)",
               color: "#fff",
               borderRadius: 10,
               padding: "6px 10px",
@@ -204,7 +208,7 @@ export default function AuricruxDock() {
             </div>
 
             <div style={{ marginTop: 12 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#334155", marginBottom: 8 }}>Quick prompts</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: auricruxColors.ink, marginBottom: 8 }}>Quick prompts</div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 {quickPrompts.map((prompt) => (
                   <button
@@ -227,7 +231,7 @@ export default function AuricruxDock() {
                 style={{
                   flex: 1,
                   minWidth: 0,
-                  border: "1px solid #cbd5e1",
+                  border: `1px solid ${fcaColors.primarySoft === "#EFF4FF" ? "#d6b25e" : "#cbd5e1"}`,
                   borderRadius: 12,
                   padding: "11px 12px",
                   outline: "none",
@@ -244,16 +248,16 @@ export default function AuricruxDock() {
             <div
               style={{
                 marginTop: 12,
-                border: "1px solid #e2e8f0",
+                border: "1px solid #efe2bd",
                 borderRadius: 12,
                 padding: 10,
                 maxHeight: 220,
                 overflow: "auto",
-                background: "#f8fafc",
+                background: "#fffdf7",
               }}
             >
               {log.length === 0 ? (
-                <div style={{ color: "#64748b", fontSize: 12, lineHeight: 1.6 }}>
+                <div style={{ color: "#7c6b4a", fontSize: 12, lineHeight: 1.6 }}>
                   Ask Auricrux for the next action, a customer update, training guidance, or a production-rollout narration cue.
                 </div>
               ) : (
@@ -263,7 +267,7 @@ export default function AuricruxDock() {
                     style={{
                       marginBottom: 8,
                       paddingBottom: 8,
-                      borderBottom: i === log.length - 1 ? "none" : "1px solid #e2e8f0",
+                      borderBottom: i === log.length - 1 ? "none" : "1px solid #f3ead2",
                     }}
                   >
                     <div style={{ opacity: 0.55, fontSize: 10 }}>{l.t}</div>
@@ -274,7 +278,7 @@ export default function AuricruxDock() {
             </div>
           </>
         ) : (
-          <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.5 }}>
+          <div style={{ marginTop: 12, fontSize: 12, color: "#6b7280", lineHeight: 1.5 }}>
             Open Auricrux to access prompts, voice, video, and continuity activity.
           </div>
         )}
@@ -287,20 +291,21 @@ function buttonStyle(kind) {
   if (kind === "primary") {
     return {
       border: "none",
-      background: "#111827",
+      background: `linear-gradient(135deg, ${auricruxColors.primaryDark} 0%, ${auricruxColors.primary} 100%)`,
       color: "#fff",
       borderRadius: 12,
       padding: "11px 14px",
       fontWeight: 700,
       cursor: "pointer",
+      boxShadow: "0 10px 24px rgba(212, 154, 34, 0.25)",
     };
   }
 
   if (kind === "chip") {
     return {
-      border: "1px solid #cbd5e1",
-      background: "#fff",
-      color: "#0f172a",
+      border: `1px solid ${auricruxColors.primary}`,
+      background: auricruxColors.primarySoft,
+      color: auricruxColors.ink,
       borderRadius: 999,
       padding: "8px 10px",
       fontSize: 12,
@@ -309,9 +314,9 @@ function buttonStyle(kind) {
   }
 
   return {
-    border: "1px solid #cbd5e1",
-    background: "#f8fafc",
-    color: "#0f172a",
+    border: `1px solid ${auricruxColors.primary}`,
+    background: "#fffdf7",
+    color: auricruxColors.ink,
     borderRadius: 10,
     padding: "8px 12px",
     fontWeight: 600,
