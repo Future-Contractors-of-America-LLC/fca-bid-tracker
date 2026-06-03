@@ -10,11 +10,11 @@ import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDec
 import PublicCtaRow from "../../components/PublicCtaRow";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
-import { publicBodyCtaSets, shellJourney } from "../../websiteShell";
+import { academyCtaSets, publicBodyCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxRail, currentProject, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../workspaceState";
 import { portalFiles } from "../../portalShell";
-import { ctaLightStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
+import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -104,10 +104,7 @@ export default function AcademyHome() {
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
           {academyContinuityMessaging.continuity.detail}
         </p>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
-          <a href="/portal/academy" style={ctaPrimaryStyle}>Open Academy</a>
-          <a href="/pricing" style={ctaLightStyle}>Plans & Rollout</a>
-        </div>
+        <PublicCtaRow actions={academyCtaSets.continuityActions} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
       </div>
 
       <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
@@ -176,19 +173,14 @@ export default function AcademyHome() {
       <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Connected portal routes</h2>
-          <div style={{ display: "grid", gap: 12 }}>
-            <a href="/portal/projects" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Project Flow</a>
-            <a href="/portal/files" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Files</a>
-            <a href="/portal/messages" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Messages</a>
-            <a href="/portal/billing" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Billing</a>
-          </div>
+          <PublicCtaRow actions={academyCtaSets.connectedPortalRoutes} style={{ display: "grid", gap: 12 }} />
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Production close</h2>
           <p style={{ lineHeight: 1.7, color: "#4b5563" }}>
             Use this screen to prove FCA is not just a bid tool. The same customer can move from sales and portal visibility into workforce enablement, compliance readiness, and long-term support.
           </p>
-          <a href="/contact" style={ctaPrimaryStyle}>Open Contact & Rollout</a>
+          <PublicCtaRow actions={academyCtaSets.productionClose} />
         </div>
       </div>
 

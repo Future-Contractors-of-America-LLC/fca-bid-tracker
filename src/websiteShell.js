@@ -69,6 +69,16 @@ export const publicActionCatalog = {
     href: "/portal/billing",
     variant: "light",
   },
+  projects: {
+    label: "Open Project Flow",
+    href: "/portal/projects",
+    variant: "light",
+  },
+  files: {
+    label: "Open Files",
+    href: "/portal/files",
+    variant: "light",
+  },
 };
 
 export const publicFallbackCtaCards = [
@@ -190,6 +200,22 @@ export const portalNarrativeCtaSets = {
     { ...publicActionCatalog.academy, variant: "primary" },
     publicActionCatalog.pricing,
     publicActionCatalog.contact,
+  ],
+};
+
+export const academyCtaSets = {
+  continuityActions: [
+    { ...publicActionCatalog.academyContinuity, label: "Open Academy", variant: "primary" },
+    publicActionCatalog.pricing,
+  ],
+  connectedPortalRoutes: [
+    publicActionCatalog.projects,
+    publicActionCatalog.files,
+    publicActionCatalog.messages,
+    publicActionCatalog.billing,
+  ],
+  productionClose: [
+    { ...publicActionCatalog.contact, variant: "primary" },
   ],
 };
 
