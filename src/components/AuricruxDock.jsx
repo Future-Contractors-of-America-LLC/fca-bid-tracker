@@ -1,9 +1,16 @@
 import { useState } from "react";
 
+const demoResponses = [
+  "Auricrux demo mode: I can guide the next customer action from this shell.",
+  "Auricrux demo mode: The portal and academy are aligned for onboarding continuity.",
+  "Auricrux demo mode: One approval is ready and two learners need assignment."
+];
+
 export default function AuricruxDock() {
   const [text, setText] = useState("");
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState("ready");
 
   async function send() {
     const cmd = text.trim();
@@ -11,7 +18,6 @@ export default function AuricruxDock() {
 
     setLoading(true);
 
-    // Log outgoing message
     setLog((prev) => [
       { t: new Date().toISOString(), m: `SENT: ${cmd}` },
       ...prev
@@ -20,7 +26,6 @@ export default function AuricruxDock() {
     setText("");
 
     try {
-      // 👉 REAL BACKEND CALL (YOUR FUNCTION APP)
       const res = await fetch(
         "https://auricrux-bid-api-node-ftcueggjg4b0ehbs.centralus-01.azurewebsites.net/api/bids",
         {
@@ -37,7 +42,12 @@ export default function AuricruxDock() {
         }
       );
 
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
       const data = await res.json();
+      setMode("live");
 
       setLog((prev) => [
         {
@@ -46,12 +56,17 @@ export default function AuricruxDock() {
         },
         ...prev
       ]);
-
     } catch (err) {
+      setMode("demo");
+      const reply = demoResponses[Math.floor(Math.random() * demoResponses.length)];
       setLog((prev) => [
         {
           t: new Date().toISOString(),
-          m: `ERROR: ${err.message}`
+          m: `AURICRUX: ${reply}`
+        },
+        {
+          t: new Date().toISOString(),
+          m: `DEMO FALLBACK: ${err.message}`
         },
         ...prev
       ]);
@@ -95,6 +110,9 @@ export default function AuricruxDock() {
       }}
     >
       <strong>Auricrux™</strong>
+      <div style={{ marginTop: 4, fontSize: 12, color: "#6b7280" }}>
+        Mode: {mode === "live" ? "Live API" : mode === "demo" ? "Demo Fallback" : "Ready"}
+      </div>
 
       <div style={{ marginTop: 8 }}>
         <button onClick={speak}>Voice</button>
@@ -123,12 +141,18 @@ export default function AuricruxDock() {
           fontSize: 11
         }}
       >
-        {log.map((l, i) => (
-          <div key={i} style={{ marginBottom: 6 }}>
-            <div style={{ opacity: 0.5 }}>{l.t}</div>
-            <div>{l.m}</div>
+        {log.length === 0 ? (
+          <div style={{ color: "#6b7280" }}>
+            Ask Auricrux for the next action, customer update, or training guidance.
           </div>
-        ))}
+        ) : (
+          log.map((l, i) => (
+            <div key={i} style={{ marginBottom: 6 }}>
+              <div style={{ opacity: 0.5 }}>{l.t}</div>
+              <div>{l.m}</div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
