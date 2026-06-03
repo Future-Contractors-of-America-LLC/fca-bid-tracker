@@ -6,6 +6,25 @@ const cardStyle = {
   borderRadius: 14,
   padding: 18,
   background: "#fff",
+  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+};
+
+const actionCardStyle = {
+  ...cardStyle,
+  background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
+  border: "1px solid #dbe3ef",
+};
+
+const actionLinkStyle = {
+  display: "inline-block",
+  textDecoration: "none",
+  background: "#111827",
+  color: "#fff",
+  padding: "10px 14px",
+  borderRadius: 10,
+  fontWeight: 700,
+  marginTop: 12,
+  marginRight: 10,
 };
 
 export default function AcademyHome() {
@@ -15,10 +34,24 @@ export default function AcademyHome() {
         <ShellHeader
           eyebrow="FCA Academy Demo"
           title="Training, Certification, and Workforce Readiness"
-          subtitle="Academy shell connected to the same customer journey shown in the portal."
+          subtitle="Academy shell connected to the same customer journey shown in the portal, so onboarding and training remain part of one operating flow."
           primaryHref="/portal"
           primaryLabel="Return to Portal"
+          secondaryHref="/contact"
+          secondaryLabel="Request Demo"
         />
+
+        <div style={{ ...actionCardStyle, marginBottom: 24 }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy continuity</div>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>This route closes the customer lifecycle story</h2>
+          <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
+            The academy is no longer a side destination. It shows how FCA can take the same customer from portal activity into workforce readiness, certification tracking, and ongoing enablement with Auricrux still visible across the journey.
+          </p>
+          <div>
+            <a href="/portal/academy" style={actionLinkStyle}>Open Portal Academy Route</a>
+            <a href="/pricing" style={{ ...actionLinkStyle, background: "#e5e7eb", color: "#111827" }}>View Pricing</a>
+          </div>
+        </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 28 }}>
           <div style={cardStyle}>
@@ -59,9 +92,28 @@ export default function AcademyHome() {
           </div>
         </div>
 
+        <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, marginTop: 24 }}>
+          <div style={cardStyle}>
+            <h2 style={{ marginTop: 0 }}>Connected portal routes</h2>
+            <div style={{ display: "grid", gap: 12 }}>
+              <a href="/portal/projects" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Projects → show delivery continuity</a>
+              <a href="/portal/files" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Files → show onboarding and compliance docs</a>
+              <a href="/portal/messages" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Messages → show Auricrux follow-through</a>
+              <a href="/portal/billing" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Billing → show commercial continuity</a>
+            </div>
+          </div>
+          <div style={cardStyle}>
+            <h2 style={{ marginTop: 0 }}>Founder pitch close</h2>
+            <p style={{ lineHeight: 1.7, color: "#4b5563" }}>
+              Use this screen to prove FCA is not just a bid tool. The same customer can move from sales and portal visibility into workforce enablement, compliance readiness, and long-term support.
+            </p>
+            <a href="/contact" style={actionLinkStyle}>Book Founder Walkthrough</a>
+          </div>
+        </div>
+
         <div style={{ marginTop: 24, ...cardStyle }}>
           <h2 style={{ marginTop: 0 }}>Why this matters in the pitch</h2>
-          <p style={{ lineHeight: 1.7 }}>
+          <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
             FCA is not just a bid tool. The academy view proves the system can carry a customer from sales and onboarding into workforce enablement, compliance visibility, and long-term operational support.
           </p>
         </div>
