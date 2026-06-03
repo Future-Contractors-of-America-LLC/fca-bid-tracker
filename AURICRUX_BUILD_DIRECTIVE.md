@@ -1,4 +1,4 @@
-﻿# AURICRUX BUILD DIRECTIVE
+# AURICRUX BUILD DIRECTIVE
 
 Applies To:
 - FCA customer bid intake/status pages
@@ -18,6 +18,7 @@ Current System State:
 - Phase 1F complete: FCA-general customer intake/status paths.
 - Phase 1G complete: customerId/customerName support.
 - Phase 1H complete: customer filter, search, and stable layout.
+- Phase 1I complete: FCA and Auricrux-only customer branding enforcement.
 
 Current Live API:
 https://auricrux-bid-api-node-ftcueggjg4b0ehbs.centralus-01.azurewebsites.net/api/bids
@@ -64,8 +65,8 @@ Auricrux must produce:
 No partial snippets.
 No placeholders except secrets.
 No explanations unless needed to prevent operator error.
-No Tyler-only architecture.
-Tyler is only a first customer/test account.
+No customer-specific architecture may define platform identity.
+Customer-facing products must use FCA or Auricrux branding only.
 FCA is the product/platform owner.
 Auricrux is the operating intelligence.
 GitHub remains source of truth.

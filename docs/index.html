@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<h2>Tyler Construction Bid Entry</h2>
+<h2>FCA Bid Entry</h2>
 
 <input id="project" placeholder="Project Name"><br><br>
 <input id="client" placeholder="Client"><br><br>
@@ -22,13 +22,10 @@
 <div id="bids"></div>
 
 <script>
-
-// ✅ submit bid
 async function submitBid() {
-
   let data = {
     id: new Date().toISOString(),
-    company: "Tyler Construction",
+    company: "FCA Customer",
     project: document.getElementById("project").value,
     client: document.getElementById("client").value,
     amount: document.getElementById("amount").value,
@@ -44,11 +41,9 @@ async function submitBid() {
   document.getElementById("msg").innerText =
     res.ok ? "✅ Bid submitted" : "❌ Error";
 
-  loadBids(); // refresh display
+  loadBids();
 }
 
-
-// ✅ load and display bids
 async function loadBids() {
   try {
     let res = await fetch("/api/bids");
@@ -84,9 +79,7 @@ async function loadBids() {
   }
 }
 
-// ✅ run when page loads
 loadBids();
-
 </script>
 
 </body>
