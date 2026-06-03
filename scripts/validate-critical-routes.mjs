@@ -80,6 +80,10 @@ for (const route of requiredAppRoutes) {
 const shellHrefSources = [
   websiteShellModule.publicActionCatalog,
   websiteShellModule.publicFallbackCtaCards,
+  websiteShellModule.auricruxWalkthroughPath,
+  websiteShellModule.platformJourneyPath,
+  websiteShellModule.platformLinkedProductAreas,
+  websiteShellModule.portalNarrativeCtaSets,
   websiteShellModule.shellJourney,
   websiteShellModule.shellPrimaryNav,
   websiteShellModule.shellWorkspaceRoutes,
