@@ -1,26 +1,65 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 const demoResponses = [
   "Auricrux demo mode: I can guide the next customer action from this shell.",
   "Auricrux demo mode: The portal and academy are aligned for onboarding continuity.",
-  "Auricrux demo mode: One approval is ready and two learners need assignment."
+  "Auricrux demo mode: One approval is ready and two learners need assignment.",
 ];
+
+const quickPrompts = [
+  "What is the next customer action?",
+  "Show training continuity.",
+  "What is blocking revenue right now?",
+];
+
+function modeMeta(mode) {
+  if (mode === "live") {
+    return {
+      label: "Live API",
+      tone: "#166534",
+      bg: "#dcfce7",
+      border: "#86efac",
+      summary: "Connected to live bid intake behavior.",
+    };
+  }
+
+  if (mode === "demo") {
+    return {
+      label: "Demo Fallback",
+      tone: "#9a3412",
+      bg: "#ffedd5",
+      border: "#fdba74",
+      summary: "Safe fallback for founder demo continuity.",
+    };
+  }
+
+  return {
+    label: "Ready",
+    tone: "#1d4ed8",
+    bg: "#dbeafe",
+    border: "#93c5fd",
+    summary: "Prepared to narrate next actions and customer state.",
+  };
+}
 
 export default function AuricruxDock() {
   const [text, setText] = useState("");
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("ready");
+  const [open, setOpen] = useState(true);
 
-  async function send() {
-    const cmd = text.trim();
+  const meta = useMemo(() => modeMeta(mode), [mode]);
+
+  async function send(customText) {
+    const cmd = (customText ?? text).trim();
     if (!cmd || loading) return;
 
     setLoading(true);
 
     setLog((prev) => [
       { t: new Date().toISOString(), m: `SENT: ${cmd}` },
-      ...prev
+      ...prev,
     ]);
 
     setText("");
@@ -37,8 +76,8 @@ export default function AuricruxDock() {
             value: 100000,
             status: "new",
             source: "auricrux-dock",
-            command: cmd
-          })
+            command: cmd,
+          }),
         }
       );
 
@@ -52,9 +91,9 @@ export default function AuricruxDock() {
       setLog((prev) => [
         {
           t: new Date().toISOString(),
-          m: `SUCCESS: Bid created (${data.id || "no id"})`
+          m: `SUCCESS: Bid created (${data.id || "no id"})`,
         },
-        ...prev
+        ...prev,
       ]);
     } catch (err) {
       setMode("demo");
@@ -62,13 +101,13 @@ export default function AuricruxDock() {
       setLog((prev) => [
         {
           t: new Date().toISOString(),
-          m: `AURICRUX: ${reply}`
+          m: `AURICRUX: ${reply}`,
         },
         {
           t: new Date().toISOString(),
-          m: `DEMO FALLBACK: ${err.message}`
+          m: `DEMO FALLBACK: ${err.message}`,
         },
-        ...prev
+        ...prev,
       ]);
     }
 
@@ -85,10 +124,10 @@ export default function AuricruxDock() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: true
+        audio: true,
       });
       stream.getTracks().forEach((t) => t.stop());
-      alert("Video capability available (capture test passed).");
+      alert("Video capability available for founder demo.");
     } catch {
       alert("Video capability blocked by browser policy or permissions.");
     }
@@ -100,60 +139,182 @@ export default function AuricruxDock() {
         position: "fixed",
         right: 16,
         bottom: 16,
-        width: 340,
+        width: open ? 368 : 220,
         zIndex: 9999,
-        background: "#fff",
-        padding: 12,
-        border: "1px solid #ddd",
-        borderRadius: 12,
-        boxShadow: "0 10px 30px rgba(0,0,0,0.12)"
+        borderRadius: 18,
+        overflow: "hidden",
+        border: "1px solid #cbd5e1",
+        boxShadow: "0 20px 50px rgba(15, 23, 42, 0.2)",
+        background: "#ffffff",
+        fontFamily: "Arial",
+        transition: "width 160ms ease",
       }}
     >
-      <strong>Auricrux™</strong>
-      <div style={{ marginTop: 4, fontSize: 12, color: "#6b7280" }}>
-        Mode: {mode === "live" ? "Live API" : mode === "demo" ? "Demo Fallback" : "Ready"}
-      </div>
-
-      <div style={{ marginTop: 8 }}>
-        <button onClick={speak}>Voice</button>
-        <button onClick={video} style={{ marginLeft: 6 }}>
-          Video
-        </button>
-      </div>
-
-      <div style={{ marginTop: 8 }}>
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Message Auricrux…"
-          style={{ width: "65%" }}
-        />
-        <button onClick={send} disabled={loading} style={{ marginLeft: 6 }}>
-          {loading ? "..." : "Send"}
-        </button>
-      </div>
-
       <div
         style={{
-          marginTop: 10,
-          maxHeight: 200,
-          overflow: "auto",
-          fontSize: 11
+          padding: 14,
+          background: "linear-gradient(135deg, #111827 0%, #1e3a8a 100%)",
+          color: "#fff",
         }}
       >
-        {log.length === 0 ? (
-          <div style={{ color: "#6b7280" }}>
-            Ask Auricrux for the next action, customer update, or training guidance.
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+          <div>
+            <div style={{ fontWeight: 700, letterSpacing: 0.2 }}>Auricrux</div>
+            <div style={{ fontSize: 12, opacity: 0.82 }}>Executive operating layer</div>
           </div>
-        ) : (
-          log.map((l, i) => (
-            <div key={i} style={{ marginBottom: 6 }}>
-              <div style={{ opacity: 0.5 }}>{l.t}</div>
-              <div>{l.m}</div>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            style={{
+              border: "1px solid rgba(255,255,255,0.25)",
+              background: "rgba(255,255,255,0.08)",
+              color: "#fff",
+              borderRadius: 10,
+              padding: "6px 10px",
+              cursor: "pointer",
+            }}
+          >
+            {open ? "Minimize" : "Open"}
+          </button>
+        </div>
+      </div>
+
+      <div style={{ padding: 14 }}>
+        <div
+          style={{
+            border: `1px solid ${meta.border}`,
+            background: meta.bg,
+            color: meta.tone,
+            borderRadius: 12,
+            padding: 12,
+          }}
+        >
+          <div style={{ fontWeight: 700, marginBottom: 4 }}>Mode: {meta.label}</div>
+          <div style={{ fontSize: 12, lineHeight: 1.5 }}>{meta.summary}</div>
+        </div>
+
+        {open ? (
+          <>
+            <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.5 }}>
+              Use Auricrux to narrate next actions, explain customer state, and preserve demo continuity across portal and academy routes.
             </div>
-          ))
+
+            <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
+              <button onClick={speak} style={buttonStyle("secondary")}>Voice</button>
+              <button onClick={video} style={buttonStyle("secondary")}>Video</button>
+            </div>
+
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#334155", marginBottom: 8 }}>Quick prompts</div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {quickPrompts.map((prompt) => (
+                  <button
+                    key={prompt}
+                    onClick={() => send(prompt)}
+                    disabled={loading}
+                    style={buttonStyle("chip")}
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
+              <input
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Message Auricrux…"
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  border: "1px solid #cbd5e1",
+                  borderRadius: 12,
+                  padding: "11px 12px",
+                  outline: "none",
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") send();
+                }}
+              />
+              <button onClick={() => send()} disabled={loading} style={buttonStyle("primary")}>
+                {loading ? "..." : "Send"}
+              </button>
+            </div>
+
+            <div
+              style={{
+                marginTop: 12,
+                border: "1px solid #e2e8f0",
+                borderRadius: 12,
+                padding: 10,
+                maxHeight: 220,
+                overflow: "auto",
+                background: "#f8fafc",
+              }}
+            >
+              {log.length === 0 ? (
+                <div style={{ color: "#64748b", fontSize: 12, lineHeight: 1.6 }}>
+                  Ask Auricrux for the next action, a customer update, training guidance, or a founder-demo narration cue.
+                </div>
+              ) : (
+                log.map((l, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      marginBottom: 8,
+                      paddingBottom: 8,
+                      borderBottom: i === log.length - 1 ? "none" : "1px solid #e2e8f0",
+                    }}
+                  >
+                    <div style={{ opacity: 0.55, fontSize: 10 }}>{l.t}</div>
+                    <div style={{ fontSize: 12, marginTop: 3, color: "#0f172a", lineHeight: 1.5 }}>{l.m}</div>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
+        ) : (
+          <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.5 }}>
+            Tap open to access prompts, voice, video, and live/demo activity.
+          </div>
         )}
       </div>
     </div>
   );
+}
+
+function buttonStyle(kind) {
+  if (kind === "primary") {
+    return {
+      border: "none",
+      background: "#111827",
+      color: "#fff",
+      borderRadius: 12,
+      padding: "11px 14px",
+      fontWeight: 700,
+      cursor: "pointer",
+    };
+  }
+
+  if (kind === "chip") {
+    return {
+      border: "1px solid #cbd5e1",
+      background: "#fff",
+      color: "#0f172a",
+      borderRadius: 999,
+      padding: "8px 10px",
+      fontSize: 12,
+      cursor: "pointer",
+    };
+  }
+
+  return {
+    border: "1px solid #cbd5e1",
+    background: "#f8fafc",
+    color: "#0f172a",
+    borderRadius: 10,
+    padding: "8px 12px",
+    fontWeight: 600,
+    cursor: "pointer",
+  };
 }
