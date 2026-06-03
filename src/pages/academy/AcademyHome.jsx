@@ -1,6 +1,12 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import ProjectSpineBar from "../../components/ProjectSpineBar";
+import WorkspaceContextBar from "../../components/WorkspaceContextBar";
+import AuricruxStatusRail from "../../components/AuricruxStatusRail";
+import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import { shellJourney } from "../../websiteShell";
+import { auricruxRail, currentProject, portalTenant, projectAuditEvents, workspaceContext } from "../../workspaceState";
+import { portalFiles } from "../../portalShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -44,11 +50,16 @@ export default function AcademyHome() {
           currentJourney="academy"
         />
 
+        <ProjectSpineBar tenant={portalTenant} project={currentProject} />
+        <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
+        <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
+
         <div style={{ ...actionCardStyle, marginBottom: 24 }}>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy continuity</div>
-          <h2 style={{ marginTop: 0, marginBottom: 10 }}>This route closes the customer lifecycle story</h2>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Academy now participates in the same workspace state</h2>
           <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
-            The academy is no longer a side destination. It shows how FCA can take the same customer from portal activity into workforce readiness, certification tracking, and ongoing enablement with Auricrux still visible across the journey.
+            The academy is no longer a side destination. It now reads the same tenant, project, workspace, audit,
+            and Auricrux state that powers the customer portal so workforce readiness stays attached to the same operational record.
           </p>
           <div>
             <a href="/portal/academy" style={actionLinkStyle}>Open Portal Academy Route</a>
@@ -95,6 +106,8 @@ export default function AcademyHome() {
           </div>
         </div>
 
+        <ProjectFileAuditPanel project={currentProject} files={portalFiles} auditEvents={projectAuditEvents} />
+
         <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, marginTop: 24 }}>
           <div style={cardStyle}>
             <h2 style={{ marginTop: 0 }}>Connected portal routes</h2>
@@ -117,7 +130,7 @@ export default function AcademyHome() {
         <div style={{ marginTop: 24, ...cardStyle }}>
           <h2 style={{ marginTop: 0 }}>Why this matters in rollout</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-            FCA is not just a bid tool. The academy view proves the system can carry a customer from sales and onboarding into workforce enablement, compliance visibility, and long-term operational support.
+            FCA Academy now participates in the same operational shell state as the portal. That moves the product closer to one true tenant, project, file, audit, and Auricrux-driven system.
           </p>
         </div>
 
