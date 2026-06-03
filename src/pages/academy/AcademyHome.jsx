@@ -5,6 +5,7 @@ import WorkspaceContextBar from "../../components/WorkspaceContextBar";
 import AuricruxStatusRail from "../../components/AuricruxStatusRail";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import RouteStateOverlay from "../../components/RouteStateOverlay";
+import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import { shellJourney } from "../../websiteShell";
@@ -81,6 +82,7 @@ export default function AcademyHome() {
         <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
         <RouteStateOverlay overlay={routeStateOverlays.academy} />
+        <ExecutiveSignalBar mode="academy" nextHref="/portal/messages" nextLabel="Preserve follow-through" />
 
         <div style={{ ...actionCardStyle, marginBottom: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>

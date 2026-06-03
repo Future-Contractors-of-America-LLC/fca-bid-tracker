@@ -6,6 +6,7 @@ import AuricruxStatusRail from "./AuricruxStatusRail";
 import RouteStateOverlay from "./RouteStateOverlay";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxBrandMark from "./AuricruxBrandMark";
+import ExecutiveSignalBar from "./ExecutiveSignalBar";
 import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../portalShell";
 
 const shellStyle = {
@@ -107,6 +108,7 @@ export default function PortalShell({
         <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
         <RouteStateOverlay overlay={routeOverlay} />
+        <ExecutiveSignalBar mode="portal" nextHref="/portal/bids" nextLabel="Advance approval path" />
 
         <div style={bannerStyle}>
           <div>
