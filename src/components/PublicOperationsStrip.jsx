@@ -1,3 +1,5 @@
+import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
+
 const shellStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 18,
@@ -8,7 +10,7 @@ const shellStyle = {
 
 const gridStyle = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+  gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 170px), 1fr))",
   gap: 14,
   marginTop: 16,
 };
@@ -18,18 +20,6 @@ const cardStyle = {
   borderRadius: 14,
   padding: 14,
   background: "#fff",
-};
-
-const actionLinkStyle = {
-  display: "inline-block",
-  textDecoration: "none",
-  background: "#111827",
-  color: "#fff",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
-  marginTop: 16,
-  marginRight: 10,
 };
 
 export default function PublicOperationsStrip({
@@ -71,9 +61,9 @@ export default function PublicOperationsStrip({
         ))}
       </div>
 
-      <div>
-        <a href={primaryHref} style={actionLinkStyle}>{primaryLabel}</a>
-        <a href={secondaryHref} style={{ ...actionLinkStyle, background: "#e5e7eb", color: "#111827" }}>{secondaryLabel}</a>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
+        <a href={primaryHref} style={ctaPrimaryStyle}>{primaryLabel}</a>
+        <a href={secondaryHref} style={ctaLightStyle}>{secondaryLabel}</a>
       </div>
     </div>
   );

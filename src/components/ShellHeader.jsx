@@ -1,6 +1,7 @@
 import JourneyStrip from "./JourneyStrip";
 import FcaBrandMark from "./FcaBrandMark";
 import { shellPrimaryNav } from "../websiteShell";
+import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
 
 const baseLinkStyle = {
   textDecoration: "none",
@@ -8,6 +9,12 @@ const baseLinkStyle = {
   fontWeight: 600,
   padding: "8px 10px",
   borderRadius: 10,
+  minHeight: 40,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  boxSizing: "border-box",
+  textAlign: "center",
 };
 
 export default function ShellHeader({
@@ -32,7 +39,7 @@ export default function ShellHeader({
         marginBottom: 28,
       }}
     >
-      <div style={{ maxWidth: 760 }}>
+      <div style={{ maxWidth: 760, minWidth: 0 }}>
         <div
           style={{
             display: "flex",
@@ -70,8 +77,9 @@ export default function ShellHeader({
           display: "flex",
           gap: 10,
           flexWrap: "wrap",
-          alignItems: "center",
+          alignItems: "stretch",
           justifyContent: "flex-end",
+          minWidth: 0,
         }}
       >
         {shellPrimaryNav.map((item) => {
@@ -92,29 +100,12 @@ export default function ShellHeader({
           );
         })}
         {secondaryHref && secondaryLabel ? (
-          <a
-            href={secondaryHref}
-            style={{
-              ...baseLinkStyle,
-              background: "#f8fafc",
-              border: "1px solid #dbe3ef",
-            }}
-          >
+          <a href={secondaryHref} style={ctaLightStyle}>
             {secondaryLabel}
           </a>
         ) : null}
         {primaryHref && primaryLabel ? (
-          <a
-            href={primaryHref}
-            style={{
-              textDecoration: "none",
-              background: "#111827",
-              color: "#fff",
-              padding: "10px 14px",
-              borderRadius: 10,
-              fontWeight: 700,
-            }}
-          >
+          <a href={primaryHref} style={ctaPrimaryStyle}>
             {primaryLabel}
           </a>
         ) : null}

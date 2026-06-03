@@ -1,8 +1,10 @@
 export const pageShellStyle = {
-  padding: 40,
+  padding: "clamp(20px, 4vw, 40px)",
   fontFamily: "Arial",
   maxWidth: 1120,
   margin: "0 auto",
+  boxSizing: "border-box",
+  width: "100%",
 };
 
 export const cardStyle = {
@@ -44,36 +46,44 @@ export const heroButtonRowStyle = {
   flexWrap: "wrap",
   gap: 12,
   marginTop: 12,
+  alignItems: "stretch",
+};
+
+const baseCtaStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  textDecoration: "none",
+  padding: "10px 14px",
+  borderRadius: 10,
+  fontWeight: 700,
+  minHeight: 42,
+  boxSizing: "border-box",
+  textAlign: "center",
 };
 
 export const ctaPrimaryStyle = {
-  display: "inline-block",
-  textDecoration: "none",
+  ...baseCtaStyle,
   background: "#111827",
   color: "#fff",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
 };
 
 export const ctaSecondaryStyle = {
-  display: "inline-block",
-  textDecoration: "none",
+  ...baseCtaStyle,
   background: "#eff6ff",
   color: "#1d4ed8",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
   border: "1px solid #bfdbfe",
 };
 
 export const ctaLightStyle = {
-  display: "inline-block",
-  textDecoration: "none",
+  ...baseCtaStyle,
   background: "#f8fafc",
   color: "#111827",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
   border: "1px solid #cbd5e1",
+};
+
+export const ctaStyleMap = {
+  primary: ctaPrimaryStyle,
+  secondary: ctaSecondaryStyle,
+  light: ctaLightStyle,
 };
