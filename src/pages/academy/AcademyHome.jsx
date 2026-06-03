@@ -6,6 +6,7 @@ import AuricruxStatusRail from "../../components/AuricruxStatusRail";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import RouteStateOverlay from "../../components/RouteStateOverlay";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
+import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import { shellJourney } from "../../websiteShell";
@@ -83,6 +84,17 @@ export default function AcademyHome() {
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
         <RouteStateOverlay overlay={routeStateOverlays.academy} />
         <ExecutiveSignalBar mode="academy" nextHref="/portal/messages" nextLabel="Preserve follow-through" />
+
+        <div style={{ marginBottom: 24 }}>
+          <BuildExpansionCommandDeck
+            title="Academy is now part of the build expansion spine"
+            detail="Training and certification are now framed as part of the same governed system expansion as validation automation, SaaS shell continuity, public conversion routes, and communications follow-through."
+            primaryHref="/portal/academy"
+            primaryLabel="Open academy route in portal"
+            secondaryHref="/portal/messages"
+            secondaryLabel="Carry continuity into comms"
+          />
+        </div>
 
         <div style={{ ...actionCardStyle, marginBottom: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>

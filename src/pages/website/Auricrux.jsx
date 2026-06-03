@@ -5,6 +5,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
+import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import { auricruxCapabilities, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -53,7 +54,16 @@ export default function AuricruxPage() {
 
       <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Open unified platform state" />
 
-      <div style={{ ...twoColumnGridStyle, marginTop: 0 }}>
+      <BuildExpansionCommandDeck
+        title="Build expansion now has a visible command layer"
+        detail="This page now shows that the FCA build is expanding as one governed operating system across automation, SaaS continuity, website conversion, academy readiness, and communications follow-through."
+        primaryHref="/portal/platform"
+        primaryLabel="Inspect live operating routes"
+        secondaryHref="/pricing"
+        secondaryLabel="Review rollout planning"
+      />
+
+      <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={{ display: "grid", gap: 16 }}>
           <div style={cardStyle}>
             <h2 style={{ marginTop: 0 }}>What Auricrux is doing in this shell</h2>

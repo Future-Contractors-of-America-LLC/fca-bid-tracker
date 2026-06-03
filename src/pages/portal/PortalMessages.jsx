@@ -1,4 +1,5 @@
 import PortalShell from "../../components/PortalShell";
+import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import { portalMessages } from "../../portalShell";
 import { auricruxRail, currentProject, routeStateOverlays, workspaceContext } from "../../workspaceState";
 
@@ -48,6 +49,17 @@ export default function PortalMessages() {
           <div><strong>Training continuity:</strong> Two learners still need assignment under {currentProject.id}.</div>
           <div><strong>Recommended route:</strong> Clear approval in /portal/bids, then advance /portal/billing.</div>
         </div>
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <BuildExpansionCommandDeck
+          title="Comms development is now treated as system follow-through"
+          detail="The messages route now participates in the same five-track build expansion as automation, SaaS continuity, public website conversion, academy readiness, and commercial progression."
+          primaryHref="/portal/billing"
+          primaryLabel="Advance to billing"
+          secondaryHref="/academy"
+          secondaryLabel="Preserve training continuity"
+        />
       </div>
 
       <div style={cardStyle}>
