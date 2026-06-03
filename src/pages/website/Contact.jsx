@@ -8,6 +8,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { contactPaths, publicActionCatalog, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
 import { cardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
@@ -18,6 +19,24 @@ const checklistStyle = {
   lineHeight: 1.8,
   color: "#334155",
 };
+
+const contactContinuityItems = [
+  {
+    label: "Walkthrough scope",
+    value: "Public page to live product flow",
+    detail: "The contact route now makes the handoff into platform, portal, and academy explicit before the conversation starts.",
+  },
+  {
+    label: "Customer confidence",
+    value: "Review the real workspace first",
+    detail: "This page keeps real product state visible so outreach is grounded in execution, not abstract promises.",
+  },
+  {
+    label: "Next action",
+    value: "Pilot, rollout, or founder review",
+    detail: "The route closes toward a concrete production step instead of ending with a generic contact form posture.",
+  },
+];
 
 export default function Contact() {
   return (
@@ -47,6 +66,21 @@ export default function Contact() {
       />
 
       <ExecutiveSignalBar mode="public" nextHref={publicActionCatalog.platform.href} nextLabel="Review live workspace state" />
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicOperationsStrip
+          eyebrow="Contact continuity strip"
+          title="Contact now behaves like a rollout handoff surface"
+          detail="Instead of acting like a detached inquiry page, contact now carries shared operating context so buyers understand what happens next inside FCA."
+          statusLabel="Conversation posture"
+          statusValue="Guided walkthrough path active"
+          items={contactContinuityItems}
+          primaryHref="/portal/platform"
+          primaryLabel="Review live workspace state"
+          secondaryHref="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
+          secondaryLabel="Schedule walkthrough"
+        />
+      </div>
 
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel

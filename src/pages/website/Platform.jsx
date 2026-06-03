@@ -6,8 +6,27 @@ import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { platformModules, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
+
+const platformContinuityItems = [
+  {
+    label: "Workspace path",
+    value: "Public route to live dashboard",
+    detail: "Platform framing now points directly into the unified dashboard instead of stopping at generic feature copy.",
+  },
+  {
+    label: "Customer signal",
+    value: "Portal and academy stay linked",
+    detail: "Operational visibility, communication, and training readiness remain part of one platform story.",
+  },
+  {
+    label: "Founder review",
+    value: "Conversion path stays visible",
+    detail: "A platform reader can move straight into rollout review, workspace entry, or product validation without route drift.",
+  },
+];
 
 export default function Platform() {
   return (
@@ -44,6 +63,21 @@ export default function Platform() {
       />
 
       <ExecutiveSignalBar mode="public" nextHref="/portal" nextLabel="Enter customer workspace" />
+
+      <div style={{ marginTop: 24 }}>
+        <PublicOperationsStrip
+          eyebrow="Platform continuity strip"
+          title="Platform messaging now mirrors the working shell"
+          detail="This route now carries the same operational posture used deeper in FCA so buyers move from explanation to live product state without losing context."
+          statusLabel="Route posture"
+          statusValue="Conversion continuity active"
+          items={platformContinuityItems}
+          primaryHref="/portal/platform"
+          primaryLabel="Open unified dashboard"
+          secondaryHref="/contact"
+          secondaryLabel="Request founder review"
+        />
+      </div>
 
       <div style={{ marginTop: 24 }}>
         <CustomerTrustPanel

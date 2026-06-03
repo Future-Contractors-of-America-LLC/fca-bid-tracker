@@ -9,6 +9,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { pricingTiers, publicActionCatalog, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
@@ -18,6 +19,24 @@ const rolloutSteps = [
   "Walk the live FCA experience from public entry through workspace, platform dashboard, portal, academy, and bid continuity.",
   "Select the rollout tier that matches readiness, team size, and continuity needs.",
   "Close on the next deployment action and rollout planning path.",
+];
+
+const pricingContinuityItems = [
+  {
+    label: "Rollout path",
+    value: "Plans map to operating readiness",
+    detail: "Pricing now reads as deployment sequencing rather than a detached brochure table.",
+  },
+  {
+    label: "Commercial state",
+    value: "Walkthrough before checkout",
+    detail: "The route keeps founder review, workspace validation, and rollout fit visible before commercial next steps.",
+  },
+  {
+    label: "Shared narrative",
+    value: "Public shell stays product-aware",
+    detail: "Pricing continues the same platform and academy continuity story instead of restarting from zero.",
+  },
 ];
 
 export default function Pricing() {
@@ -61,6 +80,21 @@ export default function Pricing() {
       />
 
       <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel={publicActionCatalog.walkthrough.label} />
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicOperationsStrip
+          eyebrow="Pricing continuity strip"
+          title="Pricing is now framed as rollout control, not isolated packaging"
+          detail="The pricing route now carries a shared operating strip so commercial review stays tied to workspace readiness, founder walkthrough, and production next actions."
+          statusLabel="Commercial posture"
+          statusValue="Rollout review recommended"
+          items={pricingContinuityItems}
+          primaryHref="/contact"
+          primaryLabel="Start rollout review"
+          secondaryHref="/portal/platform"
+          secondaryLabel="Review live workspace state"
+        />
+      </div>
 
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel

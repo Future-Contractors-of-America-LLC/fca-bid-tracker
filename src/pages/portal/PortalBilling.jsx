@@ -1,4 +1,5 @@
 import PortalShell from "../../components/PortalShell";
+import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import { auricruxRail, portalBilling, portalTenant, currentProject, routeStateOverlays, workspaceContext } from "../../systemState";
 
@@ -37,6 +38,24 @@ const actionLinkStyle = {
   marginRight: 10,
 };
 
+const billingContinuityItems = [
+  {
+    label: "Revenue signal",
+    value: "Invoices stay tied to next actions",
+    detail: "Billing now reads as part of the same operating state that drives workspace, project, and communication follow-through.",
+  },
+  {
+    label: "Customer continuity",
+    value: "Pricing and contact remain connected",
+    detail: "Commercial review can move from internal billing posture back to pricing and founder rollout review without narrative drift.",
+  },
+  {
+    label: "Training link",
+    value: "Academy readiness remains visible",
+    detail: "Billing stays linked to learner assignment so revenue and onboarding continuity remain aligned.",
+  },
+];
+
 export default function PortalBilling() {
   return (
     <PortalShell
@@ -56,6 +75,21 @@ export default function PortalBilling() {
           auricrux={auricruxRail}
           title="Billing now reads from the canonical operating state"
           detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, and blocker module as the other portal routes."
+        />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicOperationsStrip
+          eyebrow="Billing continuity strip"
+          title="Billing now stays connected to the public conversion shell"
+          detail="The same continuity pattern used on platform, pricing, and contact now extends into billing so commercial posture remains coherent across public and portal routes."
+          statusLabel="Billing posture"
+          statusValue="Commercial follow-through active"
+          items={billingContinuityItems}
+          primaryHref="/pricing"
+          primaryLabel="Open pricing"
+          secondaryHref="/contact"
+          secondaryLabel="Request rollout review"
         />
       </div>
 
