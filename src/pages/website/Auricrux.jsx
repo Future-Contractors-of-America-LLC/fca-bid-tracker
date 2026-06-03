@@ -2,6 +2,7 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
+import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import { auricruxCapabilities, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -39,6 +40,8 @@ export default function AuricruxPage() {
           This public surface now frames Auricrux as the active system layer that keeps tenant, project, route, and next-action context visible as the user moves through the FCA experience.
         </p>
       </div>
+
+      <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Open unified platform state" />
 
       <div style={{ ...twoColumnGridStyle, marginTop: 0 }}>
         <div style={{ display: "grid", gap: 16 }}>

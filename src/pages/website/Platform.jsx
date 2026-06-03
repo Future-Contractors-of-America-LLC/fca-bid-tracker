@@ -2,6 +2,7 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
+import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import { platformModules, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -30,6 +31,8 @@ export default function Platform() {
           The current shell is designed for founder-led sales conversations and believable customer walkthroughs. It shows how FCA can carry a contractor from public entry into login, portal operations, bid visibility, academy continuity, and Auricrux-guided next actions without fragmenting the experience.
         </p>
       </div>
+
+      <ExecutiveSignalBar mode="public" nextHref="/portal" nextLabel="Enter customer workspace" />
 
       <div style={{ ...responsiveGrid(220), marginTop: 28 }}>
         {platformModules.map((module) => (

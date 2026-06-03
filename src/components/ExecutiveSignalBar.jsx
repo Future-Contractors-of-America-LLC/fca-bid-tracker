@@ -12,13 +12,36 @@ const stripStyle = {
 
 export default function ExecutiveSignalBar({
   mode = "portal",
-  nextHref = "/portal/bids",
-  nextLabel = "Advance approval path",
+  nextHref,
+  nextLabel,
 }) {
+  const resolvedHref =
+    nextHref ||
+    (mode === "academy"
+      ? "/portal/messages"
+      : mode === "public"
+        ? "/portal/platform"
+        : "/portal/bids");
+
+  const resolvedLabel =
+    nextLabel ||
+    (mode === "academy"
+      ? "Preserve follow-through"
+      : mode === "public"
+        ? "Open live workspace state"
+        : "Advance approval path");
+
   const trainingSignal =
     mode === "academy"
       ? "Two learners are ready for assignment inside the academy flow."
-      : "Two learners remain ready for academy assignment from the shared shell.";
+      : mode === "public"
+        ? "Two learners remain visible in the shared academy continuity story."
+        : "Two learners remain ready for academy assignment from the shared shell.";
+
+  const intro =
+    mode === "public"
+      ? "Auricrux is exposing the same canonical operating state on public routes that users later see inside the portal and academy shells."
+      : "Auricrux is preserving one operating story across approval, revenue, communication follow-through, and workforce readiness.";
 
   return (
     <div style={stripStyle}>
@@ -26,11 +49,11 @@ export default function ExecutiveSignalBar({
         <div>
           <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 6 }}>Executive signal bar</div>
           <div style={{ color: "#334155", lineHeight: 1.6, maxWidth: 860 }}>
-            Auricrux is preserving one operating story across approval, revenue, communication follow-through, and workforce readiness.
+            {intro}
           </div>
         </div>
         <a
-          href={nextHref}
+          href={resolvedHref}
           style={{
             textDecoration: "none",
             background: "#111827",
@@ -40,7 +63,7 @@ export default function ExecutiveSignalBar({
             fontWeight: 700,
           }}
         >
-          {nextLabel}
+          {resolvedLabel}
         </a>
       </div>
 
