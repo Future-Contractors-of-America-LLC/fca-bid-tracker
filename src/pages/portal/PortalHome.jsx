@@ -3,8 +3,10 @@ import PortalShell from "../../components/PortalShell";
 import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { auricruxActions, portalMessages, portalMetrics, portalProjects } from "../../portalShell";
+import { publicBodyCtaSets } from "../../websiteShell";
 import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 
@@ -84,11 +86,13 @@ export default function PortalHome() {
           statusValue="Portal continuity active"
           items={portalEntryContinuityItems}
           primaryHref="/portal/projects"
-          primaryLabel="Open project flow"
+          primaryLabel="Open Project Flow"
           secondaryHref="/portal/platform"
-          secondaryLabel="Review platform dashboard"
+          secondaryLabel="Open Platform Dashboard"
         />
       </div>
+
+      <PublicCtaRow actions={publicBodyCtaSets.portalEntry} style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 24 }} />
 
       <WorkspaceQuickActions
         actions={[
@@ -133,11 +137,11 @@ export default function PortalHome() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Connected workspace flow</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Start on the public shell and enter through <a href="/login">workspace entry</a>.</li>
+            <li>Start on the public shell and enter through <a href="/login">Open FCA Workspace</a>.</li>
             <li>Use this portal overview to frame account status and Auricrux guidance.</li>
             <li>Open <a href="/portal/projects">Projects</a> to show execution continuity.</li>
             <li>Open <a href="/portal/files">Files</a> and <a href="/portal/messages">Messages</a> to show coordination.</li>
-            <li>Finish in <a href="/portal/academy">Academy</a> to prove workforce and training follow-through.</li>
+            <li>Finish in <a href="/portal/academy">Open Academy</a> to prove workforce and training follow-through.</li>
           </ol>
         </div>
         <div style={cardStyle}>

@@ -75,6 +75,7 @@ export default function Login() {
           <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
             This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace and unified platform dashboard.
           </p>
+          <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} />
         </div>
 
         <FounderJourneyStrip
@@ -82,7 +83,7 @@ export default function Login() {
           title="Workspace login is part of one connected customer journey"
           detail="Login is not a dead-end form. It is the bridge from public entry into portal continuity, academy readiness, and rollout planning."
           ctaHref="/portal"
-          ctaLabel="Continue to workspace"
+          ctaLabel="Open Portal Workspace"
         />
 
         <div style={{ marginBottom: 24 }}>
@@ -94,9 +95,9 @@ export default function Login() {
             statusValue="Workspace handoff active"
             items={loginContinuityItems}
             primaryHref="/portal"
-            primaryLabel="Continue to workspace"
+            primaryLabel="Open Portal Workspace"
             secondaryHref="/portal/platform"
-            secondaryLabel="Open platform dashboard"
+            secondaryLabel="Open Platform Dashboard"
           />
         </div>
 
@@ -116,7 +117,7 @@ export default function Login() {
               title="Workspace continuity before login"
               detail="Customers can see that tenant, project, and Auricrux state already exist before entering the portal, reinforcing one continuous operating shell."
               ctaHref="/portal"
-              ctaLabel="Continue into portal workspace"
+              ctaLabel="Open Portal Workspace"
             />
 
             <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>

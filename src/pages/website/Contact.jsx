@@ -11,7 +11,7 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import { contactPaths, publicActionCatalog, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
-import { cardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
+import { cardStyle, pageShellStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
 const checklistStyle = {
   margin: 0,
@@ -65,7 +65,7 @@ export default function Contact() {
         ctaLabel={publicActionCatalog.walkthrough.label}
       />
 
-      <ExecutiveSignalBar mode="public" nextHref={publicActionCatalog.platform.href} nextLabel="Review live workspace state" />
+      <ExecutiveSignalBar mode="public" nextHref={publicActionCatalog.platform.href} nextLabel="Open Platform Dashboard" />
 
       <div style={{ marginBottom: 24 }}>
         <PublicOperationsStrip
@@ -76,11 +76,13 @@ export default function Contact() {
           statusValue="Guided walkthrough path active"
           items={contactContinuityItems}
           primaryHref="/portal/platform"
-          primaryLabel="Review live workspace state"
+          primaryLabel="Open Platform Dashboard"
           secondaryHref="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
-          secondaryLabel="Schedule walkthrough"
+          secondaryLabel="Schedule a Walkthrough"
         />
       </div>
+
+      <PublicCtaRow actions={publicBodyCtaSets.contactHero} />
 
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel
@@ -119,7 +121,7 @@ export default function Contact() {
             title={publicContactMessaging.snapshot.title}
             detail={publicContactMessaging.snapshot.detail}
             ctaHref={publicActionCatalog.platform.href}
-            ctaLabel={publicContactMessaging.snapshot.ctaLabel}
+            ctaLabel="Open Platform Dashboard"
           />
 
           <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
@@ -139,7 +141,7 @@ export default function Contact() {
             <div key={path.title} style={cardStyle}>
               <h3 style={{ marginTop: 0 }}>{path.title}</h3>
               <p style={{ color: "#4b5563", lineHeight: 1.6 }}>{path.detail}</p>
-              <a href={path.cta} style={{ display: "inline-block", textDecoration: "none", background: "#111827", color: "#fff", padding: "10px 14px", borderRadius: 10, fontWeight: 700 }}>
+              <a href={path.cta} style={ctaPrimaryStyle}>
                 {path.label}
               </a>
             </div>

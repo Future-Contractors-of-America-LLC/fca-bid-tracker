@@ -34,6 +34,11 @@ export const publicActionCatalog = {
     href: "/pricing",
     variant: "light",
   },
+  contact: {
+    label: "Open Contact & Rollout",
+    href: "/contact",
+    variant: "light",
+  },
   walkthrough: {
     label: "Schedule a Walkthrough",
     href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
@@ -101,6 +106,51 @@ export const auricruxCapabilities = [
   "Maintains continuity between portal, communications, and academy",
   "Acts as a visible operating layer inside the shell",
   "Explains workflow state so teams always know what should happen next",
+];
+
+export const publicSurfaceLinks = [
+  {
+    key: "platform",
+    title: "Platform Overview",
+    detail: "See how FCA keeps bids, project visibility, communication, and training connected in one operating system.",
+    href: "/platform",
+    ctaLabel: "Platform Overview",
+  },
+  {
+    key: "auricrux",
+    title: "Auricrux Guidance",
+    detail: "See how the operating layer keeps next steps, customer visibility, and execution continuity clear.",
+    href: "/auricrux",
+    ctaLabel: "Meet Auricrux",
+  },
+  {
+    key: "portal",
+    title: "Customer Portal",
+    detail: "Projects, files, notifications, billing follow-through, and customer-facing visibility.",
+    href: "/portal",
+    ctaLabel: "Open Portal Workspace",
+  },
+  {
+    key: "academy",
+    title: "FCA Academy",
+    detail: "Training pathways, certification progress, and workforce readiness tied to the same customer journey.",
+    href: "/academy",
+    ctaLabel: "Open Academy",
+  },
+  {
+    key: "pricing",
+    title: "Plans & Rollout",
+    detail: "Move from interest into rollout planning, guided setup, and next implementation steps.",
+    href: "/pricing",
+    ctaLabel: "Plans & Rollout",
+  },
+  {
+    key: "contact",
+    title: "Contact & Rollout",
+    detail: "Start a walkthrough, pilot discussion, or rollout review from the same connected shell.",
+    href: "/contact",
+    ctaLabel: "Open Contact & Rollout",
+  },
 ];
 
 export const contactPaths = [
@@ -204,15 +254,30 @@ export const publicBodyCtaSets = {
     publicActionCatalog.auricrux,
     publicActionCatalog.pricing,
   ],
+  platformHero: [
+    { ...publicActionCatalog.workspace, variant: "primary" },
+    { ...publicActionCatalog.platform, variant: "secondary" },
+    publicActionCatalog.portal,
+  ],
+  auricruxHero: [
+    { ...publicActionCatalog.platform, variant: "primary" },
+    publicActionCatalog.portal,
+    publicActionCatalog.pricing,
+  ],
   pricingHero: [
-    { ...publicActionCatalog.walkthrough, href: "/contact", variant: "primary" },
+    { ...publicActionCatalog.contact, variant: "primary" },
     publicActionCatalog.platform,
     { ...publicActionCatalog.workspace, variant: "light" },
   ],
   pricingImmediate: [
-    { ...publicActionCatalog.walkthrough, href: "/contact", variant: "primary" },
+    { ...publicActionCatalog.contact, variant: "primary" },
     publicActionCatalog.platform,
     publicActionCatalog.portal,
+  ],
+  contactHero: [
+    { ...publicActionCatalog.platform, variant: "primary" },
+    publicActionCatalog.workspace,
+    publicActionCatalog.walkthrough,
   ],
   contactImmediate: [
     publicActionCatalog.workspace,
@@ -222,6 +287,11 @@ export const publicBodyCtaSets = {
   loginWorkspace: [
     { ...publicActionCatalog.portal, variant: "primary" },
     publicActionCatalog.platform,
+    publicActionCatalog.academy,
+  ],
+  portalEntry: [
+    { ...publicActionCatalog.platform, variant: "primary" },
+    publicActionCatalog.portal,
     publicActionCatalog.academy,
   ],
 };

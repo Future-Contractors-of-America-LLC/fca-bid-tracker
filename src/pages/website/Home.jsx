@@ -8,7 +8,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { publicBodyCtaSets, publicRouteCtas, publicSurfaceLinks, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
 import { cardStyle, pageShellStyle } from "../../publicShellStyles";
 
@@ -80,9 +80,9 @@ export default function Home() {
           statusValue="Unified shell continuity active"
           items={homeContinuityItems}
           primaryHref="/login"
-          primaryLabel="Open workspace entry"
+          primaryLabel="Open FCA Workspace"
           secondaryHref="/portal/platform"
-          secondaryLabel="Review live platform state"
+          secondaryLabel="Open Platform Dashboard"
         />
       </div>
 
@@ -105,26 +105,14 @@ export default function Home() {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 24 }}>
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Platform Overview</h3>
-          <p>See how FCA keeps bids, project visibility, communication, and training connected in one operating system.</p>
-          <a href="/platform">View platform page</a>
-        </div>
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Auricrux Guidance</h3>
-          <p>See how the operating layer keeps next steps, customer visibility, and execution continuity clear.</p>
-          <a href="/auricrux">View Auricrux page</a>
-        </div>
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Customer Portal</h3>
-          <p>Projects, files, notifications, billing follow-through, and customer-facing visibility.</p>
-          <a href="/portal">Open customer workspace</a>
-        </div>
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>FCA Academy</h3>
-          <p>Training pathways, certification progress, and workforce readiness tied to the same customer journey.</p>
-          <a href="/academy">Open academy workspace</a>
-        </div>
+        {publicSurfaceLinks.map((item) => (
+          <div key={item.key} style={cardStyle}>
+            <h3 style={{ marginTop: 0 }}>{item.title}</h3>
+            <p>{item.detail}</p>
+            <a href={item.href}>{item.ctaLabel}</a>
+          </div>
+        ))}
+
         <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>FCA Bid Product</h3>
           <p>Use the canonical FCA bid routes first for customer continuity and production rollout planning.</p>
@@ -140,15 +128,6 @@ export default function Home() {
             <a href="/fca-customer-entry/index.html">Legacy intake route</a>
             <span style={{ margin: "0 8px" }}>•</span>
             <a href="/fca-customer-status/index.html">Legacy status route</a>
-          </div>
-        </div>
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Plans & Rollout</h3>
-          <p>Move from interest into rollout planning, guided setup, and next implementation steps.</p>
-          <div style={{ marginTop: 10 }}>
-            <a href="/pricing">Plans</a>
-            <span style={{ margin: "0 8px" }}>•</span>
-            <a href="/contact">Contact</a>
           </div>
         </div>
       </div>

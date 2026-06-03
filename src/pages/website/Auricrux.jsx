@@ -7,8 +7,9 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { auricruxCapabilities, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { auricruxCapabilities, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
@@ -62,6 +63,7 @@ export default function AuricruxPage() {
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
           This page frames Auricrux as the active guidance layer that keeps tenant, project, route, and next-step context visible as users move through the FCA experience.
         </p>
+        <PublicCtaRow actions={publicBodyCtaSets.auricruxHero} />
       </div>
 
       <FounderJourneyStrip
@@ -69,10 +71,10 @@ export default function AuricruxPage() {
         title="Auricrux should support the same customer journey visible across FCA"
         detail="This route reinforces the path from public framing into workspace, portal continuity, academy readiness, and rollout planning while Auricrux explains what should happen next."
         ctaHref="/portal/platform"
-        ctaLabel="Open live platform state"
+        ctaLabel="Open Platform Dashboard"
       />
 
-      <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Open unified platform state" />
+      <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Open Platform Dashboard" />
 
       <div style={{ marginBottom: 24 }}>
         <PublicOperationsStrip
@@ -83,9 +85,9 @@ export default function AuricruxPage() {
           statusValue="System continuity active"
           items={auricruxContinuityItems}
           primaryHref="/portal/platform"
-          primaryLabel="Open live platform state"
+          primaryLabel="Open Platform Dashboard"
           secondaryHref="/pricing"
-          secondaryLabel="Review rollout planning"
+          secondaryLabel="Plans & Rollout"
         />
       </div>
 
@@ -115,9 +117,9 @@ export default function AuricruxPage() {
         title="Build expansion now has a visible command layer"
         detail="This page shows that the FCA build is expanding as one governed system across automation, SaaS continuity, website conversion, academy readiness, and communications follow-through."
         primaryHref="/portal/platform"
-        primaryLabel="Inspect live operating routes"
+        primaryLabel="Open Platform Dashboard"
         secondaryHref="/pricing"
-        secondaryLabel="Review rollout planning"
+        secondaryLabel="Plans & Rollout"
       />
 
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
@@ -147,7 +149,7 @@ export default function AuricruxPage() {
           title="Auricrux is tied to live workspace continuity"
           detail="This page references the same persisted tenant, project, and Auricrux state used across the platform dashboard and portal surfaces so the guidance story stays believable."
           ctaHref="/portal/platform"
-          ctaLabel="Review unified platform state"
+          ctaLabel="Open Platform Dashboard"
         />
       </div>
 
@@ -167,11 +169,11 @@ export default function AuricruxPage() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Suggested walkthrough path</h2>
           <div style={{ display: "grid", gap: 12 }}>
-            <a href="/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>1. Review the unified FCA platform story</a>
-            <a href="/login" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>2. Enter the workspace</a>
-            <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>3. Open the unified platform dashboard</a>
-            <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>4. Show portal continuity and next actions</a>
-            <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>5. Continue into academy readiness</a>
+            <a href="/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>1. Platform Overview</a>
+            <a href="/login" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>2. Open FCA Workspace</a>
+            <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>3. Open Platform Dashboard</a>
+            <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>4. Open Portal Workspace</a>
+            <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>5. Open Academy</a>
           </div>
         </div>
       </div>

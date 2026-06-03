@@ -76,10 +76,10 @@ export default function Pricing() {
         title={publicPricingMessaging.journey.title}
         detail={publicPricingMessaging.journey.detail}
         ctaHref="/contact"
-        ctaLabel={publicActionCatalog.walkthrough.label}
+        ctaLabel={publicActionCatalog.contact.label}
       />
 
-      <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel={publicActionCatalog.walkthrough.label} />
+      <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel={publicActionCatalog.contact.label} />
 
       <div style={{ marginBottom: 24 }}>
         <PublicOperationsStrip
@@ -90,9 +90,9 @@ export default function Pricing() {
           statusValue="Rollout review recommended"
           items={pricingContinuityItems}
           primaryHref="/contact"
-          primaryLabel="Start rollout review"
+          primaryLabel="Open Contact & Rollout"
           secondaryHref="/portal/platform"
-          secondaryLabel="Review live workspace state"
+          secondaryLabel="Open Platform Dashboard"
         />
       </div>
 
@@ -122,9 +122,9 @@ export default function Pricing() {
         title="Rollout planning reflects live system state"
         detail="Pricing is framed as a continuity-aware rollout surface that keeps approval, revenue risk, and deployment readiness visible before a live conversation."
         primaryHref="/contact"
-        primaryLabel={publicActionCatalog.walkthrough.label}
+        primaryLabel={publicActionCatalog.contact.label}
         secondaryHref={publicActionCatalog.platform.href}
-        secondaryLabel="Review Live Workspace State"
+        secondaryLabel="Open Platform Dashboard"
       />
 
       <div style={{ ...twoColumnGridStyle, marginBottom: 24, marginTop: 24 }}>
@@ -141,7 +141,7 @@ export default function Pricing() {
           title={publicPricingMessaging.snapshot.title}
           detail={publicPricingMessaging.snapshot.detail}
           ctaHref={publicActionCatalog.platform.href}
-          ctaLabel={publicPricingMessaging.snapshot.ctaLabel}
+          ctaLabel="Open Platform Dashboard"
         />
       </div>
 

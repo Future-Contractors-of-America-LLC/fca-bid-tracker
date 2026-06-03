@@ -5,9 +5,10 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { platformModules, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { platformModules, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const platformContinuityItems = [
@@ -52,6 +53,7 @@ export default function Platform() {
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>
           FCA helps contractor teams move from opportunity to delivery with better visibility into bids, customer updates, files, billing steps, and workforce readiness.
         </p>
+        <PublicCtaRow actions={publicBodyCtaSets.platformHero} />
       </div>
 
       <FounderJourneyStrip
@@ -73,9 +75,9 @@ export default function Platform() {
           statusValue="Conversion continuity active"
           items={platformContinuityItems}
           primaryHref="/portal/platform"
-          primaryLabel="Open unified dashboard"
+          primaryLabel="Open Platform Dashboard"
           secondaryHref="/contact"
-          secondaryLabel="Request founder review"
+          secondaryLabel="Open Contact & Rollout"
         />
       </div>
 
@@ -126,18 +128,18 @@ export default function Platform() {
           title="Public proof of workspace continuity"
           detail="The public platform page previews live workspace context so the site narrative stays connected to the working portal experience."
           ctaHref="/portal/platform"
-          ctaLabel="Open unified platform dashboard"
+          ctaLabel="Open Platform Dashboard"
         />
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Linked product areas</h2>
         <div style={{ ...responsiveGrid(220), gap: 12 }}>
-          <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Customer Portal Workspace</a>
-          <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Unified Platform Dashboard</a>
-          <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>FCA Academy</a>
-          <a href="/bid-entry/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Bid Entry Tool</a>
-          <a href="/bid-status/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Bid Status Tool</a>
+          <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Portal Workspace</a>
+          <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Platform Dashboard</a>
+          <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Academy</a>
+          <a href="/bid-entry/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Bid Entry</a>
+          <a href="/bid-status/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Open Bid Status</a>
         </div>
       </div>
 
