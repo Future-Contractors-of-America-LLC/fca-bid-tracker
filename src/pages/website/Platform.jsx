@@ -4,6 +4,7 @@ import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
+import PublicActionRail from "../../components/PublicActionRail";
 import { platformModules, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -82,6 +83,11 @@ export default function Platform() {
           <a href="/bid-status/" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Bid Status Tool</a>
         </div>
       </div>
+
+      <PublicActionRail
+        title="End platform framing with the same canonical production actions"
+        detail="Platform should finish with the same workspace, dashboard, academy, and founder-review actions used across the public shell so the route never feels detached from the operating system story."
+      />
 
       <ShellFooter />
     </div>

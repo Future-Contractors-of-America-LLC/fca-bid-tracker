@@ -5,6 +5,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
+import PublicActionRail from "../../components/PublicActionRail";
 import { contactPaths, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -98,6 +99,11 @@ export default function Contact() {
           <a href="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request" style={ctaLightStyle}>Request Founder Review</a>
         </div>
       </div>
+
+      <PublicActionRail
+        title="Close founder-review conversion with the same shared public action rail"
+        detail="Even at the conversion endpoint, the route now preserves the same workspace, platform, academy, and founder-review actions as the rest of the shell so the narrative stays unified."
+      />
 
       <ShellFooter />
     </div>

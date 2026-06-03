@@ -4,6 +4,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
+import PublicActionRail from "../../components/PublicActionRail";
 import { shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
@@ -118,6 +119,11 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <PublicActionRail
+        title="Close public entry with the same production next steps used across the shell"
+        detail="This shared rail keeps workspace entry, live platform state, academy continuity, and founder review visible at the bottom of the route so the conversion path stays explicit."
+      />
 
       <ShellFooter />
     </div>

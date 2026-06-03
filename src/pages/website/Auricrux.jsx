@@ -4,6 +4,7 @@ import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
+import PublicActionRail from "../../components/PublicActionRail";
 import { auricruxCapabilities, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -114,6 +115,11 @@ export default function AuricruxPage() {
           Auricrux makes the shell feel active rather than static. Instead of showing disconnected pages, FCA can demonstrate an embedded operating layer that gives context, next actions, and continuity as customers move between sales, execution, training, support, admin, and production planning surfaces.
         </p>
       </div>
+
+      <PublicActionRail
+        title="Close the Auricrux narrative with the same production actions used elsewhere"
+        detail="The operating-layer page should still end in the same concrete next steps as the rest of the public shell so narration, platform state, and conversion stay aligned."
+      />
 
       <ShellFooter />
     </div>

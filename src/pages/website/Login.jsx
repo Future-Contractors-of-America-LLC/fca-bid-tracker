@@ -4,6 +4,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
+import PublicActionRail from "../../components/PublicActionRail";
 import { shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -111,6 +112,11 @@ export default function Login() {
             </div>
           </div>
         </div>
+
+        <PublicActionRail
+          title="End workspace entry with the same standardized shell actions"
+          detail="Login now closes with the same shared action rail as the other public routes so workspace entry, platform state, academy continuity, and founder review remain consistently visible."
+        />
 
         <ShellFooter />
       </div>

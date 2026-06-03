@@ -6,6 +6,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
+import PublicActionRail from "../../components/PublicActionRail";
 import { pricingTiers, shellJourney } from "../../websiteShell";
 import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroButtonRowStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -120,6 +121,11 @@ export default function Pricing() {
           </div>
         </div>
       </div>
+
+      <PublicActionRail
+        title="Finish pricing with the same standardized public next steps"
+        detail="Pricing now closes with the same shared action rail as the rest of the public shell so production planning, workspace entry, academy continuity, and founder review remain aligned."
+      />
 
       <ShellFooter />
     </div>
