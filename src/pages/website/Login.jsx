@@ -2,14 +2,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { shellJourney } from "../../websiteShell";
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 16,
-  padding: 24,
-  boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-  background: "#fff",
-};
+import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroCardStyle, pageShellStyle } from "../../publicShellStyles";
 
 const fieldStyle = {
   width: "100%",
@@ -31,7 +24,7 @@ const moduleStyle = {
 export default function Login() {
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
-      <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+      <div style={pageShellStyle}>
         <ShellHeader
           eyebrow="Auricrux Guided Entry"
           title="Access FCA Workspace"
@@ -42,6 +35,14 @@ export default function Login() {
           currentJourney="workspace"
         />
 
+        <div style={{ ...heroCardStyle, marginBottom: 20 }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Workspace continuity</div>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Entry now feels like part of the operating shell</h2>
+          <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
+            This route now carries the same visual rhythm as the rest of the public shell while keeping the strongest conversion path focused on entering the FCA workspace and unified platform dashboard.
+          </p>
+        </div>
+
         <div style={{ display: "grid", gridTemplateColumns: "minmax(320px, 520px) 1fr", gap: 20, alignItems: "start" }}>
           <div style={cardStyle}>
             <label>Work Email</label>
@@ -51,13 +52,13 @@ export default function Login() {
             <input style={fieldStyle} defaultValue="FCA Pilot Customer" />
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
-              <a href="/portal" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#111827", color: "#fff", fontWeight: 700 }}>
+              <a href="/portal" style={ctaPrimaryStyle}>
                 Continue to Workspace
               </a>
-              <a href="/portal/platform" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#eff6ff", color: "#1d4ed8", fontWeight: 700, border: "1px solid #bfdbfe" }}>
+              <a href="/portal/platform" style={ctaSecondaryStyle}>
                 Open Platform Dashboard
               </a>
-              <a href="/academy" style={{ padding: "12px 18px", borderRadius: 10, textDecoration: "none", background: "#e5e7eb", color: "#111827", fontWeight: 700 }}>
+              <a href="/academy" style={ctaLightStyle}>
                 Open Academy
               </a>
             </div>

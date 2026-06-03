@@ -2,14 +2,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { contactPaths, shellJourney } from "../../websiteShell";
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-};
+import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, pageShellStyle } from "../../publicShellStyles";
 
 const checklistStyle = {
   margin: 0,
@@ -20,7 +13,7 @@ const checklistStyle = {
 
 export default function Contact() {
   return (
-    <div style={{ padding: 40, fontFamily: "Arial", maxWidth: 1120, margin: "0 auto" }}>
+    <div style={pageShellStyle}>
       <ShellHeader
         eyebrow="FCA Contact"
         title="Move from interest to founder demo"
@@ -59,18 +52,7 @@ export default function Contact() {
             <div key={path.title} style={cardStyle}>
               <h3 style={{ marginTop: 0 }}>{path.title}</h3>
               <p style={{ color: "#4b5563", lineHeight: 1.6 }}>{path.detail}</p>
-              <a
-                href={path.cta}
-                style={{
-                  display: "inline-block",
-                  textDecoration: "none",
-                  background: "#111827",
-                  color: "#fff",
-                  padding: "10px 14px",
-                  borderRadius: 10,
-                  fontWeight: 700,
-                }}
-              >
+              <a href={path.cta} style={ctaPrimaryStyle}>
                 {path.label}
               </a>
             </div>
@@ -84,15 +66,9 @@ export default function Contact() {
           For this stage of the product, the strongest conversion path is still a direct founder-led walkthrough. This page supports that motion while the underlying platform continues to harden.
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-          <a href="/login" style={{ display: "inline-block", textDecoration: "none", background: "#111827", color: "#fff", padding: "10px 14px", borderRadius: 10, fontWeight: 700 }}>
-            Open Demo Workspace
-          </a>
-          <a href="/portal/platform" style={{ display: "inline-block", textDecoration: "none", background: "#eff6ff", color: "#1d4ed8", padding: "10px 14px", borderRadius: 10, fontWeight: 700, border: "1px solid #bfdbfe" }}>
-            Open Platform Dashboard
-          </a>
-          <a href="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Demo%20Request" style={{ display: "inline-block", textDecoration: "none", background: "#f8fafc", color: "#111827", padding: "10px 14px", borderRadius: 10, fontWeight: 700, border: "1px solid #d1d5db" }}>
-            Request Founder Demo
-          </a>
+          <a href="/login" style={ctaPrimaryStyle}>Open Demo Workspace</a>
+          <a href="/portal/platform" style={ctaSecondaryStyle}>Open Platform Dashboard</a>
+          <a href="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Demo%20Request" style={ctaLightStyle}>Request Founder Demo</a>
         </div>
       </div>
 

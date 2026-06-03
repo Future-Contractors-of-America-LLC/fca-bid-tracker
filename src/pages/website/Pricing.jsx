@@ -2,26 +2,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { pricingTiers, shellJourney } from "../../websiteShell";
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-};
-
-const linkStyle = {
-  display: "inline-block",
-  textDecoration: "none",
-  background: "#111827",
-  color: "#fff",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
-  marginRight: 10,
-  marginTop: 12,
-};
+import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroCardStyle, pageShellStyle } from "../../publicShellStyles";
 
 const rolloutSteps = [
   "Confirm contractor fit, pilot scope, and current operating friction.",
@@ -32,7 +13,7 @@ const rolloutSteps = [
 
 export default function Pricing() {
   return (
-    <div style={{ padding: 40, fontFamily: "Arial", maxWidth: 1120, margin: "0 auto" }}>
+    <div style={pageShellStyle}>
       <ShellHeader
         eyebrow="FCA Production Planning"
         title="Production rollout planning"
@@ -45,16 +26,16 @@ export default function Pricing() {
         currentJourney="conversion"
       />
 
-      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+      <div style={{ ...heroCardStyle, marginBottom: 24 }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Production planning flow</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Move from pricing into rollout readiness</h2>
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
           The strongest motion here is not a static price sheet. It is a guided production conversation that ties scope to the live shell, platform dashboard, portal continuity, academy readiness, and Auricrux-guided next actions.
         </p>
         <div>
-          <a href="/contact" style={linkStyle}>Request Founder Review</a>
-          <a href="/portal/platform" style={{ ...linkStyle, background: "#eff6ff", color: "#1d4ed8", border: "1px solid #bfdbfe" }}>Open Platform Dashboard</a>
-          <a href="/login" style={{ ...linkStyle, background: "#e5e7eb", color: "#111827" }}>Open Demo Workspace</a>
+          <a href="/contact" style={{ ...ctaPrimaryStyle, marginRight: 10, marginTop: 12 }}>Request Founder Review</a>
+          <a href="/portal/platform" style={{ ...ctaSecondaryStyle, marginRight: 10, marginTop: 12 }}>Open Platform Dashboard</a>
+          <a href="/login" style={{ ...ctaLightStyle, marginTop: 12 }}>Open Demo Workspace</a>
         </div>
       </div>
 
@@ -101,15 +82,9 @@ export default function Pricing() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Immediate next actions</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-            <a href="/contact" style={{ display: "inline-block", textDecoration: "none", background: "#111827", color: "#fff", padding: "10px 14px", borderRadius: 10, fontWeight: 700 }}>
-              Request Founder Review
-            </a>
-            <a href="/portal/platform" style={{ display: "inline-block", textDecoration: "none", background: "#eff6ff", color: "#1d4ed8", padding: "10px 14px", borderRadius: 10, fontWeight: 700, border: "1px solid #bfdbfe" }}>
-              Open Platform Dashboard
-            </a>
-            <a href="/portal" style={{ display: "inline-block", textDecoration: "none", background: "#f8fafc", color: "#111827", padding: "10px 14px", borderRadius: 10, fontWeight: 700, border: "1px solid #cbd5e1" }}>
-              Open Portal Workspace
-            </a>
+            <a href="/contact" style={ctaPrimaryStyle}>Request Founder Review</a>
+            <a href="/portal/platform" style={ctaSecondaryStyle}>Open Platform Dashboard</a>
+            <a href="/portal" style={ctaLightStyle}>Open Portal Workspace</a>
           </div>
         </div>
       </div>

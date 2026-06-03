@@ -2,14 +2,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { auricruxCapabilities, shellJourney } from "../../websiteShell";
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-};
+import { cardStyle, heroCardStyle, pageShellStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
   "Read persisted tenant, project, and workspace state rather than treating pages as disconnected views.",
@@ -20,7 +13,7 @@ const operatingSteps = [
 
 export default function AuricruxPage() {
   return (
-    <div style={{ padding: 40, fontFamily: "Arial", maxWidth: 1120, margin: "0 auto" }}>
+    <div style={pageShellStyle}>
       <ShellHeader
         eyebrow="Auricrux Embedded Operating Layer"
         title="Auricrux stays active across the FCA shell"
@@ -32,6 +25,14 @@ export default function AuricruxPage() {
         journey={shellJourney}
         currentJourney="platform"
       />
+
+      <div style={{ ...heroCardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Embedded operating layer</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux is part of the shell, not outside it</h2>
+        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
+          This public surface now frames Auricrux as the active system layer that keeps tenant, project, route, and next-action context visible as the user moves through the FCA experience.
+        </p>
+      </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, alignItems: "start" }}>
         <div style={{ display: "grid", gap: 16 }}>

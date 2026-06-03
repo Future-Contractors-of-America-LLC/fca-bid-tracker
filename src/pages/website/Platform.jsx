@@ -2,26 +2,11 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { platformModules, shellJourney } from "../../websiteShell";
-
-const heroCardStyle = {
-  border: "1px solid #dbe3ef",
-  borderRadius: 18,
-  padding: 24,
-  background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
-  boxShadow: "0 18px 40px rgba(15, 23, 42, 0.06)",
-};
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-};
+import { cardStyle, heroCardStyle, pageShellStyle } from "../../publicShellStyles";
 
 export default function Platform() {
   return (
-    <div style={{ padding: 40, fontFamily: "Arial", maxWidth: 1120, margin: "0 auto" }}>
+    <div style={pageShellStyle}>
       <ShellHeader
         eyebrow="FCA Platform"
         title="One contractor lifecycle operating system"

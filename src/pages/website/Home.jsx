@@ -2,35 +2,17 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { shellJourney } from "../../websiteShell";
-
-const ctaStyle = {
-  display: "inline-block",
-  marginRight: 12,
-  marginTop: 12,
-  padding: "12px 18px",
-  borderRadius: 10,
-  textDecoration: "none",
-  background: "#111827",
-  color: "#fff",
-  fontWeight: 600,
-};
+import { cardStyle, ctaLightStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
 const secondaryStyle = {
-  ...ctaStyle,
+  ...ctaLightStyle,
   background: "#f3f4f6",
-  color: "#111827",
   border: "1px solid #d1d5db",
-};
-
-const cardStyle = {
-  padding: 18,
-  border: "1px solid #e5e7eb",
-  borderRadius: 12,
 };
 
 export default function Home() {
   return (
-    <div style={{ padding: 40, fontFamily: "Arial", maxWidth: 1120, margin: "0 auto" }}>
+    <div style={pageShellStyle}>
       <ShellHeader
         eyebrow="FCA + Auricrux Unified Shell"
         title="Future Contractors of America"
@@ -44,10 +26,10 @@ export default function Home() {
       />
 
       <div style={{ marginTop: 20 }}>
-        <a href="/login" style={ctaStyle}>Enter FCA Workspace</a>
-        <a href="/platform" style={secondaryStyle}>Platform Overview</a>
-        <a href="/auricrux" style={secondaryStyle}>Meet Auricrux</a>
-        <a href="/pricing" style={secondaryStyle}>Production Planning</a>
+        <a href="/login" style={{ ...ctaPrimaryStyle, marginRight: 12, marginTop: 12 }}>Enter FCA Workspace</a>
+        <a href="/platform" style={{ ...secondaryStyle, marginRight: 12, marginTop: 12 }}>Platform Overview</a>
+        <a href="/auricrux" style={{ ...secondaryStyle, marginRight: 12, marginTop: 12 }}>Meet Auricrux</a>
+        <a href="/pricing" style={{ ...secondaryStyle, marginTop: 12 }}>Production Planning</a>
       </div>
 
       <div style={{ marginTop: 28 }}>
