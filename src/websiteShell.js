@@ -1,3 +1,46 @@
+export const publicActionCatalog = {
+  workspace: {
+    label: "Open FCA Workspace",
+    href: "/login",
+    variant: "primary",
+  },
+  platform: {
+    label: "Open Platform Dashboard",
+    href: "/portal/platform",
+    variant: "secondary",
+  },
+  portal: {
+    label: "Open Portal Workspace",
+    href: "/portal",
+    variant: "light",
+  },
+  academy: {
+    label: "Open Academy",
+    href: "/academy",
+    variant: "light",
+  },
+  platformOverview: {
+    label: "Platform Overview",
+    href: "/platform",
+    variant: "secondary",
+  },
+  auricrux: {
+    label: "Meet Auricrux",
+    href: "/auricrux",
+    variant: "light",
+  },
+  pricing: {
+    label: "Plans & Rollout",
+    href: "/pricing",
+    variant: "light",
+  },
+  walkthrough: {
+    label: "Schedule a Walkthrough",
+    href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
+    variant: "light",
+  },
+};
+
 export const platformModules = [
   {
     title: "Lead to Bid",
@@ -64,8 +107,8 @@ export const contactPaths = [
   {
     title: "Schedule a Walkthrough",
     detail: "Walk through the live FCA workspace and see how FCA can support your team from first opportunity through delivery and training.",
-    cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
-    label: "Schedule a Walkthrough",
+    cta: publicActionCatalog.walkthrough.href,
+    label: publicActionCatalog.walkthrough.label,
   },
   {
     title: "Discuss a Pilot",
@@ -116,81 +159,69 @@ export const shellCompatibilityRoutes = [
 ];
 
 export const shellProductionActions = [
-  {
-    label: "Open FCA Workspace",
-    href: "/login",
-    variant: "primary",
-  },
-  {
-    label: "Open Platform Dashboard",
-    href: "/portal/platform",
-    variant: "secondary",
-  },
-  {
-    label: "Schedule a Walkthrough",
-    href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
-    variant: "light",
-  },
+  publicActionCatalog.workspace,
+  publicActionCatalog.platform,
+  publicActionCatalog.walkthrough,
 ];
 
 export const publicRouteCtas = {
   public: {
-    primaryHref: "/login",
-    primaryLabel: "Open FCA Workspace",
-    secondaryHref: "/platform",
-    secondaryLabel: "Platform Overview",
+    primaryHref: publicActionCatalog.workspace.href,
+    primaryLabel: publicActionCatalog.workspace.label,
+    secondaryHref: publicActionCatalog.platformOverview.href,
+    secondaryLabel: publicActionCatalog.platformOverview.label,
   },
   platform: {
-    primaryHref: "/login",
-    primaryLabel: "Open FCA Workspace",
-    secondaryHref: "/portal/platform",
-    secondaryLabel: "Open Platform Dashboard",
+    primaryHref: publicActionCatalog.workspace.href,
+    primaryLabel: publicActionCatalog.workspace.label,
+    secondaryHref: publicActionCatalog.platform.href,
+    secondaryLabel: publicActionCatalog.platform.label,
   },
   auricrux: {
-    primaryHref: "/portal/platform",
-    primaryLabel: "Open Platform Dashboard",
-    secondaryHref: "/portal",
-    secondaryLabel: "Open Portal Workspace",
+    primaryHref: publicActionCatalog.platform.href,
+    primaryLabel: publicActionCatalog.platform.label,
+    secondaryHref: publicActionCatalog.portal.href,
+    secondaryLabel: publicActionCatalog.portal.label,
   },
   workspace: {
-    primaryHref: "/portal",
-    primaryLabel: "Open Portal Workspace",
-    secondaryHref: "/portal/platform",
-    secondaryLabel: "Open Platform Dashboard",
+    primaryHref: publicActionCatalog.portal.href,
+    primaryLabel: publicActionCatalog.portal.label,
+    secondaryHref: publicActionCatalog.platform.href,
+    secondaryLabel: publicActionCatalog.platform.label,
   },
   conversion: {
-    primaryHref: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
-    primaryLabel: "Schedule a Walkthrough",
-    secondaryHref: "/portal/platform",
-    secondaryLabel: "Open Platform Dashboard",
+    primaryHref: publicActionCatalog.walkthrough.href,
+    primaryLabel: publicActionCatalog.walkthrough.label,
+    secondaryHref: publicActionCatalog.platform.href,
+    secondaryLabel: publicActionCatalog.platform.label,
   },
 };
 
 export const publicBodyCtaSets = {
   home: [
-    { label: "Open FCA Workspace", href: "/login", variant: "primary" },
-    { label: "Platform Overview", href: "/platform", variant: "secondary" },
-    { label: "Meet Auricrux", href: "/auricrux", variant: "light" },
-    { label: "Plans & Rollout", href: "/pricing", variant: "light" },
+    publicActionCatalog.workspace,
+    publicActionCatalog.platformOverview,
+    publicActionCatalog.auricrux,
+    publicActionCatalog.pricing,
   ],
   pricingHero: [
-    { label: "Schedule a Walkthrough", href: "/contact", variant: "primary" },
-    { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
-    { label: "Open FCA Workspace", href: "/login", variant: "light" },
+    { ...publicActionCatalog.walkthrough, href: "/contact", variant: "primary" },
+    publicActionCatalog.platform,
+    { ...publicActionCatalog.workspace, variant: "light" },
   ],
   pricingImmediate: [
-    { label: "Schedule a Walkthrough", href: "/contact", variant: "primary" },
-    { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
-    { label: "Open Portal Workspace", href: "/portal", variant: "light" },
+    { ...publicActionCatalog.walkthrough, href: "/contact", variant: "primary" },
+    publicActionCatalog.platform,
+    publicActionCatalog.portal,
   ],
   contactImmediate: [
-    { label: "Open FCA Workspace", href: "/login", variant: "primary" },
-    { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
-    { label: "Schedule a Walkthrough", href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request", variant: "light" },
+    publicActionCatalog.workspace,
+    publicActionCatalog.platform,
+    publicActionCatalog.walkthrough,
   ],
   loginWorkspace: [
-    { label: "Open Portal Workspace", href: "/portal", variant: "primary" },
-    { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
-    { label: "Open Academy", href: "/academy", variant: "light" },
+    { ...publicActionCatalog.portal, variant: "primary" },
+    publicActionCatalog.platform,
+    publicActionCatalog.academy,
   ],
 };

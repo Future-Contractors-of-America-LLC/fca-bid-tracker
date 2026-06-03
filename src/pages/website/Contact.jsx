@@ -8,7 +8,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
-import { contactPaths, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { contactPaths, publicActionCatalog, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const checklistStyle = {
@@ -41,11 +41,11 @@ export default function Contact() {
         currentJourney="conversion"
         title="A walkthrough should feel like the natural next step"
         detail="This route makes the next step explicit so a live conversation feels like the natural outcome of platform framing, workspace continuity, and operating-state validation."
-        ctaHref="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
-        ctaLabel="Schedule a walkthrough"
+        ctaHref={publicActionCatalog.walkthrough.href}
+        ctaLabel={publicActionCatalog.walkthrough.label}
       />
 
-      <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Review live workspace state" />
+      <ExecutiveSignalBar mode="public" nextHref={publicActionCatalog.platform.href} nextLabel="Review live workspace state" />
 
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel
@@ -72,10 +72,10 @@ export default function Contact() {
       <CommercialReadinessPanel
         title="Your walkthrough begins from real operating context"
         detail="Contact is framed as a customer-ready conversion surface that inherits the same approval, revenue, and rollout readiness state shown across Auricrux, platform, portal, and academy routes."
-        primaryHref="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
-        primaryLabel="Schedule a Walkthrough"
-        secondaryHref="/portal/platform"
-        secondaryLabel="Open Platform Dashboard"
+        primaryHref={publicActionCatalog.walkthrough.href}
+        primaryLabel={publicActionCatalog.walkthrough.label}
+        secondaryHref={publicActionCatalog.platform.href}
+        secondaryLabel={publicActionCatalog.platform.label}
       />
 
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
@@ -83,7 +83,7 @@ export default function Contact() {
           <WorkspaceSnapshotCard
             title="Walkthroughs start from real workspace state"
             detail="This page reinforces that the review is not a disconnected pitch flow. Tenant, project, and Auricrux continuity already exist before the walkthrough begins."
-            ctaHref="/portal/platform"
+            ctaHref={publicActionCatalog.platform.href}
             ctaLabel="Open unified platform dashboard"
           />
 

@@ -9,7 +9,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
-import { pricingTiers, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { pricingTiers, publicActionCatalog, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const rolloutSteps = [
@@ -56,10 +56,10 @@ export default function Pricing() {
         title="Plans should connect directly to rollout decisions"
         detail="This route shows where plans fit in the path from public framing into workspace continuity, platform visibility, and rollout planning."
         ctaHref="/contact"
-        ctaLabel="Schedule a walkthrough"
+        ctaLabel={publicActionCatalog.walkthrough.label}
       />
 
-      <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel="Schedule a walkthrough" />
+      <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel={publicActionCatalog.walkthrough.label} />
 
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel
@@ -87,8 +87,8 @@ export default function Pricing() {
         title="Rollout planning reflects live system state"
         detail="Pricing is framed as a continuity-aware rollout surface that keeps approval, revenue risk, and deployment readiness visible before a live conversation."
         primaryHref="/contact"
-        primaryLabel="Schedule a Walkthrough"
-        secondaryHref="/portal/platform"
+        primaryLabel={publicActionCatalog.walkthrough.label}
+        secondaryHref={publicActionCatalog.platform.href}
         secondaryLabel="Review Live Workspace State"
       />
 
@@ -105,7 +105,7 @@ export default function Pricing() {
         <WorkspaceSnapshotCard
           title="Pricing references live workspace state"
           detail="This planning surface points directly at persisted tenant, project, and Auricrux continuity so rollout conversations stay attached to the operating workspace."
-          ctaHref="/portal/platform"
+          ctaHref={publicActionCatalog.platform.href}
           ctaLabel="Review platform state before your call"
         />
       </div>
