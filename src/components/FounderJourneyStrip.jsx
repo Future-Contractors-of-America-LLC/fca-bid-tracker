@@ -21,8 +21,8 @@ const stepBaseStyle = {
 
 export default function FounderJourneyStrip({
   currentJourney = "public",
-  title = "Founder journey",
-  detail = "Move through one connected path from public framing into workspace continuity, operating visibility, and founder review.",
+  title = "Customer journey",
+  detail = "Move through one connected path from public entry into workspace continuity, operating visibility, and rollout planning.",
   ctaHref = "/portal/platform",
   ctaLabel = "Open unified platform state",
 }) {
@@ -30,7 +30,7 @@ export default function FounderJourneyStrip({
     <div style={stripStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
         <div>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Conversion flow bar</div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Customer path</div>
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h2>
           <div style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>{detail}</div>
         </div>

@@ -13,9 +13,9 @@ export default function Home() {
   return (
     <div style={pageShellStyle}>
       <ShellHeader
-        eyebrow="FCA + Auricrux Unified Shell"
+        eyebrow="FCA Contractor Workspace"
         title="Future Contractors of America"
-        subtitle="Unified contractor lifecycle platform for sales, portal operations, bid visibility, workforce readiness, and Auricrux-guided execution."
+        subtitle="A connected workspace for bids, customer updates, project visibility, workforce readiness, and guided next steps."
         primaryHref={publicRouteCtas.public.primaryHref}
         primaryLabel={publicRouteCtas.public.primaryLabel}
         secondaryHref={publicRouteCtas.public.secondaryHref}
@@ -44,8 +44,8 @@ export default function Home() {
 
       <FounderJourneyStrip
         currentJourney="public"
-        title="Start the FCA founder walkthrough from one canonical entry path"
-        detail="Public entry now frames the exact path into platform story, workspace login, portal continuity, academy readiness, and founder review without switching narratives."
+        title="Start with a clear customer path"
+        detail="Public entry now guides visitors into platform overview, workspace access, customer portal visibility, academy readiness, and rollout planning without switching narratives."
         ctaHref="/login"
         ctaLabel="Enter FCA workspace"
       />
@@ -54,8 +54,8 @@ export default function Home() {
 
       <div style={{ marginTop: 28 }}>
         <WorkspaceSnapshotCard
-          title="Public entry now reflects real workspace continuity"
-          detail="The home page now previews the same persisted tenant, project, and Auricrux state that carries through the platform dashboard and portal routes."
+          title="See how the workspace stays connected"
+          detail="The home page previews the same tenant, project, and Auricrux state that carries through the platform dashboard and portal routes."
           ctaHref="/login"
           ctaLabel="Enter workspace with continuity"
         />
@@ -63,13 +63,13 @@ export default function Home() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Platform Story</h3>
-          <p>Show FCA as one connected operating system instead of a standalone tool.</p>
+          <h3 style={{ marginTop: 0 }}>Platform Overview</h3>
+          <p>See how FCA brings bids, delivery, communication, and training into one connected system.</p>
           <a href="/platform">View platform page</a>
         </div>
         <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Auricrux Layer</h3>
-          <p>Frame the intelligence layer that keeps next actions and continuity visible across the shell.</p>
+          <h3 style={{ marginTop: 0 }}>Auricrux Guidance</h3>
+          <p>See how the operating layer keeps next actions and continuity visible across the workspace.</p>
           <a href="/auricrux">View Auricrux page</a>
         </div>
         <div style={cardStyle}>
@@ -100,10 +100,10 @@ export default function Home() {
           </div>
         </div>
         <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Production Conversion</h3>
-          <p>Move from shell visibility into rollout planning, founder review, and production implementation.</p>
+          <h3 style={{ marginTop: 0 }}>Plans & Rollout</h3>
+          <p>Move from interest into rollout planning, guided setup, and next implementation steps.</p>
           <div style={{ marginTop: 10 }}>
-            <a href="/pricing">Planning</a>
+            <a href="/pricing">Plans</a>
             <span style={{ margin: "0 8px" }}>•</span>
             <a href="/contact">Contact</a>
           </div>
@@ -111,8 +111,8 @@ export default function Home() {
       </div>
 
       <PublicActionRail
-        title="Close public entry with the same production next steps used across the shell"
-        detail="This shared rail keeps workspace entry, live platform state, academy continuity, and founder review visible at the bottom of the route so the conversion path stays explicit."
+        title="Take the next step with FCA"
+        detail="This shared rail keeps workspace entry, platform visibility, academy continuity, and guided walkthrough options visible at the bottom of each route so the next step stays clear."
       />
 
       <ShellFooter />

@@ -33,7 +33,7 @@ export default function Login() {
         <ShellHeader
           eyebrow="Auricrux Guided Entry"
           title="Access FCA Workspace"
-          subtitle="This workspace entry routes customers into the unified FCA shell for portal operations, lifecycle visibility, academy continuity, and Auricrux-guided execution."
+          subtitle="This workspace entry routes customers into the unified FCA shell for portal operations, lifecycle visibility, academy continuity, and guided next steps."
           primaryHref={publicRouteCtas.workspace.primaryHref}
           primaryLabel={publicRouteCtas.workspace.primaryLabel}
           secondaryHref={publicRouteCtas.workspace.secondaryHref}
@@ -46,7 +46,7 @@ export default function Login() {
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
             <div>
               <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Workspace continuity</div>
-              <h2 style={{ marginTop: 0, marginBottom: 10 }}>Entry now feels like part of the operating shell</h2>
+              <h2 style={{ marginTop: 0, marginBottom: 10 }}>Entry now feels like part of the product experience</h2>
             </div>
             <div style={{ display: "grid", gap: 10 }}>
               <FcaBrandMark compact />
@@ -54,14 +54,14 @@ export default function Login() {
             </div>
           </div>
           <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-            This route now carries the same visual rhythm as the rest of the public shell while keeping the strongest conversion path focused on entering the FCA workspace and unified platform dashboard.
+            This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace and unified platform dashboard.
           </p>
         </div>
 
         <FounderJourneyStrip
           currentJourney="workspace"
-          title="Workspace login is now clearly positioned inside the founder journey"
-          detail="This route makes it explicit that login is not a dead-end form. It is the bridge from public framing into portal continuity, academy readiness, and founder review."
+          title="Workspace login is part of one connected customer journey"
+          detail="Login is not a dead-end form. It is the bridge from public entry into portal continuity, academy readiness, and rollout planning."
           ctaHref="/portal"
           ctaLabel="Continue to workspace"
         />
@@ -107,8 +107,8 @@ export default function Login() {
         </div>
 
         <PublicActionRail
-          title="End workspace entry with the same standardized shell actions"
-          detail="Login now closes with the same shared action rail as the other public routes so workspace entry, platform state, academy continuity, and founder review remain consistently visible."
+          title="Continue into the FCA workspace"
+          detail="Login closes with the same shared action rail as the other public routes so workspace entry, platform state, academy continuity, and walkthrough options remain consistently visible."
         />
 
         <ShellFooter />

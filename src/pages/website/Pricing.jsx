@@ -15,16 +15,16 @@ const rolloutSteps = [
   "Confirm contractor fit, pilot scope, and current operating friction.",
   "Walk the live FCA shell from public entry through workspace, platform dashboard, portal, academy, and bid continuity.",
   "Select the rollout tier that matches readiness, team size, and continuity needs.",
-  "Close on founder review, next deployment action, and production planning path.",
+  "Close on the next deployment action and rollout planning path.",
 ];
 
 export default function Pricing() {
   return (
     <div style={pageShellStyle}>
       <ShellHeader
-        eyebrow="FCA Production Planning"
+        eyebrow="FCA Plans & Rollout"
         title="Production rollout planning"
-        subtitle="This page is structured to support a real rollout conversation: pilot scope, operating readiness, founder review, and the next production action inside the FCA shell."
+        subtitle="This page supports a real rollout conversation: pilot scope, operating readiness, guided setup, and the next production action inside the FCA shell."
         primaryHref={publicRouteCtas.conversion.primaryHref}
         primaryLabel={publicRouteCtas.conversion.primaryLabel}
         secondaryHref={publicRouteCtas.conversion.secondaryHref}
@@ -45,33 +45,33 @@ export default function Pricing() {
           </div>
         </div>
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
-          The strongest motion here is not a static price sheet. It is a guided production conversation that ties scope to the live shell, platform dashboard, portal continuity, academy readiness, and Auricrux-guided next actions.
+          This is more than a static price sheet. It is a guided rollout conversation that ties scope to the live shell, platform dashboard, portal continuity, academy readiness, and Auricrux-guided next actions.
         </p>
         <PublicCtaRow actions={publicBodyCtaSets.pricingHero} />
       </div>
 
       <FounderJourneyStrip
         currentJourney="conversion"
-        title="Pricing now sits inside the same founder journey as the rest of the shell"
-        detail="This route no longer behaves like a detached price sheet. It shows where pricing fits in the path from public framing into workspace continuity, platform visibility, and founder review."
+        title="Plans should connect directly to rollout decisions"
+        detail="This route does not behave like a detached price sheet. It shows where plans fit in the path from public framing into workspace continuity, platform visibility, and rollout planning."
         ctaHref="/contact"
-        ctaLabel="Convert to founder review"
+        ctaLabel="Schedule a walkthrough"
       />
 
-      <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel="Convert to founder review" />
+      <ExecutiveSignalBar mode="public" nextHref="/contact" nextLabel="Schedule a walkthrough" />
 
       <CommercialReadinessPanel
-        title="Rollout pricing now reflects live commercial state"
-        detail="Pricing is now framed as a continuity-aware rollout surface that keeps approval, revenue risk, and deployment readiness visible before a founder conversation."
+        title="Rollout planning reflects live system state"
+        detail="Pricing is framed as a continuity-aware rollout surface that keeps approval, revenue risk, and deployment readiness visible before a live conversation."
         primaryHref="/contact"
-        primaryLabel="Request Founder Review"
+        primaryLabel="Schedule a Walkthrough"
         secondaryHref="/portal/platform"
         secondaryLabel="Review Live Workspace State"
       />
 
       <div style={{ ...twoColumnGridStyle, marginBottom: 24, marginTop: 24 }}>
         <div style={{ ...cardStyle, background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)" }}>
-          <h2 style={{ marginTop: 0 }}>Founder rollout checklist</h2>
+          <h2 style={{ marginTop: 0 }}>Rollout checklist</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8, marginBottom: 0, color: "#334155" }}>
             {rolloutSteps.map((step) => (
               <li key={step}>{step}</li>
@@ -80,10 +80,10 @@ export default function Pricing() {
         </div>
 
         <WorkspaceSnapshotCard
-          title="Pricing now references live shell state"
-          detail="This planning surface now points directly at persisted tenant, project, and Auricrux continuity so rollout conversations stay attached to the operating workspace."
+          title="Pricing references live shell state"
+          detail="This planning surface points directly at persisted tenant, project, and Auricrux continuity so rollout conversations stay attached to the operating workspace."
           ctaHref="/portal/platform"
-          ctaLabel="Review platform state before founder call"
+          ctaLabel="Review platform state before your call"
         />
       </div>
 
@@ -104,9 +104,9 @@ export default function Pricing() {
 
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>How to position the tiers</h2>
+          <h2 style={{ marginTop: 0 }}>How to choose a plan</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-            Use these tiers to frame the conversation around operational maturity, rollout depth, and continuity needs. The immediate objective is to match the contractor to the right production path, not to force a generic self-serve checkout motion.
+            Use these tiers to frame the conversation around operational maturity, rollout depth, and continuity needs. The objective is to match your team to the right production path, not force a generic self-serve checkout.
           </p>
         </div>
         <div style={cardStyle}>
@@ -116,8 +116,8 @@ export default function Pricing() {
       </div>
 
       <PublicActionRail
-        title="Finish pricing with the same standardized public next steps"
-        detail="Pricing now closes with the same shared action rail as the rest of the public shell so production planning, workspace entry, academy continuity, and founder review remain aligned."
+        title="Finish planning with a clear next step"
+        detail="Pricing closes with the same shared action rail as the rest of the public site so rollout planning, workspace entry, academy continuity, and walkthrough options remain aligned."
       />
 
       <ShellFooter />

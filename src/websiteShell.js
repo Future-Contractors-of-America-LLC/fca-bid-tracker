@@ -20,8 +20,8 @@ export const platformModules = [
 export const pricingTiers = [
   {
     name: "Pilot Workspace",
-    price: "Founder-guided",
-    detail: "Best for early FCA pilot customers who want a live walkthrough, configured shell access, and close execution support.",
+    price: "Guided setup",
+    detail: "Best for early FCA customers who want a live walkthrough, configured shell access, and close rollout support.",
     includes: [
       "Customer workspace shell",
       "Bid and project flow walkthrough",
@@ -57,37 +57,37 @@ export const auricruxCapabilities = [
   "Surfaces next actions across customer-facing workflows",
   "Maintains continuity between portal, communications, and academy",
   "Acts as a visible operating layer inside the shell",
-  "Strengthens founder walkthrough clarity by explaining workflow state",
+  "Explains workflow state so teams always know what should happen next",
 ];
 
 export const contactPaths = [
   {
-    title: "Founder Review",
-    detail: "Walk through the live FCA workspace and show how FCA can support a contractor from first touch through delivery and training.",
-    cta: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request",
-    label: "Request Founder Review",
+    title: "Schedule a Walkthrough",
+    detail: "Walk through the live FCA workspace and see how FCA can support your team from first opportunity through delivery and training.",
+    cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
+    label: "Schedule a Walkthrough",
   },
   {
-    title: "Pilot Discussion",
-    detail: "Discuss pilot scope, customer fit, and where the current workspace can create immediate value.",
+    title: "Discuss a Pilot",
+    detail: "Talk through pilot scope, team fit, and where the current workspace can create immediate value.",
     cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Pilot%20Discussion",
-    label: "Start Pilot Conversation",
+    label: "Start Pilot Discussion",
   },
   {
-    title: "Platform Review",
+    title: "Review Rollout Options",
     detail: "Review portal, bid, academy, and Auricrux operating surfaces for a broader rollout conversation.",
-    cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Platform%20Review",
-    label: "Schedule Platform Review",
+    cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Rollout%20Review",
+    label: "Review Rollout Options",
   },
 ];
 
 export const shellJourney = [
-  { key: "public", label: "Public Entry", href: "/" },
-  { key: "platform", label: "Platform Framing", href: "/platform" },
-  { key: "workspace", label: "Workspace Login", href: "/login" },
-  { key: "portal", label: "Portal Flow", href: "/portal" },
-  { key: "academy", label: "Academy Continuity", href: "/academy" },
-  { key: "conversion", label: "Founder Review", href: "/contact" },
+  { key: "public", label: "Home", href: "/" },
+  { key: "platform", label: "Platform", href: "/platform" },
+  { key: "workspace", label: "Workspace", href: "/login" },
+  { key: "portal", label: "Portal", href: "/portal" },
+  { key: "academy", label: "Academy", href: "/academy" },
+  { key: "conversion", label: "Get Started", href: "/contact" },
 ];
 
 export const shellPrimaryNav = [
@@ -127,8 +127,8 @@ export const shellProductionActions = [
     variant: "secondary",
   },
   {
-    label: "Request Founder Review",
-    href: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request",
+    label: "Schedule a Walkthrough",
+    href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
     variant: "light",
   },
 ];
@@ -159,8 +159,8 @@ export const publicRouteCtas = {
     secondaryLabel: "Open Platform Dashboard",
   },
   conversion: {
-    primaryHref: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request",
-    primaryLabel: "Request Founder Review",
+    primaryHref: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
+    primaryLabel: "Schedule a Walkthrough",
     secondaryHref: "/portal/platform",
     secondaryLabel: "Open Platform Dashboard",
   },
@@ -171,22 +171,22 @@ export const publicBodyCtaSets = {
     { label: "Open FCA Workspace", href: "/login", variant: "primary" },
     { label: "Platform Overview", href: "/platform", variant: "secondary" },
     { label: "Meet Auricrux", href: "/auricrux", variant: "light" },
-    { label: "Production Planning", href: "/pricing", variant: "light" },
+    { label: "Plans & Rollout", href: "/pricing", variant: "light" },
   ],
   pricingHero: [
-    { label: "Request Founder Review", href: "/contact", variant: "primary" },
+    { label: "Schedule a Walkthrough", href: "/contact", variant: "primary" },
     { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
     { label: "Open FCA Workspace", href: "/login", variant: "light" },
   ],
   pricingImmediate: [
-    { label: "Request Founder Review", href: "/contact", variant: "primary" },
+    { label: "Schedule a Walkthrough", href: "/contact", variant: "primary" },
     { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
     { label: "Open Portal Workspace", href: "/portal", variant: "light" },
   ],
   contactImmediate: [
     { label: "Open FCA Workspace", href: "/login", variant: "primary" },
     { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
-    { label: "Request Founder Review", href: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request", variant: "light" },
+    { label: "Schedule a Walkthrough", href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request", variant: "light" },
   ],
   loginWorkspace: [
     { label: "Open Portal Workspace", href: "/portal", variant: "primary" },

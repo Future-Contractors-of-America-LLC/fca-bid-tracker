@@ -11,7 +11,7 @@ import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "..
 
 const operatingSteps = [
   "Read persisted tenant, project, and workspace state rather than treating pages as disconnected views.",
-  "Surface the current recommended action and blocker so customers and founders see what should happen next.",
+  "Surface the current recommended action and blocker so customers and teams can see what should happen next.",
   "Maintain continuity as the user moves between platform dashboard, portal routes, academy, support, and admin.",
   "Keep the shell feeling active, guided, and operational rather than static or brochure-like.",
 ];
@@ -40,14 +40,14 @@ export default function AuricruxPage() {
           <AuricruxBrandMark />
         </div>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          This public surface now frames Auricrux as the active system layer that keeps tenant, project, route, and next-action context visible as the user moves through the FCA experience.
+          This public surface frames Auricrux as the active system layer that keeps tenant, project, route, and next-action context visible as users move through the FCA experience.
         </p>
       </div>
 
       <FounderJourneyStrip
         currentJourney="platform"
-        title="Auricrux should narrate the same founder journey visible across the shell"
-        detail="This route now reinforces the canonical path from public framing into workspace, portal continuity, academy readiness, and founder review while Auricrux explains state along the way."
+        title="Auricrux should support the same customer journey visible across the shell"
+        detail="This route reinforces the canonical path from public framing into workspace, portal continuity, academy readiness, and rollout planning while Auricrux explains state along the way."
         ctaHref="/portal/platform"
         ctaLabel="Open live platform state"
       />
@@ -56,7 +56,7 @@ export default function AuricruxPage() {
 
       <BuildExpansionCommandDeck
         title="Build expansion now has a visible command layer"
-        detail="This page now shows that the FCA build is expanding as one governed operating system across automation, SaaS continuity, website conversion, academy readiness, and communications follow-through."
+        detail="This page shows that the FCA build is expanding as one governed operating system across automation, SaaS continuity, website conversion, academy readiness, and communications follow-through."
         primaryHref="/portal/platform"
         primaryLabel="Inspect live operating routes"
         secondaryHref="/pricing"
@@ -88,7 +88,7 @@ export default function AuricruxPage() {
 
         <WorkspaceSnapshotCard
           title="Auricrux is tied to live shell continuity"
-          detail="This page now references the same persisted tenant, project, and Auricrux state used across the platform dashboard and portal surfaces so the operating-layer story stays believable."
+          detail="This page references the same persisted tenant, project, and Auricrux state used across the platform dashboard and portal surfaces so the operating-layer story stays believable."
           ctaHref="/portal/platform"
           ctaLabel="Review unified platform state"
         />
@@ -103,14 +103,14 @@ export default function AuricruxPage() {
             <li>Portal route guidance and continuity</li>
             <li>Academy coaching continuity</li>
             <li>Support and admin operating context</li>
-            <li>Founder demo narration support</li>
+            <li>Customer walkthrough support</li>
           </ul>
         </div>
 
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Direct founder demo path</h2>
+          <h2 style={{ marginTop: 0 }}>Suggested walkthrough path</h2>
           <div style={{ display: "grid", gap: 12 }}>
-            <a href="/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>1. Frame the unified FCA platform story</a>
+            <a href="/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>1. Review the unified FCA platform story</a>
             <a href="/login" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>2. Enter the workspace shell</a>
             <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>3. Open the unified platform dashboard</a>
             <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>4. Show portal continuity and next actions</a>
@@ -127,8 +127,8 @@ export default function AuricruxPage() {
       </div>
 
       <PublicActionRail
-        title="Close the Auricrux narrative with the same production actions used elsewhere"
-        detail="The operating-layer page should still end in the same concrete next steps as the rest of the public shell so narration, platform state, and conversion stay aligned."
+        title="Close the Auricrux narrative with concrete next steps"
+        detail="The operating-layer page should still end in the same clear next steps as the rest of the public shell so narration, platform state, and conversion stay aligned."
       />
 
       <ShellFooter />

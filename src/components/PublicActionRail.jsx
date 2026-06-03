@@ -39,14 +39,14 @@ const ctaStyles = {
 };
 
 export default function PublicActionRail({
-  title = "Public continuity action rail",
-  detail = "Close every public route with the same production-oriented next actions so customers and founders always have a clear path into workspace, platform state, academy, and founder review.",
+  title = "Ready for the next step?",
+  detail = "Close each public route with the same clear actions so customers always have a path into workspace access, platform visibility, or a guided walkthrough.",
 }) {
   return (
     <div style={railStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 14 }}>
         <div>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Shared action rail</div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Next actions</div>
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h2>
           <div style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>{detail}</div>
         </div>

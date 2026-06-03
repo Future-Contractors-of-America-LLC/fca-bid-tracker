@@ -65,10 +65,10 @@ export default function ShellFooter() {
             <AuricruxBrandMark compact />
           </div>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>
-            FCA Conversion Path
+            FCA Customer Journey
           </div>
           <div style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Use this shell to present the full contractor lifecycle: public entry,
+            Use this shell to explore the full contractor lifecycle: public entry,
             platform framing, workspace visibility, academy enablement, and
             Auricrux-guided next actions.
           </div>
@@ -106,10 +106,10 @@ export default function ShellFooter() {
         </div>
 
         <div>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Standardized Next Actions</div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Recommended Next Actions</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            Every public shell route now closes on the same canonical actions: open workspace,
-            open unified platform state, or request founder review.
+            Every public route closes on the same clear actions: open workspace,
+            review platform state, or schedule a guided walkthrough.
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             {shellProductionActions.map((action) => (

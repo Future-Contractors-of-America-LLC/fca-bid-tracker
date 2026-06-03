@@ -22,8 +22,8 @@ export default function Contact() {
     <div style={pageShellStyle}>
       <ShellHeader
         eyebrow="FCA Contact"
-        title="Move from interest to founder review"
-        subtitle="This contact surface is structured around the immediate sales objective: converting interest into a founder-led review, pilot conversation, or broader platform assessment."
+        title="Talk with FCA about your rollout"
+        subtitle="This contact surface helps customers move from interest into a walkthrough, pilot conversation, or broader rollout assessment."
         primaryHref={publicRouteCtas.conversion.primaryHref}
         primaryLabel={publicRouteCtas.conversion.primaryLabel}
         secondaryHref={publicRouteCtas.conversion.secondaryHref}
@@ -38,19 +38,19 @@ export default function Contact() {
 
       <FounderJourneyStrip
         currentJourney="conversion"
-        title="Founder review now closes the same journey opened on public entry"
-        detail="This route makes the conversion path explicit so founder review feels like the natural outcome of platform framing, workspace continuity, and live operating-state validation."
-        ctaHref="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request"
-        ctaLabel="Send founder review request"
+        title="A walkthrough should feel like the natural next step"
+        detail="This route makes the next step explicit so a live conversation feels like the natural outcome of platform framing, workspace continuity, and operating-state validation."
+        ctaHref="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
+        ctaLabel="Schedule a walkthrough"
       />
 
       <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Review live operating state" />
 
       <CommercialReadinessPanel
-        title="Founder review begins from real operating context"
-        detail="Contact is now framed as a conversion surface that inherits the same approval, revenue, and rollout readiness state shown across Auricrux, platform, portal, and academy routes."
-        primaryHref="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request"
-        primaryLabel="Send Founder Review Request"
+        title="Your walkthrough begins from real operating context"
+        detail="Contact is framed as a customer-ready conversion surface that inherits the same approval, revenue, and rollout readiness state shown across Auricrux, platform, portal, and academy routes."
+        primaryHref="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
+        primaryLabel="Schedule a Walkthrough"
         secondaryHref="/portal/platform"
         secondaryLabel="Open Platform Dashboard"
       />
@@ -58,20 +58,20 @@ export default function Contact() {
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={{ display: "grid", gap: 16 }}>
           <WorkspaceSnapshotCard
-            title="Founder review starts from real shell state"
-            detail="This conversion page now reinforces that the review is not a disconnected pitch deck flow. Tenant, project, and Auricrux continuity already exist before the walkthrough begins."
+            title="Walkthroughs start from real shell state"
+            detail="This conversion page reinforces that the review is not a disconnected pitch-deck flow. Tenant, project, and Auricrux continuity already exist before the walkthrough begins."
             ctaHref="/portal/platform"
             ctaLabel="Open unified platform dashboard"
           />
 
           <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
-            <h2 style={{ marginTop: 0 }}>What happens in the founder review</h2>
+            <h2 style={{ marginTop: 0 }}>What happens in a walkthrough</h2>
             <ol style={checklistStyle}>
               <li>Frame the FCA platform story from the public shell.</li>
               <li>Show persisted workspace continuity before entry.</li>
               <li>Open the platform dashboard to summarize tenant, project, support, academy, and admin state.</li>
-              <li>Transition into portal, academy, and bid routes based on customer fit.</li>
-              <li>Close on pilot scope, rollout path, and next production action.</li>
+              <li>Transition into portal, academy, and bid routes based on your team's fit.</li>
+              <li>Close on pilot scope, rollout path, and the next production action.</li>
             </ol>
           </div>
         </div>
@@ -90,16 +90,16 @@ export default function Contact() {
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Immediate founder CTA</h2>
+        <h2 style={{ marginTop: 0 }}>Immediate CTA</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 12 }}>
-          For this stage of the product, the strongest conversion path is still a direct founder-led review. This page supports that motion while the underlying platform continues to harden.
+          The strongest conversion path is still a direct walkthrough of the live FCA workspace. This page supports that motion while the platform continues to harden.
         </p>
         <PublicCtaRow actions={publicBodyCtaSets.contactImmediate} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <PublicActionRail
-        title="Close founder-review conversion with the same shared public action rail"
-        detail="Even at the conversion endpoint, the route now preserves the same workspace, platform, academy, and founder-review actions as the rest of the shell so the narrative stays unified."
+        title="Close with the same shared next steps"
+        detail="Even at the conversion endpoint, the route preserves the same workspace, platform, academy, and walkthrough actions as the rest of the site so the experience stays unified."
       />
 
       <ShellFooter />

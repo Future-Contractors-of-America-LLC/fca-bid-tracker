@@ -14,7 +14,7 @@ export default function Platform() {
       <ShellHeader
         eyebrow="FCA Platform"
         title="One contractor lifecycle operating system"
-        subtitle="FCA is being shaped as a unified operating surface for sales, portal visibility, project follow-through, workforce enablement, and Auricrux-guided execution."
+        subtitle="FCA is designed as a unified operating surface for bids, portal visibility, project follow-through, workforce enablement, and guided execution."
         primaryHref={publicRouteCtas.platform.primaryHref}
         primaryLabel={publicRouteCtas.platform.primaryLabel}
         secondaryHref={publicRouteCtas.platform.secondaryHref}
@@ -30,14 +30,14 @@ export default function Platform() {
         </div>
         <h2 style={{ marginTop: 0 }}>Built to feel like one connected system</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>
-          The current shell is designed for founder-led sales conversations and believable customer walkthroughs. It shows how FCA can carry a contractor from public entry into login, portal operations, bid visibility, academy continuity, and Auricrux-guided next actions without fragmenting the experience.
+          FCA helps contractor teams move from public entry into workspace access, portal operations, bid visibility, academy continuity, and guided next actions without fragmenting the experience.
         </p>
       </div>
 
       <FounderJourneyStrip
         currentJourney="platform"
-        title="Platform framing should pull the founder straight into the operating path"
-        detail="This route now shows the same canonical founder journey used across public conversion pages so platform framing leads naturally into workspace, portal, academy, and founder review."
+        title="Platform framing should lead customers into the product experience"
+        detail="This route shows the same connected customer journey used across the public site so platform framing leads naturally into workspace, portal, academy, and rollout planning."
         ctaHref="/login"
         ctaLabel="Continue to workspace login"
       />
@@ -55,19 +55,19 @@ export default function Platform() {
 
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Current founder walkthrough</h2>
+          <h2 style={{ marginTop: 0 }}>How customers move through FCA</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-            <li>Start on the public home page and frame the FCA platform story.</li>
+            <li>Start on the public home page and review the FCA platform story.</li>
             <li>Enter through <a href="/login">workspace login</a>.</li>
-            <li>Show the <a href="/portal">customer portal</a> and module continuity.</li>
-            <li>Transition into <a href="/portal/academy">academy continuity</a>.</li>
-            <li>Open the <a href="/portal/platform">platform dashboard</a> to summarize tenant, project, support, and admin state in one view.</li>
-            <li>Use the Auricrux dock to narrate next actions and system visibility.</li>
+            <li>Open the <a href="/portal">customer portal</a> for visibility into projects, files, and communications.</li>
+            <li>Continue into <a href="/portal/academy">academy continuity</a> for onboarding and workforce readiness.</li>
+            <li>Use the <a href="/portal/platform">platform dashboard</a> to summarize tenant, project, support, and admin state in one view.</li>
+            <li>Follow Auricrux guidance to keep next actions visible across the system.</li>
           </ol>
         </div>
         <WorkspaceSnapshotCard
           title="Public proof of workspace continuity"
-          detail="The public platform page now previews live shell context so the sales narrative stays connected to the working portal experience."
+          detail="The public platform page previews live shell context so the site narrative stays connected to the working portal experience."
           ctaHref="/portal/platform"
           ctaLabel="Open unified platform dashboard"
         />
@@ -85,8 +85,8 @@ export default function Platform() {
       </div>
 
       <PublicActionRail
-        title="End platform framing with the same canonical production actions"
-        detail="Platform should finish with the same workspace, dashboard, academy, and founder-review actions used across the public shell so the route never feels detached from the operating system story."
+        title="Keep exploring the FCA platform"
+        detail="Platform pages should end with the same clear actions used across the public site so the route never feels detached from the product experience."
       />
 
       <ShellFooter />

@@ -16,10 +16,10 @@ const cellStyle = {
 };
 
 export default function CommercialReadinessPanel({
-  title = "Commercial readiness",
-  detail = "Auricrux is keeping revenue, approval, and rollout readiness visible before the founder review begins.",
+  title = "Rollout readiness",
+  detail = "Auricrux is keeping approval, revenue, and rollout readiness visible so your team can move forward with confidence.",
   primaryHref = "/contact",
-  primaryLabel = "Request Founder Review",
+  primaryLabel = "Schedule a Walkthrough",
   secondaryHref = "/portal/platform",
   secondaryLabel = "Open Platform Dashboard",
 }) {
@@ -27,7 +27,7 @@ export default function CommercialReadinessPanel({
     <div style={panelStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
         <div>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Commercial readiness layer</div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Readiness snapshot</div>
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h2>
           <div style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>{detail}</div>
         </div>
