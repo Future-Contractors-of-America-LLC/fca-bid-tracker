@@ -1,3 +1,4 @@
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
@@ -27,8 +28,13 @@ export default function AuricruxPage() {
       />
 
       <div style={{ ...heroCardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Embedded operating layer</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux is part of the shell, not outside it</h2>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Embedded operating layer</div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux is part of the shell, not outside it</h2>
+          </div>
+          <AuricruxBrandMark />
+        </div>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
           This public surface now frames Auricrux as the active system layer that keeps tenant, project, route, and next-action context visible as the user moves through the FCA experience.
         </p>

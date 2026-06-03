@@ -1,4 +1,5 @@
 import JourneyStrip from "./JourneyStrip";
+import FcaBrandMark from "./FcaBrandMark";
 import { shellPrimaryNav } from "../websiteShell";
 
 const baseLinkStyle = {
@@ -32,9 +33,29 @@ export default function ShellHeader({
       }}
     >
       <div style={{ maxWidth: 760 }}>
-        <p style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>
-          {eyebrow}
-        </p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            flexWrap: "wrap",
+            marginBottom: 14,
+          }}
+        >
+          <FcaBrandMark compact />
+          <div
+            style={{
+              padding: "8px 12px",
+              borderRadius: 999,
+              background: "#eff6ff",
+              color: "#2563eb",
+              fontWeight: 800,
+              letterSpacing: "0.04em",
+            }}
+          >
+            {eyebrow}
+          </div>
+        </div>
         <h1 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h1>
         {subtitle ? (
           <p style={{ marginTop: 0, color: "#4b5563", lineHeight: 1.6 }}>

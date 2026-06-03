@@ -1,3 +1,5 @@
+import AuricruxBrandMark from "./AuricruxBrandMark";
+import FcaBrandMark from "./FcaBrandMark";
 import {
   shellCompatibilityRoutes,
   shellPrimaryNav,
@@ -58,6 +60,10 @@ export default function ShellFooter() {
         }}
       >
         <div>
+          <div style={{ display: "grid", gap: 14, marginBottom: 14 }}>
+            <FcaBrandMark compact />
+            <AuricruxBrandMark compact />
+          </div>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>
             FCA Conversion Path
           </div>

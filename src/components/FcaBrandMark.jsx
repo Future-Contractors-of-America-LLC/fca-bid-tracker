@@ -1,0 +1,71 @@
+export default function FcaBrandMark({ compact = false, showTagline = true }) {
+  const iconSize = compact ? 46 : 62;
+  const wordmarkSize = compact ? 28 : 38;
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: compact ? 12 : 16,
+        flexWrap: "wrap",
+      }}
+    >
+      <svg
+        width={iconSize}
+        height={iconSize}
+        viewBox="0 0 120 120"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="fcaBrandBlue" x1="22" y1="12" x2="98" y2="108" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#7AA5FF" />
+            <stop offset="0.5" stopColor="#4F7CFF" />
+            <stop offset="1" stopColor="#3157D7" />
+          </linearGradient>
+          <linearGradient id="fcaBrandBlueDark" x1="38" y1="48" x2="88" y2="108" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#3F6BEE" />
+            <stop offset="1" stopColor="#2445B3" />
+          </linearGradient>
+        </defs>
+        <path d="M60 10L104 35V84L83 96V46L60 32L37 46V96L16 84V35L60 10Z" fill="url(#fcaBrandBlue)" />
+        <path d="M60 10V32L83 46L104 35L60 10Z" fill="#8EB3FF" fillOpacity="0.96" />
+        <path d="M37 46L60 32V10L16 35L37 46Z" fill="#5E8FFF" fillOpacity="0.95" />
+        <path d="M37 46V96L60 82V59L37 46Z" fill="url(#fcaBrandBlueDark)" fillOpacity="0.97" />
+        <path d="M83 46V96L60 82V59L83 46Z" fill="#4874F5" fillOpacity="0.9" />
+        <path d="M45 55L60 46L75 55V68L60 77L45 68V55Z" fill="#F8FAFC" fillOpacity="0.14" />
+      </svg>
+
+      <div>
+        <div
+          style={{
+            fontSize: wordmarkSize,
+            lineHeight: 1,
+            fontWeight: 900,
+            letterSpacing: "0.04em",
+            color: "#111827",
+          }}
+        >
+          FCA
+        </div>
+        {showTagline ? (
+          <div
+            style={{
+              marginTop: 6,
+              fontSize: compact ? 10 : 12,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              fontWeight: 800,
+              color: "#334155",
+              lineHeight: 1.25,
+            }}
+          >
+            Future Contractors<br />of America
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
