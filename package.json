@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:system": "npm run lint && npm run build",
+    "validate:routes": "node scripts/validate-routes.mjs",
+    "build:system": "npm run validate:routes && npm run lint && npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

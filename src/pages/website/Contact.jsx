@@ -7,6 +7,7 @@ import CommercialReadinessPanel from "../../components/CommercialReadinessPanel"
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import { contactPaths, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { cardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -23,7 +24,7 @@ export default function Contact() {
       <ShellHeader
         eyebrow="FCA Contact"
         title="Talk with FCA about your rollout"
-        subtitle="This contact surface helps customers move from interest into a walkthrough, pilot conversation, or broader rollout assessment."
+        subtitle="This page helps customers move from interest into a walkthrough, pilot conversation, or broader rollout assessment."
         primaryHref={publicRouteCtas.conversion.primaryHref}
         primaryLabel={publicRouteCtas.conversion.primaryLabel}
         secondaryHref={publicRouteCtas.conversion.secondaryHref}
@@ -44,7 +45,29 @@ export default function Contact() {
         ctaLabel="Schedule a walkthrough"
       />
 
-      <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Review live operating state" />
+      <ExecutiveSignalBar mode="public" nextHref="/portal/platform" nextLabel="Review live workspace state" />
+
+      <div style={{ marginBottom: 24 }}>
+        <CustomerTrustPanel
+          eyebrow="Start with clarity"
+          title="Know what to expect from a walkthrough"
+          detail="A customer conversation should quickly show how FCA fits your workflow, where it reduces friction, and what rollout path makes sense next."
+          items={[
+            {
+              title: "See the real workspace",
+              detail: "Walk through the platform, portal, and academy routes instead of a disconnected slide deck.",
+            },
+            {
+              title: "Focus on your team's fit",
+              detail: "Use the conversation to match your team size, process, and rollout needs to the right next step.",
+            },
+            {
+              title: "Leave with a practical plan",
+              detail: "End with a clear pilot, rollout, or follow-up action instead of an open-ended discussion.",
+            },
+          ]}
+        />
+      </div>
 
       <CommercialReadinessPanel
         title="Your walkthrough begins from real operating context"
@@ -58,8 +81,8 @@ export default function Contact() {
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={{ display: "grid", gap: 16 }}>
           <WorkspaceSnapshotCard
-            title="Walkthroughs start from real shell state"
-            detail="This conversion page reinforces that the review is not a disconnected pitch-deck flow. Tenant, project, and Auricrux continuity already exist before the walkthrough begins."
+            title="Walkthroughs start from real workspace state"
+            detail="This page reinforces that the review is not a disconnected pitch flow. Tenant, project, and Auricrux continuity already exist before the walkthrough begins."
             ctaHref="/portal/platform"
             ctaLabel="Open unified platform dashboard"
           />
@@ -67,10 +90,10 @@ export default function Contact() {
           <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
             <h2 style={{ marginTop: 0 }}>What happens in a walkthrough</h2>
             <ol style={checklistStyle}>
-              <li>Frame the FCA platform story from the public shell.</li>
+              <li>Review the FCA platform story from the public site.</li>
               <li>Show persisted workspace continuity before entry.</li>
               <li>Open the platform dashboard to summarize tenant, project, support, academy, and admin state.</li>
-              <li>Transition into portal, academy, and bid routes based on your team's fit.</li>
+              <li>Transition into portal, academy, and bid routes based on your team&apos;s fit.</li>
               <li>Close on pilot scope, rollout path, and the next production action.</li>
             </ol>
           </div>
@@ -90,9 +113,9 @@ export default function Contact() {
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Immediate CTA</h2>
+        <h2 style={{ marginTop: 0 }}>Immediate next step</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 12 }}>
-          The strongest conversion path is still a direct walkthrough of the live FCA workspace. This page supports that motion while the platform continues to harden.
+          The strongest conversion path is still a direct walkthrough of the live FCA workspace. This page keeps that option visible while the platform continues to harden.
         </p>
         <PublicCtaRow actions={publicBodyCtaSets.contactImmediate} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
