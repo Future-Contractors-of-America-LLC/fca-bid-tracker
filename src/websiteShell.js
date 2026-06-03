@@ -390,6 +390,29 @@ export const executiveSignalCtaSets = {
   },
 };
 
+export const founderJourneyCtaSets = {
+  workspace: {
+    href: publicActionCatalog.portal.href,
+    label: publicActionCatalog.portal.label,
+  },
+  conversion: {
+    href: publicActionCatalog.contact.href,
+    label: publicActionCatalog.contact.label,
+  },
+  contact: {
+    href: publicActionCatalog.walkthrough.href,
+    label: publicActionCatalog.walkthrough.label,
+  },
+  publicPlatform: {
+    href: publicActionCatalog.workspace.href,
+    label: "Continue to workspace login",
+  },
+  publicAuricrux: {
+    href: publicActionCatalog.platform.href,
+    label: publicActionCatalog.platform.label,
+  },
+};
+
 export const platformModules = [
   {
     title: "Lead to Bid",

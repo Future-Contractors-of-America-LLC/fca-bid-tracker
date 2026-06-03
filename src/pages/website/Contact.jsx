@@ -9,7 +9,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { contactPaths, executiveSignalCtaSets, publicActionCatalog, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, publicActionCatalog, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
 import { cardStyle, pageShellStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
@@ -61,8 +61,8 @@ export default function Contact() {
         currentJourney="conversion"
         title={publicContactMessaging.journey.title}
         detail={publicContactMessaging.journey.detail}
-        ctaHref={publicActionCatalog.walkthrough.href}
-        ctaLabel={publicActionCatalog.walkthrough.label}
+        ctaHref={founderJourneyCtaSets.contact.href}
+        ctaLabel={founderJourneyCtaSets.contact.label}
       />
 
       <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.contact.href} nextLabel={executiveSignalCtaSets.contact.label} />

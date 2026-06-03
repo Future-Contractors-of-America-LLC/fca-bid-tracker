@@ -10,6 +10,7 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import {
   executiveSignalCtaSets,
+  founderJourneyCtaSets,
   platformJourneyPath,
   platformLinkedProductAreas,
   platformModules,
@@ -68,8 +69,8 @@ export default function Platform() {
         currentJourney="platform"
         title="Platform framing should lead customers into the product experience"
         detail="This route shows the same connected customer journey used across the public site so platform framing leads naturally into workspace, portal, academy, and rollout planning."
-        ctaHref="/login"
-        ctaLabel="Continue to workspace login"
+        ctaHref={founderJourneyCtaSets.publicPlatform.href}
+        ctaLabel={founderJourneyCtaSets.publicPlatform.label}
       />
 
       <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.publicPlatform.href} nextLabel={executiveSignalCtaSets.publicPlatform.label} />

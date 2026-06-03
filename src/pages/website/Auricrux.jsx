@@ -13,6 +13,7 @@ import {
   auricruxCapabilities,
   auricruxWalkthroughPath,
   executiveSignalCtaSets,
+  founderJourneyCtaSets,
   publicBodyCtaSets,
   publicRouteCtas,
   shellJourney,
@@ -77,8 +78,8 @@ export default function AuricruxPage() {
         currentJourney="platform"
         title="Auricrux should support the same customer journey visible across FCA"
         detail="This route reinforces the path from public framing into workspace, portal continuity, academy readiness, and rollout planning while Auricrux explains what should happen next."
-        ctaHref="/portal/platform"
-        ctaLabel="Open Platform Dashboard"
+        ctaHref={founderJourneyCtaSets.publicAuricrux.href}
+        ctaLabel={founderJourneyCtaSets.publicAuricrux.label}
       />
 
       <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.publicAuricrux.href} nextLabel={executiveSignalCtaSets.publicAuricrux.label} />

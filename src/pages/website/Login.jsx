@@ -7,7 +7,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { founderJourneyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const fieldStyle = {
@@ -82,8 +82,8 @@ export default function Login() {
           currentJourney="workspace"
           title="Workspace login is part of one connected customer journey"
           detail="Login is not a dead-end form. It is the bridge from public entry into portal continuity, academy readiness, and rollout planning."
-          ctaHref="/portal"
-          ctaLabel="Open Portal Workspace"
+          ctaHref={founderJourneyCtaSets.workspace.href}
+          ctaLabel={founderJourneyCtaSets.workspace.label}
         />
 
         <div style={{ marginBottom: 24 }}>
