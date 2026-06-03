@@ -4,8 +4,9 @@ import ProjectSpineBar from "../../components/ProjectSpineBar";
 import WorkspaceContextBar from "../../components/WorkspaceContextBar";
 import AuricruxStatusRail from "../../components/AuricruxStatusRail";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
+import RouteStateOverlay from "../../components/RouteStateOverlay";
 import { shellJourney } from "../../websiteShell";
-import { auricruxRail, currentProject, portalTenant, projectAuditEvents, workspaceContext } from "../../workspaceState";
+import { auricruxRail, currentProject, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../workspaceState";
 import { portalFiles } from "../../portalShell";
 
 const cardStyle = {
@@ -53,6 +54,7 @@ export default function AcademyHome() {
         <ProjectSpineBar tenant={portalTenant} project={currentProject} />
         <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
+        <RouteStateOverlay overlay={routeStateOverlays.academy} />
 
         <div style={{ ...actionCardStyle, marginBottom: 24 }}>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy continuity</div>
@@ -130,7 +132,7 @@ export default function AcademyHome() {
         <div style={{ marginTop: 24, ...cardStyle }}>
           <h2 style={{ marginTop: 0 }}>Why this matters in rollout</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-            FCA Academy now participates in the same operational shell state as the portal. That moves the product closer to one true tenant, project, file, audit, and Auricrux-driven system.
+            FCA Academy now participates in the same operational shell state as the portal. That moves the product closer to one true tenant, project, file, audit, route-state, and Auricrux-driven system.
           </p>
         </div>
 

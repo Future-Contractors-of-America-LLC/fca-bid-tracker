@@ -1,6 +1,7 @@
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import { auricruxActions, currentProject, portalFiles, portalMessages, projectAuditEvents } from "../../portalShell";
+import { routeStateOverlays } from "../../workspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -29,6 +30,7 @@ export default function PortalMessages() {
       subtitle="Communication shell so customer actions never disappear into a dead end and every stage has a visible update path."
       activeHref="/portal/messages"
       currentJourney="coordination"
+      routeOverlay={routeStateOverlays.messages}
       primaryHref="/portal/billing"
       primaryLabel="Open Billing"
     >

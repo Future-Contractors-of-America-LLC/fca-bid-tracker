@@ -1,5 +1,6 @@
 import PortalShell from "../../components/PortalShell";
 import { auricruxActions, currentProject, portalMessages, portalMetrics, portalProjects, portalTenant } from "../../portalShell";
+import { routeStateOverlays } from "../../workspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -22,6 +23,7 @@ export default function PortalHome() {
       subtitle="Live workspace shell with Auricrux-guided next actions, communication visibility, billing readiness, and academy continuity."
       activeHref="/portal"
       currentJourney="lead"
+      routeOverlay={routeStateOverlays.overview}
       primaryHref="/portal/projects"
       primaryLabel="Open Project Flow"
     >

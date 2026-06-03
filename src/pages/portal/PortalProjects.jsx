@@ -1,5 +1,6 @@
 import PortalShell from "../../components/PortalShell";
 import { currentProject, portalProjects } from "../../portalShell";
+import { routeStateOverlays } from "../../workspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -16,6 +17,7 @@ export default function PortalProjects() {
       subtitle="Execution-stage shell showing how FCA carries a customer from awarded work into delivery, accountability, and closeout."
       activeHref="/portal/projects"
       currentJourney="job"
+      routeOverlay={routeStateOverlays.projects}
       primaryHref="/portal/files"
       primaryLabel="Open Files"
     >

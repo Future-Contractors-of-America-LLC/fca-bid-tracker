@@ -3,6 +3,7 @@ import ShellFooter from "./ShellFooter";
 import ProjectSpineBar from "./ProjectSpineBar";
 import WorkspaceContextBar from "./WorkspaceContextBar";
 import AuricruxStatusRail from "./AuricruxStatusRail";
+import RouteStateOverlay from "./RouteStateOverlay";
 import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../portalShell";
 
 const shellStyle = {
@@ -62,6 +63,7 @@ export default function PortalShell({
   subtitle,
   activeHref,
   currentJourney,
+  routeOverlay,
   children,
   primaryHref = "/portal/messages",
   primaryLabel = "Open Messages",
@@ -84,6 +86,7 @@ export default function PortalShell({
         <ProjectSpineBar tenant={portalTenant} project={currentProject} />
         <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
+        <RouteStateOverlay overlay={routeOverlay} />
 
         <div style={bannerStyle}>
           <div>

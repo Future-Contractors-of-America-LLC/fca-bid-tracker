@@ -1,5 +1,6 @@
 import PortalShell from "../../components/PortalShell";
 import { currentProject, portalBids } from "../../portalShell";
+import { routeStateOverlays } from "../../workspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -16,6 +17,7 @@ export default function PortalBids() {
       subtitle="Bid-facing shell for production conversations, tied directly to project conversion and customer action."
       activeHref="/portal/bids"
       currentJourney="bid"
+      routeOverlay={routeStateOverlays.bids}
       primaryHref="/bid-entry/"
       primaryLabel="Open Bid Entry"
     >

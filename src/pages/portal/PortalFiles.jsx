@@ -1,6 +1,7 @@
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import { currentProject, portalFiles, projectAuditEvents } from "../../portalShell";
+import { routeStateOverlays } from "../../workspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -17,6 +18,7 @@ export default function PortalFiles() {
       subtitle="Document shell proving that bids, permits, onboarding packets, and project artifacts live in one connected workspace."
       activeHref="/portal/files"
       currentJourney="coordination"
+      routeOverlay={routeStateOverlays.files}
       primaryHref="/portal/messages"
       primaryLabel="Open Messages"
     >

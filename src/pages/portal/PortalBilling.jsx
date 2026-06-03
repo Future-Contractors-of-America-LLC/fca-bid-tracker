@@ -1,6 +1,7 @@
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import { currentProject, portalBilling, portalFiles, projectAuditEvents } from "../../portalShell";
+import { routeStateOverlays } from "../../workspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -29,6 +30,7 @@ export default function PortalBilling() {
       subtitle="Account shell showing that FCA can carry approved work into invoicing, review, and customer financial visibility."
       activeHref="/portal/billing"
       currentJourney="finance"
+      routeOverlay={routeStateOverlays.billing}
       primaryHref="/portal/academy"
       primaryLabel="Open Academy Continuity"
     >
