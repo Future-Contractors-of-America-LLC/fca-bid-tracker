@@ -6,6 +6,7 @@ import Login from "./src/pages/website/Login";
 import Pricing from "./src/pages/website/Pricing";
 import Contact from "./src/pages/website/Contact";
 import Auricrux from "./src/pages/website/Auricrux";
+import NotFound from "./src/pages/website/NotFound";
 
 import PortalHome from "./src/pages/portal/PortalHome";
 import PlatformDashboard from "./src/pages/portal/PlatformDashboard";
@@ -26,6 +27,7 @@ const routes = {
   "/pricing": Pricing,
   "/contact": Contact,
   "/auricrux": Auricrux,
+  "/not-found": NotFound,
 
   "/portal": PortalHome,
   "/portal/platform": PlatformDashboard,
@@ -48,7 +50,7 @@ function normalizePath(pathname) {
 
 export default function Router() {
   const normalizedPath = normalizePath(window.location.pathname);
-  const Page = routes[normalizedPath] || Home;
+  const Page = routes[normalizedPath] || NotFound;
 
-  return <Page />;
+  return <Page requestedPath={normalizedPath} />;
 }
