@@ -89,3 +89,46 @@ export const shellJourney = [
   { key: "academy", label: "Academy Continuity", href: "/academy" },
   { key: "conversion", label: "Demo Conversion", href: "/contact" },
 ];
+
+export const shellPrimaryNav = [
+  { label: "Home", href: "/", journeyKey: "public" },
+  { label: "Platform", href: "/platform", journeyKey: "platform" },
+  { label: "Auricrux", href: "/auricrux", journeyKey: "platform" },
+  { label: "Pricing", href: "/pricing", journeyKey: "conversion" },
+  { label: "Contact", href: "/contact", journeyKey: "conversion" },
+  { label: "Login", href: "/login", journeyKey: "workspace" },
+  { label: "Portal", href: "/portal", journeyKey: "portal" },
+  { label: "Academy", href: "/academy", journeyKey: "academy" },
+];
+
+export const shellWorkspaceRoutes = [
+  { label: "Enter Workspace", href: "/login" },
+  { label: "Unified Platform Dashboard", href: "/portal/platform" },
+  { label: "Customer Portal", href: "/portal" },
+  { label: "FCA Academy", href: "/academy" },
+  { label: "Bid Entry", href: "/bid-entry/" },
+  { label: "Bid Status", href: "/bid-status/" },
+];
+
+export const shellCompatibilityRoutes = [
+  { label: "Legacy intake route", href: "/fca-customer-entry/index.html" },
+  { label: "Legacy status route", href: "/fca-customer-status/index.html" },
+];
+
+export const shellProductionActions = [
+  {
+    label: "Start Rollout",
+    href: "/contact",
+    variant: "primary",
+  },
+  {
+    label: "Open Platform Dashboard",
+    href: "/portal/platform",
+    variant: "secondary",
+  },
+  {
+    label: "Email FCA",
+    href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Production%20Rollout",
+    variant: "light",
+  },
+];

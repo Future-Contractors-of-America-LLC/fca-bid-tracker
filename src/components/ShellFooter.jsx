@@ -1,7 +1,43 @@
+import {
+  shellCompatibilityRoutes,
+  shellPrimaryNav,
+  shellProductionActions,
+  shellWorkspaceRoutes,
+} from "../websiteShell";
+
 const linkStyle = {
   textDecoration: "none",
   color: "#111827",
   fontWeight: 600,
+};
+
+const ctaStyles = {
+  primary: {
+    textDecoration: "none",
+    background: "#111827",
+    color: "#fff",
+    padding: "10px 14px",
+    borderRadius: 10,
+    fontWeight: 700,
+  },
+  secondary: {
+    textDecoration: "none",
+    background: "#eff6ff",
+    color: "#1d4ed8",
+    padding: "10px 14px",
+    borderRadius: 10,
+    fontWeight: 700,
+    border: "1px solid #bfdbfe",
+  },
+  light: {
+    textDecoration: "none",
+    background: "#f3f4f6",
+    color: "#111827",
+    padding: "10px 14px",
+    borderRadius: 10,
+    fontWeight: 700,
+    border: "1px solid #d1d5db",
+  },
 };
 
 export default function ShellFooter() {
@@ -35,21 +71,18 @@ export default function ShellFooter() {
         <div>
           <div style={{ fontWeight: 700, marginBottom: 8 }}>Public Pages</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <a href="/platform" style={linkStyle}>Platform</a>
-            <a href="/auricrux" style={linkStyle}>Auricrux</a>
-            <a href="/pricing" style={linkStyle}>Pricing</a>
-            <a href="/contact" style={linkStyle}>Contact</a>
+            {shellPrimaryNav.slice(1, 5).map((item) => (
+              <a key={item.href} href={item.href} style={linkStyle}>{item.label}</a>
+            ))}
           </div>
         </div>
 
         <div>
           <div style={{ fontWeight: 700, marginBottom: 8 }}>Canonical Workspace Routes</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <a href="/login" style={linkStyle}>Enter Workspace</a>
-            <a href="/portal" style={linkStyle}>Customer Portal</a>
-            <a href="/academy" style={linkStyle}>FCA Academy</a>
-            <a href="/bid-entry/" style={linkStyle}>Bid Entry</a>
-            <a href="/bid-status/" style={linkStyle}>Bid Status</a>
+            {shellWorkspaceRoutes.map((item) => (
+              <a key={item.href} href={item.href} style={linkStyle}>{item.label}</a>
+            ))}
           </div>
         </div>
 
@@ -60,8 +93,9 @@ export default function ShellFooter() {
             but the canonical FCA shell routes above should be used first.
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <a href="/fca-customer-entry/index.html" style={linkStyle}>Legacy intake route</a>
-            <a href="/fca-customer-status/index.html" style={linkStyle}>Legacy status route</a>
+            {shellCompatibilityRoutes.map((item) => (
+              <a key={item.href} href={item.href} style={linkStyle}>{item.label}</a>
+            ))}
           </div>
         </div>
 
@@ -71,33 +105,11 @@ export default function ShellFooter() {
             Ready for a founder-led rollout conversation, pilot implementation, or production planning discussion.
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <a
-              href="/contact"
-              style={{
-                textDecoration: "none",
-                background: "#111827",
-                color: "#fff",
-                padding: "10px 14px",
-                borderRadius: 10,
-                fontWeight: 700,
-              }}
-            >
-              Start Rollout
-            </a>
-            <a
-              href="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Production%20Rollout"
-              style={{
-                textDecoration: "none",
-                background: "#f3f4f6",
-                color: "#111827",
-                padding: "10px 14px",
-                borderRadius: 10,
-                fontWeight: 700,
-                border: "1px solid #d1d5db",
-              }}
-            >
-              Email FCA
-            </a>
+            {shellProductionActions.map((action) => (
+              <a key={action.href} href={action.href} style={ctaStyles[action.variant]}>
+                {action.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>

@@ -1,9 +1,12 @@
 import JourneyStrip from "./JourneyStrip";
+import { shellPrimaryNav } from "../websiteShell";
 
-const linkStyle = {
+const baseLinkStyle = {
   textDecoration: "none",
   color: "#111827",
   fontWeight: 600,
+  padding: "8px 10px",
+  borderRadius: 10,
 };
 
 export default function ShellHeader({
@@ -44,23 +47,40 @@ export default function ShellHeader({
       <div
         style={{
           display: "flex",
-          gap: 14,
+          gap: 10,
           flexWrap: "wrap",
           alignItems: "center",
+          justifyContent: "flex-end",
         }}
       >
-        <a href="/" style={linkStyle}>Home</a>
-        <a href="/platform" style={linkStyle}>Platform</a>
-        <a href="/auricrux" style={linkStyle}>Auricrux</a>
-        <a href="/pricing" style={linkStyle}>Pricing</a>
-        <a href="/contact" style={linkStyle}>Contact</a>
-        <a href="/login" style={linkStyle}>Login</a>
-        <a href="/portal" style={linkStyle}>Portal</a>
-        <a href="/academy" style={linkStyle}>Academy</a>
-        <a href="/bid-entry/" style={linkStyle}>Bid Entry</a>
-        <a href="/bid-status/" style={linkStyle}>Bid Status</a>
+        {shellPrimaryNav.map((item) => {
+          const isActive = item.journeyKey === currentJourney;
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              style={{
+                ...baseLinkStyle,
+                background: isActive ? "#eff6ff" : "transparent",
+                color: isActive ? "#1d4ed8" : "#111827",
+                border: isActive ? "1px solid #bfdbfe" : "1px solid transparent",
+              }}
+            >
+              {item.label}
+            </a>
+          );
+        })}
         {secondaryHref && secondaryLabel ? (
-          <a href={secondaryHref} style={linkStyle}>{secondaryLabel}</a>
+          <a
+            href={secondaryHref}
+            style={{
+              ...baseLinkStyle,
+              background: "#f8fafc",
+              border: "1px solid #dbe3ef",
+            }}
+          >
+            {secondaryLabel}
+          </a>
         ) : null}
         {primaryHref && primaryLabel ? (
           <a
