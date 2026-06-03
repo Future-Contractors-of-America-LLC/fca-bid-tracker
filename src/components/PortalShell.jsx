@@ -7,6 +7,7 @@ import RouteStateOverlay from "./RouteStateOverlay";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxBrandMark from "./AuricruxBrandMark";
 import ExecutiveSignalBar from "./ExecutiveSignalBar";
+import { portalShellCtas } from "../websiteShell";
 import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../systemState";
 
 const shellStyle = {
@@ -80,8 +81,8 @@ export default function PortalShell({
           subtitle={subtitle}
           primaryHref={primaryHref}
           primaryLabel={primaryLabel}
-          secondaryHref="/academy"
-          secondaryLabel="Academy Workspace"
+          secondaryHref={portalShellCtas.headerSecondary.href}
+          secondaryLabel={portalShellCtas.headerSecondary.label}
           journey={portalJourney}
           currentJourney={currentJourney}
         />
@@ -108,7 +109,7 @@ export default function PortalShell({
         <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
         <RouteStateOverlay overlay={routeOverlay} />
-        <ExecutiveSignalBar mode="portal" nextHref="/portal/bids" nextLabel="Advance approval path" />
+        <ExecutiveSignalBar mode="portal" nextHref={portalShellCtas.executiveSignal.href} nextLabel={portalShellCtas.executiveSignal.label} />
 
         <div style={bannerStyle}>
           <div>
@@ -120,7 +121,7 @@ export default function PortalShell({
               file coordination, communication follow-through, billing readiness, and academy onboarding.
             </div>
           </div>
-          <a href="/portal/projects" style={bannerButtonStyle}>View Project Flow</a>
+          <a href={portalShellCtas.journeyBanner.href} style={bannerButtonStyle}>{portalShellCtas.journeyBanner.label}</a>
         </div>
 
         <div style={navGridStyle}>

@@ -86,6 +86,7 @@ const shellHrefSources = [
   websiteShellModule.portalNarrativeCtaSets,
   websiteShellModule.academyCtaSets,
   websiteShellModule.homeCtaSets,
+  websiteShellModule.portalShellCtas,
   websiteShellModule.shellJourney,
   websiteShellModule.shellPrimaryNav,
   websiteShellModule.shellWorkspaceRoutes,

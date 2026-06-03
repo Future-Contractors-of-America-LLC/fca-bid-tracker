@@ -240,6 +240,21 @@ export const homeCtaSets = {
   ],
 };
 
+export const portalShellCtas = {
+  headerSecondary: {
+    href: publicActionCatalog.academy.href,
+    label: "Academy Workspace",
+  },
+  executiveSignal: {
+    href: "/portal/bids",
+    label: "Advance approval path",
+  },
+  journeyBanner: {
+    href: publicActionCatalog.projects.href,
+    label: "View Project Flow",
+  },
+};
+
 export const platformModules = [
   {
     title: "Lead to Bid",
