@@ -1,6 +1,9 @@
 import PortalShell from "../../components/PortalShell";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import { ctaLightStyle, ctaPrimaryStyle } from "../../publicShellStyles";
+import { publicBodyCtaSets } from "../../websiteShell";
 import { auricruxRail, portalBilling, portalTenant, currentProject, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
@@ -24,18 +27,6 @@ const invoiceStyle = {
   padding: "14px 0",
   borderBottom: "1px solid #e5e7eb",
   alignItems: "center",
-};
-
-const actionLinkStyle = {
-  display: "inline-block",
-  textDecoration: "none",
-  background: "#111827",
-  color: "#fff",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
-  marginTop: 12,
-  marginRight: 10,
 };
 
 const billingContinuityItems = [
@@ -87,10 +78,14 @@ export default function PortalBilling() {
           statusValue="Commercial follow-through active"
           items={billingContinuityItems}
           primaryHref="/pricing"
-          primaryLabel="Open pricing"
+          primaryLabel="Plans & Rollout"
           secondaryHref="/contact"
-          secondaryLabel="Request rollout review"
+          secondaryLabel="Open Contact & Rollout"
         />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
@@ -131,10 +126,10 @@ export default function PortalBilling() {
             Billing is not just accounting. In FCA it stays tied to project progress, document readiness,
             customer communications, and training completion so commercial follow-through remains visible.
           </p>
-          <div>
-            <a href="/academy" style={actionLinkStyle}>Continue to Academy</a>
-            <a href="/pricing" style={{ ...actionLinkStyle, background: "#e5e7eb", color: "#111827" }}>Open Pricing</a>
-            <a href="/contact" style={{ ...actionLinkStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>Request Rollout Review</a>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
+            <a href="/academy" style={ctaPrimaryStyle}>Open Academy</a>
+            <a href="/pricing" style={ctaLightStyle}>Plans & Rollout</a>
+            <a href="/contact" style={ctaLightStyle}>Open Contact & Rollout</a>
           </div>
         </div>
         <div style={cardStyle}>
