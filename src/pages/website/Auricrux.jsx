@@ -1,5 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import { auricruxCapabilities, shellJourney } from "../../websiteShell";
 
 const cardStyle = {
@@ -10,47 +11,88 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const operatingSteps = [
+  "Read persisted tenant, project, and workspace state rather than treating pages as disconnected views.",
+  "Surface the current recommended action and blocker so customers and founders see what should happen next.",
+  "Maintain continuity as the user moves between platform dashboard, portal routes, academy, support, and admin.",
+  "Keep the shell feeling active, guided, and operational rather than static or brochure-like.",
+];
+
 export default function AuricruxPage() {
   return (
     <div style={{ padding: 40, fontFamily: "Arial", maxWidth: 1120, margin: "0 auto" }}>
       <ShellHeader
-        eyebrow="Auricrux Operating Layer"
-        title="Auricrux stays visible across the shell"
-        subtitle="Auricrux is presented as the intelligence and execution layer that helps customers understand state, prioritize actions, and maintain continuity across FCA surfaces."
-        primaryHref="/portal"
-        primaryLabel="See Auricrux in Portal"
-        secondaryHref="/platform"
-        secondaryLabel="View Platform"
+        eyebrow="Auricrux Embedded Operating Layer"
+        title="Auricrux stays active across the FCA shell"
+        subtitle="Auricrux is presented here as the visible operating layer that reads state, explains continuity, recommends next actions, and keeps the public shell connected to the working FCA workspace."
+        primaryHref="/portal/platform"
+        primaryLabel="Open Platform Dashboard"
+        secondaryHref="/portal"
+        secondaryLabel="Open Portal Workspace"
         journey={shellJourney}
         currentJourney="platform"
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>What Auricrux is doing in this demo shell</h2>
-          <div style={{ display: "grid", gap: 12 }}>
-            {auricruxCapabilities.map((item) => (
-              <div key={item} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
-                {item}
-              </div>
-            ))}
+      <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, alignItems: "start" }}>
+        <div style={{ display: "grid", gap: 16 }}>
+          <div style={cardStyle}>
+            <h2 style={{ marginTop: 0 }}>What Auricrux is doing in this shell</h2>
+            <div style={{ display: "grid", gap: 12 }}>
+              {auricruxCapabilities.map((item) => (
+                <div key={item} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+            <h2 style={{ marginTop: 0 }}>How Auricrux behaves like an operating layer</h2>
+            <ol style={{ paddingLeft: 20, lineHeight: 1.8, marginBottom: 0, color: "#334155" }}>
+              {operatingSteps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
           </div>
         </div>
+
+        <WorkspaceSnapshotCard
+          title="Auricrux is tied to live shell continuity"
+          detail="This page now references the same persisted tenant, project, and Auricrux state used across the platform dashboard and portal surfaces so the operating-layer story stays believable."
+          ctaHref="/portal/platform"
+          ctaLabel="Review unified platform state"
+        />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Visible surfaces</h2>
-          <ul style={{ paddingLeft: 20, lineHeight: 1.9 }}>
+          <h2 style={{ marginTop: 0 }}>Visible operating surfaces</h2>
+          <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
             <li>Persistent dock across the shell</li>
-            <li>Portal next-action visibility</li>
+            <li>Platform dashboard next-action visibility</li>
+            <li>Portal route guidance and continuity</li>
             <li>Academy coaching continuity</li>
+            <li>Support and admin operating context</li>
             <li>Founder demo narration support</li>
           </ul>
+        </div>
+
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Direct founder demo path</h2>
+          <div style={{ display: "grid", gap: 12 }}>
+            <a href="/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>1. Frame the unified FCA platform story</a>
+            <a href="/login" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>2. Enter the workspace shell</a>
+            <a href="/portal/platform" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>3. Open the unified platform dashboard</a>
+            <a href="/portal" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>4. Show portal continuity and next actions</a>
+            <a href="/academy" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>5. Continue into academy readiness</a>
+          </div>
         </div>
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Why this matters commercially</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-          Auricrux makes the shell feel active rather than static. Instead of showing disconnected pages, FCA can demonstrate an operating layer that gives context, next actions, and continuity as customers move between sales, execution, training, and account support surfaces.
+          Auricrux makes the shell feel active rather than static. Instead of showing disconnected pages, FCA can demonstrate an embedded operating layer that gives context, next actions, and continuity as customers move between sales, execution, training, support, admin, and production planning surfaces.
         </p>
       </div>
 
