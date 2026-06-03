@@ -3,8 +3,7 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
-import { ctaLightStyle, ctaPrimaryStyle } from "../../publicShellStyles";
-import { publicBodyCtaSets } from "../../websiteShell";
+import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
 import { auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
@@ -66,10 +65,7 @@ export default function PortalSupport() {
             <div><strong>Project ID:</strong> {currentProject.id}</div>
             <div><strong>Current issue pattern:</strong> approval delay, onboarding coordination, billing readiness</div>
           </div>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
-            <a href="/portal/messages" style={ctaPrimaryStyle}>Open Messages</a>
-            <a href="/portal/billing" style={ctaLightStyle}>Open Billing</a>
-          </div>
+          <PublicCtaRow actions={portalNarrativeCtaSets.supportContext} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Escalation lanes</h2>

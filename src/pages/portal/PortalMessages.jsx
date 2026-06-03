@@ -2,8 +2,7 @@ import PortalShell from "../../components/PortalShell";
 import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import { portalMessages } from "../../portalShell";
-import { ctaLightStyle, ctaPrimaryStyle } from "../../publicShellStyles";
-import { publicBodyCtaSets } from "../../websiteShell";
+import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
 import { portalMessagesMessaging } from "../../systemContinuity";
 import { auricruxRail, currentProject, routeStateOverlays, workspaceContext } from "../../workspaceState";
 
@@ -68,11 +67,7 @@ export default function PortalMessages() {
             <div style={{ color: "#6b7280", fontSize: 14, marginTop: 4 }}>{message.time}</div>
           </div>
         ))}
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
-          <a href="/portal/billing" style={ctaPrimaryStyle}>Open Billing</a>
-          <a href="/academy" style={ctaLightStyle}>Open Academy</a>
-          <a href="/contact" style={ctaLightStyle}>Open Contact & Rollout</a>
-        </div>
+        <PublicCtaRow actions={portalNarrativeCtaSets.messageStream} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
       </div>
     </PortalShell>
   );

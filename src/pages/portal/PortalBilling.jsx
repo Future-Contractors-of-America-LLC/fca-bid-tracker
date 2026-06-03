@@ -2,8 +2,7 @@ import PortalShell from "../../components/PortalShell";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
-import { ctaLightStyle, ctaPrimaryStyle } from "../../publicShellStyles";
-import { publicBodyCtaSets } from "../../websiteShell";
+import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
 import { auricruxRail, portalBilling, portalTenant, currentProject, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
@@ -126,11 +125,7 @@ export default function PortalBilling() {
             Billing is not just accounting. In FCA it stays tied to project progress, document readiness,
             customer communications, and training completion so commercial follow-through remains visible.
           </p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
-            <a href="/academy" style={ctaPrimaryStyle}>Open Academy</a>
-            <a href="/pricing" style={ctaLightStyle}>Plans & Rollout</a>
-            <a href="/contact" style={ctaLightStyle}>Open Contact & Rollout</a>
-          </div>
+          <PublicCtaRow actions={portalNarrativeCtaSets.billingNarrative} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Current billing posture</h2>

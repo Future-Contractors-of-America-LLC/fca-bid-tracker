@@ -59,6 +59,16 @@ export const publicActionCatalog = {
     href: "/portal/academy",
     variant: "light",
   },
+  messages: {
+    label: "Open Messages",
+    href: "/portal/messages",
+    variant: "primary",
+  },
+  billing: {
+    label: "Open Billing",
+    href: "/portal/billing",
+    variant: "light",
+  },
 };
 
 export const publicFallbackCtaCards = [
@@ -161,6 +171,27 @@ export const platformLinkedProductAreas = [
   publicActionCatalog.bidEntry,
   publicActionCatalog.bidStatus,
 ];
+
+export const portalNarrativeCtaSets = {
+  bidSalesNarrative: [
+    publicActionCatalog.messages,
+    publicActionCatalog.billing,
+  ],
+  supportContext: [
+    publicActionCatalog.messages,
+    publicActionCatalog.billing,
+  ],
+  messageStream: [
+    publicActionCatalog.billing,
+    publicActionCatalog.academy,
+    publicActionCatalog.contact,
+  ],
+  billingNarrative: [
+    { ...publicActionCatalog.academy, variant: "primary" },
+    publicActionCatalog.pricing,
+    publicActionCatalog.contact,
+  ],
+};
 
 export const platformModules = [
   {
@@ -410,14 +441,14 @@ export const publicBodyCtaSets = {
     publicActionCatalog.portal,
     publicActionCatalog.academy,
   ],
-  academyEntry: [
-    { ...publicActionCatalog.portal, variant: "primary" },
-    publicActionCatalog.platform,
-    publicActionCatalog.contact,
-  ],
   portalCoordination: [
     { ...publicActionCatalog.platform, variant: "primary" },
     publicActionCatalog.portal,
+    publicActionCatalog.contact,
+  ],
+  academyEntry: [
+    { ...publicActionCatalog.portal, variant: "primary" },
+    publicActionCatalog.platform,
     publicActionCatalog.contact,
   ],
 };

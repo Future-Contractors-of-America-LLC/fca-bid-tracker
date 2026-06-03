@@ -1,8 +1,7 @@
 import PortalShell from "../../components/PortalShell";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
-import { ctaLightStyle, ctaPrimaryStyle } from "../../publicShellStyles";
-import { publicBodyCtaSets } from "../../websiteShell";
+import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
 import { auricruxRail, currentProject, portalBids, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
@@ -82,10 +81,7 @@ export default function PortalBids() {
           This shell lets FCA show that bidding is not a disconnected tool. Auricrux can surface the approval queue, explain blockers,
           and move directly from estimate visibility into project execution, communications, and onboarding.
         </p>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
-          <a href="/portal/messages" style={ctaPrimaryStyle}>Open Messages</a>
-          <a href="/portal/billing" style={ctaLightStyle}>Open Billing</a>
-        </div>
+        <PublicCtaRow actions={portalNarrativeCtaSets.bidSalesNarrative} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
       </div>
     </PortalShell>
   );
