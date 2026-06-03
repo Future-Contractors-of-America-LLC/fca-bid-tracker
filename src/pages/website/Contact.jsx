@@ -6,8 +6,9 @@ import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import { contactPaths, publicRouteCtas, shellJourney } from "../../websiteShell";
-import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
+import PublicCtaRow from "../../components/PublicCtaRow";
+import { contactPaths, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { cardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const checklistStyle = {
   margin: 0,
@@ -80,7 +81,7 @@ export default function Contact() {
             <div key={path.title} style={cardStyle}>
               <h3 style={{ marginTop: 0 }}>{path.title}</h3>
               <p style={{ color: "#4b5563", lineHeight: 1.6 }}>{path.detail}</p>
-              <a href={path.cta} style={ctaPrimaryStyle}>
+              <a href={path.cta} style={{ display: "inline-block", textDecoration: "none", background: "#111827", color: "#fff", padding: "10px 14px", borderRadius: 10, fontWeight: 700 }}>
                 {path.label}
               </a>
             </div>
@@ -93,11 +94,7 @@ export default function Contact() {
         <p style={{ lineHeight: 1.7, marginBottom: 12 }}>
           For this stage of the product, the strongest conversion path is still a direct founder-led review. This page supports that motion while the underlying platform continues to harden.
         </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-          <a href="/login" style={ctaPrimaryStyle}>Open FCA Workspace</a>
-          <a href="/portal/platform" style={ctaSecondaryStyle}>Open Platform Dashboard</a>
-          <a href="mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request" style={ctaLightStyle}>Request Founder Review</a>
-        </div>
+        <PublicCtaRow actions={publicBodyCtaSets.contactImmediate} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <PublicActionRail

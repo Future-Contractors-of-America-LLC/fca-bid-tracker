@@ -7,8 +7,9 @@ import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import { pricingTiers, publicRouteCtas, shellJourney } from "../../websiteShell";
-import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroButtonRowStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
+import PublicCtaRow from "../../components/PublicCtaRow";
+import { pricingTiers, publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const rolloutSteps = [
   "Confirm contractor fit, pilot scope, and current operating friction.",
@@ -46,11 +47,7 @@ export default function Pricing() {
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
           The strongest motion here is not a static price sheet. It is a guided production conversation that ties scope to the live shell, platform dashboard, portal continuity, academy readiness, and Auricrux-guided next actions.
         </p>
-        <div style={heroButtonRowStyle}>
-          <a href="/contact" style={ctaPrimaryStyle}>Request Founder Review</a>
-          <a href="/portal/platform" style={ctaSecondaryStyle}>Open Platform Dashboard</a>
-          <a href="/login" style={ctaLightStyle}>Open FCA Workspace</a>
-        </div>
+        <PublicCtaRow actions={publicBodyCtaSets.pricingHero} />
       </div>
 
       <FounderJourneyStrip
@@ -114,11 +111,7 @@ export default function Pricing() {
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Immediate next actions</h2>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-            <a href="/contact" style={ctaPrimaryStyle}>Request Founder Review</a>
-            <a href="/portal/platform" style={ctaSecondaryStyle}>Open Platform Dashboard</a>
-            <a href="/portal" style={ctaLightStyle}>Open Portal Workspace</a>
-          </div>
+          <PublicCtaRow actions={publicBodyCtaSets.pricingImmediate} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
         </div>
       </div>
 

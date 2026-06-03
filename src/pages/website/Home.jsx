@@ -5,14 +5,9 @@ import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import { publicRouteCtas, shellJourney } from "../../websiteShell";
-import { cardStyle, ctaLightStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
-
-const secondaryStyle = {
-  ...ctaLightStyle,
-  background: "#f3f4f6",
-  border: "1px solid #d1d5db",
-};
+import PublicCtaRow from "../../components/PublicCtaRow";
+import { publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { cardStyle, pageShellStyle } from "../../publicShellStyles";
 
 export default function Home() {
   return (
@@ -55,12 +50,7 @@ export default function Home() {
         ctaLabel="Enter FCA workspace"
       />
 
-      <div style={{ marginTop: 20 }}>
-        <a href="/login" style={{ ...ctaPrimaryStyle, marginRight: 12, marginTop: 12 }}>Enter FCA Workspace</a>
-        <a href="/platform" style={{ ...secondaryStyle, marginRight: 12, marginTop: 12 }}>Platform Overview</a>
-        <a href="/auricrux" style={{ ...secondaryStyle, marginRight: 12, marginTop: 12 }}>Meet Auricrux</a>
-        <a href="/pricing" style={{ ...secondaryStyle, marginTop: 12 }}>Production Planning</a>
-      </div>
+      <PublicCtaRow actions={publicBodyCtaSets.home} />
 
       <div style={{ marginTop: 28 }}>
         <WorkspaceSnapshotCard

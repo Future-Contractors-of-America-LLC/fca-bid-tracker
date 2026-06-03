@@ -5,8 +5,9 @@ import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import { publicRouteCtas, shellJourney } from "../../websiteShell";
-import { cardStyle, ctaLightStyle, ctaPrimaryStyle, ctaSecondaryStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
+import PublicCtaRow from "../../components/PublicCtaRow";
+import { publicBodyCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const fieldStyle = {
   width: "100%",
@@ -73,17 +74,7 @@ export default function Login() {
             <label>Company</label>
             <input style={fieldStyle} defaultValue="Future Contractors of America Pilot Workspace" />
 
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
-              <a href="/portal" style={ctaPrimaryStyle}>
-                Continue to Workspace
-              </a>
-              <a href="/portal/platform" style={ctaSecondaryStyle}>
-                Open Platform Dashboard
-              </a>
-              <a href="/academy" style={ctaLightStyle}>
-                Open Academy
-              </a>
-            </div>
+            <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }} />
           </div>
 
           <div style={{ display: "grid", gap: 16 }}>

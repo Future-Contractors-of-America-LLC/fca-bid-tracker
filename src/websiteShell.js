@@ -165,3 +165,32 @@ export const publicRouteCtas = {
     secondaryLabel: "Open Platform Dashboard",
   },
 };
+
+export const publicBodyCtaSets = {
+  home: [
+    { label: "Open FCA Workspace", href: "/login", variant: "primary" },
+    { label: "Platform Overview", href: "/platform", variant: "secondary" },
+    { label: "Meet Auricrux", href: "/auricrux", variant: "light" },
+    { label: "Production Planning", href: "/pricing", variant: "light" },
+  ],
+  pricingHero: [
+    { label: "Request Founder Review", href: "/contact", variant: "primary" },
+    { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
+    { label: "Open FCA Workspace", href: "/login", variant: "light" },
+  ],
+  pricingImmediate: [
+    { label: "Request Founder Review", href: "/contact", variant: "primary" },
+    { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
+    { label: "Open Portal Workspace", href: "/portal", variant: "light" },
+  ],
+  contactImmediate: [
+    { label: "Open FCA Workspace", href: "/login", variant: "primary" },
+    { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
+    { label: "Request Founder Review", href: "mailto:hello@futurecontractorsofamerica.com?subject=Founder%20Review%20Request", variant: "light" },
+  ],
+  loginWorkspace: [
+    { label: "Open Portal Workspace", href: "/portal", variant: "primary" },
+    { label: "Open Platform Dashboard", href: "/portal/platform", variant: "secondary" },
+    { label: "Open Academy", href: "/academy", variant: "light" },
+  ],
+};
