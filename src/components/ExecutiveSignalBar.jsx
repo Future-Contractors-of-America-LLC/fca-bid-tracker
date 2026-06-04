@@ -1,4 +1,5 @@
 import { auricruxRail, currentProject, workspaceContext } from "../workspaceState";
+import AuricruxExecutiveCommandInsight from "./AuricruxExecutiveCommandInsight";
 
 const stripStyle = {
   border: "1px solid #e5d3a1",
@@ -81,6 +82,8 @@ export default function ExecutiveSignalBar({
         <SignalCell label="Training continuity" value={trainingSignal} />
         <SignalCell label="Project spine" value={`${currentProject.id} · ${currentProject.stage}`} />
       </div>
+
+      <AuricruxExecutiveCommandInsight mode="signal" nextHref={resolvedHref} nextLabel={resolvedLabel} />
     </div>
   );
 }

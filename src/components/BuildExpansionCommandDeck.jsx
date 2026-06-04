@@ -1,4 +1,5 @@
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
+import AuricruxExecutiveCommandInsight from "./AuricruxExecutiveCommandInsight";
 
 const shellStyle = {
   border: "1px solid #dbe3ef",
@@ -90,6 +91,8 @@ export default function BuildExpansionCommandDeck({
           </div>
         ))}
       </div>
+
+      <AuricruxExecutiveCommandInsight mode="deck" nextHref={primaryHref} nextLabel={primaryLabel} />
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
         <a href={primaryHref} style={ctaPrimaryStyle}>{primaryLabel}</a>
