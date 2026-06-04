@@ -1,15 +1,14 @@
-﻿name: Auricrux Engine (Scheduler)
+name: Auricrux Engine (Scheduler)
 
 on:
   workflow_dispatch:
   repository_dispatch:
     types: [auricrux_bid_cycle]
-  schedule:
-    - cron: "*/15 * * * *"
 
 jobs:
   auricrux-engine-tick:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Run Auricrux Engine tick
@@ -18,6 +17,7 @@ jobs:
         run: |
           echo "[Auricrux] Tick..."
           echo "[Auricrux] API_BASE=$API_BASE"
+          echo "[Auricrux] Primary schedule ownership moved to auricrux-control-plane.yml"
 
           node <<'NODE'
           const API = process.env.API_BASE;
