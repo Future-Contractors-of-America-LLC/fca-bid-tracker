@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets } from "../../websiteShell";
-import { currentProject, portalProjects, portalTenant, routeStateOverlays, workspaceContext, auricruxRail } from "../../systemState";
+import { portalProjects, routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -13,6 +15,12 @@ const cardStyle = {
 };
 
 export default function PortalProjects() {
+  const { state, refreshSyncStamp } = useWorkspaceState();
+
+  useEffect(() => {
+    refreshSyncStamp("Persisted project flow state active");
+  }, [refreshSyncStamp]);
+
   return (
     <PortalShell
       title="Project Flow and Customer Visibility"
@@ -25,11 +33,11 @@ export default function PortalProjects() {
     >
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
-          tenant={portalTenant}
-          project={currentProject}
-          workspace={workspaceContext}
-          auricrux={auricruxRail}
-          title="Project route is anchored to the canonical system state"
+          tenant={state.tenant}
+          project={state.project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
+          title="Project route is anchored to the live workspace state"
           detail="Project execution visibility now reads from the same tenant, project, next-action, and blocker source as the rest of the FCA shell."
         />
       </div>
@@ -38,13 +46,23 @@ export default function PortalProjects() {
         <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted project state</div>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
+          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
+          <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+        </div>
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>Current Project Root</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-          <div><strong>{currentProject.name}</strong></div>
-          <div>Project ID: {currentProject.id}</div>
-          <div>Current stage: {currentProject.stage}</div>
-          <div>{currentProject.auditStatus}</div>
+          <div><strong>{state.project.name}</strong></div>
+          <div>Project ID: {state.project.id}</div>
+          <div>Current stage: {state.project.stage}</div>
+          <div>{state.project.auditStatus}</div>
         </div>
       </div>
 

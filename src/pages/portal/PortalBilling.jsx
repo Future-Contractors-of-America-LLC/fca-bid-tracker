@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
-import { auricruxRail, portalBilling, portalTenant, currentProject, routeStateOverlays, workspaceContext } from "../../systemState";
+import { portalBilling, routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -47,6 +49,12 @@ const billingContinuityItems = [
 ];
 
 export default function PortalBilling() {
+  const { state, refreshSyncStamp } = useWorkspaceState();
+
+  useEffect(() => {
+    refreshSyncStamp("Persisted billing continuity state active");
+  }, [refreshSyncStamp]);
+
   return (
     <PortalShell
       title="Billing and Account Continuity"
@@ -59,11 +67,11 @@ export default function PortalBilling() {
     >
       <div style={{ marginBottom: 24 }}>
         <SystemStateSummary
-          tenant={portalTenant}
-          project={currentProject}
-          workspace={workspaceContext}
-          auricrux={auricruxRail}
-          title="Billing now reads from the canonical operating state"
+          tenant={state.tenant}
+          project={state.project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
+          title="Billing now reads from the live workspace state"
           detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, and blocker module as the other portal routes."
         />
       </div>
@@ -87,13 +95,23 @@ export default function PortalBilling() {
         <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted billing state</div>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
+          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
+          <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+        </div>
+      </div>
+
       <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Revenue continuity focus</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Billing now echoes the same approval and training state as the rest of the shell</h2>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Revenue blocker:</strong> {auricruxRail.currentBlocker}</div>
-          <div><strong>Business impact:</strong> {auricruxRail.blockerImpact}</div>
-          <div><strong>Commercial next step:</strong> Convert {workspaceContext.currentNextAction.toLowerCase()} into invoice follow-through.</div>
+          <div><strong>Revenue blocker:</strong> {state.auricrux.currentBlocker}</div>
+          <div><strong>Business impact:</strong> {state.auricrux.blockerImpact}</div>
+          <div><strong>Commercial next step:</strong> Convert {state.workspace.currentNextAction.toLowerCase()} into invoice follow-through.</div>
           <div><strong>Training continuity:</strong> Billing remains tied to learner assignment so onboarding and revenue stay visible together.</div>
         </div>
       </div>
