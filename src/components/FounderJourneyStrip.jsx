@@ -1,4 +1,5 @@
 import AuricruxNarrativeInsight from "./AuricruxNarrativeInsight";
+import { isCurrentRouteHref } from "../ctaBehavior";
 import { shellJourney } from "../websiteShell";
 
 const stripStyle = {
@@ -27,6 +28,9 @@ export default function FounderJourneyStrip({
   ctaHref = "/portal/platform",
   ctaLabel = "Open unified platform state",
 }) {
+  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname;
+  const showCta = !isCurrentRouteHref(ctaHref, currentPath);
+
   return (
     <div style={stripStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
@@ -35,39 +39,48 @@ export default function FounderJourneyStrip({
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h2>
           <div style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>{detail}</div>
         </div>
-        <a
-          href={ctaHref}
-          style={{
-            textDecoration: "none",
-            background: "#111827",
-            color: "#fff",
-            padding: "10px 14px",
-            borderRadius: 10,
-            fontWeight: 700,
-          }}
-        >
-          {ctaLabel}
-        </a>
+        {showCta ? (
+          <a
+            href={ctaHref}
+            style={{
+              textDecoration: "none",
+              background: "#111827",
+              color: "#fff",
+              padding: "10px 14px",
+              borderRadius: 10,
+              fontWeight: 700,
+            }}
+          >
+            {ctaLabel}
+          </a>
+        ) : null}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 10 }}>
         {shellJourney.map((step, index) => {
           const isActive = step.key === currentJourney;
-          return (
-            <a
-              key={step.key}
-              href={step.href}
-              style={{
-                ...stepBaseStyle,
-                border: isActive ? "1px solid #2563eb" : stepBaseStyle.border,
-                background: isActive ? "#eff6ff" : stepBaseStyle.background,
-              }}
-            >
+          const sharedStyle = {
+            ...stepBaseStyle,
+            border: isActive ? "1px solid #2563eb" : stepBaseStyle.border,
+            background: isActive ? "#eff6ff" : stepBaseStyle.background,
+          };
+          const content = (
+            <>
               <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: isActive ? "#2563eb" : "#64748b", fontWeight: 700, marginBottom: 6 }}>
                 Step {index + 1}
               </div>
               <div style={{ fontWeight: 700, marginBottom: 4 }}>{step.label}</div>
               <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.5 }}>{step.href}</div>
+            </>
+          );
+
+          return isActive ? (
+            <span key={step.key} style={sharedStyle} aria-current="page">
+              {content}
+            </span>
+          ) : (
+            <a key={step.key} href={step.href} style={sharedStyle}>
+              {content}
             </a>
           );
         })}

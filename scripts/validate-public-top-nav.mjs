@@ -22,6 +22,14 @@ const checks = [
     ],
   },
   {
+    file: path.join(root, "src", "components", "WorkspaceQuickActions.jsx"),
+    markers: [
+      'import { filterVisibleActions } from "../ctaBehavior";',
+      'const visibleActions = filterVisibleActions(actions, currentPath);',
+      'if (!visibleActions.length) return null;',
+    ],
+  },
+  {
     file: path.join(root, "src", "components", "PublicOperationsStrip.jsx"),
     markers: [
       'import { resolveActionPair } from "../ctaBehavior";',
@@ -43,6 +51,30 @@ const checks = [
       'return isActive ? (',
       '<span key={item.key} style={sharedStyle} aria-current="page">',
       '<a key={item.key} href={item.href} style={sharedStyle}>',
+    ],
+  },
+  {
+    file: path.join(root, "src", "components", "FounderJourneyStrip.jsx"),
+    markers: [
+      'import { isCurrentRouteHref } from "../ctaBehavior";',
+      'const showCta = !isCurrentRouteHref(ctaHref, currentPath);',
+      '<span key={step.key} style={sharedStyle} aria-current="page">',
+    ],
+  },
+  {
+    file: path.join(root, "src", "components", "ExecutiveSignalBar.jsx"),
+    markers: [
+      'import { isCurrentRouteHref } from "../ctaBehavior";',
+      'const showAction = !isCurrentRouteHref(resolvedHref, currentPath);',
+      '{showAction ? (',
+    ],
+  },
+  {
+    file: path.join(root, "src", "components", "BuildExpansionCommandDeck.jsx"),
+    markers: [
+      'import { resolveActionPair } from "../ctaBehavior";',
+      'const { primary, secondary } = resolveActionPair(',
+      '{primary ? <AuricruxExecutiveCommandInsight mode="deck" nextHref={primary.href} nextLabel={primary.label} /> : null}',
     ],
   },
   {

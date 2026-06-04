@@ -1,3 +1,4 @@
+import { resolveActionPair } from "../ctaBehavior";
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
 import AuricruxExecutiveCommandInsight from "./AuricruxExecutiveCommandInsight";
 
@@ -65,6 +66,13 @@ export default function BuildExpansionCommandDeck({
   secondaryLabel = "Request founder review",
   tracks = defaultTracks,
 }) {
+  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname;
+  const { primary, secondary } = resolveActionPair(
+    { href: primaryHref, label: primaryLabel },
+    { href: secondaryHref, label: secondaryLabel },
+    currentPath
+  );
+
   return (
     <div style={shellStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
@@ -92,12 +100,14 @@ export default function BuildExpansionCommandDeck({
         ))}
       </div>
 
-      <AuricruxExecutiveCommandInsight mode="deck" nextHref={primaryHref} nextLabel={primaryLabel} />
+      {primary ? <AuricruxExecutiveCommandInsight mode="deck" nextHref={primary.href} nextLabel={primary.label} /> : null}
 
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
-        <a href={primaryHref} style={ctaPrimaryStyle}>{primaryLabel}</a>
-        <a href={secondaryHref} style={ctaLightStyle}>{secondaryLabel}</a>
-      </div>
+      {primary || secondary ? (
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
+          {primary ? <a href={primary.href} style={ctaPrimaryStyle}>{primary.label}</a> : null}
+          {secondary ? <a href={secondary.href} style={ctaLightStyle}>{secondary.label}</a> : null}
+        </div>
+      ) : null}
     </div>
   );
 }

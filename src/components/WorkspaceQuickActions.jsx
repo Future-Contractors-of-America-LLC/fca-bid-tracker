@@ -1,4 +1,5 @@
 import AuricruxActionHint from "./AuricruxActionHint";
+import { filterVisibleActions } from "../ctaBehavior";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -22,7 +23,10 @@ const actionStyle = {
 };
 
 export default function WorkspaceQuickActions({ actions = [] }) {
-  if (!actions.length) return null;
+  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname;
+  const visibleActions = filterVisibleActions(actions, currentPath);
+
+  if (!visibleActions.length) return null;
 
   return (
     <div style={cardStyle}>
@@ -38,7 +42,7 @@ export default function WorkspaceQuickActions({ actions = [] }) {
       </div>
 
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }}>
-        {actions.map((action) => (
+        {visibleActions.map((action) => (
           <div key={action.label} style={{ minWidth: 0, maxWidth: 280 }}>
             <a
               href={action.href}

@@ -1,3 +1,4 @@
+import { isCurrentRouteHref } from "../ctaBehavior";
 import { auricruxRail, currentProject, workspaceContext } from "../workspaceState";
 import AuricruxExecutiveCommandInsight from "./AuricruxExecutiveCommandInsight";
 
@@ -44,6 +45,9 @@ export default function ExecutiveSignalBar({
       ? "Auricrux is exposing the same canonical operating state on public routes that users later see inside the portal and academy shells."
       : "Auricrux is preserving one operating story across approval, revenue, communication follow-through, and workforce readiness.";
 
+  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname;
+  const showAction = !isCurrentRouteHref(resolvedHref, currentPath);
+
   return (
     <div style={stripStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
@@ -53,19 +57,21 @@ export default function ExecutiveSignalBar({
             {intro}
           </div>
         </div>
-        <a
-          href={resolvedHref}
-          style={{
-            textDecoration: "none",
-            background: "#111827",
-            color: "#fff",
-            padding: "10px 14px",
-            borderRadius: 10,
-            fontWeight: 700,
-          }}
-        >
-          {resolvedLabel}
-        </a>
+        {showAction ? (
+          <a
+            href={resolvedHref}
+            style={{
+              textDecoration: "none",
+              background: "#111827",
+              color: "#fff",
+              padding: "10px 14px",
+              borderRadius: 10,
+              fontWeight: 700,
+            }}
+          >
+            {resolvedLabel}
+          </a>
+        ) : null}
       </div>
 
       <div
