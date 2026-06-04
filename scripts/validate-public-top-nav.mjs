@@ -117,6 +117,46 @@ const checks = [
       'What happens in a walkthrough',
     ],
   },
+  {
+    file: path.join(root, "src", "pages", "portal", "PortalProfile.jsx"),
+    markers: [
+      'Customer profile now reads from the live authenticated workspace',
+      'Persisted profile state',
+      'Why this route matters',
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "portal", "PortalNotifications.jsx"),
+    markers: [
+      'Notifications now read from live workspace continuity',
+      'Persisted notification state',
+      'Active notifications',
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "portal", "PortalProjects.jsx"),
+    markers: [
+      'Project route is anchored to the live workspace state',
+      'Persisted project state',
+      'Project Lifecycle',
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "portal", "PortalMessages.jsx"),
+    markers: [
+      'Persisted message state',
+      'BuildExpansionCommandDeck',
+      'Message stream',
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "portal", "PortalBilling.jsx"),
+    markers: [
+      'Billing now reads from the live workspace state',
+      'Persisted billing state',
+      'Billing queue',
+    ],
+  },
 ];
 
 const failures = [];

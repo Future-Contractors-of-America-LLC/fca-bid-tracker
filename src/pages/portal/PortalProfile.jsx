@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
-import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { publicBodyCtaSets } from "../../websiteShell";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -47,10 +45,6 @@ export default function PortalProfile() {
           title="Customer profile now reads from the live authenticated workspace"
           detail="This profile route binds session identity, tenant continuity, project state, and Auricrux guidance into one customer-facing operating surface."
         />
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalEntry} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>

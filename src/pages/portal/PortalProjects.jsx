@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
-import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { publicBodyCtaSets } from "../../websiteShell";
 import { portalProjects, routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -40,10 +38,6 @@ export default function PortalProjects() {
           title="Project route is anchored to the live workspace state"
           detail="Project execution visibility now reads from the same tenant, project, next-action, and blocker source as the rest of the FCA shell."
         />
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>

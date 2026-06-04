@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
-import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
+import { portalNarrativeCtaSets } from "../../websiteShell";
 import { portalBilling, routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -89,10 +89,6 @@ export default function PortalBilling() {
           secondaryHref="/contact"
           secondaryLabel="Open Contact & Rollout"
         />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>

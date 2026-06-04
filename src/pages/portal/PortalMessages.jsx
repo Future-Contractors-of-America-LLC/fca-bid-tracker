@@ -4,7 +4,7 @@ import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDec
 import PublicCtaRow from "../../components/PublicCtaRow";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { portalMessages } from "../../portalShell";
-import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
+import { portalNarrativeCtaSets } from "../../websiteShell";
 import { portalMessagesMessaging } from "../../systemContinuity";
 import { routeStateOverlays } from "../../workspaceState";
 
@@ -69,10 +69,6 @@ export default function PortalMessages() {
           secondaryHref="/academy"
           secondaryLabel="Open Academy"
         />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <div style={cardStyle}>
