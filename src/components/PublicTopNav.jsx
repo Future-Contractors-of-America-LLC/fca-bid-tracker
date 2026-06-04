@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { readCustomerSession } from "../customerSession";
+import { clearCustomerSession, readCustomerSession } from "../customerSession";
 import { publicActionCatalog } from "../websiteShell";
 
 const navShellStyle = {
@@ -156,10 +156,24 @@ export default function PublicTopNav() {
     };
   }, []);
 
+  useEffect(() => {
+    setOpenMenu(null);
+    setMobileOpen(false);
+  }, [currentPath]);
+
+  function handleLogout() {
+    clearCustomerSession();
+    setOpenMenu(null);
+    setMobileOpen(false);
+    window.location.assign("/login");
+  }
+
+  const menuVisible = mobileOpen || typeof window === "undefined" ? true : true;
+
   return (
     <div style={navShellStyle} ref={navRef}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", flex: "1 1 640px" }}>
           <button
             type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
@@ -169,50 +183,68 @@ export default function PublicTopNav() {
             <span>{mobileOpen ? "−" : "+"}</span>
           </button>
 
-          {(mobileOpen ? navGroups : navGroups).map((group) => (
-            <div key={group.key} style={{ position: "relative" }}>
-              <button
-                type="button"
-                onClick={() => setOpenMenu((prev) => (prev === group.key ? null : group.key))}
-                style={{
-                  ...triggerButtonStyle,
-                  background: openMenu === group.key ? "#eff6ff" : triggerButtonStyle.background,
-                  color: openMenu === group.key ? "#1d4ed8" : triggerButtonStyle.color,
-                  border: openMenu === group.key ? "1px solid #bfdbfe" : triggerButtonStyle.border,
-                }}
-              >
-                {group.label}
-              </button>
+          <div style={{ display: menuVisible ? "flex" : "none", gap: 10, flexWrap: "wrap", alignItems: "center", flex: "1 1 auto" }}>
+            {navGroups.map((group) => (
+              <div key={group.key} style={{ position: "relative" }}>
+                <button
+                  type="button"
+                  onClick={() => setOpenMenu((prev) => (prev === group.key ? null : group.key))}
+                  style={{
+                    ...triggerButtonStyle,
+                    background: openMenu === group.key ? "#eff6ff" : triggerButtonStyle.background,
+                    color: openMenu === group.key ? "#1d4ed8" : triggerButtonStyle.color,
+                    border: openMenu === group.key ? "1px solid #bfdbfe" : triggerButtonStyle.border,
+                  }}
+                >
+                  {group.label}
+                </button>
 
-              {openMenu === group.key ? (
-                <div style={dropdownMenuStyle}>
-                  {group.items.map((item, index) => {
-                    const itemPath = item.href.startsWith("mailto:") ? item.href : normalizePath(item.href);
-                    const isActive = !item.href.startsWith("mailto:") && itemPath === currentPath;
-                    return (
-                      <a
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setOpenMenu(null)}
-                        style={{
-                          ...menuLinkStyle,
-                          borderTop: index === 0 ? "none" : menuLinkStyle.borderTop,
-                          background: isActive ? "#eff6ff" : "#fff",
-                          color: isActive ? "#1d4ed8" : menuLinkStyle.color,
-                          fontWeight: isActive ? 700 : 500,
-                        }}
-                      >
-                        {item.label}
-                      </a>
-                    );
-                  })}
-                </div>
-              ) : null}
-            </div>
-          ))}
+                {openMenu === group.key ? (
+                  <div style={dropdownMenuStyle}>
+                    {group.items.map((item, index) => {
+                      const itemPath = item.href.startsWith("mailto:") ? item.href : normalizePath(item.href);
+                      const isActive = !item.href.startsWith("mailto:") && itemPath === currentPath;
+                      return (
+                        <a
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setOpenMenu(null)}
+                          style={{
+                            ...menuLinkStyle,
+                            borderTop: index === 0 ? "none" : menuLinkStyle.borderTop,
+                            background: isActive ? "#eff6ff" : "#fff",
+                            color: isActive ? "#1d4ed8" : menuLinkStyle.color,
+                            fontWeight: isActive ? 700 : 500,
+                          }}
+                        >
+                          {item.label}
+                        </a>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          {session?.authenticated ? (
+            <div
+              style={{
+                padding: "8px 12px",
+                borderRadius: 999,
+                border: "1px solid #bfdbfe",
+                background: "#eff6ff",
+                color: "#1d4ed8",
+                fontWeight: 700,
+                fontSize: 12,
+              }}
+            >
+              Live session: {session.company}
+            </div>
+          ) : null}
+
           <a href="/login" style={actionButtonStyle}>{session?.authenticated ? "Switch Workspace" : "Login"}</a>
 
           <div style={{ position: "relative" }}>
@@ -254,6 +286,26 @@ export default function PublicTopNav() {
                     </a>
                   );
                 })}
+                {session?.authenticated ? (
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    style={{
+                      width: "100%",
+                      textAlign: "left",
+                      border: "none",
+                      borderTop: "1px solid #eef2f7",
+                      background: "#fff",
+                      color: "#991b1b",
+                      padding: "10px 12px",
+                      fontSize: 14,
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Logout
+                  </button>
+                ) : null}
               </div>
             ) : null}
           </div>
