@@ -19,6 +19,26 @@ const fcaColors = brandIdentity.fca.colors;
 const OPEN_STORAGE_KEY = "auricrux-dock-open";
 const COMPACT_STORAGE_KEY = "auricrux-dock-compact";
 
+function safeStorageGet(key) {
+  if (typeof window === "undefined") return null;
+
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeStorageSet(key, value) {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Installed app / private mode / restricted storage should not break shell rendering.
+  }
+}
+
 function modeMeta(mode) {
   if (mode === "live") {
     return {
@@ -102,8 +122,8 @@ export default function AuricruxDock() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const storedOpen = window.localStorage.getItem(OPEN_STORAGE_KEY);
-    const storedCompact = window.localStorage.getItem(COMPACT_STORAGE_KEY);
+    const storedOpen = safeStorageGet(OPEN_STORAGE_KEY);
+    const storedCompact = safeStorageGet(COMPACT_STORAGE_KEY);
 
     if (storedOpen === null) {
       setOpen(window.innerWidth >= 1440);
@@ -121,13 +141,13 @@ export default function AuricruxDock() {
   }, []);
 
   useEffect(() => {
-    if (!hydrated || typeof window === "undefined") return;
-    window.localStorage.setItem(OPEN_STORAGE_KEY, String(open));
+    if (!hydrated) return;
+    safeStorageSet(OPEN_STORAGE_KEY, String(open));
   }, [open, hydrated]);
 
   useEffect(() => {
-    if (!hydrated || typeof window === "undefined") return;
-    window.localStorage.setItem(COMPACT_STORAGE_KEY, String(compact));
+    if (!hydrated) return;
+    safeStorageSet(COMPACT_STORAGE_KEY, String(compact));
   }, [compact, hydrated]);
 
   async function send(customText) {
@@ -194,12 +214,17 @@ export default function AuricruxDock() {
   }
 
   function speak() {
-    if (!("speechSynthesis" in window)) return;
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     const u = new SpeechSynthesisUtterance("Auricrux is online.");
     window.speechSynthesis.speak(u);
   }
 
   async function video() {
+    if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+      alert("Video capability is unavailable in this browser context.");
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
