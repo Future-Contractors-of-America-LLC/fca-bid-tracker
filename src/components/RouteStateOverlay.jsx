@@ -1,3 +1,5 @@
+import AuricruxStateExplanation from "./AuricruxStateExplanation";
+
 const wrapStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 16,
@@ -47,6 +49,11 @@ export default function RouteStateOverlay({ overlay }) {
           <div style={{ color: "#475569", marginTop: 4, lineHeight: 1.6 }}>{overlay.auricruxDetail}</div>
         </div>
       </div>
+
+      <AuricruxStateExplanation
+        mode="overlay"
+        overlay={overlay}
+      />
     </div>
   );
 }

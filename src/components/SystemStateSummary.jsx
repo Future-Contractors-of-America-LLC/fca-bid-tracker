@@ -1,3 +1,5 @@
+import AuricruxStateExplanation from "./AuricruxStateExplanation";
+
 const summaryCardStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 14,
@@ -38,6 +40,12 @@ export default function SystemStateSummary({
           <div>{auricrux.currentBlocker}</div>
         </div>
       </div>
+
+      <AuricruxStateExplanation
+        mode="summary"
+        title="Auricrux explanation of live state continuity"
+        detail={`Auricrux is interpreting ${workspace.currentNextAction.toLowerCase()} against ${auricrux.currentBlocker.toLowerCase()} so ${project.id} stays attached to one operating story instead of fragmented route state.`}
+      />
     </div>
   );
 }
