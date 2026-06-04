@@ -8,6 +8,7 @@ import FcaBrandMark from "./FcaBrandMark";
 import AuricruxBrandMark from "./AuricruxBrandMark";
 import ExecutiveSignalBar from "./ExecutiveSignalBar";
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
+import AuricruxNavHint from "./AuricruxNavHint";
 import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
 import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../systemState";
 
@@ -141,18 +142,20 @@ export default function PortalShell({
           {portalModules.map((module) => {
             const isActive = module.href === activeHref;
             return (
-              <a
-                key={module.href}
-                href={module.href}
-                style={{
-                  ...navCardStyle,
-                  border: isActive ? "1px solid #2563eb" : navCardStyle.border,
-                  background: isActive ? "#eff6ff" : navCardStyle.background,
-                }}
-              >
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>{module.label}</div>
-                <div style={{ color: "#4b5563", lineHeight: 1.5, fontSize: 14 }}>{module.description}</div>
-              </a>
+              <div key={module.href} style={{ minWidth: 0 }}>
+                <a
+                  href={module.href}
+                  style={{
+                    ...navCardStyle,
+                    border: isActive ? "1px solid #2563eb" : navCardStyle.border,
+                    background: isActive ? "#eff6ff" : navCardStyle.background,
+                  }}
+                >
+                  <div style={{ fontWeight: 700, marginBottom: 6 }}>{module.label}</div>
+                  <div style={{ color: "#4b5563", lineHeight: 1.5, fontSize: 14 }}>{module.description}</div>
+                </a>
+                <AuricruxNavHint item={module} />
+              </div>
             );
           })}
         </div>

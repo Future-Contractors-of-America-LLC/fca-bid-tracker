@@ -1,6 +1,7 @@
 import JourneyStrip from "./JourneyStrip";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
+import AuricruxNavHint from "./AuricruxNavHint";
 import { shellPrimaryNav } from "../websiteShell";
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
 
@@ -87,18 +88,20 @@ export default function ShellHeader({
           {shellPrimaryNav.map((item) => {
             const isActive = item.journeyKey === currentJourney;
             return (
-              <a
-                key={item.href}
-                href={item.href}
-                style={{
-                  ...baseLinkStyle,
-                  background: isActive ? "#eff6ff" : "transparent",
-                  color: isActive ? "#1d4ed8" : "#111827",
-                  border: isActive ? "1px solid #bfdbfe" : "1px solid transparent",
-                }}
-              >
-                {item.label}
-              </a>
+              <div key={item.href} style={{ minWidth: 0, maxWidth: 220 }}>
+                <a
+                  href={item.href}
+                  style={{
+                    ...baseLinkStyle,
+                    background: isActive ? "#eff6ff" : "transparent",
+                    color: isActive ? "#1d4ed8" : "#111827",
+                    border: isActive ? "1px solid #bfdbfe" : "1px solid transparent",
+                  }}
+                >
+                  {item.label}
+                </a>
+                <AuricruxNavHint item={item} />
+              </div>
             );
           })}
           {secondaryHref && secondaryLabel ? (
