@@ -1,4 +1,5 @@
 import AuricruxBrandMark from "./AuricruxBrandMark";
+import { resolveActionPair } from "../ctaBehavior";
 import { auricruxRail, currentProject, workspaceContext } from "../workspaceState";
 
 const shellStyle = {
@@ -30,6 +31,13 @@ export default function AuricruxPresenceLayer({
   secondaryLabel = "Open Messages",
   compact = false,
 }) {
+  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname;
+  const { primary, secondary } = resolveActionPair(
+    { href: primaryHref, label: primaryLabel },
+    { href: secondaryHref, label: secondaryLabel },
+    currentPath
+  );
+
   return (
     <div style={shellStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: compact ? "flex-start" : "center", flexWrap: "wrap", marginBottom: 12 }}>
@@ -59,10 +67,12 @@ export default function AuricruxPresenceLayer({
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "stretch" }}>
-        <a href={primaryHref} style={linkStyle}>{primaryLabel}</a>
-        <a href={secondaryHref} style={linkStyle}>{secondaryLabel}</a>
-      </div>
+      {primary || secondary ? (
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "stretch" }}>
+          {primary ? <a href={primary.href} style={linkStyle}>{primary.label}</a> : null}
+          {secondary ? <a href={secondary.href} style={linkStyle}>{secondary.label}</a> : null}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
+import { filterVisibleActions } from "../ctaBehavior";
 import { shellProductionActions, shellWorkspaceRoutes } from "../websiteShell";
 import { ctaLightStyle, ctaStyleMap } from "../publicShellStyles";
 
@@ -15,6 +16,10 @@ export default function PublicActionRail({
   title = "Ready for the next step?",
   detail = "Close each public route with the same clear actions so customers always have a path into workspace access, platform visibility, or a guided walkthrough.",
 }) {
+  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname;
+  const productionActions = filterVisibleActions(shellProductionActions, currentPath);
+  const workspaceRoutes = filterVisibleActions(shellWorkspaceRoutes.slice(0, 4), currentPath);
+
   return (
     <div style={railStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 14 }}>
@@ -23,13 +28,15 @@ export default function PublicActionRail({
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h2>
           <div style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>{detail}</div>
         </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "stretch" }}>
-          {shellProductionActions.map((action) => (
-            <a key={action.href} href={action.href} style={ctaStyleMap[action.variant] || ctaLightStyle}>
-              {action.label}
-            </a>
-          ))}
-        </div>
+        {productionActions.length ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "stretch" }}>
+            {productionActions.map((action) => (
+              <a key={action.href} href={action.href} style={ctaStyleMap[action.variant] || ctaLightStyle}>
+                {action.label}
+              </a>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <div style={{ marginBottom: 16 }}>
@@ -39,36 +46,38 @@ export default function PublicActionRail({
           detail="Every public route now hands off through an Auricrux-guided decision layer so conversion, workspace access, and platform review keep the same intelligence spine."
           primaryHref="/portal/platform"
           primaryLabel="Open Platform Dashboard"
-          secondaryHref="/portal/messages"
-          secondaryLabel="Open Messages"
+          secondaryHref="/login"
+          secondaryLabel="Open Login Portal"
           compact
         />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 180px), 1fr))", gap: 12 }}>
-        {shellWorkspaceRoutes.slice(0, 4).map((route) => (
-          <a
-            key={route.href}
-            href={route.href}
-            style={{
-              textDecoration: "none",
-              border: "1px solid #dbe3ef",
-              background: "#ffffff",
-              borderRadius: 12,
-              padding: 12,
-              color: "#111827",
-              boxSizing: "border-box",
-              minWidth: 0,
-            }}
-          >
-            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>
-              Next surface
-            </div>
-            <div style={{ fontWeight: 700, marginBottom: 4 }}>{route.label}</div>
-            <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.5, wordBreak: "break-word" }}>{route.href}</div>
-          </a>
-        ))}
-      </div>
+      {workspaceRoutes.length ? (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 180px), 1fr))", gap: 12 }}>
+          {workspaceRoutes.map((route) => (
+            <a
+              key={route.href}
+              href={route.href}
+              style={{
+                textDecoration: "none",
+                border: "1px solid #dbe3ef",
+                background: "#ffffff",
+                borderRadius: 12,
+                padding: 12,
+                color: "#111827",
+                boxSizing: "border-box",
+                minWidth: 0,
+              }}
+            >
+              <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>
+                Next surface
+              </div>
+              <div style={{ fontWeight: 700, marginBottom: 4 }}>{route.label}</div>
+              <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.5, wordBreak: "break-word" }}>{route.href}</div>
+            </a>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

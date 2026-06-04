@@ -5,49 +5,54 @@ const root = process.cwd();
 
 const checks = [
   {
-    file: path.join(root, "src", "navigation.js"),
+    file: path.join(root, "src", "ctaBehavior.js"),
     markers: [
-      'export const NAVIGATION_EVENT = "auricrux:navigate";',
-      'export function isManagedAppPath(pathname = "/") {',
-      'export function isManagedNavigationTarget(href = "") {',
-      'if (href.endsWith(".html")) return false;',
-      'window.dispatchEvent(new CustomEvent(NAVIGATION_EVENT, { detail: { href: nextPath } }));',
+      'export function isCurrentRouteHref(href = "", currentPath = "/") {',
+      'export function dedupeActions(actions = []) {',
+      'export function filterVisibleActions(actions = [], currentPath = "/") {',
+      'export function resolveActionPair(primaryAction, secondaryAction, currentPath = "/") {',
     ],
   },
   {
-    file: path.join(root, "src", "router.jsx"),
+    file: path.join(root, "src", "components", "PublicCtaRow.jsx"),
     markers: [
-      'const [normalizedPath, setNormalizedPath] = useState(readCurrentPath);',
-      'function handleDocumentClick(event) {',
-      'const anchor = event.target.closest("a[href]");',
-      'if (!isManagedNavigationTarget(href)) return;',
-      'event.preventDefault();',
-      'navigateTo(href);',
-      'window.addEventListener(NAVIGATION_EVENT, syncRouteFromLocation);',
+      'import { filterVisibleActions } from "../ctaBehavior";',
+      'const visibleActions = filterVisibleActions(actions, currentPath);',
+      'if (!visibleActions.length) return null;',
     ],
   },
   {
-    file: path.join(root, "src", "components", "PublicTopNav.jsx"),
+    file: path.join(root, "src", "components", "PublicOperationsStrip.jsx"),
     markers: [
-      'import { navigateTo } from "../navigation";',
-      'navigateTo(loginHref);',
-      'const workspaceHref = resolveWorkspaceEntryHref(session, mode === "portal" ? currentPath : "/portal/profile");',
-      'const actionHref = session?.authenticated ? workspaceHref : loginHref;',
+      'import { resolveActionPair } from "../ctaBehavior";',
+      'const { primary, secondary } = resolveActionPair(',
+      '{primary ? <AuricruxTrustInsight mode="operations" primaryHref={primary.href} primaryLabel={primary.label} /> : null}',
     ],
   },
   {
-    file: path.join(root, "src", "components", "CustomerSessionBar.jsx"),
+    file: path.join(root, "src", "components", "AuricruxPresenceLayer.jsx"),
     markers: [
-      'import { navigateTo } from "../navigation";',
-      'navigateTo("/login");',
+      'import { resolveActionPair } from "../ctaBehavior";',
+      'const { primary, secondary } = resolveActionPair(',
+      '{primary || secondary ? (',
     ],
   },
   {
-    file: path.join(root, "src", "pages", "website", "Login.jsx"),
+    file: path.join(root, "src", "components", "JourneyStrip.jsx"),
     markers: [
-      'import { navigateTo } from "../../navigation";',
-      'navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));',
-      'navigateTo("/login");',
+      'return isActive ? (',
+      '<span key={item.key} style={sharedStyle} aria-current="page">',
+      '<a key={item.key} href={item.href} style={sharedStyle}>',
+    ],
+  },
+  {
+    file: path.join(root, "src", "components", "PublicActionRail.jsx"),
+    markers: [
+      'import { filterVisibleActions } from "../ctaBehavior";',
+      'const productionActions = filterVisibleActions(shellProductionActions, currentPath);',
+      'const workspaceRoutes = filterVisibleActions(shellWorkspaceRoutes.slice(0, 4), currentPath);',
+      'secondaryHref="/login"',
+      'secondaryLabel="Open Login Portal"',
     ],
   },
 ];
@@ -70,4 +75,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Public top nav validation passed across internal SPA navigation and login continuity surfaces.");
+console.log("Public top nav validation passed across CTA dedupe and no-op suppression surfaces.");

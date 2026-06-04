@@ -32,17 +32,14 @@ export default function JourneyStrip({ items = [], current }) {
       >
         {items.map((item, index) => {
           const isActive = item.key === current;
-          return (
-            <a
-              key={item.key}
-              href={item.href}
-              style={{
-                ...itemStyle,
-                background: isActive ? "#eff6ff" : itemStyle.background,
-                border: isActive ? "1px solid #2563eb" : itemStyle.border,
-                color: isActive ? "#1d4ed8" : itemStyle.color,
-              }}
-            >
+          const sharedStyle = {
+            ...itemStyle,
+            background: isActive ? "#eff6ff" : itemStyle.background,
+            border: isActive ? "1px solid #2563eb" : itemStyle.border,
+            color: isActive ? "#1d4ed8" : itemStyle.color,
+          };
+          const content = (
+            <>
               <span
                 style={{
                   width: 20,
@@ -60,6 +57,16 @@ export default function JourneyStrip({ items = [], current }) {
                 {index + 1}
               </span>
               <span>{item.label}</span>
+            </>
+          );
+
+          return isActive ? (
+            <span key={item.key} style={sharedStyle} aria-current="page">
+              {content}
+            </span>
+          ) : (
+            <a key={item.key} href={item.href} style={sharedStyle}>
+              {content}
             </a>
           );
         })}
