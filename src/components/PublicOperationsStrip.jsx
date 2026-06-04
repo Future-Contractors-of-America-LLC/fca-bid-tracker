@@ -1,4 +1,5 @@
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
+import AuricruxTrustInsight from "./AuricruxTrustInsight";
 
 const shellStyle = {
   border: "1px solid #dbe3ef",
@@ -60,6 +61,8 @@ export default function PublicOperationsStrip({
           </div>
         ))}
       </div>
+
+      <AuricruxTrustInsight mode="operations" primaryHref={primaryHref} primaryLabel={primaryLabel} />
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }}>
         <a href={primaryHref} style={ctaPrimaryStyle}>{primaryLabel}</a>

@@ -1,3 +1,5 @@
+import AuricruxTrustInsight from "./AuricruxTrustInsight";
+
 const panelStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 16,
@@ -50,6 +52,8 @@ export default function CustomerTrustPanel({
           </div>
         ))}
       </div>
+
+      <AuricruxTrustInsight mode="trust" primaryHref="/portal/platform" primaryLabel="Open Platform Dashboard" />
     </div>
   );
 }

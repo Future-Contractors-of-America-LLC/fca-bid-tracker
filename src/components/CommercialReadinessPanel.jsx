@@ -1,4 +1,5 @@
 import { auricruxRail, currentProject, workspaceContext } from "../workspaceState";
+import AuricruxTrustInsight from "./AuricruxTrustInsight";
 
 const panelStyle = {
   border: "1px solid #dbe3ef",
@@ -44,6 +45,8 @@ export default function CommercialReadinessPanel({
         <ReadinessCell label="Rollout move" value={auricruxRail.nextRecommendedAction} />
         <ReadinessCell label="Project spine" value={`${currentProject.id} · ${currentProject.stage}`} />
       </div>
+
+      <AuricruxTrustInsight mode="readiness" primaryHref={primaryHref} primaryLabel={primaryLabel} />
     </div>
   );
 }
