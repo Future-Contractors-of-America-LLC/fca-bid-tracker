@@ -36,6 +36,16 @@ const routeMetadata = {
     description:
       "Access the FCA workspace, customer portal, academy continuity, and Auricrux-supported operations.",
   },
+  "/bid-entry": {
+    title: "Bid Entry | Future Contractors of America",
+    description:
+      "Enter the FCA bid intake bridge and continue into the customer submission workflow without losing shell continuity.",
+  },
+  "/bid-status": {
+    title: "Bid Status | Future Contractors of America",
+    description:
+      "Open the FCA bid status bridge and continue into customer follow-through without breaking route continuity.",
+  },
   "/portal": {
     title: "Portal | Future Contractors of America",
     description:
