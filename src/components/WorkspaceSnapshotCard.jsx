@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import AuricruxNarrativeInsight from "./AuricruxNarrativeInsight";
+import AutomationStatusCard from "./AutomationStatusCard";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 
 const cardStyle = {
@@ -32,75 +32,30 @@ const linkStyle = {
   color: "#111827",
 };
 
-const controlPlaneStyle = {
-  marginTop: 16,
-  padding: 14,
-  borderRadius: 14,
-  border: "1px solid #cbd5e1",
-  background: "#ffffff",
-};
-
 const labelStyle = {
   color: "#64748b",
-  fontSize: 12,
+  fontSize: 13,
   textTransform: "uppercase",
   letterSpacing: 0.3,
-  fontWeight: 700,
-};
-
-const initialControlPlane = {
-  controller: "auricrux-control-plane",
-  status: "checking",
-  preferredPath: "github-actions-control-plane",
-  lastRunUtc: null,
-  lastMode: null,
-  lastOutcome: null,
 };
 
 export default function WorkspaceSnapshotCard({
   title = "Live workspace snapshot",
-  detail = "This public shell now previews the same persisted tenant and project context used inside the portal.",
+  detail = "This public shell now previews the same tenant, project, and guided next-step context customers see inside the platform.",
   ctaHref = "/portal/platform",
   ctaLabel = "Open platform dashboard",
 }) {
   const { state } = useWorkspaceState();
-  const [controlPlane, setControlPlane] = useState(initialControlPlane);
-
-  useEffect(() => {
-    let active = true;
-
-    async function loadControlPlane() {
-      try {
-        const response = await fetch("/auricrux/control-plane/index.json", { cache: "no-store" });
-        if (!response.ok) return;
-        const payload = await response.json();
-        if (active) {
-          setControlPlane({
-            ...initialControlPlane,
-            ...payload,
-          });
-        }
-      } catch {
-        // keep shell continuity without blocking the public route
-      }
-    }
-
-    loadControlPlane();
-
-    return () => {
-      active = false;
-    };
-  }, []);
 
   return (
     <div style={cardStyle}>
-      <div style={pillStyle}>Persisted shell state</div>
+      <div style={pillStyle}>Live workspace</div>
       <h2 style={{ marginTop: 14, marginBottom: 10 }}>{title}</h2>
       <p style={{ color: "#334155", lineHeight: 1.7, marginTop: 0 }}>{detail}</p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginTop: 14 }}>
         <div>
-          <div style={labelStyle}>Tenant</div>
+          <div style={labelStyle}>Customer</div>
           <div style={{ fontWeight: 700, marginTop: 4 }}>{state.tenant.name}</div>
         </div>
         <div>
@@ -108,46 +63,26 @@ export default function WorkspaceSnapshotCard({
           <div style={{ fontWeight: 700, marginTop: 4 }}>{state.project.name}</div>
         </div>
         <div>
-          <div style={labelStyle}>Stage</div>
+          <div style={labelStyle}>Current stage</div>
           <div style={{ fontWeight: 700, marginTop: 4 }}>{state.project.stage}</div>
         </div>
         <div>
-          <div style={labelStyle}>Auricrux</div>
+          <div style={labelStyle}>Guided support</div>
           <div style={{ fontWeight: 700, marginTop: 4 }}>{state.auricrux.systemState || state.auricrux.readinessState}</div>
         </div>
       </div>
 
       <div style={{ marginTop: 16, color: "#475569", lineHeight: 1.7 }}>
-        <div><strong>Next action:</strong> {state.auricrux.nextRecommendedAction}</div>
-        <div><strong>Backing source:</strong> {state.meta.backingSource}</div>
-        {state.meta.authenticatedCustomer ? <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer}</div> : null}
+        <div><strong>Recommended next step:</strong> {state.auricrux.nextRecommendedAction}</div>
+        <div><strong>Workspace source:</strong> {state.meta.backingSource}</div>
+        {state.meta.authenticatedCustomer ? <div><strong>Signed-in customer:</strong> {state.meta.authenticatedCustomer}</div> : null}
       </div>
 
-      <div style={controlPlaneStyle}>
-        <div style={{ ...labelStyle, marginBottom: 8 }}>Automation control plane</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, color: "#334155" }}>
-          <div>
-            <div style={labelStyle}>Controller</div>
-            <div style={{ fontWeight: 700, marginTop: 4 }}>{controlPlane.controller}</div>
-          </div>
-          <div>
-            <div style={labelStyle}>Status</div>
-            <div style={{ fontWeight: 700, marginTop: 4 }}>{controlPlane.status}</div>
-          </div>
-          <div>
-            <div style={labelStyle}>Last mode</div>
-            <div style={{ fontWeight: 700, marginTop: 4 }}>{controlPlane.lastMode || "Awaiting first governed run"}</div>
-          </div>
-          <div>
-            <div style={labelStyle}>Last outcome</div>
-            <div style={{ fontWeight: 700, marginTop: 4 }}>{controlPlane.lastOutcome || "Not recorded yet"}</div>
-          </div>
-        </div>
-        <div style={{ marginTop: 10, color: "#475569", lineHeight: 1.7 }}>
-          <div><strong>Preferred path:</strong> {controlPlane.preferredPath}</div>
-          <div><strong>Last run:</strong> {controlPlane.lastRunUtc || "No heartbeat recorded yet"}</div>
-        </div>
-      </div>
+      <AutomationStatusCard
+        title="System status"
+        eyebrow="Platform reliability"
+        detail="Customers can see that guided support and system checks are active without needing to read internal engineering logs."
+      />
 
       <AuricruxNarrativeInsight mode="snapshot" ctaHref={ctaHref} ctaLabel={ctaLabel} />
 

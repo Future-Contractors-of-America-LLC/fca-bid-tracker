@@ -4,6 +4,7 @@ import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import AutomationStatusCard from "../../components/AutomationStatusCard";
 import { auricruxActions, portalMessages, portalMetrics } from "../../portalShell";
 import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import { routeStateOverlays } from "../../workspaceState";
@@ -28,24 +29,24 @@ export default function PlatformDashboard() {
   const { state, refreshSyncStamp } = useWorkspaceState();
 
   useEffect(() => {
-    refreshSyncStamp("Persisted platform dashboard state active");
+    refreshSyncStamp("Live workspace dashboard active");
   }, [refreshSyncStamp]);
 
   return (
     <PortalShell
-      title="FCA Unified Platform Dashboard"
-      subtitle="Single executive and customer shell view summarizing portal operations, academy continuity, support posture, admin readiness, and Auricrux-guided execution."
+      title="FCA Platform Dashboard"
+      subtitle="A customer-friendly view of projects, messages, billing readiness, training continuity, and guided next steps."
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
       primaryHref="/portal/projects"
-      primaryLabel="Open Project Flow"
+      primaryLabel="Open Projects"
     >
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted workspace state</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Platform dashboard now reads from a branded operating source</h2>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live workspace dashboard</div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Your platform summary is connected across projects, billing, messages, and training</h2>
           </div>
           <div style={{ display: "grid", gap: 10 }}>
             <FcaBrandMark compact />
@@ -54,8 +55,8 @@ export default function PlatformDashboard() {
         </div>
         <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
           <div><strong>Source:</strong> {state.meta.backingSource}</div>
-          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
-          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
+          <div><strong>Workspace status:</strong> {state.meta.persistenceState}</div>
+          <div><strong>Last refresh:</strong> {state.meta.lastSyncedAt || "Pending initial refresh"}</div>
         </div>
         <PublicCtaRow actions={publicBodyCtaSets.portalEntry} />
       </div>
@@ -63,14 +64,14 @@ export default function PlatformDashboard() {
       <WorkspaceQuickActions actions={platformDashboardCtaSets.quickActions} />
 
       <div style={{ ...cardStyle, marginTop: 24, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
-        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Executive continuity focus</div>
+        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>What needs attention now</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7 }}>
           <div>
-            <strong>Next action</strong>
+            <strong>Recommended next step</strong>
             <div>{state.workspace.currentNextAction}</div>
           </div>
           <div>
-            <strong>Revenue blocker</strong>
+            <strong>Current blocker</strong>
             <div>{state.auricrux.currentBlocker}</div>
           </div>
           <div>
@@ -78,8 +79,8 @@ export default function PlatformDashboard() {
             <div>Two learners remain ready for assignment in the academy flow.</div>
           </div>
           <div>
-            <strong>Operating move</strong>
-            <div>Advance approval through bids, preserve follow-through in messages, then convert in billing.</div>
+            <strong>Best path forward</strong>
+            <div>Move approval through bids, keep communication clear, and carry the same context into billing and onboarding.</div>
           </div>
         </div>
       </div>
@@ -96,19 +97,19 @@ export default function PlatformDashboard() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Executive workspace summary</h2>
+          <h2 style={{ marginTop: 0 }}>Workspace summary</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div><strong>Tenant:</strong> {state.tenant.name}</div>
+            <div><strong>Customer:</strong> {state.tenant.name}</div>
             <div><strong>Project:</strong> {state.project.name}</div>
             <div><strong>Project ID:</strong> {state.project.id}</div>
             <div><strong>Current stage:</strong> {state.project.stage}</div>
           </div>
         </div>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Auricrux next actions</h2>
+          <h2 style={{ marginTop: 0 }}>Auricrux guidance</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
             <div><strong>Recommendation:</strong> {state.auricrux.nextRecommendedAction}</div>
-            <div><strong>Blocker:</strong> {state.auricrux.currentBlocker}</div>
+            <div><strong>Current blocker:</strong> {state.auricrux.currentBlocker}</div>
           </div>
           <ul style={{ paddingLeft: 20, lineHeight: 1.8, marginBottom: 0 }}>
             {auricruxActions.map((action) => (
@@ -117,6 +118,12 @@ export default function PlatformDashboard() {
           </ul>
         </div>
       </div>
+
+      <AutomationStatusCard
+        title="System status"
+        eyebrow="Platform reliability"
+        detail="This dashboard shows a simple service-health summary so customers and teams can see that guided support is active without digging through internal logs."
+      />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 24 }}>
         {platformDashboardCtaSets.operationalCards.map((item) => (
@@ -129,7 +136,7 @@ export default function PlatformDashboard() {
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Recent platform signals</h2>
+        <h2 style={{ marginTop: 0 }}>Recent updates</h2>
         {portalMessages.map((message) => (
           <div key={message.subject} style={{ marginBottom: 12 }}>
             <strong>{message.from}</strong>
