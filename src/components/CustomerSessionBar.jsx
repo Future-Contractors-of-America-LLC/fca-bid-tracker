@@ -1,4 +1,5 @@
 import useCustomerSession from "../hooks/useCustomerSession";
+import { navigateTo } from "../navigation";
 import { auricruxRail, currentProject, workspaceContext } from "../workspaceState";
 
 const shellStyle = {
@@ -36,7 +37,7 @@ export default function CustomerSessionBar({
 
   function handleLogout() {
     logout();
-    window.location.assign("/login");
+    navigateTo("/login");
   }
 
   return (

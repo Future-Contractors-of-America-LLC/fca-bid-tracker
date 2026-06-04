@@ -6,6 +6,7 @@ import {
   resolveProfileHref,
   resolveWorkspaceEntryHref,
 } from "../customerSession";
+import { navigateTo } from "../navigation";
 import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext } from "../workspaceState";
 import { publicActionCatalog } from "../websiteShell";
 
@@ -302,7 +303,7 @@ export default function PublicTopNav({ mode = "public" }) {
     clearCustomerSession();
     setOpenMenu(null);
     setMobileOpen(false);
-    window.location.assign(loginHref);
+    navigateTo(loginHref);
   }
 
   const menuVisible = !isMobile || mobileOpen;

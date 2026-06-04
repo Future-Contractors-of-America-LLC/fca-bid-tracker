@@ -10,6 +10,7 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import CustomerSessionBar from "../../components/CustomerSessionBar";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
+import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { founderJourneyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
@@ -88,12 +89,12 @@ export default function Login({ requestedPath = "/portal/profile", accessMode = 
     }
 
     setError("");
-    window.location.assign(resolveWorkspaceEntryHref(result.session, nextHref));
+    navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
   }
 
   function handleResetSession() {
     logout();
-    window.location.assign("/login");
+    navigateTo("/login");
   }
 
   return (

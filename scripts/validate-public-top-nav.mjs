@@ -5,59 +5,49 @@ const root = process.cwd();
 
 const checks = [
   {
-    file: path.join(root, "src", "components", "PublicTopNav.jsx"),
+    file: path.join(root, "src", "navigation.js"),
     markers: [
-      'import { useEffect, useMemo, useRef, useState } from "react";',
-      'resolveLoginHref,',
-      'resolveProfileHref,',
-      'resolveWorkspaceEntryHref,',
-      'const loginHref = resolveLoginHref();',
-      'const workspaceHref = resolveWorkspaceEntryHref(session, mode === "portal" ? currentPath : "/portal/profile");',
-      'const actionHref = session?.authenticated ? workspaceHref : loginHref;',
-      'const actionLabel = session?.authenticated ? "Open Workspace" : "Open Login Portal";',
-      'window.location.assign(loginHref);',
-      '{isMobile ? (',
-      'Continuity stamp:',
-      'Active project spine: {currentProject.id} · {workspaceContext.currentNextAction}',
-      '{continuityStamp} · Auricrux: {auricruxRail.nextRecommendedAction}',
-      'aria-label={profileLabel}',
+      'export const NAVIGATION_EVENT = "auricrux:navigate";',
+      'export function isManagedAppPath(pathname = "/") {',
+      'export function isManagedNavigationTarget(href = "") {',
+      'if (href.endsWith(".html")) return false;',
+      'window.dispatchEvent(new CustomEvent(NAVIGATION_EVENT, { detail: { href: nextPath } }));',
     ],
   },
   {
-    file: path.join(root, "src", "components", "ShellHeader.jsx"),
+    file: path.join(root, "src", "router.jsx"),
     markers: [
-      'import PublicTopNav from "./PublicTopNav";',
-      'const renderHeaderActions = !(showTopNav && topNavMode === "public");',
-      '{showTopNav ? <PublicTopNav mode={topNavMode} /> : null}',
-      '{renderHeaderActions ? (',
+      'const [normalizedPath, setNormalizedPath] = useState(readCurrentPath);',
+      'function handleDocumentClick(event) {',
+      'const anchor = event.target.closest("a[href]");',
+      'if (!isManagedNavigationTarget(href)) return;',
+      'event.preventDefault();',
+      'navigateTo(href);',
+      'window.addEventListener(NAVIGATION_EVENT, syncRouteFromLocation);',
+    ],
+  },
+  {
+    file: path.join(root, "src", "components", "PublicTopNav.jsx"),
+    markers: [
+      'import { navigateTo } from "../navigation";',
+      'navigateTo(loginHref);',
+      'const workspaceHref = resolveWorkspaceEntryHref(session, mode === "portal" ? currentPath : "/portal/profile");',
+      'const actionHref = session?.authenticated ? workspaceHref : loginHref;',
     ],
   },
   {
     file: path.join(root, "src", "components", "CustomerSessionBar.jsx"),
     markers: [
-      'function handleLogout() {',
-      'logout();',
-      'window.location.assign("/login");',
-    ],
-  },
-  {
-    file: path.join(root, "src", "customerSession.js"),
-    markers: [
-      'export function resolveLoginHref() {',
-      'export function resolveProfileHref(session = readCustomerSession()) {',
-      'export function resolveWorkspaceEntryHref(session = readCustomerSession(), requestedPath = "/portal/profile") {',
-      'return "/portal/profile";',
+      'import { navigateTo } from "../navigation";',
+      'navigateTo("/login");',
     ],
   },
   {
     file: path.join(root, "src", "pages", "website", "Login.jsx"),
     markers: [
-      'import { resolveWorkspaceEntryHref } from "../../customerSession";',
-      'const requestedWorkspaceHref = accessMode === "protected" ? requestedPath : session?.nextHref || "/portal/profile";',
-      'window.location.assign(resolveWorkspaceEntryHref(result.session, nextHref));',
-      'primaryHref={isAuthenticated ? nextHref : "/login"}',
-      'primaryLabel={isAuthenticated ? "Open Active Workspace" : "Open Login Portal"}',
-      'onClick={handleResetSession}',
+      'import { navigateTo } from "../../navigation";',
+      'navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));',
+      'navigateTo("/login");',
     ],
   },
 ];
@@ -80,4 +70,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Public top nav validation passed across public navigation cleanliness and live login routing surfaces.");
+console.log("Public top nav validation passed across internal SPA navigation and login continuity surfaces.");
