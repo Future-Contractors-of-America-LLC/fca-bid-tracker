@@ -130,6 +130,7 @@ const portalNavGroups = [
       publicActionCatalog.projects,
       publicActionCatalog.files,
       publicActionCatalog.messages,
+      { label: "Open Notifications", href: "/portal/notifications", variant: "light" },
       publicActionCatalog.billing,
     ],
   },
@@ -154,6 +155,7 @@ const portalQuickLinks = [
   { label: "Profile", href: "/portal/profile", variant: "primary" },
   publicActionCatalog.projects,
   publicActionCatalog.messages,
+  { label: "Notifications", href: "/portal/notifications", variant: "secondary" },
   publicActionCatalog.billing,
 ];
 
@@ -165,6 +167,7 @@ function normalizePath(value) {
 function resolveRouteCue(pathname, mode) {
   if (mode === "portal") {
     if (pathname.startsWith("/portal/profile")) return "Customer profile active";
+    if (pathname.startsWith("/portal/notifications")) return "Notification continuity active";
     if (pathname.startsWith("/portal/messages")) return "Message continuity active";
     if (pathname.startsWith("/portal/projects")) return "Project execution active";
     if (pathname.startsWith("/portal/files")) return "Document spine active";
@@ -188,6 +191,7 @@ function resolveRouteCue(pathname, mode) {
 function renderQuickBadge(item, mode) {
   if (mode !== "portal") return null;
   if (item.href === "/portal/profile") return "Live";
+  if (item.href === "/portal/notifications") return portalMessages.length + 2;
   if (item.href === "/portal/messages") return portalMessages.length;
   if (item.href === "/portal/projects") return currentProject.id;
   if (item.href === "/portal/billing") return "Live";
@@ -224,7 +228,7 @@ export default function PublicTopNav({ mode = "public" }) {
   const routeCue = resolveRouteCue(currentPath, mode);
   const workspaceLabel = resolveWorkspaceLabel(session, mode);
   const continuityStamp = resolveContinuityStamp(session);
-  const notificationCount = portalMessages.length;
+  const notificationCount = portalMessages.length + 2;
 
   const profileMenu = useMemo(
     () => [
@@ -235,6 +239,10 @@ export default function PublicTopNav({ mode = "public" }) {
       {
         href: mode === "portal" ? "/portal/platform" : "/platform",
         label: mode === "portal" ? "Open Platform Dashboard" : "Open Platform Overview",
+      },
+      {
+        href: mode === "portal" ? "/portal/notifications" : "/login",
+        label: mode === "portal" ? "Open Notifications" : "Open Login Portal",
       },
       {
         href: mode === "portal" ? "/portal/academy" : "/academy",

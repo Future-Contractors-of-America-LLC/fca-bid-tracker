@@ -13,6 +13,7 @@ import PlatformDashboard from "./pages/portal/PlatformDashboard";
 import PortalProjects from "./pages/portal/PortalProjects";
 import PortalFiles from "./pages/portal/PortalFiles";
 import PortalMessages from "./pages/portal/PortalMessages";
+import PortalNotifications from "./pages/portal/PortalNotifications";
 import PortalBids from "./pages/portal/PortalBids";
 import PortalBilling from "./pages/portal/PortalBilling";
 import PortalSupport from "./pages/portal/PortalSupport";
@@ -37,6 +38,7 @@ export const routes = {
   "/portal/projects": PortalProjects,
   "/portal/files": PortalFiles,
   "/portal/messages": PortalMessages,
+  "/portal/notifications": PortalNotifications,
   "/portal/bids": PortalBids,
   "/portal/billing": PortalBilling,
   "/portal/support": PortalSupport,

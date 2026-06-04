@@ -105,6 +105,17 @@ export const routeStateOverlays = {
     auricruxRole: "Escalate and clarify",
     auricruxDetail: "Auricrux uses message state to explain urgency, preserve continuity, and route the customer forward.",
   },
+  notifications: {
+    title: "Notification route state",
+    summary: "Notifications specialize the shared state around alert visibility, recent activity awareness, and continuity cues tied to the same customer workspace.",
+    status: "Notification state active",
+    primaryFocus: "Alert visibility",
+    primaryDetail: "This route centralizes what changed most recently so the customer can react without losing project and Auricrux context.",
+    dependency: "Message, audit, and route continuity",
+    dependencyDetail: "Notifications depend on message activity, audit events, and shared route-state continuity remaining attached to the same customer and project spine.",
+    auricruxRole: "Signal and prioritize",
+    auricruxDetail: "Auricrux turns recent messages and audit events into a prioritized alert stream so the customer sees what matters next.",
+  },
   billing: {
     title: "Billing route state",
     summary: "Billing specializes the shared state around revenue follow-through, invoice readiness, and customer retention continuity.",
@@ -345,6 +356,11 @@ export const portalModules = [
     href: "/portal/messages",
     label: "Messages",
     description: "Customer communications and Auricrux updates",
+  },
+  {
+    href: "/portal/notifications",
+    label: "Notifications",
+    description: "Alert stream for messages, audits, and continuity signals",
   },
   {
     href: "/portal/billing",
