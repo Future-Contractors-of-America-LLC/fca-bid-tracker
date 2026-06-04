@@ -62,10 +62,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p auricrux/system
+          mkdir -p auricrux/system public/auricrux/control-plane
           node <<'NODE'
           const fs = require('fs');
-          const path = 'auricrux/system/control-plane.json';
+          const statePath = 'auricrux/system/control-plane.json';
+          const publicPath = 'public/auricrux/control-plane/index.json';
           const mode = process.env.MODE;
           const eventName = process.env.EVENT_NAME;
           const now = new Date().toISOString();
@@ -80,8 +81,8 @@ jobs:
             lastOutcome: null,
             history: []
           };
-          if (fs.existsSync(path)) {
-            state = JSON.parse(fs.readFileSync(path, 'utf8'));
+          if (fs.existsSync(statePath)) {
+            state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
           }
           state.lastRunUtc = now;
           state.lastMode = mode;
@@ -90,7 +91,9 @@ jobs:
           state.history = Array.isArray(state.history) ? state.history : [];
           state.history.unshift({ at: now, event: eventName, mode, outcome: 'running' });
           state.history = state.history.slice(0, 20);
-          fs.writeFileSync(path, JSON.stringify(state, null, 2) + '\n');
+          const serialized = JSON.stringify(state, null, 2) + '\n';
+          fs.writeFileSync(statePath, serialized);
+          fs.writeFileSync(publicPath, serialized);
           NODE
         env:
           MODE: ${{ steps.resolve.outputs.mode }}
@@ -114,15 +117,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p auricrux/system
+          mkdir -p auricrux/system public/auricrux/control-plane
           node <<'NODE'
           const fs = require('fs');
-          const path = 'auricrux/system/control-plane.json';
+          const statePath = 'auricrux/system/control-plane.json';
+          const publicPath = 'public/auricrux/control-plane/index.json';
           const mode = process.env.MODE;
           const eventName = process.env.EVENT_NAME;
           const jobStatus = process.env.JOB_STATUS;
           const now = new Date().toISOString();
-          let state = JSON.parse(fs.readFileSync(path, 'utf8'));
+          let state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
           state.lastRunUtc = now;
           state.lastMode = mode;
           state.lastEvent = eventName;
@@ -133,7 +137,9 @@ jobs:
           } else {
             state.history.unshift({ at: now, event: eventName, mode, outcome: jobStatus });
           }
-          fs.writeFileSync(path, JSON.stringify(state, null, 2) + '\n');
+          const serialized = JSON.stringify(state, null, 2) + '\n';
+          fs.writeFileSync(statePath, serialized);
+          fs.writeFileSync(publicPath, serialized);
           NODE
         env:
           MODE: ${{ steps.resolve.outputs.mode }}
@@ -147,7 +153,7 @@ jobs:
           set -euo pipefail
           git config user.name "auricrux"
           git config user.email "auricrux@ai.system"
-          git add auricrux/system/control-plane.json
+          git add auricrux/system/control-plane.json public/auricrux/control-plane/index.json
           git commit -m "Auricrux: control plane heartbeat" || echo "No control plane changes"
           git push || echo "Control plane push skipped"
 
@@ -161,5 +167,6 @@ jobs:
             echo "- Mode: ${{ steps.resolve.outputs.mode }}"
             echo "- Outcome: ${{ job.status }}"
             echo "- State file: auricrux/system/control-plane.json"
+            echo "- Public status surface: public/auricrux/control-plane/index.json"
             echo "- Paths: status = heartbeat only, executive = auricrux/exec/index.mjs, engine = auricrux_engine.js"
           } >> "$GITHUB_STEP_SUMMARY"

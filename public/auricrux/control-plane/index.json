@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "controller": "auricrux-control-plane",
+  "status": "online",
+  "preferredPath": "github-actions-control-plane",
+  "lastRunUtc": null,
+  "lastMode": null,
+  "lastEvent": null,
+  "lastOutcome": null,
+  "history": []
+}
