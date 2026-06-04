@@ -2,6 +2,7 @@ import JourneyStrip from "./JourneyStrip";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import AuricruxNavHint from "./AuricruxNavHint";
+import PublicTopNav from "./PublicTopNav";
 import { shellPrimaryNav } from "../websiteShell";
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
 
@@ -29,9 +30,12 @@ export default function ShellHeader({
   secondaryLabel,
   journey,
   currentJourney,
+  showTopNav = true,
 }) {
   return (
     <>
+      {showTopNav ? <PublicTopNav /> : null}
+
       <div
         style={{
           display: "flex",

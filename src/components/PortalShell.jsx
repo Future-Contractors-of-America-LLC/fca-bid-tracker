@@ -88,6 +88,7 @@ export default function PortalShell({
           secondaryLabel={portalShellCtas.headerSecondary.label}
           journey={portalJourney}
           currentJourney={currentJourney}
+          showTopNav={false}
         />
 
         <CustomerSessionBar requestedPath={activeHref} />
