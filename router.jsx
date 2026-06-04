@@ -7,6 +7,8 @@ import Pricing from "./src/pages/website/Pricing";
 import Contact from "./src/pages/website/Contact";
 import Auricrux from "./src/pages/website/Auricrux";
 import NotFound from "./src/pages/website/NotFound";
+import LegacyBidEntry from "./src/pages/website/LegacyBidEntry";
+import LegacyBidStatus from "./src/pages/website/LegacyBidStatus";
 
 import PortalHome from "./src/pages/portal/PortalHome";
 import PlatformDashboard from "./src/pages/portal/PlatformDashboard";
@@ -28,6 +30,8 @@ export const routes = {
   "/contact": Contact,
   "/auricrux": Auricrux,
   "/not-found": NotFound,
+  "/bid-entry": LegacyBidEntry,
+  "/bid-status": LegacyBidStatus,
 
   "/portal": PortalHome,
   "/portal/platform": PlatformDashboard,

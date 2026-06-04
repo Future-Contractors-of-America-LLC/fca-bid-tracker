@@ -13,6 +13,8 @@ const explicitRoutes = new Set([
   "/contact",
   "/auricrux",
   "/not-found",
+  "/bid-entry",
+  "/bid-status",
   "/portal",
   "/portal/platform",
   "/portal/projects",
@@ -27,8 +29,6 @@ const explicitRoutes = new Set([
 ]);
 
 const allowedStaticPrefixes = [
-  "/bid-entry",
-  "/bid-status",
   "/fca-customer-entry",
   "/fca-customer-status",
   "mailto:",

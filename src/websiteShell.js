@@ -46,12 +46,12 @@ export const publicActionCatalog = {
   },
   bidEntry: {
     label: "Open Bid Entry",
-    href: "/bid-entry/",
+    href: "/bid-entry",
     variant: "secondary",
   },
   bidStatus: {
     label: "Open Bid Status",
-    href: "/bid-status/",
+    href: "/bid-status",
     variant: "light",
   },
   academyContinuity: {
@@ -566,8 +566,8 @@ export const shellWorkspaceRoutes = [
   { label: "Unified Platform Dashboard", href: "/portal/platform" },
   { label: "Customer Portal", href: "/portal" },
   { label: "FCA Academy", href: "/academy" },
-  { label: "Bid Entry", href: "/bid-entry/" },
-  { label: "Bid Status", href: "/bid-status/" },
+  { label: "Bid Entry", href: "/bid-entry" },
+  { label: "Bid Status", href: "/bid-status" },
 ];
 
 export const shellCompatibilityRoutes = [
