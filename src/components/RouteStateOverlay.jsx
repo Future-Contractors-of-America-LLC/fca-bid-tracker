@@ -1,4 +1,6 @@
 import AuricruxStateExplanation from "./AuricruxStateExplanation";
+import { resolveLiveTenantIdentity } from "../liveWorkspaceIdentity";
+import { portalTenant } from "../workspaceState";
 
 const wrapStyle = {
   border: "1px solid #dbe3ef",
@@ -19,6 +21,8 @@ const itemStyle = {
 export default function RouteStateOverlay({ overlay }) {
   if (!overlay) return null;
 
+  const liveTenant = resolveLiveTenantIdentity(portalTenant);
+
   return (
     <div style={wrapStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "flex-start" }}>
@@ -26,6 +30,7 @@ export default function RouteStateOverlay({ overlay }) {
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Route-Level State Overlay</div>
           <h3 style={{ marginTop: 0, marginBottom: 8 }}>{overlay.title}</h3>
           <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 860 }}>{overlay.summary}</div>
+          <div style={{ color: "#64748b", lineHeight: 1.6, marginTop: 8 }}>Authenticated tenant context: {liveTenant.name}</div>
         </div>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 12px", borderRadius: 999, border: "1px solid #cbd5e1", background: "#fff", color: "#334155", fontWeight: 700 }}>
           {overlay.status}

@@ -1,4 +1,6 @@
 import AuricruxContextInsight from "./AuricruxContextInsight";
+import { resolveLiveProjectIdentity, resolveLiveTenantIdentity } from "../liveWorkspaceIdentity";
+import { portalTenant } from "../workspaceState";
 
 const railStyle = {
   border: "1px solid #dbe3ef",
@@ -19,16 +21,20 @@ const itemStyle = {
 export default function AuricruxStatusRail({ project, rail }) {
   if (!project || !rail) return null;
 
+  const liveTenant = resolveLiveTenantIdentity(portalTenant);
+  const liveProject = resolveLiveProjectIdentity(project);
+
   return (
     <div style={railStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "flex-start" }}>
         <div>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Auricrux Status Rail</div>
-          <h3 style={{ marginTop: 0, marginBottom: 8 }}>Operational guidance for {project.id}</h3>
+          <h3 style={{ marginTop: 0, marginBottom: 8 }}>Operational guidance for {liveProject.id}</h3>
           <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 860 }}>
             Auricrux remains embedded across the shell as the visible intelligence layer for state awareness,
             next-action sequencing, blocker visibility, and continuity readiness.
           </div>
+          <div style={{ color: "#64748b", lineHeight: 1.6, marginTop: 8 }}>Authenticated tenant context: {liveTenant.name}</div>
         </div>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 12px", borderRadius: 999, border: "1px solid #bfdbfe", background: "#eff6ff", color: "#1d4ed8", fontWeight: 700 }}>
           <span style={{ width: 10, height: 10, borderRadius: 999, background: "#2563eb", display: "inline-block" }} />
@@ -61,7 +67,7 @@ export default function AuricruxStatusRail({ project, rail }) {
 
       <AuricruxContextInsight
         mode="status"
-        project={project}
+        project={liveProject}
         rail={rail}
       />
     </div>
