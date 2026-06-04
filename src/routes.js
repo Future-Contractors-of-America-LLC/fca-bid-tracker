@@ -17,6 +17,7 @@ import PortalBids from "./pages/portal/PortalBids";
 import PortalBilling from "./pages/portal/PortalBilling";
 import PortalSupport from "./pages/portal/PortalSupport";
 import PortalAdmin from "./pages/portal/PortalAdmin";
+import PortalProfile from "./pages/portal/PortalProfile";
 
 import AcademyHome from "./pages/academy/AcademyHome";
 
@@ -40,6 +41,7 @@ export const routes = {
   "/portal/billing": PortalBilling,
   "/portal/support": PortalSupport,
   "/portal/admin": PortalAdmin,
+  "/portal/profile": PortalProfile,
   "/portal/academy": AcademyHome,
 
   "/academy": AcademyHome,

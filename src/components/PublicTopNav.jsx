@@ -110,6 +110,7 @@ const portalNavGroups = [
       publicActionCatalog.portal,
       publicActionCatalog.platform,
       publicActionCatalog.academyContinuity,
+      { label: "Open Customer Profile", href: "/portal/profile", variant: "light" },
     ],
   },
   {
@@ -140,6 +141,7 @@ const publicQuickLinks = [
 ];
 
 const portalQuickLinks = [
+  { label: "Profile", href: "/portal/profile", variant: "primary" },
   publicActionCatalog.projects,
   publicActionCatalog.messages,
   publicActionCatalog.billing,
@@ -152,6 +154,7 @@ function normalizePath(value) {
 
 function resolveRouteCue(pathname, mode) {
   if (mode === "portal") {
+    if (pathname.startsWith("/portal/profile")) return "Route cue: customer profile active";
     if (pathname.startsWith("/portal/messages")) return "Route cue: message continuity active";
     if (pathname.startsWith("/portal/projects")) return "Route cue: project execution active";
     if (pathname.startsWith("/portal/files")) return "Route cue: document spine active";
@@ -174,6 +177,7 @@ function resolveRouteCue(pathname, mode) {
 
 function renderQuickBadge(item, mode) {
   if (mode !== "portal") return null;
+  if (item.href === "/portal/profile") return "Live";
   if (item.href === "/portal/messages") return portalMessages.length;
   if (item.href === "/portal/projects") return currentProject.id;
   if (item.href === "/portal/billing") return "Live";
@@ -194,7 +198,7 @@ function resolveContinuityStamp(session) {
 
 export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
-  const profileHref = session?.authenticated ? session.nextHref || "/portal" : "/login";
+  const profileHref = session?.authenticated ? "/portal/profile" : "/login";
   const profileLabel = session?.authenticated ? session.company : "Profile";
   const profileInitial = session?.authenticated ? session.company.charAt(0).toUpperCase() : "↗";
   const currentPath = typeof window === "undefined" ? "/" : normalizePath(window.location.pathname);
@@ -214,7 +218,7 @@ export default function PublicTopNav({ mode = "public" }) {
     () => [
       {
         href: profileHref,
-        label: session?.authenticated ? "Open Active Workspace" : "Open Login",
+        label: session?.authenticated ? "Open Customer Profile" : "Open Login",
       },
       {
         href: mode === "portal" ? "/portal/platform" : "/platform",
