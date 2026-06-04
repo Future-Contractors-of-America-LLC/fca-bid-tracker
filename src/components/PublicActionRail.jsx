@@ -1,3 +1,4 @@
+import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import { shellProductionActions, shellWorkspaceRoutes } from "../websiteShell";
 import { ctaLightStyle, ctaStyleMap } from "../publicShellStyles";
 
@@ -29,6 +30,19 @@ export default function PublicActionRail({
             </a>
           ))}
         </div>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <AuricruxPresenceLayer
+          surfaceLabel="Auricrux embedded in public action rail"
+          title="Auricrux now closes the public route instead of waiting in a separate assistant tab"
+          detail="Every public route now hands off through an Auricrux-guided decision layer so conversion, workspace access, and platform review keep the same intelligence spine."
+          primaryHref="/portal/platform"
+          primaryLabel="Open Platform Dashboard"
+          secondaryHref="/portal/messages"
+          secondaryLabel="Open Messages"
+          compact
+        />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 180px), 1fr))", gap: 12 }}>

@@ -7,6 +7,7 @@ import RouteStateOverlay from "./RouteStateOverlay";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxBrandMark from "./AuricruxBrandMark";
 import ExecutiveSignalBar from "./ExecutiveSignalBar";
+import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
 import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../systemState";
 
@@ -110,6 +111,18 @@ export default function PortalShell({
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
         <RouteStateOverlay overlay={routeOverlay} />
         <ExecutiveSignalBar mode="portal" nextHref={executiveSignalCtaSets.portal.href} nextLabel={executiveSignalCtaSets.portal.label} />
+
+        <div style={{ marginBottom: 20 }}>
+          <AuricruxPresenceLayer
+            surfaceLabel="Auricrux embedded in portal shell"
+            title="Auricrux is now embedded inside the route frame, not just the route content"
+            detail={routeOverlay ? `${routeOverlay.summary} ${routeOverlay.auricruxDetail}` : "Auricrux remains active at the route-frame level so shell navigation, decisions, and continuity stay under one intelligence layer."}
+            primaryHref={primaryHref}
+            primaryLabel={primaryLabel}
+            secondaryHref={executiveSignalCtaSets.portal.href}
+            secondaryLabel={executiveSignalCtaSets.portal.label}
+          />
+        </div>
 
         <div style={bannerStyle}>
           <div>

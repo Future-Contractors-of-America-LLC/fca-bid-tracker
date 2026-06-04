@@ -1,5 +1,6 @@
 import JourneyStrip from "./JourneyStrip";
 import FcaBrandMark from "./FcaBrandMark";
+import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import { shellPrimaryNav } from "../websiteShell";
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
 
@@ -29,87 +30,102 @@ export default function ShellHeader({
   currentJourney,
 }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        gap: 20,
-        flexWrap: "wrap",
-        alignItems: "flex-start",
-        marginBottom: 28,
-      }}
-    >
-      <div style={{ maxWidth: 760, minWidth: 0 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 14,
-            flexWrap: "wrap",
-            marginBottom: 14,
-          }}
-        >
-          <FcaBrandMark compact />
-          <div
-            style={{
-              padding: "8px 12px",
-              borderRadius: 999,
-              background: "#eff6ff",
-              color: "#2563eb",
-              fontWeight: 800,
-              letterSpacing: "0.04em",
-            }}
-          >
-            {eyebrow}
-          </div>
-        </div>
-        <h1 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h1>
-        {subtitle ? (
-          <p style={{ marginTop: 0, color: "#4b5563", lineHeight: 1.6 }}>
-            {subtitle}
-          </p>
-        ) : null}
-        <JourneyStrip items={journey} current={currentJourney} />
-      </div>
-
+    <>
       <div
         style={{
           display: "flex",
-          gap: 10,
+          justifyContent: "space-between",
+          gap: 20,
           flexWrap: "wrap",
-          alignItems: "stretch",
-          justifyContent: "flex-end",
-          minWidth: 0,
+          alignItems: "flex-start",
+          marginBottom: 28,
         }}
       >
-        {shellPrimaryNav.map((item) => {
-          const isActive = item.journeyKey === currentJourney;
-          return (
-            <a
-              key={item.href}
-              href={item.href}
+        <div style={{ maxWidth: 760, minWidth: 0 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              flexWrap: "wrap",
+              marginBottom: 14,
+            }}
+          >
+            <FcaBrandMark compact />
+            <div
               style={{
-                ...baseLinkStyle,
-                background: isActive ? "#eff6ff" : "transparent",
-                color: isActive ? "#1d4ed8" : "#111827",
-                border: isActive ? "1px solid #bfdbfe" : "1px solid transparent",
+                padding: "8px 12px",
+                borderRadius: 999,
+                background: "#eff6ff",
+                color: "#2563eb",
+                fontWeight: 800,
+                letterSpacing: "0.04em",
               }}
             >
-              {item.label}
+              {eyebrow}
+            </div>
+          </div>
+          <h1 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h1>
+          {subtitle ? (
+            <p style={{ marginTop: 0, color: "#4b5563", lineHeight: 1.6 }}>
+              {subtitle}
+            </p>
+          ) : null}
+          <JourneyStrip items={journey} current={currentJourney} />
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            flexWrap: "wrap",
+            alignItems: "stretch",
+            justifyContent: "flex-end",
+            minWidth: 0,
+          }}
+        >
+          {shellPrimaryNav.map((item) => {
+            const isActive = item.journeyKey === currentJourney;
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                style={{
+                  ...baseLinkStyle,
+                  background: isActive ? "#eff6ff" : "transparent",
+                  color: isActive ? "#1d4ed8" : "#111827",
+                  border: isActive ? "1px solid #bfdbfe" : "1px solid transparent",
+                }}
+              >
+                {item.label}
+              </a>
+            );
+          })}
+          {secondaryHref && secondaryLabel ? (
+            <a href={secondaryHref} style={ctaLightStyle}>
+              {secondaryLabel}
             </a>
-          );
-        })}
-        {secondaryHref && secondaryLabel ? (
-          <a href={secondaryHref} style={ctaLightStyle}>
-            {secondaryLabel}
-          </a>
-        ) : null}
-        {primaryHref && primaryLabel ? (
-          <a href={primaryHref} style={ctaPrimaryStyle}>
-            {primaryLabel}
-          </a>
-        ) : null}
+          ) : null}
+          {primaryHref && primaryLabel ? (
+            <a href={primaryHref} style={ctaPrimaryStyle}>
+              {primaryLabel}
+            </a>
+          ) : null}
+        </div>
       </div>
-    </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <AuricruxPresenceLayer
+          surfaceLabel="Auricrux embedded in header"
+          title="Auricrux is present before the user takes the next action"
+          detail="Header state now carries Auricrux forward as an active operating layer instead of leaving guidance to isolated route bodies or the dock alone."
+          primaryHref={primaryHref || "/portal/platform"}
+          primaryLabel={primaryLabel || "Open Platform Dashboard"}
+          secondaryHref={secondaryHref || "/portal/messages"}
+          secondaryLabel={secondaryLabel || "Open Messages"}
+          compact
+        />
+      </div>
+    </>
   );
 }

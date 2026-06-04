@@ -15,7 +15,8 @@
     "validate:academy-ctas": "node scripts/validate-academy-ctas.mjs",
     "validate:portal-narrative-ctas": "node scripts/validate-portal-narrative-ctas.mjs",
     "validate:portal-shell-primary-actions": "node scripts/validate-portal-shell-primary-actions.mjs",
-    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run validate:shell-actions && npm run validate:jsx-actions && npm run validate:site-metadata && npm run validate:shell-navigation && npm run validate:academy-ctas && npm run validate:portal-narrative-ctas && npm run validate:portal-shell-primary-actions && npm run lint && npm run build",
+    "validate:auricrux-embedment": "node scripts/validate-auricrux-embedment.mjs",
+    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run validate:shell-actions && npm run validate:jsx-actions && npm run validate:site-metadata && npm run validate:shell-navigation && npm run validate:academy-ctas && npm run validate:portal-narrative-ctas && npm run validate:portal-shell-primary-actions && npm run validate:auricrux-embedment && npm run lint && npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

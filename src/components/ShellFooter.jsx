@@ -1,4 +1,5 @@
 import AuricruxBrandMark from "./AuricruxBrandMark";
+import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import FcaBrandMark from "./FcaBrandMark";
 import {
   shellCompatibilityRoutes,
@@ -51,6 +52,19 @@ export default function ShellFooter() {
         borderTop: "1px solid #e5e7eb",
       }}
     >
+      <div style={{ marginBottom: 18 }}>
+        <AuricruxPresenceLayer
+          surfaceLabel="Auricrux embedded in footer"
+          title="Auricrux now anchors the close of every shell layer"
+          detail="The footer no longer ends as passive navigation only. Auricrux remains active at the bottom of the experience so the user exits every route with live operational guidance."
+          primaryHref="/portal/platform"
+          primaryLabel="Open Platform Dashboard"
+          secondaryHref="/academy"
+          secondaryLabel="Open Academy"
+          compact
+        />
+      </div>
+
       <div
         style={{
           display: "grid",
