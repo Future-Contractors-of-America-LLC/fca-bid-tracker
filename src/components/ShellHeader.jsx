@@ -1,24 +1,8 @@
 import JourneyStrip from "./JourneyStrip";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
-import AuricruxNavHint from "./AuricruxNavHint";
 import PublicTopNav from "./PublicTopNav";
-import { shellPrimaryNav } from "../websiteShell";
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
-
-const baseLinkStyle = {
-  textDecoration: "none",
-  color: "#111827",
-  fontWeight: 600,
-  padding: "8px 10px",
-  borderRadius: 10,
-  minHeight: 40,
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  boxSizing: "border-box",
-  textAlign: "center",
-};
 
 export default function ShellHeader({
   eyebrow = "FCA Unified Shell",
@@ -90,25 +74,6 @@ export default function ShellHeader({
             minWidth: 0,
           }}
         >
-          {shellPrimaryNav.map((item) => {
-            const isActive = item.journeyKey === currentJourney;
-            return (
-              <div key={item.href} style={{ minWidth: 0, maxWidth: 220 }}>
-                <a
-                  href={item.href}
-                  style={{
-                    ...baseLinkStyle,
-                    background: isActive ? "#eff6ff" : "transparent",
-                    color: isActive ? "#1d4ed8" : "#111827",
-                    border: isActive ? "1px solid #bfdbfe" : "1px solid transparent",
-                  }}
-                >
-                  {item.label}
-                </a>
-                <AuricruxNavHint item={item} />
-              </div>
-            );
-          })}
           {secondaryHref && secondaryLabel ? (
             <a href={secondaryHref} style={ctaLightStyle}>
               {secondaryLabel}

@@ -47,13 +47,23 @@ const menuLinkStyle = {
   lineHeight: 1.5,
 };
 
-const actionButtonStyle = {
+const primaryButtonStyle = {
   textDecoration: "none",
   background: "#111827",
   color: "#fff",
   padding: "10px 14px",
   borderRadius: 10,
   fontWeight: 700,
+};
+
+const secondaryButtonStyle = {
+  textDecoration: "none",
+  background: "#ffffff",
+  color: "#111827",
+  padding: "10px 14px",
+  borderRadius: 10,
+  fontWeight: 700,
+  border: "1px solid #cbd5e1",
 };
 
 const profileIconStyle = {
@@ -154,25 +164,25 @@ function normalizePath(value) {
 
 function resolveRouteCue(pathname, mode) {
   if (mode === "portal") {
-    if (pathname.startsWith("/portal/profile")) return "Route cue: customer profile active";
-    if (pathname.startsWith("/portal/messages")) return "Route cue: message continuity active";
-    if (pathname.startsWith("/portal/projects")) return "Route cue: project execution active";
-    if (pathname.startsWith("/portal/files")) return "Route cue: document spine active";
-    if (pathname.startsWith("/portal/billing")) return "Route cue: revenue continuity active";
-    if (pathname.startsWith("/portal/academy")) return "Route cue: academy continuity active";
-    if (pathname.startsWith("/portal/support")) return "Route cue: support continuity active";
-    if (pathname.startsWith("/portal/admin")) return "Route cue: admin control surface active";
-    if (pathname.startsWith("/portal/platform")) return "Route cue: unified platform summary active";
-    return "Route cue: customer workspace overview active";
+    if (pathname.startsWith("/portal/profile")) return "Customer profile active";
+    if (pathname.startsWith("/portal/messages")) return "Message continuity active";
+    if (pathname.startsWith("/portal/projects")) return "Project execution active";
+    if (pathname.startsWith("/portal/files")) return "Document spine active";
+    if (pathname.startsWith("/portal/billing")) return "Revenue continuity active";
+    if (pathname.startsWith("/portal/academy")) return "Academy continuity active";
+    if (pathname.startsWith("/portal/support")) return "Support continuity active";
+    if (pathname.startsWith("/portal/admin")) return "Admin control active";
+    if (pathname.startsWith("/portal/platform")) return "Platform summary active";
+    return "Workspace overview active";
   }
 
-  if (pathname === "/platform") return "Route cue: public platform framing active";
-  if (pathname === "/auricrux") return "Route cue: Auricrux public guidance active";
-  if (pathname === "/pricing") return "Route cue: rollout and pricing posture active";
-  if (pathname === "/contact") return "Route cue: conversion and rollout review active";
-  if (pathname === "/login") return "Route cue: live customer entry active";
-  if (pathname === "/academy") return "Route cue: academy public continuity active";
-  return "Route cue: public shell entry active";
+  if (pathname === "/platform") return "Platform framing active";
+  if (pathname === "/auricrux") return "Auricrux guidance active";
+  if (pathname === "/pricing") return "Rollout posture active";
+  if (pathname === "/contact") return "Rollout review active";
+  if (pathname === "/login") return "Login portal active";
+  if (pathname === "/academy") return "Academy continuity active";
+  return "Public shell entry active";
 }
 
 function renderQuickBadge(item, mode) {
@@ -198,6 +208,8 @@ function resolveContinuityStamp(session) {
 
 export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
+  const loginHref = "/login";
+  const workspaceHref = session?.authenticated ? "/portal/profile" : "/login";
   const profileHref = session?.authenticated ? "/portal/profile" : "/login";
   const profileLabel = session?.authenticated ? session.company : "Profile";
   const profileInitial = session?.authenticated ? session.company.charAt(0).toUpperCase() : "↗";
@@ -218,7 +230,7 @@ export default function PublicTopNav({ mode = "public" }) {
     () => [
       {
         href: profileHref,
-        label: session?.authenticated ? "Open Customer Profile" : "Open Login",
+        label: session?.authenticated ? "Open Customer Profile" : "Open Login Portal",
       },
       {
         href: mode === "portal" ? "/portal/platform" : "/platform",
@@ -287,117 +299,13 @@ export default function PublicTopNav({ mode = "public" }) {
 
   return (
     <div style={navShellStyle} ref={navRef}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", flex: "1 1 640px" }}>
-          <button
-            type="button"
-            onClick={() => setMobileOpen((prev) => !prev)}
-            style={{ ...triggerButtonStyle, display: "inline-flex", alignItems: "center", gap: 8 }}
-          >
-            <span>Menu</span>
-            <span>{mobileOpen ? "−" : "+"}</span>
-          </button>
-
-          <div
-            style={{
-              display: menuVisible ? "flex" : "none",
-              gap: 10,
-              flexWrap: "wrap",
-              alignItems: "center",
-              flex: "1 1 auto",
-              width: isMobile ? "100%" : "auto",
-              flexDirection: isMobile ? "column" : "row",
-            }}
-          >
-            {navGroups.map((group) => (
-              <div key={group.key} style={{ position: "relative", width: isMobile ? "100%" : "auto" }}>
-                <button
-                  type="button"
-                  onClick={() => setOpenMenu((prev) => (prev === group.key ? null : group.key))}
-                  style={{
-                    ...triggerButtonStyle,
-                    background: openMenu === group.key ? "#eff6ff" : triggerButtonStyle.background,
-                    color: openMenu === group.key ? "#1d4ed8" : triggerButtonStyle.color,
-                    border: openMenu === group.key ? "1px solid #bfdbfe" : triggerButtonStyle.border,
-                    width: isMobile ? "100%" : "auto",
-                    textAlign: isMobile ? "left" : "center",
-                  }}
-                >
-                  {group.label}
-                </button>
-
-                {openMenu === group.key ? (
-                  <div style={{ ...dropdownMenuStyle, position: isMobile ? "relative" : "absolute", top: isMobile ? 8 : dropdownMenuStyle.top, width: isMobile ? "100%" : "auto" }}>
-                    {group.items.map((item, index) => {
-                      const itemPath = item.href.startsWith("mailto:") ? item.href : normalizePath(item.href);
-                      const isActive = !item.href.startsWith("mailto:") && itemPath === currentPath;
-                      return (
-                        <a
-                          key={item.href}
-                          href={item.href}
-                          onClick={() => setOpenMenu(null)}
-                          style={{
-                            ...menuLinkStyle,
-                            borderTop: index === 0 ? "none" : menuLinkStyle.borderTop,
-                            background: isActive ? "#eff6ff" : "#fff",
-                            color: isActive ? "#1d4ed8" : menuLinkStyle.color,
-                            fontWeight: isActive ? 700 : 500,
-                          }}
-                        >
-                          {item.label}
-                        </a>
-                      );
-                    })}
-                  </div>
-                ) : null}
-              </div>
-            ))}
-
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto" }}>
-              {quickLinks.map((item) => {
-                const isActive = normalizePath(item.href) === currentPath;
-                const quickBadge = renderQuickBadge(item, mode);
-                return (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    style={{
-                      textDecoration: "none",
-                      padding: "9px 11px",
-                      borderRadius: 999,
-                      border: isActive ? "1px solid #bfdbfe" : "1px solid #dbe3ef",
-                      background: isActive ? "#eff6ff" : "#fff",
-                      color: isActive ? "#1d4ed8" : "#334155",
-                      fontSize: 13,
-                      fontWeight: 700,
-                      display: "inline-flex",
-                      gap: 8,
-                      alignItems: "center",
-                    }}
-                  >
-                    <span>{item.label}</span>
-                    {quickBadge ? (
-                      <span
-                        style={{
-                          padding: "2px 8px",
-                          borderRadius: 999,
-                          background: "#dbeafe",
-                          color: "#1d4ed8",
-                          fontSize: 11,
-                          fontWeight: 800,
-                        }}
-                      >
-                        {quickBadge}
-                      </span>
-                    ) : null}
-                  </a>
-                );
-              })}
-            </div>
-          </div>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center", marginBottom: 12 }}>
+        <div style={{ display: "grid", gap: 6, minWidth: 0, flex: "1 1 320px" }}>
+          <div style={{ color: "#111827", fontWeight: 800, fontSize: 15 }}>{workspaceLabel}</div>
+          <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.5 }}>{routeCue} · {workspaceContext.currentNextAction}</div>
         </div>
 
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto", justifyContent: isMobile ? "space-between" : "flex-end" }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto", justifyContent: isMobile ? "flex-start" : "flex-end" }}>
           <div
             style={{
               padding: "8px 12px",
@@ -407,7 +315,7 @@ export default function PublicTopNav({ mode = "public" }) {
               color: "#1d4ed8",
               fontWeight: 700,
               fontSize: 12,
-              maxWidth: isMobile ? "100%" : 260,
+              maxWidth: isMobile ? "100%" : 220,
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -420,48 +328,12 @@ export default function PublicTopNav({ mode = "public" }) {
             style={{
               padding: "8px 12px",
               borderRadius: 999,
-              border: "1px solid #cbd5e1",
-              background: "#fff",
-              color: "#334155",
-              fontWeight: 700,
-              fontSize: 12,
-              maxWidth: isMobile ? "100%" : 280,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {workspaceLabel}
-          </div>
-
-          <div
-            style={{
-              padding: "8px 12px",
-              borderRadius: 999,
-              border: "1px solid #e5d3a1",
-              background: "#fffaf0",
-              color: "#8a6a14",
-              fontWeight: 700,
-              fontSize: 12,
-              maxWidth: isMobile ? "100%" : 320,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {routeCue} · {workspaceContext.currentNextAction}
-          </div>
-
-          <div
-            style={{
-              padding: "8px 12px",
-              borderRadius: 999,
               border: "1px solid #dbe3ef",
               background: "#fff",
               color: "#475569",
               fontWeight: 700,
               fontSize: 12,
-              maxWidth: isMobile ? "100%" : 280,
+              maxWidth: isMobile ? "100%" : 260,
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -470,36 +342,39 @@ export default function PublicTopNav({ mode = "public" }) {
             {continuityStamp}
           </div>
 
-          <div
-            style={{
-              padding: "8px 12px",
-              borderRadius: 999,
-              border: "1px solid #bfdbfe",
-              background: "#eff6ff",
-              color: "#1d4ed8",
-              fontWeight: 700,
-              fontSize: 12,
-              display: "inline-flex",
-              gap: 8,
-              alignItems: "center",
-            }}
-          >
-            <span>Notifications</span>
-            <span
+          {mode === "portal" ? (
+            <div
               style={{
-                padding: "2px 8px",
+                padding: "8px 12px",
                 borderRadius: 999,
-                background: "#dbeafe",
+                border: "1px solid #bfdbfe",
+                background: "#eff6ff",
                 color: "#1d4ed8",
-                fontSize: 11,
-                fontWeight: 800,
+                fontWeight: 700,
+                fontSize: 12,
+                display: "inline-flex",
+                gap: 8,
+                alignItems: "center",
               }}
             >
-              {notificationCount}
-            </span>
-          </div>
+              <span>Notifications</span>
+              <span
+                style={{
+                  padding: "2px 8px",
+                  borderRadius: 999,
+                  background: "#dbeafe",
+                  color: "#1d4ed8",
+                  fontSize: 11,
+                  fontWeight: 800,
+                }}
+              >
+                {notificationCount}
+              </span>
+            </div>
+          ) : null}
 
-          <a href="/login" style={actionButtonStyle}>{session?.authenticated ? "Switch Workspace" : "Login"}</a>
+          <a href={loginHref} style={secondaryButtonStyle}>Open Login Portal</a>
+          <a href={workspaceHref} style={primaryButtonStyle}>{session?.authenticated ? "Open Workspace" : "Enter Workspace"}</a>
 
           <div style={{ position: "relative" }}>
             <button
@@ -581,6 +456,117 @@ export default function PublicTopNav({ mode = "public" }) {
               </div>
             ) : null}
           </div>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", flex: "1 1 520px" }}>
+          <button
+            type="button"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            style={{ ...triggerButtonStyle, display: "inline-flex", alignItems: "center", gap: 8 }}
+          >
+            <span>Menu</span>
+            <span>{mobileOpen ? "−" : "+"}</span>
+          </button>
+
+          <div
+            style={{
+              display: menuVisible ? "flex" : "none",
+              gap: 10,
+              flexWrap: "wrap",
+              alignItems: "center",
+              flex: "1 1 auto",
+              width: isMobile ? "100%" : "auto",
+              flexDirection: isMobile ? "column" : "row",
+            }}
+          >
+            {navGroups.map((group) => (
+              <div key={group.key} style={{ position: "relative", width: isMobile ? "100%" : "auto" }}>
+                <button
+                  type="button"
+                  onClick={() => setOpenMenu((prev) => (prev === group.key ? null : group.key))}
+                  style={{
+                    ...triggerButtonStyle,
+                    background: openMenu === group.key ? "#eff6ff" : triggerButtonStyle.background,
+                    color: openMenu === group.key ? "#1d4ed8" : triggerButtonStyle.color,
+                    border: openMenu === group.key ? "1px solid #bfdbfe" : triggerButtonStyle.border,
+                    width: isMobile ? "100%" : "auto",
+                    textAlign: isMobile ? "left" : "center",
+                  }}
+                >
+                  {group.label}
+                </button>
+
+                {openMenu === group.key ? (
+                  <div style={{ ...dropdownMenuStyle, position: isMobile ? "relative" : "absolute", top: isMobile ? 8 : dropdownMenuStyle.top, width: isMobile ? "100%" : "auto" }}>
+                    {group.items.map((item, index) => {
+                      const itemPath = item.href.startsWith("mailto:") ? item.href : normalizePath(item.href);
+                      const isActive = !item.href.startsWith("mailto:") && itemPath === currentPath;
+                      return (
+                        <a
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setOpenMenu(null)}
+                          style={{
+                            ...menuLinkStyle,
+                            borderTop: index === 0 ? "none" : menuLinkStyle.borderTop,
+                            background: isActive ? "#eff6ff" : "#fff",
+                            color: isActive ? "#1d4ed8" : menuLinkStyle.color,
+                            fontWeight: isActive ? 700 : 500,
+                          }}
+                        >
+                          {item.label}
+                        </a>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto" }}>
+          {quickLinks.map((item) => {
+            const isActive = normalizePath(item.href) === currentPath;
+            const quickBadge = renderQuickBadge(item, mode);
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                style={{
+                  textDecoration: "none",
+                  padding: "9px 11px",
+                  borderRadius: 999,
+                  border: isActive ? "1px solid #bfdbfe" : "1px solid #dbe3ef",
+                  background: isActive ? "#eff6ff" : "#fff",
+                  color: isActive ? "#1d4ed8" : "#334155",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  display: "inline-flex",
+                  gap: 8,
+                  alignItems: "center",
+                }}
+              >
+                <span>{item.label}</span>
+                {quickBadge ? (
+                  <span
+                    style={{
+                      padding: "2px 8px",
+                      borderRadius: 999,
+                      background: "#dbeafe",
+                      color: "#1d4ed8",
+                      fontSize: 11,
+                      fontWeight: 800,
+                    }}
+                  >
+                    {quickBadge}
+                  </span>
+                ) : null}
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>
