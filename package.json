@@ -13,7 +13,8 @@
     "validate:site-metadata": "node scripts/validate-site-metadata.mjs",
     "validate:shell-navigation": "node scripts/validate-shell-navigation-parity.mjs",
     "validate:academy-ctas": "node scripts/validate-academy-ctas.mjs",
-    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run validate:shell-actions && npm run validate:jsx-actions && npm run validate:site-metadata && npm run validate:shell-navigation && npm run validate:academy-ctas && npm run lint && npm run build",
+    "validate:portal-narrative-ctas": "node scripts/validate-portal-narrative-ctas.mjs",
+    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run validate:shell-actions && npm run validate:jsx-actions && npm run validate:site-metadata && npm run validate:shell-navigation && npm run validate:academy-ctas && npm run validate:portal-narrative-ctas && npm run lint && npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

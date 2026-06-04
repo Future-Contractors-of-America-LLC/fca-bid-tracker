@@ -26,7 +26,7 @@ export default function PortalBids() {
       activeHref="/portal/bids"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}
-      primaryHref="/bid-entry/"
+      primaryHref="/bid-entry"
       primaryLabel="Open Bid Entry"
     >
       <div style={{ marginBottom: 16 }}>
