@@ -6,10 +6,9 @@ import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, publicActionCatalog, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
 import { cardStyle, pageShellStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
@@ -82,8 +81,6 @@ export default function Contact() {
         />
       </div>
 
-      <PublicCtaRow actions={publicBodyCtaSets.contactHero} />
-
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel
           eyebrow={publicContactMessaging.trust.eyebrow}
@@ -151,10 +148,9 @@ export default function Contact() {
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>{publicContactMessaging.immediate.title}</h2>
-        <p style={{ lineHeight: 1.7, marginBottom: 12 }}>
-          {publicContactMessaging.immediate.detail}
+        <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
+          {publicContactMessaging.immediate.detail} The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options and shared next actions already presented above.
         </p>
-        <PublicCtaRow actions={publicBodyCtaSets.contactImmediate} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
       <PublicActionRail

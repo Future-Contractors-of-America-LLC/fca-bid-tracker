@@ -5,7 +5,6 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import {
@@ -14,7 +13,6 @@ import {
   platformJourneyPath,
   platformLinkedProductAreas,
   platformModules,
-  publicBodyCtaSets,
   publicRouteCtas,
   shellJourney,
 } from "../../websiteShell";
@@ -59,10 +57,9 @@ export default function Platform() {
           <FcaBrandMark compact />
         </div>
         <h2 style={{ marginTop: 0 }}>Built to feel like one connected system</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860 }}>
+        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
           FCA helps contractor teams move from opportunity to delivery with better visibility into bids, customer updates, files, billing steps, and workforce readiness.
         </p>
-        <PublicCtaRow actions={publicBodyCtaSets.platformHero} />
       </div>
 
       <FounderJourneyStrip

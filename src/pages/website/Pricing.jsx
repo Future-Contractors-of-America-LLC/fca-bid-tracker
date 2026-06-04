@@ -7,10 +7,9 @@ import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
-import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -68,7 +67,6 @@ export default function Pricing() {
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
           {publicPricingMessaging.hero.detail}
         </p>
-        <PublicCtaRow actions={publicBodyCtaSets.pricingHero} />
       </div>
 
       <FounderJourneyStrip
@@ -169,7 +167,9 @@ export default function Pricing() {
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Immediate next actions</h2>
-          <PublicCtaRow actions={publicBodyCtaSets.pricingImmediate} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
+          <p style={{ lineHeight: 1.7, marginBottom: 0, color: "#4b5563" }}>
+            Review the rollout path, then move into contact and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.
+          </p>
         </div>
       </div>
 

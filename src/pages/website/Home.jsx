@@ -8,7 +8,8 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { homeCtaSets, publicBodyCtaSets, publicRouteCtas, publicSurfaceLinks, shellJourney } from "../../websiteShell";
+import { filterVisibleActions } from "../../ctaBehavior";
+import { homeCtaSets, publicSurfaceLinks, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
 import { cardStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
@@ -31,6 +32,9 @@ const homeContinuityItems = [
 ];
 
 export default function Home() {
+  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname;
+  const visibleSurfaceLinks = filterVisibleActions(publicSurfaceLinks, currentPath);
+
   return (
     <div style={pageShellStyle}>
       <ShellHeader
@@ -86,8 +90,6 @@ export default function Home() {
         />
       </div>
 
-      <PublicCtaRow actions={publicBodyCtaSets.home} />
-
       <div style={{ marginTop: 28 }}>
         <CustomerTrustPanel
           title={publicHomeMessaging.trust.title}
@@ -105,7 +107,7 @@ export default function Home() {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 24 }}>
-        {publicSurfaceLinks.map((item) => (
+        {visibleSurfaceLinks.map((item) => (
           <div key={item.key} style={cardStyle}>
             <h3 style={{ marginTop: 0 }}>{item.title}</h3>
             <p>{item.detail}</p>

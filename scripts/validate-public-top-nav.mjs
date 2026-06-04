@@ -87,6 +87,36 @@ const checks = [
       'secondaryLabel="Open Login Portal"',
     ],
   },
+  {
+    file: path.join(root, "src", "pages", "website", "Home.jsx"),
+    markers: [
+      'import { filterVisibleActions } from "../../ctaBehavior";',
+      'const visibleSurfaceLinks = filterVisibleActions(publicSurfaceLinks, currentPath);',
+      '{visibleSurfaceLinks.map((item) => (',
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "website", "Platform.jsx"),
+    markers: [
+      'FCA helps contractor teams move from opportunity to delivery with better visibility into bids, customer updates, files, billing steps, and workforce readiness.',
+      'marginBottom: 0',
+      'Linked product areas',
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "website", "Pricing.jsx"),
+    markers: [
+      'Review the rollout path, then move into contact and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.',
+      'Immediate next actions',
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "website", "Contact.jsx"),
+    markers: [
+      'The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options and shared next actions already presented above.',
+      'What happens in a walkthrough',
+    ],
+  },
 ];
 
 const failures = [];
@@ -107,4 +137,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Public top nav validation passed across CTA dedupe and no-op suppression surfaces.");
+console.log("Public top nav validation passed across CTA dedupe, no-op suppression, and route-local cleanup surfaces.");
