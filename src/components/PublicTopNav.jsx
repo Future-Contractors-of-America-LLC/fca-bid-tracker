@@ -115,6 +115,7 @@ export default function PublicTopNav() {
   const navRef = useRef(null);
   const [openMenu, setOpenMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const profileMenu = useMemo(
     () => [
@@ -148,11 +149,23 @@ export default function PublicTopNav() {
       }
     }
 
+    function handleResize() {
+      if (typeof window === "undefined") return;
+      const mobile = window.innerWidth < 960;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setMobileOpen(false);
+      }
+    }
+
+    handleResize();
     document.addEventListener("mousedown", handleClickAway);
     document.addEventListener("keydown", handleEscape);
+    window.addEventListener("resize", handleResize);
     return () => {
       document.removeEventListener("mousedown", handleClickAway);
       document.removeEventListener("keydown", handleEscape);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -168,11 +181,11 @@ export default function PublicTopNav() {
     window.location.assign("/login");
   }
 
-  const menuVisible = mobileOpen || typeof window === "undefined" ? true : true;
+  const menuVisible = !isMobile || mobileOpen;
 
   return (
     <div style={navShellStyle} ref={navRef}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", flex: "1 1 640px" }}>
           <button
             type="button"
@@ -183,9 +196,19 @@ export default function PublicTopNav() {
             <span>{mobileOpen ? "−" : "+"}</span>
           </button>
 
-          <div style={{ display: menuVisible ? "flex" : "none", gap: 10, flexWrap: "wrap", alignItems: "center", flex: "1 1 auto" }}>
+          <div
+            style={{
+              display: menuVisible ? "flex" : "none",
+              gap: 10,
+              flexWrap: "wrap",
+              alignItems: "center",
+              flex: "1 1 auto",
+              width: isMobile ? "100%" : "auto",
+              flexDirection: isMobile ? "column" : "row",
+            }}
+          >
             {navGroups.map((group) => (
-              <div key={group.key} style={{ position: "relative" }}>
+              <div key={group.key} style={{ position: "relative", width: isMobile ? "100%" : "auto" }}>
                 <button
                   type="button"
                   onClick={() => setOpenMenu((prev) => (prev === group.key ? null : group.key))}
@@ -194,13 +217,15 @@ export default function PublicTopNav() {
                     background: openMenu === group.key ? "#eff6ff" : triggerButtonStyle.background,
                     color: openMenu === group.key ? "#1d4ed8" : triggerButtonStyle.color,
                     border: openMenu === group.key ? "1px solid #bfdbfe" : triggerButtonStyle.border,
+                    width: isMobile ? "100%" : "auto",
+                    textAlign: isMobile ? "left" : "center",
                   }}
                 >
                   {group.label}
                 </button>
 
                 {openMenu === group.key ? (
-                  <div style={dropdownMenuStyle}>
+                  <div style={{ ...dropdownMenuStyle, position: isMobile ? "relative" : "absolute", top: isMobile ? 8 : dropdownMenuStyle.top, width: isMobile ? "100%" : "auto" }}>
                     {group.items.map((item, index) => {
                       const itemPath = item.href.startsWith("mailto:") ? item.href : normalizePath(item.href);
                       const isActive = !item.href.startsWith("mailto:") && itemPath === currentPath;
@@ -228,7 +253,7 @@ export default function PublicTopNav() {
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto", justifyContent: isMobile ? "space-between" : "flex-end" }}>
           {session?.authenticated ? (
             <div
               style={{
@@ -239,6 +264,10 @@ export default function PublicTopNav() {
                 color: "#1d4ed8",
                 fontWeight: 700,
                 fontSize: 12,
+                maxWidth: isMobile ? "100%" : 260,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
               }}
             >
               Live session: {session.company}
@@ -259,12 +288,22 @@ export default function PublicTopNav() {
             </button>
 
             {openMenu === "profile" ? (
-              <div style={{ ...dropdownMenuStyle, right: 0, left: "auto", minWidth: 240 }}>
+              <div style={{ ...dropdownMenuStyle, right: 0, left: "auto", minWidth: 260, position: isMobile ? "absolute" : "absolute" }}>
                 <div style={{ padding: "12px 12px 10px", background: "#f8fbff", borderBottom: "1px solid #eef2f7" }}>
-                  <div style={{ fontWeight: 700, color: "#111827" }}>{profileLabel}</div>
-                  <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
-                    {session?.authenticated ? session.email : "Public visitor profile"}
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+                    <div>
+                      <div style={{ fontWeight: 700, color: "#111827" }}>{profileLabel}</div>
+                      <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
+                        {session?.authenticated ? session.email : "Public visitor profile"}
+                      </div>
+                    </div>
+                    <div style={{ ...profileIconStyle, cursor: "default" }}>{profileInitial}</div>
                   </div>
+                  {session?.authenticated ? (
+                    <div style={{ marginTop: 10, color: "#475569", fontSize: 13, lineHeight: 1.5 }}>
+                      Auricrux is preserving live customer continuity into {profileHref}.
+                    </div>
+                  ) : null}
                 </div>
                 {profileMenu.map((item, index) => {
                   const itemPath = normalizePath(item.href);
