@@ -1,4 +1,5 @@
 import AuricruxContextInsight from "./AuricruxContextInsight";
+import { resolveLiveProjectIdentity, resolveLiveTenantIdentity } from "../liveWorkspaceIdentity";
 
 const panelStyle = {
   border: "1px solid #dbe3ef",
@@ -19,6 +20,9 @@ const itemStyle = {
 export default function WorkspaceContextBar({ tenant, project, workspace }) {
   if (!tenant || !project || !workspace) return null;
 
+  const liveTenant = resolveLiveTenantIdentity(tenant);
+  const liveProject = resolveLiveProjectIdentity(project);
+
   return (
     <div style={panelStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "flex-start" }}>
@@ -31,17 +35,18 @@ export default function WorkspaceContextBar({ tenant, project, workspace }) {
           </div>
         </div>
         <div style={{ color: "#475569", fontSize: 14, lineHeight: 1.7 }}>
-          <div><strong>Tenant:</strong> {tenant.name}</div>
-          <div><strong>Project:</strong> {project.id}</div>
-          <div><strong>Stage:</strong> {project.stage}</div>
+          <div><strong>Tenant:</strong> {liveTenant.name}</div>
+          <div><strong>Project:</strong> {liveProject.id}</div>
+          <div><strong>Stage:</strong> {liveProject.stage}</div>
+          {liveTenant.authenticatedEmail ? <div><strong>Session:</strong> {liveTenant.authenticatedEmail}</div> : null}
         </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginTop: 16 }}>
         <div style={itemStyle}>
           <div style={{ fontSize: 12, color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Current project</div>
-          <div style={{ fontWeight: 700 }}>{project.name}</div>
-          <div style={{ color: "#475569", marginTop: 4, lineHeight: 1.6 }}>{project.customer}</div>
+          <div style={{ fontWeight: 700 }}>{liveProject.name}</div>
+          <div style={{ color: "#475569", marginTop: 4, lineHeight: 1.6 }}>{liveProject.customer}</div>
         </div>
         <div style={itemStyle}>
           <div style={{ fontSize: 12, color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Current stage</div>
@@ -62,7 +67,7 @@ export default function WorkspaceContextBar({ tenant, project, workspace }) {
 
       <AuricruxContextInsight
         mode="workspace"
-        project={project}
+        project={liveProject}
         workspace={workspace}
       />
     </div>
