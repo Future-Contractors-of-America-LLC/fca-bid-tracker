@@ -1,3 +1,5 @@
+import AuricruxContextInsight from "./AuricruxContextInsight";
+
 const panelStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 16,
@@ -57,6 +59,12 @@ export default function WorkspaceContextBar({ tenant, project, workspace }) {
           <div style={{ color: "#475569", marginTop: 4, lineHeight: 1.6 }}>{workspace.auditSummary}</div>
         </div>
       </div>
+
+      <AuricruxContextInsight
+        mode="workspace"
+        project={project}
+        workspace={workspace}
+      />
     </div>
   );
 }

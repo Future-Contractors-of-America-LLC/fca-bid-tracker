@@ -1,3 +1,5 @@
+import AuricruxContextInsight from "./AuricruxContextInsight";
+
 const railStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 16,
@@ -56,6 +58,12 @@ export default function AuricruxStatusRail({ project, rail }) {
           <div style={{ color: "#475569", marginTop: 4, lineHeight: 1.6 }}>{rail.readinessSummary}</div>
         </div>
       </div>
+
+      <AuricruxContextInsight
+        mode="status"
+        project={project}
+        rail={rail}
+      />
     </div>
   );
 }
