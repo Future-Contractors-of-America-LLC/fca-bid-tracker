@@ -1,0 +1,165 @@
+name: Auricrux Control Plane
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Automation mode"
+        required: true
+        default: "status"
+        type: choice
+        options:
+          - status
+          - executive
+          - engine
+  repository_dispatch:
+    types: [auricrux_control_plane]
+  schedule:
+    - cron: "11,41 * * * *"
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: auricrux-control-plane
+  cancel-in-progress: true
+
+jobs:
+  control-plane:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Resolve requested mode
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+          EVENT_NAME="${GITHUB_EVENT_NAME}"
+          MODE="status"
+
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            MODE="${{ inputs.mode }}"
+          elif [ "$EVENT_NAME" = "repository_dispatch" ]; then
+            MODE="${{ github.event.client_payload.mode || 'status' }}"
+          fi
+
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "event_name=$EVENT_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Update repo-backed control-plane state
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p auricrux/system
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'auricrux/system/control-plane.json';
+          const mode = process.env.MODE;
+          const eventName = process.env.EVENT_NAME;
+          const now = new Date().toISOString();
+          let state = {
+            version: 1,
+            controller: 'auricrux-control-plane',
+            status: 'online',
+            preferredPath: 'github-actions-control-plane',
+            lastRunUtc: null,
+            lastMode: null,
+            lastEvent: null,
+            lastOutcome: null,
+            history: []
+          };
+          if (fs.existsSync(path)) {
+            state = JSON.parse(fs.readFileSync(path, 'utf8'));
+          }
+          state.lastRunUtc = now;
+          state.lastMode = mode;
+          state.lastEvent = eventName;
+          state.lastOutcome = 'running';
+          state.history = Array.isArray(state.history) ? state.history : [];
+          state.history.unshift({ at: now, event: eventName, mode, outcome: 'running' });
+          state.history = state.history.slice(0, 20);
+          fs.writeFileSync(path, JSON.stringify(state, null, 2) + '\n');
+          NODE
+        env:
+          MODE: ${{ steps.resolve.outputs.mode }}
+          EVENT_NAME: ${{ steps.resolve.outputs.event_name }}
+
+      - name: Run executive path
+        if: steps.resolve.outputs.mode == 'executive'
+        env:
+          AURICRUX_COMMAND: control-plane-executive
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_EVENT_PATH: ${{ github.event_path }}
+          GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+        run: node auricrux/exec/index.mjs
+
+      - name: Run engine path
+        if: steps.resolve.outputs.mode == 'engine'
+        run: node auricrux_engine.js
+
+      - name: Finalize control-plane state
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p auricrux/system
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'auricrux/system/control-plane.json';
+          const mode = process.env.MODE;
+          const eventName = process.env.EVENT_NAME;
+          const jobStatus = process.env.JOB_STATUS;
+          const now = new Date().toISOString();
+          let state = JSON.parse(fs.readFileSync(path, 'utf8'));
+          state.lastRunUtc = now;
+          state.lastMode = mode;
+          state.lastEvent = eventName;
+          state.lastOutcome = jobStatus;
+          state.history = Array.isArray(state.history) ? state.history : [];
+          if (state.history.length > 0) {
+            state.history[0] = { at: now, event: eventName, mode, outcome: jobStatus };
+          } else {
+            state.history.unshift({ at: now, event: eventName, mode, outcome: jobStatus });
+          }
+          fs.writeFileSync(path, JSON.stringify(state, null, 2) + '\n');
+          NODE
+        env:
+          MODE: ${{ steps.resolve.outputs.mode }}
+          EVENT_NAME: ${{ steps.resolve.outputs.event_name }}
+          JOB_STATUS: ${{ job.status }}
+
+      - name: Commit control-plane updates
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "auricrux"
+          git config user.email "auricrux@ai.system"
+          git add auricrux/system/control-plane.json
+          git commit -m "Auricrux: control plane heartbeat" || echo "No control plane changes"
+          git push || echo "Control plane push skipped"
+
+      - name: Write job summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Auricrux Control Plane"
+            echo "- Event: ${{ steps.resolve.outputs.event_name }}"
+            echo "- Mode: ${{ steps.resolve.outputs.mode }}"
+            echo "- Outcome: ${{ job.status }}"
+            echo "- State file: auricrux/system/control-plane.json"
+            echo "- Paths: status = heartbeat only, executive = auricrux/exec/index.mjs, engine = auricrux_engine.js"
+          } >> "$GITHUB_STEP_SUMMARY"
