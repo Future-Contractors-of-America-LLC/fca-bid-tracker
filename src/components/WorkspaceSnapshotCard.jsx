@@ -1,3 +1,4 @@
+import AuricruxNarrativeInsight from "./AuricruxNarrativeInsight";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 
 const cardStyle = {
@@ -59,14 +60,17 @@ export default function WorkspaceSnapshotCard({
         </div>
         <div>
           <div style={{ color: "#64748b", fontSize: 13, textTransform: "uppercase", letterSpacing: 0.3 }}>Auricrux</div>
-          <div style={{ fontWeight: 700, marginTop: 4 }}>{state.auricrux.status}</div>
+          <div style={{ fontWeight: 700, marginTop: 4 }}>{state.auricrux.systemState || state.auricrux.readinessState}</div>
         </div>
       </div>
 
       <div style={{ marginTop: 16, color: "#475569", lineHeight: 1.7 }}>
         <div><strong>Next action:</strong> {state.auricrux.nextRecommendedAction}</div>
         <div><strong>Backing source:</strong> {state.meta.backingSource}</div>
+        {state.meta.authenticatedCustomer ? <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer}</div> : null}
       </div>
+
+      <AuricruxNarrativeInsight mode="snapshot" ctaHref={ctaHref} ctaLabel={ctaLabel} />
 
       <a href={ctaHref} style={linkStyle}>{ctaLabel}</a>
     </div>

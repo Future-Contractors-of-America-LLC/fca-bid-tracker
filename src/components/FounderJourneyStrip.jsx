@@ -1,3 +1,4 @@
+import AuricruxNarrativeInsight from "./AuricruxNarrativeInsight";
 import { shellJourney } from "../websiteShell";
 
 const stripStyle = {
@@ -71,6 +72,8 @@ export default function FounderJourneyStrip({
           );
         })}
       </div>
+
+      <AuricruxNarrativeInsight mode="founder" ctaHref={ctaHref} ctaLabel={ctaLabel} />
     </div>
   );
 }
