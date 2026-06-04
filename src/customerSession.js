@@ -22,7 +22,7 @@ export function writeCustomerSession(session) {
     company: session.company,
     workspaceLabel: session.workspaceLabel || session.company,
     lastLoginAt: session.lastLoginAt || new Date().toISOString(),
-    nextHref: session.nextHref || "/portal",
+    nextHref: session.nextHref || "/portal/profile",
   };
 
   try {
@@ -46,4 +46,19 @@ export function clearCustomerSession() {
 
 export function isProtectedCustomerRoute(pathname = "/") {
   return pathname.startsWith("/portal");
+}
+
+export function resolveLoginHref() {
+  return "/login";
+}
+
+export function resolveProfileHref(session = readCustomerSession()) {
+  return session?.authenticated ? "/portal/profile" : resolveLoginHref();
+}
+
+export function resolveWorkspaceEntryHref(session = readCustomerSession(), requestedPath = "/portal/profile") {
+  if (!session?.authenticated) return resolveLoginHref();
+  if (requestedPath && isProtectedCustomerRoute(requestedPath)) return requestedPath;
+  if (session.nextHref && isProtectedCustomerRoute(session.nextHref)) return session.nextHref;
+  return "/portal/profile";
 }

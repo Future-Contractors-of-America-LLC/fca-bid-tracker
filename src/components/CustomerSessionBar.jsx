@@ -29,10 +29,15 @@ export default function CustomerSessionBar({
 
   if (!isAuthenticated || !session) return null;
 
-  const resolvedPath = requestedPath || session.nextHref || "/portal";
+  const resolvedPath = requestedPath || session.nextHref || "/portal/profile";
   const detail = mode === "login"
     ? `Customer access is live. Auricrux is preserving continuity from login into ${resolvedPath} for ${session.company}.`
     : `Customer access is live for ${session.company}. Auricrux is preserving ${workspaceContext.currentNextAction.toLowerCase()} and ${auricruxRail.currentBlocker.toLowerCase()} inside the active workspace.`;
+
+  function handleLogout() {
+    logout();
+    window.location.assign("/login");
+  }
 
   return (
     <div style={shellStyle}>
@@ -44,7 +49,7 @@ export default function CustomerSessionBar({
         </div>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
           <a href={resolvedPath} style={buttonStyle}>Open Active Workspace</a>
-          <button onClick={logout} style={{ ...buttonStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>
+          <button onClick={handleLogout} style={{ ...buttonStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>
             Sign Out
           </button>
         </div>

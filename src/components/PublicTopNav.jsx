@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { clearCustomerSession, readCustomerSession } from "../customerSession";
+import {
+  clearCustomerSession,
+  readCustomerSession,
+  resolveLoginHref,
+  resolveProfileHref,
+  resolveWorkspaceEntryHref,
+} from "../customerSession";
 import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext } from "../workspaceState";
 import { publicActionCatalog } from "../websiteShell";
 
@@ -156,7 +162,6 @@ const portalQuickLinks = [
   publicActionCatalog.projects,
   publicActionCatalog.messages,
   { label: "Notifications", href: "/portal/notifications", variant: "secondary" },
-  publicActionCatalog.billing,
 ];
 
 function normalizePath(value) {
@@ -194,7 +199,6 @@ function renderQuickBadge(item, mode) {
   if (item.href === "/portal/notifications") return portalMessages.length + 2;
   if (item.href === "/portal/messages") return portalMessages.length;
   if (item.href === "/portal/projects") return currentProject.id;
-  if (item.href === "/portal/billing") return "Live";
   return null;
 }
 
@@ -212,11 +216,6 @@ function resolveContinuityStamp(session) {
 
 export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
-  const loginHref = "/login";
-  const workspaceHref = session?.authenticated ? "/portal/profile" : "/login";
-  const profileHref = session?.authenticated ? "/portal/profile" : "/login";
-  const profileLabel = session?.authenticated ? session.company : "Profile";
-  const profileInitial = session?.authenticated ? session.company.charAt(0).toUpperCase() : "↗";
   const currentPath = typeof window === "undefined" ? "/" : normalizePath(window.location.pathname);
   const navRef = useRef(null);
   const [openMenu, setOpenMenu] = useState(null);
@@ -229,6 +228,14 @@ export default function PublicTopNav({ mode = "public" }) {
   const workspaceLabel = resolveWorkspaceLabel(session, mode);
   const continuityStamp = resolveContinuityStamp(session);
   const notificationCount = portalMessages.length + 2;
+  const loginHref = resolveLoginHref();
+  const workspaceHref = resolveWorkspaceEntryHref(session, mode === "portal" ? currentPath : "/portal/profile");
+  const profileHref = resolveProfileHref(session);
+  const actionHref = session?.authenticated ? workspaceHref : loginHref;
+  const actionLabel = session?.authenticated ? "Open Workspace" : "Open Login Portal";
+
+  const profileLabel = session?.authenticated ? session.company : "Profile";
+  const profileInitial = session?.authenticated ? session.company.charAt(0).toUpperCase() : "↗";
 
   const profileMenu = useMemo(
     () => [
@@ -241,7 +248,7 @@ export default function PublicTopNav({ mode = "public" }) {
         label: mode === "portal" ? "Open Platform Dashboard" : "Open Platform Overview",
       },
       {
-        href: mode === "portal" ? "/portal/notifications" : "/login",
+        href: mode === "portal" ? "/portal/notifications" : loginHref,
         label: mode === "portal" ? "Open Notifications" : "Open Login Portal",
       },
       {
@@ -249,7 +256,7 @@ export default function PublicTopNav({ mode = "public" }) {
         label: mode === "portal" ? "Open Academy Continuity" : "Open Academy",
       },
     ],
-    [mode, profileHref, session]
+    [loginHref, mode, profileHref, session]
   );
 
   useEffect(() => {
@@ -295,7 +302,7 @@ export default function PublicTopNav({ mode = "public" }) {
     clearCustomerSession();
     setOpenMenu(null);
     setMobileOpen(false);
-    window.location.assign("/login");
+    window.location.assign(loginHref);
   }
 
   const menuVisible = !isMobile || mobileOpen;
@@ -323,7 +330,7 @@ export default function PublicTopNav({ mode = "public" }) {
               color: "#1d4ed8",
               fontWeight: 700,
               fontSize: 12,
-              maxWidth: isMobile ? "100%" : 220,
+              maxWidth: isMobile ? "100%" : 260,
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -332,32 +339,14 @@ export default function PublicTopNav({ mode = "public" }) {
             {sessionBadgeText}
           </div>
 
-          <div
-            style={{
-              padding: "8px 12px",
-              borderRadius: 999,
-              border: "1px solid #dbe3ef",
-              background: "#fff",
-              color: "#475569",
-              fontWeight: 700,
-              fontSize: 12,
-              maxWidth: isMobile ? "100%" : 260,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {continuityStamp}
-          </div>
-
           {mode === "portal" ? (
             <div
               style={{
                 padding: "8px 12px",
                 borderRadius: 999,
-                border: "1px solid #bfdbfe",
-                background: "#eff6ff",
-                color: "#1d4ed8",
+                border: "1px solid #dbe3ef",
+                background: "#fff",
+                color: "#475569",
                 fontWeight: 700,
                 fontSize: 12,
                 display: "inline-flex",
@@ -381,8 +370,7 @@ export default function PublicTopNav({ mode = "public" }) {
             </div>
           ) : null}
 
-          <a href={loginHref} style={secondaryButtonStyle}>Open Login Portal</a>
-          <a href={workspaceHref} style={primaryButtonStyle}>{session?.authenticated ? "Open Workspace" : "Enter Workspace"}</a>
+          <a href={actionHref} style={session?.authenticated ? primaryButtonStyle : secondaryButtonStyle}>{actionLabel}</a>
 
           <div style={{ position: "relative" }}>
             <button
@@ -422,8 +410,8 @@ export default function PublicTopNav({ mode = "public" }) {
                   </div>
                 </div>
                 {profileMenu.map((item, index) => {
-                  const itemPath = normalizePath(item.href);
-                  const isActive = itemPath === currentPath;
+                  const itemPath = item.href.startsWith("mailto:") ? item.href : normalizePath(item.href);
+                  const isActive = !item.href.startsWith("mailto:") && itemPath === currentPath;
                   return (
                     <a
                       key={item.href}
@@ -469,14 +457,16 @@ export default function PublicTopNav({ mode = "public" }) {
 
       <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center" }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", flex: "1 1 520px" }}>
-          <button
-            type="button"
-            onClick={() => setMobileOpen((prev) => !prev)}
-            style={{ ...triggerButtonStyle, display: "inline-flex", alignItems: "center", gap: 8 }}
-          >
-            <span>Menu</span>
-            <span>{mobileOpen ? "−" : "+"}</span>
-          </button>
+          {isMobile ? (
+            <button
+              type="button"
+              onClick={() => setMobileOpen((prev) => !prev)}
+              style={{ ...triggerButtonStyle, display: "inline-flex", alignItems: "center", gap: 8 }}
+            >
+              <span>Menu</span>
+              <span>{mobileOpen ? "−" : "+"}</span>
+            </button>
+          ) : null}
 
           <div
             style={{
@@ -537,12 +527,13 @@ export default function PublicTopNav({ mode = "public" }) {
 
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto" }}>
           {quickLinks.map((item) => {
-            const isActive = normalizePath(item.href) === currentPath;
+            const resolvedHref = item.href === "/login" ? actionHref : item.href;
+            const isActive = normalizePath(resolvedHref) === currentPath;
             const quickBadge = renderQuickBadge(item, mode);
             return (
               <a
                 key={item.href}
-                href={item.href}
+                href={resolvedHref}
                 style={{
                   textDecoration: "none",
                   padding: "9px 11px",

@@ -9,6 +9,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import CustomerSessionBar from "../../components/CustomerSessionBar";
+import { resolveWorkspaceEntryHref } from "../../customerSession";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { founderJourneyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
@@ -59,7 +60,7 @@ const loginContinuityItems = [
   },
 ];
 
-export default function Login({ requestedPath = "/portal", accessMode = "direct" }) {
+export default function Login({ requestedPath = "/portal/profile", accessMode = "direct" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
   const [form, setForm] = useState({
     email: session?.email || "workspace@futurecontractorsofamerica.com",
@@ -67,7 +68,8 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
   });
   const [error, setError] = useState("");
 
-  const nextHref = accessMode === "protected" ? requestedPath : session?.nextHref || "/portal";
+  const requestedWorkspaceHref = accessMode === "protected" ? requestedPath : session?.nextHref || "/portal/profile";
+  const nextHref = requestedWorkspaceHref?.startsWith("/portal") ? requestedWorkspaceHref : "/portal/profile";
   const liveEntryDetail = accessMode === "protected"
     ? `Customer login is now required to enter ${requestedPath}. Auricrux is preserving continuity so the user lands inside the requested live workspace surface after authentication.`
     : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace and unified platform dashboard.";
@@ -86,7 +88,12 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
     }
 
     setError("");
-    window.location.assign(nextHref);
+    window.location.assign(resolveWorkspaceEntryHref(result.session, nextHref));
+  }
+
+  function handleResetSession() {
+    logout();
+    window.location.assign("/login");
   }
 
   return (
@@ -139,8 +146,8 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             statusLabel="Entry posture"
             statusValue="Workspace handoff active"
             items={loginContinuityItems}
-            primaryHref="/portal"
-            primaryLabel="Open Portal Workspace"
+            primaryHref={isAuthenticated ? nextHref : "/login"}
+            primaryLabel={isAuthenticated ? "Open Active Workspace" : "Open Login Portal"}
             secondaryHref="/portal/platform"
             secondaryLabel="Open Platform Dashboard"
           />
@@ -171,9 +178,12 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
               <button type="submit" style={submitButtonStyle}>Open Live Customer Workspace</button>
               {isAuthenticated ? (
-                <button type="button" onClick={logout} style={{ ...submitButtonStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>
-                  Reset Session
-                </button>
+                <>
+                  <a href={nextHref} style={{ ...submitButtonStyle, textDecoration: "none" }}>Open Active Workspace</a>
+                  <button type="button" onClick={handleResetSession} style={{ ...submitButtonStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>
+                    Reset Session
+                  </button>
+                </>
               ) : null}
             </div>
 
@@ -184,8 +194,8 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             <WorkspaceSnapshotCard
               title="Workspace continuity before login"
               detail="Customers can see that tenant, project, and Auricrux state already exist before entering the portal, reinforcing one continuous operating shell."
-              ctaHref="/portal"
-              ctaLabel="Open Portal Workspace"
+              ctaHref="/login"
+              ctaLabel="Open Login Portal"
             />
 
             <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>

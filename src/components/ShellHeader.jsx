@@ -17,6 +17,8 @@ export default function ShellHeader({
   showTopNav = true,
   topNavMode = "public",
 }) {
+  const renderHeaderActions = !(showTopNav && topNavMode === "public");
+
   return (
     <>
       {showTopNav ? <PublicTopNav mode={topNavMode} /> : null}
@@ -64,27 +66,29 @@ export default function ShellHeader({
           <JourneyStrip items={journey} current={currentJourney} />
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            flexWrap: "wrap",
-            alignItems: "stretch",
-            justifyContent: "flex-end",
-            minWidth: 0,
-          }}
-        >
-          {secondaryHref && secondaryLabel ? (
-            <a href={secondaryHref} style={ctaLightStyle}>
-              {secondaryLabel}
-            </a>
-          ) : null}
-          {primaryHref && primaryLabel ? (
-            <a href={primaryHref} style={ctaPrimaryStyle}>
-              {primaryLabel}
-            </a>
-          ) : null}
-        </div>
+        {renderHeaderActions ? (
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              flexWrap: "wrap",
+              alignItems: "stretch",
+              justifyContent: "flex-end",
+              minWidth: 0,
+            }}
+          >
+            {secondaryHref && secondaryLabel ? (
+              <a href={secondaryHref} style={ctaLightStyle}>
+                {secondaryLabel}
+              </a>
+            ) : null}
+            {primaryHref && primaryLabel ? (
+              <a href={primaryHref} style={ctaPrimaryStyle}>
+                {primaryLabel}
+              </a>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       <div style={{ marginBottom: 24 }}>
