@@ -1,3 +1,5 @@
+import AuricruxSpineInsight from "./AuricruxSpineInsight";
+
 const cardStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 16,
@@ -62,6 +64,8 @@ export default function ProjectSpineBar({ tenant, project }) {
           <div style={{ color: "#475569", lineHeight: 1.6 }}>{project.auricruxSummary}</div>
         </div>
       </div>
+
+      <AuricruxSpineInsight tenant={tenant} project={project} />
     </div>
   );
 }
