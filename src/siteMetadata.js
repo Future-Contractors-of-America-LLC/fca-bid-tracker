@@ -5,7 +5,7 @@ const DEFAULT_DESCRIPTION =
   "Future Contractors of America is the operating system for contractor growth, bid execution, project visibility, and Auricrux-guided workflow continuity.";
 const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/social-card.svg`;
 
-const routeMetadata = {
+export const routeMetadata = {
   "/": {
     title: DEFAULT_TITLE,
     description:
@@ -61,11 +61,6 @@ const routeMetadata = {
     description:
       "Track contractor projects, lifecycle progress, and rollout readiness inside the FCA workspace.",
   },
-  "/portal/bids": {
-    title: "Bids | Future Contractors of America",
-    description:
-      "Coordinate bid pipeline activity, opportunity posture, and execution follow-through in the FCA portal.",
-  },
   "/portal/files": {
     title: "Files | Future Contractors of America",
     description:
@@ -75,6 +70,11 @@ const routeMetadata = {
     title: "Messages | Future Contractors of America",
     description:
       "Maintain customer, team, and operational communication continuity across FCA workflows.",
+  },
+  "/portal/bids": {
+    title: "Bids | Future Contractors of America",
+    description:
+      "Coordinate bid pipeline activity, opportunity posture, and execution follow-through in the FCA portal.",
   },
   "/portal/billing": {
     title: "Billing | Future Contractors of America",

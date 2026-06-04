@@ -10,7 +10,8 @@
     "validate:critical-routes": "node scripts/validate-critical-routes.mjs",
     "validate:shell-actions": "node scripts/validate-shell-actions.mjs",
     "validate:jsx-actions": "node scripts/validate-jsx-action-literals.mjs",
-    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run validate:shell-actions && npm run validate:jsx-actions && npm run lint && npm run build",
+    "validate:site-metadata": "node scripts/validate-site-metadata.mjs",
+    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run validate:shell-actions && npm run validate:jsx-actions && npm run validate:site-metadata && npm run lint && npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
