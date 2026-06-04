@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { clearCustomerSession, readCustomerSession } from "../customerSession";
-import { currentProject, portalMessages, workspaceContext } from "../workspaceState";
+import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext } from "../workspaceState";
 import { publicActionCatalog } from "../websiteShell";
 
 const navShellStyle = {
@@ -180,6 +180,18 @@ function renderQuickBadge(item, mode) {
   return null;
 }
 
+function resolveWorkspaceLabel(session, mode) {
+  if (session?.authenticated) return session.workspaceLabel || `${session.company} Workspace`;
+  return mode === "portal" ? "Portal Continuity Workspace" : "Public Continuity Workspace";
+}
+
+function resolveContinuityStamp(session) {
+  if (session?.authenticated && session.lastLoginAt) {
+    return `Last login: ${new Date(session.lastLoginAt).toLocaleString()}`;
+  }
+  return `Continuity stamp: ${projectAuditEvents[projectAuditEvents.length - 1]?.time || "Active"}`;
+}
+
 export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
   const profileHref = session?.authenticated ? session.nextHref || "/portal" : "/login";
@@ -194,6 +206,9 @@ export default function PublicTopNav({ mode = "public" }) {
   const navGroups = mode === "portal" ? portalNavGroups : publicNavGroups;
   const quickLinks = mode === "portal" ? portalQuickLinks : publicQuickLinks;
   const routeCue = resolveRouteCue(currentPath, mode);
+  const workspaceLabel = resolveWorkspaceLabel(session, mode);
+  const continuityStamp = resolveContinuityStamp(session);
+  const notificationCount = portalMessages.length;
 
   const profileMenu = useMemo(
     () => [
@@ -401,6 +416,24 @@ export default function PublicTopNav({ mode = "public" }) {
             style={{
               padding: "8px 12px",
               borderRadius: 999,
+              border: "1px solid #cbd5e1",
+              background: "#fff",
+              color: "#334155",
+              fontWeight: 700,
+              fontSize: 12,
+              maxWidth: isMobile ? "100%" : 280,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {workspaceLabel}
+          </div>
+
+          <div
+            style={{
+              padding: "8px 12px",
+              borderRadius: 999,
               border: "1px solid #e5d3a1",
               background: "#fffaf0",
               color: "#8a6a14",
@@ -413,6 +446,53 @@ export default function PublicTopNav({ mode = "public" }) {
             }}
           >
             {routeCue} · {workspaceContext.currentNextAction}
+          </div>
+
+          <div
+            style={{
+              padding: "8px 12px",
+              borderRadius: 999,
+              border: "1px solid #dbe3ef",
+              background: "#fff",
+              color: "#475569",
+              fontWeight: 700,
+              fontSize: 12,
+              maxWidth: isMobile ? "100%" : 280,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {continuityStamp}
+          </div>
+
+          <div
+            style={{
+              padding: "8px 12px",
+              borderRadius: 999,
+              border: "1px solid #bfdbfe",
+              background: "#eff6ff",
+              color: "#1d4ed8",
+              fontWeight: 700,
+              fontSize: 12,
+              display: "inline-flex",
+              gap: 8,
+              alignItems: "center",
+            }}
+          >
+            <span>Notifications</span>
+            <span
+              style={{
+                padding: "2px 8px",
+                borderRadius: 999,
+                background: "#dbeafe",
+                color: "#1d4ed8",
+                fontSize: 11,
+                fontWeight: 800,
+              }}
+            >
+              {notificationCount}
+            </span>
           </div>
 
           <a href="/login" style={actionButtonStyle}>{session?.authenticated ? "Switch Workspace" : "Login"}</a>
@@ -449,6 +529,9 @@ export default function PublicTopNav({ mode = "public" }) {
                   </div>
                   <div style={{ marginTop: 10, color: "#8a6a14", fontSize: 12, lineHeight: 1.5 }}>
                     Active project spine: {currentProject.id} · {workspaceContext.currentNextAction}
+                  </div>
+                  <div style={{ marginTop: 8, color: "#1d4ed8", fontSize: 12, lineHeight: 1.5 }}>
+                    {continuityStamp} · Auricrux: {auricruxRail.nextRecommendedAction}
                   </div>
                 </div>
                 {profileMenu.map((item, index) => {
