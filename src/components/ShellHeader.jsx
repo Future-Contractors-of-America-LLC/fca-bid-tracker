@@ -31,10 +31,11 @@ export default function ShellHeader({
   journey,
   currentJourney,
   showTopNav = true,
+  topNavMode = "public",
 }) {
   return (
     <>
-      {showTopNav ? <PublicTopNav /> : null}
+      {showTopNav ? <PublicTopNav mode={topNavMode} /> : null}
 
       <div
         style={{

@@ -10,22 +10,22 @@ const checks = [
       'import { useEffect, useMemo, useRef, useState } from "react";',
       'import { clearCustomerSession, readCustomerSession } from "../customerSession";',
       'import { publicActionCatalog } from "../websiteShell";',
-      'key: "explore"',
-      'key: "workspace"',
-      'key: "company"',
+      'const publicNavGroups = [',
+      'const portalNavGroups = [',
+      'const publicQuickLinks = [',
+      'const portalQuickLinks = [',
+      'export default function PublicTopNav({ mode = "public" }) {',
+      'const navGroups = mode === "portal" ? portalNavGroups : publicNavGroups;',
+      'const quickLinks = mode === "portal" ? portalQuickLinks : publicQuickLinks;',
       'const [isMobile, setIsMobile] = useState(false);',
       'window.addEventListener("resize", handleResize);',
       'setOpenMenu((prev) => (prev === group.key ? null : group.key))',
       'setOpenMenu((prev) => (prev === "profile" ? null : "profile"))',
-      'const [mobileOpen, setMobileOpen] = useState(false);',
-      'document.addEventListener("mousedown", handleClickAway);',
-      'document.addEventListener("keydown", handleEscape);',
       'window.location.assign("/login");',
-      'Live session: {session.company}',
-      'Logout',
-      'Auricrux is preserving live customer continuity into {profileHref}.',
-      'useEffect(() => {',
-      '}, [currentPath]);',
+      'Live session: ${session.company}',
+      'Auricrux is preserving live customer continuity into ${profileHref}.',
+      'Portal continuity shell',
+      'Public continuity shell',
       'aria-label={profileLabel}',
     ],
   },
@@ -33,14 +33,15 @@ const checks = [
     file: path.join(root, "src", "components", "ShellHeader.jsx"),
     markers: [
       'import PublicTopNav from "./PublicTopNav";',
-      'showTopNav = true',
-      '{showTopNav ? <PublicTopNav /> : null}',
+      'topNavMode = "public"',
+      '{showTopNav ? <PublicTopNav mode={topNavMode} /> : null}',
     ],
   },
   {
     file: path.join(root, "src", "components", "PortalShell.jsx"),
     markers: [
-      'showTopNav={false}',
+      'showTopNav',
+      'topNavMode="portal"',
     ],
   },
 ];
@@ -63,4 +64,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Public top nav validation passed across public header and portal shell guard surfaces.");
+console.log("Public top nav validation passed across public and portal top navigation surfaces.");

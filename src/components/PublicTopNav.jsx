@@ -69,7 +69,7 @@ const profileIconStyle = {
   cursor: "pointer",
 };
 
-const navGroups = [
+const publicNavGroups = [
   {
     key: "explore",
     label: "Explore",
@@ -101,12 +101,55 @@ const navGroups = [
   },
 ];
 
+const portalNavGroups = [
+  {
+    key: "workspace",
+    label: "Workspace",
+    items: [
+      publicActionCatalog.portal,
+      publicActionCatalog.platform,
+      publicActionCatalog.academyContinuity,
+    ],
+  },
+  {
+    key: "delivery",
+    label: "Delivery",
+    items: [
+      publicActionCatalog.projects,
+      publicActionCatalog.files,
+      publicActionCatalog.messages,
+      publicActionCatalog.billing,
+    ],
+  },
+  {
+    key: "support",
+    label: "Support",
+    items: [
+      publicActionCatalog.support,
+      publicActionCatalog.admin,
+      publicActionCatalog.contact,
+    ],
+  },
+];
+
+const publicQuickLinks = [
+  publicActionCatalog.workspace,
+  publicActionCatalog.platformOverview,
+  publicActionCatalog.contact,
+];
+
+const portalQuickLinks = [
+  publicActionCatalog.projects,
+  publicActionCatalog.messages,
+  publicActionCatalog.billing,
+];
+
 function normalizePath(value) {
   if (!value || typeof value !== "string") return "/";
   return value.endsWith("/") && value !== "/" ? value.slice(0, -1) : value;
 }
 
-export default function PublicTopNav() {
+export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
   const profileHref = session?.authenticated ? session.nextHref || "/portal" : "/login";
   const profileLabel = session?.authenticated ? session.company : "Profile";
@@ -117,6 +160,9 @@ export default function PublicTopNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  const navGroups = mode === "portal" ? portalNavGroups : publicNavGroups;
+  const quickLinks = mode === "portal" ? portalQuickLinks : publicQuickLinks;
+
   const profileMenu = useMemo(
     () => [
       {
@@ -124,15 +170,15 @@ export default function PublicTopNav() {
         label: session?.authenticated ? "Open Active Workspace" : "Open Login",
       },
       {
-        href: "/portal/platform",
-        label: "Open Platform Dashboard",
+        href: mode === "portal" ? "/portal/platform" : "/platform",
+        label: mode === "portal" ? "Open Platform Dashboard" : "Open Platform Overview",
       },
       {
-        href: "/academy",
-        label: "Open Academy",
+        href: mode === "portal" ? "/portal/academy" : "/academy",
+        label: mode === "portal" ? "Open Academy Continuity" : "Open Academy",
       },
     ],
-    [profileHref, session]
+    [mode, profileHref, session]
   );
 
   useEffect(() => {
@@ -182,6 +228,11 @@ export default function PublicTopNav() {
   }
 
   const menuVisible = !isMobile || mobileOpen;
+  const sessionBadgeText = session?.authenticated
+    ? `Live session: ${session.company}`
+    : mode === "portal"
+      ? "Portal continuity shell"
+      : "Public continuity shell";
 
   return (
     <div style={navShellStyle} ref={navRef}>
@@ -250,29 +301,51 @@ export default function PublicTopNav() {
                 ) : null}
               </div>
             ))}
+
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto" }}>
+              {quickLinks.map((item) => {
+                const isActive = normalizePath(item.href) === currentPath;
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    style={{
+                      textDecoration: "none",
+                      padding: "9px 11px",
+                      borderRadius: 999,
+                      border: isActive ? "1px solid #bfdbfe" : "1px solid #dbe3ef",
+                      background: isActive ? "#eff6ff" : "#fff",
+                      color: isActive ? "#1d4ed8" : "#334155",
+                      fontSize: 13,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {item.label}
+                  </a>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto", justifyContent: isMobile ? "space-between" : "flex-end" }}>
-          {session?.authenticated ? (
-            <div
-              style={{
-                padding: "8px 12px",
-                borderRadius: 999,
-                border: "1px solid #bfdbfe",
-                background: "#eff6ff",
-                color: "#1d4ed8",
-                fontWeight: 700,
-                fontSize: 12,
-                maxWidth: isMobile ? "100%" : 260,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Live session: {session.company}
-            </div>
-          ) : null}
+          <div
+            style={{
+              padding: "8px 12px",
+              borderRadius: 999,
+              border: "1px solid #bfdbfe",
+              background: "#eff6ff",
+              color: "#1d4ed8",
+              fontWeight: 700,
+              fontSize: 12,
+              maxWidth: isMobile ? "100%" : 260,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {sessionBadgeText}
+          </div>
 
           <a href="/login" style={actionButtonStyle}>{session?.authenticated ? "Switch Workspace" : "Login"}</a>
 
@@ -288,22 +361,24 @@ export default function PublicTopNav() {
             </button>
 
             {openMenu === "profile" ? (
-              <div style={{ ...dropdownMenuStyle, right: 0, left: "auto", minWidth: 260, position: isMobile ? "absolute" : "absolute" }}>
+              <div style={{ ...dropdownMenuStyle, right: 0, left: "auto", minWidth: 260 }}>
                 <div style={{ padding: "12px 12px 10px", background: "#f8fbff", borderBottom: "1px solid #eef2f7" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
                     <div>
                       <div style={{ fontWeight: 700, color: "#111827" }}>{profileLabel}</div>
                       <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
-                        {session?.authenticated ? session.email : "Public visitor profile"}
+                        {session?.authenticated ? session.email : mode === "portal" ? "Portal visitor profile" : "Public visitor profile"}
                       </div>
                     </div>
                     <div style={{ ...profileIconStyle, cursor: "default" }}>{profileInitial}</div>
                   </div>
-                  {session?.authenticated ? (
-                    <div style={{ marginTop: 10, color: "#475569", fontSize: 13, lineHeight: 1.5 }}>
-                      Auricrux is preserving live customer continuity into {profileHref}.
-                    </div>
-                  ) : null}
+                  <div style={{ marginTop: 10, color: "#475569", fontSize: 13, lineHeight: 1.5 }}>
+                    {session?.authenticated
+                      ? `Auricrux is preserving live customer continuity into ${profileHref}.`
+                      : mode === "portal"
+                        ? "Auricrux is preserving portal continuity across authenticated workspace surfaces."
+                        : "Auricrux is preserving public continuity across customer-facing entry surfaces."}
+                  </div>
                 </div>
                 {profileMenu.map((item, index) => {
                   const itemPath = normalizePath(item.href);
