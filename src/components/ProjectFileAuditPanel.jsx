@@ -1,3 +1,5 @@
+import AuricruxFileAuditInsight from "./AuricruxFileAuditInsight";
+
 const sectionStyle = {
   border: "1px solid #e5e7eb",
   borderRadius: 16,
@@ -42,6 +44,10 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
             </div>
           ))}
         </div>
+      </div>
+
+      <div style={{ gridColumn: "1 / -1" }}>
+        <AuricruxFileAuditInsight project={project} files={files} auditEvents={auditEvents} />
       </div>
     </div>
   );
