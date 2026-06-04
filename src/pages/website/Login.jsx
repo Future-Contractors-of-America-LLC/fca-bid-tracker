@@ -1,3 +1,4 @@
+import { useState } from "react";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
@@ -7,6 +8,8 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
+import CustomerSessionBar from "../../components/CustomerSessionBar";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { founderJourneyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -27,6 +30,17 @@ const moduleStyle = {
   background: "#f8fafc",
 };
 
+const submitButtonStyle = {
+  textDecoration: "none",
+  background: "#111827",
+  color: "#fff",
+  padding: "12px 16px",
+  borderRadius: 10,
+  fontWeight: 700,
+  border: "none",
+  cursor: "pointer",
+};
+
 const loginContinuityItems = [
   {
     label: "Entry flow",
@@ -45,7 +59,36 @@ const loginContinuityItems = [
   },
 ];
 
-export default function Login() {
+export default function Login({ requestedPath = "/portal", accessMode = "direct" }) {
+  const { session, isAuthenticated, login, logout } = useCustomerSession();
+  const [form, setForm] = useState({
+    email: session?.email || "workspace@futurecontractorsofamerica.com",
+    company: session?.company || "Future Contractors of America Pilot Workspace",
+  });
+  const [error, setError] = useState("");
+
+  const nextHref = accessMode === "protected" ? requestedPath : session?.nextHref || "/portal";
+  const liveEntryDetail = accessMode === "protected"
+    ? `Customer login is now required to enter ${requestedPath}. Auricrux is preserving continuity so the user lands inside the requested live workspace surface after authentication.`
+    : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace and unified platform dashboard.";
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const result = login({
+      email: form.email,
+      company: form.company,
+      nextHref,
+    });
+
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+
+    setError("");
+    window.location.assign(nextHref);
+  }
+
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
       <div style={pageShellStyle}>
@@ -61,6 +104,8 @@ export default function Login() {
           currentJourney="workspace"
         />
 
+        <CustomerSessionBar requestedPath={nextHref} mode="login" />
+
         <div style={{ ...heroCardStyle, marginBottom: 20 }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
             <div>
@@ -73,7 +118,7 @@ export default function Login() {
             </div>
           </div>
           <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-            This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace and unified platform dashboard.
+            {liveEntryDetail}
           </p>
           <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} />
         </div>
@@ -102,15 +147,38 @@ export default function Login() {
         </div>
 
         <div style={twoColumnGridStyle}>
-          <div style={cardStyle}>
+          <form style={cardStyle} onSubmit={handleSubmit}>
             <label>Work Email</label>
-            <input style={fieldStyle} defaultValue="workspace@futurecontractorsofamerica.com" />
+            <input
+              style={fieldStyle}
+              value={form.email}
+              onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+            />
 
             <label>Company</label>
-            <input style={fieldStyle} defaultValue="Future Contractors of America Pilot Workspace" />
+            <input
+              style={fieldStyle}
+              value={form.company}
+              onChange={(event) => setForm((prev) => ({ ...prev, company: event.target.value }))}
+            />
 
-            <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }} />
-          </div>
+            <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
+              This live customer session preserves Auricrux continuity and routes directly into {nextHref} after entry.
+            </div>
+
+            {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 700 }}>{error}</div> : null}
+
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+              <button type="submit" style={submitButtonStyle}>Open Live Customer Workspace</button>
+              {isAuthenticated ? (
+                <button type="button" onClick={logout} style={{ ...submitButtonStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>
+                  Reset Session
+                </button>
+              ) : null}
+            </div>
+
+            <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }} />
+          </form>
 
           <div style={{ display: "grid", gap: 16 }}>
             <WorkspaceSnapshotCard

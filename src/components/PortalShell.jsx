@@ -9,6 +9,7 @@ import AuricruxBrandMark from "./AuricruxBrandMark";
 import ExecutiveSignalBar from "./ExecutiveSignalBar";
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import AuricruxNavHint from "./AuricruxNavHint";
+import CustomerSessionBar from "./CustomerSessionBar";
 import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
 import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../systemState";
 
@@ -88,6 +89,8 @@ export default function PortalShell({
           journey={portalJourney}
           currentJourney={currentJourney}
         />
+
+        <CustomerSessionBar requestedPath={activeHref} />
 
         <div
           style={{
