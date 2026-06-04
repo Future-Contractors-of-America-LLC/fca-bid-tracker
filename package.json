@@ -8,7 +8,8 @@
     "build": "vite build",
     "validate:routes": "node scripts/validate-routes.mjs",
     "validate:critical-routes": "node scripts/validate-critical-routes.mjs",
-    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run lint && npm run build",
+    "validate:shell-actions": "node scripts/validate-shell-actions.mjs",
+    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run validate:shell-actions && npm run lint && npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
