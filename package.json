@@ -11,7 +11,8 @@
     "validate:shell-actions": "node scripts/validate-shell-actions.mjs",
     "validate:jsx-actions": "node scripts/validate-jsx-action-literals.mjs",
     "validate:site-metadata": "node scripts/validate-site-metadata.mjs",
-    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run validate:shell-actions && npm run validate:jsx-actions && npm run validate:site-metadata && npm run lint && npm run build",
+    "validate:shell-navigation": "node scripts/validate-shell-navigation-parity.mjs",
+    "build:system": "npm run validate:routes && npm run validate:critical-routes && npm run validate:shell-actions && npm run validate:jsx-actions && npm run validate:site-metadata && npm run validate:shell-navigation && npm run lint && npm run build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
