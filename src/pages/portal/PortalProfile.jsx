@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets } from "../../websiteShell";
-import { auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
+import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -15,10 +17,16 @@ const cardStyle = {
 
 export default function PortalProfile() {
   const { session, isAuthenticated } = useCustomerSession();
-  const sessionCompany = session?.company || portalTenant.name;
-  const sessionEmail = session?.email || "workspace@futurecontractorsofamerica.com";
-  const sessionWorkspace = session?.workspaceLabel || `${sessionCompany} Workspace`;
-  const sessionLogin = session?.lastLoginAt || "Pending first authenticated entry";
+  const { state, refreshSyncStamp } = useWorkspaceState();
+
+  useEffect(() => {
+    refreshSyncStamp("Persisted customer profile state active");
+  }, [refreshSyncStamp]);
+
+  const sessionCompany = session?.company || state.tenant.name;
+  const sessionEmail = session?.email || state.meta.customerSessionEmail || "workspace@futurecontractorsofamerica.com";
+  const sessionWorkspace = session?.workspaceLabel || state.meta.customerWorkspaceLabel || `${sessionCompany} Workspace`;
+  const sessionLogin = session?.lastLoginAt || state.meta.lastSyncedAt || "Pending first authenticated entry";
 
   return (
     <PortalShell
@@ -32,10 +40,10 @@ export default function PortalProfile() {
     >
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
-          tenant={portalTenant}
-          project={currentProject}
-          workspace={workspaceContext}
-          auricrux={auricruxRail}
+          tenant={state.tenant}
+          project={state.project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
           title="Customer profile now reads from the live authenticated workspace"
           detail="This profile route binds session identity, tenant continuity, project state, and Auricrux guidance into one customer-facing operating surface."
         />
@@ -43,6 +51,16 @@ export default function PortalProfile() {
 
       <div style={{ marginBottom: 16 }}>
         <PublicCtaRow actions={publicBodyCtaSets.portalEntry} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted profile state</div>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
+          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
+          <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+        </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16 }}>
@@ -60,10 +78,10 @@ export default function PortalProfile() {
         <div style={cardStyle}>
           <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Auricrux continuity signal</div>
           <div style={{ color: "#475569", lineHeight: 1.8 }}>
-            <div><strong>Next action:</strong> {workspaceContext.currentNextAction}</div>
-            <div><strong>Current blocker:</strong> {auricruxRail.currentBlocker}</div>
-            <div><strong>Recommended move:</strong> {auricruxRail.nextRecommendedAction}</div>
-            <div><strong>Project spine:</strong> {currentProject.id} · {currentProject.stage}</div>
+            <div><strong>Next action:</strong> {state.workspace.currentNextAction}</div>
+            <div><strong>Current blocker:</strong> {state.auricrux.currentBlocker}</div>
+            <div><strong>Recommended move:</strong> {state.auricrux.nextRecommendedAction}</div>
+            <div><strong>Project spine:</strong> {state.project.id} · {state.project.stage}</div>
           </div>
         </div>
       </div>

@@ -1,8 +1,11 @@
+import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import useCustomerSession from "../../hooks/useCustomerSession";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets } from "../../websiteShell";
-import { auricruxRail, currentProject, portalMessages, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
+import { portalMessages, projectAuditEvents, routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -13,7 +16,24 @@ const cardStyle = {
 };
 
 export default function PortalNotifications() {
+  const { state, refreshSyncStamp } = useWorkspaceState();
+  const { session, isAuthenticated } = useCustomerSession();
+
+  useEffect(() => {
+    refreshSyncStamp("Persisted notifications state active");
+  }, [refreshSyncStamp]);
+
   const liveNotifications = [
+    ...(isAuthenticated
+      ? [
+          {
+            type: "session",
+            title: "Authenticated workspace continuity active",
+            detail: `${session.company} is now attached to ${state.project.id} through the shared FCA workspace shell.`,
+            time: "Live",
+          },
+        ]
+      : []),
     ...portalMessages.map((message) => ({
       type: "message",
       title: message.subject,
@@ -40,10 +60,10 @@ export default function PortalNotifications() {
     >
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
-          tenant={portalTenant}
-          project={currentProject}
-          workspace={workspaceContext}
-          auricrux={auricruxRail}
+          tenant={state.tenant}
+          project={state.project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
           title="Notifications now read from live workspace continuity"
           detail="This route unifies customer messages, project audit cues, and Auricrux state so the customer can see what changed and what must happen next."
         />
@@ -53,13 +73,24 @@ export default function PortalNotifications() {
         <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted notification state</div>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
+          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
+          <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+        </div>
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Notification continuity</div>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Customer:</strong> {portalTenant.name}</div>
-          <div><strong>Project spine:</strong> {currentProject.id}</div>
-          <div><strong>Current blocker:</strong> {auricruxRail.currentBlocker}</div>
-          <div><strong>Recommended move:</strong> {auricruxRail.nextRecommendedAction}</div>
+          <div><strong>Customer:</strong> {state.tenant.name}</div>
+          <div><strong>Project spine:</strong> {state.project.id}</div>
+          <div><strong>Current blocker:</strong> {state.auricrux.currentBlocker}</div>
+          <div><strong>Recommended move:</strong> {state.auricrux.nextRecommendedAction}</div>
+          <div><strong>Next action:</strong> {state.workspace.currentNextAction}</div>
         </div>
       </div>
 
