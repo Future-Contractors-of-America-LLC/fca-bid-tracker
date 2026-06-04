@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useRef, useState } from "react";
 import { readCustomerSession } from "../customerSession";
 import { publicActionCatalog } from "../websiteShell";
 
@@ -8,29 +9,38 @@ const navShellStyle = {
   padding: "12px 14px",
   marginBottom: 18,
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+  position: "sticky",
+  top: 12,
+  zIndex: 40,
 };
 
-const dropdownStyle = {
+const triggerButtonStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 12,
   background: "#fff",
-  minWidth: 180,
-  padding: 0,
-};
-
-const summaryStyle = {
-  listStyle: "none",
-  cursor: "pointer",
   padding: "10px 12px",
   fontWeight: 700,
   color: "#111827",
+  cursor: "pointer",
+};
+
+const dropdownMenuStyle = {
+  position: "absolute",
+  top: "calc(100% + 8px)",
+  left: 0,
+  minWidth: 220,
+  border: "1px solid #dbe3ef",
+  borderRadius: 14,
+  background: "#fff",
+  boxShadow: "0 18px 40px rgba(15, 23, 42, 0.10)",
+  overflow: "hidden",
 };
 
 const menuLinkStyle = {
   display: "block",
   textDecoration: "none",
   color: "#334155",
-  padding: "8px 12px",
+  padding: "10px 12px",
   borderTop: "1px solid #eef2f7",
   fontSize: 14,
   lineHeight: 1.5,
@@ -56,11 +66,12 @@ const profileIconStyle = {
   alignItems: "center",
   justifyContent: "center",
   fontWeight: 800,
-  textDecoration: "none",
+  cursor: "pointer",
 };
 
 const navGroups = [
   {
+    key: "explore",
     label: "Explore",
     items: [
       publicActionCatalog.platformOverview,
@@ -69,6 +80,7 @@ const navGroups = [
     ],
   },
   {
+    key: "workspace",
     label: "Workspace",
     items: [
       publicActionCatalog.workspace,
@@ -78,6 +90,7 @@ const navGroups = [
     ],
   },
   {
+    key: "company",
     label: "Company",
     items: [
       publicActionCatalog.contact,
@@ -88,31 +101,162 @@ const navGroups = [
   },
 ];
 
+function normalizePath(value) {
+  if (!value || typeof value !== "string") return "/";
+  return value.endsWith("/") && value !== "/" ? value.slice(0, -1) : value;
+}
+
 export default function PublicTopNav() {
   const session = readCustomerSession();
   const profileHref = session?.authenticated ? session.nextHref || "/portal" : "/login";
   const profileLabel = session?.authenticated ? session.company : "Profile";
   const profileInitial = session?.authenticated ? session.company.charAt(0).toUpperCase() : "↗";
+  const currentPath = typeof window === "undefined" ? "/" : normalizePath(window.location.pathname);
+  const navRef = useRef(null);
+  const [openMenu, setOpenMenu] = useState(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const profileMenu = useMemo(
+    () => [
+      {
+        href: profileHref,
+        label: session?.authenticated ? "Open Active Workspace" : "Open Login",
+      },
+      {
+        href: "/portal/platform",
+        label: "Open Platform Dashboard",
+      },
+      {
+        href: "/academy",
+        label: "Open Academy",
+      },
+    ],
+    [profileHref, session]
+  );
+
+  useEffect(() => {
+    function handleClickAway(event) {
+      if (!navRef.current?.contains(event.target)) {
+        setOpenMenu(null);
+      }
+    }
+
+    function handleEscape(event) {
+      if (event.key === "Escape") {
+        setOpenMenu(null);
+        setMobileOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickAway);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleClickAway);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   return (
-    <div style={navShellStyle}>
+    <div style={navShellStyle} ref={navRef}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap", alignItems: "center" }}>
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-          {navGroups.map((group) => (
-            <details key={group.label} style={dropdownStyle}>
-              <summary style={summaryStyle}>{group.label}</summary>
-              <div>
-                {group.items.map((item) => (
-                  <a key={item.href} href={item.href} style={menuLinkStyle}>{item.label}</a>
-                ))}
-              </div>
-            </details>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <button
+            type="button"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            style={{ ...triggerButtonStyle, display: "inline-flex", alignItems: "center", gap: 8 }}
+          >
+            <span>Menu</span>
+            <span>{mobileOpen ? "−" : "+"}</span>
+          </button>
+
+          {(mobileOpen ? navGroups : navGroups).map((group) => (
+            <div key={group.key} style={{ position: "relative" }}>
+              <button
+                type="button"
+                onClick={() => setOpenMenu((prev) => (prev === group.key ? null : group.key))}
+                style={{
+                  ...triggerButtonStyle,
+                  background: openMenu === group.key ? "#eff6ff" : triggerButtonStyle.background,
+                  color: openMenu === group.key ? "#1d4ed8" : triggerButtonStyle.color,
+                  border: openMenu === group.key ? "1px solid #bfdbfe" : triggerButtonStyle.border,
+                }}
+              >
+                {group.label}
+              </button>
+
+              {openMenu === group.key ? (
+                <div style={dropdownMenuStyle}>
+                  {group.items.map((item, index) => {
+                    const itemPath = item.href.startsWith("mailto:") ? item.href : normalizePath(item.href);
+                    const isActive = !item.href.startsWith("mailto:") && itemPath === currentPath;
+                    return (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setOpenMenu(null)}
+                        style={{
+                          ...menuLinkStyle,
+                          borderTop: index === 0 ? "none" : menuLinkStyle.borderTop,
+                          background: isActive ? "#eff6ff" : "#fff",
+                          color: isActive ? "#1d4ed8" : menuLinkStyle.color,
+                          fontWeight: isActive ? 700 : 500,
+                        }}
+                      >
+                        {item.label}
+                      </a>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
           ))}
         </div>
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
           <a href="/login" style={actionButtonStyle}>{session?.authenticated ? "Switch Workspace" : "Login"}</a>
-          <a href={profileHref} style={profileIconStyle} title={profileLabel} aria-label={profileLabel}>{profileInitial}</a>
+
+          <div style={{ position: "relative" }}>
+            <button
+              type="button"
+              onClick={() => setOpenMenu((prev) => (prev === "profile" ? null : "profile"))}
+              style={profileIconStyle}
+              title={profileLabel}
+              aria-label={profileLabel}
+            >
+              {profileInitial}
+            </button>
+
+            {openMenu === "profile" ? (
+              <div style={{ ...dropdownMenuStyle, right: 0, left: "auto", minWidth: 240 }}>
+                <div style={{ padding: "12px 12px 10px", background: "#f8fbff", borderBottom: "1px solid #eef2f7" }}>
+                  <div style={{ fontWeight: 700, color: "#111827" }}>{profileLabel}</div>
+                  <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
+                    {session?.authenticated ? session.email : "Public visitor profile"}
+                  </div>
+                </div>
+                {profileMenu.map((item, index) => {
+                  const itemPath = normalizePath(item.href);
+                  const isActive = itemPath === currentPath;
+                  return (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setOpenMenu(null)}
+                      style={{
+                        ...menuLinkStyle,
+                        borderTop: index === 0 ? "none" : menuLinkStyle.borderTop,
+                        background: isActive ? "#eff6ff" : "#fff",
+                        color: isActive ? "#1d4ed8" : menuLinkStyle.color,
+                        fontWeight: isActive ? 700 : 500,
+                      }}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>
