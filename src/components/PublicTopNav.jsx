@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { clearCustomerSession, readCustomerSession } from "../customerSession";
+import { currentProject, portalMessages, workspaceContext } from "../workspaceState";
 import { publicActionCatalog } from "../websiteShell";
 
 const navShellStyle = {
@@ -149,6 +150,36 @@ function normalizePath(value) {
   return value.endsWith("/") && value !== "/" ? value.slice(0, -1) : value;
 }
 
+function resolveRouteCue(pathname, mode) {
+  if (mode === "portal") {
+    if (pathname.startsWith("/portal/messages")) return "Route cue: message continuity active";
+    if (pathname.startsWith("/portal/projects")) return "Route cue: project execution active";
+    if (pathname.startsWith("/portal/files")) return "Route cue: document spine active";
+    if (pathname.startsWith("/portal/billing")) return "Route cue: revenue continuity active";
+    if (pathname.startsWith("/portal/academy")) return "Route cue: academy continuity active";
+    if (pathname.startsWith("/portal/support")) return "Route cue: support continuity active";
+    if (pathname.startsWith("/portal/admin")) return "Route cue: admin control surface active";
+    if (pathname.startsWith("/portal/platform")) return "Route cue: unified platform summary active";
+    return "Route cue: customer workspace overview active";
+  }
+
+  if (pathname === "/platform") return "Route cue: public platform framing active";
+  if (pathname === "/auricrux") return "Route cue: Auricrux public guidance active";
+  if (pathname === "/pricing") return "Route cue: rollout and pricing posture active";
+  if (pathname === "/contact") return "Route cue: conversion and rollout review active";
+  if (pathname === "/login") return "Route cue: live customer entry active";
+  if (pathname === "/academy") return "Route cue: academy public continuity active";
+  return "Route cue: public shell entry active";
+}
+
+function renderQuickBadge(item, mode) {
+  if (mode !== "portal") return null;
+  if (item.href === "/portal/messages") return portalMessages.length;
+  if (item.href === "/portal/projects") return currentProject.id;
+  if (item.href === "/portal/billing") return "Live";
+  return null;
+}
+
 export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
   const profileHref = session?.authenticated ? session.nextHref || "/portal" : "/login";
@@ -162,6 +193,7 @@ export default function PublicTopNav({ mode = "public" }) {
 
   const navGroups = mode === "portal" ? portalNavGroups : publicNavGroups;
   const quickLinks = mode === "portal" ? portalQuickLinks : publicQuickLinks;
+  const routeCue = resolveRouteCue(currentPath, mode);
 
   const profileMenu = useMemo(
     () => [
@@ -305,6 +337,7 @@ export default function PublicTopNav({ mode = "public" }) {
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto" }}>
               {quickLinks.map((item) => {
                 const isActive = normalizePath(item.href) === currentPath;
+                const quickBadge = renderQuickBadge(item, mode);
                 return (
                   <a
                     key={item.href}
@@ -318,9 +351,26 @@ export default function PublicTopNav({ mode = "public" }) {
                       color: isActive ? "#1d4ed8" : "#334155",
                       fontSize: 13,
                       fontWeight: 700,
+                      display: "inline-flex",
+                      gap: 8,
+                      alignItems: "center",
                     }}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    {quickBadge ? (
+                      <span
+                        style={{
+                          padding: "2px 8px",
+                          borderRadius: 999,
+                          background: "#dbeafe",
+                          color: "#1d4ed8",
+                          fontSize: 11,
+                          fontWeight: 800,
+                        }}
+                      >
+                        {quickBadge}
+                      </span>
+                    ) : null}
                   </a>
                 );
               })}
@@ -345,6 +395,24 @@ export default function PublicTopNav({ mode = "public" }) {
             }}
           >
             {sessionBadgeText}
+          </div>
+
+          <div
+            style={{
+              padding: "8px 12px",
+              borderRadius: 999,
+              border: "1px solid #e5d3a1",
+              background: "#fffaf0",
+              color: "#8a6a14",
+              fontWeight: 700,
+              fontSize: 12,
+              maxWidth: isMobile ? "100%" : 320,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {routeCue} · {workspaceContext.currentNextAction}
           </div>
 
           <a href="/login" style={actionButtonStyle}>{session?.authenticated ? "Switch Workspace" : "Login"}</a>
@@ -378,6 +446,9 @@ export default function PublicTopNav({ mode = "public" }) {
                       : mode === "portal"
                         ? "Auricrux is preserving portal continuity across authenticated workspace surfaces."
                         : "Auricrux is preserving public continuity across customer-facing entry surfaces."}
+                  </div>
+                  <div style={{ marginTop: 10, color: "#8a6a14", fontSize: 12, lineHeight: 1.5 }}>
+                    Active project spine: {currentProject.id} · {workspaceContext.currentNextAction}
                   </div>
                 </div>
                 {profileMenu.map((item, index) => {
