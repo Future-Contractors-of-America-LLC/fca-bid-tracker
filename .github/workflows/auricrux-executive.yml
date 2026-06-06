@@ -2,6 +2,12 @@ name: Auricrux Executive Operator
 
 on:
   workflow_dispatch:
+    inputs:
+      command:
+        description: "Executive command to pass to the Auricrux engine"
+        required: false
+        default: ""
+        type: string
   issues:
     types: [opened, edited, reopened]
 
@@ -11,18 +17,20 @@ permissions:
   issues: write
 
 concurrency:
-  group: auricrux-executive
+  group: auricrux-executive-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   execute:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.ref_name || 'main' }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -31,16 +39,16 @@ jobs:
 
       - name: Run Auricrux Executive Engine
         env:
-          AURICRUX_COMMAND: ${{ github.event.inputs.command }}
+          AURICRUX_COMMAND: ${{ github.event.inputs.command || '' }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_EVENT_PATH: ${{ github.event_path }}
-          GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
         run: node auricrux/exec/index.mjs
 
       - name: Create or Update PR
         uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+          token: ${{ secrets.AURICRUX_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           commit-message: "Auricrux: system advancement"
           title: "Auricrux: system advancement"
           body: "Autonomous system advancement executed by Auricrux."
