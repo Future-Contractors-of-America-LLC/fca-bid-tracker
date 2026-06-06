@@ -27,9 +27,12 @@ It exists to keep Static Web App hardening attached to the pages that are truly 
 - `src/pages/website/Pricing.jsx`
 - `src/pages/website/Contact.jsx`
 - `src/pages/website/Auricrux.jsx`
+- `src/pages/website/LegacyBidEntry.jsx`
+- `src/pages/website/LegacyBidStatus.jsx`
 
-### Verified active portal shell example
+### Verified active portal shell pages
 - `src/pages/portal/PortalHome.jsx`
+- `src/pages/portal/PlatformDashboard.jsx`
 
 ## Verified Findings
 
@@ -92,7 +95,17 @@ Direct inspection of `src/pages/website/Auricrux.jsx` confirms:
 - capability deck, command layer framing, and walkthrough path
 - linkage into platform dashboard and rollout routes
 
-### 7. Active runtime portal home shell is continuity-grade
+### 7. Active runtime bid bridge routes are continuity-grade compatibility surfaces
+Direct inspection of `src/pages/website/LegacyBidEntry.jsx` and `src/pages/website/LegacyBidStatus.jsx` confirms:
+
+- canonical bid shorthand routes are present in the active runtime map
+- each route uses `LegacyRouteBridge`
+- each route explicitly forwards into the compatible customer-facing bid intake/status surfaces
+- companion links preserve movement between bid intake and bid status rather than dead-ending
+
+This means `/bid-entry` and `/bid-status` are valid continuity bridges in the active runtime shell, even though they are compatibility-style routes rather than full native workspace pages.
+
+### 8. Active runtime portal home shell is continuity-grade
 Direct inspection of `src/pages/portal/PortalHome.jsx` confirms the active portal route already includes:
 
 - persisted overview state reporting
@@ -104,7 +117,19 @@ Direct inspection of `src/pages/portal/PortalHome.jsx` confirms the active porta
 - project snapshot continuity
 - recent workspace signal continuity
 
-### 8. Active runtime shell quality is stronger than the duplicate route tree suggested
+### 9. Active runtime platform dashboard is continuity-grade
+Direct inspection of `src/pages/portal/PlatformDashboard.jsx` confirms:
+
+- persisted workspace dashboard state
+- workspace quick actions
+- recommended next step and current blocker visibility
+- platform metrics
+- workspace summary and Auricrux guidance sections
+- automation/system-status card
+- operational cards linking into portal/workspace sub-surfaces
+- recent update continuity
+
+### 10. Active runtime shell quality is stronger than the duplicate route tree suggested
 The duplicate `src/routes/**` tree contained placeholder-style surfaces, but the active runtime shell in `src/pages/**` already carries real continuity architecture and customer-facing structure.
 
 ## Corrected Quality Read
@@ -116,19 +141,17 @@ The duplicate `src/routes/**` tree contained placeholder-style surfaces, but the
 - `/pricing` via `src/pages/website/Pricing.jsx`
 - `/contact` via `src/pages/website/Contact.jsx`
 - `/auricrux` via `src/pages/website/Auricrux.jsx`
+- `/bid-entry` via `src/pages/website/LegacyBidEntry.jsx`
+- `/bid-status` via `src/pages/website/LegacyBidStatus.jsx`
 - `/portal` via `src/pages/portal/PortalHome.jsx`
+- `/portal/platform` via `src/pages/portal/PlatformDashboard.jsx`
 
 These active routes should be treated as **validated continuity-grade runtime surfaces**.
 
 ### Still requiring direct active-runtime validation
 The following active runtime pages still need direct page-file review in the same way:
 
-#### Website pages
-- `src/pages/website/LegacyBidEntry.jsx`
-- `src/pages/website/LegacyBidStatus.jsx`
-
 #### Portal pages
-- `src/pages/portal/PlatformDashboard.jsx`
 - `src/pages/portal/PortalProjects.jsx`
 - `src/pages/portal/PortalFiles.jsx`
 - `src/pages/portal/PortalMessages.jsx`
@@ -141,12 +164,13 @@ The following active runtime pages still need direct page-file review in the sam
 
 ## What This Means Operationally
 
-### Resolved misconception
-The active runtime shell is **not** broadly a demo-placeholder shell.
-The verified runtime website routes and runtime portal-home page already show real FCA/Auricrux continuity architecture, branded framing, CTA structure, and operational context.
+### Resolved misconceptions
+- The active runtime shell is **not** broadly a demo-placeholder shell.
+- Canonical bid continuity routes are present and valid in the active runtime path.
+- The active platform dashboard already carries continuity-grade operational context.
 
 ### Remaining task
-The job now is to finish direct validation across the remaining `src/pages/**` surfaces and identify whether any of them still lag behind the quality already present in the validated website shell and portal-home shell.
+The job now is to finish direct validation across the remaining active portal sub-surfaces and identify whether any of them lag behind the quality already present in the validated website shell, portal home, and platform dashboard.
 
 ## Founder Action Required
 
@@ -156,18 +180,15 @@ The job now is to finish direct validation across the remaining `src/pages/**` s
 
 Continue active-runtime validation in this order:
 
-1. `src/pages/website/LegacyBidEntry.jsx`
-2. `src/pages/website/LegacyBidStatus.jsx`
-3. `src/pages/portal/PlatformDashboard.jsx`
-4. `src/pages/portal/PortalProjects.jsx`
-5. `src/pages/portal/PortalFiles.jsx`
-6. `src/pages/portal/PortalMessages.jsx`
-7. `src/pages/portal/PortalNotifications.jsx`
-8. `src/pages/portal/PortalBids.jsx`
-9. `src/pages/portal/PortalBilling.jsx`
-10. `src/pages/portal/PortalSupport.jsx`
-11. `src/pages/portal/PortalAdmin.jsx`
-12. `src/pages/portal/PortalProfile.jsx`
+1. `src/pages/portal/PortalProjects.jsx`
+2. `src/pages/portal/PortalFiles.jsx`
+3. `src/pages/portal/PortalMessages.jsx`
+4. `src/pages/portal/PortalNotifications.jsx`
+5. `src/pages/portal/PortalBids.jsx`
+6. `src/pages/portal/PortalBilling.jsx`
+7. `src/pages/portal/PortalSupport.jsx`
+8. `src/pages/portal/PortalAdmin.jsx`
+9. `src/pages/portal/PortalProfile.jsx`
 
 ## Operating Rule
 
