@@ -20,10 +20,12 @@ const explicitRoutes = new Set([
   "/portal/projects",
   "/portal/files",
   "/portal/messages",
+  "/portal/notifications",
   "/portal/bids",
   "/portal/billing",
   "/portal/support",
   "/portal/admin",
+  "/portal/profile",
   "/portal/academy",
   "/academy",
 ]);
