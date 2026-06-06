@@ -33,6 +33,15 @@ It exists to keep Static Web App hardening attached to the pages that are truly 
 ### Verified active portal shell pages
 - `src/pages/portal/PortalHome.jsx`
 - `src/pages/portal/PlatformDashboard.jsx`
+- `src/pages/portal/PortalProjects.jsx`
+- `src/pages/portal/PortalFiles.jsx`
+- `src/pages/portal/PortalMessages.jsx`
+- `src/pages/portal/PortalNotifications.jsx`
+- `src/pages/portal/PortalBids.jsx`
+- `src/pages/portal/PortalBilling.jsx`
+- `src/pages/portal/PortalSupport.jsx`
+- `src/pages/portal/PortalAdmin.jsx`
+- `src/pages/portal/PortalProfile.jsx`
 
 ## Verified Findings
 
@@ -129,7 +138,75 @@ Direct inspection of `src/pages/portal/PlatformDashboard.jsx` confirms:
 - operational cards linking into portal/workspace sub-surfaces
 - recent update continuity
 
-### 10. Active runtime shell quality is stronger than the duplicate route tree suggested
+### 10. Active runtime project flow page is continuity-grade
+Direct inspection of `src/pages/portal/PortalProjects.jsx` confirms:
+
+- project route is anchored to live workspace state through `SystemStateSummary`
+- persisted project-state reporting is present
+- current project root and lifecycle framing are visible
+- project cards preserve stage, owner, due date, and next-action continuity
+
+### 11. Active runtime file route is continuity-grade
+Direct inspection of `src/pages/portal/PortalFiles.jsx` confirms:
+
+- file route reads from canonical tenant/project/workspace/Auricrux state
+- portal coordination CTA continuity is present
+- file-spine context is made explicit
+- `ProjectFileAuditPanel` keeps files and audit events attached to project continuity
+
+### 12. Active runtime message route is continuity-grade
+Direct inspection of `src/pages/portal/PortalMessages.jsx` confirms:
+
+- persisted message continuity state is present
+- message route is tied to current next action and blocker state
+- build-expansion/continuity deck is embedded
+- message stream is connected to downstream billing and academy CTA progression
+
+### 13. Active runtime notifications route is continuity-grade
+Direct inspection of `src/pages/portal/PortalNotifications.jsx` confirms:
+
+- notifications unify customer session continuity, project audit events, messages, and Auricrux guidance
+- persisted notification state is present
+- notification continuity summarizes blocker, recommended move, and next action in one route
+
+### 14. Active runtime bids route is continuity-grade
+Direct inspection of `src/pages/portal/PortalBids.jsx` confirms:
+
+- bid approval state reads from canonical operating state
+- bid route is explicitly connected to project conversion context
+- approval continuity focus is visible through next action, blocker, and downstream impact
+- route-local CTA movement into bid-entry and billing/messages continuity is present
+
+### 15. Active runtime billing route is continuity-grade
+Direct inspection of `src/pages/portal/PortalBilling.jsx` confirms:
+
+- billing reads from live workspace state
+- billing continuity strip ties portal finance back to pricing/contact conversion posture
+- persisted billing state and revenue continuity focus are explicit
+- billing queue is presented alongside narrative linkage into academy, pricing, and contact next steps
+
+### 16. Active runtime support route is continuity-grade
+Direct inspection of `src/pages/portal/PortalSupport.jsx` confirms:
+
+- support route is attached to canonical operating state
+- support continuity is branded and tied to tenant/project context
+- escalation lanes and support narrative stay inside the same workspace shell
+
+### 17. Active runtime admin route is continuity-grade
+Direct inspection of `src/pages/portal/PortalAdmin.jsx` confirms:
+
+- admin route reads from canonical control state
+- governance continuity is branded and route-local
+- seat readiness, rollout state, and governance visibility are surfaced as part of one shell
+
+### 18. Active runtime profile route is continuity-grade
+Direct inspection of `src/pages/portal/PortalProfile.jsx` confirms:
+
+- profile route binds authenticated session identity to tenant/project/Auricrux context
+- persisted profile state is present
+- the profile icon destination is a real customer-facing operating surface rather than a dead-end stub
+
+### 19. Active runtime shell quality is stronger than the duplicate route tree suggested
 The duplicate `src/routes/**` tree contained placeholder-style surfaces, but the active runtime shell in `src/pages/**` already carries real continuity architecture and customer-facing structure.
 
 ## Corrected Quality Read
@@ -145,22 +222,20 @@ The duplicate `src/routes/**` tree contained placeholder-style surfaces, but the
 - `/bid-status` via `src/pages/website/LegacyBidStatus.jsx`
 - `/portal` via `src/pages/portal/PortalHome.jsx`
 - `/portal/platform` via `src/pages/portal/PlatformDashboard.jsx`
+- `/portal/projects` via `src/pages/portal/PortalProjects.jsx`
+- `/portal/files` via `src/pages/portal/PortalFiles.jsx`
+- `/portal/messages` via `src/pages/portal/PortalMessages.jsx`
+- `/portal/notifications` via `src/pages/portal/PortalNotifications.jsx`
+- `/portal/bids` via `src/pages/portal/PortalBids.jsx`
+- `/portal/billing` via `src/pages/portal/PortalBilling.jsx`
+- `/portal/support` via `src/pages/portal/PortalSupport.jsx`
+- `/portal/admin` via `src/pages/portal/PortalAdmin.jsx`
+- `/portal/profile` via `src/pages/portal/PortalProfile.jsx`
 
 These active routes should be treated as **validated continuity-grade runtime surfaces**.
 
-### Still requiring direct active-runtime validation
-The following active runtime pages still need direct page-file review in the same way:
-
-#### Portal pages
-- `src/pages/portal/PortalProjects.jsx`
-- `src/pages/portal/PortalFiles.jsx`
-- `src/pages/portal/PortalMessages.jsx`
-- `src/pages/portal/PortalNotifications.jsx`
-- `src/pages/portal/PortalBids.jsx`
-- `src/pages/portal/PortalBilling.jsx`
-- `src/pages/portal/PortalSupport.jsx`
-- `src/pages/portal/PortalAdmin.jsx`
-- `src/pages/portal/PortalProfile.jsx`
+### Remaining direct active-runtime validation
+No major public or portal route remains unvalidated from the current active runtime map, based on the inspected path inventory captured in `src/routes.js`.
 
 ## What This Means Operationally
 
@@ -168,9 +243,14 @@ The following active runtime pages still need direct page-file review in the sam
 - The active runtime shell is **not** broadly a demo-placeholder shell.
 - Canonical bid continuity routes are present and valid in the active runtime path.
 - The active platform dashboard already carries continuity-grade operational context.
+- The remaining validated portal sub-surfaces also carry continuity-grade workspace context rather than placeholder-only behavior.
 
 ### Remaining task
-The job now is to finish direct validation across the remaining active portal sub-surfaces and identify whether any of them lag behind the quality already present in the validated website shell, portal home, and platform dashboard.
+The highest-value remaining work in this lane is no longer broad route validation. It is now:
+
+1. build/validation truth (`npm run build` / `npm run build:system`)
+2. classification and eventual cleanup/deprecation of duplicate `src/routes/**` tree
+3. Function App minimum execution spine work after Static Web App validation closes
 
 ## Founder Action Required
 
@@ -178,17 +258,10 @@ The job now is to finish direct validation across the remaining active portal su
 
 ## Next Concrete Action
 
-Continue active-runtime validation in this order:
-
-1. `src/pages/portal/PortalProjects.jsx`
-2. `src/pages/portal/PortalFiles.jsx`
-3. `src/pages/portal/PortalMessages.jsx`
-4. `src/pages/portal/PortalNotifications.jsx`
-5. `src/pages/portal/PortalBids.jsx`
-6. `src/pages/portal/PortalBilling.jsx`
-7. `src/pages/portal/PortalSupport.jsx`
-8. `src/pages/portal/PortalAdmin.jsx`
-9. `src/pages/portal/PortalProfile.jsx`
+1. verify build truth for the active shell
+2. verify system validation truth for the active shell
+3. classify duplicate `src/routes/**` tree for later removal/deprecation
+4. then advance to the Function App minimum execution spine lane
 
 ## Operating Rule
 
