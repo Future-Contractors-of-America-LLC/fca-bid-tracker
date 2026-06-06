@@ -1,0 +1,126 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const shellStyles = {
+  page: {
+    minHeight: 'calc(100vh - 64px)',
+    background: 'linear-gradient(180deg, #081120 0%, #0f172a 45%, #111827 100%)',
+    color: '#e5eefb',
+    padding: '3rem 1.5rem 4rem',
+  },
+  wrap: {
+    maxWidth: '1120px',
+    margin: '0 auto',
+    display: 'grid',
+    gap: '1.5rem',
+  },
+  eyebrow: {
+    color: '#7dd3fc',
+    fontSize: '0.82rem',
+    fontWeight: 700,
+    letterSpacing: '0.16em',
+    textTransform: 'uppercase',
+    marginBottom: '0.75rem',
+  },
+  title: {
+    margin: 0,
+    fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+    lineHeight: 1.05,
+  },
+  lead: {
+    maxWidth: '780px',
+    margin: '1rem 0 0',
+    fontSize: '1.05rem',
+    lineHeight: 1.7,
+    color: '#cbd5e1',
+  },
+  ctas: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '0.75rem',
+    marginTop: '1.5rem',
+  },
+  primary: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0.9rem 1.2rem',
+    borderRadius: '999px',
+    textDecoration: 'none',
+    background: '#4f7cff',
+    color: '#ffffff',
+    fontWeight: 700,
+  },
+  secondary: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0.9rem 1.2rem',
+    borderRadius: '999px',
+    textDecoration: 'none',
+    background: 'rgba(148, 163, 184, 0.12)',
+    color: '#e5eefb',
+    border: '1px solid rgba(148, 163, 184, 0.25)',
+    fontWeight: 700,
+  },
+  grid: {
+    display: 'grid',
+    gap: '1rem',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    marginTop: '1rem',
+  },
+  card: {
+    background: 'rgba(15, 23, 42, 0.75)',
+    border: '1px solid rgba(125, 211, 252, 0.14)',
+    borderRadius: '1rem',
+    padding: '1.1rem',
+    boxShadow: '0 10px 30px rgba(2, 6, 23, 0.25)',
+  },
+  cardTitle: {
+    margin: '0 0 0.45rem',
+    fontSize: '1rem',
+    color: '#f8fafc',
+  },
+  cardBody: {
+    margin: 0,
+    color: '#cbd5e1',
+    lineHeight: 1.6,
+    fontSize: '0.96rem',
+  },
+};
+
+export default function RouteExperienceShell({ eyebrow, title, lead, primaryCta, secondaryCta, cards = [] }) {
+  return (
+    <section style={shellStyles.page}>
+      <div style={shellStyles.wrap}>
+        <header>
+          <div style={shellStyles.eyebrow}>{eyebrow}</div>
+          <h1 style={shellStyles.title}>{title}</h1>
+          <p style={shellStyles.lead}>{lead}</p>
+          <div style={shellStyles.ctas}>
+            {primaryCta ? (
+              <Link to={primaryCta.href} style={shellStyles.primary}>
+                {primaryCta.label}
+              </Link>
+            ) : null}
+            {secondaryCta ? (
+              <Link to={secondaryCta.href} style={shellStyles.secondary}>
+                {secondaryCta.label}
+              </Link>
+            ) : null}
+          </div>
+        </header>
+        {cards.length ? (
+          <div style={shellStyles.grid}>
+            {cards.map((card) => (
+              <article key={card.title} style={shellStyles.card}>
+                <h2 style={shellStyles.cardTitle}>{card.title}</h2>
+                <p style={shellStyles.cardBody}>{card.detail}</p>
+              </article>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </section>
+  );
+}
