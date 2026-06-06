@@ -22,7 +22,7 @@ export default function PortalBids() {
   return (
     <PortalShell
       title="Bid Pipeline and Approval Readiness"
-      subtitle="Bid-facing shell for production conversations, tied directly to project conversion and customer action."
+      subtitle="Bid-facing shell for estimating, scope alignment, and conversion into job-start execution rather than a disconnected sales-only view."
       activeHref="/portal/bids"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}
@@ -60,26 +60,36 @@ export default function PortalBids() {
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
           <div><strong>Active project root:</strong> {currentProject.name}</div>
           <div><strong>Project ID:</strong> {currentProject.id}</div>
+          <div><strong>Current stage:</strong> {currentProject.stage}</div>
           <div>{currentProject.auricruxSummary}</div>
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
         {portalBids.map((bid) => (
           <div key={bid.package} style={cardStyle}>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>{bid.status}</div>
             <h3 style={{ marginTop: 0, marginBottom: 10 }}>{bid.package}</h3>
             <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 10 }}>{bid.value}</div>
-            <div style={{ color: "#4b5563", lineHeight: 1.6 }}>{bid.blocker}</div>
+            <div style={{ color: "#0f172a", lineHeight: 1.7 }}>
+              <div><strong>Estimator:</strong> {bid.estimator}</div>
+              <div><strong>Scope package:</strong> {bid.scopePackage}</div>
+              <div><strong>Decision due:</strong> {bid.dueDate}</div>
+              <div><strong>Trade coverage:</strong> {bid.tradeCoverage}</div>
+            </div>
+            <div style={{ color: "#4b5563", lineHeight: 1.6, marginTop: 12 }}>
+              <div><strong>Current blocker:</strong> {bid.blocker}</div>
+              <div><strong>Next commercial move:</strong> {bid.nextCommercialMove}</div>
+            </div>
           </div>
         ))}
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Sales Narrative</h2>
+        <h2 style={{ marginTop: 0 }}>Construction-facing narrative</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-          This shell lets FCA show that bidding is not a disconnected tool. Auricrux can surface the approval queue, explain blockers,
-          and move directly from estimate visibility into project execution, communications, and onboarding.
+          This shell now shows bidding as a true preconstruction control surface. FCA can hold estimator ownership, scope package clarity,
+          trade coverage gaps, approval timing, and the move from won work into job-start setup instead of leaving bid activity as detached CRM copy.
         </p>
         <PublicCtaRow actions={portalNarrativeCtaSets.bidSalesNarrative} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
       </div>

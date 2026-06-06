@@ -22,7 +22,7 @@ export default function PortalProjects() {
   return (
     <PortalShell
       title="Project Flow and Customer Visibility"
-      subtitle="Execution-stage shell showing how FCA carries a customer from awarded work into delivery, accountability, and closeout."
+      subtitle="Execution-stage shell showing how FCA carries a customer from awarded work into job setup, delivery coordination, and closeout accountability."
       activeHref="/portal/projects"
       currentJourney="job"
       routeOverlay={routeStateOverlays.projects}
@@ -85,13 +85,19 @@ export default function PortalProjects() {
                 <h3 style={{ margin: "0 0 6px 0" }}>{project.id} · {project.customer}</h3>
                 <div style={{ color: "#4b5563", lineHeight: 1.6 }}>
                   Current stage: <strong>{project.stage}</strong><br />
-                  Next action: {project.nextAction}
+                  Next action: {project.nextAction}<br />
+                  Site status: {project.siteStatus}
                 </div>
               </div>
-              <div style={{ minWidth: 180 }}>
+              <div style={{ minWidth: 220, color: "#0f172a", lineHeight: 1.7 }}>
                 <div><strong>Owner:</strong> {project.owner}</div>
                 <div><strong>Due:</strong> {project.due}</div>
+                <div><strong>Superintendent:</strong> {project.superintendent}</div>
+                <div><strong>Permit status:</strong> {project.permitStatus}</div>
               </div>
+            </div>
+            <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.6 }}>
+              <strong>Commercial focus:</strong> {project.commercialFocus}
             </div>
           </div>
         ))}
