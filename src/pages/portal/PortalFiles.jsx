@@ -17,7 +17,7 @@ export default function PortalFiles() {
   return (
     <PortalShell
       title="Files, Plans, and Customer Documents"
-      subtitle="Document shell proving that bids, permits, onboarding packets, and project artifacts live in one connected workspace."
+      subtitle="Document shell proving that bid packages, permit sets, RFIs, submittals, safety packets, and project artifacts live in one connected workspace."
       activeHref="/portal/files"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.files}

@@ -27,6 +27,14 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
                 </div>
                 <div style={{ alignSelf: "center", fontWeight: 700, color: "#1d4ed8" }}>{file.action}</div>
               </div>
+              <div style={{ color: "#0f172a", lineHeight: 1.7, marginTop: 10 }}>
+                {file.discipline ? <div><strong>Discipline:</strong> {file.discipline}</div> : null}
+                {file.status ? <div><strong>Status:</strong> {file.status}</div> : null}
+                {file.owner ? <div><strong>Owner:</strong> {file.owner}</div> : null}
+              </div>
+              {file.note ? (
+                <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 10 }}>{file.note}</div>
+              ) : null}
             </div>
           ))}
         </div>
@@ -40,6 +48,7 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
             <div key={`${event.time}-${event.action}`} style={{ borderLeft: "3px solid #2563eb", paddingLeft: 12 }}>
               <div style={{ fontSize: 12, color: "#64748b", fontWeight: 700 }}>{event.time}</div>
               <div style={{ fontWeight: 700, marginTop: 4 }}>{event.action}</div>
+              {event.discipline ? <div style={{ fontSize: 12, color: "#1d4ed8", fontWeight: 700, marginTop: 4 }}>{event.discipline}</div> : null}
               <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 4 }}>{event.detail}</div>
             </div>
           ))}
