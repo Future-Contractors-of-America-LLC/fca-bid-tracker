@@ -1,12 +1,28 @@
+import fs from "fs";
 import path from "path";
 import { pathToFileURL } from "url";
 
 const root = process.cwd();
-const routerModule = await import(pathToFileURL(path.join(root, "router.jsx")).href);
+const routesSource = fs.readFileSync(path.join(root, "src", "routes.js"), "utf8");
 const websiteShellModule = await import(pathToFileURL(path.join(root, "src", "websiteShell.js")).href);
 
-const routes = routerModule.routes || {};
-const routeSet = new Set(Object.keys(routes));
+function parseRouteKeys(source) {
+  const routeObjectMatch = source.match(/export const routes = \{([\s\S]*?)\n\};/);
+  if (!routeObjectMatch) {
+    throw new Error("Unable to locate exported routes object in src/routes.js");
+  }
+
+  const keys = new Set();
+  const keyPattern = /["'](\/[^"']*)["']\s*:/g;
+
+  for (const match of routeObjectMatch[1].matchAll(keyPattern)) {
+    keys.add(match[1]);
+  }
+
+  return keys;
+}
+
+const routeSet = parseRouteKeys(routesSource);
 
 const requiredAppRoutes = [
   "/",
