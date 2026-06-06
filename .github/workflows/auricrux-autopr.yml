@@ -29,14 +29,14 @@ jobs:
           set -euo pipefail
           mkdir -p auricrux/system
           GENERATED_AT=$(date -u +"%Y-%m-%d %H:%M UTC")
-          cat > AURICRUX_DIGEST.txt <<EOF
-Auricrux autonomous maintenance cycle
-Generated: ${GENERATED_AT}
-Repository: Future-Contractors-of-America-LLC/fca-bid-tracker
-Mode: deterministic no-cost maintenance placeholder
-Control Plane: primary schedule ownership moved to .github/workflows/auricrux-control-plane.yml
-Next intent: keep repo autonomy rail available as a bounded manual/fallback PR path
-EOF
+          {
+            echo "Auricrux autonomous maintenance cycle"
+            echo "Generated: ${GENERATED_AT}"
+            echo "Repository: Future-Contractors-of-America-LLC/fca-bid-tracker"
+            echo "Mode: deterministic no-cost maintenance placeholder"
+            echo "Control Plane: primary schedule ownership moved to .github/workflows/auricrux-control-plane.yml"
+            echo "Next intent: keep repo autonomy rail available as a bounded manual/fallback PR path"
+          } > AURICRUX_DIGEST.txt
           cp AURICRUX_DIGEST.txt auricrux/system/autopr_latest.txt
           test -s AURICRUX_DIGEST.txt || { echo "AURICRUX_DIGEST.txt was not generated"; exit 1; }
 
