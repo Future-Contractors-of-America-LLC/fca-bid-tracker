@@ -7,6 +7,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
+import ProductProofSection from "../../components/ProductProofSection";
 import {
   executiveSignalCtaSets,
   founderJourneyCtaSets,
@@ -36,6 +37,33 @@ const platformContinuityItems = [
   },
 ];
 
+const platformConstructionProof = [
+  {
+    title: "Estimating to operations handoff",
+    detail: "Use the bid and project flow to demonstrate how opportunities, scope, approvals, and awarded work stay connected.",
+    href: "/bid-entry",
+    label: "Open Bid Entry",
+  },
+  {
+    title: "Project document control",
+    detail: "Show files, submittals, RFIs, and customer-visible coordination inside the same operating shell.",
+    href: "/portal/files",
+    label: "Open Files",
+  },
+  {
+    title: "Customer communication continuity",
+    detail: "Open the portal workspace and messages to prove the product supports real owner and customer follow-through.",
+    href: "/portal/messages",
+    label: "Open Messages",
+  },
+  {
+    title: "Field readiness and training",
+    detail: "Keep workforce onboarding and academy continuity attached to the same delivery story.",
+    href: "/academy",
+    label: "Open Academy",
+  },
+];
+
 export default function Platform() {
   return (
     <div style={pageShellStyle}>
@@ -58,7 +86,7 @@ export default function Platform() {
         </div>
         <h2 style={{ marginTop: 0 }}>Built to feel like one connected system</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
-          FCA helps contractor teams move from opportunity to delivery with better visibility into bids, customer updates, files, billing steps, and workforce readiness.
+          FCA helps contractor teams move from opportunity to delivery with better visibility into bids, approvals, project files, customer updates, billing steps, and workforce readiness.
         </p>
       </div>
 
@@ -87,6 +115,13 @@ export default function Platform() {
         />
       </div>
 
+      <ProductProofSection
+        eyebrow="Construction product proof"
+        title="Platform language now reflects actual construction operations"
+        detail="The product path now speaks more directly to bid handoff, document control, customer coordination, and field readiness instead of generic SaaS movement alone."
+        highlights={platformConstructionProof}
+      />
+
       <div style={{ marginTop: 24 }}>
         <CustomerTrustPanel
           eyebrow="Why teams use FCA"
@@ -95,15 +130,15 @@ export default function Platform() {
           items={[
             {
               title: "Track work in one place",
-              detail: "Keep opportunities, projects, files, and customer communication connected instead of scattered across separate tools.",
+              detail: "Keep opportunities, projects, files, RFIs, submittals, and customer communication connected instead of scattered across separate tools.",
             },
             {
               title: "Stay ahead of blockers",
-              detail: "See approvals, billing readiness, and next steps before they turn into delays.",
+              detail: "See approvals, document gaps, billing readiness, and next steps before they turn into delays.",
             },
             {
               title: "Support rollout and training",
-              detail: "Tie onboarding, academy access, and field readiness into the same operating flow.",
+              detail: "Tie onboarding, academy access, safety reinforcement, and field readiness into the same operating flow.",
             },
           ]}
         />

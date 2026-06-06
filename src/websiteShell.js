@@ -176,21 +176,21 @@ export const platformJourneyPath = [
     prefix: "Open the",
     href: publicActionCatalog.portal.href,
     label: "customer portal",
-    suffix: "for visibility into projects, files, and communications.",
+    suffix: "for visibility into projects, files, RFIs, submittals, and customer communication.",
   },
   {
     step: 4,
     prefix: "Continue into",
     href: publicActionCatalog.academyContinuity.href,
     label: "academy continuity",
-    suffix: "for onboarding and workforce readiness.",
+    suffix: "for onboarding, safety reinforcement, and workforce readiness.",
   },
   {
     step: 5,
     prefix: "Use the",
     href: publicActionCatalog.platform.href,
     label: "platform dashboard",
-    suffix: "to summarize tenant, project, support, and admin state in one view.",
+    suffix: "to summarize bid posture, project health, approvals, billing risk, and admin state in one view.",
   },
 ];
 
@@ -285,7 +285,7 @@ export const portalEntryCtaSets = {
       prefix: "Open",
       href: publicActionCatalog.projects.href,
       label: "Projects",
-      suffix: "to show execution continuity.",
+      suffix: "to show estimating handoff, job execution continuity, and schedule posture.",
     },
     {
       step: 4,
@@ -295,14 +295,14 @@ export const portalEntryCtaSets = {
       suffix: "and",
       secondaryHref: publicActionCatalog.messages.href,
       secondaryLabel: "Messages",
-      trailing: "to show coordination.",
+      trailing: "to show drawing packages, submittals, RFIs, and coordination flow.",
     },
     {
       step: 5,
       prefix: "Finish in",
       href: publicActionCatalog.academyContinuity.href,
       label: "Open Academy",
-      suffix: "to prove workforce and training follow-through.",
+      suffix: "to prove workforce onboarding, safety readiness, and training follow-through.",
     },
   ],
 };
@@ -317,7 +317,7 @@ export const platformDashboardCtaSets = {
   operationalCards: [
     {
       title: "Portal operations",
-      detail: "Project visibility, files, messages, and billing continuity remain attached to one tenant and project spine.",
+      detail: "Project visibility, file control, RFIs, messages, and billing continuity remain attached to one tenant and project spine.",
       href: publicActionCatalog.portal.href,
       label: publicActionCatalog.portal.label,
     },
@@ -416,19 +416,19 @@ export const founderJourneyCtaSets = {
 export const platformModules = [
   {
     title: "Lead to Bid",
-    detail: "Capture opportunities, structure estimating workflows, and guide approvals with Auricrux visibility.",
+    detail: "Capture opportunities, scope notes, estimator handoff, and approval posture before the job is won.",
   },
   {
     title: "Project Delivery",
-    detail: "Carry awarded work into project coordination, documents, billing, and closeout from one workspace.",
+    detail: "Carry awarded work into job execution, document control, customer updates, billing, and closeout from one workspace.",
   },
   {
     title: "Customer Portal",
-    detail: "Give customers live visibility into projects, files, messages, and next actions without disconnected tools.",
+    detail: "Give customers live visibility into projects, files, statuses, messages, and next actions without disconnected tools.",
   },
   {
-    title: "Academy Continuity",
-    detail: "Move onboarding and workforce enablement into FCA Academy as part of the same lifecycle.",
+    title: "Field & Academy Readiness",
+    detail: "Move onboarding, safety reinforcement, and workforce enablement into FCA Academy as part of the same lifecycle.",
   },
 ];
 
@@ -436,10 +436,10 @@ export const pricingTiers = [
   {
     name: "Pilot Workspace",
     price: "Guided setup",
-    detail: "Best for early FCA customers who want a live walkthrough, configured shell access, and close rollout support.",
+    detail: "Best for early FCA customers who want a live walkthrough, configured shell access, and close rollout support across bid intake, project visibility, and customer communication.",
     includes: [
       "Customer workspace shell",
-      "Bid and project flow walkthrough",
+      "Bid intake and estimator handoff walkthrough",
       "Auricrux-guided next actions",
       "Academy continuity demo",
     ],
@@ -447,18 +447,18 @@ export const pricingTiers = [
   {
     name: "Growth Platform",
     price: "Custom scope",
-    detail: "For contractors who need deeper operational rollout across portal, documents, communications, and training.",
+    detail: "For contractors who need deeper operational rollout across project coordination, files, approvals, customer communication, billing, and training.",
     includes: [
       "Expanded portal modules",
       "Customer communication structure",
       "Billing and account continuity",
-      "Training rollout planning",
+      "Training and rollout planning",
     ],
   },
   {
     name: "Enterprise Rollout",
     price: "Strategic engagement",
-    detail: "For larger organizations adopting FCA as a unified contractor lifecycle operating system.",
+    detail: "For larger organizations adopting FCA as a unified contractor lifecycle operating system across estimating, operations, delivery, and workforce readiness.",
     includes: [
       "Multi-team rollout planning",
       "Auricrux operating visibility",
@@ -469,17 +469,17 @@ export const pricingTiers = [
 ];
 
 export const auricruxCapabilities = [
-  "Surfaces next actions across customer-facing workflows",
-  "Maintains continuity between portal, communications, and academy",
+  "Surfaces next actions across estimating, delivery, and customer-facing workflows",
+  "Maintains continuity between portal operations, communication, and academy readiness",
   "Acts as a visible operating layer inside the shell",
-  "Explains workflow state so teams always know what should happen next",
+  "Explains blockers so teams know what should happen next before delay risk grows",
 ];
 
 export const publicSurfaceLinks = [
   {
     key: "platform",
     title: "Platform Overview",
-    detail: "See how FCA keeps bids, project visibility, communication, and training connected in one operating system.",
+    detail: "See how FCA keeps bids, project visibility, communication, field documentation, and training connected in one operating system.",
     href: "/platform",
     ctaLabel: "Platform Overview",
   },
@@ -500,7 +500,7 @@ export const publicSurfaceLinks = [
   {
     key: "academy",
     title: "FCA Academy",
-    detail: "Training pathways, certification progress, and workforce readiness tied to the same customer journey.",
+    detail: "Training pathways, certification progress, safety reinforcement, and workforce readiness tied to the same customer journey.",
     href: "/academy",
     ctaLabel: "Open Academy",
   },
@@ -523,13 +523,13 @@ export const publicSurfaceLinks = [
 export const contactPaths = [
   {
     title: "Schedule a Walkthrough",
-    detail: "Walk through the live FCA workspace and see how FCA can support your team from first opportunity through delivery and training.",
+    detail: "Walk through the live FCA workspace and see how FCA can support your team from first opportunity through bid handoff, project delivery, customer visibility, and training.",
     cta: publicActionCatalog.walkthrough.href,
     label: publicActionCatalog.walkthrough.label,
   },
   {
     title: "Discuss a Pilot",
-    detail: "Talk through pilot scope, team fit, and where the current workspace can create immediate value.",
+    detail: "Talk through pilot scope, team fit, and where the current workspace can create immediate value in estimating, customer communication, and job follow-through.",
     cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Pilot%20Discussion",
     label: "Start Pilot Discussion",
   },
