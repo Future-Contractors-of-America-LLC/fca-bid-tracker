@@ -20,8 +20,13 @@ It exists to keep Static Web App hardening attached to the pages that are truly 
 - `src/router.jsx`
 - `src/routes.js`
 
-### Verified active website shell example
+### Verified active website shell pages
 - `src/pages/website/Home.jsx`
+- `src/pages/website/Platform.jsx`
+- `src/pages/website/Login.jsx`
+- `src/pages/website/Pricing.jsx`
+- `src/pages/website/Contact.jsx`
+- `src/pages/website/Auricrux.jsx`
 
 ### Verified active portal shell example
 - `src/pages/portal/PortalHome.jsx`
@@ -39,7 +44,55 @@ Direct inspection of `src/pages/website/Home.jsx` confirms the active home route
 - canonical bid-route CTA references
 - legacy compatibility CTA references
 
-### 2. Active runtime portal home shell is continuity-grade
+### 2. Active runtime platform shell is continuity-grade
+Direct inspection of `src/pages/website/Platform.jsx` confirms:
+
+- shell header and footer continuity
+- platform-specific continuity strip
+- founder journey continuity
+- executive signal bar
+- product-module cards
+- linked product-area routing
+- public proof of workspace continuity through dashboard CTA flow
+
+### 3. Active runtime login shell is continuity-grade
+Direct inspection of `src/pages/website/Login.jsx` confirms:
+
+- live customer session handling and protected-route continuity
+- workspace continuity strip
+- persisted post-login routing behavior
+- visible downstream portal/platform/academy destinations
+- workspace module previews
+- route-local CTA continuity without dead-end form posture
+
+### 4. Active runtime pricing shell is continuity-grade
+Direct inspection of `src/pages/website/Pricing.jsx` confirms:
+
+- rollout-oriented pricing framing rather than detached brochure posture
+- pricing continuity strip
+- commercial readiness panel
+- rollout checklist and pricing tiers
+- shared conversion CTA posture into contact and platform review
+
+### 5. Active runtime contact shell is continuity-grade
+Direct inspection of `src/pages/website/Contact.jsx` confirms:
+
+- contact continuity strip
+- walkthrough and rollout framing tied to real operating context
+- workspace snapshot continuity
+- structured contact-path cards
+- shared conversion posture rather than generic inquiry-page behavior
+
+### 6. Active runtime Auricrux shell is continuity-grade
+Direct inspection of `src/pages/website/Auricrux.jsx` confirms:
+
+- shell-consistent Auricrux framing
+- Auricrux continuity strip
+- executive signal bar and founder journey continuity
+- capability deck, command layer framing, and walkthrough path
+- linkage into platform dashboard and rollout routes
+
+### 7. Active runtime portal home shell is continuity-grade
 Direct inspection of `src/pages/portal/PortalHome.jsx` confirms the active portal route already includes:
 
 - persisted overview state reporting
@@ -51,13 +104,18 @@ Direct inspection of `src/pages/portal/PortalHome.jsx` confirms the active porta
 - project snapshot continuity
 - recent workspace signal continuity
 
-### 3. Active runtime shell quality is stronger than the duplicate route tree suggested
+### 8. Active runtime shell quality is stronger than the duplicate route tree suggested
 The duplicate `src/routes/**` tree contained placeholder-style surfaces, but the active runtime shell in `src/pages/**` already carries real continuity architecture and customer-facing structure.
 
 ## Corrected Quality Read
 
 ### Verified strong surfaces now
 - `/` via `src/pages/website/Home.jsx`
+- `/platform` via `src/pages/website/Platform.jsx`
+- `/login` via `src/pages/website/Login.jsx`
+- `/pricing` via `src/pages/website/Pricing.jsx`
+- `/contact` via `src/pages/website/Contact.jsx`
+- `/auricrux` via `src/pages/website/Auricrux.jsx`
 - `/portal` via `src/pages/portal/PortalHome.jsx`
 
 These active routes should be treated as **validated continuity-grade runtime surfaces**.
@@ -66,11 +124,6 @@ These active routes should be treated as **validated continuity-grade runtime su
 The following active runtime pages still need direct page-file review in the same way:
 
 #### Website pages
-- `src/pages/website/Platform.jsx`
-- `src/pages/website/Login.jsx`
-- `src/pages/website/Pricing.jsx`
-- `src/pages/website/Contact.jsx`
-- `src/pages/website/Auricrux.jsx`
 - `src/pages/website/LegacyBidEntry.jsx`
 - `src/pages/website/LegacyBidStatus.jsx`
 
@@ -90,10 +143,10 @@ The following active runtime pages still need direct page-file review in the sam
 
 ### Resolved misconception
 The active runtime shell is **not** broadly a demo-placeholder shell.
-At least the verified home and portal-home runtime pages already show continuity-grade implementation.
+The verified runtime website routes and runtime portal-home page already show real FCA/Auricrux continuity architecture, branded framing, CTA structure, and operational context.
 
 ### Remaining task
-The job now is to finish direct validation across the remaining `src/pages/**` surfaces and identify whether any of them still lag behind the quality already present in `Home.jsx` and `PortalHome.jsx`.
+The job now is to finish direct validation across the remaining `src/pages/**` surfaces and identify whether any of them still lag behind the quality already present in the validated website shell and portal-home shell.
 
 ## Founder Action Required
 
@@ -103,15 +156,18 @@ The job now is to finish direct validation across the remaining `src/pages/**` s
 
 Continue active-runtime validation in this order:
 
-1. `src/pages/website/Platform.jsx`
-2. `src/pages/website/Login.jsx`
-3. `src/pages/website/Pricing.jsx`
-4. `src/pages/website/Contact.jsx`
-5. `src/pages/website/Auricrux.jsx`
-6. `src/pages/website/LegacyBidEntry.jsx`
-7. `src/pages/website/LegacyBidStatus.jsx`
-8. `src/pages/portal/PlatformDashboard.jsx`
-9. remaining portal pages
+1. `src/pages/website/LegacyBidEntry.jsx`
+2. `src/pages/website/LegacyBidStatus.jsx`
+3. `src/pages/portal/PlatformDashboard.jsx`
+4. `src/pages/portal/PortalProjects.jsx`
+5. `src/pages/portal/PortalFiles.jsx`
+6. `src/pages/portal/PortalMessages.jsx`
+7. `src/pages/portal/PortalNotifications.jsx`
+8. `src/pages/portal/PortalBids.jsx`
+9. `src/pages/portal/PortalBilling.jsx`
+10. `src/pages/portal/PortalSupport.jsx`
+11. `src/pages/portal/PortalAdmin.jsx`
+12. `src/pages/portal/PortalProfile.jsx`
 
 ## Operating Rule
 
