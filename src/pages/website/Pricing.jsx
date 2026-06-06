@@ -9,6 +9,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
+import ProductProofSection from "../../components/ProductProofSection";
 import { executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
@@ -35,6 +36,33 @@ const pricingContinuityItems = [
     label: "Shared narrative",
     value: "Public shell stays product-aware",
     detail: "Pricing continues the same platform and academy continuity story instead of restarting from zero.",
+  },
+];
+
+const pricingProductProof = [
+  {
+    title: "Validate live operating state",
+    detail: "Open the platform dashboard during pricing review so commercial discussion stays attached to product proof.",
+    href: "/portal/platform",
+    label: "Open Platform Dashboard",
+  },
+  {
+    title: "Show customer workspace depth",
+    detail: "Use the portal shell to demonstrate the product that the rollout tiers are funding and sequencing.",
+    href: "/portal",
+    label: "Open Portal Workspace",
+  },
+  {
+    title: "Prove bid continuity",
+    detail: "Bring the canonical bid route into the conversation so pilot and rollout scope are tied to a real production flow.",
+    href: "/bid-entry",
+    label: "Open Bid Entry",
+  },
+  {
+    title: "Keep academy in scope",
+    detail: "Training and readiness stay inside the same product story, which makes rollout planning more credible.",
+    href: "/academy",
+    label: "Open Academy",
   },
 ];
 
@@ -94,7 +122,14 @@ export default function Pricing() {
         />
       </div>
 
-      <div style={{ marginBottom: 24 }}>
+      <ProductProofSection
+        eyebrow="Pricing product proof"
+        title="Pricing now closes against visible product, not promise-only packaging"
+        detail="The route now keeps dashboard, workspace, bid, and academy proof in view so rollout conversations stay anchored to the actual FCA product."
+        highlights={pricingProductProof}
+      />
+
+      <div style={{ marginBottom: 24, marginTop: 24 }}>
         <CustomerTrustPanel
           eyebrow={publicPricingMessaging.trust.eyebrow}
           title={publicPricingMessaging.trust.title}

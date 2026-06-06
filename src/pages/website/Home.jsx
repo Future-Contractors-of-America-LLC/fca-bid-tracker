@@ -8,6 +8,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
+import ProductProofSection from "../../components/ProductProofSection";
 import { filterVisibleActions } from "../../ctaBehavior";
 import { homeCtaSets, publicSurfaceLinks, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
@@ -28,6 +29,33 @@ const homeContinuityItems = [
     label: "Next action",
     value: "Clear conversion motion remains active",
     detail: "Visitors can move directly into workspace, platform review, or rollout planning without losing context.",
+  },
+];
+
+const homeProductProof = [
+  {
+    title: "Open the live dashboard story",
+    detail: "Go from the public shell into the unified platform dashboard and show real operating continuity instead of stopping at marketing copy.",
+    href: "/portal/platform",
+    label: "Open Platform Dashboard",
+  },
+  {
+    title: "Enter the customer workspace",
+    detail: "Use the login and portal path to demonstrate project, file, message, bid, billing, and support continuity.",
+    href: "/portal",
+    label: "Open Portal Workspace",
+  },
+  {
+    title: "Walk the bid product",
+    detail: "Move directly into the canonical FCA bid intake route so the product shows a real customer movement path from the home page.",
+    href: "/bid-entry",
+    label: "Open Bid Entry",
+  },
+  {
+    title: "Keep training attached",
+    detail: "Open academy continuity from the same shell so workforce readiness remains part of the product story.",
+    href: "/academy",
+    label: "Open Academy",
   },
 ];
 
@@ -89,6 +117,13 @@ export default function Home() {
           secondaryLabel="Open Platform Dashboard"
         />
       </div>
+
+      <ProductProofSection
+        eyebrow="Home product proof"
+        title="The home page now demonstrates real FCA product movement"
+        detail="Visitors can validate the dashboard, workspace, bid routes, and academy continuity directly from the public shell instead of relying on abstract claims."
+        highlights={homeProductProof}
+      />
 
       <div style={{ marginTop: 28 }}>
         <CustomerTrustPanel

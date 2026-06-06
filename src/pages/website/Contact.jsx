@@ -8,6 +8,7 @@ import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
+import ProductProofSection from "../../components/ProductProofSection";
 import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
 import { cardStyle, pageShellStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
@@ -34,6 +35,33 @@ const contactContinuityItems = [
     label: "Next action",
     value: "Pilot, rollout, or founder review",
     detail: "The route closes toward a concrete production step instead of ending with a generic contact form posture.",
+  },
+];
+
+const contactProductProof = [
+  {
+    title: "Show the dashboard in the first call",
+    detail: "Start walkthroughs from the unified platform dashboard so buyers immediately see the real product behind the conversation.",
+    href: "/portal/platform",
+    label: "Open Platform Dashboard",
+  },
+  {
+    title: "Open the operating workspace",
+    detail: "Use the portal route to prove projects, files, messages, bids, billing, support, and admin are already part of one shell.",
+    href: "/portal",
+    label: "Open Portal Workspace",
+  },
+  {
+    title: "Bring intake into the demo",
+    detail: "Move into the bid route during the walkthrough so the customer sees real movement from entry into production flow.",
+    href: "/bid-entry",
+    label: "Open Bid Entry",
+  },
+  {
+    title: "Keep training in the same story",
+    detail: "Open academy continuity before the conversation ends so rollout feels complete instead of fragmented.",
+    href: "/academy",
+    label: "Open Academy",
   },
 ];
 
@@ -81,7 +109,14 @@ export default function Contact() {
         />
       </div>
 
-      <div style={{ marginBottom: 24 }}>
+      <ProductProofSection
+        eyebrow="Contact product proof"
+        title="Contact now opens directly into a founder-demo product path"
+        detail="This route now reinforces the exact dashboard, workspace, bid, and academy movement that should happen during a live walkthrough."
+        highlights={contactProductProof}
+      />
+
+      <div style={{ marginBottom: 24, marginTop: 24 }}>
         <CustomerTrustPanel
           eyebrow={publicContactMessaging.trust.eyebrow}
           title={publicContactMessaging.trust.title}
