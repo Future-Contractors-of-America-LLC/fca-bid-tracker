@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: auricrux-advancement-${{ github.ref }}
+  group: auricrux-advancement-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.ref_name || 'main' }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
