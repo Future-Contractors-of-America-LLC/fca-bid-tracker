@@ -3,6 +3,7 @@ import path from "path";
 
 const root = process.cwd();
 const target = path.join(root, "public", "domain-continuity.json");
+const defaultHost = "delightful-mushroom-0de67860f.7.azurestaticapps.net";
 
 const payload = {
   service: "fca-bid-tracker",
@@ -12,9 +13,11 @@ const payload = {
   gitRef: process.env.GITHUB_REF || "local",
   gitSha: process.env.GITHUB_SHA || "local",
   runId: process.env.GITHUB_RUN_ID || "local",
+  defaultHost,
   expectedHosts: [
     "futurecontractorsofamerica.com",
-    "www.futurecontractorsofamerica.com"
+    "www.futurecontractorsofamerica.com",
+    defaultHost,
   ],
   canonicalRoutes: [
     "/",

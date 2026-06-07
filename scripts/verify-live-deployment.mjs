@@ -99,8 +99,20 @@ function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintR
     }
   }
 
-  if (continuity?.expectedHosts && !continuity.expectedHosts.includes(host) && host !== targetDefaultHost) {
+  if (continuity?.expectedHosts && !continuity.expectedHosts.includes(host)) {
     failures.push(`https://${host}/domain-continuity.json does not list ${host} as an expected host`);
+  }
+
+  if (continuity?.defaultHost && continuity.defaultHost !== targetDefaultHost) {
+    failures.push(`${host} reports unexpected default host ${continuity.defaultHost}; expected ${targetDefaultHost}`);
+  }
+
+  if (deployment?.defaultHost && deployment.defaultHost !== targetDefaultHost) {
+    failures.push(`${host} deployment manifest reports unexpected default host ${deployment.defaultHost}; expected ${targetDefaultHost}`);
+  }
+
+  if (fingerprint?.defaultHost && fingerprint.defaultHost !== targetDefaultHost) {
+    failures.push(`${host} runtime fingerprint reports unexpected default host ${fingerprint.defaultHost}; expected ${targetDefaultHost}`);
   }
 
   for (const check of routeChecks) {

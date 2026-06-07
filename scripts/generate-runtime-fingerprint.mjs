@@ -3,6 +3,7 @@ import path from "path";
 
 const root = process.cwd();
 const target = path.join(root, "public", "runtime-fingerprint.txt");
+const defaultHost = "delightful-mushroom-0de67860f.7.azurestaticapps.net";
 
 const lines = [
   `service=fca-bid-tracker`,
@@ -11,7 +12,8 @@ const lines = [
   `gitRef=${process.env.GITHUB_REF || "local"}`,
   `gitSha=${process.env.GITHUB_SHA || "local"}`,
   `runId=${process.env.GITHUB_RUN_ID || "local"}`,
-  `expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com`,
+  `defaultHost=${defaultHost}`,
+  `expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,${defaultHost}`,
   `continuityIntent=governed-public-runtime-fingerprint`
 ];
 
