@@ -18,7 +18,7 @@ export default function PortalSupport() {
   return (
     <PortalShell
       title="Support, Escalation, and Continuity"
-      subtitle="Support surface for customer help, issue escalation, and Auricrux-guided continuity recovery inside the same workspace shell."
+      subtitle="Support surface for owner communication, permit/document issues, field-readiness blockers, and Auricrux-guided recovery inside the same workspace shell."
       activeHref="/portal/support"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.support}
@@ -52,7 +52,7 @@ export default function PortalSupport() {
           </div>
         </div>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Customer help, escalation handling, and recovery guidance remain attached to the same tenant, project, and Auricrux state as the rest of FCA rather than appearing as a disconnected support tool.
+          Customer help, escalation handling, and recovery guidance remain attached to the same tenant, project, permit/document, billing, and Auricrux state as the rest of FCA rather than appearing as a disconnected support tool.
         </p>
       </div>
 
@@ -63,19 +63,39 @@ export default function PortalSupport() {
             <div><strong>Tenant:</strong> {portalTenant.name}</div>
             <div><strong>Project:</strong> {currentProject.name}</div>
             <div><strong>Project ID:</strong> {currentProject.id}</div>
-            <div><strong>Current issue pattern:</strong> approval delay, onboarding coordination, billing readiness</div>
+            <div><strong>Current issue pattern:</strong> scope approval delay, permit submission dependency, mobilization onboarding, and invoice timing risk</div>
           </div>
-          <PublicCtaRow actions={portalNarrativeCtaSets.supportContext} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
+          <div style={{ marginTop: 14 }}>
+            <PublicCtaRow actions={portalNarrativeCtaSets.supportContext} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
+          </div>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Escalation lanes</h2>
           <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
-            <li>Customer-facing support request</li>
-            <li>Auricrux continuity alert</li>
-            <li>Billing readiness blocker</li>
-            <li>Academy onboarding delay</li>
-            <li>Founder review escalation</li>
+            <li>Owner approval and revised scope dispute</li>
+            <li>Permit or plan-set submission blocker</li>
+            <li>RFI / submittal coordination delay</li>
+            <li>Field onboarding or safety packet issue</li>
+            <li>Billing / retainage follow-through escalation</li>
           </ul>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 24 }}>
+        <div style={cardStyle}>
+          <div style={{ color: "#6b7280" }}>Primary blocker</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{auricruxRail.currentBlocker}</div>
+          <div>{auricruxRail.blockerImpact}</div>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ color: "#6b7280" }}>Support owner</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{workspaceContext.nextActionOwner}</div>
+          <div>Escalations stay tied to the same next-action chain as bids, files, and billing.</div>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ color: "#6b7280" }}>Recovery priority</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>Clear approval path</div>
+          <div>Support is currently focused on removing the dependency that is holding permit release, startup packet issuance, and invoice readiness.</div>
         </div>
       </div>
 
@@ -83,7 +103,7 @@ export default function PortalSupport() {
         <h2 style={{ marginTop: 0 }}>Why this route matters</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
           Support should not sit outside the operating shell. This route keeps customer help, continuity recovery,
-          and escalation handling attached to the same tenant, project, file, audit, and Auricrux state as the rest of FCA.
+          and escalation handling attached to the same tenant, project, file, audit, permit/document, and Auricrux state as the rest of FCA.
         </p>
       </div>
     </PortalShell>

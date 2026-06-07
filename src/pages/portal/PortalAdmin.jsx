@@ -18,7 +18,7 @@ export default function PortalAdmin() {
   return (
     <PortalShell
       title="Admin, Rollout, and Governance Control"
-      subtitle="Administrative surface for tenant status, rollout readiness, seat visibility, and Auricrux governance awareness."
+      subtitle="Administrative surface for tenant status, seat visibility, construction-workflow rollout, and Auricrux governance awareness."
       activeHref="/portal/admin"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.admin}
@@ -44,7 +44,7 @@ export default function PortalAdmin() {
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Governance continuity</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA administration now reads as a branded control surface</h2>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA administration now reads as a construction control surface</h2>
           </div>
           <div style={{ display: "grid", gap: 10 }}>
             <FcaBrandMark compact />
@@ -52,7 +52,7 @@ export default function PortalAdmin() {
           </div>
         </div>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Tenant rollout posture, seat readiness, and governance visibility remain inside the same FCA workspace, with Auricrux maintaining execution awareness rather than handing control off to a separate admin product.
+          Tenant rollout posture, seat readiness, project governance, and construction-workflow visibility remain inside the same FCA workspace, with Auricrux maintaining execution awareness rather than handing control off to a separate admin product.
         </p>
       </div>
 
@@ -64,18 +64,18 @@ export default function PortalAdmin() {
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Seat readiness</div>
-          <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>5 seats</div>
-          <div>Owner, Admin, Estimator, Coordinator, Learner</div>
+          <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>7 seats</div>
+          <div>Owner, Admin, Estimator, Project Coordinator, Superintendent, Accounting, Learner</div>
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Rollout state</div>
           <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>Production shell active</div>
-          <div>Backend spine and persistence hardening still in progress</div>
+          <div>Bid, file, coordination, billing, and academy continuity are live while deeper persistence hardening continues.</div>
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Governance visibility</div>
           <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>Auricrux monitored</div>
-          <div>Project {currentProject.id} remains within shared audit and workspace control</div>
+          <div>Project {currentProject.id} remains within shared audit and workspace control.</div>
         </div>
       </div>
 
@@ -83,17 +83,17 @@ export default function PortalAdmin() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Administrative priorities</h2>
           <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
-            <li>Confirm tenant rollout sequence</li>
-            <li>Validate project-linked file/audit continuity</li>
-            <li>Track billing and training readiness together</li>
-            <li>Preserve Auricrux visibility across all routes</li>
+            <li>Confirm tenant rollout sequence and seat assignment by role</li>
+            <li>Validate project-linked file, permit, and audit continuity</li>
+            <li>Track billing, retainage, and training readiness together</li>
+            <li>Preserve Auricrux visibility across estimating, job, and closeout routes</li>
           </ul>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Production posture</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
             This control surface is the beginning of the broader platform spine: tenant summary, seat/readiness view,
-            rollout status, and governance visibility inside the same FCA shell.
+            rollout status, and governance visibility inside the same FCA shell for construction operations.
           </p>
         </div>
       </div>
