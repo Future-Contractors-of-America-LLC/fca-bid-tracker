@@ -73,7 +73,7 @@ export default function Login({ requestedPath = "/portal/profile", accessMode = 
   const nextHref = requestedWorkspaceHref?.startsWith("/portal") ? requestedWorkspaceHref : "/portal/profile";
   const liveEntryDetail = accessMode === "protected"
     ? `Customer login is now required to enter ${requestedPath}. Auricrux is preserving continuity so the user lands inside the requested live workspace surface after authentication.`
-    : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace and unified platform dashboard.";
+    : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace, reviewing the platform dashboard, and continuing into live construction operations.";
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -103,7 +103,7 @@ export default function Login({ requestedPath = "/portal/profile", accessMode = 
         <ShellHeader
           eyebrow="Auricrux Guided Entry"
           title="Access FCA Workspace"
-          subtitle="This workspace entry routes customers into the unified FCA shell for portal operations, lifecycle visibility, academy continuity, and guided next steps."
+          subtitle="This workspace entry routes customers into the unified FCA shell for estimating visibility, project delivery, document control, billing follow-through, academy continuity, and guided next steps."
           primaryHref={shellHeaderCtaSets.workspace.primaryHref}
           primaryLabel={shellHeaderCtaSets.workspace.primaryLabel}
           secondaryHref={shellHeaderCtaSets.workspace.secondaryHref}
@@ -134,7 +134,7 @@ export default function Login({ requestedPath = "/portal/profile", accessMode = 
         <FounderJourneyStrip
           currentJourney="workspace"
           title="Workspace login is part of one connected customer journey"
-          detail="Login is not a dead-end form. It is the bridge from public entry into portal continuity, academy readiness, and rollout planning."
+          detail="Login is not a dead-end form. It is the bridge from public entry into portal continuity, academy readiness, estimating control, and rollout planning."
           ctaHref={founderJourneyCtaSets.workspace.href}
           ctaLabel={founderJourneyCtaSets.workspace.label}
         />
@@ -171,7 +171,7 @@ export default function Login({ requestedPath = "/portal/profile", accessMode = 
             />
 
             <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
-              This live customer session preserves Auricrux continuity and routes directly into {nextHref} after entry.
+              This live customer session preserves Auricrux continuity and routes directly into {nextHref} after entry so estimating, job setup, files, messages, billing, and academy readiness stay in one operating shell.
             </div>
 
             {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 700 }}>{error}</div> : null}
@@ -203,12 +203,12 @@ export default function Login({ requestedPath = "/portal/profile", accessMode = 
               <h2 style={{ marginTop: 0 }}>What opens after entry</h2>
               <div style={responsiveGrid(180)}>
                 {[
-                  ["Projects", "Execution visibility and stage continuity"],
-                  ["Bids", "Approval queue and pipeline context"],
-                  ["Files", "Bid packages, permits, and onboarding docs"],
-                  ["Messages", "Auricrux-guided customer communications"],
-                  ["Billing", "Invoice readiness and account follow-through"],
-                  ["Academy", "Workforce training continuity"],
+                  ["Projects", "Execution visibility, mobilization posture, and stage continuity"],
+                  ["Bids", "Approval queue, scope control, and estimator context"],
+                  ["Files", "Bid packages, permit sets, RFIs, and onboarding docs"],
+                  ["Messages", "Auricrux-guided customer and coordination communications"],
+                  ["Billing", "Invoice readiness, retainage, and account follow-through"],
+                  ["Academy", "Workforce training, safety readiness, and field continuity"],
                 ].map(([title, detail]) => (
                   <div key={title} style={moduleStyle}>
                     <div style={{ fontWeight: 700, marginBottom: 6 }}>{title}</div>
