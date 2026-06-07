@@ -29,8 +29,8 @@ const pricingContinuityItems = [
   },
   {
     label: "Commercial state",
-    value: "Lower and higher tiers are visible",
-    detail: "The route now shows a $99/mo startup tier, a $2,500 one-time pilot, and higher recurring rollout paths with concrete included products.",
+    value: "Lower, mid, and enterprise tiers are visible",
+    detail: "The route now shows $99/mo startup, $2,500 one-time pilot, $499/mo and $899/mo mid-range offerings, plus larger recurring rollout paths with concrete included products.",
   },
   {
     label: "Shared narrative",
@@ -40,49 +40,17 @@ const pricingContinuityItems = [
 ];
 
 const pricingProductProof = [
-  {
-    title: "Validate live operating state",
-    detail: "Open the platform dashboard during pricing review so commercial discussion stays attached to product proof.",
-    href: "/portal/platform",
-    label: "Open Platform Dashboard",
-  },
-  {
-    title: "Show customer workspace depth",
-    detail: "Use the portal shell to demonstrate the product that the rollout tiers are funding and sequencing.",
-    href: "/portal",
-    label: "Open Portal Workspace",
-  },
-  {
-    title: "Prove bid continuity",
-    detail: "Bring the canonical bid route into the conversation so startup, pilot, and rollout scope are tied to a real production flow.",
-    href: "/bid-entry",
-    label: "Open Bid Entry",
-  },
-  {
-    title: "Keep academy and comms in scope",
-    detail: "Training, lecture continuity, and communications routing stay inside the same product story, which makes rollout planning more credible.",
-    href: "/academy",
-    label: "Open Academy",
-  },
+  { title: "Validate live operating state", detail: "Open the platform dashboard during pricing review so commercial discussion stays attached to product proof.", href: "/portal/platform", label: "Open Platform Dashboard" },
+  { title: "Show customer workspace depth", detail: "Use the portal shell to demonstrate the product that the rollout tiers are funding and sequencing.", href: "/portal", label: "Open Portal Workspace" },
+  { title: "Prove bid continuity", detail: "Bring the canonical bid route into the conversation so startup, pilot, and rollout scope are tied to a real production flow.", href: "/bid-entry", label: "Open Bid Entry" },
+  { title: "Keep academy and comms in scope", detail: "Training, lecture continuity, and communications routing stay inside the same product story, which makes rollout planning more credible.", href: "/academy", label: "Open Academy" },
 ];
 
 const productPackages = [
-  {
-    title: "FCA SaaS Workspace",
-    detail: "Projects, bids, files, billing, support, admin, and dashboard continuity for daily contractor operations.",
-  },
-  {
-    title: "Customer Portal",
-    detail: "Customer-facing visibility into projects, files, statuses, messages, and next actions inside the same workspace.",
-  },
-  {
-    title: "Academy / LMS",
-    detail: "Onboarding, safety reinforcement, workforce readiness, and lecture continuity tied directly to delivery rollout.",
-  },
-  {
-    title: "Auricrux + Comms",
-    detail: "Guided next actions plus routed chat, SMS, phone, email, Teams, conference, and lecture channels according to plan depth.",
-  },
+  { title: "FCA SaaS Workspace", detail: "Projects, bids, files, billing, support, admin, and dashboard continuity for daily contractor operations." },
+  { title: "Customer Portal", detail: "Customer-facing visibility into projects, files, statuses, messages, and next actions inside the same workspace." },
+  { title: "Academy / LMS", detail: "Onboarding, safety reinforcement, workforce readiness, and lecture continuity tied directly to delivery rollout." },
+  { title: "Auricrux + Comms", detail: "Guided next actions plus routed chat, SMS, phone, email, Teams, conference, and lecture channels according to plan depth." },
 ];
 
 export default function Pricing() {
@@ -111,9 +79,7 @@ export default function Pricing() {
             <AuricruxBrandMark compact />
           </div>
         </div>
-        <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>
-          {publicPricingMessaging.hero.detail}
-        </p>
+        <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>{publicPricingMessaging.hero.detail}</p>
       </div>
 
       <FounderJourneyStrip
@@ -154,18 +120,9 @@ export default function Pricing() {
           title={publicPricingMessaging.trust.title}
           detail={publicPricingMessaging.trust.detail}
           items={[
-            {
-              title: "Start at the right level",
-              detail: "Use Startup Workspace for low-cost entry, Pilot Workspace for one-time guided launch, or larger rollout paths when the team is ready.",
-            },
-            {
-              title: "Expand with confidence",
-              detail: "Add billing, training, and broader channel continuity as your team grows into the platform.",
-            },
-            {
-              title: "Plan a broader rollout",
-              detail: "Use a larger rollout path when multiple teams, workflows, or operating units need to stay aligned.",
-            },
+            { title: "Start at the right level", detail: "Use Startup Workspace for low-cost entry, Pilot Workspace for one-time guided launch, Team or Operations Workspace for mid-range growth, or larger rollout paths when the team is ready." },
+            { title: "Expand with confidence", detail: "Add billing, training, and broader channel continuity as your team grows into the platform." },
+            { title: "Plan a broader rollout", detail: "Use a larger rollout path when multiple teams, workflows, or operating units need to stay aligned." },
           ]}
         />
       </div>
@@ -183,9 +140,7 @@ export default function Pricing() {
         <div style={{ ...cardStyle, background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)" }}>
           <h2 style={{ marginTop: 0 }}>Rollout checklist</h2>
           <ol style={{ paddingLeft: 20, lineHeight: 1.8, marginBottom: 0, color: "#334155" }}>
-            {rolloutSteps.map((step) => (
-              <li key={step}>{step}</li>
-            ))}
+            {rolloutSteps.map((step) => <li key={step}>{step}</li>)}
           </ol>
         </div>
 
@@ -227,9 +182,7 @@ export default function Pricing() {
             </div>
 
             <ul style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-              {tier.includes.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
+              {tier.includes.map((item) => <li key={item}>{item}</li>)}
             </ul>
 
             <a href={tier.ctaHref} style={ctaPrimaryStyle}>{tier.ctaLabel}</a>
@@ -252,10 +205,7 @@ export default function Pricing() {
         </div>
       </div>
 
-      <PublicActionRail
-        title={publicPricingMessaging.actionRail.title}
-        detail={publicPricingMessaging.actionRail.detail}
-      />
+      <PublicActionRail title={publicPricingMessaging.actionRail.title} detail={publicPricingMessaging.actionRail.detail} />
 
       <ShellFooter />
     </div>

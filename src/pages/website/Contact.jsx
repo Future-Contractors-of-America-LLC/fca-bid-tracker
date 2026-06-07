@@ -23,48 +23,16 @@ const checklistStyle = {
 };
 
 const contactContinuityItems = [
-  {
-    label: "Walkthrough scope",
-    value: "Public page to live product flow",
-    detail: "The contact route now makes the handoff into platform, portal, academy, and comms explicit before the conversation starts.",
-  },
-  {
-    label: "Customer confidence",
-    value: "Review the real workspace first",
-    detail: "This page keeps real product state visible so outreach is grounded in execution, not abstract promises.",
-  },
-  {
-    label: "Next action",
-    value: "Startup, pilot, growth, or enterprise review",
-    detail: "The route closes toward a concrete pricing and rollout step instead of ending with a generic contact form posture.",
-  },
+  { label: "Walkthrough scope", value: "Public page to live product flow", detail: "The contact route now makes the handoff into platform, portal, academy, and comms explicit before the conversation starts." },
+  { label: "Customer confidence", value: "Review the real workspace first", detail: "This page keeps real product state visible so outreach is grounded in execution, not abstract promises." },
+  { label: "Next action", value: "Startup, pilot, mid-range, growth, or enterprise review", detail: "The route closes toward a concrete pricing and rollout step instead of ending with a generic contact form posture." },
 ];
 
 const contactProductProof = [
-  {
-    title: "Show the dashboard in the first call",
-    detail: "Start walkthroughs from the unified platform dashboard so buyers immediately see the real product behind the conversation.",
-    href: "/portal/platform",
-    label: "Open Platform Dashboard",
-  },
-  {
-    title: "Open the operating workspace",
-    detail: "Use the portal route to prove projects, files, messages, bids, billing, support, admin, and comms are already part of one shell.",
-    href: "/portal",
-    label: "Open Portal Workspace",
-  },
-  {
-    title: "Bring intake into the demo",
-    detail: "Move into the bid route during the walkthrough so the customer sees real movement from entry into production flow.",
-    href: "/bid-entry",
-    label: "Open Bid Entry",
-  },
-  {
-    title: "Keep training and channels in the same story",
-    detail: "Open academy continuity before the conversation ends so rollout feels complete instead of fragmented.",
-    href: "/academy",
-    label: "Open Academy",
-  },
+  { title: "Show the dashboard in the first call", detail: "Start walkthroughs from the unified platform dashboard so buyers immediately see the real product behind the conversation.", href: "/portal/platform", label: "Open Platform Dashboard" },
+  { title: "Open the operating workspace", detail: "Use the portal route to prove projects, files, messages, bids, billing, support, admin, and comms are already part of one shell.", href: "/portal", label: "Open Portal Workspace" },
+  { title: "Bring intake into the demo", detail: "Move into the bid route during the walkthrough so the customer sees real movement from entry into production flow.", href: "/bid-entry", label: "Open Bid Entry" },
+  { title: "Keep training and channels in the same story", detail: "Open academy continuity before the conversation ends so rollout feels complete instead of fragmented.", href: "/academy", label: "Open Academy" },
 ];
 
 export default function Contact() {
@@ -82,9 +50,7 @@ export default function Contact() {
         currentJourney="conversion"
       />
 
-      <div style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}>
-        <FcaBrandMark compact />
-      </div>
+      <div style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}><FcaBrandMark compact /></div>
 
       <FounderJourneyStrip
         currentJourney="conversion"
@@ -134,18 +100,9 @@ export default function Contact() {
           title={publicContactMessaging.trust.title}
           detail={publicContactMessaging.trust.detail}
           items={[
-            {
-              title: "See the real workspace",
-              detail: "Walk through the platform, portal, academy, and comms routes instead of a disconnected slide deck.",
-            },
-            {
-              title: "Focus on your team's fit",
-              detail: "Use the conversation to match your team size, estimating flow, field coordination, rollout needs, communication preferences, and price tier to the right next step.",
-            },
-            {
-              title: "Leave with a practical plan",
-              detail: "End with a clear Startup Workspace, Pilot Workspace, Growth Platform, or Enterprise Rollout path instead of an open-ended discussion.",
-            },
+            { title: "See the real workspace", detail: "Walk through the platform, portal, academy, and comms routes instead of a disconnected slide deck." },
+            { title: "Focus on your team's fit", detail: "Use the conversation to match your team size, estimating flow, field coordination, rollout needs, communication preferences, and price tier to the right next step." },
+            { title: "Leave with a practical plan", detail: "End with a clear Startup Workspace, Pilot Workspace, Team Workspace, Operations Workspace, Growth Platform, or Enterprise Rollout path instead of an open-ended discussion." },
           ]}
         />
       </div>
@@ -167,12 +124,8 @@ export default function Contact() {
               <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>{tier.name}</div>
               <div style={{ fontSize: 26, fontWeight: 700, marginBottom: 8 }}>{tier.price}</div>
               <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>{tier.detail}</div>
-              <div style={{ color: "#111827", lineHeight: 1.7, fontSize: 14 }}>
-                <strong>Products:</strong> {tier.products.join(" · ")}
-              </div>
-              <div style={{ color: "#111827", lineHeight: 1.7, fontSize: 14 }}>
-                <strong>Comms:</strong> {tier.comms.join(" · ")}
-              </div>
+              <div style={{ color: "#111827", lineHeight: 1.7, fontSize: 14 }}><strong>Products:</strong> {tier.products.join(" · ")}</div>
+              <div style={{ color: "#111827", lineHeight: 1.7, fontSize: 14 }}><strong>Comms:</strong> {tier.comms.join(" · ")}</div>
             </div>
           ))}
         </div>
@@ -180,12 +133,7 @@ export default function Contact() {
 
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={{ display: "grid", gap: 16 }}>
-          <WorkspaceSnapshotCard
-            title={publicContactMessaging.snapshot.title}
-            detail={publicContactMessaging.snapshot.detail}
-            ctaHref={publicActionCatalog.platform.href}
-            ctaLabel="Open Platform Dashboard"
-          />
+          <WorkspaceSnapshotCard title={publicContactMessaging.snapshot.title} detail={publicContactMessaging.snapshot.detail} ctaHref={publicActionCatalog.platform.href} ctaLabel="Open Platform Dashboard" />
 
           <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
             <h2 style={{ marginTop: 0 }}>What happens in a walkthrough</h2>
@@ -195,7 +143,7 @@ export default function Contact() {
               <li>Open the platform dashboard to summarize tenant, project, support, academy, admin, comms, and revenue state.</li>
               <li>Transition into portal, academy, bid, and communications routes based on your team's fit.</li>
               <li>Review approvals, document-control posture, billing follow-through, field-readiness gaps, communication cadence, and plan pricing.</li>
-              <li>Close on startup, pilot, growth, or enterprise path, plus the next production action.</li>
+              <li>Close on startup, pilot, mid-range, growth, or enterprise path, plus the next production action.</li>
             </ol>
           </div>
         </div>
@@ -205,9 +153,7 @@ export default function Contact() {
             <div key={path.title} style={cardStyle}>
               <h3 style={{ marginTop: 0 }}>{path.title}</h3>
               <p style={{ color: "#4b5563", lineHeight: 1.6 }}>{path.detail}</p>
-              <a href={path.cta} style={ctaPrimaryStyle}>
-                {path.label}
-              </a>
+              <a href={path.cta} style={ctaPrimaryStyle}>{path.label}</a>
             </div>
           ))}
         </div>
@@ -220,10 +166,7 @@ export default function Contact() {
         </p>
       </div>
 
-      <PublicActionRail
-        title={publicContactMessaging.actionRail.title}
-        detail={publicContactMessaging.actionRail.detail}
-      />
+      <PublicActionRail title={publicContactMessaging.actionRail.title} detail={publicContactMessaging.actionRail.detail} />
 
       <ShellFooter />
     </div>
