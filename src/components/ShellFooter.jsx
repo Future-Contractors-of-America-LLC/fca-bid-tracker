@@ -1,5 +1,6 @@
 import AuricruxBrandMark from "./AuricruxBrandMark";
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
+import DeploymentStatusBeacon from "./DeploymentStatusBeacon";
 import FcaBrandMark from "./FcaBrandMark";
 import {
   shellCompatibilityRoutes,
@@ -134,17 +135,7 @@ export default function ShellFooter() {
           </div>
         </div>
 
-        <div>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Deployment Verification</div>
-          <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            Public deployment now exposes a build manifest plus live API routes so deployment drift is easier to detect without opening the repository.
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <a href="/deployment-status.json" style={linkStyle}>Open deployment manifest</a>
-            <a href="/api/auricrux" style={linkStyle}>Open Auricrux API health</a>
-            <a href="/api/customer-login" style={linkStyle}>Open customer login API route</a>
-          </div>
-        </div>
+        <DeploymentStatusBeacon />
       </div>
     </div>
   );
