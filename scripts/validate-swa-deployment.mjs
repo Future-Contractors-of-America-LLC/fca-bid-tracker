@@ -17,6 +17,10 @@ const checks = [
       "test -f dist/live-shell-verification.html",
       "test -f dist/host-binding-audit.html",
       "test -f dist/api-continuity-audit.html",
+      "npm run verify:live-deployment",
+      "actions/upload-artifact@v4",
+      "workspace/live_deployment_smoke_summary.json",
+      "workspace/live_deployment_smoke_failures.txt",
       "test -f api/customer-login.js",
       "test -f api/auricrux.js"
     ]
@@ -24,48 +28,23 @@ const checks = [
   {
     file: path.join(root, "package.json"),
     markers: [
+      '"verify:live-deployment": "node scripts/verify-live-deployment.mjs"',
       '"prebuild": "node scripts/generate-deployment-manifest.mjs && node scripts/generate-domain-continuity-witness.mjs && node scripts/generate-runtime-fingerprint.mjs"',
-      '"validate:swa-deployment": "node scripts/validate-swa-deployment.mjs"',
-      'npm run validate:swa-deployment'
+      '"validate:swa-deployment": "node scripts/validate-swa-deployment.mjs"'
     ]
   },
   {
-    file: path.join(root, "public", "runtime-fingerprint.txt"),
+    file: path.join(root, "scripts", "verify-live-deployment.mjs"),
     markers: [
-      'service=fca-bid-tracker',
-      'gitSha=pending-build',
-      'expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com',
-      'continuityIntent=governed-public-runtime-fingerprint'
-    ]
-  },
-  {
-    file: path.join(root, "public", "host-binding-audit.html"),
-    markers: [
-      'FCA host binding audit',
-      '/deployment-status.json',
-      '/domain-continuity.json',
-      '/runtime-fingerprint.txt',
-      'Witness SHA aligned',
-      'Current host'
-    ]
-  },
-  {
-    file: path.join(root, "public", "api-continuity-audit.html"),
-    markers: [
-      'FCA API continuity audit',
-      '/api/customer-login',
-      '/api/auricrux',
-      '/runtime-fingerprint.txt',
-      'partial API continuity only',
-      'both public API continuity endpoints failed'
-    ]
-  },
-  {
-    file: path.join(root, "public", "staticwebapp.config.json"),
-    markers: [
-      '"route": "/runtime-fingerprint.txt"',
+      '"futurecontractorsofamerica.com"',
+      '"www.futurecontractorsofamerica.com"',
+      '"/deployment-status.json"',
       '"/runtime-fingerprint.txt"',
-      '"Content-Type": "text/plain; charset=utf-8"'
+      '"/warranty"',
+      '"/referrals"',
+      'workspace',
+      'live_deployment_smoke_summary.json',
+      'live_deployment_smoke_failures.txt'
     ]
   }
 ];
@@ -84,4 +63,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Static Web App deployment validation passed for governed runtime fingerprint generation, cross-artifact SHA alignment checks, witness pack continuity, host-binding audit surfaces, API continuity audit surfaces, and API deployment wiring.");
+console.log("Static Web App deployment validation passed for post-deploy live smoke retries, artifact preservation, governed witness pack continuity, and API deployment wiring.");

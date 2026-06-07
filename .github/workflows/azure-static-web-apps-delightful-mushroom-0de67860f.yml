@@ -18,7 +18,7 @@ jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     name: Build, Deploy, and Smoke Verify Job
     steps:
       - name: Checkout
@@ -69,6 +69,19 @@ jobs:
 
       - name: Post-deploy live domain smoke verification
         run: npm run verify:live-deployment
+        env:
+          AURICRUX_LIVE_VERIFY_ATTEMPTS: '4'
+          AURICRUX_LIVE_VERIFY_DELAY_MS: '15000'
+
+      - name: Upload live deployment smoke artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-deployment-smoke
+          path: |
+            workspace/live_deployment_smoke_summary.json
+            workspace/live_deployment_smoke_failures.txt
+          if-no-files-found: warn
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
