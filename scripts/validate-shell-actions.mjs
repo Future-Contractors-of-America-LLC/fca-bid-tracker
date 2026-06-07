@@ -56,6 +56,10 @@ function validatePair(target, label, location, failures) {
   }
 }
 
+function hasOwn(value, key) {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
+
 function walk(value, location, failures) {
   if (Array.isArray(value)) {
     value.forEach((item, index) => walk(item, `${location}[${index}]`, failures));
@@ -66,21 +70,26 @@ function walk(value, location, failures) {
     return;
   }
 
-  const visibleLabel = value.label ?? value.ctaLabel;
+  const hrefLabel = value.label ?? value.ctaLabel;
+  const ctaLabel = value.label ?? value.ctaLabel;
 
-  if (Object.prototype.hasOwnProperty.call(value, "href") || Object.prototype.hasOwnProperty.call(value, "label") || Object.prototype.hasOwnProperty.call(value, "ctaLabel")) {
-    validatePair(value.href, visibleLabel, `${location}.href`, failures);
+  if (hasOwn(value, "href")) {
+    validatePair(value.href, hrefLabel, `${location}.href`, failures);
   }
 
-  if (Object.prototype.hasOwnProperty.call(value, "cta") || Object.prototype.hasOwnProperty.call(value, "ctaLabel")) {
-    validatePair(value.cta, visibleLabel, `${location}.cta`, failures);
+  if (hasOwn(value, "cta")) {
+    validatePair(value.cta, ctaLabel, `${location}.cta`, failures);
   }
 
-  if (Object.prototype.hasOwnProperty.call(value, "primaryHref") || Object.prototype.hasOwnProperty.call(value, "primaryLabel")) {
+  if (hasOwn(value, "ctaHref")) {
+    validatePair(value.ctaHref, value.ctaLabel, `${location}.ctaHref`, failures);
+  }
+
+  if (hasOwn(value, "primaryHref") || hasOwn(value, "primaryLabel")) {
     validatePair(value.primaryHref, value.primaryLabel, `${location}.primaryHref`, failures);
   }
 
-  if (Object.prototype.hasOwnProperty.call(value, "secondaryHref") || Object.prototype.hasOwnProperty.call(value, "secondaryLabel")) {
+  if (hasOwn(value, "secondaryHref") || hasOwn(value, "secondaryLabel")) {
     validatePair(value.secondaryHref, value.secondaryLabel, `${location}.secondaryHref`, failures);
   }
 
@@ -89,7 +98,7 @@ function walk(value, location, failures) {
   }
 
   Object.entries(value).forEach(([key, nestedValue]) => {
-    if (["href", "label", "cta", "ctaLabel", "primaryHref", "primaryLabel", "secondaryHref", "secondaryLabel", "variant"].includes(key)) {
+    if (["href", "label", "cta", "ctaLabel", "ctaHref", "primaryHref", "primaryLabel", "secondaryHref", "secondaryLabel", "variant"].includes(key)) {
       return;
     }
     walk(nestedValue, `${location}.${key}`, failures);
