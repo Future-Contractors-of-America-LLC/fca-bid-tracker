@@ -1,12 +1,22 @@
+import fs from "fs";
 import path from "path";
 import { pathToFileURL } from "url";
 
 const root = process.cwd();
-const routesModule = await import(pathToFileURL(path.join(root, "src", "routes.js")).href);
+const routesSource = fs.readFileSync(path.join(root, "src", "routes.js"), "utf8");
 const siteMetadataModule = await import(pathToFileURL(path.join(root, "src", "siteMetadata.js")).href);
 
-const routes = routesModule.routes || {};
-const routeKeys = Object.keys(routes);
+function extractRouteKeys(source) {
+  const routeBlockMatch = source.match(/export const routes = \{([\s\S]*?)\n\};/);
+  if (!routeBlockMatch) {
+    throw new Error("Unable to locate exported routes object in src/routes.js");
+  }
+
+  return [...routeBlockMatch[1].matchAll(/(["'])(\/[^"']*)\1\s*:/g)].map((match) => match[2]);
+}
+
+const routeKeys = extractRouteKeys(routesSource);
+const routeSet = new Set(routeKeys);
 const routeMetadata = siteMetadataModule.routeMetadata || {};
 
 const failures = [];
@@ -30,7 +40,7 @@ for (const route of routesRequiringMetadata) {
 }
 
 for (const key of metadataKeys) {
-  if (!routes[key] && key !== "/") {
+  if (!routeSet.has(key) && key !== "/") {
     failures.push(`Metadata entry does not map to a live route: ${key}`);
   }
 }
