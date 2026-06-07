@@ -58,7 +58,7 @@ export default function PortalBilling() {
   return (
     <PortalShell
       title="Billing and Account Continuity"
-      subtitle="Billing surface tied to the same tenant, project, message, and Auricrux state as the rest of the FCA workspace."
+      subtitle="Billing surface tied to the same tenant, project, message, and Auricrux state as the rest of the FCA workspace, with construction revenue controls kept visible."
       activeHref="/portal/billing"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.billing}
@@ -123,11 +123,22 @@ export default function PortalBilling() {
           </div>
         </div>
         {portalBilling.map((invoice) => (
-          <div key={invoice.invoice} style={invoiceStyle}>
-            <div style={{ fontWeight: 700 }}>{invoice.invoice}</div>
-            <div>{invoice.customer}</div>
-            <div>{invoice.amount}</div>
-            <div>{invoice.status}</div>
+          <div key={invoice.invoice} style={{ borderBottom: "1px solid #e5e7eb", padding: "14px 0" }}>
+            <div style={invoiceStyle}>
+              <div style={{ fontWeight: 700 }}>{invoice.invoice}</div>
+              <div>{invoice.customer}</div>
+              <div>{invoice.amount}</div>
+              <div>{invoice.status}</div>
+            </div>
+            <div style={{ color: "#0f172a", lineHeight: 1.7, marginTop: 6 }}>
+              <div><strong>Billing basis:</strong> {invoice.billingBasis}</div>
+              <div><strong>Retainage:</strong> {invoice.retainage}</div>
+              <div><strong>Aging:</strong> {invoice.aging}</div>
+              <div><strong>Owner:</strong> {invoice.owner}</div>
+            </div>
+            <div style={{ color: "#475569", marginTop: 8 }}>
+              <strong>Next action:</strong> {invoice.nextAction}
+            </div>
           </div>
         ))}
       </div>
@@ -136,17 +147,17 @@ export default function PortalBilling() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Why billing belongs in the same shell</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-            Billing is not just accounting. In FCA it stays tied to project progress, document readiness,
-            customer communications, and training completion so commercial follow-through remains visible.
+            Billing is not just accounting. In FCA it stays tied to project progress, pay-app backup, document readiness,
+            owner approvals, customer communications, and training completion so commercial follow-through remains visible.
           </p>
           <PublicCtaRow actions={portalNarrativeCtaSets.billingNarrative} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Current billing posture</h2>
           <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
-            <li>One invoice is awaiting internal review.</li>
-            <li>One invoice has already been sent.</li>
-            <li>One pilot-customer invoice is positioned for approval.</li>
+            <li>One draft pay app is waiting on backup review.</li>
+            <li>One closeout invoice is out with retainage still outstanding.</li>
+            <li>One pilot-customer invoice is positioned for approval after scope signoff.</li>
             <li>Auricrux continues monitoring account follow-through.</li>
           </ul>
         </div>
