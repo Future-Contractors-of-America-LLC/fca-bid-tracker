@@ -26,6 +26,7 @@ const allowedStaticPrefixes = [
   "/fca-customer-entry",
   "/fca-customer-status",
 ];
+const allowedExternalPrefixes = ["mailto:", "https://", "http://"];
 
 function normalizePath(value) {
   if (!value || typeof value !== "string") return value;
@@ -37,7 +38,8 @@ function isLiveOrAllowedPath(value) {
   const normalized = normalizePath(value);
   if (!normalized) return false;
   if (routeSet.has(normalized)) return true;
-  return allowedStaticPrefixes.some((prefix) => normalized.startsWith(prefix));
+  if (allowedStaticPrefixes.some((prefix) => normalized.startsWith(prefix))) return true;
+  return allowedExternalPrefixes.some((prefix) => value.startsWith(prefix));
 }
 
 const failures = [];
@@ -114,7 +116,7 @@ for (const [key, ctaGroup] of Object.entries(publicRouteCtas)) {
     continue;
   }
 
-  if (!routeSet.has(normalizePath(ctaGroup.primaryHref))) {
+  if (!isLiveOrAllowedPath(ctaGroup.primaryHref)) {
     failures.push(`publicRouteCtas.${key}.primaryHref is not a live route: ${ctaGroup.primaryHref}`);
   }
 
@@ -122,7 +124,7 @@ for (const [key, ctaGroup] of Object.entries(publicRouteCtas)) {
     failures.push(`publicRouteCtas.${key}.primaryLabel is missing.`);
   }
 
-  if (!routeSet.has(normalizePath(ctaGroup.secondaryHref))) {
+  if (!isLiveOrAllowedPath(ctaGroup.secondaryHref)) {
     failures.push(`publicRouteCtas.${key}.secondaryHref is not a live route: ${ctaGroup.secondaryHref}`);
   }
 

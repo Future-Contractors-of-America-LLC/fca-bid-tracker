@@ -356,6 +356,10 @@ export const contactPaths = [
 export const shellJourney = [
   { key: "public", label: "Home", href: "/" },
   { key: "platform", label: "Platform", href: "/platform" },
+  { key: "auricrux", label: "Auricrux", href: "/auricrux" },
+  { key: "pricing", label: "Pricing", href: "/pricing" },
+  { key: "warranty", label: "Warranty", href: "/warranty" },
+  { key: "referrals", label: "Referrals", href: "/referrals" },
   { key: "workspace", label: "Workspace", href: "/login" },
   { key: "portal", label: "Portal", href: "/portal" },
   { key: "academy", label: "Academy", href: "/academy" },
