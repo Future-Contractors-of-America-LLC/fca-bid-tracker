@@ -434,19 +434,35 @@ export const platformModules = [
 
 export const pricingTiers = [
   {
-    name: "Pilot Workspace",
-    price: "$495/mo",
-    detail: "For small contractors and pilot teams that need real FCA workspace access, bid continuity, customer portal visibility, and guided rollout support without a large first commitment.",
-    products: ["SaaS workspace", "Customer portal", "Auricrux guidance"],
+    name: "Startup Workspace",
+    price: "$99/mo",
+    detail: "For very small contractors, startups, and owner-operators who need a lightweight real FCA entry point with workspace access, bid continuity, and visible next actions at the lowest monthly tier.",
+    products: ["SaaS workspace", "Customer portal lite", "Auricrux guidance"],
     comms: ["Chat", "Email"],
     ctaHref: "/login",
-    ctaLabel: "Start Pilot Workspace",
+    ctaLabel: "Start Startup Workspace",
     includes: [
       "1 live customer workspace",
+      "Core bid entry and status continuity",
+      "Portal-lite visibility for projects and messages",
+      "Auricrux guided next actions",
+      "Low-friction monthly entry point",
+    ],
+  },
+  {
+    name: "Pilot Workspace",
+    price: "$2,500 one-time",
+    detail: "For contractors who want a guided launch and structured production pilot with real workspace setup, customer portal continuity, academy visibility, and rollout support before moving into a recurring plan.",
+    products: ["SaaS workspace", "Customer portal", "Academy/LMS preview", "Auricrux guidance"],
+    comms: ["Chat", "SMS", "Email"],
+    ctaHref: "/contact",
+    ctaLabel: "Launch Paid Pilot",
+    includes: [
+      "1 guided production pilot launch",
       "Bid intake and estimator handoff flow",
       "Portal visibility for projects, files, and messages",
-      "Auricrux-guided next actions",
-      "Guided pilot rollout review",
+      "Academy / LMS readiness preview",
+      "Structured rollout review and closeout plan",
     ],
   },
   {
@@ -543,10 +559,10 @@ export const contactPaths = [
     label: publicActionCatalog.walkthrough.label,
   },
   {
-    title: "Discuss a Pilot Workspace",
-    detail: "Talk through pilot scope, team fit, active product surfaces, and the $495/mo Pilot Workspace path for a real customer-ready starting point.",
-    cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Pilot%20Workspace%20Discussion",
-    label: "Discuss Pilot Workspace",
+    title: "Discuss Startup or Pilot",
+    detail: "Talk through startup fit, pilot scope, active product surfaces, and the $99/mo Startup Workspace or $2,500 one-time Pilot Workspace paths for a real customer-ready starting point.",
+    cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Startup%20or%20Pilot%20Discussion",
+    label: "Discuss Startup / Pilot",
   },
   {
     title: "Review Growth or Enterprise Rollout",

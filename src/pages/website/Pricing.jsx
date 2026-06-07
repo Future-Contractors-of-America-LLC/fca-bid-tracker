@@ -29,8 +29,8 @@ const pricingContinuityItems = [
   },
   {
     label: "Commercial state",
-    value: "Actual price + actual products",
-    detail: "The route now keeps concrete monthly pricing and included customer products visible before the next commercial step.",
+    value: "Lower and higher tiers are visible",
+    detail: "The route now shows a $99/mo startup tier, a $2,500 one-time pilot, and higher recurring rollout paths with concrete included products.",
   },
   {
     label: "Shared narrative",
@@ -54,7 +54,7 @@ const pricingProductProof = [
   },
   {
     title: "Prove bid continuity",
-    detail: "Bring the canonical bid route into the conversation so pilot and rollout scope are tied to a real production flow.",
+    detail: "Bring the canonical bid route into the conversation so startup, pilot, and rollout scope are tied to a real production flow.",
     href: "/bid-entry",
     label: "Open Bid Entry",
   },
@@ -155,8 +155,8 @@ export default function Pricing() {
           detail={publicPricingMessaging.trust.detail}
           items={[
             {
-              title: "Pilot quickly",
-              detail: "Start with guided setup and a practical walkthrough of the workspace, portal, and communications flows.",
+              title: "Start at the right level",
+              detail: "Use Startup Workspace for low-cost entry, Pilot Workspace for one-time guided launch, or larger rollout paths when the team is ready.",
             },
             {
               title: "Expand with confidence",

@@ -35,7 +35,7 @@ const contactContinuityItems = [
   },
   {
     label: "Next action",
-    value: "Pilot, growth, or enterprise review",
+    value: "Startup, pilot, growth, or enterprise review",
     detail: "The route closes toward a concrete pricing and rollout step instead of ending with a generic contact form posture.",
   },
 ];
@@ -144,7 +144,7 @@ export default function Contact() {
             },
             {
               title: "Leave with a practical plan",
-              detail: "End with a clear Pilot Workspace, Growth Platform, or Enterprise Rollout path instead of an open-ended discussion.",
+              detail: "End with a clear Startup Workspace, Pilot Workspace, Growth Platform, or Enterprise Rollout path instead of an open-ended discussion.",
             },
           ]}
         />
@@ -195,7 +195,7 @@ export default function Contact() {
               <li>Open the platform dashboard to summarize tenant, project, support, academy, admin, comms, and revenue state.</li>
               <li>Transition into portal, academy, bid, and communications routes based on your team's fit.</li>
               <li>Review approvals, document-control posture, billing follow-through, field-readiness gaps, communication cadence, and plan pricing.</li>
-              <li>Close on pilot scope, rollout path, channel plan, pricing path, and the next production action.</li>
+              <li>Close on startup, pilot, growth, or enterprise path, plus the next production action.</li>
             </ol>
           </div>
         </div>
