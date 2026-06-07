@@ -1,11 +1,19 @@
 import fs from "fs";
 import path from "path";
-import { pathToFileURL } from "url";
 
 const root = process.cwd();
-const routerModule = await import(pathToFileURL(path.join(root, "router.jsx")).href);
-const routes = routerModule.routes || {};
-const routeSet = new Set(Object.keys(routes));
+const routesSource = fs.readFileSync(path.join(root, "src", "routes.js"), "utf8");
+
+function extractRouteKeys(source) {
+  const routeBlockMatch = source.match(/export const routes = \{([\s\S]*?)\n\};/);
+  if (!routeBlockMatch) {
+    throw new Error("Unable to locate exported routes object in src/routes.js");
+  }
+
+  return [...routeBlockMatch[1].matchAll(/(["'])(\/[^"']*)\1\s*:/g)].map((match) => match[2]);
+}
+
+const routeSet = new Set(extractRouteKeys(routesSource));
 
 const scanRoots = [path.join(root, "src")];
 const allowedExternalPrefixes = ["mailto:", "https://", "http://"];
