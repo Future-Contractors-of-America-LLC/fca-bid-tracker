@@ -44,6 +44,29 @@ const ctaStyles = {
   },
 };
 
+const continuityLinks = [
+  {
+    href: "/live-shell-verification.html",
+    label: "Open raw live verification",
+    detail: "Bypass the React shell and inspect the hosted verification artifact directly.",
+  },
+  {
+    href: "/login?seeded=1",
+    label: "Open seeded login",
+    detail: "Start a guided public test-account flow without needing manual credential entry.",
+  },
+  {
+    href: "/login?seeded=1&autologin=1&next=/portal/platform",
+    label: "Open direct platform workspace",
+    detail: "Jump directly into the authenticated platform route for live walkthrough and revenue demos.",
+  },
+  {
+    href: "/api/customer-login",
+    label: "Open customer login API",
+    detail: "Confirm the Static Web App Functions surface is reachable from the public host.",
+  },
+];
+
 export default function ShellFooter() {
   return (
     <div
@@ -116,6 +139,33 @@ export default function ShellFooter() {
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {shellCompatibilityRoutes.map((item) => (
               <a key={item.href} href={item.href} style={linkStyle}>{item.label}</a>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Continuity Launchpad</div>
+          <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
+            When the public shell looks stale, use these routes to verify hosted artifacts,
+            authenticate into the demo workspace faster, and confirm function continuity
+            without relying on deeper navigation.
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {continuityLinks.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                style={{
+                  textDecoration: "none",
+                  border: "1px solid #dbe3ef",
+                  borderRadius: 12,
+                  padding: 12,
+                  background: "#f8fafc",
+                }}
+              >
+                <div style={{ color: "#111827", fontWeight: 700, marginBottom: 4 }}>{item.label}</div>
+                <div style={{ color: "#4b5563", lineHeight: 1.6 }}>{item.detail}</div>
+              </a>
             ))}
           </div>
         </div>
