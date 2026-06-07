@@ -34,3 +34,5 @@ jobs:
 
       - name: Run governed build validation
         run: npm run build:system
+
+# retrigger: 2026-06-07T00:00:00Z
