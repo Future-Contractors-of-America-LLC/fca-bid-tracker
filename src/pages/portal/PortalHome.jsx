@@ -6,6 +6,7 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
+import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import { auricruxActions, portalMessages, portalMetrics, portalProjects, routeStateOverlays } from "../../systemState";
 import { portalEntryCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -54,7 +55,7 @@ export default function PortalHome() {
   return (
     <PortalShell
       title="FCA Customer Workspace"
-      subtitle="Live workspace shell with Auricrux-guided next actions, estimating visibility, document control, billing readiness, and academy continuity."
+      subtitle="Live workspace shell with Auricrux-guided next actions, estimating visibility, document control, billing readiness, academy continuity, and plan-aware revenue posture."
       activeHref="/portal"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}
@@ -62,6 +63,10 @@ export default function PortalHome() {
       primaryLabel="Open Project Flow"
     >
       <ProductAccessStatusPanel session={session} />
+
+      <div style={{ marginBottom: 24 }}>
+        <CustomerPlanSummaryPanel session={session} title="Portal overview customer plan summary" />
+      </div>
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
@@ -140,7 +145,7 @@ export default function PortalHome() {
                 {item.secondaryHref ? <> {item.suffix} <a href={item.secondaryHref}>{item.secondaryLabel}</a> {item.trailing}</> : ` ${item.suffix}`}
               </li>
             ))}
-            <li>Use this portal overview to frame account status, project readiness, and Auricrux guidance.</li>
+            <li>Use this portal overview to frame account status, project readiness, Auricrux guidance, and active commercial packaging.</li>
           </ol>
         </div>
         <div style={cardStyle}>

@@ -8,6 +8,7 @@ import AutomationStatusCard from "../../components/AutomationStatusCard";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
+import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import { auricruxActions, portalMessages, portalMetrics, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -39,7 +40,7 @@ export default function PlatformDashboard() {
   return (
     <PortalShell
       title="FCA Platform Dashboard"
-      subtitle="A customer-friendly view of estimating posture, project delivery, document control, billing readiness, training continuity, guided next steps, and enabled communications lanes."
+      subtitle="A customer-friendly view of estimating posture, project delivery, document control, billing readiness, training continuity, guided next steps, enabled communications lanes, and active commercial packaging."
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
@@ -49,11 +50,15 @@ export default function PlatformDashboard() {
       <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
       <CustomerCommsLaunchpad session={session} title="Launch customer-enabled communications lanes" />
 
+      <div style={{ marginBottom: 24 }}>
+        <CustomerPlanSummaryPanel session={session} title="Platform dashboard customer plan summary" />
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live workspace dashboard</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Your platform summary is connected across bids, jobs, files, billing, training, and customer communications</h2>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Your platform summary is connected across bids, jobs, files, billing, training, customer communications, and commercial plan state</h2>
           </div>
           <div style={{ display: "grid", gap: 10 }}>
             <FcaBrandMark compact />
@@ -99,7 +104,7 @@ export default function PlatformDashboard() {
           </div>
           <div>
             <strong>Best path forward</strong>
-            <div>Move approval through bids, keep document dependencies visible, and carry the same context into billing, onboarding, and customer-facing comms.</div>
+            <div>Move approval through bids, keep document dependencies visible, and carry the same context into billing, onboarding, customer-facing comms, and plan-backed expansion.</div>
           </div>
         </div>
       </div>
