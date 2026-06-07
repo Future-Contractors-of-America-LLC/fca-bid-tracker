@@ -10,6 +10,9 @@ import ExecutiveSignalBar from "./ExecutiveSignalBar";
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import AuricruxNavHint from "./AuricruxNavHint";
 import CustomerSessionBar from "./CustomerSessionBar";
+import RouteReadinessOverlay from "./RouteReadinessOverlay";
+import useCustomerSession from "../hooks/useCustomerSession";
+import useWorkspaceState from "../hooks/useWorkspaceState";
 import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
 import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../systemState";
 
@@ -75,6 +78,9 @@ export default function PortalShell({
   primaryHref = "/portal/messages",
   primaryLabel = "Open Messages",
 }) {
+  const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
+  const { refreshSyncStamp } = useWorkspaceState();
+
   return (
     <div style={shellStyle}>
       <div style={pageStyle}>
@@ -117,6 +123,15 @@ export default function PortalShell({
         <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
         <RouteStateOverlay overlay={routeOverlay} />
         <ExecutiveSignalBar mode="portal" nextHref={executiveSignalCtaSets.portal.href} nextLabel={executiveSignalCtaSets.portal.label} />
+
+        <RouteReadinessOverlay
+          activeHref={activeHref}
+          session={session}
+          setProductAccess={setProductAccess}
+          setCommsAccess={setCommsAccess}
+          applyPlanPreset={applyPlanPreset}
+          refreshSyncStamp={refreshSyncStamp}
+        />
 
         <div style={{ marginBottom: 20 }}>
           <AuricruxPresenceLayer
