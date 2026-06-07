@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { routeStateOverlays } from "../../systemState";
@@ -49,6 +50,8 @@ export default function PortalProfile() {
           detail="This profile route binds session identity, tenant continuity, project state, and Auricrux guidance into one customer-facing operating surface."
         />
       </div>
+
+      <CustomerProductLaunchpad session={session} title="Launch real customer product access" />
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted profile state</div>
