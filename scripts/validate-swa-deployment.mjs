@@ -12,6 +12,7 @@ const checks = [
       "app_location: dist",
       "api_location: api",
       "test -f dist/deployment-status.json",
+      "test -f dist/domain-continuity.json",
       "test -f dist/live-shell-verification.html",
       "test -f api/customer-login.js",
       "test -f api/auricrux.js",
@@ -20,7 +21,7 @@ const checks = [
   {
     file: path.join(root, "package.json"),
     markers: [
-      '"prebuild": "node scripts/generate-deployment-manifest.mjs"',
+      '"prebuild": "node scripts/generate-deployment-manifest.mjs && node scripts/generate-domain-continuity-witness.mjs"',
       '"validate:swa-deployment": "node scripts/validate-swa-deployment.mjs"',
       'npm run validate:swa-deployment',
     ],
@@ -36,10 +37,31 @@ const checks = [
     ],
   },
   {
+    file: path.join(root, "scripts", "generate-domain-continuity-witness.mjs"),
+    markers: [
+      '"domain-continuity.json"',
+      '"futurecontractorsofamerica.com"',
+      '"www.futurecontractorsofamerica.com"',
+      '"/portal/platform"',
+      '"/team"',
+      '"apex-and-www-must-resolve-to-same-governed-swa-artifact"'
+    ],
+  },
+  {
     file: path.join(root, "public", "deployment-status.json"),
     markers: [
       '"service": "fca-bid-tracker"',
       '"deploymentIntent": "static-web-app-plus-functions"',
+    ],
+  },
+  {
+    file: path.join(root, "public", "domain-continuity.json"),
+    markers: [
+      '"witnessType": "domain-continuity"',
+      '"futurecontractorsofamerica.com"',
+      '"www.futurecontractorsofamerica.com"',
+      '"knownUnexpectedRoutes"',
+      '"/team"'
     ],
   },
   {
@@ -50,6 +72,8 @@ const checks = [
       "/api/customer-login",
       "/api/auricrux",
       'cache: "no-store"',
+      'Current host',
+      'expectedHosts',
     ],
   },
   {
@@ -101,4 +125,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Static Web App deployment validation passed for app artifact continuity, API deployment wiring, cache-busting posture, raw hosting verification surfaces, deployed staticwebapp.config artifact continuity, and public deployment verification manifest generation.");
+console.log("Static Web App deployment validation passed for app artifact continuity, API deployment wiring, cache-busting posture, raw hosting verification surfaces, deployed staticwebapp.config artifact continuity, domain continuity witness generation, and public deployment verification manifest generation.");

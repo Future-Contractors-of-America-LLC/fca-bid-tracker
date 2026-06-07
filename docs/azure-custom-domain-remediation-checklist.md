@@ -2,7 +2,7 @@
 
 ## Current bounded finding
 
-Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, and seeded login flow, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
+Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, and a host-aware domain continuity witness, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
 
 ## Symptoms consistent with Azure-side drift
 
@@ -10,6 +10,7 @@ Repository `main` contains the current FCA shell route inventory, deployment ver
 - public shell does not expose latest verification surfaces
 - public custom domain appears to serve route behavior inconsistent with `src/routes.js`
 - `www` behavior may differ from apex behavior
+- the host-aware witness is designed to declare both expected hosts and expose route drift once the correct artifact reaches the live site
 
 ## Required Azure checks
 
@@ -59,12 +60,24 @@ After deployment, confirm:
 
 respond from the same host as the web shell.
 
+### 6) Verify the raw witness on both hosts
+
+After Azure-side correction, verify on both:
+
+- `https://futurecontractorsofamerica.com/live-shell-verification.html`
+- `https://www.futurecontractorsofamerica.com/live-shell-verification.html`
+- `https://futurecontractorsofamerica.com/domain-continuity.json`
+- `https://www.futurecontractorsofamerica.com/domain-continuity.json`
+
+The witness should show the current host as expected and expose the governed route inventory.
+
 ## Expected success criteria
 
 After Azure-side correction, the following should all be visible on the same public host:
 
 - `/live-shell-verification.html`
 - `/deployment-status.json`
+- `/domain-continuity.json`
 - `/login?seeded=1`
 - `/login?seeded=1&autologin=1&next=/portal/platform`
 - `/api/customer-login`

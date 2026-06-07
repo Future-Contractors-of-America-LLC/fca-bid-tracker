@@ -1,0 +1,39 @@
+{
+  "service": "fca-bid-tracker",
+  "witnessType": "domain-continuity",
+  "generatedAt": "pending-build",
+  "source": "repo-default",
+  "gitRef": "main",
+  "gitSha": "pending-build",
+  "runId": "pending-build",
+  "expectedHosts": [
+    "futurecontractorsofamerica.com",
+    "www.futurecontractorsofamerica.com"
+  ],
+  "canonicalRoutes": [
+    "/",
+    "/platform",
+    "/login",
+    "/pricing",
+    "/contact",
+    "/auricrux",
+    "/academy",
+    "/portal/platform",
+    "/portal/projects",
+    "/portal/files",
+    "/portal/messages",
+    "/portal/notifications",
+    "/portal/bids",
+    "/portal/billing",
+    "/portal/support",
+    "/portal/admin",
+    "/portal/profile",
+    "/portal/auricrux",
+    "/live-shell-verification.html",
+    "/deployment-status.json"
+  ],
+  "knownUnexpectedRoutes": [
+    "/team"
+  ],
+  "continuityIntent": "apex-and-www-must-resolve-to-same-governed-swa-artifact"
+}

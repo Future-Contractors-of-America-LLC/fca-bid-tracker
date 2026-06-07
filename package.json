@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-deployment-manifest.mjs",
+    "prebuild": "node scripts/generate-deployment-manifest.mjs && node scripts/generate-domain-continuity-witness.mjs",
     "build": "vite build",
     "validate:routes": "node scripts/validate-routes.mjs",
     "validate:critical-routes": "node scripts/validate-critical-routes.mjs",
