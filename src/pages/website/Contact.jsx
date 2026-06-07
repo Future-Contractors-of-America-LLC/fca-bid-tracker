@@ -10,6 +10,8 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
+import ContactActionCenter from "../../components/ContactActionCenter";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels } from "../../systemState";
@@ -36,6 +38,8 @@ const contactProductProof = [
 ];
 
 export default function Contact() {
+  const { session, login } = useCustomerSession();
+
   return (
     <div style={pageShellStyle}>
       <ShellHeader
@@ -87,6 +91,10 @@ export default function Contact() {
         />
       </div>
 
+      <div style={{ marginBottom: 24 }}>
+        <ContactActionCenter session={session} login={login} />
+      </div>
+
       <ProductProofSection
         eyebrow="Contact product proof"
         title="Contact now opens directly into a founder-demo product path"
@@ -109,7 +117,7 @@ export default function Contact() {
 
       <CommercialReadinessPanel
         title="Your walkthrough begins from real operating context"
-        detail="Contact is framed as a customer-ready conversion surface that inherits the same approval, revenue, rollout readiness, product packaging, and communications state shown across Auricrux, platform, portal, and academy routes."
+        detail="Contact is framed as a customer-ready conversion surface that inherits the same approval, revenue, rollout readiness, product packaging, communications state, and real session activation shown across Auricrux, platform, portal, and academy routes."
         primaryHref={publicActionCatalog.walkthrough.href}
         primaryLabel={publicActionCatalog.walkthrough.label}
         secondaryHref={publicActionCatalog.platform.href}
@@ -162,7 +170,7 @@ export default function Contact() {
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>{publicContactMessaging.immediate.title}</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-          {publicContactMessaging.immediate.detail} The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options, current pricing paths, and shared next actions already presented above.
+          {publicContactMessaging.immediate.detail} The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options, current pricing paths, shared next actions, and live workspace activation already presented above.
         </p>
       </div>
 
