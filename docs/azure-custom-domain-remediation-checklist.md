@@ -2,7 +2,7 @@
 
 ## Current bounded finding
 
-Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, a raw API continuity audit page, a plain-text runtime fingerprint artifact, and the newly added lifecycle revenue routes `/warranty` and `/referrals`, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
+Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, a raw API continuity audit page, a plain-text runtime fingerprint artifact, and the lifecycle revenue routes `/warranty` and `/referrals`, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
 
 ## Why the runtime fingerprint and cross-artifact audit were added
 
@@ -10,7 +10,7 @@ The FCA operating model requires artifacts for completed execution, not just cla
 
 ## New repository-side continuity finding
 
-Route validation and sitemap parity have now been extended to include the new lifecycle revenue routes `/warranty` and `/referrals`. This removes another repo-side drift source and ensures the public lifecycle expansion is represented in route governance and crawl surfaces.
+Public lifecycle governance is now explicitly validated across four surfaces together: router registration, site metadata, sitemap coverage, and shell navigation. This was added because `/warranty` and `/referrals` had been implemented but could still drift behind validation and crawl posture if left unchecked.
 
 ## Required Azure checks
 
