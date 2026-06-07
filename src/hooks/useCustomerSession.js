@@ -14,6 +14,26 @@ function normalizeProductSelection(enabledProducts = {}) {
   };
 }
 
+export function resolveRoleDefaultProducts(role = "Owner / Admin") {
+  const normalizedRole = (role || "").trim();
+
+  switch (normalizedRole) {
+    case "Estimator":
+      return { saas: true, lms: false, auricrux: true };
+    case "Project Coordinator":
+      return { saas: true, lms: true, auricrux: true };
+    case "Superintendent":
+      return { saas: true, lms: true, auricrux: true };
+    case "Accounting":
+      return { saas: true, lms: false, auricrux: true };
+    case "Field Operations":
+      return { saas: false, lms: true, auricrux: true };
+    case "Owner / Admin":
+    default:
+      return { saas: true, lms: true, auricrux: true };
+  }
+}
+
 export default function useCustomerSession() {
   const [session, setSession] = useState(null);
 
@@ -30,7 +50,7 @@ export default function useCustomerSession() {
         company,
         role = "Owner / Admin",
         nextHref = "/portal/platform",
-        enabledProducts = { saas: true, lms: true, auricrux: true },
+        enabledProducts = resolveRoleDefaultProducts(role),
       }) {
         const normalizedEmail = (email || "").trim().toLowerCase();
         const normalizedCompany = (company || "").trim();

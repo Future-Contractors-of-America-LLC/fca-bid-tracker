@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
@@ -12,7 +12,7 @@ import CustomerSessionBar from "../../components/CustomerSessionBar";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
-import useCustomerSession from "../../hooks/useCustomerSession";
+import useCustomerSession, { resolveRoleDefaultProducts } from "../../hooks/useCustomerSession";
 import { founderJourneyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -100,13 +100,22 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     email: session?.email || "workspace@futurecontractorsofamerica.com",
     company: session?.company || "Future Contractors of America Pilot Workspace",
     role: session?.role || "Owner / Admin",
-    enabledProducts: session?.enabledProducts || {
-      saas: true,
-      lms: true,
-      auricrux: true,
-    },
+    enabledProducts: session?.enabledProducts || resolveRoleDefaultProducts(session?.role || "Owner / Admin"),
   });
+  const [provisioningMode, setProvisioningMode] = useState(session?.enabledProducts ? "custom" : "role-defaults");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!session) return;
+
+    setForm({
+      email: session.email || "workspace@futurecontractorsofamerica.com",
+      company: session.company || "Future Contractors of America Pilot Workspace",
+      role: session.role || "Owner / Admin",
+      enabledProducts: session.enabledProducts || resolveRoleDefaultProducts(session.role || "Owner / Admin"),
+    });
+    setProvisioningMode("custom");
+  }, [session]);
 
   const requestedWorkspaceHref = accessMode === "protected" ? requestedPath : session?.nextHref || "/portal/platform";
   const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy"
@@ -116,7 +125,26 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     ? `Customer login is now required to enter ${requestedPath}. Auricrux is preserving continuity so the user lands inside the requested live workspace surface after authentication.`
     : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace, reviewing the platform dashboard, and continuing into live construction operations.";
 
+  function handleRoleChange(role) {
+    setForm((prev) => ({
+      ...prev,
+      role,
+      enabledProducts: provisioningMode === "role-defaults" ? resolveRoleDefaultProducts(role) : prev.enabledProducts,
+    }));
+  }
+
+  function handleProvisioningModeChange(mode) {
+    setProvisioningMode(mode);
+    if (mode === "role-defaults") {
+      setForm((prev) => ({
+        ...prev,
+        enabledProducts: resolveRoleDefaultProducts(prev.role),
+      }));
+    }
+  }
+
   function handleProductToggle(productKey) {
+    setProvisioningMode("custom");
     setForm((prev) => ({
       ...prev,
       enabledProducts: {
@@ -151,6 +179,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   }
 
   const enabledProductCount = Object.values(form.enabledProducts).filter(Boolean).length;
+  const roleDefaultProducts = resolveRoleDefaultProducts(form.role);
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
@@ -230,7 +259,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             <select
               style={fieldStyle}
               value={form.role}
-              onChange={(event) => setForm((prev) => ({ ...prev, role: event.target.value }))}
+              onChange={(event) => handleRoleChange(event.target.value)}
             >
               <option>Owner / Admin</option>
               <option>Estimator</option>
@@ -243,6 +272,37 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Customer product provisioning</div>
             <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
               Choose the real product surfaces this customer should be able to enter on first login. This keeps the customer session honest across SaaS workspace, Academy / LMS, and Auricrux instead of opening every route by default.
+            </div>
+
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 12 }}>
+              <button
+                type="button"
+                onClick={() => handleProvisioningModeChange("role-defaults")}
+                style={{
+                  ...submitButtonStyle,
+                  background: provisioningMode === "role-defaults" ? "#1d4ed8" : "#e2e8f0",
+                  color: provisioningMode === "role-defaults" ? "#fff" : "#0f172a",
+                }}
+              >
+                Use Role Defaults
+              </button>
+              <button
+                type="button"
+                onClick={() => handleProvisioningModeChange("custom")}
+                style={{
+                  ...submitButtonStyle,
+                  background: provisioningMode === "custom" ? "#111827" : "#e2e8f0",
+                  color: provisioningMode === "custom" ? "#fff" : "#0f172a",
+                }}
+              >
+                Customize Product Access
+              </button>
+            </div>
+
+            <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
+              {provisioningMode === "role-defaults"
+                ? `Role defaults are active for ${form.role}: SaaS ${roleDefaultProducts.saas ? "enabled" : "held back"}, Academy/LMS ${roleDefaultProducts.lms ? "enabled" : "held back"}, Auricrux ${roleDefaultProducts.auricrux ? "enabled" : "held back"}.`
+                : "Custom provisioning is active. Toggle the exact product layers this customer should receive on first login."}
             </div>
 
             <div style={productAccessGridStyle}>
