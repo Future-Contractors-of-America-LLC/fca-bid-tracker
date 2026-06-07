@@ -11,6 +11,7 @@ import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import CustomerSessionBar from "../../components/CustomerSessionBar";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
+import LoginActionCenter from "../../components/LoginActionCenter";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -279,6 +280,10 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             secondaryHref="/portal/messages"
             secondaryLabel="Open Comms Workspace"
           />
+        </div>
+
+        <div style={{ marginBottom: 24 }}>
+          <LoginActionCenter session={session} login={login} requestedPath={nextHref} />
         </div>
 
         <div style={twoColumnGridStyle}>
