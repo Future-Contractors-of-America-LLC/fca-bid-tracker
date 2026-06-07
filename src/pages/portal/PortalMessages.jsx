@@ -84,7 +84,7 @@ export default function PortalMessages() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Message route is anchored to the shared operating state"
-          detail="Communication continuity now reads from the same tenant, project, next action, blocker data, and customer channel access that power bids, files, billing, and academy routes."
+          detail="Communication continuity now reads from the same tenant, project, next action, blocker data, customer channel access, warranty follow-through, and referral-growth posture that power bids, files, billing, and academy routes."
         />
       </div>
 
@@ -104,7 +104,7 @@ export default function PortalMessages() {
       <div style={{ marginBottom: 24 }}>
         <AuricruxCommsPanel
           title="Auricrux comms now spans every external and internal follow-through lane"
-          detail="Chat, SMS, phone, email, Teams, conference, and lecture are now framed as one coordinated FCA and Auricrux communications system instead of disconnected handoff points."
+          detail="Chat, SMS, phone, email, Teams, conference, and lecture are now framed as one coordinated FCA and Auricrux communications system instead of disconnected handoff points, and they now support support recovery, warranty continuity, and referral conversion in the same shell."
           statusLabel="Comms command status"
           statusValue={activeChannel ? `${activeChannel.toUpperCase()} lane active` : "Unified coordination active"}
           items={commItems}
@@ -144,12 +144,29 @@ export default function PortalMessages() {
         />
       </div>
 
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginBottom: 24 }}>
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Warranty message lane</h2>
+          <p style={{ color: "#475569", lineHeight: 1.7 }}>
+            Service follow-through, document retrieval, and post-handover updates can now be positioned as real communications continuity instead of detached support mail.
+          </p>
+          <a href="/warranty" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Warranty Continuity</a>
+        </div>
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Referral conversion lane</h2>
+          <p style={{ color: "#475569", lineHeight: 1.7 }}>
+            Reviews, introductions, and customer advocacy now stay attached to project proof and guided message follow-through instead of separate manual outreach loops.
+          </p>
+          <a href="/referrals" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Referral Continuity</a>
+        </div>
+      </div>
+
       <div style={cardStyle}>
         <h2 style={{ marginTop: 0 }}>Coordination stream</h2>
         <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 16 }}>
           {activeChannel
             ? `Showing only ${activeChannel.toUpperCase()}-aligned coordination so customer channel access stays honest to the active session.`
-            : "Showing all live coordination lanes across chat, SMS, phone, email, Teams, conference, and lecture continuity."}
+            : "Showing all live coordination lanes across chat, SMS, phone, email, Teams, conference, lecture, warranty follow-through, and referral continuity."}
         </div>
         {filteredMessages.length ? filteredMessages.map((message) => (
           <div key={`${message.from}-${message.subject}`} style={{ padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>

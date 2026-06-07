@@ -54,7 +54,7 @@ export default function PortalSupport() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Support route is attached to the canonical operating state"
-          detail="Escalation and recovery context now read from the same system module as portal execution, billing, academy continuity, and commercial plan activation."
+          detail="Escalation and recovery context now read from the same system module as portal execution, billing, academy continuity, commercial plan activation, warranty continuity, and referral follow-through."
         />
       </div>
 
@@ -76,7 +76,7 @@ export default function PortalSupport() {
       <div style={{ marginBottom: 24 }}>
         <AuricruxCommsPanel
           title="Support is now framed inside the full Auricrux communications stack"
-          detail="Recovery no longer stops at a support inbox. FCA support now routes across phone, SMS, chat, Teams, conference, and training continuity so every escalation can move back into execution."
+          detail="Recovery no longer stops at a support inbox. FCA support now routes across phone, SMS, chat, Teams, conference, and training continuity so every escalation can move back into execution, warranty follow-through, and referral-safe customer recovery."
           statusLabel="Recovery posture"
           statusValue={`Escalation lanes connected · ${selectedPlan.name}`}
           items={commItems}
@@ -99,7 +99,7 @@ export default function PortalSupport() {
           </div>
         </div>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Customer help, escalation handling, and recovery guidance remain attached to the same tenant, project, permit/document, billing, selected-plan, and Auricrux state as the rest of FCA rather than appearing as a disconnected support tool.
+          Customer help, escalation handling, and recovery guidance remain attached to the same tenant, project, permit/document, billing, selected-plan, warranty, referral, and Auricrux state as the rest of FCA rather than appearing as a disconnected support tool.
         </p>
       </div>
 
@@ -111,7 +111,7 @@ export default function PortalSupport() {
             <div><strong>Project:</strong> {state.project.name}</div>
             <div><strong>Project ID:</strong> {state.project.id}</div>
             <div><strong>Current plan:</strong> {selectedPlan.name} · {selectedPlan.price}</div>
-            <div><strong>Current issue pattern:</strong> scope approval delay, permit submission dependency, mobilization onboarding, and invoice timing risk</div>
+            <div><strong>Current issue pattern:</strong> scope approval delay, permit submission dependency, mobilization onboarding, invoice timing risk, and post-handover continuity readiness</div>
           </div>
           <div style={{ marginTop: 14 }}>
             <PublicCtaRow actions={portalNarrativeCtaSets.supportContext} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
@@ -125,6 +125,7 @@ export default function PortalSupport() {
             <li>RFI / submittal coordination delay</li>
             <li>Field onboarding or safety packet issue</li>
             <li>Billing / retainage follow-through escalation</li>
+            <li>Warranty response or closeout-document retrieval</li>
           </ul>
         </div>
       </div>
@@ -138,12 +139,29 @@ export default function PortalSupport() {
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Support owner</div>
           <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.workspace.nextActionOwner}</div>
-          <div>Escalations stay tied to the same next-action chain as bids, files, billing, and plan enforcement.</div>
+          <div>Escalations stay tied to the same next-action chain as bids, files, billing, warranty, referrals, and plan enforcement.</div>
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Recovery priority</div>
           <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>Clear approval path</div>
-          <div>Support is currently focused on removing the dependency that is holding permit release, startup packet issuance, invoice readiness, and plan-backed expansion progress.</div>
+          <div>Support is currently focused on removing the dependency that is holding permit release, startup packet issuance, invoice readiness, warranty confidence, and referral-safe expansion progress.</div>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginTop: 24 }}>
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Warranty continuity lane</h2>
+          <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
+            Post-handover service now belongs to the same governed recovery surface so support can turn issues into retention and recurring-service continuity instead of unmanaged churn.
+          </p>
+          <a href="/warranty" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Warranty Continuity</a>
+        </div>
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Referral-safe recovery lane</h2>
+          <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
+            Service recovery is now framed as part of referral protection so customer trust, reviews, and future introductions remain tied to real follow-through.
+          </p>
+          <a href="/referrals" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Referral Continuity</a>
         </div>
       </div>
 
@@ -151,7 +169,8 @@ export default function PortalSupport() {
         <h2 style={{ marginTop: 0 }}>Why this route matters</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
           Support should not sit outside the operating shell. This route keeps customer help, continuity recovery,
-          and escalation handling attached to the same tenant, project, file, audit, permit/document, selected-plan, and Auricrux state as the rest of FCA.
+          warranty retention, referral protection, and escalation handling attached to the same tenant, project, file, audit, permit/document,
+          selected-plan, and Auricrux state as the rest of FCA.
         </p>
       </div>
     </PortalShell>
