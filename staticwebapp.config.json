@@ -2,9 +2,27 @@
   "routes": [
     {
       "route": "/api/*",
-      "rewrite": "/api/*"
+      "rewrite": "/api/*",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      }
+    },
+    {
+      "route": "/deployment-status.json",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      }
+    },
+    {
+      "route": "/index.html",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      }
     }
   ],
+  "globalHeaders": {
+    "X-Auricrux-Deployment-Intent": "live-login-and-public-shell-verification"
+  },
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": [
@@ -18,12 +36,16 @@
       "/*.gif",
       "/*.svg",
       "/*.ico",
-      "/favicon.ico"
+      "/favicon.ico",
+      "/deployment-status.json"
     ]
   },
   "responseOverrides": {
     "404": {
-      "rewrite": "/index.html"
+      "rewrite": "/index.html",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      }
     }
   }
 }

@@ -40,6 +40,19 @@ const checks = [
       '"deploymentIntent": "static-web-app-plus-functions"',
     ],
   },
+  {
+    file: path.join(root, "staticwebapp.config.json"),
+    markers: [
+      '"route": "/api/*"',
+      '"route": "/deployment-status.json"',
+      '"route": "/index.html"',
+      '"Cache-Control": "no-store, no-cache, must-revalidate"',
+      '"X-Auricrux-Deployment-Intent": "live-login-and-public-shell-verification"',
+      '"rewrite": "/index.html"',
+      '"exclude": [',
+      '"/deployment-status.json"',
+    ],
+  },
 ];
 
 const failures = [];
@@ -61,4 +74,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Static Web App deployment validation passed for app artifact continuity, API deployment wiring, and public deployment verification manifest generation.");
+console.log("Static Web App deployment validation passed for app artifact continuity, API deployment wiring, cache-busting posture, and public deployment verification manifest generation.");
