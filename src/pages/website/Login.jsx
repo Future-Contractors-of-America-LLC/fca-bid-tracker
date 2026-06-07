@@ -9,6 +9,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import CustomerSessionBar from "../../components/CustomerSessionBar";
+import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -117,6 +118,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         />
 
         <CustomerSessionBar requestedPath={nextHref} mode="login" />
+        <CustomerProductLaunchpad session={session} title="Launch real customer product after login" />
 
         <div style={{ ...heroCardStyle, marginBottom: 20 }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>

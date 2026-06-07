@@ -1,8 +1,10 @@
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
+import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { auricruxActions, auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 import { publicBodyCtaSets } from "../../websiteShell";
 
@@ -16,6 +18,7 @@ const cardStyle = {
 
 export default function PortalAuricrux() {
   const { session } = useCustomerSession();
+  const { state } = useWorkspaceState();
 
   return (
     <PortalShell
@@ -27,7 +30,8 @@ export default function PortalAuricrux() {
       primaryHref="/portal/platform"
       primaryLabel="Open Platform Dashboard"
     >
-      <ProductAccessStatusPanel session={session} />
+      <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
+      <CustomerProductLaunchpad session={session} title="Launch real customer product from Auricrux" />
 
       <div style={{ marginBottom: 24 }}>
         <SystemStateSummary
