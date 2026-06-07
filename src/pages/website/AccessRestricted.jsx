@@ -2,7 +2,9 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
+import AccessRecoveryActionCenter from "../../components/AccessRecoveryActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { resolveCustomerProduct } from "../../customerSession";
 import { pageShellStyle, cardStyle } from "../../publicShellStyles";
 
@@ -16,7 +18,8 @@ const productLabels = {
 const commsLabels = ["chat", "sms", "phone", "email", "teams", "conference", "lecture"];
 
 export default function AccessRestricted({ requestedPath = "/portal/platform" }) {
-  const { session } = useCustomerSession();
+  const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
+  const { refreshSyncStamp } = useWorkspaceState();
   const product = resolveCustomerProduct(requestedPath);
   const productLabel = productLabels[product] || "Requested product";
   const products = session?.enabledProducts || { saas: true, lms: true, auricrux: true };
@@ -27,12 +30,23 @@ export default function AccessRestricted({ requestedPath = "/portal/platform" })
       <ShellHeader
         eyebrow="Customer Access Control"
         title="This customer route is not enabled for the current session"
-        subtitle="FCA is preserving customer continuity, but the requested product surface is not currently enabled for this authenticated workspace."
+        subtitle="FCA is preserving customer continuity, but the requested product surface is not currently enabled for this authenticated workspace. This route now includes live recovery controls instead of a dead-end restricted state."
         primaryHref="/portal/profile"
         primaryLabel="Open Customer Profile"
         secondaryHref="/portal/platform"
         secondaryLabel="Open Platform Dashboard"
       />
+
+      <div style={{ marginBottom: 24 }}>
+        <AccessRecoveryActionCenter
+          requestedPath={requestedPath}
+          session={session}
+          setProductAccess={setProductAccess}
+          setCommsAccess={setCommsAccess}
+          applyPlanPreset={applyPlanPreset}
+          refreshSyncStamp={refreshSyncStamp}
+        />
+      </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Access status</h2>
@@ -40,7 +54,7 @@ export default function AccessRestricted({ requestedPath = "/portal/platform" })
           <div><strong>Customer:</strong> {session?.company || "Authenticated customer"}</div>
           <div><strong>Requested route:</strong> {requestedPath}</div>
           <div><strong>Product:</strong> {productLabel}</div>
-          <div><strong>Recommended next move:</strong> Review the current product-access profile, then return to an enabled FCA surface.</div>
+          <div><strong>Recommended next move:</strong> Restore the requested access here, or review the current product-access profile before returning to an enabled FCA surface.</div>
         </div>
       </div>
 
