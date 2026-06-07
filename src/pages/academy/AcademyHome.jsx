@@ -11,9 +11,10 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
+import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
-import { auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
+import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { pageShellStyle } from "../../publicShellStyles";
@@ -81,6 +82,16 @@ export default function AcademyHome() {
       <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
       <RouteStateOverlay overlay={routeStateOverlays.academy} />
       <ExecutiveSignalBar mode="academy" nextHref={executiveSignalCtaSets.academy.href} nextLabel={executiveSignalCtaSets.academy.label} />
+
+      <div style={{ marginBottom: 24 }}>
+        <AuricruxCommsPanel
+          title="Academy is now connected to the full Auricrux communications stack"
+          detail="Training, onboarding, safety refreshers, lecture delivery, conference reviews, and cross-team coaching now sit inside the same communications control plane as project, support, and customer follow-through."
+          statusLabel="Training comms posture"
+          statusValue="Rollout channels connected"
+          items={auricruxCommsChannels}
+        />
+      </div>
 
       <div style={{ marginBottom: 24 }}>
         <BuildExpansionCommandDeck

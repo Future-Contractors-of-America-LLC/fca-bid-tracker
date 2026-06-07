@@ -3,8 +3,9 @@ import PortalShell from "../../components/PortalShell";
 import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { portalMessages, routeStateOverlays } from "../../systemState";
+import { auricruxCommsChannels, portalMessages, routeStateOverlays } from "../../systemState";
 import { portalNarrativeCtaSets } from "../../websiteShell";
 import { portalMessagesMessaging } from "../../systemContinuity";
 
@@ -47,6 +48,16 @@ export default function PortalMessages() {
           auricrux={state.auricrux}
           title="Message route is anchored to the shared operating state"
           detail="Communication continuity now reads from the same tenant, project, next action, and blocker data that powers bids, files, billing, and academy routes."
+        />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <AuricruxCommsPanel
+          title="Auricrux comms now spans every external and internal follow-through lane"
+          detail="Chat, SMS, phone, email, Teams, conference, and lecture are now framed as one coordinated FCA and Auricrux communications system instead of disconnected handoff points."
+          statusLabel="Comms command status"
+          statusValue="Unified coordination active"
+          items={auricruxCommsChannels}
         />
       </div>
 

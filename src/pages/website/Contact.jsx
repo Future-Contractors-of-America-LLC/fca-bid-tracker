@@ -9,8 +9,10 @@ import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
+import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
+import { auricruxCommsChannels } from "../../systemState";
 import { cardStyle, pageShellStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
 const checklistStyle = {
@@ -95,6 +97,16 @@ export default function Contact() {
       <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.contact.href} nextLabel={executiveSignalCtaSets.contact.label} />
 
       <div style={{ marginBottom: 24 }}>
+        <AuricruxCommsPanel
+          title="Contact is now connected to the full Auricrux communications stack"
+          detail="Website conversion now speaks directly to chat, SMS, phone, email, Teams, conference, and lecture paths so the public site hands buyers into a real FCA operating and communications system."
+          statusLabel="Public conversion comms"
+          statusValue="Founder-demo channels active"
+          items={auricruxCommsChannels}
+        />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
         <PublicOperationsStrip
           eyebrow="Contact continuity strip"
           title="Contact now behaves like a rollout handoff surface"
@@ -112,7 +124,7 @@ export default function Contact() {
       <ProductProofSection
         eyebrow="Contact product proof"
         title="Contact now opens directly into a founder-demo product path"
-        detail="This route now reinforces the exact dashboard, workspace, bid, and academy movement that should happen during a live walkthrough."
+        detail="This route now reinforces the exact dashboard, workspace, bid, academy, and communications movement that should happen during a live walkthrough."
         highlights={contactProductProof}
       />
 
@@ -124,15 +136,15 @@ export default function Contact() {
           items={[
             {
               title: "See the real workspace",
-              detail: "Walk through the platform, portal, and academy routes instead of a disconnected slide deck.",
+              detail: "Walk through the platform, portal, academy, and comms routes instead of a disconnected slide deck.",
             },
             {
               title: "Focus on your team's fit",
-              detail: "Use the conversation to match your team size, estimating flow, field coordination, and rollout needs to the right next step.",
+              detail: "Use the conversation to match your team size, estimating flow, field coordination, rollout needs, and communication preferences to the right next step.",
             },
             {
               title: "Leave with a practical plan",
-              detail: "End with a clear pilot, rollout, or follow-up action instead of an open-ended discussion.",
+              detail: "End with a clear pilot, rollout, communications path, or follow-up action instead of an open-ended discussion.",
             },
           ]}
         />
@@ -140,7 +152,7 @@ export default function Contact() {
 
       <CommercialReadinessPanel
         title="Your walkthrough begins from real operating context"
-        detail="Contact is framed as a customer-ready conversion surface that inherits the same approval, revenue, and rollout readiness state shown across Auricrux, platform, portal, and academy routes."
+        detail="Contact is framed as a customer-ready conversion surface that inherits the same approval, revenue, rollout readiness, and communications state shown across Auricrux, platform, portal, and academy routes."
         primaryHref={publicActionCatalog.walkthrough.href}
         primaryLabel={publicActionCatalog.walkthrough.label}
         secondaryHref={publicActionCatalog.platform.href}
@@ -161,10 +173,10 @@ export default function Contact() {
             <ol style={checklistStyle}>
               <li>Review the FCA platform story from the public site.</li>
               <li>Show persisted workspace continuity before entry.</li>
-              <li>Open the platform dashboard to summarize tenant, project, support, academy, and admin state.</li>
-              <li>Transition into portal, academy, and bid routes based on your team's fit.</li>
-              <li>Review approvals, document-control posture, billing follow-through, and field-readiness gaps.</li>
-              <li>Close on pilot scope, rollout path, and the next production action.</li>
+              <li>Open the platform dashboard to summarize tenant, project, support, academy, admin, and comms state.</li>
+              <li>Transition into portal, academy, bid, and communications routes based on your team's fit.</li>
+              <li>Review approvals, document-control posture, billing follow-through, field-readiness gaps, and communication cadence.</li>
+              <li>Close on pilot scope, rollout path, channel plan, and the next production action.</li>
             </ol>
           </div>
         </div>

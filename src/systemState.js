@@ -38,6 +38,58 @@ export const auricruxRail = {
   readinessSummary: "The shell is positioned for permanent workspace use while deeper project, file, audit, and academy persistence continue to harden behind it.",
 };
 
+export const auricruxCommsChannels = [
+  {
+    label: "Chat",
+    value: "Text, video, and audio triage",
+    detail: "Auricrux keeps customer, estimator, and field communication inside one live thread so execution context never gets detached from the project spine.",
+    href: "/portal/messages",
+    ctaLabel: "Open Chat Workspace",
+  },
+  {
+    label: "SMS",
+    value: "Approval nudges and field alerts",
+    detail: "Use SMS for short-cycle approval follow-through, permit reminders, site readiness, and mobilization cues.",
+    href: "/portal/notifications",
+    ctaLabel: "Open Alert Stream",
+  },
+  {
+    label: "Phone",
+    value: "Escalation and recovery lane",
+    detail: "Support and owner escalations stay linked to the same project, billing, and document-control context Auricrux is already tracking.",
+    href: "/portal/support",
+    ctaLabel: "Open Support Lane",
+  },
+  {
+    label: "Email",
+    value: "Commercial and document continuity",
+    detail: "Auricrux sequences approval requests, permit release messaging, invoice follow-through, and rollout summaries as part of one executive cadence.",
+    href: "/contact",
+    ctaLabel: "Open Rollout Path",
+  },
+  {
+    label: "Teams",
+    value: "Internal coordination surface",
+    detail: "Cross-functional coordination across estimating, project, field, academy, and support is framed as one operating channel rather than isolated team chatter.",
+    href: "/portal/platform",
+    ctaLabel: "Open Platform Coordination",
+  },
+  {
+    label: "Conference",
+    value: "Founder demo and customer review",
+    detail: "Live walkthroughs, project reviews, and executive check-ins route directly from the website into the real shell surfaces.",
+    href: "/portal/auricrux",
+    ctaLabel: "Open Auricrux Guidance",
+  },
+  {
+    label: "Lecture",
+    value: "Academy coaching and rollout",
+    detail: "Training, onboarding, safety refreshers, and process coaching remain tied to the same customer lifecycle as sales and operations.",
+    href: "/academy",
+    ctaLabel: "Open Academy",
+  },
+];
+
 export const routeStateOverlays = {
   platform: {
     title: "Unified platform dashboard state",

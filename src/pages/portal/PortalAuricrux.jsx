@@ -3,9 +3,10 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { auricruxActions, auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
+import { auricruxActions, auricruxCommsChannels, auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 import { publicBodyCtaSets } from "../../websiteShell";
 
 const cardStyle = {
@@ -23,7 +24,7 @@ export default function PortalAuricrux() {
   return (
     <PortalShell
       title="Auricrux Live Guidance Workspace"
-      subtitle="Authenticated customer surface for live Auricrux guidance across approvals, document dependencies, billing follow-through, and workforce readiness."
+      subtitle="Authenticated customer surface for live Auricrux guidance across approvals, document dependencies, billing follow-through, workforce readiness, and communications orchestration."
       activeHref="/portal/auricrux"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
@@ -40,7 +41,17 @@ export default function PortalAuricrux() {
           workspace={workspaceContext}
           auricrux={auricruxRail}
           title="Auricrux is now a live authenticated product surface"
-          detail="This route gives the customer direct access to Auricrux guidance inside the real workspace shell, tied to the same tenant, project, blocker, and next-action state as the rest of FCA."
+          detail="This route gives the customer direct access to Auricrux guidance inside the real workspace shell, tied to the same tenant, project, blocker, next-action, and communications state as the rest of FCA."
+        />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <AuricruxCommsPanel
+          title="Auricrux now acts as the cross-channel communications executive layer"
+          detail="Auricrux communications is now framed as one coordinated control plane across chat, SMS, phone, email, Teams, conference, and lecture so guidance can move execution forward instead of stopping at recommendations."
+          statusLabel="Auricrux comms status"
+          statusValue="Cross-channel orchestration active"
+          items={auricruxCommsChannels}
         />
       </div>
 
@@ -72,7 +83,7 @@ export default function PortalAuricrux() {
           <div style={{ color: "#475569", lineHeight: 1.8 }}>
             <div><strong>Session:</strong> {session?.workspaceLabel || "Authenticated customer workspace"}</div>
             <div><strong>Route:</strong> /portal/auricrux</div>
-            <div><strong>Scope:</strong> SaaS workspace + LMS continuity + live Auricrux guidance</div>
+            <div><strong>Scope:</strong> SaaS workspace + LMS continuity + live Auricrux guidance + comms orchestration</div>
             <div><strong>Project spine:</strong> {currentProject.id} · {currentProject.stage}</div>
           </div>
         </div>

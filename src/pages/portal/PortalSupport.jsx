@@ -3,8 +3,9 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
-import { auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
+import { auricruxCommsChannels, auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -33,6 +34,16 @@ export default function PortalSupport() {
           auricrux={auricruxRail}
           title="Support route is attached to the canonical operating state"
           detail="Escalation and recovery context now read from the same system module as portal execution, billing, and academy continuity."
+        />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <AuricruxCommsPanel
+          title="Support is now framed inside the full Auricrux communications stack"
+          detail="Recovery no longer stops at a support inbox. FCA support now routes across phone, SMS, chat, Teams, conference, and training continuity so every escalation can move back into execution."
+          statusLabel="Recovery posture"
+          statusValue="Escalation lanes connected"
+          items={auricruxCommsChannels}
         />
       </div>
 
