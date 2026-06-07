@@ -20,7 +20,14 @@ const allowedExternalPrefixes = ["mailto:", "https://", "http://"];
 const allowedStaticPrefixes = [
   "/fca-customer-entry",
   "/fca-customer-status",
+  "/api/",
 ];
+const allowedStaticRoutes = new Set([
+  "/deployment-status.json",
+  "/runtime-fingerprint.txt",
+  "/live-shell-verification.html",
+  "/api-continuity-audit.html",
+]);
 
 function walk(targetPath, files = []) {
   const stat = fs.statSync(targetPath);
@@ -40,15 +47,19 @@ function walk(targetPath, files = []) {
 
 function normalizeTarget(target) {
   if (!target || typeof target !== "string") return target;
-  return target.endsWith("/") && target !== "/" ? target.slice(0, -1) : target;
+  const withoutQueryOrHash = target.split("#")[0].split("?")[0];
+  return withoutQueryOrHash.endsWith("/") && withoutQueryOrHash !== "/"
+    ? withoutQueryOrHash.slice(0, -1)
+    : withoutQueryOrHash;
 }
 
 function isSupportedTarget(target) {
   const normalized = normalizeTarget(target);
   if (!normalized) return false;
   if (routeSet.has(normalized)) return true;
+  if (allowedStaticRoutes.has(normalized)) return true;
   if (allowedStaticPrefixes.some((prefix) => normalized.startsWith(prefix))) return true;
-  return allowedExternalPrefixes.some((prefix) => normalized.startsWith(prefix));
+  return allowedExternalPrefixes.some((prefix) => target.startsWith(prefix));
 }
 
 function collectLiteralTargets(content, file, failures) {
