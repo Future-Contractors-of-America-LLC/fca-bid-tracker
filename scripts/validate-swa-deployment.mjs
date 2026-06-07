@@ -61,8 +61,34 @@ const checks = [
   {
     file: path.join(root, "public", "staticwebapp.config.json"),
     markers: [
+      '"route": "/deployment-status.json"',
+      '"route": "/domain-continuity.json"',
       '"route": "/runtime-fingerprint.txt"',
+      '"route": "/live-shell-verification.html"',
+      '"route": "/host-binding-audit.html"',
+      '"route": "/api-continuity-audit.html"',
+      '"/deployment-status.json"',
+      '"/domain-continuity.json"',
       '"/runtime-fingerprint.txt"',
+      '"/host-binding-audit.html"',
+      '"/api-continuity-audit.html"',
+      '"Content-Type": "text/plain; charset=utf-8"'
+    ]
+  },
+  {
+    file: path.join(root, "staticwebapp.config.json"),
+    markers: [
+      '"route": "/deployment-status.json"',
+      '"route": "/domain-continuity.json"',
+      '"route": "/runtime-fingerprint.txt"',
+      '"route": "/live-shell-verification.html"',
+      '"route": "/host-binding-audit.html"',
+      '"route": "/api-continuity-audit.html"',
+      '"/deployment-status.json"',
+      '"/domain-continuity.json"',
+      '"/runtime-fingerprint.txt"',
+      '"/host-binding-audit.html"',
+      '"/api-continuity-audit.html"',
       '"Content-Type": "text/plain; charset=utf-8"'
     ]
   }
@@ -82,4 +108,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Static Web App deployment validation passed for governed runtime fingerprint generation, witness pack continuity, host-binding audit surfaces, API continuity audit surfaces, and API deployment wiring.");
+console.log("Static Web App deployment validation passed for governed runtime fingerprint generation, root/public staticwebapp.config parity, witness pack continuity, host-binding audit surfaces, API continuity audit surfaces, and API deployment wiring.");

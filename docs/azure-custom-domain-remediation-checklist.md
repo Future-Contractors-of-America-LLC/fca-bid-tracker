@@ -2,11 +2,15 @@
 
 ## Current bounded finding
 
-Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, a raw API continuity audit page, and now a plain-text runtime fingerprint artifact, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
+Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, a raw API continuity audit page, and a plain-text runtime fingerprint artifact, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
 
 ## Why the runtime fingerprint was added
 
-The FCA operating model requires artifacts for completed execution, not just claims. The master matrix makes artifact production mandatory and states that no step is complete without output. It also requires Auricrux to execute, validate, record, and optimize continuously. fileciteturn0file8 The runtime fingerprint gives a minimal raw witness that can be checked even if HTML rendering or SPA behavior is misleading.
+The FCA operating model requires artifacts for completed execution, not just claims. The master matrix makes artifact production mandatory and states that no step is complete without output. It also requires Auricrux to execute, validate, record, and optimize continuously. The runtime fingerprint gives a minimal raw witness that can be checked even if HTML rendering or SPA behavior is misleading. fileciteturn0file8
+
+## New repository-side continuity finding
+
+The repository had drift between the root `staticwebapp.config.json` and the deployed `public/staticwebapp.config.json`. Root/public parity has now been restored and deployment validation now fails if either copy drops the full witness pack routes. This removes another repo-side source of false confidence and narrows the remaining blocker further toward Azure-side host binding or deployment propagation.
 
 ## Required Azure checks
 
