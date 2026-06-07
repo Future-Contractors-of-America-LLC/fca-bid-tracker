@@ -14,8 +14,24 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const accessCardStyle = {
+  ...cardStyle,
+  display: "grid",
+  gap: 12,
+};
+
+const toggleButtonStyle = {
+  border: "1px solid #cbd5e1",
+  borderRadius: 10,
+  padding: "10px 14px",
+  fontWeight: 700,
+  cursor: "pointer",
+  background: "#f8fafc",
+  color: "#0f172a",
+};
+
 export default function PortalProfile() {
-  const { session, isAuthenticated } = useCustomerSession();
+  const { session, isAuthenticated, setProductAccess } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
 
   useEffect(() => {
@@ -29,6 +45,37 @@ export default function PortalProfile() {
   const workspaceRole = session?.role || "Owner / Admin";
   const enabledProducts = session?.enabledProducts || { saas: true, lms: true, auricrux: true };
   const customerId = session?.customerId || "CUST-FCA-LIVE-001";
+
+  function toggleProduct(productKey, enabled) {
+    setProductAccess(productKey, !enabled);
+  }
+
+  const productCards = [
+    {
+      key: "saas",
+      title: "SaaS access",
+      description: "Portal workspace, platform dashboard, bids, files, messages, billing, support, and admin.",
+      href: "/portal/platform",
+      ctaLabel: "Open SaaS Workspace",
+      enabled: enabledProducts.saas,
+    },
+    {
+      key: "lms",
+      title: "LMS access",
+      description: "Academy continuity, onboarding tracks, safety readiness, and workforce coaching.",
+      href: "/academy",
+      ctaLabel: "Open Academy / LMS",
+      enabled: enabledProducts.lms,
+    },
+    {
+      key: "auricrux",
+      title: "Auricrux access",
+      description: "Guided next actions, blocker visibility, and continuity across all customer-facing routes.",
+      href: "/portal/auricrux",
+      ctaLabel: "Open Auricrux",
+      enabled: enabledProducts.auricrux,
+    },
+  ];
 
   return (
     <PortalShell
@@ -88,39 +135,42 @@ export default function PortalProfile() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 16 }}>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Current operating lane</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.workspace.currentStageLabel}</div>
-          <div>{state.workspace.stageSummary}</div>
+      <div style={{ marginTop: 16 }}>
+        <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live customer product controls</div>
+          <div style={{ color: "#475569", lineHeight: 1.8 }}>
+            This profile now controls real access across SaaS workspace, Academy / LMS, and Auricrux. Toggle a product layer here to verify that login continuity, launch surfaces, and route protection stay honest to the authenticated customer session.
+          </div>
         </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Project responsibility</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.workspace.nextActionOwner}</div>
-          <div>The profile now keeps ownership visible so estimating, coordination, accounting, and field roles stay legible to the customer.</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Construction-facing identity</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>Workspace tied to live job flow</div>
-          <div>Profile continuity stays attached to bids, project setup, document control, billing, and workforce readiness instead of becoming a dead-end account page.</div>
-        </div>
-      </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 16 }}>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>SaaS access</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{enabledProducts.saas ? "Enabled" : "Pending"}</div>
-          <div>Portal workspace, platform dashboard, bids, files, messages, billing, support, and admin.</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>LMS access</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{enabledProducts.lms ? "Enabled" : "Pending"}</div>
-          <div>Academy continuity, onboarding tracks, safety readiness, and workforce coaching.</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Auricrux access</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{enabledProducts.auricrux ? "Enabled" : "Pending"}</div>
-          <div>Guided next actions, blocker visibility, and continuity across all customer-facing routes.</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+          {productCards.map((product) => (
+            <div key={product.key} style={accessCardStyle}>
+              <div>
+                <div style={{ color: "#6b7280" }}>{product.title}</div>
+                <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{product.enabled ? "Enabled" : "Pending"}</div>
+                <div style={{ color: "#475569", lineHeight: 1.7 }}>{product.description}</div>
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <a
+                  href={product.enabled ? product.href : "/portal/profile"}
+                  style={{
+                    textDecoration: "none",
+                    background: product.enabled ? "#111827" : "#cbd5e1",
+                    color: product.enabled ? "#fff" : "#475569",
+                    padding: "10px 14px",
+                    borderRadius: 10,
+                    fontWeight: 700,
+                  }}
+                >
+                  {product.enabled ? product.ctaLabel : `${product.ctaLabel} Unavailable`}
+                </a>
+                <button type="button" onClick={() => toggleProduct(product.key, product.enabled)} style={toggleButtonStyle}>
+                  {product.enabled ? "Disable Access" : "Enable Access"}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

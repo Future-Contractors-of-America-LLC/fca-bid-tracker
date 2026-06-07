@@ -52,6 +52,20 @@ export function writeCustomerSession(session) {
   return payload;
 }
 
+export function updateCustomerSession(updates = {}) {
+  const currentSession = readCustomerSession();
+  if (!currentSession) return null;
+
+  return writeCustomerSession({
+    ...currentSession,
+    ...updates,
+    enabledProducts: normalizeEnabledProducts({
+      ...currentSession.enabledProducts,
+      ...updates.enabledProducts,
+    }),
+  });
+}
+
 export function clearCustomerSession() {
   if (typeof window === "undefined") return;
 

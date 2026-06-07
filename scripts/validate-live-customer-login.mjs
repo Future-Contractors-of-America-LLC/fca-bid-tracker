@@ -10,14 +10,18 @@ const checks = [
       "CUSTOMER_SESSION_KEY",
       "readCustomerSession",
       "writeCustomerSession",
+      "updateCustomerSession",
       "isProtectedCustomerRoute",
+      "hasCustomerProductAccess",
     ],
   },
   {
     file: path.join(root, "src", "hooks", "useCustomerSession.js"),
     markers: [
       'from "../customerSession"',
-      "login({ email, company, nextHref = \"/portal\" })",
+      'login({ email, company, role = "Owner / Admin", nextHref = "/portal/platform" })',
+      "updateSession(updates = {})",
+      "setProductAccess(product, enabled)",
       "logout()",
     ],
   },
@@ -25,9 +29,10 @@ const checks = [
     file: path.join(root, "src", "router.jsx"),
     markers: [
       'import Login from "./pages/website/Login";',
-      'import { readCustomerSession, isProtectedCustomerRoute } from "./customerSession";',
+      "hasCustomerProductAccess",
       "const needsCustomerLogin = isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;",
-      "accessMode={needsCustomerLogin ? \"protected\" : \"direct\"}",
+      "const lacksProductAccess = !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);",
+      'accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"}',
     ],
   },
   {
@@ -35,8 +40,11 @@ const checks = [
     markers: [
       'import useCustomerSession from "../hooks/useCustomerSession";',
       "Live customer session",
-      "Sign Out",
       "Open Active Workspace",
+      "Open Academy / LMS",
+      "Open Auricrux",
+      "Unavailable",
+      "Sign Out",
     ],
   },
   {
@@ -52,7 +60,25 @@ const checks = [
       'import useCustomerSession from "../../hooks/useCustomerSession";',
       'import CustomerSessionBar from "../../components/CustomerSessionBar";',
       "Open Live Customer Workspace",
-      "window.location.assign(nextHref);",
+      "Launch real customer product after login",
+      "navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));",
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "portal", "PortalProfile.jsx"),
+    markers: [
+      "Live customer product controls",
+      "toggleProduct(product.key, product.enabled)",
+      "Disable Access",
+      "Enable Access",
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "website", "AccessRestricted.jsx"),
+    markers: [
+      "This customer route is not enabled for the current session",
+      "Enabled product layers",
+      "Return to profile",
     ],
   },
 ];
@@ -76,4 +102,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Live customer login validation passed across session state, router guard, portal shell, and login route.");
+console.log("Live customer login validation passed across session state, router guard, profile controls, and authenticated launch surfaces.");

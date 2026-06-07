@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   clearCustomerSession,
   readCustomerSession,
+  updateCustomerSession,
   writeCustomerSession,
 } from "../customerSession";
 
@@ -44,6 +45,33 @@ export default function useCustomerSession() {
             auricrux: true,
           },
         });
+
+        setSession(saved);
+        return { ok: true, session: saved };
+      },
+      updateSession(updates = {}) {
+        const saved = updateCustomerSession(updates);
+        if (!saved) {
+          return { ok: false, error: "No authenticated customer session was found." };
+        }
+
+        setSession(saved);
+        return { ok: true, session: saved };
+      },
+      setProductAccess(product, enabled) {
+        if (!["saas", "lms", "auricrux"].includes(product)) {
+          return { ok: false, error: "Unknown product access target." };
+        }
+
+        const saved = updateCustomerSession({
+          enabledProducts: {
+            [product]: enabled,
+          },
+        });
+
+        if (!saved) {
+          return { ok: false, error: "No authenticated customer session was found." };
+        }
 
         setSession(saved);
         return { ok: true, session: saved };

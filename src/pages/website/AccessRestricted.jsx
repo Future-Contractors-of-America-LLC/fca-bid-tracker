@@ -43,9 +43,9 @@ export default function AccessRestricted({ requestedPath = "/portal/platform" })
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Enabled product layers</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
-          <AccessCell label="SaaS workspace" status={products.saas ? "Enabled" : "Pending"} href="/portal/platform" />
-          <AccessCell label="Academy / LMS" status={products.lms ? "Enabled" : "Pending"} href="/academy" />
-          <AccessCell label="Auricrux guidance" status={products.auricrux ? "Enabled" : "Pending"} href="/portal/auricrux" />
+          <AccessCell label="SaaS workspace" enabled={products.saas} href="/portal/platform" />
+          <AccessCell label="Academy / LMS" enabled={products.lms} href="/academy" />
+          <AccessCell label="Auricrux guidance" enabled={products.auricrux} href="/portal/auricrux" />
         </div>
       </div>
 
@@ -59,12 +59,14 @@ export default function AccessRestricted({ requestedPath = "/portal/platform" })
   );
 }
 
-function AccessCell({ label, status, href }) {
+function AccessCell({ label, enabled, href }) {
   return (
     <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff" }}>
       <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>{label}</div>
-      <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>{status}</div>
-      <a href={href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open route</a>
+      <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>{enabled ? "Enabled" : "Pending"}</div>
+      <a href={enabled ? href : "/portal/profile"} style={{ color: enabled ? "#1d4ed8" : "#475569", fontWeight: 700, textDecoration: "none" }}>
+        {enabled ? "Open route" : "Return to profile"}
+      </a>
     </div>
   );
 }

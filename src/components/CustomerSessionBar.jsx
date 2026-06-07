@@ -32,13 +32,34 @@ export default function CustomerSessionBar({
 
   const resolvedPath = requestedPath || session.nextHref || "/portal/platform";
   const detail = mode === "login"
-    ? `Customer access is live. Auricrux is preserving continuity from login into ${resolvedPath} for ${session.company}, with SaaS workspace, Academy/LMS, and Auricrux guidance enabled in the same customer shell.`
+    ? `Customer access is live. Auricrux is preserving continuity from login into ${resolvedPath} for ${session.company}, with SaaS workspace, Academy/LMS, and Auricrux guidance controlled inside the same customer shell.`
     : `Customer access is live for ${session.company}. Auricrux is preserving ${workspaceContext.currentNextAction.toLowerCase()} and ${auricruxRail.currentBlocker.toLowerCase()} inside the active workspace.`;
 
   function handleLogout() {
     logout();
     navigateTo("/login");
   }
+
+  const actions = [
+    {
+      label: "Open Active Workspace",
+      href: resolvedPath,
+      enabled: session.enabledProducts?.saas !== false,
+      style: buttonStyle,
+    },
+    {
+      label: "Open Academy / LMS",
+      href: "/academy",
+      enabled: session.enabledProducts?.lms !== false,
+      style: { ...buttonStyle, background: "#1d4ed8" },
+    },
+    {
+      label: "Open Auricrux",
+      href: "/portal/auricrux",
+      enabled: session.enabledProducts?.auricrux !== false,
+      style: { ...buttonStyle, background: "#7c3aed" },
+    },
+  ];
 
   return (
     <div style={shellStyle}>
@@ -49,9 +70,19 @@ export default function CustomerSessionBar({
           <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 860 }}>{detail}</div>
         </div>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-          <a href={resolvedPath} style={buttonStyle}>Open Active Workspace</a>
-          <a href="/academy" style={{ ...buttonStyle, background: "#1d4ed8" }}>Open Academy / LMS</a>
-          <a href="/portal/auricrux" style={{ ...buttonStyle, background: "#7c3aed" }}>Open Auricrux</a>
+          {actions.map((action) => (
+            <a
+              key={action.label}
+              href={action.enabled ? action.href : "/portal/profile"}
+              style={{
+                ...action.style,
+                background: action.enabled ? action.style.background : "#cbd5e1",
+                color: action.enabled ? action.style.color : "#475569",
+              }}
+            >
+              {action.enabled ? action.label : `${action.label} Unavailable`}
+            </a>
+          ))}
           <button onClick={handleLogout} style={{ ...buttonStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>
             Sign Out
           </button>
