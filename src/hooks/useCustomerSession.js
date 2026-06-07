@@ -16,20 +16,33 @@ export default function useCustomerSession() {
     () => ({
       session,
       isAuthenticated: Boolean(session?.authenticated),
-      login({ email, company, nextHref = "/portal" }) {
+      login({ email, company, role = "Owner / Admin", nextHref = "/portal/platform" }) {
         const normalizedEmail = (email || "").trim().toLowerCase();
         const normalizedCompany = (company || "").trim();
+        const normalizedRole = (role || "").trim() || "Owner / Admin";
 
         if (!normalizedEmail || !normalizedCompany) {
           return { ok: false, error: "Email and company are required." };
         }
 
+        const companyKey = normalizedCompany
+          .replace(/[^a-z0-9]+/gi, "-")
+          .replace(/^-+|-+$/g, "")
+          .toUpperCase();
+
         const saved = writeCustomerSession({
           email: normalizedEmail,
           company: normalizedCompany,
+          role: normalizedRole,
+          customerId: `CUST-${companyKey || "FCA"}-001`,
           workspaceLabel: `${normalizedCompany} Workspace`,
           nextHref,
           lastLoginAt: new Date().toISOString(),
+          enabledProducts: {
+            saas: true,
+            lms: true,
+            auricrux: true,
+          },
         });
 
         setSession(saved);

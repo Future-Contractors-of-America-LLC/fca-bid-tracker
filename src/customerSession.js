@@ -1,5 +1,13 @@
 export const CUSTOMER_SESSION_KEY = "fca_customer_session_v1";
 
+function normalizeEnabledProducts(enabledProducts) {
+  return {
+    saas: enabledProducts?.saas !== false,
+    lms: enabledProducts?.lms !== false,
+    auricrux: enabledProducts?.auricrux !== false,
+  };
+}
+
 export function readCustomerSession() {
   if (typeof window === "undefined") return null;
 
@@ -7,7 +15,14 @@ export function readCustomerSession() {
     const raw = window.localStorage.getItem(CUSTOMER_SESSION_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    return parsed?.authenticated ? parsed : null;
+    if (!parsed?.authenticated) return null;
+
+    return {
+      ...parsed,
+      role: parsed.role || "Owner / Admin",
+      customerId: parsed.customerId || "CUST-FCA-LIVE-001",
+      enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
+    };
   } catch {
     return null;
   }
@@ -20,9 +35,12 @@ export function writeCustomerSession(session) {
     authenticated: true,
     email: session.email,
     company: session.company,
+    role: session.role || "Owner / Admin",
+    customerId: session.customerId || "CUST-FCA-LIVE-001",
     workspaceLabel: session.workspaceLabel || session.company,
     lastLoginAt: session.lastLoginAt || new Date().toISOString(),
-    nextHref: session.nextHref || "/portal/profile",
+    nextHref: session.nextHref || "/portal/platform",
+    enabledProducts: normalizeEnabledProducts(session.enabledProducts),
   };
 
   try {
@@ -45,7 +63,7 @@ export function clearCustomerSession() {
 }
 
 export function isProtectedCustomerRoute(pathname = "/") {
-  return pathname.startsWith("/portal");
+  return pathname.startsWith("/portal") || pathname === "/academy";
 }
 
 export function resolveLoginHref() {
@@ -56,9 +74,9 @@ export function resolveProfileHref(session = readCustomerSession()) {
   return session?.authenticated ? "/portal/profile" : resolveLoginHref();
 }
 
-export function resolveWorkspaceEntryHref(session = readCustomerSession(), requestedPath = "/portal/profile") {
+export function resolveWorkspaceEntryHref(session = readCustomerSession(), requestedPath = "/portal/platform") {
   if (!session?.authenticated) return resolveLoginHref();
   if (requestedPath && isProtectedCustomerRoute(requestedPath)) return requestedPath;
   if (session.nextHref && isProtectedCustomerRoute(session.nextHref)) return session.nextHref;
-  return "/portal/profile";
+  return "/portal/platform";
 }

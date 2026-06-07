@@ -26,6 +26,8 @@ export default function PortalProfile() {
   const sessionWorkspace = session?.workspaceLabel || state.meta.customerWorkspaceLabel || `${sessionCompany} Workspace`;
   const sessionLogin = session?.lastLoginAt || state.meta.lastSyncedAt || "Pending first authenticated entry";
   const workspaceRole = session?.role || "Owner / Admin";
+  const enabledProducts = session?.enabledProducts || { saas: true, lms: true, auricrux: true };
+  const customerId = session?.customerId || "CUST-FCA-LIVE-001";
 
   return (
     <PortalShell
@@ -64,6 +66,7 @@ export default function PortalProfile() {
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>{sessionWorkspace}</h2>
           <div style={{ color: "#475569", lineHeight: 1.8 }}>
             <div><strong>Customer company:</strong> {sessionCompany}</div>
+            <div><strong>Customer ID:</strong> {customerId}</div>
             <div><strong>Customer email:</strong> {sessionEmail}</div>
             <div><strong>Workspace role:</strong> {workspaceRole}</div>
             <div><strong>Session status:</strong> {isAuthenticated ? "Authenticated" : "Shell continuity mode"}</div>
@@ -100,12 +103,30 @@ export default function PortalProfile() {
         </div>
       </div>
 
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 16 }}>
+        <div style={cardStyle}>
+          <div style={{ color: "#6b7280" }}>SaaS access</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{enabledProducts.saas ? "Enabled" : "Pending"}</div>
+          <div>Portal workspace, platform dashboard, bids, files, messages, billing, support, and admin.</div>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ color: "#6b7280" }}>LMS access</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{enabledProducts.lms ? "Enabled" : "Pending"}</div>
+          <div>Academy continuity, onboarding tracks, safety readiness, and workforce coaching.</div>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ color: "#6b7280" }}>Auricrux access</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{enabledProducts.auricrux ? "Enabled" : "Pending"}</div>
+          <div>Guided next actions, blocker visibility, and continuity across all customer-facing routes.</div>
+        </div>
+      </div>
+
       <div style={{ ...cardStyle, marginTop: 16 }}>
         <h2 style={{ marginTop: 0 }}>Why this route matters</h2>
         <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0 }}>
           The profile icon now has a real destination inside the product. Instead of routing customers into a dead-end account stub,
           this surface confirms who is signed in, what workspace they control, what project spine is active, what role they hold in the construction workflow,
-          and what Auricrux says should happen next.
+          what product layers they can access, and what Auricrux says should happen next.
         </p>
       </div>
     </PortalShell>

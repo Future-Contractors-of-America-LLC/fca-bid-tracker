@@ -61,16 +61,19 @@ const loginContinuityItems = [
   },
 ];
 
-export default function Login({ requestedPath = "/portal/profile", accessMode = "direct" }) {
+export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
   const [form, setForm] = useState({
     email: session?.email || "workspace@futurecontractorsofamerica.com",
     company: session?.company || "Future Contractors of America Pilot Workspace",
+    role: session?.role || "Owner / Admin",
   });
   const [error, setError] = useState("");
 
-  const requestedWorkspaceHref = accessMode === "protected" ? requestedPath : session?.nextHref || "/portal/profile";
-  const nextHref = requestedWorkspaceHref?.startsWith("/portal") ? requestedWorkspaceHref : "/portal/profile";
+  const requestedWorkspaceHref = accessMode === "protected" ? requestedPath : session?.nextHref || "/portal/platform";
+  const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy"
+    ? requestedWorkspaceHref
+    : "/portal/platform";
   const liveEntryDetail = accessMode === "protected"
     ? `Customer login is now required to enter ${requestedPath}. Auricrux is preserving continuity so the user lands inside the requested live workspace surface after authentication.`
     : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace, reviewing the platform dashboard, and continuing into live construction operations.";
@@ -80,6 +83,7 @@ export default function Login({ requestedPath = "/portal/profile", accessMode = 
     const result = login({
       email: form.email,
       company: form.company,
+      role: form.role,
       nextHref,
     });
 
@@ -170,8 +174,22 @@ export default function Login({ requestedPath = "/portal/profile", accessMode = 
               onChange={(event) => setForm((prev) => ({ ...prev, company: event.target.value }))}
             />
 
+            <label>Workspace Role</label>
+            <select
+              style={fieldStyle}
+              value={form.role}
+              onChange={(event) => setForm((prev) => ({ ...prev, role: event.target.value }))}
+            >
+              <option>Owner / Admin</option>
+              <option>Estimator</option>
+              <option>Project Coordinator</option>
+              <option>Superintendent</option>
+              <option>Accounting</option>
+              <option>Field Operations</option>
+            </select>
+
             <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
-              This live customer session preserves Auricrux continuity and routes directly into {nextHref} after entry so estimating, job setup, files, messages, billing, and academy readiness stay in one operating shell.
+              This live customer session preserves Auricrux continuity and routes directly into {nextHref} so SaaS workspace access, Academy/LMS readiness, and Auricrux guidance stay inside one functional customer login.
             </div>
 
             {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 700 }}>{error}</div> : null}
@@ -203,12 +221,12 @@ export default function Login({ requestedPath = "/portal/profile", accessMode = 
               <h2 style={{ marginTop: 0 }}>What opens after entry</h2>
               <div style={responsiveGrid(180)}>
                 {[
-                  ["Projects", "Execution visibility, mobilization posture, and stage continuity"],
-                  ["Bids", "Approval queue, scope control, and estimator context"],
-                  ["Files", "Bid packages, permit sets, RFIs, and onboarding docs"],
-                  ["Messages", "Auricrux-guided customer and coordination communications"],
-                  ["Billing", "Invoice readiness, retainage, and account follow-through"],
-                  ["Academy", "Workforce training, safety readiness, and field continuity"],
+                  ["SaaS Workspace", "Projects, bids, files, messages, billing, support, and admin continuity"],
+                  ["Platform Dashboard", "Executive summary across project state, blockers, and next actions"],
+                  ["Academy / LMS", "Workforce training, safety readiness, and field continuity"],
+                  ["Auricrux", "Guided next actions, blocker visibility, and continuity across all routes"],
+                  ["Document Control", "Permit sets, RFIs, submittals, and onboarding docs"],
+                  ["Revenue Flow", "Invoice readiness, retainage, and commercial follow-through"],
                 ].map(([title, detail]) => (
                   <div key={title} style={moduleStyle}>
                     <div style={{ fontWeight: 700, marginBottom: 6 }}>{title}</div>
