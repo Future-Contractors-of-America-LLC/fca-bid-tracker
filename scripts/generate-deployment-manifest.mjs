@@ -13,6 +13,7 @@ const payload = {
   runId: process.env.GITHUB_RUN_ID || "local",
   verificationRoutes: [
     "/deployment-status.json",
+    "/live-shell-verification.html",
     "/api/auricrux",
     "/api/customer-login",
     "/login",

@@ -12,6 +12,7 @@ const checks = [
       "app_location: dist",
       "api_location: api",
       "test -f dist/deployment-status.json",
+      "test -f dist/live-shell-verification.html",
       "test -f api/customer-login.js",
       "test -f api/auricrux.js",
     ],
@@ -28,6 +29,7 @@ const checks = [
     file: path.join(root, "scripts", "generate-deployment-manifest.mjs"),
     markers: [
       '"deployment-status.json"',
+      '"/live-shell-verification.html"',
       '"/api/auricrux"',
       '"/api/customer-login"',
       '"static-web-app-plus-functions"',
@@ -38,6 +40,16 @@ const checks = [
     markers: [
       '"service": "fca-bid-tracker"',
       '"deploymentIntent": "static-web-app-plus-functions"',
+    ],
+  },
+  {
+    file: path.join(root, "public", "live-shell-verification.html"),
+    markers: [
+      'FCA live shell verification',
+      '/deployment-status.json',
+      '/api/customer-login',
+      '/api/auricrux',
+      'cache: "no-store"',
     ],
   },
   {
@@ -74,4 +86,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Static Web App deployment validation passed for app artifact continuity, API deployment wiring, cache-busting posture, and public deployment verification manifest generation.");
+console.log("Static Web App deployment validation passed for app artifact continuity, API deployment wiring, cache-busting posture, raw hosting verification surfaces, and public deployment verification manifest generation.");
