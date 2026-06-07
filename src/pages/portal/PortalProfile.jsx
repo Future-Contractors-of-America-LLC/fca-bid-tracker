@@ -25,11 +25,12 @@ export default function PortalProfile() {
   const sessionEmail = session?.email || state.meta.customerSessionEmail || "workspace@futurecontractorsofamerica.com";
   const sessionWorkspace = session?.workspaceLabel || state.meta.customerWorkspaceLabel || `${sessionCompany} Workspace`;
   const sessionLogin = session?.lastLoginAt || state.meta.lastSyncedAt || "Pending first authenticated entry";
+  const workspaceRole = session?.role || "Owner / Admin";
 
   return (
     <PortalShell
       title="Customer Identity and Workspace Profile"
-      subtitle="Live customer identity surface showing session continuity, workspace ownership, and Auricrux-guided next actions inside the active FCA shell."
+      subtitle="Live customer identity surface showing workspace ownership, construction-role continuity, and Auricrux-guided next actions inside the active FCA shell."
       activeHref="/portal/profile"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}
@@ -64,6 +65,7 @@ export default function PortalProfile() {
           <div style={{ color: "#475569", lineHeight: 1.8 }}>
             <div><strong>Customer company:</strong> {sessionCompany}</div>
             <div><strong>Customer email:</strong> {sessionEmail}</div>
+            <div><strong>Workspace role:</strong> {workspaceRole}</div>
             <div><strong>Session status:</strong> {isAuthenticated ? "Authenticated" : "Shell continuity mode"}</div>
             <div><strong>Last login:</strong> {sessionLogin}</div>
           </div>
@@ -80,11 +82,30 @@ export default function PortalProfile() {
         </div>
       </div>
 
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 16 }}>
+        <div style={cardStyle}>
+          <div style={{ color: "#6b7280" }}>Current operating lane</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.workspace.currentStageLabel}</div>
+          <div>{state.workspace.stageSummary}</div>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ color: "#6b7280" }}>Project responsibility</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.workspace.nextActionOwner}</div>
+          <div>The profile now keeps ownership visible so estimating, coordination, accounting, and field roles stay legible to the customer.</div>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ color: "#6b7280" }}>Construction-facing identity</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>Workspace tied to live job flow</div>
+          <div>Profile continuity stays attached to bids, project setup, document control, billing, and workforce readiness instead of becoming a dead-end account page.</div>
+        </div>
+      </div>
+
       <div style={{ ...cardStyle, marginTop: 16 }}>
         <h2 style={{ marginTop: 0 }}>Why this route matters</h2>
         <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0 }}>
           The profile icon now has a real destination inside the product. Instead of routing customers into a dead-end account stub,
-          this surface confirms who is signed in, what workspace they control, what project spine is active, and what Auricrux says should happen next.
+          this surface confirms who is signed in, what workspace they control, what project spine is active, what role they hold in the construction workflow,
+          and what Auricrux says should happen next.
         </p>
       </div>
     </PortalShell>
