@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>FCA API continuity audit</title>
+    <style>
+      body { margin: 0; padding: 24px; font-family: Arial, sans-serif; background: #07111f; color: #e5eefb; }
+      .shell { max-width: 960px; margin: 0 auto; background: rgba(15,23,42,.92); border: 1px solid rgba(148,163,184,.25); border-radius: 18px; padding: 24px; }
+      .status { margin: 16px 0; font-weight: 700; }
+      .ok { color: #34d399; }
+      .warn { color: #fbbf24; }
+      .fail { color: #f87171; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 18px 0; }
+      .card { background: #0f172a; border: 1px solid rgba(148,163,184,.2); border-radius: 12px; padding: 12px; }
+      .label { font-size: 12px; text-transform: uppercase; color: #93c5fd; margin-bottom: 6px; font-weight: 700; }
+      .value { font-weight: 700; word-break: break-word; }
+      pre { white-space: pre-wrap; word-break: break-word; background: #0f172a; border-radius: 12px; padding: 14px; border: 1px solid rgba(148,163,184,.2); }
+      a { color: #93c5fd; }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <h1>FCA API continuity audit</h1>
+      <p>This raw page bypasses the SPA and tests the live Functions surface from the active host. If this page is current but the APIs fail, the remaining blocker is the Functions deployment path rather than the public shell artifact.</p>
+      <div id="summary" class="status warn">Running API continuity audit…</div>
+      <div class="grid" id="facts"></div>
+      <p>
+        Related verification routes:
+        <a href="/deployment-status.json">deployment-status.json</a>,
+        <a href="/domain-continuity.json">domain-continuity.json</a>,
+        <a href="/live-shell-verification.html">live-shell-verification.html</a>,
+        <a href="/host-binding-audit.html">host-binding-audit.html</a>
+      </p>
+      <pre id="payload">Awaiting API responses…</pre>
+    </main>
+    <script>
+      const summary = document.getElementById('summary');
+      const facts = document.getElementById('facts');
+      const payload = document.getElementById('payload');
+      function addFact(label, value) {
+        const node = document.createElement('div');
+        node.className = 'card';
+        node.innerHTML = `<div class="label">${label}</div><div class="value">${value}</div>`;
+        facts.appendChild(node);
+      }
+      async function fetchEndpoint(path) {
+        const startedAt = Date.now();
+        try {
+          const response = await fetch(path, { cache: 'no-store' });
+          const text = await response.text();
+          return {
+            ok: response.ok,
+            status: response.status,
+            elapsedMs: Date.now() - startedAt,
+            sample: text.slice(0, 280)
+          };
+        } catch (error) {
+          return {
+            ok: false,
+            status: 'network-failure',
+            elapsedMs: Date.now() - startedAt,
+            sample: error.message
+          };
+        }
+      }
+      async function run() {
+        const currentHost = window.location.host || 'unknown';
+        addFact('Current host', currentHost);
+        addFact('Current path', window.location.pathname || '/');
+        const results = {
+          customerLogin: await fetchEndpoint('/api/customer-login'),
+          auricrux: await fetchEndpoint('/api/auricrux')
+        };
+        addFact('customer-login status', String(results.customerLogin.status));
+        addFact('customer-login latency', `${results.customerLogin.elapsedMs}ms`);
+        addFact('auricrux status', String(results.auricrux.status));
+        addFact('auricrux latency', `${results.auricrux.elapsedMs}ms`);
+        payload.textContent = JSON.stringify(results, null, 2);
+        if (results.customerLogin.ok && results.auricrux.ok) {
+          summary.className = 'status ok';
+          summary.textContent = 'OK: both public API continuity endpoints responded successfully from this host.';
+          return;
+        }
+        if (results.customerLogin.ok || results.auricrux.ok) {
+          summary.className = 'status warn';
+          summary.textContent = 'WARN: partial API continuity only. One endpoint responded but the other failed.';
+          return;
+        }
+        summary.className = 'status fail';
+        summary.textContent = 'FAIL: both public API continuity endpoints failed from this host.';
+      }
+      run();
+    </script>
+  </body>
+</html>

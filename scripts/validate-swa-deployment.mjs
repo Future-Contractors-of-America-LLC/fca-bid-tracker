@@ -15,6 +15,7 @@ const checks = [
       "test -f dist/domain-continuity.json",
       "test -f dist/live-shell-verification.html",
       "test -f dist/host-binding-audit.html",
+      "test -f dist/api-continuity-audit.html",
       "test -f api/customer-login.js",
       "test -f api/auricrux.js"
     ]
@@ -48,12 +49,25 @@ const checks = [
     ]
   },
   {
+    file: path.join(root, "public", "api-continuity-audit.html"),
+    markers: [
+      'FCA API continuity audit',
+      '/api/customer-login',
+      '/api/auricrux',
+      '/host-binding-audit.html',
+      'partial API continuity only',
+      'both public API continuity endpoints failed'
+    ]
+  },
+  {
     file: path.join(root, "public", "staticwebapp.config.json"),
     markers: [
       '"route": "/domain-continuity.json"',
       '"route": "/host-binding-audit.html"',
+      '"route": "/api-continuity-audit.html"',
       '"/domain-continuity.json"',
-      '"/host-binding-audit.html"'
+      '"/host-binding-audit.html"',
+      '"/api-continuity-audit.html"'
     ]
   }
 ];
@@ -72,4 +86,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log('Static Web App deployment validation passed for witness triad continuity, API deployment wiring, and host-binding audit surfaces.');
+console.log('Static Web App deployment validation passed for witness triad continuity, host-binding audit surfaces, API continuity audit surfaces, and API deployment wiring.');

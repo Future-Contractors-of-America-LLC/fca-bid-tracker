@@ -2,7 +2,7 @@
 
 ## Current bounded finding
 
-Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, and a raw host-binding audit page, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
+Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, and a raw API continuity audit page, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
 
 ## Symptoms consistent with Azure-side drift
 
@@ -11,6 +11,7 @@ Repository `main` contains the current FCA shell route inventory, deployment ver
 - public custom domain appears to serve route behavior inconsistent with `src/routes.js`
 - `www` behavior may differ from apex behavior
 - the host-aware witness declares both expected hosts and exposes route drift once the correct artifact reaches the live site
+- the raw API continuity audit distinguishes frontend artifact drift from Functions deployment drift
 
 ## Required Azure checks
 
@@ -38,12 +39,14 @@ If the resource binding is correct but deployment still does not reflect `main`:
 Confirm:
 - `/api/customer-login`
 - `/api/auricrux`
+- `/api-continuity-audit.html`
 
-### 6) Verify the witness triad on both hosts
+### 6) Verify the full public verification pack on both hosts
 Check on both apex and `www`:
 - `/deployment-status.json`
 - `/domain-continuity.json`
 - `/live-shell-verification.html`
 - `/host-binding-audit.html`
+- `/api-continuity-audit.html`
 
-The audit page should show the current host as expected and the witnesses should all agree on governed build identity.
+The audit pages should show the current host as expected and the witness set should agree on governed build identity and API availability.

@@ -32,6 +32,12 @@
       }
     },
     {
+      "route": "/api-continuity-audit.html",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      }
+    },
+    {
       "route": "/index.html",
       "headers": {
         "Cache-Control": "no-store, no-cache, must-revalidate"
@@ -58,7 +64,8 @@
       "/deployment-status.json",
       "/domain-continuity.json",
       "/live-shell-verification.html",
-      "/host-binding-audit.html"
+      "/host-binding-audit.html",
+      "/api-continuity-audit.html"
     ]
   },
   "responseOverrides": {
