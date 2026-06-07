@@ -3,11 +3,19 @@ import path from "path";
 import { pathToFileURL } from "url";
 
 const root = process.cwd();
-const routesModule = await import(pathToFileURL(path.join(root, "src", "routes.js")).href);
+const routesSource = await fs.readFile(path.join(root, "src", "routes.js"), "utf8");
 const websiteShellModule = await import(pathToFileURL(path.join(root, "src", "websiteShell.js")).href);
 
-const routes = routesModule.routes || {};
-const routeSet = new Set(Object.keys(routes));
+function extractRouteKeys(source) {
+  const routeBlockMatch = source.match(/export const routes = \{([\s\S]*?)\n\};/);
+  if (!routeBlockMatch) {
+    throw new Error("Unable to locate exported routes object in src/routes.js");
+  }
+
+  return [...routeBlockMatch[1].matchAll(/(["'])(\/[^"']*)\1\s*:/g)].map((match) => match[2]);
+}
+
+const routeSet = new Set(extractRouteKeys(routesSource));
 const portalNarrativeCtaSets = websiteShellModule.portalNarrativeCtaSets || {};
 const publicBodyCtaSets = websiteShellModule.publicBodyCtaSets || {};
 
@@ -52,12 +60,16 @@ const portalPageChecks = [
 
 function normalizePath(value) {
   if (!value || typeof value !== "string") return value;
-  return value.endsWith("/") && value !== "/" ? value.slice(0, -1) : value;
+  const withoutQueryOrHash = value.split("#")[0].split("?")[0];
+  return withoutQueryOrHash.endsWith("/") && withoutQueryOrHash !== "/"
+    ? withoutQueryOrHash.slice(0, -1)
+    : withoutQueryOrHash;
 }
 
 function isSupportedHref(value) {
   if (!value || typeof value !== "string") return false;
   if (value.startsWith("mailto:")) return true;
+  if (value.startsWith("https://") || value.startsWith("http://")) return true;
   return routeSet.has(normalizePath(value));
 }
 
