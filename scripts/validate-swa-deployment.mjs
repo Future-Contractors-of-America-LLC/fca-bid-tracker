@@ -13,6 +13,7 @@ const checks = [
       "api_location: api",
       "test -f dist/deployment-status.json",
       "test -f dist/domain-continuity.json",
+      "test -f dist/runtime-fingerprint.txt",
       "test -f dist/live-shell-verification.html",
       "test -f dist/host-binding-audit.html",
       "test -f dist/api-continuity-audit.html",
@@ -23,29 +24,27 @@ const checks = [
   {
     file: path.join(root, "package.json"),
     markers: [
-      '"prebuild": "node scripts/generate-deployment-manifest.mjs && node scripts/generate-domain-continuity-witness.mjs"',
+      '"prebuild": "node scripts/generate-deployment-manifest.mjs && node scripts/generate-domain-continuity-witness.mjs && node scripts/generate-runtime-fingerprint.mjs"',
       '"validate:swa-deployment": "node scripts/validate-swa-deployment.mjs"',
       'npm run validate:swa-deployment'
     ]
   },
   {
-    file: path.join(root, "public", "domain-continuity.json"),
+    file: path.join(root, "scripts", "generate-runtime-fingerprint.mjs"),
     markers: [
-      '"witnessType": "domain-continuity"',
+      '"runtime-fingerprint.txt"',
       '"futurecontractorsofamerica.com"',
       '"www.futurecontractorsofamerica.com"',
-      '"/team"'
+      '"governed-public-runtime-fingerprint"'
     ]
   },
   {
-    file: path.join(root, "public", "host-binding-audit.html"),
+    file: path.join(root, "public", "runtime-fingerprint.txt"),
     markers: [
-      'FCA host binding audit',
-      '/deployment-status.json',
-      '/domain-continuity.json',
-      '/live-shell-verification.html',
-      'Current host',
-      'knownUnexpectedRoutes'
+      'service=fca-bid-tracker',
+      'gitSha=pending-build',
+      'expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com',
+      'continuityIntent=governed-public-runtime-fingerprint'
     ]
   },
   {
@@ -62,28 +61,25 @@ const checks = [
   {
     file: path.join(root, "public", "staticwebapp.config.json"),
     markers: [
-      '"route": "/domain-continuity.json"',
-      '"route": "/host-binding-audit.html"',
-      '"route": "/api-continuity-audit.html"',
-      '"/domain-continuity.json"',
-      '"/host-binding-audit.html"',
-      '"/api-continuity-audit.html"'
+      '"route": "/runtime-fingerprint.txt"',
+      '"/runtime-fingerprint.txt"',
+      '"Content-Type": "text/plain; charset=utf-8"'
     ]
   }
 ];
 
 const failures = [];
 for (const check of checks) {
-  const source = await fs.readFile(check.file, 'utf8');
+  const source = await fs.readFile(check.file, "utf8");
   for (const marker of check.markers) {
     if (!source.includes(marker)) failures.push(`${path.relative(root, check.file)} is missing required deployment hardening marker: ${marker}`);
   }
 }
 
 if (failures.length > 0) {
-  console.error('Static Web App deployment validation failed:');
+  console.error("Static Web App deployment validation failed:");
   for (const failure of failures) console.error(` - ${failure}`);
   process.exit(1);
 }
 
-console.log('Static Web App deployment validation passed for witness triad continuity, host-binding audit surfaces, API continuity audit surfaces, and API deployment wiring.');
+console.log("Static Web App deployment validation passed for governed runtime fingerprint generation, witness pack continuity, host-binding audit surfaces, API continuity audit surfaces, and API deployment wiring.");

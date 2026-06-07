@@ -2,16 +2,11 @@
 
 ## Current bounded finding
 
-Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, and a raw API continuity audit page, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
+Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, a raw API continuity audit page, and now a plain-text runtime fingerprint artifact, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
 
-## Symptoms consistent with Azure-side drift
+## Why the runtime fingerprint was added
 
-- repo `main` continues advancing
-- public shell does not expose latest verification surfaces
-- public custom domain appears to serve route behavior inconsistent with `src/routes.js`
-- `www` behavior may differ from apex behavior
-- the host-aware witness declares both expected hosts and exposes route drift once the correct artifact reaches the live site
-- the raw API continuity audit distinguishes frontend artifact drift from Functions deployment drift
+The FCA operating model requires artifacts for completed execution, not just claims. The master matrix makes artifact production mandatory and states that no step is complete without output. It also requires Auricrux to execute, validate, record, and optimize continuously. fileciteturn0file8 The runtime fingerprint gives a minimal raw witness that can be checked even if HTML rendering or SPA behavior is misleading.
 
 ## Required Azure checks
 
@@ -35,18 +30,13 @@ If the resource binding is correct but deployment still does not reflect `main`:
 2. Replace GitHub secret `AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F`
 3. Re-run workflow `Azure Static Web Apps CI/CD`
 
-### 5) Verify functions continuity
-Confirm:
-- `/api/customer-login`
-- `/api/auricrux`
-- `/api-continuity-audit.html`
-
-### 6) Verify the full public verification pack on both hosts
+### 5) Verify the full public verification pack on both hosts
 Check on both apex and `www`:
 - `/deployment-status.json`
 - `/domain-continuity.json`
+- `/runtime-fingerprint.txt`
 - `/live-shell-verification.html`
 - `/host-binding-audit.html`
 - `/api-continuity-audit.html`
 
-The audit pages should show the current host as expected and the witness set should agree on governed build identity and API availability.
+The raw witnesses should agree on governed build identity, expected hosts, and API availability.

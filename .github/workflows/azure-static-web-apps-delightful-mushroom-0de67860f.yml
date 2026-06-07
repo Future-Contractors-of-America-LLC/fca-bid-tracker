@@ -45,6 +45,7 @@ jobs:
           test -f dist/staticwebapp.config.json
           test -f dist/deployment-status.json
           test -f dist/domain-continuity.json
+          test -f dist/runtime-fingerprint.txt
           test -f dist/live-shell-verification.html
           test -f dist/host-binding-audit.html
           test -f dist/api-continuity-audit.html

@@ -1,0 +1,8 @@
+service=fca-bid-tracker
+generatedAt=pending-build
+source=repo-default
+gitRef=main
+gitSha=pending-build
+runId=pending-build
+expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com
+continuityIntent=governed-public-runtime-fingerprint
