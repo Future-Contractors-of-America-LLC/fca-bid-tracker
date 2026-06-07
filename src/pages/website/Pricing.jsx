@@ -10,6 +10,8 @@ import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
+import PricingActionCenter from "../../components/PricingActionCenter";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
@@ -54,6 +56,8 @@ const productPackages = [
 ];
 
 export default function Pricing() {
+  const { session, login } = useCustomerSession();
+
   return (
     <div style={pageShellStyle}>
       <ShellHeader
@@ -107,6 +111,10 @@ export default function Pricing() {
         />
       </div>
 
+      <div style={{ marginBottom: 24 }}>
+        <PricingActionCenter session={session} login={login} />
+      </div>
+
       <ProductProofSection
         eyebrow="Pricing product proof"
         title="Pricing now closes against visible product, not promise-only packaging"
@@ -129,7 +137,7 @@ export default function Pricing() {
 
       <CommercialReadinessPanel
         title="Rollout planning reflects live system state"
-        detail="Pricing is framed as a continuity-aware rollout surface that keeps approval, revenue risk, product depth, and communications readiness visible before a live conversation."
+        detail="Pricing is framed as a continuity-aware rollout surface that keeps approval, revenue risk, product depth, communications readiness, and real session activation visible before a live conversation."
         primaryHref="/contact"
         primaryLabel={publicActionCatalog.contact.label}
         secondaryHref={publicActionCatalog.platform.href}
@@ -200,7 +208,7 @@ export default function Pricing() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Immediate next actions</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0, color: "#4b5563" }}>
-            Review the rollout path, then move into contact, pricing fit, and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.
+            Review the rollout path, activate a real workspace if you are ready to move, then continue into contact, pricing fit, and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.
           </p>
         </div>
       </div>
