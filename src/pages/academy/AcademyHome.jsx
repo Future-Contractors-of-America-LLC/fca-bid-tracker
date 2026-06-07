@@ -12,8 +12,7 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
-import { auricruxRail, currentProject, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../workspaceState";
-import { portalFiles } from "../../portalShell";
+import { auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -104,7 +103,9 @@ export default function AcademyHome() {
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
           {academyContinuityMessaging.continuity.detail}
         </p>
-        <PublicCtaRow actions={academyCtaSets.continuityActions} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
+        <div style={{ marginTop: 14 }}>
+          <PublicCtaRow actions={academyCtaSets.continuityActions} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
+        </div>
       </div>
 
       <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
@@ -112,7 +113,7 @@ export default function AcademyHome() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7 }}>
           <div>
             <strong>Assignment need</strong>
-            <div>Two learners are ready for onboarding assignment.</div>
+            <div>Two learners are ready for onboarding assignment before mobilization.</div>
           </div>
           <div>
             <strong>Dependency</strong>
@@ -124,7 +125,7 @@ export default function AcademyHome() {
           </div>
           <div>
             <strong>Coordinated next move</strong>
-            <div>Assign learners here, then preserve follow-through in messages and billing.</div>
+            <div>Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning.</div>
           </div>
         </div>
       </div>
@@ -133,17 +134,17 @@ export default function AcademyHome() {
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Learners enrolled</div>
           <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>24</div>
-          <div>Across onboarding, safety, and estimating tracks</div>
+          <div>Across onboarding, safety, estimating, and field-readiness tracks</div>
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Certifications in progress</div>
           <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>9</div>
-          <div>OSHA, field readiness, and platform onboarding</div>
+          <div>OSHA, field readiness, equipment awareness, and platform onboarding</div>
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Completion rate</div>
           <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>87%</div>
-          <div>Workspace KPI for rollout confidence</div>
+          <div>Workspace KPI for rollout confidence and job-start readiness</div>
         </div>
       </div>
 
@@ -155,6 +156,7 @@ export default function AcademyHome() {
             <li>Customer Portal Navigation</li>
             <li>Bid Workflow Fundamentals</li>
             <li>Field Onboarding and Safety Readiness</li>
+            <li>RFI, submittal, and document-control discipline</li>
             <li>Auricrux Guided Execution Overview</li>
           </ol>
         </div>
@@ -163,7 +165,7 @@ export default function AcademyHome() {
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
             <div>• Two new learners are ready for onboarding assignment.</div>
             <div>• One certification expires in 14 days.</div>
-            <div>• Portal activity suggests scheduling estimating refresher training.</div>
+            <div>• Field kickoff posture suggests scheduling a safety and document-control refresher before mobilization.</div>
           </div>
         </div>
       </div>
@@ -178,7 +180,7 @@ export default function AcademyHome() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Production close</h2>
           <p style={{ lineHeight: 1.7, color: "#4b5563" }}>
-            Use this screen to prove FCA is not just a bid tool. The same customer can move from sales and portal visibility into workforce enablement, compliance readiness, and long-term support.
+            Use this screen to prove FCA is not just a bid tool. The same customer can move from sales and portal visibility into workforce enablement, safety readiness, compliance discipline, and long-term support.
           </p>
           <PublicCtaRow actions={academyCtaSets.productionClose} />
         </div>
