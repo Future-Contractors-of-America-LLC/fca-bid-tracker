@@ -43,6 +43,10 @@ const continuityCardStyle = {
 export default function AcademyHome() {
   const { session } = useCustomerSession();
   const { state } = useWorkspaceState();
+  const liveTenant = state?.tenant || portalTenant;
+  const liveProject = state?.project || currentProject;
+  const liveWorkspace = state?.workspace || workspaceContext;
+  const liveAuricrux = state?.auricrux || auricruxRail;
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
   const commItems = auricruxCommsChannels.map((item) => ({
     ...item,
@@ -86,9 +90,9 @@ export default function AcademyHome() {
       <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
       <CustomerCommsLaunchpad session={session} title="Launch enabled training and customer communications lanes" />
 
-      <ProjectSpineBar tenant={portalTenant} project={currentProject} />
-      <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
-      <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
+      <ProjectSpineBar tenant={liveTenant} project={liveProject} />
+      <WorkspaceContextBar tenant={liveTenant} project={liveProject} workspace={liveWorkspace} />
+      <AuricruxStatusRail project={liveProject} rail={liveAuricrux} />
       <RouteStateOverlay overlay={routeStateOverlays.academy} />
       <ExecutiveSignalBar mode="academy" nextHref={executiveSignalCtaSets.academy.href} nextLabel={executiveSignalCtaSets.academy.label} />
 
@@ -141,7 +145,7 @@ export default function AcademyHome() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7 }}>
           <div>
             <strong>Assignment need</strong>
-            <div>Two learners are ready for onboarding assignment before mobilization.</div>
+            <div>Two learners are ready for onboarding assignment before mobilization for {liveProject.id}.</div>
           </div>
           <div>
             <strong>Dependency</strong>
@@ -149,11 +153,11 @@ export default function AcademyHome() {
           </div>
           <div>
             <strong>Commercial blocker</strong>
-            <div>{auricruxRail.blockerImpact}</div>
+            <div>{liveAuricrux.blockerImpact}</div>
           </div>
           <div>
             <strong>Coordinated next move</strong>
-            <div>Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning.</div>
+            <div>Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning for {liveTenant.name}.</div>
           </div>
         </div>
       </div>
@@ -191,14 +195,14 @@ export default function AcademyHome() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Auricrux coaching notes</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div>• Two new learners are ready for onboarding assignment.</div>
+            <div>• Two new learners are ready for onboarding assignment under {liveTenant.name}.</div>
             <div>• One certification expires in 14 days.</div>
-            <div>• Field kickoff posture suggests scheduling a safety and document-control refresher before mobilization.</div>
+            <div>• Field kickoff posture for {liveProject.id} suggests scheduling a safety and document-control refresher before mobilization.</div>
           </div>
         </div>
       </div>
 
-      <ProjectFileAuditPanel project={currentProject} files={portalFiles} auditEvents={projectAuditEvents} />
+      <ProjectFileAuditPanel project={liveProject} files={portalFiles} auditEvents={projectAuditEvents} />
 
       <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
@@ -208,7 +212,7 @@ export default function AcademyHome() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Production close</h2>
           <p style={{ lineHeight: 1.7, color: "#4b5563" }}>
-            Use this screen to prove FCA is not just a bid tool. The same customer can move from sales and portal visibility into workforce enablement, safety readiness, compliance discipline, and long-term support.
+            Use this screen to prove FCA is not just a bid tool. The same customer can move from sales and portal visibility into workforce enablement, safety readiness, compliance discipline, and long-term support without breaking the shared system state.
           </p>
           <PublicCtaRow actions={academyCtaSets.productionClose} />
         </div>
