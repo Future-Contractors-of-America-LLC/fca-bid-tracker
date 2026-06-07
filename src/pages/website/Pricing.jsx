@@ -19,8 +19,8 @@ import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGrid
 
 const rolloutSteps = [
   "Confirm contractor fit, pilot scope, and current operating friction.",
-  "Walk the live FCA experience from public entry through workspace, platform dashboard, portal, academy, and bid continuity.",
-  "Select the rollout tier that matches readiness, team size, product depth, and communications needs.",
+  "Walk the live FCA experience from public entry through workspace, platform dashboard, portal, academy, bid continuity, warranty continuity, and referral follow-through.",
+  "Select the rollout tier that matches readiness, team size, product depth, communications needs, and post-handover continuity posture.",
   "Close on the next deployment action, pricing path, and rollout planning sequence.",
 ];
 
@@ -38,7 +38,7 @@ const pricingContinuityItems = [
   {
     label: "Shared narrative",
     value: "Public shell stays product-aware",
-    detail: "Pricing continues the same platform, academy, portal, and communications continuity story instead of restarting from zero.",
+    detail: "Pricing continues the same platform, academy, portal, communications, warranty, and referral continuity story instead of restarting from zero.",
   },
 ];
 
@@ -47,6 +47,7 @@ const pricingProductProof = [
   { title: "Show customer workspace depth", detail: "Use the portal shell to demonstrate the product that the rollout tiers are funding and sequencing.", href: "/portal", label: "Open Portal Workspace" },
   { title: "Prove bid continuity", detail: "Bring the canonical bid route into the conversation so startup, pilot, and rollout scope are tied to a real production flow.", href: "/bid-entry", label: "Open Bid Entry" },
   { title: "Keep academy and comms in scope", detail: "Training, lecture continuity, and communications routing stay inside the same product story, which makes rollout planning more credible.", href: "/academy", label: "Open Academy" },
+  { title: "Show recurring service and advocacy lanes", detail: "Use warranty and referral continuity to prove the revenue story continues after handoff instead of ending at project delivery.", href: "/warranty", label: "Open Warranty Continuity" },
 ];
 
 const productPackages = [
@@ -54,6 +55,7 @@ const productPackages = [
   { title: "Customer Portal", detail: "Customer-facing visibility into projects, files, statuses, messages, and next actions inside the same workspace." },
   { title: "Academy / LMS", detail: "Onboarding, safety reinforcement, workforce readiness, and lecture continuity tied directly to delivery rollout." },
   { title: "Auricrux + Comms", detail: "Guided next actions plus routed chat, SMS, phone, email, Teams, conference, and lecture channels according to plan depth." },
+  { title: "Lifecycle Revenue Continuity", detail: "Warranty retention, recurring service posture, reviews, and referral-safe expansion now remain attached to the same operating and rollout story." },
 ];
 
 export default function Pricing() {
@@ -101,7 +103,7 @@ export default function Pricing() {
         <PublicOperationsStrip
           eyebrow="Pricing continuity strip"
           title="Pricing is now framed as rollout control, not isolated packaging"
-          detail="The pricing route now carries a shared operating strip so commercial review stays tied to workspace readiness, founder walkthrough, and production next actions."
+          detail="The pricing route now carries a shared operating strip so commercial review stays tied to workspace readiness, founder walkthrough, production next actions, and lifecycle revenue continuity."
           statusLabel="Commercial posture"
           statusValue="Rollout review recommended"
           items={pricingContinuityItems}
@@ -116,12 +118,12 @@ export default function Pricing() {
         <PricingActionCenter session={session} login={login} />
       </div>
 
-      <CommercialContinuityFeed title="Pricing and rollout memory" detail="Recent pricing activations, plan promotions, and revenue-shaping workspace changes stay visible here so commercial continuity is durable across pricing, contact, login, and portal routes." />
+      <CommercialContinuityFeed title="Pricing and rollout memory" detail="Recent pricing activations, plan promotions, revenue-shaping workspace changes, recurring-service continuity posture, and referral-ready lifecycle transitions stay visible here so commercial continuity is durable across pricing, contact, login, and portal routes." />
 
       <ProductProofSection
         eyebrow="Pricing product proof"
         title="Pricing now closes against visible product, not promise-only packaging"
-        detail="The route now keeps dashboard, workspace, bid, academy, and communications proof in view so rollout conversations stay anchored to the actual FCA product."
+        detail="The route now keeps dashboard, workspace, bid, academy, communications, warranty, and referral proof in view so rollout conversations stay anchored to the actual FCA product and its revenue lifecycle."
         highlights={pricingProductProof}
       />
 
@@ -132,15 +134,15 @@ export default function Pricing() {
           detail={publicPricingMessaging.trust.detail}
           items={[
             { title: "Start at the right level", detail: "Use Startup Workspace for low-cost entry, Pilot Workspace for one-time guided launch, Team or Operations Workspace for mid-range growth, or larger rollout paths when the team is ready." },
-            { title: "Expand with confidence", detail: "Add billing, training, and broader channel continuity as your team grows into the platform." },
-            { title: "Plan a broader rollout", detail: "Use a larger rollout path when multiple teams, workflows, or operating units need to stay aligned." },
+            { title: "Expand with confidence", detail: "Add billing, training, broader channel continuity, recurring service posture, and referral growth readiness as your team grows into the platform." },
+            { title: "Plan a broader rollout", detail: "Use a larger rollout path when multiple teams, workflows, or operating units need to stay aligned from delivery through post-handover customer retention." },
           ]}
         />
       </div>
 
       <CommercialReadinessPanel
         title="Rollout planning reflects live system state"
-        detail="Pricing is framed as a continuity-aware rollout surface that keeps approval, revenue risk, product depth, communications readiness, and real session activation visible before a live conversation."
+        detail="Pricing is framed as a continuity-aware rollout surface that keeps approval, revenue risk, product depth, communications readiness, recurring-service posture, and real session activation visible before a live conversation."
         primaryHref="/contact"
         primaryLabel={publicActionCatalog.contact.label}
         secondaryHref={publicActionCatalog.platform.href}
@@ -205,13 +207,13 @@ export default function Pricing() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>How to choose a plan</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-            Use these tiers to frame the conversation around operational maturity, rollout depth, communications coverage, and continuity needs. The objective is to match your team to the right production path, not force a generic self-serve checkout.
+            Use these tiers to frame the conversation around operational maturity, rollout depth, communications coverage, continuity needs, and post-handover growth posture. The objective is to match your team to the right production path, not force a generic self-serve checkout.
           </p>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Immediate next actions</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0, color: "#4b5563" }}>
-            Review the rollout path, activate a real workspace if you are ready to move, then continue into contact, pricing fit, and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.
+            Review the rollout path, activate a real workspace if you are ready to move, then continue into contact, pricing fit, recurring-service posture, referral-readiness, and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.
           </p>
         </div>
       </div>

@@ -51,6 +51,11 @@ const billingContinuityItems = [
     value: "Academy readiness remains visible",
     detail: "Billing stays linked to learner assignment so revenue and onboarding continuity remain aligned.",
   },
+  {
+    label: "Lifecycle revenue",
+    value: "Service and referrals can become billable follow-through",
+    detail: "Billing now reinforces recurring maintenance, warranty response, and referral-driven growth as governed commercial continuity rather than separate side activity.",
+  },
 ];
 
 export default function PortalBilling() {
@@ -80,7 +85,7 @@ export default function PortalBilling() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Billing now reads from the live workspace state"
-          detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, blocker, and selected-plan modules as the other portal routes."
+          detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, blocker, selected-plan, warranty, and referral modules as the other portal routes."
         />
       </div>
 
@@ -99,13 +104,13 @@ export default function PortalBilling() {
         />
       </div>
 
-      <CommercialContinuityFeed title="Billing and commercial continuity feed" detail="Recent plan promotions, workspace activations, product/comms repairs, and revenue-shaping mutations remain visible here so billing can operate as part of one durable commercial system." />
+      <CommercialContinuityFeed title="Billing and commercial continuity feed" detail="Recent plan promotions, workspace activations, product/comms repairs, recurring-service posture changes, and revenue-shaping mutations remain visible here so billing can operate as part of one durable commercial system." />
 
       <div style={{ marginBottom: 24 }}>
         <PublicOperationsStrip
           eyebrow="Billing continuity strip"
           title="Billing now stays connected to the public conversion shell"
-          detail="The same continuity pattern used on platform, pricing, and contact now extends into billing so commercial posture remains coherent across public and portal routes."
+          detail="The same continuity pattern used on platform, pricing, and contact now extends into billing so commercial posture remains coherent across public and portal routes, including recurring service and referral-safe growth."
           statusLabel="Billing posture"
           statusValue="Commercial follow-through active"
           items={billingContinuityItems}
@@ -131,12 +136,13 @@ export default function PortalBilling() {
 
       <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Revenue continuity focus</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Billing now echoes the same approval, plan, and training state as the rest of the shell</h2>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Billing now echoes the same approval, plan, training, warranty, and referral state as the rest of the shell</h2>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Revenue blocker:</strong> {state.auricrux.currentBlocker}</div>
           <div><strong>Business impact:</strong> {state.auricrux.blockerImpact}</div>
           <div><strong>Commercial next step:</strong> Convert {state.workspace.currentNextAction.toLowerCase()} into invoice follow-through under the {selectedPlan.name} plan.</div>
           <div><strong>Training continuity:</strong> Billing remains tied to learner assignment so onboarding and revenue stay visible together.</div>
+          <div><strong>Lifecycle expansion:</strong> Recurring maintenance, service response, and advocacy-safe follow-through are now treated as part of the commercial picture.</div>
         </div>
       </div>
 
@@ -171,12 +177,29 @@ export default function PortalBilling() {
         ))}
       </div>
 
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginTop: 24 }}>
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Recurring service revenue lane</h2>
+          <p style={{ lineHeight: 1.7, marginBottom: 12, color: "#4b5563" }}>
+            Billing now reinforces post-handover service and maintenance as a governed expansion path instead of treating delivery as the commercial finish line.
+          </p>
+          <a href="/warranty" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Warranty Continuity</a>
+        </div>
+        <div style={cardStyle}>
+          <h2 style={{ marginTop: 0 }}>Referral-driven revenue lane</h2>
+          <p style={{ lineHeight: 1.7, marginBottom: 12, color: "#4b5563" }}>
+            Customer advocacy and review-safe follow-through are now framed as part of revenue continuity so finished work can re-enter the pipeline intentionally.
+          </p>
+          <a href="/referrals" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Referral Continuity</a>
+        </div>
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Why billing belongs in the same shell</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
             Billing is not just accounting. In FCA it stays tied to project progress, pay-app backup, document readiness,
-            owner approvals, customer communications, plan activation, and training completion so commercial follow-through remains visible.
+            owner approvals, customer communications, plan activation, training completion, warranty retention, and referral-driven follow-through so commercial continuity remains visible.
           </p>
           <PublicCtaRow actions={portalNarrativeCtaSets.billingNarrative} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
         </div>
@@ -187,6 +210,7 @@ export default function PortalBilling() {
             <li>Commercial packaging: {selectedPlan.price}.</li>
             <li>Billing model: {selectedPlan.billingModel}.</li>
             <li>Auricrux continues monitoring account follow-through.</li>
+            <li>Recurring service and referral growth are now included in the lifecycle revenue story.</li>
           </ul>
         </div>
       </div>
