@@ -51,6 +51,7 @@ export default function CustomerSessionBar({
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
           <a href={resolvedPath} style={buttonStyle}>Open Active Workspace</a>
           <a href="/academy" style={{ ...buttonStyle, background: "#1d4ed8" }}>Open Academy / LMS</a>
+          <a href="/portal/auricrux" style={{ ...buttonStyle, background: "#7c3aed" }}>Open Auricrux</a>
           <button onClick={handleLogout} style={{ ...buttonStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>
             Sign Out
           </button>
