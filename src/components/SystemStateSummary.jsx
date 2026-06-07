@@ -19,6 +19,7 @@ export default function SystemStateSummary({
 }) {
   const liveTenant = resolveLiveTenantIdentity(tenant);
   const liveProject = resolveLiveProjectIdentity(project);
+  const enabledProducts = liveTenant.enabledProducts;
 
   return (
     <div style={summaryCardStyle}>
@@ -31,6 +32,7 @@ export default function SystemStateSummary({
           <strong>Tenant</strong>
           <div>{liveTenant.name}</div>
           {liveTenant.authenticatedEmail ? <div style={{ color: "#64748b", fontSize: 13 }}>{liveTenant.authenticatedEmail}</div> : null}
+          {liveTenant.customerId ? <div style={{ color: "#64748b", fontSize: 13 }}>Customer ID: {liveTenant.customerId}</div> : null}
         </div>
         <div>
           <strong>Project</strong>
@@ -45,6 +47,25 @@ export default function SystemStateSummary({
           <div>{auricrux.currentBlocker}</div>
         </div>
       </div>
+
+      {liveTenant.workspaceRole || enabledProducts ? (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7, marginTop: 16 }}>
+          {liveTenant.workspaceRole ? (
+            <div>
+              <strong>Workspace role</strong>
+              <div>{liveTenant.workspaceRole}</div>
+            </div>
+          ) : null}
+          {enabledProducts ? (
+            <div>
+              <strong>Product access</strong>
+              <div>
+                SaaS: {enabledProducts.saas !== false ? "Enabled" : "Pending"} · LMS: {enabledProducts.lms !== false ? "Enabled" : "Pending"} · Auricrux: {enabledProducts.auricrux !== false ? "Enabled" : "Pending"}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
 
       <AuricruxStateExplanation
         mode="summary"

@@ -10,6 +10,9 @@ export function resolveLiveTenantIdentity(tenant) {
     roleSummary: `${session.workspaceLabel} is authenticated and operating through the live FCA customer continuity shell.`,
     authenticatedEmail: session.email,
     workspaceLabel: session.workspaceLabel,
+    customerId: session.customerId,
+    workspaceRole: session.role,
+    enabledProducts: session.enabledProducts,
   };
 }
 
