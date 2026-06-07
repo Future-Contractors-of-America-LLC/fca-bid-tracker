@@ -1,8 +1,12 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import ProjectActionCenter from "../../components/ProjectActionCenter";
+import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
+import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { portalProjects, routeStateOverlays } from "../../systemState";
+import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -14,6 +18,7 @@ const cardStyle = {
 
 export default function PortalProjects() {
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const { projects, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
 
   useEffect(() => {
     refreshSyncStamp("Persisted project flow state active");
@@ -39,6 +44,9 @@ export default function PortalProjects() {
           detail="Project execution visibility now reads from the same tenant, project, next-action, and blocker source as the rest of the FCA shell."
         />
       </div>
+
+      <CommercialContinuityFeed title="Project commercial continuity feed" detail="Recent project-stage changes, permit-path repairs, and execution-to-closeout mutations remain visible here so delivery actions stay tied to revenue and rollout continuity." />
+      <AutomationRecoveryFeed title="Project automation feed" detail="Recent Auricrux project repairs and stage transitions remain visible across routes so execution-state changes are durable." />
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted project state</div>
@@ -78,7 +86,7 @@ export default function PortalProjects() {
       </div>
 
       <div style={{ display: "grid", gap: 16 }}>
-        {portalProjects.map((project) => (
+        {projects.map((project) => (
           <div key={project.id} style={cardStyle}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
               <div>
@@ -99,6 +107,7 @@ export default function PortalProjects() {
             <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.6 }}>
               <strong>Commercial focus:</strong> {project.commercialFocus}
             </div>
+            <ProjectActionCenter project={project} advanceProjectStage={advanceProjectStage} clearPermitBlocker={clearPermitBlocker} />
           </div>
         ))}
       </div>
