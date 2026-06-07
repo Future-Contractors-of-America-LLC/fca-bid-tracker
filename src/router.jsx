@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 
 import NotFound from "./pages/website/NotFound";
 import Login from "./pages/website/Login";
-import { readCustomerSession, isProtectedCustomerRoute } from "./customerSession";
+import AccessRestricted from "./pages/website/AccessRestricted";
+import {
+  readCustomerSession,
+  hasCustomerProductAccess,
+  isProtectedCustomerRoute,
+} from "./customerSession";
 import { NAVIGATION_EVENT, isManagedNavigationTarget, navigateTo } from "./navigation";
 import { routes, normalizePath } from "./routes";
 import { syncDocumentMetadata } from "./siteMetadata";
@@ -15,7 +20,12 @@ export default function Router() {
   const [normalizedPath, setNormalizedPath] = useState(readCurrentPath);
   const session = readCustomerSession();
   const needsCustomerLogin = isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;
-  const Page = needsCustomerLogin ? Login : routes[normalizedPath] || NotFound;
+  const lacksProductAccess = !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);
+  const Page = needsCustomerLogin
+    ? Login
+    : lacksProductAccess
+      ? AccessRestricted
+      : routes[normalizedPath] || NotFound;
 
   useEffect(() => {
     function syncRouteFromLocation() {
@@ -53,5 +63,5 @@ export default function Router() {
     syncDocumentMetadata(needsCustomerLogin ? "/login" : normalizedPath);
   }, [needsCustomerLogin, normalizedPath]);
 
-  return <Page requestedPath={normalizedPath} accessMode={needsCustomerLogin ? "protected" : "direct"} />;
+  return <Page requestedPath={normalizedPath} accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"} />;
 }

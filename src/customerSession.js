@@ -66,6 +66,20 @@ export function isProtectedCustomerRoute(pathname = "/") {
   return pathname.startsWith("/portal") || pathname === "/academy";
 }
 
+export function resolveCustomerProduct(pathname = "/") {
+  if (pathname === "/academy" || pathname.startsWith("/portal/academy")) return "lms";
+  if (pathname.startsWith("/portal") || pathname === "/login") return "saas";
+  if (pathname === "/auricrux") return "auricrux";
+  return "public";
+}
+
+export function hasCustomerProductAccess(session, pathname = "/") {
+  const product = resolveCustomerProduct(pathname);
+  if (product === "public") return true;
+  if (!session?.authenticated) return false;
+  return session.enabledProducts?.[product] !== false;
+}
+
 export function resolveLoginHref() {
   return "/login";
 }
@@ -76,7 +90,9 @@ export function resolveProfileHref(session = readCustomerSession()) {
 
 export function resolveWorkspaceEntryHref(session = readCustomerSession(), requestedPath = "/portal/platform") {
   if (!session?.authenticated) return resolveLoginHref();
-  if (requestedPath && isProtectedCustomerRoute(requestedPath)) return requestedPath;
-  if (session.nextHref && isProtectedCustomerRoute(session.nextHref)) return session.nextHref;
-  return "/portal/platform";
+  if (requestedPath && isProtectedCustomerRoute(requestedPath) && hasCustomerProductAccess(session, requestedPath)) return requestedPath;
+  if (session.nextHref && isProtectedCustomerRoute(session.nextHref) && hasCustomerProductAccess(session, session.nextHref)) return session.nextHref;
+  if (hasCustomerProductAccess(session, "/portal/platform")) return "/portal/platform";
+  if (hasCustomerProductAccess(session, "/academy")) return "/academy";
+  return "/portal/profile";
 }
