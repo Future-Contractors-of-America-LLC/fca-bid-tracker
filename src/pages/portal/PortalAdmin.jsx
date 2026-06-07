@@ -1,12 +1,15 @@
+import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
+import AdminActionCenter from "../../components/AdminActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets } from "../../websiteShell";
-import { auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
+import { routeStateOverlays } from "../../systemState";
 import { resolvePlanPreset } from "../../pricingPlans";
 
 const cardStyle = {
@@ -18,13 +21,19 @@ const cardStyle = {
 };
 
 export default function PortalAdmin() {
-  const { session } = useCustomerSession();
+  const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
+  const { state, refreshSyncStamp } = useWorkspaceState();
+
+  useEffect(() => {
+    refreshSyncStamp("Persisted admin governance state active");
+  }, [refreshSyncStamp]);
+
   const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
 
   return (
     <PortalShell
       title="Admin, Rollout, and Governance Control"
-      subtitle="Administrative surface for tenant status, seat visibility, construction-workflow rollout, commercial package awareness, and Auricrux governance control."
+      subtitle="Administrative surface for tenant status, seat visibility, construction-workflow rollout, commercial package awareness, Auricrux governance control, and one-click admin actions."
       activeHref="/portal/admin"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.admin}
@@ -33,10 +42,10 @@ export default function PortalAdmin() {
     >
       <div style={{ marginBottom: 24 }}>
         <SystemStateSummary
-          tenant={portalTenant}
-          project={currentProject}
-          workspace={workspaceContext}
-          auricrux={auricruxRail}
+          tenant={state.tenant}
+          project={state.project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
           title="Admin route now reads from the canonical control state"
           detail="Tenant rollout, governance visibility, commercial packaging, and next-action context now come from the same shared system module as the rest of the FCA shell."
         />
@@ -44,6 +53,17 @@ export default function PortalAdmin() {
 
       <div style={{ marginBottom: 24 }}>
         <CustomerPlanSummaryPanel session={session} title="Admin-aligned customer plan summary" />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <AdminActionCenter
+          session={session}
+          state={state}
+          applyPlanPreset={applyPlanPreset}
+          setProductAccess={setProductAccess}
+          setCommsAccess={setCommsAccess}
+          refreshSyncStamp={refreshSyncStamp}
+        />
       </div>
 
       <div style={{ marginBottom: 24 }}>
@@ -69,8 +89,8 @@ export default function PortalAdmin() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Tenant</div>
-          <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>{portalTenant.name}</div>
-          <div>{portalTenant.roleSummary}</div>
+          <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>{state.tenant.name}</div>
+          <div>{state.tenant.roleSummary}</div>
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Seat readiness</div>
@@ -85,7 +105,7 @@ export default function PortalAdmin() {
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Governance visibility</div>
           <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>Auricrux monitored</div>
-          <div>Project {currentProject.id} remains within shared audit and workspace control.</div>
+          <div>Project {state.project.id} remains within shared audit and workspace control.</div>
         </div>
       </div>
 
