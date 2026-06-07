@@ -3,8 +3,11 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
+import { resolvePlanPreset } from "../../pricingPlans";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -15,10 +18,13 @@ const cardStyle = {
 };
 
 export default function PortalAdmin() {
+  const { session } = useCustomerSession();
+  const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
+
   return (
     <PortalShell
       title="Admin, Rollout, and Governance Control"
-      subtitle="Administrative surface for tenant status, seat visibility, construction-workflow rollout, and Auricrux governance awareness."
+      subtitle="Administrative surface for tenant status, seat visibility, construction-workflow rollout, commercial package awareness, and Auricrux governance control."
       activeHref="/portal/admin"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.admin}
@@ -32,8 +38,12 @@ export default function PortalAdmin() {
           workspace={workspaceContext}
           auricrux={auricruxRail}
           title="Admin route now reads from the canonical control state"
-          detail="Tenant rollout, governance visibility, and next-action context now come from the same shared system module as the rest of the FCA shell."
+          detail="Tenant rollout, governance visibility, commercial packaging, and next-action context now come from the same shared system module as the rest of the FCA shell."
         />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <CustomerPlanSummaryPanel session={session} title="Admin-aligned customer plan summary" />
       </div>
 
       <div style={{ marginBottom: 24 }}>
@@ -70,7 +80,7 @@ export default function PortalAdmin() {
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Rollout state</div>
           <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>Production shell active</div>
-          <div>Bid, file, coordination, billing, and academy continuity are live while deeper persistence hardening continues.</div>
+          <div>Bid, file, coordination, billing, academy, and plan continuity are live while deeper persistence hardening continues.</div>
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Governance visibility</div>
@@ -85,15 +95,15 @@ export default function PortalAdmin() {
           <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
             <li>Confirm tenant rollout sequence and seat assignment by role</li>
             <li>Validate project-linked file, permit, and audit continuity</li>
-            <li>Track billing, retainage, and training readiness together</li>
-            <li>Preserve Auricrux visibility across estimating, job, and closeout routes</li>
+            <li>Track billing, retainage, training readiness, and selected-plan growth together</li>
+            <li>Preserve Auricrux visibility across estimating, job, closeout, and commercial upgrade routes</li>
           </ul>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Production posture</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
             This control surface is the beginning of the broader platform spine: tenant summary, seat/readiness view,
-            rollout status, and governance visibility inside the same FCA shell for construction operations.
+            rollout status, selected plan ({selectedPlan.name}), and governance visibility inside the same FCA shell for construction operations.
           </p>
         </div>
       </div>

@@ -4,8 +4,11 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
+import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
+import { resolvePlanPreset } from "../../pricingPlans";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -16,10 +19,19 @@ const cardStyle = {
 };
 
 export default function PortalSupport() {
+  const { session } = useCustomerSession();
+  const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
+  const commItems = auricruxCommsChannels.map((item) => ({
+    ...item,
+    value: `${item.value}${session?.enabledComms?.[item.label.toLowerCase()] === false ? " · Pending for this customer" : " · Enabled for this customer"}`,
+    href: `/portal/messages#${item.label.toLowerCase()}`,
+    ctaLabel: `Open ${item.label}`,
+  }));
+
   return (
     <PortalShell
       title="Support, Escalation, and Continuity"
-      subtitle="Support surface for owner communication, permit/document issues, field-readiness blockers, and Auricrux-guided recovery inside the same workspace shell."
+      subtitle="Support surface for owner communication, permit/document issues, field-readiness blockers, plan-aware recovery, and Auricrux-guided execution inside the same workspace shell."
       activeHref="/portal/support"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.support}
@@ -33,8 +45,12 @@ export default function PortalSupport() {
           workspace={workspaceContext}
           auricrux={auricruxRail}
           title="Support route is attached to the canonical operating state"
-          detail="Escalation and recovery context now read from the same system module as portal execution, billing, and academy continuity."
+          detail="Escalation and recovery context now read from the same system module as portal execution, billing, academy continuity, and commercial plan activation."
         />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <CustomerPlanSummaryPanel session={session} title="Support-aligned customer plan summary" />
       </div>
 
       <div style={{ marginBottom: 24 }}>
@@ -42,8 +58,8 @@ export default function PortalSupport() {
           title="Support is now framed inside the full Auricrux communications stack"
           detail="Recovery no longer stops at a support inbox. FCA support now routes across phone, SMS, chat, Teams, conference, and training continuity so every escalation can move back into execution."
           statusLabel="Recovery posture"
-          statusValue="Escalation lanes connected"
-          items={auricruxCommsChannels}
+          statusValue={`Escalation lanes connected · ${selectedPlan.name}`}
+          items={commItems}
         />
       </div>
 
@@ -63,7 +79,7 @@ export default function PortalSupport() {
           </div>
         </div>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Customer help, escalation handling, and recovery guidance remain attached to the same tenant, project, permit/document, billing, and Auricrux state as the rest of FCA rather than appearing as a disconnected support tool.
+          Customer help, escalation handling, and recovery guidance remain attached to the same tenant, project, permit/document, billing, selected-plan, and Auricrux state as the rest of FCA rather than appearing as a disconnected support tool.
         </p>
       </div>
 
@@ -74,6 +90,7 @@ export default function PortalSupport() {
             <div><strong>Tenant:</strong> {portalTenant.name}</div>
             <div><strong>Project:</strong> {currentProject.name}</div>
             <div><strong>Project ID:</strong> {currentProject.id}</div>
+            <div><strong>Current plan:</strong> {selectedPlan.name} · {selectedPlan.price}</div>
             <div><strong>Current issue pattern:</strong> scope approval delay, permit submission dependency, mobilization onboarding, and invoice timing risk</div>
           </div>
           <div style={{ marginTop: 14 }}>
@@ -101,12 +118,12 @@ export default function PortalSupport() {
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Support owner</div>
           <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{workspaceContext.nextActionOwner}</div>
-          <div>Escalations stay tied to the same next-action chain as bids, files, and billing.</div>
+          <div>Escalations stay tied to the same next-action chain as bids, files, billing, and plan enforcement.</div>
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Recovery priority</div>
           <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>Clear approval path</div>
-          <div>Support is currently focused on removing the dependency that is holding permit release, startup packet issuance, and invoice readiness.</div>
+          <div>Support is currently focused on removing the dependency that is holding permit release, startup packet issuance, invoice readiness, and plan-backed expansion progress.</div>
         </div>
       </div>
 
@@ -114,7 +131,7 @@ export default function PortalSupport() {
         <h2 style={{ marginTop: 0 }}>Why this route matters</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
           Support should not sit outside the operating shell. This route keeps customer help, continuity recovery,
-          and escalation handling attached to the same tenant, project, file, audit, permit/document, and Auricrux state as the rest of FCA.
+          and escalation handling attached to the same tenant, project, file, audit, permit/document, selected-plan, and Auricrux state as the rest of FCA.
         </p>
       </div>
     </PortalShell>
