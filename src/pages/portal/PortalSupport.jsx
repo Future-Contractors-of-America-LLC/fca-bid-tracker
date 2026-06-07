@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
@@ -5,9 +6,11 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
+import SupportActionCenter from "../../components/SupportActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
-import { auricruxCommsChannels, auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
+import { auricruxCommsChannels, routeStateOverlays } from "../../systemState";
 import { resolvePlanPreset } from "../../pricingPlans";
 
 const cardStyle = {
@@ -19,7 +22,13 @@ const cardStyle = {
 };
 
 export default function PortalSupport() {
-  const { session } = useCustomerSession();
+  const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
+  const { state, refreshSyncStamp } = useWorkspaceState();
+
+  useEffect(() => {
+    refreshSyncStamp("Persisted support continuity state active");
+  }, [refreshSyncStamp]);
+
   const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
   const commItems = auricruxCommsChannels.map((item) => ({
     ...item,
@@ -31,7 +40,7 @@ export default function PortalSupport() {
   return (
     <PortalShell
       title="Support, Escalation, and Continuity"
-      subtitle="Support surface for owner communication, permit/document issues, field-readiness blockers, plan-aware recovery, and Auricrux-guided execution inside the same workspace shell."
+      subtitle="Support surface for owner communication, permit/document issues, field-readiness blockers, plan-aware recovery, and Auricrux-guided execution inside the same workspace shell, with one-click support actions."
       activeHref="/portal/support"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.support}
@@ -40,10 +49,10 @@ export default function PortalSupport() {
     >
       <div style={{ marginBottom: 24 }}>
         <SystemStateSummary
-          tenant={portalTenant}
-          project={currentProject}
-          workspace={workspaceContext}
-          auricrux={auricruxRail}
+          tenant={state.tenant}
+          project={state.project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
           title="Support route is attached to the canonical operating state"
           detail="Escalation and recovery context now read from the same system module as portal execution, billing, academy continuity, and commercial plan activation."
         />
@@ -51,6 +60,17 @@ export default function PortalSupport() {
 
       <div style={{ marginBottom: 24 }}>
         <CustomerPlanSummaryPanel session={session} title="Support-aligned customer plan summary" />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <SupportActionCenter
+          session={session}
+          state={state}
+          applyPlanPreset={applyPlanPreset}
+          setProductAccess={setProductAccess}
+          setCommsAccess={setCommsAccess}
+          refreshSyncStamp={refreshSyncStamp}
+        />
       </div>
 
       <div style={{ marginBottom: 24 }}>
@@ -87,9 +107,9 @@ export default function PortalSupport() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Active support context</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div><strong>Tenant:</strong> {portalTenant.name}</div>
-            <div><strong>Project:</strong> {currentProject.name}</div>
-            <div><strong>Project ID:</strong> {currentProject.id}</div>
+            <div><strong>Tenant:</strong> {state.tenant.name}</div>
+            <div><strong>Project:</strong> {state.project.name}</div>
+            <div><strong>Project ID:</strong> {state.project.id}</div>
             <div><strong>Current plan:</strong> {selectedPlan.name} · {selectedPlan.price}</div>
             <div><strong>Current issue pattern:</strong> scope approval delay, permit submission dependency, mobilization onboarding, and invoice timing risk</div>
           </div>
@@ -112,12 +132,12 @@ export default function PortalSupport() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Primary blocker</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{auricruxRail.currentBlocker}</div>
-          <div>{auricruxRail.blockerImpact}</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.auricrux.currentBlocker}</div>
+          <div>{state.auricrux.blockerImpact}</div>
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Support owner</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{workspaceContext.nextActionOwner}</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.workspace.nextActionOwner}</div>
           <div>Escalations stay tied to the same next-action chain as bids, files, billing, and plan enforcement.</div>
         </div>
         <div style={cardStyle}>
