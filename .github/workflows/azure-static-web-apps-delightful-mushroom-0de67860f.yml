@@ -46,6 +46,7 @@ jobs:
           test -f dist/deployment-status.json
           test -f dist/domain-continuity.json
           test -f dist/live-shell-verification.html
+          test -f dist/host-binding-audit.html
           test -f api/package.json
           test -f api/host.json
           test -f api/customer-login.js

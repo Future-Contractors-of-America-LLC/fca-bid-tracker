@@ -14,7 +14,19 @@
       }
     },
     {
+      "route": "/domain-continuity.json",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      }
+    },
+    {
       "route": "/live-shell-verification.html",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate"
+      }
+    },
+    {
+      "route": "/host-binding-audit.html",
       "headers": {
         "Cache-Control": "no-store, no-cache, must-revalidate"
       }
@@ -44,7 +56,9 @@
       "/*.ico",
       "/favicon.ico",
       "/deployment-status.json",
-      "/live-shell-verification.html"
+      "/domain-continuity.json",
+      "/live-shell-verification.html",
+      "/host-binding-audit.html"
     ]
   },
   "responseOverrides": {

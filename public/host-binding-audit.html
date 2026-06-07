@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>FCA host binding audit</title>
+    <style>
+      body { margin: 0; padding: 24px; font-family: Arial, sans-serif; background: #08111f; color: #e5eefb; }
+      .shell { max-width: 960px; margin: 0 auto; background: rgba(15,23,42,.9); border: 1px solid rgba(148,163,184,.25); border-radius: 18px; padding: 24px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 18px 0; }
+      .card { background: #0f172a; border: 1px solid rgba(148,163,184,.2); border-radius: 12px; padding: 12px; }
+      .label { font-size: 12px; text-transform: uppercase; color: #93c5fd; margin-bottom: 6px; font-weight: 700; }
+      .value { font-weight: 700; word-break: break-word; }
+      pre { white-space: pre-wrap; word-break: break-word; background: #0f172a; border-radius: 12px; padding: 14px; border: 1px solid rgba(148,163,184,.2); }
+      a { color: #93c5fd; }
+      .ok { color: #34d399; }
+      .warn { color: #fbbf24; }
+      .fail { color: #f87171; }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <h1>FCA host binding audit</h1>
+      <p>This raw page bypasses the SPA and compares the current host against the deployment witnesses. If this page is absent or stale, the deployment or domain binding is still wrong.</p>
+      <div id="summary" class="warn">Loading host-binding audit…</div>
+      <div class="grid" id="facts"></div>
+      <p>
+        Witness routes:
+        <a href="/deployment-status.json">deployment-status.json</a>,
+        <a href="/domain-continuity.json">domain-continuity.json</a>,
+        <a href="/live-shell-verification.html">live-shell-verification.html</a>
+      </p>
+      <pre id="payload">Awaiting witness payloads…</pre>
+    </main>
+    <script>
+      const summary = document.getElementById('summary');
+      const facts = document.getElementById('facts');
+      const payload = document.getElementById('payload');
+      function addFact(label, value) {
+        const node = document.createElement('div');
+        node.className = 'card';
+        node.innerHTML = `<div class="label">${label}</div><div class="value">${value}</div>`;
+        facts.appendChild(node);
+      }
+      async function readJson(path) {
+        const response = await fetch(path, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`${path} failed with ${response.status}`);
+        return response.json();
+      }
+      async function run() {
+        const currentHost = window.location.host || 'unknown';
+        addFact('Current host', currentHost);
+        addFact('Current path', window.location.pathname || '/');
+        try {
+          const [deployment, continuity] = await Promise.all([
+            readJson('/deployment-status.json'),
+            readJson('/domain-continuity.json')
+          ]);
+          const expectedHosts = continuity.expectedHosts || deployment.expectedHosts || [];
+          const hostOk = expectedHosts.includes(currentHost);
+          const stale = deployment.gitSha === 'pending-build' || deployment.generatedAt === 'pending-build';
+          addFact('Git SHA', deployment.gitSha || 'unknown');
+          addFact('Run ID', deployment.runId || 'unknown');
+          addFact('Expected hosts', expectedHosts.join(', ') || 'not declared');
+          addFact('Known unexpected routes', (continuity.knownUnexpectedRoutes || []).join(', ') || 'none');
+          payload.textContent = JSON.stringify({ deployment, continuity }, null, 2);
+          if (!hostOk) {
+            summary.className = 'fail';
+            summary.textContent = `FAIL: ${currentHost} is not listed in the expected hosts witness.`;
+            return;
+          }
+          if (stale) {
+            summary.className = 'warn';
+            summary.textContent = 'WARN: witness files loaded but still report a stale or pending build identity.';
+            return;
+          }
+          summary.className = 'ok';
+          summary.textContent = 'OK: host matches the expected witness set and the deployment identity is governed.';
+        } catch (error) {
+          summary.className = 'fail';
+          summary.textContent = `FAIL: ${error.message}`;
+          payload.textContent = error.stack || error.message;
+        }
+      }
+      run();
+    </script>
+  </body>
+</html>
