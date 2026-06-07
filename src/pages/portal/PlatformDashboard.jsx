@@ -9,6 +9,7 @@ import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel"
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
+import ExecutionCommandCenter from "../../components/ExecutionCommandCenter";
 import { auricruxActions, portalMessages, portalMetrics, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -31,7 +32,7 @@ const metricStyle = {
 
 export default function PlatformDashboard() {
   const { state, refreshSyncStamp } = useWorkspaceState();
-  const { session } = useCustomerSession();
+  const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
 
   useEffect(() => {
     refreshSyncStamp("Live workspace dashboard active");
@@ -40,7 +41,7 @@ export default function PlatformDashboard() {
   return (
     <PortalShell
       title="FCA Platform Dashboard"
-      subtitle="A customer-friendly view of estimating posture, project delivery, document control, billing readiness, training continuity, guided next steps, enabled communications lanes, and active commercial packaging."
+      subtitle="A customer-friendly view of estimating posture, project delivery, document control, billing readiness, training continuity, guided next steps, enabled communications lanes, active commercial packaging, and one-click workspace actions."
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
@@ -52,6 +53,17 @@ export default function PlatformDashboard() {
 
       <div style={{ marginBottom: 24 }}>
         <CustomerPlanSummaryPanel session={session} title="Platform dashboard customer plan summary" />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <ExecutionCommandCenter
+          session={session}
+          state={state}
+          applyPlanPreset={applyPlanPreset}
+          setProductAccess={setProductAccess}
+          setCommsAccess={setCommsAccess}
+          refreshSyncStamp={refreshSyncStamp}
+        />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
@@ -78,7 +90,7 @@ export default function PlatformDashboard() {
       <div style={{ marginTop: 24 }}>
         <CommercialReadinessPanel
           title="Revenue and rollout readiness"
-          detail="This live dashboard now keeps approval, billing, communications access, and rollout readiness connected so revenue-facing claims stay truthful to the authenticated customer workspace."
+          detail="This live dashboard now keeps approval, billing, communications access, rollout readiness, and executable customer controls connected so revenue-facing claims stay truthful to the authenticated workspace."
           primaryHref="/pricing"
           primaryLabel="Review Commercial Packaging"
           secondaryHref="/portal/billing"
