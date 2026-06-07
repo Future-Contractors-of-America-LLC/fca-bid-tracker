@@ -5,9 +5,11 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import AutomationStatusCard from "../../components/AutomationStatusCard";
+import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import { auricruxActions, portalMessages, portalMetrics, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { ctaPrimaryStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -26,6 +28,7 @@ const metricStyle = {
 
 export default function PlatformDashboard() {
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const { session } = useCustomerSession();
 
   useEffect(() => {
     refreshSyncStamp("Live workspace dashboard active");
@@ -41,6 +44,8 @@ export default function PlatformDashboard() {
       primaryHref="/portal/projects"
       primaryLabel="Open Projects"
     >
+      <ProductAccessStatusPanel session={session} />
+
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>

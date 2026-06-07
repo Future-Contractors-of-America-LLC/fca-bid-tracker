@@ -10,9 +10,11 @@ import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDec
 import PublicCtaRow from "../../components/PublicCtaRow";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -36,6 +38,8 @@ const continuityCardStyle = {
 };
 
 export default function AcademyHome() {
+  const { session } = useCustomerSession();
+
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
@@ -67,6 +71,8 @@ export default function AcademyHome() {
         <FcaBrandMark compact />
         <AuricruxBrandMark compact />
       </div>
+
+      <ProductAccessStatusPanel session={session} />
 
       <ProjectSpineBar tenant={portalTenant} project={currentProject} />
       <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
