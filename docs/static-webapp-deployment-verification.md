@@ -14,14 +14,19 @@ The FCA Static Web App is now expected to expose all of the following on the liv
 
 ## Cache policy
 
-To reduce stale public-shell behavior and make live login fixes visible faster, `staticwebapp.config.json` now applies `Cache-Control: no-store, no-cache, must-revalidate` to:
+To reduce stale public-shell behavior and make live login fixes visible faster, the **deployed** `public/staticwebapp.config.json` now applies `Cache-Control: no-store, no-cache, must-revalidate` to:
 
 - `/api/*`
 - `/deployment-status.json`
+- `/live-shell-verification.html`
 - `/index.html`
 - the SPA fallback 404 rewrite posture
 
 This is intended to reduce the risk that the custom domain continues serving an older shell after `main` has already advanced.
+
+## Critical implementation note
+
+For Vite-based deployment in this repository, the file that actually ships into `dist/staticwebapp.config.json` is `public/staticwebapp.config.json`. The repository also retains a root `staticwebapp.config.json`, but continuity validation now explicitly checks the deployed artifact source under `public/` so cache-control hardening is not accidentally applied only to a non-deployed copy.
 
 ## Expected public verification steps
 

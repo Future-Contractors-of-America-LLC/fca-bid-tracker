@@ -45,11 +45,26 @@ const checks = [
   {
     file: path.join(root, "public", "live-shell-verification.html"),
     markers: [
-      'FCA live shell verification',
-      '/deployment-status.json',
-      '/api/customer-login',
-      '/api/auricrux',
+      "FCA live shell verification",
+      "/deployment-status.json",
+      "/api/customer-login",
+      "/api/auricrux",
       'cache: "no-store"',
+    ],
+  },
+  {
+    file: path.join(root, "public", "staticwebapp.config.json"),
+    markers: [
+      '"route": "/api/*"',
+      '"route": "/deployment-status.json"',
+      '"route": "/live-shell-verification.html"',
+      '"route": "/index.html"',
+      '"Cache-Control": "no-store, no-cache, must-revalidate"',
+      '"X-Auricrux-Deployment-Intent": "live-login-and-public-shell-verification"',
+      '"rewrite": "/index.html"',
+      '"exclude": [',
+      '"/deployment-status.json"',
+      '"/live-shell-verification.html"',
     ],
   },
   {
@@ -86,4 +101,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Static Web App deployment validation passed for app artifact continuity, API deployment wiring, cache-busting posture, raw hosting verification surfaces, and public deployment verification manifest generation.");
+console.log("Static Web App deployment validation passed for app artifact continuity, API deployment wiring, cache-busting posture, raw hosting verification surfaces, deployed staticwebapp.config artifact continuity, and public deployment verification manifest generation.");
