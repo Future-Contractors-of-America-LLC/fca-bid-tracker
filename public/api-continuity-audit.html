@@ -31,6 +31,7 @@
       <p>
         Related verification routes:
         <a href="/deployment-status.json">deployment-status.json</a>,
+        <a href="/runtime-fingerprint.txt">runtime-fingerprint.txt</a>,
         <a href="/domain-continuity.json">domain-continuity.json</a>,
         <a href="/live-shell-verification.html">live-shell-verification.html</a>,
         <a href="/host-binding-audit.html">host-binding-audit.html</a>
@@ -67,11 +68,33 @@
           };
         }
       }
+      async function fetchText(path) {
+        const response = await fetch(path, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`${path} failed with ${response.status}`);
+        return response.text();
+      }
+      function parseFingerprint(text) {
+        return text.trim().split('\n').reduce((acc, line) => {
+          const idx = line.indexOf('=');
+          if (idx === -1) return acc;
+          acc[line.slice(0, idx)] = line.slice(idx + 1);
+          return acc;
+        }, {});
+      }
       async function run() {
         const currentHost = window.location.host || 'unknown';
         addFact('Current host', currentHost);
         addFact('Current path', window.location.pathname || '/');
+        let runtime = null;
+        try {
+          runtime = parseFingerprint(await fetchText('/runtime-fingerprint.txt'));
+          addFact('Witness Git SHA', runtime.gitSha || 'unknown');
+          addFact('Witness Run ID', runtime.runId || 'unknown');
+        } catch (error) {
+          addFact('Witness state', `unavailable: ${error.message}`);
+        }
         const results = {
+          runtime,
           customerLogin: await fetchEndpoint('/api/customer-login'),
           auricrux: await fetchEndpoint('/api/auricrux')
         };
