@@ -101,6 +101,8 @@ const publicNavGroups = [
     key: "workspace",
     label: "Workspace",
     items: [
+      publicActionCatalog.liveTestLogin,
+      publicActionCatalog.instantTestWorkspace,
       publicActionCatalog.workspace,
       publicActionCatalog.portal,
       publicActionCatalog.academy,
@@ -153,7 +155,8 @@ const portalNavGroups = [
 ];
 
 const publicQuickLinks = [
-  publicActionCatalog.workspace,
+  publicActionCatalog.liveTestLogin,
+  publicActionCatalog.instantTestWorkspace,
   publicActionCatalog.platformOverview,
   publicActionCatalog.contact,
 ];
@@ -167,7 +170,8 @@ const portalQuickLinks = [
 
 function normalizePath(value) {
   if (!value || typeof value !== "string") return "/";
-  return value.endsWith("/") && value !== "/" ? value.slice(0, -1) : value;
+  const stripped = value.split("#")[0].split("?")[0];
+  return stripped.endsWith("/") && stripped !== "/" ? stripped.slice(0, -1) : stripped;
 }
 
 function resolveRouteCue(pathname, mode) {
@@ -217,7 +221,9 @@ function resolveContinuityStamp(session) {
 
 export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
-  const currentPath = typeof window === "undefined" ? "/" : normalizePath(window.location.pathname);
+  const currentPath = typeof window === "undefined"
+    ? "/"
+    : normalizePath(`${window.location.pathname}${window.location.search}${window.location.hash}`);
   const navRef = useRef(null);
   const [openMenu, setOpenMenu] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -233,7 +239,7 @@ export default function PublicTopNav({ mode = "public" }) {
   const workspaceHref = resolveWorkspaceEntryHref(session, mode === "portal" ? currentPath : "/portal/profile");
   const profileHref = resolveProfileHref(session);
   const actionHref = session?.authenticated ? workspaceHref : loginHref;
-  const actionLabel = session?.authenticated ? "Open Workspace" : "Open Login Portal";
+  const actionLabel = session?.authenticated ? "Open Workspace" : "Open Live Test Login";
 
   const profileLabel = session?.authenticated ? session.company : "Profile";
   const profileInitial = session?.authenticated ? session.company.charAt(0).toUpperCase() : "↗";
@@ -242,7 +248,7 @@ export default function PublicTopNav({ mode = "public" }) {
     () => [
       {
         href: profileHref,
-        label: session?.authenticated ? "Open Customer Profile" : "Open Login Portal",
+        label: session?.authenticated ? "Open Customer Profile" : "Open Live Test Login",
       },
       {
         href: mode === "portal" ? "/portal/platform" : "/platform",
@@ -250,7 +256,7 @@ export default function PublicTopNav({ mode = "public" }) {
       },
       {
         href: mode === "portal" ? "/portal/notifications" : loginHref,
-        label: mode === "portal" ? "Open Notifications" : "Open Login Portal",
+        label: mode === "portal" ? "Open Notifications" : "Instant Test Entry",
       },
       {
         href: mode === "portal" ? "/portal/academy" : "/academy",
@@ -528,7 +534,7 @@ export default function PublicTopNav({ mode = "public" }) {
 
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", width: isMobile ? "100%" : "auto" }}>
           {quickLinks.map((item) => {
-            const resolvedHref = item.href === "/login" ? actionHref : item.href;
+            const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;
             const isActive = normalizePath(resolvedHref) === currentPath;
             const quickBadge = renderQuickBadge(item, mode);
             return (

@@ -14,6 +14,7 @@ const checks = [
       "accountSource",
       "isProtectedCustomerRoute",
       "hasCustomerProductAccess",
+      'return "/login?seeded=1";',
     ],
   },
   {
@@ -57,6 +58,15 @@ const checks = [
     markers: [
       'import CustomerSessionBar from "./CustomerSessionBar";',
       "<CustomerSessionBar requestedPath={activeHref} />",
+    ],
+  },
+  {
+    file: path.join(root, "src", "components", "PublicTopNav.jsx"),
+    markers: [
+      "publicActionCatalog.liveTestLogin",
+      "publicActionCatalog.instantTestWorkspace",
+      'const actionLabel = session?.authenticated ? "Open Workspace" : "Open Live Test Login";',
+      'const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;',
     ],
   },
   {
@@ -130,4 +140,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Live customer login validation passed across session state, router guard, seeded auth continuity, query-driven test entry, profile controls, and authenticated launch surfaces.");
+console.log("Live customer login validation passed across session state, shared navigation, router guard, seeded auth continuity, query-driven test entry, profile controls, and authenticated launch surfaces.");

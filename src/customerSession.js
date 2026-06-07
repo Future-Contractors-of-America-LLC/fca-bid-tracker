@@ -118,7 +118,7 @@ export function hasCustomerProductAccess(session, pathname = "/") {
 }
 
 export function resolveLoginHref() {
-  return "/login";
+  return "/login?seeded=1";
 }
 
 export function resolveProfileHref(session = readCustomerSession()) {
