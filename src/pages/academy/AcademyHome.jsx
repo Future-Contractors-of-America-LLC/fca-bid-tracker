@@ -13,6 +13,7 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
+import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
@@ -41,8 +42,8 @@ const continuityCardStyle = {
 };
 
 export default function AcademyHome() {
-  const { session } = useCustomerSession();
-  const { state } = useWorkspaceState();
+  const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
+  const { state, refreshSyncStamp } = useWorkspaceState();
   const liveTenant = state?.tenant || portalTenant;
   const liveProject = state?.project || currentProject;
   const liveWorkspace = state?.workspace || workspaceContext;
@@ -95,6 +96,14 @@ export default function AcademyHome() {
       <AuricruxStatusRail project={liveProject} rail={liveAuricrux} />
       <RouteStateOverlay overlay={routeStateOverlays.academy} />
       <ExecutiveSignalBar mode="academy" nextHref={executiveSignalCtaSets.academy.href} nextLabel={executiveSignalCtaSets.academy.label} />
+
+      <AcademyReadinessOverlay
+        session={session}
+        setProductAccess={setProductAccess}
+        setCommsAccess={setCommsAccess}
+        applyPlanPreset={applyPlanPreset}
+        refreshSyncStamp={refreshSyncStamp}
+      />
 
       <div style={{ marginBottom: 24 }}>
         <AuricruxCommsPanel
