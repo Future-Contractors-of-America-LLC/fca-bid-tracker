@@ -5,9 +5,8 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import AutomationStatusCard from "../../components/AutomationStatusCard";
-import { auricruxActions, portalMessages, portalMetrics } from "../../portalShell";
+import { auricruxActions, portalMessages, portalMetrics, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
-import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { ctaPrimaryStyle } from "../../publicShellStyles";
 
@@ -35,7 +34,7 @@ export default function PlatformDashboard() {
   return (
     <PortalShell
       title="FCA Platform Dashboard"
-      subtitle="A customer-friendly view of projects, messages, billing readiness, training continuity, and guided next steps."
+      subtitle="A customer-friendly view of estimating posture, project delivery, document control, billing readiness, training continuity, and guided next steps."
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
@@ -46,7 +45,7 @@ export default function PlatformDashboard() {
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live workspace dashboard</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Your platform summary is connected across projects, billing, messages, and training</h2>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Your platform summary is connected across bids, jobs, files, billing, and training</h2>
           </div>
           <div style={{ display: "grid", gap: 10 }}>
             <FcaBrandMark compact />
@@ -80,7 +79,7 @@ export default function PlatformDashboard() {
           </div>
           <div>
             <strong>Best path forward</strong>
-            <div>Move approval through bids, keep communication clear, and carry the same context into billing and onboarding.</div>
+            <div>Move approval through bids, keep document dependencies visible, and carry the same context into billing and onboarding.</div>
           </div>
         </div>
       </div>
@@ -141,6 +140,7 @@ export default function PlatformDashboard() {
           <div key={message.subject} style={{ marginBottom: 12 }}>
             <strong>{message.from}</strong>
             <div style={{ color: "#4b5563" }}>{message.subject}</div>
+            <div style={{ color: "#475569", fontSize: 14, marginTop: 4 }}>{message.channel} · {message.nextAction}</div>
             <div style={{ color: "#6b7280", fontSize: 14 }}>{message.time}</div>
           </div>
         ))}
