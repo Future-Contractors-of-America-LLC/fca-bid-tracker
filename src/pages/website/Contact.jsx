@@ -128,7 +128,7 @@ export default function Contact() {
             },
             {
               title: "Focus on your team's fit",
-              detail: "Use the conversation to match your team size, process, and rollout needs to the right next step.",
+              detail: "Use the conversation to match your team size, estimating flow, field coordination, and rollout needs to the right next step.",
             },
             {
               title: "Leave with a practical plan",
@@ -163,6 +163,7 @@ export default function Contact() {
               <li>Show persisted workspace continuity before entry.</li>
               <li>Open the platform dashboard to summarize tenant, project, support, academy, and admin state.</li>
               <li>Transition into portal, academy, and bid routes based on your team's fit.</li>
+              <li>Review approvals, document-control posture, billing follow-through, and field-readiness gaps.</li>
               <li>Close on pilot scope, rollout path, and the next production action.</li>
             </ol>
           </div>
