@@ -16,12 +16,19 @@ The repository `main` branch now contains routes such as:
 - `/portal/support`
 - `/portal/admin`
 - `/portal/academy`
+- `/live-shell-verification.html`
+- `/deployment-status.json`
 
 The public custom domain still appears to expose content inconsistent with this route inventory.
 
 ## Repository evidence
 
 The canonical route registry lives in `src/routes.js` and does **not** include `/team`.
+
+The deployment witness manifest now also declares the expected public hosts:
+
+- `futurecontractorsofamerica.com`
+- `www.futurecontractorsofamerica.com`
 
 ## Interpretation
 
@@ -46,3 +53,4 @@ If `www.futurecontractorsofamerica.com/team` is live while the repository route 
 - `/deployment-status.json` should expose a real Git SHA and run ID
 - `/login?seeded=1` should expose the seeded test-account path
 - `/api/customer-login` and `/api/auricrux` should respond from the same host
+- the verification page should show the current host as one of the manifest's declared expected hosts

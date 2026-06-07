@@ -11,6 +11,10 @@ const payload = {
   gitRef: process.env.GITHUB_REF || "local",
   gitSha: process.env.GITHUB_SHA || "local",
   runId: process.env.GITHUB_RUN_ID || "local",
+  expectedHosts: [
+    "futurecontractorsofamerica.com",
+    "www.futurecontractorsofamerica.com"
+  ],
   verificationRoutes: [
     "/deployment-status.json",
     "/live-shell-verification.html",

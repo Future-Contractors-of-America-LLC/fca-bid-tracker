@@ -14,74 +14,20 @@
         background: #07111f;
         color: #e5eefb;
       }
-      body {
-        margin: 0;
-        padding: 32px 18px;
-        background: linear-gradient(180deg, #07111f 0%, #10233d 100%);
-      }
-      .shell {
-        max-width: 920px;
-        margin: 0 auto;
-        background: rgba(7, 17, 31, 0.76);
-        border: 1px solid rgba(148, 163, 184, 0.28);
-        border-radius: 20px;
-        padding: 24px;
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-      }
-      h1 {
-        margin: 0 0 12px;
-        font-size: 2rem;
-      }
-      p, li {
-        line-height: 1.65;
-        color: #dbe7f5;
-      }
-      .status {
-        margin: 18px 0;
-        padding: 16px;
-        border-radius: 14px;
-        background: rgba(15, 23, 42, 0.9);
-        border: 1px solid rgba(59, 130, 246, 0.3);
-      }
+      body { margin: 0; padding: 32px 18px; background: linear-gradient(180deg, #07111f 0%, #10233d 100%); }
+      .shell { max-width: 920px; margin: 0 auto; background: rgba(7, 17, 31, 0.76); border: 1px solid rgba(148, 163, 184, 0.28); border-radius: 20px; padding: 24px; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35); }
+      h1 { margin: 0 0 12px; font-size: 2rem; }
+      p, li { line-height: 1.65; color: #dbe7f5; }
+      .status { margin: 18px 0; padding: 16px; border-radius: 14px; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(59, 130, 246, 0.3); }
       .ok { border-color: rgba(16, 185, 129, 0.55); }
       .warn { border-color: rgba(245, 158, 11, 0.55); }
       .fail { border-color: rgba(239, 68, 68, 0.55); }
-      pre {
-        white-space: pre-wrap;
-        word-break: break-word;
-        background: rgba(15, 23, 42, 0.9);
-        border-radius: 14px;
-        padding: 16px;
-        color: #bfdbfe;
-        border: 1px solid rgba(148, 163, 184, 0.22);
-      }
-      a {
-        color: #93c5fd;
-        font-weight: 700;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 12px;
-        margin: 18px 0 10px;
-      }
-      .card {
-        background: rgba(15, 23, 42, 0.75);
-        border: 1px solid rgba(148, 163, 184, 0.22);
-        border-radius: 14px;
-        padding: 14px;
-      }
-      .label {
-        font-size: 0.78rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #93c5fd;
-        margin-bottom: 6px;
-      }
-      .value {
-        font-size: 1rem;
-        font-weight: 700;
-      }
+      pre { white-space: pre-wrap; word-break: break-word; background: rgba(15, 23, 42, 0.9); border-radius: 14px; padding: 16px; color: #bfdbfe; border: 1px solid rgba(148, 163, 184, 0.22); }
+      a { color: #93c5fd; font-weight: 700; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin: 18px 0 10px; }
+      .card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(148, 163, 184, 0.22); border-radius: 14px; padding: 14px; }
+      .label { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: #93c5fd; margin-bottom: 6px; }
+      .value { font-size: 1rem; font-weight: 700; }
     </style>
   </head>
   <body>
@@ -89,11 +35,10 @@
       <h1>FCA live shell verification</h1>
       <p>
         This route is a raw hosted HTML artifact that bypasses the React shell. If this page updates while the public shell does not,
-        the remaining fault is likely browser or shell caching. If this page is also stale, the remaining fault is in the Azure Static Web App deployment path.
+        the remaining fault is likely browser or shell caching. If this page is also stale, the remaining fault is in the Azure Static Web App deployment path or custom-domain binding.
       </p>
 
       <div id="status" class="status">Loading live deployment witness…</div>
-
       <div class="grid" id="facts"></div>
 
       <p>
@@ -126,6 +71,10 @@
       }
 
       async function load() {
+        const currentHost = window.location.host || "unknown";
+        addFact("Current host", currentHost);
+        addFact("Current path", window.location.pathname || "/");
+
         try {
           const response = await fetch("/deployment-status.json", { cache: "no-store" });
           if (!response.ok) throw new Error(`manifest request failed with ${response.status}`);
@@ -133,17 +82,26 @@
           payloadNode.textContent = JSON.stringify(payload, null, 2);
 
           const stale = payload.gitSha === "pending-build" || payload.gitSha === "local" || payload.generatedAt === "pending-build";
-          if (stale) {
-            setStatus("warn", "Deployment manifest is reachable, but the live site is still exposing a stale or non-governed build identity.");
-          } else {
-            setStatus("ok", "Deployment manifest is live and exposing governed build identity from the hosted artifact.");
-          }
+          const expectedHosts = Array.isArray(payload.expectedHosts) ? payload.expectedHosts : [];
+          const unexpectedHost = expectedHosts.length > 0 && !expectedHosts.includes(currentHost);
 
           addFact("Git SHA", payload.gitSha || "unknown");
           addFact("Git ref", payload.gitRef || "unknown");
           addFact("Run ID", payload.runId || "unknown");
           addFact("Generated", payload.generatedAt || "unknown");
           addFact("Source", payload.source || "unknown");
+          addFact("Expected hosts", expectedHosts.join(", ") || "not declared");
+
+          if (unexpectedHost) {
+            setStatus("fail", `This host (${currentHost}) is not one of the expected deployment hosts declared by the manifest. The custom domain or bound resource is likely wrong.`);
+            return;
+          }
+
+          if (stale) {
+            setStatus("warn", "Deployment manifest is reachable, but the live site is still exposing a stale or non-governed build identity.");
+          } else {
+            setStatus("ok", "Deployment manifest is live and exposing governed build identity from the hosted artifact.");
+          }
         } catch (error) {
           setStatus("fail", `The raw verification route loaded, but the deployment manifest failed: ${error.message}`);
           payloadNode.textContent = error.stack || error.message;

@@ -5,6 +5,10 @@
   "gitRef": "main",
   "gitSha": "pending-build",
   "runId": "pending-build",
+  "expectedHosts": [
+    "futurecontractorsofamerica.com",
+    "www.futurecontractorsofamerica.com"
+  ],
   "verificationRoutes": [
     "/deployment-status.json",
     "/live-shell-verification.html",
