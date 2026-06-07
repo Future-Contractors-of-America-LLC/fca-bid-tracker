@@ -5,6 +5,7 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
+import MessageActionCenter from "../../components/MessageActionCenter";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { auricruxCommsChannels, portalMessages, routeStateOverlays } from "../../systemState";
@@ -37,7 +38,7 @@ const channelMap = {
 
 export default function PortalMessages() {
   const { state, refreshSyncStamp } = useWorkspaceState();
-  const { session } = useCustomerSession();
+  const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
   const [activeChannel, setActiveChannel] = useState(() => readActiveChannel());
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function PortalMessages() {
   return (
     <PortalShell
       title={portalMessagesMessaging.header.title}
-      subtitle={portalMessagesMessaging.header.subtitle}
+      subtitle={`${portalMessagesMessaging.header.subtitle} This route now includes one-click communications recovery controls.`}
       activeHref="/portal/messages"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.messages}
@@ -88,6 +89,17 @@ export default function PortalMessages() {
       </div>
 
       <CustomerCommsLaunchpad session={session} title="Launch customer-enabled communications lanes" />
+
+      <div style={{ marginBottom: 24 }}>
+        <MessageActionCenter
+          session={session}
+          state={state}
+          applyPlanPreset={applyPlanPreset}
+          setProductAccess={setProductAccess}
+          setCommsAccess={setCommsAccess}
+          refreshSyncStamp={refreshSyncStamp}
+        />
+      </div>
 
       <div style={{ marginBottom: 24 }}>
         <AuricruxCommsPanel
