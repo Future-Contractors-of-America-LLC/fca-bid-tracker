@@ -9,6 +9,7 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
+import PublicCtaRow from "../../components/PublicCtaRow";
 import {
   executiveSignalCtaSets,
   founderJourneyCtaSets,
@@ -86,9 +87,15 @@ export default function Platform() {
           <FcaBrandMark compact />
         </div>
         <h2 style={{ marginTop: 0 }}>Built to feel like one connected system</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
+        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 12 }}>
           FCA helps contractor teams move from opportunity to delivery with better visibility into bids, approvals, project files, customer updates, billing steps, workforce readiness, and communications routing.
         </p>
+        <PublicCtaRow
+          actions={[
+            { href: "/login?seeded=1", label: "Open Live Test Login", variant: "primary" },
+            { href: "/login?seeded=1&autologin=1&next=/portal/platform", label: "Instant Test Workspace", variant: "secondary" },
+          ]}
+        />
       </div>
 
       <FounderJourneyStrip
@@ -109,10 +116,10 @@ export default function Platform() {
           statusLabel="Route posture"
           statusValue="Conversion continuity active"
           items={platformContinuityItems}
-          primaryHref="/portal/platform"
-          primaryLabel="Open Platform Dashboard"
-          secondaryHref="/contact"
-          secondaryLabel="Open Contact & Rollout"
+          primaryHref="/login?seeded=1"
+          primaryLabel="Open Live Test Login"
+          secondaryHref="/login?seeded=1&autologin=1&next=/portal/platform"
+          secondaryLabel="Instant Test Workspace"
         />
       </div>
 
@@ -127,8 +134,8 @@ export default function Platform() {
         <CommercialReadinessPanel
           title="Commercial and rollout readiness"
           detail="The public platform route now connects commercial packaging, rollout readiness, communications continuity, and live product access so revenue conversations stay attached to real operating surfaces."
-          primaryHref="/pricing"
-          primaryLabel="Review Pricing"
+          primaryHref="/login?seeded=1"
+          primaryLabel="Open Live Test Login"
           secondaryHref="/portal/platform"
           secondaryLabel="Open Platform Dashboard"
         />
@@ -180,8 +187,8 @@ export default function Platform() {
         <WorkspaceSnapshotCard
           title="Public proof of workspace continuity"
           detail="The public platform page previews live workspace context so the site narrative stays connected to the working portal experience."
-          ctaHref="/portal/platform"
-          ctaLabel="Open Platform Dashboard"
+          ctaHref="/login?seeded=1"
+          ctaLabel="Open Live Test Login"
         />
       </div>
 

@@ -111,10 +111,10 @@ export default function Home() {
           statusLabel="Entry posture"
           statusValue="Unified shell continuity active"
           items={homeContinuityItems}
-          primaryHref="/login"
-          primaryLabel="Open FCA Workspace"
-          secondaryHref="/portal/platform"
-          secondaryLabel="Open Platform Dashboard"
+          primaryHref="/login?seeded=1"
+          primaryLabel="Open Live Test Login"
+          secondaryHref="/login?seeded=1&autologin=1&next=/portal/platform"
+          secondaryLabel="Instant Test Workspace"
         />
       </div>
 
@@ -136,8 +136,8 @@ export default function Home() {
         <WorkspaceSnapshotCard
           title={publicHomeMessaging.snapshot.title}
           detail={publicHomeMessaging.snapshot.detail}
-          ctaHref="/login"
-          ctaLabel={publicHomeMessaging.snapshot.ctaLabel}
+          ctaHref="/login?seeded=1"
+          ctaLabel="Open Live Test Login"
         />
       </div>
 
@@ -149,6 +149,12 @@ export default function Home() {
             <a href={item.href} style={ctaPrimaryStyle}>{item.ctaLabel}</a>
           </div>
         ))}
+
+        <div style={cardStyle}>
+          <h3 style={{ marginTop: 0 }}>Live test-drive entry</h3>
+          <p>Open the real seeded login route or jump straight into the live platform workspace without hunting through the shell first.</p>
+          <PublicCtaRow actions={homeCtaSets.testDrive} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 10 }} />
+        </div>
 
         <div style={cardStyle}>
           <h3 style={{ marginTop: 0 }}>FCA Bid Product</h3>

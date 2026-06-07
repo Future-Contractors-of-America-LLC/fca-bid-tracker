@@ -4,6 +4,16 @@ export const publicActionCatalog = {
     href: "/login",
     variant: "primary",
   },
+  liveTestLogin: {
+    label: "Open Live Test Login",
+    href: "/login?seeded=1",
+    variant: "secondary",
+  },
+  instantTestWorkspace: {
+    label: "Instant Test Workspace",
+    href: "/login?seeded=1&autologin=1&next=/portal/platform",
+    variant: "secondary",
+  },
   platform: {
     label: "Open Platform Dashboard",
     href: "/portal/platform",
@@ -115,6 +125,12 @@ export const publicFallbackCtaCards = [
     label: publicActionCatalog.workspace.label,
   },
   {
+    title: publicActionCatalog.liveTestLogin.label,
+    detail: "Open the real seeded test-account login page with credentials preloaded so public validation starts immediately.",
+    href: publicActionCatalog.liveTestLogin.href,
+    label: publicActionCatalog.liveTestLogin.label,
+  },
+  {
     title: publicActionCatalog.platformOverview.label,
     detail: "Use the platform route to continue through the supported product shell and customer journey.",
     href: publicActionCatalog.platformOverview.href,
@@ -168,6 +184,10 @@ export const academyCtaSets = {
 export const homeCtaSets = {
   bidProduct: [{ ...publicActionCatalog.bidEntry, variant: "primary" }, publicActionCatalog.bidStatus],
   legacyCompatibility: [publicActionCatalog.legacyIntake, publicActionCatalog.legacyStatus],
+  testDrive: [
+    { ...publicActionCatalog.liveTestLogin, variant: "primary" },
+    publicActionCatalog.instantTestWorkspace,
+  ],
 };
 
 export const portalShellCtas = {
@@ -343,6 +363,8 @@ export const shellPrimaryNav = [
 
 export const shellWorkspaceRoutes = [
   { label: "Enter Workspace", href: "/login" },
+  { label: "Live Test Login", href: "/login?seeded=1" },
+  { label: "Instant Test Workspace", href: "/login?seeded=1&autologin=1&next=/portal/platform" },
   { label: "Unified Platform Dashboard", href: "/portal/platform" },
   { label: "Customer Portal", href: "/portal" },
   { label: "FCA Academy", href: "/academy" },
@@ -355,19 +377,19 @@ export const shellCompatibilityRoutes = [
   { label: publicActionCatalog.legacyStatus.label, href: publicActionCatalog.legacyStatus.href },
 ];
 
-export const shellProductionActions = [publicActionCatalog.workspace, publicActionCatalog.platform, publicActionCatalog.walkthrough];
+export const shellProductionActions = [publicActionCatalog.workspace, publicActionCatalog.liveTestLogin, publicActionCatalog.platform, publicActionCatalog.walkthrough];
 
 export const publicRouteCtas = {
-  public: { primaryHref: publicActionCatalog.workspace.href, primaryLabel: publicActionCatalog.workspace.label, secondaryHref: publicActionCatalog.platformOverview.href, secondaryLabel: publicActionCatalog.platformOverview.label },
-  platform: { primaryHref: publicActionCatalog.workspace.href, primaryLabel: publicActionCatalog.workspace.label, secondaryHref: publicActionCatalog.platform.href, secondaryLabel: publicActionCatalog.platform.label },
+  public: { primaryHref: publicActionCatalog.liveTestLogin.href, primaryLabel: publicActionCatalog.liveTestLogin.label, secondaryHref: publicActionCatalog.instantTestWorkspace.href, secondaryLabel: publicActionCatalog.instantTestWorkspace.label },
+  platform: { primaryHref: publicActionCatalog.liveTestLogin.href, primaryLabel: publicActionCatalog.liveTestLogin.label, secondaryHref: publicActionCatalog.instantTestWorkspace.href, secondaryLabel: publicActionCatalog.instantTestWorkspace.label },
   auricrux: { primaryHref: publicActionCatalog.platform.href, primaryLabel: publicActionCatalog.platform.label, secondaryHref: publicActionCatalog.portal.href, secondaryLabel: publicActionCatalog.portal.label },
   workspace: { primaryHref: publicActionCatalog.portal.href, primaryLabel: publicActionCatalog.portal.label, secondaryHref: publicActionCatalog.platform.href, secondaryLabel: publicActionCatalog.platform.label },
   conversion: { primaryHref: publicActionCatalog.walkthrough.href, primaryLabel: publicActionCatalog.walkthrough.label, secondaryHref: publicActionCatalog.platform.href, secondaryLabel: publicActionCatalog.platform.label },
 };
 
 export const publicBodyCtaSets = {
-  home: [publicActionCatalog.workspace, publicActionCatalog.platformOverview, publicActionCatalog.auricrux, publicActionCatalog.pricing],
-  platformHero: [{ ...publicActionCatalog.workspace, variant: "primary" }, { ...publicActionCatalog.platform, variant: "secondary" }, publicActionCatalog.portal],
+  home: [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace, publicActionCatalog.platformOverview, publicActionCatalog.pricing],
+  platformHero: [{ ...publicActionCatalog.liveTestLogin, variant: "primary" }, { ...publicActionCatalog.instantTestWorkspace, variant: "secondary" }, publicActionCatalog.portal],
   auricruxHero: [{ ...publicActionCatalog.platform, variant: "primary" }, publicActionCatalog.portal, publicActionCatalog.pricing],
   pricingHero: [{ ...publicActionCatalog.contact, variant: "primary" }, publicActionCatalog.platform, { ...publicActionCatalog.workspace, variant: "light" }],
   pricingImmediate: [{ ...publicActionCatalog.contact, variant: "primary" }, publicActionCatalog.platform, publicActionCatalog.portal],

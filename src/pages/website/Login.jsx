@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
@@ -109,6 +109,27 @@ const commsOptions = [
   { key: "lecture", title: "Lecture", detail: "Academy-led instruction and rollout delivery." },
 ];
 
+function readLoginQueryState() {
+  if (typeof window === "undefined") {
+    return {
+      seeded: false,
+      autologin: false,
+      nextHref: null,
+    };
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const seeded = params.get("seeded") === "1" || params.get("account") === "test";
+  const autologin = seeded && params.get("autologin") === "1";
+  const nextHref = params.get("next");
+
+  return {
+    seeded,
+    autologin,
+    nextHref,
+  };
+}
+
 async function authenticateWorkspaceAccount(email, password) {
   const localAccount = resolveSeededCustomerAccount(email, password);
 
@@ -157,6 +178,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const [provisioningMode, setProvisioningMode] = useState(session?.enabledProducts ? "custom" : "plan-defaults");
   const [error, setError] = useState("");
   const [authStatus, setAuthStatus] = useState("idle");
+  const autologinAttemptedRef = useRef(false);
+  const queryState = readLoginQueryState();
 
   useEffect(() => {
     if (!session) return;
@@ -174,13 +197,70 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     setProvisioningMode("custom");
   }, [session]);
 
-  const requestedWorkspaceHref = accessMode === "protected" ? requestedPath : session?.nextHref || "/portal/platform";
+  useEffect(() => {
+    if (!queryState.seeded) return;
+    setError("");
+    setAuthStatus(queryState.autologin ? "authenticating" : "seeded");
+    setProvisioningMode("custom");
+    setForm((prev) => ({
+      ...prev,
+      email: PRIMARY_TEST_ACCOUNT.email,
+      password: PRIMARY_TEST_ACCOUNT.password,
+      company: PRIMARY_TEST_ACCOUNT.company,
+      role: PRIMARY_TEST_ACCOUNT.role,
+      selectedPlan: PRIMARY_TEST_ACCOUNT.selectedPlan,
+      enabledProducts: PRIMARY_TEST_ACCOUNT.enabledProducts,
+      enabledComms: PRIMARY_TEST_ACCOUNT.enabledComms,
+    }));
+  }, [queryState.autologin, queryState.seeded]);
+
+  const requestedWorkspaceHref = accessMode === "protected"
+    ? requestedPath
+    : queryState.nextHref || session?.nextHref || "/portal/platform";
   const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy"
     ? requestedWorkspaceHref
     : "/portal/platform";
   const liveEntryDetail = accessMode === "protected"
     ? `Customer login is now required to enter ${requestedPath}. Auricrux is preserving continuity so the user lands inside the requested live workspace surface after authentication.`
     : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace, reviewing the platform dashboard, continuing into live construction operations, and routing through the right communications lanes.";
+
+  useEffect(() => {
+    if (!queryState.seeded || !queryState.autologin || autologinAttemptedRef.current) return;
+
+    autologinAttemptedRef.current = true;
+
+    async function runAutologin() {
+      try {
+        const authenticatedAccount = await authenticateWorkspaceAccount(PRIMARY_TEST_ACCOUNT.email, PRIMARY_TEST_ACCOUNT.password);
+        const result = login({
+          email: authenticatedAccount.email || PRIMARY_TEST_ACCOUNT.email,
+          company: authenticatedAccount.company || PRIMARY_TEST_ACCOUNT.company,
+          role: authenticatedAccount.role || PRIMARY_TEST_ACCOUNT.role,
+          nextHref,
+          selectedPlan: authenticatedAccount.selectedPlan || PRIMARY_TEST_ACCOUNT.selectedPlan,
+          enabledProducts: authenticatedAccount.enabledProducts || PRIMARY_TEST_ACCOUNT.enabledProducts,
+          enabledComms: authenticatedAccount.enabledComms || PRIMARY_TEST_ACCOUNT.enabledComms,
+          customerId: authenticatedAccount.customerId,
+          workspaceLabel: authenticatedAccount.workspaceLabel,
+          accountSource: authenticatedAccount.accountSource,
+        });
+
+        if (!result.ok) {
+          setAuthStatus("failed");
+          setError(result.error);
+          return;
+        }
+
+        setAuthStatus("authenticated");
+        navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
+      } catch (autologinError) {
+        setAuthStatus("failed");
+        setError(autologinError?.message || "Customer authentication failed.");
+      }
+    }
+
+    runAutologin();
+  }, [login, nextHref, queryState.autologin, queryState.seeded]);
 
   function handleRoleChange(role) {
     setForm((prev) => ({ ...prev, role }));
@@ -345,10 +425,10 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             statusLabel="Entry posture"
             statusValue="Workspace handoff active"
             items={loginContinuityItems}
-            primaryHref={isAuthenticated ? nextHref : "/login"}
-            primaryLabel={isAuthenticated ? "Open Active Workspace" : "Open Login Portal"}
-            secondaryHref="/portal/messages"
-            secondaryLabel="Open Comms Workspace"
+            primaryHref={isAuthenticated ? nextHref : "/login?seeded=1"}
+            primaryLabel={isAuthenticated ? "Open Active Workspace" : "Open Live Test Login"}
+            secondaryHref="/login?seeded=1&autologin=1&next=/portal/platform"
+            secondaryLabel="Instant Test Workspace"
           />
         </div>
 
@@ -369,9 +449,17 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
               <div style={{ color: "#0f172a", lineHeight: 1.7, marginBottom: 12 }}>
                 Password: <strong>{PRIMARY_TEST_ACCOUNT.password}</strong>
               </div>
-              <button type="button" onClick={handleUseTestAccount} style={{ ...submitButtonStyle, background: "#1d4ed8" }}>
-                Use Seeded Test Account
-              </button>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <button type="button" onClick={handleUseTestAccount} style={{ ...submitButtonStyle, background: "#1d4ed8" }}>
+                  Use Seeded Test Account
+                </button>
+                <a href="/login?seeded=1" style={{ ...submitButtonStyle, textDecoration: "none", background: "#0f172a" }}>
+                  Open Seeded Login URL
+                </a>
+                <a href="/login?seeded=1&autologin=1&next=/portal/platform" style={{ ...submitButtonStyle, textDecoration: "none", background: "#0f766e" }}>
+                  Instant Platform Access
+                </a>
+              </div>
             </div>
 
             <label>Work Email</label>
@@ -525,8 +613,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             <WorkspaceSnapshotCard
               title="Workspace continuity before login"
               detail="Customers can see that tenant, project, and Auricrux state already exist before entering the portal, reinforcing one continuous operating shell."
-              ctaHref="/login"
-              ctaLabel="Open Login Portal"
+              ctaHref="/login?seeded=1"
+              ctaLabel="Open Live Test Login"
             />
 
             <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
