@@ -81,6 +81,11 @@ export const routeMetadata = {
     description:
       "Maintain customer, team, and operational communication continuity across FCA workflows.",
   },
+  "/portal/notifications": {
+    title: "Notifications | Future Contractors of America",
+    description:
+      "Track live alerts, customer updates, and operational notifications across the FCA workspace.",
+  },
   "/portal/bids": {
     title: "Bids | Future Contractors of America",
     description:
@@ -100,6 +105,16 @@ export const routeMetadata = {
     title: "Admin | Future Contractors of America",
     description:
       "Review tenant controls, permissions, and executive administration across the FCA operating surface.",
+  },
+  "/portal/profile": {
+    title: "Profile | Future Contractors of America",
+    description:
+      "Review account identity, workspace access, and customer profile continuity inside the FCA portal.",
+  },
+  "/portal/auricrux": {
+    title: "Portal Auricrux | Future Contractors of America",
+    description:
+      "Access the Auricrux operating layer inside the FCA portal for guided next actions, visibility, and execution continuity.",
   },
   "/portal/academy": {
     title: "Academy | Future Contractors of America",
