@@ -1,10 +1,13 @@
-export default function ProductAccessStatusPanel({ session }) {
-  if (!session?.authenticated) return null;
+export default function ProductAccessStatusPanel({ session, stateMeta }) {
+  const sessionProducts = session?.enabledProducts;
+  const stateProducts = stateMeta?.enabledProducts;
 
-  const products = session.enabledProducts || {
-    saas: true,
-    lms: true,
-    auricrux: true,
+  if (!session?.authenticated && !stateProducts) return null;
+
+  const products = {
+    saas: sessionProducts?.saas ?? stateProducts?.saas ?? true,
+    lms: sessionProducts?.lms ?? stateProducts?.lms ?? true,
+    auricrux: sessionProducts?.auricrux ?? stateProducts?.auricrux ?? true,
   };
 
   const cards = [
@@ -38,7 +41,7 @@ export default function ProductAccessStatusPanel({ session }) {
     >
       <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live customer product access</div>
       <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 14 }}>
-        {session.workspaceLabel} is authenticated as {session.role || "Owner / Admin"}. This customer session has live product continuity across SaaS workspace, Academy/LMS, and Auricrux guidance.
+        {(session?.workspaceLabel || stateMeta?.customerWorkspaceLabel || "Authenticated workspace")} is authenticated as {(session?.role || stateMeta?.customerRole || "Owner / Admin")}. This customer session has live product continuity across SaaS workspace, Academy/LMS, and Auricrux guidance.
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>

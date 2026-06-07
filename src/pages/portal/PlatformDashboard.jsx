@@ -44,7 +44,7 @@ export default function PlatformDashboard() {
       primaryHref="/portal/projects"
       primaryLabel="Open Projects"
     >
-      <ProductAccessStatusPanel session={session} />
+      <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>

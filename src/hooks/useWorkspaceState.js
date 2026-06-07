@@ -15,9 +15,16 @@ function bindCustomerSession(baseState) {
     },
     meta: {
       ...baseState.meta,
+      customerId: session.customerId,
+      customerRole: session.role,
       customerSessionEmail: session.email,
       customerWorkspaceLabel: session.workspaceLabel,
       authenticatedCustomer: session.company,
+      enabledProducts: {
+        saas: session.enabledProducts?.saas !== false,
+        lms: session.enabledProducts?.lms !== false,
+        auricrux: session.enabledProducts?.auricrux !== false,
+      },
     },
   };
 }

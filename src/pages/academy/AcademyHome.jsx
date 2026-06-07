@@ -15,6 +15,7 @@ import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderC
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -39,6 +40,7 @@ const continuityCardStyle = {
 
 export default function AcademyHome() {
   const { session } = useCustomerSession();
+  const { state } = useWorkspaceState();
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -72,7 +74,7 @@ export default function AcademyHome() {
         <AuricruxBrandMark compact />
       </div>
 
-      <ProductAccessStatusPanel session={session} />
+      <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
 
       <ProjectSpineBar tenant={portalTenant} project={currentProject} />
       <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
