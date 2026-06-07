@@ -4,6 +4,8 @@ import Login from "./pages/website/Login";
 import Pricing from "./pages/website/Pricing";
 import Contact from "./pages/website/Contact";
 import Auricrux from "./pages/website/Auricrux";
+import Warranty from "./pages/website/Warranty";
+import Referrals from "./pages/website/Referrals";
 import NotFound from "./pages/website/NotFound";
 import LegacyBidEntry from "./pages/website/LegacyBidEntry";
 import LegacyBidStatus from "./pages/website/LegacyBidStatus";
@@ -30,6 +32,8 @@ export const routes = {
   "/pricing": Pricing,
   "/contact": Contact,
   "/auricrux": Auricrux,
+  "/warranty": Warranty,
+  "/referrals": Referrals,
   "/not-found": NotFound,
   "/bid-entry": LegacyBidEntry,
   "/bid-status": LegacyBidStatus,

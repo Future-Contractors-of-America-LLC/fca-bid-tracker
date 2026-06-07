@@ -49,6 +49,16 @@ export const publicActionCatalog = {
     href: "/contact",
     variant: "light",
   },
+  warranty: {
+    label: "Open Warranty Continuity",
+    href: "/warranty",
+    variant: "light",
+  },
+  referrals: {
+    label: "Open Referral Continuity",
+    href: "/referrals",
+    variant: "light",
+  },
   walkthrough: {
     label: "Schedule a Walkthrough",
     href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
@@ -236,7 +246,7 @@ export const executiveSignalCtaSets = {
   publicPlatform: { href: publicActionCatalog.portal.href, label: "Enter customer workspace" },
   publicAuricrux: { href: publicActionCatalog.platform.href, label: publicActionCatalog.platform.label },
   conversion: { href: publicActionCatalog.contact.href, label: publicActionCatalog.contact.label },
-  contact: { href: publicActionCatalog.platform.href, label: publicActionCatalog.platform.label },
+  contact: { href: publicActionCatalog.walkthrough.href, label: publicActionCatalog.walkthrough.label },
   academy: { href: publicActionCatalog.messages.href, label: "Preserve follow-through" },
   portal: { href: portalShellCtas.executiveSignal.href, label: portalShellCtas.executiveSignal.label },
 };
@@ -331,14 +341,16 @@ export const publicSurfaceLinks = [
   { key: "auricrux", title: "Auricrux Guidance", detail: "See how the operating layer keeps next steps, customer visibility, and execution continuity clear.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
   { key: "portal", title: "Customer Portal", detail: "Projects, files, notifications, billing follow-through, and customer-facing visibility.", href: "/portal", ctaLabel: "Open Portal Workspace" },
   { key: "academy", title: "FCA Academy", detail: "Training pathways, certification progress, safety reinforcement, and workforce readiness tied to the same customer journey.", href: "/academy", ctaLabel: "Open Academy" },
+  { key: "warranty", title: "Warranty Continuity", detail: "Post-handover service, support posture, maintenance continuity, and recurring customer retention flow.", href: "/warranty", ctaLabel: "Open Warranty Continuity" },
+  { key: "referrals", title: "Referral Continuity", detail: "Turn finished work into reviews, customer advocacy, and guided new-opportunity motion.", href: "/referrals", ctaLabel: "Open Referral Continuity" },
   { key: "pricing", title: "Plans & Rollout", detail: "Move from interest into rollout planning, guided setup, and next implementation steps.", href: "/pricing", ctaLabel: "Plans & Rollout" },
   { key: "contact", title: "Contact & Rollout", detail: "Start a walkthrough, pilot discussion, or rollout review from the same connected shell.", href: "/contact", ctaLabel: "Open Contact & Rollout" },
 ];
 
 export const contactPaths = [
-  { title: "Schedule a Walkthrough", detail: "Walk through the live FCA workspace and see how FCA can support your team from first opportunity through bid handoff, project delivery, customer visibility, training, and communications routing.", cta: publicActionCatalog.walkthrough.href, label: publicActionCatalog.walkthrough.label },
+  { title: "Schedule a Walkthrough", detail: "Walk through the live FCA workspace and see how FCA can support your team from first opportunity through bid handoff, project delivery, customer visibility, training, communications routing, warranty continuity, and referral growth.", cta: publicActionCatalog.walkthrough.href, label: publicActionCatalog.walkthrough.label },
   { title: "Discuss Startup, Pilot, or Mid-Range Plans", detail: "Talk through startup fit, pilot scope, and mid-range operating needs across the $99/mo Startup Workspace, $2,500 one-time Pilot Workspace, $499/mo Team Workspace, and $899/mo Operations Workspace paths.", cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Startup%20Pilot%20or%20Mid-Range%20Discussion", label: "Discuss Startup / Pilot / Mid-Range" },
-  { title: "Review Growth or Enterprise Rollout", detail: "Review Growth Platform and Enterprise Rollout packaging, communications lanes, and rollout sequencing for broader deployment.", cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Growth%20or%20Enterprise%20Rollout", label: "Review Growth / Enterprise" },
+  { title: "Review Growth or Enterprise Rollout", detail: "Review Growth Platform and Enterprise Rollout packaging, communications lanes, rollout sequencing, post-handover continuity, and referral-driven expansion for broader deployment.", cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Growth%20or%20Enterprise%20Rollout", label: "Review Growth / Enterprise" },
 ];
 
 export const shellJourney = [
@@ -354,6 +366,8 @@ export const shellPrimaryNav = [
   { label: "Home", href: "/", journeyKey: "public" },
   { label: "Platform", href: "/platform", journeyKey: "platform" },
   { label: "Auricrux", href: "/auricrux", journeyKey: "platform" },
+  { label: "Warranty", href: "/warranty", journeyKey: "conversion" },
+  { label: "Referrals", href: "/referrals", journeyKey: "conversion" },
   { label: "Pricing", href: "/pricing", journeyKey: "conversion" },
   { label: "Contact", href: "/contact", journeyKey: "conversion" },
   { label: "Login", href: "/login", journeyKey: "workspace" },

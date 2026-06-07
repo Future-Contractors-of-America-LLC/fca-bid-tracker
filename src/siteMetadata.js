@@ -31,6 +31,16 @@ export const routeMetadata = {
     description:
       "Contact Future Contractors of America to start rollout planning, demos, onboarding, or platform deployment discussions.",
   },
+  "/warranty": {
+    title: "Warranty | Future Contractors of America",
+    description:
+      "Explore FCA warranty, post-handover service, and recurring maintenance continuity connected to support, files, and customer follow-through.",
+  },
+  "/referrals": {
+    title: "Referrals | Future Contractors of America",
+    description:
+      "See how FCA turns finished work into customer advocacy, reviews, referral flow, and revenue continuity.",
+  },
   "/login": {
     title: "Login | Future Contractors of America",
     description:
