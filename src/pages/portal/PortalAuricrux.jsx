@@ -2,6 +2,7 @@ import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
+import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -20,6 +21,13 @@ const cardStyle = {
 export default function PortalAuricrux() {
   const { session } = useCustomerSession();
   const { state } = useWorkspaceState();
+  const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
+  const commItems = auricruxCommsChannels.map((item) => ({
+    ...item,
+    value: `${item.value}${enabledComms[item.label.toLowerCase()] === false ? " · Pending for this customer" : " · Enabled for this customer"}`,
+    href: `/portal/messages#${item.label.toLowerCase()}`,
+    ctaLabel: `Open ${item.label}`,
+  }));
 
   return (
     <PortalShell
@@ -33,6 +41,7 @@ export default function PortalAuricrux() {
     >
       <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
       <CustomerProductLaunchpad session={session} title="Launch real customer product from Auricrux" />
+      <CustomerCommsLaunchpad session={session} title="Launch enabled communications lanes from Auricrux" />
 
       <div style={{ marginBottom: 24 }}>
         <SystemStateSummary
@@ -51,7 +60,7 @@ export default function PortalAuricrux() {
           detail="Auricrux communications is now framed as one coordinated control plane across chat, SMS, phone, email, Teams, conference, and lecture so guidance can move execution forward instead of stopping at recommendations."
           statusLabel="Auricrux comms status"
           statusValue="Cross-channel orchestration active"
-          items={auricruxCommsChannels}
+          items={commItems}
         />
       </div>
 

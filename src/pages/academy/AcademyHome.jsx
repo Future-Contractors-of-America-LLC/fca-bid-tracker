@@ -12,6 +12,7 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
+import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
@@ -42,6 +43,13 @@ const continuityCardStyle = {
 export default function AcademyHome() {
   const { session } = useCustomerSession();
   const { state } = useWorkspaceState();
+  const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
+  const commItems = auricruxCommsChannels.map((item) => ({
+    ...item,
+    value: `${item.value}${enabledComms[item.label.toLowerCase()] === false ? " · Pending for this customer" : " · Enabled for this customer"}`,
+    href: `/portal/messages#${item.label.toLowerCase()}`,
+    ctaLabel: `Open ${item.label}`,
+  }));
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -76,6 +84,7 @@ export default function AcademyHome() {
       </div>
 
       <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
+      <CustomerCommsLaunchpad session={session} title="Launch enabled training and customer communications lanes" />
 
       <ProjectSpineBar tenant={portalTenant} project={currentProject} />
       <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
@@ -89,7 +98,7 @@ export default function AcademyHome() {
           detail="Training, onboarding, safety refreshers, lecture delivery, conference reviews, and cross-team coaching now sit inside the same communications control plane as project, support, and customer follow-through."
           statusLabel="Training comms posture"
           statusValue="Rollout channels connected"
-          items={auricruxCommsChannels}
+          items={commItems}
         />
       </div>
 
