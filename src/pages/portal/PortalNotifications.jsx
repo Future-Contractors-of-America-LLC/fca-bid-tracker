@@ -26,22 +26,28 @@ export default function PortalNotifications() {
       ? [
           {
             type: "session",
+            badge: "Live workspace",
             title: "Authenticated workspace continuity active",
             detail: `${session.company} is now attached to ${state.project.id} through the shared FCA workspace shell.`,
+            routeHint: "Continue through bids, files, messages, and billing without losing customer context.",
             time: "Live",
           },
         ]
       : []),
     ...portalMessages.map((message) => ({
       type: "message",
+      badge: message.priority,
       title: message.subject,
       detail: `${message.from} · ${message.preview}`,
+      routeHint: `${message.channel} · ${message.nextAction}`,
       time: message.time,
     })),
-    ...projectAuditEvents.slice(0, 2).map((event) => ({
+    ...projectAuditEvents.slice(0, 3).map((event) => ({
       type: "audit",
+      badge: event.discipline || "Audit",
       title: event.action,
       detail: event.detail,
+      routeHint: `${event.discipline || "Operational"} continuity recorded on ${state.project.id}.`,
       time: event.time,
     })),
   ];
@@ -49,7 +55,7 @@ export default function PortalNotifications() {
   return (
     <PortalShell
       title="Live Notifications and Continuity Alerts"
-      subtitle="Workspace notification surface showing message activity, audit cues, and Auricrux continuity signals in one live customer-facing layer."
+      subtitle="Workspace alert surface showing approvals, permit/document dependencies, field-readiness cues, and Auricrux continuity signals in one customer-facing layer."
       activeHref="/portal/notifications"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.notifications}
@@ -93,10 +99,18 @@ export default function PortalNotifications() {
         <div style={{ display: "grid", gap: 12 }}>
           {liveNotifications.map((notification) => (
             <div key={`${notification.type}-${notification.time}-${notification.title}`} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                <div>
-                  <div style={{ fontWeight: 700 }}>{notification.title}</div>
-                  <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 4 }}>{notification.detail}</div>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "flex-start" }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                    <div style={{ fontWeight: 700 }}>{notification.title}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#1d4ed8", background: "#dbeafe", borderRadius: 999, padding: "4px 8px" }}>
+                      {notification.badge}
+                    </div>
+                  </div>
+                  <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 6 }}>{notification.detail}</div>
+                  <div style={{ color: "#0f172a", lineHeight: 1.6, marginTop: 8 }}>
+                    <strong>Route hint:</strong> {notification.routeHint}
+                  </div>
                 </div>
                 <div style={{ color: "#64748b", fontSize: 13, fontWeight: 700 }}>{notification.time}</div>
               </div>
