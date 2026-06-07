@@ -31,11 +31,16 @@ const explicitRoutes = new Set([
   "/portal/auricrux",
   "/portal/academy",
   "/academy",
+  "/deployment-status.json",
+  "/runtime-fingerprint.txt",
+  "/live-shell-verification.html",
+  "/api-continuity-audit.html",
 ]);
 
 const allowedStaticPrefixes = [
   "/fca-customer-entry",
   "/fca-customer-status",
+  "/api/",
   "mailto:",
   "https://",
   "http://",
