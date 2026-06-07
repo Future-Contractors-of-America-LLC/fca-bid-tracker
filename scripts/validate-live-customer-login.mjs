@@ -11,6 +11,7 @@ const checks = [
       "readCustomerSession",
       "writeCustomerSession",
       "updateCustomerSession",
+      "accountSource",
       "isProtectedCustomerRoute",
       "hasCustomerProductAccess",
     ],
@@ -20,7 +21,9 @@ const checks = [
     markers: [
       'from "../customerSession"',
       "export function resolveRoleDefaultProducts",
-      'enabledProducts = resolveRoleDefaultProducts(role)',
+      "customerId,",
+      "workspaceLabel,",
+      'accountSource = "workspace-shell"',
       "At least one customer product surface must be enabled.",
       "updateSession(updates = {})",
       "setProductAccess(product, enabled)",
@@ -59,16 +62,17 @@ const checks = [
   {
     file: path.join(root, "src", "pages", "website", "Login.jsx"),
     markers: [
-      'import useCustomerSession, { resolveRoleDefaultProducts } from "../../hooks/useCustomerSession";',
       'import CustomerSessionBar from "../../components/CustomerSessionBar";',
+      'import { PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";',
+      "authenticateWorkspaceAccount",
       "Customer product provisioning",
-      "Use Role Defaults",
-      "Customize Product Access",
-      "Role defaults are active",
+      "Use Plan Defaults",
+      "Customize Access",
       "Custom provisioning is active.",
       "Enabled for first login",
       "Held back until enabled",
       "Launch real customer product after login",
+      "Use Seeded Test Account",
       "navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));",
     ],
   },
@@ -110,4 +114,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Live customer login validation passed across session state, router guard, profile controls, role-aware provisioning, and authenticated launch surfaces.");
+console.log("Live customer login validation passed across session state, router guard, seeded auth continuity, profile controls, and authenticated launch surfaces.");
