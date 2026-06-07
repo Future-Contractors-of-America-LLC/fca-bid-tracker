@@ -34,6 +34,7 @@ export function readCustomerSession() {
       role: parsed.role || "Owner / Admin",
       customerId: parsed.customerId || "CUST-FCA-LIVE-001",
       selectedPlan: parsed.selectedPlan || "startup",
+      accountSource: parsed.accountSource || "workspace-shell",
       enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
       enabledComms: normalizeEnabledComms(parsed.enabledComms),
     };
@@ -55,6 +56,7 @@ export function writeCustomerSession(session) {
     lastLoginAt: session.lastLoginAt || new Date().toISOString(),
     nextHref: session.nextHref || "/portal/platform",
     selectedPlan: session.selectedPlan || "startup",
+    accountSource: session.accountSource || "workspace-shell",
     enabledProducts: normalizeEnabledProducts(session.enabledProducts),
     enabledComms: normalizeEnabledComms(session.enabledComms),
   };

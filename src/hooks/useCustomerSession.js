@@ -96,6 +96,9 @@ export default function useCustomerSession() {
         selectedPlan = "startup",
         enabledProducts,
         enabledComms,
+        customerId,
+        workspaceLabel,
+        accountSource = "workspace-shell",
       }) {
         const normalizedEmail = (email || "").trim().toLowerCase();
         const normalizedCompany = (company || "").trim();
@@ -121,17 +124,18 @@ export default function useCustomerSession() {
           email: normalizedEmail,
           company: normalizedCompany,
           role: normalizedRole,
-          customerId: `CUST-${companyKey || "FCA"}-001`,
-          workspaceLabel: `${normalizedCompany} Workspace`,
+          customerId: customerId || `CUST-${companyKey || "FCA"}-001`,
+          workspaceLabel: workspaceLabel || `${normalizedCompany} Workspace`,
           nextHref,
           lastLoginAt: new Date().toISOString(),
           selectedPlan: planPreset.key,
+          accountSource,
           enabledProducts: normalizedProducts,
           enabledComms: normalizedComms,
         });
 
         setSession(saved);
-        logAutomationEvent("login-activation", `Workspace activated for ${normalizedCompany}`, `Auricrux activated ${planPreset.name} with ${Object.values(normalizedProducts).filter(Boolean).length} product layers and ${Object.values(normalizedComms).filter(Boolean).length} communications lanes.`, nextHref);
+        logAutomationEvent("login-activation", `Workspace activated for ${normalizedCompany}`, `Auricrux activated ${planPreset.name} with ${Object.values(normalizedProducts).filter(Boolean).length} product layers and ${Object.values(normalizedComms).filter(Boolean).length} communications lanes through ${accountSource}.`, nextHref);
         logCommercialEvent("workspace-activation", `${planPreset.name} workspace activated`, `Auricrux turned a commercial entry into a live authenticated workspace for ${normalizedCompany}.`, nextHref === "/portal/platform" ? "/pricing" : nextHref);
         return { ok: true, session: saved };
       },

@@ -15,6 +15,7 @@ import LoginActionCenter from "../../components/LoginActionCenter";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import { PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";
 import { founderJourneyCtaSets, pricingTiers, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { resolvePlanPreset } from "../../pricingPlans";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
@@ -107,12 +108,45 @@ const commsOptions = [
   { key: "lecture", title: "Lecture", detail: "Academy-led instruction and rollout delivery." },
 ];
 
+async function authenticateWorkspaceAccount(email, password) {
+  const localAccount = resolveSeededCustomerAccount(email, password);
+
+  try {
+    const response = await fetch("/api/customer-login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const payload = await response.json();
+
+    if (!response.ok || !payload?.ok || !payload?.account) {
+      if (localAccount) {
+        return { ...localAccount, accountSource: "local-fallback" };
+      }
+
+      throw new Error(payload?.error || "Customer authentication failed.");
+    }
+
+    return { ...payload.account, accountSource: payload.authenticationMode || "api" };
+  } catch (error) {
+    if (localAccount) {
+      return { ...localAccount, accountSource: "local-fallback" };
+    }
+
+    throw error;
+  }
+}
+
 export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
   const initialPlan = session?.selectedPlan || "startup";
   const initialPreset = resolvePlanPreset(initialPlan);
   const [form, setForm] = useState({
-    email: session?.email || "workspace@futurecontractorsofamerica.com",
+    email: session?.email || PRIMARY_TEST_ACCOUNT.email,
+    password: "",
     company: session?.company || "Future Contractors of America Pilot Workspace",
     role: session?.role || "Owner / Admin",
     selectedPlan: initialPlan,
@@ -121,13 +155,15 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   });
   const [provisioningMode, setProvisioningMode] = useState(session?.enabledProducts ? "custom" : "plan-defaults");
   const [error, setError] = useState("");
+  const [authStatus, setAuthStatus] = useState("idle");
 
   useEffect(() => {
     if (!session) return;
     const planKey = session.selectedPlan || "startup";
     const planPreset = resolvePlanPreset(planKey);
     setForm({
-      email: session.email || "workspace@futurecontractorsofamerica.com",
+      email: session.email || PRIMARY_TEST_ACCOUNT.email,
+      password: "",
       company: session.company || "Future Contractors of America Pilot Workspace",
       role: session.role || "Owner / Admin",
       selectedPlan: planKey,
@@ -193,25 +229,54 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     }));
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const result = login({
-      email: form.email,
-      company: form.company,
-      role: form.role,
-      nextHref,
-      selectedPlan: form.selectedPlan,
-      enabledProducts: form.enabledProducts,
-      enabledComms: form.enabledComms,
-    });
-
-    if (!result.ok) {
-      setError(result.error);
-      return;
-    }
-
+  function handleUseTestAccount() {
     setError("");
-    navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
+    setAuthStatus("seeded");
+    setProvisioningMode("custom");
+    setForm((prev) => ({
+      ...prev,
+      email: PRIMARY_TEST_ACCOUNT.email,
+      password: PRIMARY_TEST_ACCOUNT.password,
+      company: PRIMARY_TEST_ACCOUNT.company,
+      role: PRIMARY_TEST_ACCOUNT.role,
+      selectedPlan: PRIMARY_TEST_ACCOUNT.selectedPlan,
+      enabledProducts: PRIMARY_TEST_ACCOUNT.enabledProducts,
+      enabledComms: PRIMARY_TEST_ACCOUNT.enabledComms,
+    }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError("");
+    setAuthStatus("authenticating");
+
+    try {
+      const authenticatedAccount = await authenticateWorkspaceAccount(form.email, form.password);
+      const result = login({
+        email: authenticatedAccount.email || form.email,
+        company: authenticatedAccount.company || form.company,
+        role: authenticatedAccount.role || form.role,
+        nextHref,
+        selectedPlan: authenticatedAccount.selectedPlan || form.selectedPlan,
+        enabledProducts: authenticatedAccount.enabledProducts || form.enabledProducts,
+        enabledComms: authenticatedAccount.enabledComms || form.enabledComms,
+        customerId: authenticatedAccount.customerId,
+        workspaceLabel: authenticatedAccount.workspaceLabel,
+        accountSource: authenticatedAccount.accountSource,
+      });
+
+      if (!result.ok) {
+        setAuthStatus("failed");
+        setError(result.error);
+        return;
+      }
+
+      setAuthStatus("authenticated");
+      navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
+    } catch (submitError) {
+      setAuthStatus("failed");
+      setError(submitError?.message || "Customer authentication failed.");
+    }
   }
 
   function handleResetSession() {
@@ -288,11 +353,35 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
         <div style={twoColumnGridStyle}>
           <form style={cardStyle} onSubmit={handleSubmit}>
+            <div style={{ ...productOptionStyle, marginBottom: 16, background: "#eff6ff" }}>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>Live seeded customer test account</div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>
+                A real test account is now provisioned for public workspace validation. Use the button below to load the credentials and validate SaaS, Academy / LMS, and Auricrux access from the live login route.
+              </div>
+              <div style={{ color: "#0f172a", lineHeight: 1.7, marginBottom: 8 }}>
+                Email: <strong>{PRIMARY_TEST_ACCOUNT.email}</strong>
+              </div>
+              <div style={{ color: "#0f172a", lineHeight: 1.7, marginBottom: 12 }}>
+                Password: <strong>{PRIMARY_TEST_ACCOUNT.password}</strong>
+              </div>
+              <button type="button" onClick={handleUseTestAccount} style={{ ...submitButtonStyle, background: "#1d4ed8" }}>
+                Use Seeded Test Account
+              </button>
+            </div>
+
             <label>Work Email</label>
             <input
               style={fieldStyle}
               value={form.email}
               onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+            />
+
+            <label>Password</label>
+            <input
+              type="password"
+              style={fieldStyle}
+              value={form.password}
+              onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
             />
 
             <label>Company</label>
@@ -402,6 +491,12 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
             <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
               This live customer session preserves Auricrux continuity and routes directly into {nextHref}. {enabledProductCount} product surface{enabledProductCount === 1 ? " is" : "s are"} currently enabled for first entry and {enabledCommsCount} communications lane{enabledCommsCount === 1 ? " is" : "s are"} available in the comms workspace.
+            </div>
+
+            <div style={{ color: authStatus === "failed" ? "#b91c1c" : "#0f766e", marginBottom: 12, fontWeight: 700 }}>
+              {authStatus === "authenticating" ? "Authenticating seeded customer account…" : null}
+              {authStatus === "authenticated" ? "Customer authentication passed. Opening live workspace…" : null}
+              {authStatus === "seeded" ? "Seeded test credentials loaded. Submit to enter the workspace." : null}
             </div>
 
             {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 700 }}>{error}</div> : null}

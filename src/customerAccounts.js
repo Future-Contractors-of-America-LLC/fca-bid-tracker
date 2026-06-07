@@ -1,0 +1,52 @@
+export const PRIMARY_TEST_ACCOUNT = {
+  email: "founder.test@futurecontractorsofamerica.com",
+  password: "FCA-HandsOff-2026!",
+  company: "Future Contractors of America Test Workspace",
+  role: "Owner / Admin",
+  customerId: "CUST-FCA-TEST-001",
+  workspaceLabel: "FCA Founder Test Workspace",
+  selectedPlan: "enterprise",
+  enabledProducts: {
+    saas: true,
+    lms: true,
+    auricrux: true,
+  },
+  enabledComms: {
+    chat: true,
+    sms: true,
+    phone: true,
+    email: true,
+    teams: true,
+    conference: true,
+    lecture: true,
+  },
+};
+
+export const TEST_CUSTOMER_ACCOUNTS = [PRIMARY_TEST_ACCOUNT];
+
+export function sanitizeSeededCustomerAccount(account) {
+  if (!account) return null;
+
+  return {
+    email: account.email,
+    company: account.company,
+    role: account.role,
+    customerId: account.customerId,
+    workspaceLabel: account.workspaceLabel,
+    selectedPlan: account.selectedPlan,
+    enabledProducts: account.enabledProducts,
+    enabledComms: account.enabledComms,
+  };
+}
+
+export function resolveSeededCustomerAccount(email = "", password = "") {
+  const normalizedEmail = (email || "").trim().toLowerCase();
+  const normalizedPassword = (password || "").trim();
+
+  const match = TEST_CUSTOMER_ACCOUNTS.find(
+    (account) =>
+      account.email.toLowerCase() === normalizedEmail && account.password === normalizedPassword
+  );
+
+  return sanitizeSeededCustomerAccount(match);
+}
