@@ -5,9 +5,8 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import { auricruxActions, portalMessages, portalMetrics, portalProjects } from "../../portalShell";
+import { auricruxActions, portalMessages, portalMetrics, portalProjects, routeStateOverlays } from "../../systemState";
 import { portalEntryCtaSets, publicBodyCtaSets } from "../../websiteShell";
-import { routeStateOverlays } from "../../workspaceState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 
 const cardStyle = {
@@ -52,7 +51,7 @@ export default function PortalHome() {
   return (
     <PortalShell
       title="FCA Customer Workspace"
-      subtitle="Live workspace shell with Auricrux-guided next actions, communication visibility, billing readiness, and academy continuity."
+      subtitle="Live workspace shell with Auricrux-guided next actions, estimating visibility, document control, billing readiness, and academy continuity."
       activeHref="/portal"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}
@@ -136,7 +135,7 @@ export default function PortalHome() {
                 {item.secondaryHref ? <> {item.suffix} <a href={item.secondaryHref}>{item.secondaryLabel}</a> {item.trailing}</> : ` ${item.suffix}`}
               </li>
             ))}
-            <li>Use this portal overview to frame account status and Auricrux guidance.</li>
+            <li>Use this portal overview to frame account status, project readiness, and Auricrux guidance.</li>
           </ol>
         </div>
         <div style={cardStyle}>
@@ -144,7 +143,8 @@ export default function PortalHome() {
           {portalProjects.map((project) => (
             <div key={project.id} style={{ marginBottom: 14 }}>
               <div style={{ fontWeight: 700 }}>{project.id} · {project.customer}</div>
-              <div style={{ color: "#4b5563" }}>{project.stage} · Next: {project.nextAction}</div>
+              <div style={{ color: "#4b5563", lineHeight: 1.6 }}>{project.stage} · Next: {project.nextAction}</div>
+              <div style={{ color: "#475569", fontSize: 14, marginTop: 4 }}>Permit: {project.permitStatus}</div>
             </div>
           ))}
         </div>
@@ -156,6 +156,7 @@ export default function PortalHome() {
           <div key={message.subject} style={{ marginBottom: 12 }}>
             <strong>{message.from}</strong>
             <div style={{ color: "#4b5563" }}>{message.subject}</div>
+            <div style={{ color: "#475569", fontSize: 14, marginTop: 4 }}>{message.channel} · {message.nextAction}</div>
             <div style={{ color: "#6b7280", fontSize: 14 }}>{message.time}</div>
           </div>
         ))}
