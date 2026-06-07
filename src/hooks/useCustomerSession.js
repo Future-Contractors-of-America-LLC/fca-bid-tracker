@@ -6,6 +6,14 @@ import {
   writeCustomerSession,
 } from "../customerSession";
 
+function normalizeProductSelection(enabledProducts = {}) {
+  return {
+    saas: enabledProducts.saas !== false,
+    lms: enabledProducts.lms !== false,
+    auricrux: enabledProducts.auricrux !== false,
+  };
+}
+
 export default function useCustomerSession() {
   const [session, setSession] = useState(null);
 
@@ -17,13 +25,24 @@ export default function useCustomerSession() {
     () => ({
       session,
       isAuthenticated: Boolean(session?.authenticated),
-      login({ email, company, role = "Owner / Admin", nextHref = "/portal/platform" }) {
+      login({
+        email,
+        company,
+        role = "Owner / Admin",
+        nextHref = "/portal/platform",
+        enabledProducts = { saas: true, lms: true, auricrux: true },
+      }) {
         const normalizedEmail = (email || "").trim().toLowerCase();
         const normalizedCompany = (company || "").trim();
         const normalizedRole = (role || "").trim() || "Owner / Admin";
+        const normalizedProducts = normalizeProductSelection(enabledProducts);
 
         if (!normalizedEmail || !normalizedCompany) {
           return { ok: false, error: "Email and company are required." };
+        }
+
+        if (!normalizedProducts.saas && !normalizedProducts.lms && !normalizedProducts.auricrux) {
+          return { ok: false, error: "At least one customer product surface must be enabled." };
         }
 
         const companyKey = normalizedCompany
@@ -39,11 +58,7 @@ export default function useCustomerSession() {
           workspaceLabel: `${normalizedCompany} Workspace`,
           nextHref,
           lastLoginAt: new Date().toISOString(),
-          enabledProducts: {
-            saas: true,
-            lms: true,
-            auricrux: true,
-          },
+          enabledProducts: normalizedProducts,
         });
 
         setSession(saved);

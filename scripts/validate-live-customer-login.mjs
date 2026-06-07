@@ -19,7 +19,8 @@ const checks = [
     file: path.join(root, "src", "hooks", "useCustomerSession.js"),
     markers: [
       'from "../customerSession"',
-      'login({ email, company, role = "Owner / Admin", nextHref = "/portal/platform" })',
+      'enabledProducts = { saas: true, lms: true, auricrux: true }',
+      "At least one customer product surface must be enabled.",
       "updateSession(updates = {})",
       "setProductAccess(product, enabled)",
       "logout()",
@@ -59,7 +60,10 @@ const checks = [
     markers: [
       'import useCustomerSession from "../../hooks/useCustomerSession";',
       'import CustomerSessionBar from "../../components/CustomerSessionBar";',
-      "Open Live Customer Workspace",
+      "Customer product provisioning",
+      "Enabled for first login",
+      "Held back until enabled",
+      "At least one customer product surface must be enabled.",
       "Launch real customer product after login",
       "navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));",
     ],
@@ -102,4 +106,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Live customer login validation passed across session state, router guard, profile controls, and authenticated launch surfaces.");
+console.log("Live customer login validation passed across session state, router guard, profile controls, login provisioning, and authenticated launch surfaces.");

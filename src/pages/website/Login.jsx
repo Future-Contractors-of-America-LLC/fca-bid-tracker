@@ -33,6 +33,20 @@ const moduleStyle = {
   background: "#f8fafc",
 };
 
+const productAccessGridStyle = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+  gap: 12,
+  marginBottom: 16,
+};
+
+const productOptionStyle = {
+  border: "1px solid #dbe3ef",
+  borderRadius: 12,
+  padding: 14,
+  background: "#f8fafc",
+};
+
 const submitButtonStyle = {
   textDecoration: "none",
   background: "#111827",
@@ -62,12 +76,35 @@ const loginContinuityItems = [
   },
 ];
 
+const productAccessOptions = [
+  {
+    key: "saas",
+    title: "SaaS workspace",
+    detail: "Projects, bids, files, messages, billing, support, and admin continuity inside the construction workspace.",
+  },
+  {
+    key: "lms",
+    title: "Academy / LMS",
+    detail: "Workforce onboarding, safety readiness, and field training continuity inside the same customer shell.",
+  },
+  {
+    key: "auricrux",
+    title: "Auricrux guidance",
+    detail: "Guided next actions, blocker visibility, and executive continuity across the customer's operating surfaces.",
+  },
+];
+
 export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
   const [form, setForm] = useState({
     email: session?.email || "workspace@futurecontractorsofamerica.com",
     company: session?.company || "Future Contractors of America Pilot Workspace",
     role: session?.role || "Owner / Admin",
+    enabledProducts: session?.enabledProducts || {
+      saas: true,
+      lms: true,
+      auricrux: true,
+    },
   });
   const [error, setError] = useState("");
 
@@ -79,6 +116,16 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     ? `Customer login is now required to enter ${requestedPath}. Auricrux is preserving continuity so the user lands inside the requested live workspace surface after authentication.`
     : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace, reviewing the platform dashboard, and continuing into live construction operations.";
 
+  function handleProductToggle(productKey) {
+    setForm((prev) => ({
+      ...prev,
+      enabledProducts: {
+        ...prev.enabledProducts,
+        [productKey]: !prev.enabledProducts[productKey],
+      },
+    }));
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     const result = login({
@@ -86,6 +133,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       company: form.company,
       role: form.role,
       nextHref,
+      enabledProducts: form.enabledProducts,
     });
 
     if (!result.ok) {
@@ -101,6 +149,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     logout();
     navigateTo("/login");
   }
+
+  const enabledProductCount = Object.values(form.enabledProducts).filter(Boolean).length;
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
@@ -190,8 +240,35 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
               <option>Field Operations</option>
             </select>
 
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Customer product provisioning</div>
+            <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
+              Choose the real product surfaces this customer should be able to enter on first login. This keeps the customer session honest across SaaS workspace, Academy / LMS, and Auricrux instead of opening every route by default.
+            </div>
+
+            <div style={productAccessGridStyle}>
+              {productAccessOptions.map((product) => {
+                const enabled = form.enabledProducts[product.key];
+                return (
+                  <label key={product.key} style={{ ...productOptionStyle, background: enabled ? "#eff6ff" : "#f8fafc", cursor: "pointer" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
+                      <div style={{ fontWeight: 700, color: "#111827" }}>{product.title}</div>
+                      <input
+                        type="checkbox"
+                        checked={enabled}
+                        onChange={() => handleProductToggle(product.key)}
+                      />
+                    </div>
+                    <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{product.detail}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#1d4ed8" : "#64748b" }}>
+                      {enabled ? "Enabled for first login" : "Held back until enabled"}
+                    </div>
+                  </label>
+                );
+              })}
+            </div>
+
             <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
-              This live customer session preserves Auricrux continuity and routes directly into {nextHref} so SaaS workspace access, Academy/LMS readiness, and Auricrux guidance stay inside one functional customer login.
+              This live customer session preserves Auricrux continuity and routes directly into {nextHref}. {enabledProductCount} product surface{enabledProductCount === 1 ? " is" : "s are"} currently enabled for first entry.
             </div>
 
             {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 700 }}>{error}</div> : null}
