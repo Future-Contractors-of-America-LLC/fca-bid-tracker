@@ -33,6 +33,7 @@ export function readCustomerSession() {
       ...parsed,
       role: parsed.role || "Owner / Admin",
       customerId: parsed.customerId || "CUST-FCA-LIVE-001",
+      selectedPlan: parsed.selectedPlan || "startup",
       enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
       enabledComms: normalizeEnabledComms(parsed.enabledComms),
     };
@@ -53,6 +54,7 @@ export function writeCustomerSession(session) {
     workspaceLabel: session.workspaceLabel || session.company,
     lastLoginAt: session.lastLoginAt || new Date().toISOString(),
     nextHref: session.nextHref || "/portal/platform",
+    selectedPlan: session.selectedPlan || "startup",
     enabledProducts: normalizeEnabledProducts(session.enabledProducts),
     enabledComms: normalizeEnabledComms(session.enabledComms),
   };

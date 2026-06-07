@@ -4,8 +4,10 @@ import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { portalNarrativeCtaSets } from "../../websiteShell";
 import { portalBilling, routeStateOverlays } from "../../systemState";
+import { resolvePlanPreset } from "../../pricingPlans";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -38,7 +40,7 @@ const billingContinuityItems = [
   },
   {
     label: "Customer continuity",
-    value: "Pricing and contact remain connected",
+    value: "Plan and pricing remain connected",
     detail: "Commercial review can move from internal billing posture back to pricing and founder rollout review without narrative drift.",
   },
   {
@@ -50,15 +52,18 @@ const billingContinuityItems = [
 
 export default function PortalBilling() {
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const { session } = useCustomerSession();
 
   useEffect(() => {
     refreshSyncStamp("Persisted billing continuity state active");
   }, [refreshSyncStamp]);
 
+  const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
+
   return (
     <PortalShell
       title="Billing and Account Continuity"
-      subtitle="Billing surface tied to the same tenant, project, message, and Auricrux state as the rest of the FCA workspace, with construction revenue controls kept visible."
+      subtitle="Billing surface tied to the same tenant, project, message, Auricrux, and plan-activation state as the rest of the FCA workspace, with construction revenue controls kept visible."
       activeHref="/portal/billing"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.billing}
@@ -72,7 +77,7 @@ export default function PortalBilling() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Billing now reads from the live workspace state"
-          detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, and blocker module as the other portal routes."
+          detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, blocker, and selected-plan modules as the other portal routes."
         />
       </div>
 
@@ -98,16 +103,19 @@ export default function PortalBilling() {
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+          <div><strong>Selected plan:</strong> {selectedPlan.name}</div>
+          <div><strong>Billing model:</strong> {selectedPlan.billingModel}</div>
+          <div><strong>Commercial packaging:</strong> {selectedPlan.price}</div>
         </div>
       </div>
 
       <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Revenue continuity focus</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Billing now echoes the same approval and training state as the rest of the shell</h2>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Billing now echoes the same approval, plan, and training state as the rest of the shell</h2>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Revenue blocker:</strong> {state.auricrux.currentBlocker}</div>
           <div><strong>Business impact:</strong> {state.auricrux.blockerImpact}</div>
-          <div><strong>Commercial next step:</strong> Convert {state.workspace.currentNextAction.toLowerCase()} into invoice follow-through.</div>
+          <div><strong>Commercial next step:</strong> Convert {state.workspace.currentNextAction.toLowerCase()} into invoice follow-through under the {selectedPlan.name} plan.</div>
           <div><strong>Training continuity:</strong> Billing remains tied to learner assignment so onboarding and revenue stay visible together.</div>
         </div>
       </div>
@@ -148,16 +156,16 @@ export default function PortalBilling() {
           <h2 style={{ marginTop: 0 }}>Why billing belongs in the same shell</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
             Billing is not just accounting. In FCA it stays tied to project progress, pay-app backup, document readiness,
-            owner approvals, customer communications, and training completion so commercial follow-through remains visible.
+            owner approvals, customer communications, plan activation, and training completion so commercial follow-through remains visible.
           </p>
           <PublicCtaRow actions={portalNarrativeCtaSets.billingNarrative} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Current billing posture</h2>
           <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
-            <li>One draft pay app is waiting on backup review.</li>
-            <li>One closeout invoice is out with retainage still outstanding.</li>
-            <li>One pilot-customer invoice is positioned for approval after scope signoff.</li>
+            <li>Current customer plan: {selectedPlan.name}.</li>
+            <li>Commercial packaging: {selectedPlan.price}.</li>
+            <li>Billing model: {selectedPlan.billingModel}.</li>
             <li>Auricrux continues monitoring account follow-through.</li>
           </ul>
         </div>

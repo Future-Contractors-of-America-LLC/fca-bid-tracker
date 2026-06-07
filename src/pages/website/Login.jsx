@@ -13,8 +13,9 @@ import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad"
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
-import useCustomerSession, { resolveRoleDefaultProducts, resolveRoleDefaultComms } from "../../hooks/useCustomerSession";
-import { founderJourneyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import useCustomerSession from "../../hooks/useCustomerSession";
+import { founderJourneyCtaSets, pricingTiers, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { resolvePlanPreset } from "../../pricingPlans";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const fieldStyle = {
@@ -107,25 +108,30 @@ const commsOptions = [
 
 export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
+  const initialPlan = session?.selectedPlan || "startup";
+  const initialPreset = resolvePlanPreset(initialPlan);
   const [form, setForm] = useState({
     email: session?.email || "workspace@futurecontractorsofamerica.com",
     company: session?.company || "Future Contractors of America Pilot Workspace",
     role: session?.role || "Owner / Admin",
-    enabledProducts: session?.enabledProducts || resolveRoleDefaultProducts(session?.role || "Owner / Admin"),
-    enabledComms: session?.enabledComms || resolveRoleDefaultComms(session?.role || "Owner / Admin"),
+    selectedPlan: initialPlan,
+    enabledProducts: session?.enabledProducts || initialPreset.enabledProducts,
+    enabledComms: session?.enabledComms || initialPreset.enabledComms,
   });
-  const [provisioningMode, setProvisioningMode] = useState(session?.enabledProducts ? "custom" : "role-defaults");
+  const [provisioningMode, setProvisioningMode] = useState(session?.enabledProducts ? "custom" : "plan-defaults");
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (!session) return;
-
+    const planKey = session.selectedPlan || "startup";
+    const planPreset = resolvePlanPreset(planKey);
     setForm({
       email: session.email || "workspace@futurecontractorsofamerica.com",
       company: session.company || "Future Contractors of America Pilot Workspace",
       role: session.role || "Owner / Admin",
-      enabledProducts: session.enabledProducts || resolveRoleDefaultProducts(session.role || "Owner / Admin"),
-      enabledComms: session.enabledComms || resolveRoleDefaultComms(session.role || "Owner / Admin"),
+      selectedPlan: planKey,
+      enabledProducts: session.enabledProducts || planPreset.enabledProducts,
+      enabledComms: session.enabledComms || planPreset.enabledComms,
     });
     setProvisioningMode("custom");
   }, [session]);
@@ -139,21 +145,27 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace, reviewing the platform dashboard, continuing into live construction operations, and routing through the right communications lanes.";
 
   function handleRoleChange(role) {
+    setForm((prev) => ({ ...prev, role }));
+  }
+
+  function handlePlanChange(planKey) {
+    const planPreset = resolvePlanPreset(planKey);
     setForm((prev) => ({
       ...prev,
-      role,
-      enabledProducts: provisioningMode === "role-defaults" ? resolveRoleDefaultProducts(role) : prev.enabledProducts,
-      enabledComms: provisioningMode === "role-defaults" ? resolveRoleDefaultComms(role) : prev.enabledComms,
+      selectedPlan: planKey,
+      enabledProducts: provisioningMode === "plan-defaults" ? planPreset.enabledProducts : prev.enabledProducts,
+      enabledComms: provisioningMode === "plan-defaults" ? planPreset.enabledComms : prev.enabledComms,
     }));
   }
 
   function handleProvisioningModeChange(mode) {
     setProvisioningMode(mode);
-    if (mode === "role-defaults") {
+    if (mode === "plan-defaults") {
+      const planPreset = resolvePlanPreset(form.selectedPlan);
       setForm((prev) => ({
         ...prev,
-        enabledProducts: resolveRoleDefaultProducts(prev.role),
-        enabledComms: resolveRoleDefaultComms(prev.role),
+        enabledProducts: planPreset.enabledProducts,
+        enabledComms: planPreset.enabledComms,
       }));
     }
   }
@@ -187,6 +199,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       company: form.company,
       role: form.role,
       nextHref,
+      selectedPlan: form.selectedPlan,
       enabledProducts: form.enabledProducts,
       enabledComms: form.enabledComms,
     });
@@ -207,8 +220,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
   const enabledProductCount = Object.values(form.enabledProducts).filter(Boolean).length;
   const enabledCommsCount = Object.values(form.enabledComms).filter(Boolean).length;
-  const roleDefaultProducts = resolveRoleDefaultProducts(form.role);
-  const roleDefaultComms = resolveRoleDefaultComms(form.role);
+  const selectedPlanPreset = resolvePlanPreset(form.selectedPlan);
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
@@ -286,11 +298,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             />
 
             <label>Workspace Role</label>
-            <select
-              style={fieldStyle}
-              value={form.role}
-              onChange={(event) => handleRoleChange(event.target.value)}
-            >
+            <select style={fieldStyle} value={form.role} onChange={(event) => handleRoleChange(event.target.value)}>
               <option>Owner / Admin</option>
               <option>Estimator</option>
               <option>Project Coordinator</option>
@@ -299,22 +307,36 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
               <option>Field Operations</option>
             </select>
 
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Customer product provisioning</div>
+            <label>Customer Plan</label>
+            <select style={fieldStyle} value={form.selectedPlan} onChange={(event) => handlePlanChange(event.target.value)}>
+              {pricingTiers.map((tier) => (
+                <option key={tier.name} value={tier.name.toLowerCase().split(" ")[0]}>
+                  {tier.name} · {tier.price}
+                </option>
+              ))}
+            </select>
+
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Plan activation posture</div>
             <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
-              Choose the real product surfaces this customer should be able to enter on first login. This keeps the customer session honest across SaaS workspace, Academy / LMS, and Auricrux instead of opening every route by default.
+              The selected plan now governs the default products and communications this customer receives on first login. Choose plan defaults for honest commercial-to-product enforcement, or customize access if the rollout requires an exception.
+            </div>
+            <div style={{ ...productOptionStyle, marginBottom: 16, background: "#eff6ff" }}>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>{selectedPlanPreset.name}</div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>Price: {selectedPlanPreset.price}</div>
+              <div style={{ color: "#475569", lineHeight: 1.7 }}>Billing model: {selectedPlanPreset.billingModel}</div>
             </div>
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 12 }}>
               <button
                 type="button"
-                onClick={() => handleProvisioningModeChange("role-defaults")}
+                onClick={() => handleProvisioningModeChange("plan-defaults")}
                 style={{
                   ...submitButtonStyle,
-                  background: provisioningMode === "role-defaults" ? "#1d4ed8" : "#e2e8f0",
-                  color: provisioningMode === "role-defaults" ? "#fff" : "#0f172a",
+                  background: provisioningMode === "plan-defaults" ? "#1d4ed8" : "#e2e8f0",
+                  color: provisioningMode === "plan-defaults" ? "#fff" : "#0f172a",
                 }}
               >
-                Use Role Defaults
+                Use Plan Defaults
               </button>
               <button
                 type="button"
@@ -325,16 +347,17 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
                   color: provisioningMode === "custom" ? "#fff" : "#0f172a",
                 }}
               >
-                Customize Product Access
+                Customize Access
               </button>
             </div>
 
             <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
-              {provisioningMode === "role-defaults"
-                ? `Role defaults are active for ${form.role}: SaaS ${roleDefaultProducts.saas ? "enabled" : "held back"}, Academy/LMS ${roleDefaultProducts.lms ? "enabled" : "held back"}, Auricrux ${roleDefaultProducts.auricrux ? "enabled" : "held back"}.`
-                : "Custom provisioning is active. Toggle the exact product layers this customer should receive on first login."}
+              {provisioningMode === "plan-defaults"
+                ? `Plan defaults are active for ${selectedPlanPreset.name}.`
+                : "Custom provisioning is active. Toggle the exact product layers and channels this customer should receive on first login."}
             </div>
 
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Customer product provisioning</div>
             <div style={productAccessGridStyle}>
               {productAccessOptions.map((product) => {
                 const enabled = form.enabledProducts[product.key];
@@ -342,11 +365,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
                   <label key={product.key} style={{ ...productOptionStyle, background: enabled ? "#eff6ff" : "#f8fafc", cursor: "pointer" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
                       <div style={{ fontWeight: 700, color: "#111827" }}>{product.title}</div>
-                      <input
-                        type="checkbox"
-                        checked={enabled}
-                        onChange={() => handleProductToggle(product.key)}
-                      />
+                      <input type="checkbox" checked={enabled} onChange={() => handleProductToggle(product.key)} />
                     </div>
                     <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{product.detail}</div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#1d4ed8" : "#64748b" }}>
@@ -358,14 +377,6 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             </div>
 
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Communications provisioning</div>
-            <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
-              Bind real communications lanes to the customer session so portal, academy, auricrux guidance, and support surfaces stay honest about which channels are active.
-            </div>
-            <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
-              {provisioningMode === "role-defaults"
-                ? `Role defaults are active for ${form.role}: ${Object.entries(roleDefaultComms).filter(([, enabled]) => enabled).map(([key]) => key).join(", ")}.`
-                : "Custom communications provisioning is active. Toggle the exact channels this customer should receive on first login."}
-            </div>
             <div style={productAccessGridStyle}>
               {commsOptions.map((channel) => {
                 const enabled = form.enabledComms[channel.key];
@@ -373,11 +384,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
                   <label key={channel.key} style={{ ...productOptionStyle, background: enabled ? "#ecfeff" : "#f8fafc", cursor: "pointer" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
                       <div style={{ fontWeight: 700, color: "#111827" }}>{channel.title}</div>
-                      <input
-                        type="checkbox"
-                        checked={enabled}
-                        onChange={() => handleCommsToggle(channel.key)}
-                      />
+                      <input type="checkbox" checked={enabled} onChange={() => handleCommsToggle(channel.key)} />
                     </div>
                     <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{channel.detail}</div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#0f766e" : "#64748b" }}>

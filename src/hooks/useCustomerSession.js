@@ -5,6 +5,7 @@ import {
   updateCustomerSession,
   writeCustomerSession,
 } from "../customerSession";
+import { resolvePlanPreset } from "../pricingPlans";
 
 function normalizeProductSelection(enabledProducts = {}) {
   return {
@@ -82,14 +83,16 @@ export default function useCustomerSession() {
         company,
         role = "Owner / Admin",
         nextHref = "/portal/platform",
-        enabledProducts = resolveRoleDefaultProducts(role),
-        enabledComms = resolveRoleDefaultComms(role),
+        selectedPlan = "startup",
+        enabledProducts,
+        enabledComms,
       }) {
         const normalizedEmail = (email || "").trim().toLowerCase();
         const normalizedCompany = (company || "").trim();
         const normalizedRole = (role || "").trim() || "Owner / Admin";
-        const normalizedProducts = normalizeProductSelection(enabledProducts);
-        const normalizedComms = normalizeCommsSelection(enabledComms);
+        const planPreset = resolvePlanPreset(selectedPlan);
+        const normalizedProducts = normalizeProductSelection(enabledProducts || planPreset.enabledProducts || resolveRoleDefaultProducts(role));
+        const normalizedComms = normalizeCommsSelection(enabledComms || planPreset.enabledComms || resolveRoleDefaultComms(role));
 
         if (!normalizedEmail || !normalizedCompany) {
           return { ok: false, error: "Email and company are required." };
@@ -112,6 +115,7 @@ export default function useCustomerSession() {
           workspaceLabel: `${normalizedCompany} Workspace`,
           nextHref,
           lastLoginAt: new Date().toISOString(),
+          selectedPlan: planPreset.key,
           enabledProducts: normalizedProducts,
           enabledComms: normalizedComms,
         });
@@ -155,6 +159,21 @@ export default function useCustomerSession() {
           enabledComms: {
             [channel]: enabled,
           },
+        });
+
+        if (!saved) {
+          return { ok: false, error: "No authenticated customer session was found." };
+        }
+
+        setSession(saved);
+        return { ok: true, session: saved };
+      },
+      applyPlanPreset(planKey) {
+        const planPreset = resolvePlanPreset(planKey);
+        const saved = updateCustomerSession({
+          selectedPlan: planPreset.key,
+          enabledProducts: planPreset.enabledProducts,
+          enabledComms: planPreset.enabledComms,
         });
 
         if (!saved) {
