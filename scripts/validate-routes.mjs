@@ -59,6 +59,11 @@ function normalizeHref(href) {
   return href.endsWith("/") && href !== "/" ? href.slice(0, -1) : href;
 }
 
+function stripQueryAndHash(href) {
+  if (!href) return href;
+  return href.split("#")[0].split("?")[0];
+}
+
 function isTrackedHref(href) {
   return href.startsWith("/") || href.startsWith("mailto:") || href.startsWith("http://") || href.startsWith("https://");
 }
@@ -106,7 +111,8 @@ for (const exportedValue of Object.values(websiteShellModule)) {
 }
 
 const invalid = [...hrefs].filter((href) => {
-  if (explicitRoutes.has(href)) return false;
+  const baseHref = stripQueryAndHash(href);
+  if (explicitRoutes.has(baseHref)) return false;
   return !allowedStaticPrefixes.some((prefix) => href.startsWith(prefix));
 });
 

@@ -63,7 +63,12 @@ const checks = [
     file: path.join(root, "src", "pages", "website", "Login.jsx"),
     markers: [
       'import CustomerSessionBar from "../../components/CustomerSessionBar";',
+      'import DeploymentStatusBeacon from "../../components/DeploymentStatusBeacon";',
       'import { PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";',
+      "readLoginQueryState",
+      'const seeded = params.get("seeded") === "1" || params.get("account") === "test";',
+      'const autologin = seeded && params.get("autologin") === "1";',
+      "autologinAttemptedRef",
       "authenticateWorkspaceAccount",
       "Customer product provisioning",
       "Use Plan Defaults",
@@ -73,6 +78,8 @@ const checks = [
       "Held back until enabled",
       "Launch real customer product after login",
       "Use Seeded Test Account",
+      "Open Seeded Login URL",
+      "Instant Platform Access",
       "navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));",
     ],
   },
@@ -91,6 +98,15 @@ const checks = [
       "This customer route is not enabled for the current session",
       "Enabled product layers",
       "Return to profile",
+    ],
+  },
+  {
+    file: path.join(root, "src", "websiteShell.js"),
+    markers: [
+      'label: "Open Live Test Login"',
+      'href: "/login?seeded=1"',
+      'label: "Instant Test Workspace"',
+      'href: "/login?seeded=1&autologin=1&next=/portal/platform"',
     ],
   },
 ];
@@ -114,4 +130,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Live customer login validation passed across session state, router guard, seeded auth continuity, profile controls, and authenticated launch surfaces.");
+console.log("Live customer login validation passed across session state, router guard, seeded auth continuity, query-driven test entry, profile controls, and authenticated launch surfaces.");

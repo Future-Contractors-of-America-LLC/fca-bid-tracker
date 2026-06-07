@@ -52,9 +52,15 @@ function normalizeHref(href) {
   return href.endsWith("/") && href !== "/" ? href.slice(0, -1) : href;
 }
 
+function stripQueryAndHash(href) {
+  if (!href) return href;
+  return href.split("#")[0].split("?")[0];
+}
+
 function isSupportedHref(href) {
   const normalized = normalizeHref(href);
-  if (routeSet.has(normalized)) return true;
+  const baseHref = stripQueryAndHash(normalized);
+  if (routeSet.has(baseHref)) return true;
   return allowedStaticPrefixes.some((prefix) => normalized.startsWith(prefix));
 }
 
