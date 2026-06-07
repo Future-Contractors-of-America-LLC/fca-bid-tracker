@@ -5,9 +5,11 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
+import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import { auricruxActions, portalMessages, portalMetrics, portalProjects, routeStateOverlays } from "../../systemState";
 import { portalEntryCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useCustomerSession from "../../hooks/useCustomerSession";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -43,6 +45,7 @@ const portalEntryContinuityItems = [
 
 export default function PortalHome() {
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const { session } = useCustomerSession();
 
   useEffect(() => {
     refreshSyncStamp("Persisted portal overview state active");
@@ -58,6 +61,8 @@ export default function PortalHome() {
       primaryHref="/portal/projects"
       primaryLabel="Open Project Flow"
     >
+      <ProductAccessStatusPanel session={session} />
+
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>
