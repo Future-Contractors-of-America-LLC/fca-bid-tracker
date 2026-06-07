@@ -5,6 +5,7 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import BillingActionCenter from "../../components/BillingActionCenter";
+import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { portalNarrativeCtaSets } from "../../websiteShell";
@@ -97,6 +98,8 @@ export default function PortalBilling() {
           refreshSyncStamp={refreshSyncStamp}
         />
       </div>
+
+      <CommercialContinuityFeed title="Billing and commercial continuity feed" detail="Recent plan promotions, workspace activations, product/comms repairs, and revenue-shaping mutations remain visible here so billing can operate as part of one durable commercial system." />
 
       <div style={{ marginBottom: 24 }}>
         <PublicOperationsStrip

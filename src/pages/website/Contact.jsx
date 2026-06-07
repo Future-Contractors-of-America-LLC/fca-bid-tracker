@@ -11,6 +11,7 @@ import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import ContactActionCenter from "../../components/ContactActionCenter";
+import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
@@ -94,6 +95,8 @@ export default function Contact() {
       <div style={{ marginBottom: 24 }}>
         <ContactActionCenter session={session} login={login} />
       </div>
+
+      <CommercialContinuityFeed title="Walkthrough and conversion memory" detail="Recent walkthrough activations, plan shifts, billing/comms continuity changes, and revenue-shaping mutations remain visible here so contact stays tied to real commercial movement instead of generic outreach." />
 
       <ProductProofSection
         eyebrow="Contact product proof"

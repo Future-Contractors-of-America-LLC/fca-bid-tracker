@@ -11,6 +11,7 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
 import PricingActionCenter from "../../components/PricingActionCenter";
+import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
@@ -114,6 +115,8 @@ export default function Pricing() {
       <div style={{ marginBottom: 24 }}>
         <PricingActionCenter session={session} login={login} />
       </div>
+
+      <CommercialContinuityFeed title="Pricing and rollout memory" detail="Recent pricing activations, plan promotions, and revenue-shaping workspace changes stay visible here so commercial continuity is durable across pricing, contact, login, and portal routes." />
 
       <ProductProofSection
         eyebrow="Pricing product proof"
