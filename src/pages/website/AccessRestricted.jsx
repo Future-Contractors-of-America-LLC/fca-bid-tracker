@@ -1,6 +1,7 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicActionRail from "../../components/PublicActionRail";
+import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { resolveCustomerProduct } from "../../customerSession";
 import { pageShellStyle, cardStyle } from "../../publicShellStyles";
@@ -12,11 +13,14 @@ const productLabels = {
   public: "Public access",
 };
 
+const commsLabels = ["chat", "sms", "phone", "email", "teams", "conference", "lecture"];
+
 export default function AccessRestricted({ requestedPath = "/portal/platform" }) {
   const { session } = useCustomerSession();
   const product = resolveCustomerProduct(requestedPath);
   const productLabel = productLabels[product] || "Requested product";
   const products = session?.enabledProducts || { saas: true, lms: true, auricrux: true };
+  const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
 
   return (
     <div style={pageShellStyle}>
@@ -49,9 +53,20 @@ export default function AccessRestricted({ requestedPath = "/portal/platform" })
         </div>
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Enabled communications lanes</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+          {commsLabels.map((channel) => (
+            <AccessCell key={channel} label={channel.toUpperCase()} enabled={enabledComms[channel]} href={`/portal/messages#${channel}`} />
+          ))}
+        </div>
+      </div>
+
+      <CustomerCommsLaunchpad session={session} title="Launch enabled communications lanes" />
+
       <PublicActionRail
         title="Continue inside the live customer shell"
-        detail="Use the profile and platform surfaces to confirm enabled product layers across SaaS workspace, Academy/LMS, and Auricrux guidance."
+        detail="Use the profile, platform, and communications surfaces to confirm enabled product layers across SaaS workspace, Academy/LMS, Auricrux guidance, and the comms control plane."
       />
 
       <ShellFooter />

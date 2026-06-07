@@ -22,6 +22,13 @@ const buttonStyle = {
   cursor: "pointer",
 };
 
+function summarizeComms(enabledComms = {}) {
+  return Object.entries(enabledComms)
+    .filter(([, enabled]) => enabled !== false)
+    .map(([key]) => key)
+    .join(", ") || "None enabled";
+}
+
 export default function CustomerSessionBar({
   requestedPath,
   mode = "portal",
@@ -32,7 +39,7 @@ export default function CustomerSessionBar({
 
   const resolvedPath = requestedPath || session.nextHref || "/portal/platform";
   const detail = mode === "login"
-    ? `Customer access is live. Auricrux is preserving continuity from login into ${resolvedPath} for ${session.company}, with SaaS workspace, Academy/LMS, and Auricrux guidance controlled inside the same customer shell.`
+    ? `Customer access is live. Auricrux is preserving continuity from login into ${resolvedPath} for ${session.company}, with SaaS workspace, Academy/LMS, Auricrux guidance, and communications routing controlled inside the same customer shell.`
     : `Customer access is live for ${session.company}. Auricrux is preserving ${workspaceContext.currentNextAction.toLowerCase()} and ${auricruxRail.currentBlocker.toLowerCase()} inside the active workspace.`;
 
   function handleLogout() {
@@ -58,6 +65,12 @@ export default function CustomerSessionBar({
       href: "/portal/auricrux",
       enabled: session.enabledProducts?.auricrux !== false,
       style: { ...buttonStyle, background: "#7c3aed" },
+    },
+    {
+      label: "Open Comms Workspace",
+      href: "/portal/messages",
+      enabled: true,
+      style: { ...buttonStyle, background: "#0f766e" },
     },
   ];
 
@@ -98,6 +111,7 @@ export default function CustomerSessionBar({
         <SessionCell label="SaaS access" value={session.enabledProducts?.saas ? "Enabled" : "Pending"} />
         <SessionCell label="LMS access" value={session.enabledProducts?.lms ? "Enabled" : "Pending"} />
         <SessionCell label="Auricrux access" value={session.enabledProducts?.auricrux ? "Enabled" : "Pending"} />
+        <SessionCell label="Comms channels" value={summarizeComms(session.enabledComms)} />
         <SessionCell label="Auricrux continuity" value={`${currentProject.id} · ${auricruxRail.nextRecommendedAction}`} />
       </div>
     </div>

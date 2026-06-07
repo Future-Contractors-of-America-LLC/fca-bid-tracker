@@ -10,9 +10,10 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import CustomerSessionBar from "../../components/CustomerSessionBar";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
+import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
-import useCustomerSession, { resolveRoleDefaultProducts } from "../../hooks/useCustomerSession";
+import useCustomerSession, { resolveRoleDefaultProducts, resolveRoleDefaultComms } from "../../hooks/useCustomerSession";
 import { founderJourneyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
@@ -66,13 +67,13 @@ const loginContinuityItems = [
   },
   {
     label: "Post-login path",
-    value: "Portal, platform, and academy remain visible",
+    value: "Portal, platform, academy, and comms remain visible",
     detail: "The route now keeps downstream workspace destinations obvious before entry rather than hiding the next move behind a generic form feel.",
   },
   {
     label: "Conversion posture",
     value: "Operational walkthrough remains active",
-    detail: "This route still supports workspace entry while keeping live dashboard review and rollout guidance accessible.",
+    detail: "This route still supports workspace entry while keeping live dashboard review, comms routing, and rollout guidance accessible.",
   },
 ];
 
@@ -94,6 +95,16 @@ const productAccessOptions = [
   },
 ];
 
+const commsOptions = [
+  { key: "chat", title: "Chat", detail: "Text-first coordination across customer, project, and operator lanes." },
+  { key: "sms", title: "SMS", detail: "Short-form field escalation and fast customer recovery." },
+  { key: "phone", title: "Phone", detail: "Urgent live coordination and issue resolution." },
+  { key: "email", title: "Email", detail: "Commercial, billing, and document continuity." },
+  { key: "teams", title: "Teams", detail: "Structured collaboration across internal and external operations." },
+  { key: "conference", title: "Conference", detail: "Executive and project multi-party review sessions." },
+  { key: "lecture", title: "Lecture", detail: "Academy-led instruction and rollout delivery." },
+];
+
 export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
   const [form, setForm] = useState({
@@ -101,6 +112,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     company: session?.company || "Future Contractors of America Pilot Workspace",
     role: session?.role || "Owner / Admin",
     enabledProducts: session?.enabledProducts || resolveRoleDefaultProducts(session?.role || "Owner / Admin"),
+    enabledComms: session?.enabledComms || resolveRoleDefaultComms(session?.role || "Owner / Admin"),
   });
   const [provisioningMode, setProvisioningMode] = useState(session?.enabledProducts ? "custom" : "role-defaults");
   const [error, setError] = useState("");
@@ -113,6 +125,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       company: session.company || "Future Contractors of America Pilot Workspace",
       role: session.role || "Owner / Admin",
       enabledProducts: session.enabledProducts || resolveRoleDefaultProducts(session.role || "Owner / Admin"),
+      enabledComms: session.enabledComms || resolveRoleDefaultComms(session.role || "Owner / Admin"),
     });
     setProvisioningMode("custom");
   }, [session]);
@@ -123,13 +136,14 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     : "/portal/platform";
   const liveEntryDetail = accessMode === "protected"
     ? `Customer login is now required to enter ${requestedPath}. Auricrux is preserving continuity so the user lands inside the requested live workspace surface after authentication.`
-    : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace, reviewing the platform dashboard, and continuing into live construction operations.";
+    : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace, reviewing the platform dashboard, continuing into live construction operations, and routing through the right communications lanes.";
 
   function handleRoleChange(role) {
     setForm((prev) => ({
       ...prev,
       role,
       enabledProducts: provisioningMode === "role-defaults" ? resolveRoleDefaultProducts(role) : prev.enabledProducts,
+      enabledComms: provisioningMode === "role-defaults" ? resolveRoleDefaultComms(role) : prev.enabledComms,
     }));
   }
 
@@ -139,6 +153,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       setForm((prev) => ({
         ...prev,
         enabledProducts: resolveRoleDefaultProducts(prev.role),
+        enabledComms: resolveRoleDefaultComms(prev.role),
       }));
     }
   }
@@ -154,6 +169,17 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     }));
   }
 
+  function handleCommsToggle(channelKey) {
+    setProvisioningMode("custom");
+    setForm((prev) => ({
+      ...prev,
+      enabledComms: {
+        ...prev.enabledComms,
+        [channelKey]: !prev.enabledComms[channelKey],
+      },
+    }));
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     const result = login({
@@ -162,6 +188,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       role: form.role,
       nextHref,
       enabledProducts: form.enabledProducts,
+      enabledComms: form.enabledComms,
     });
 
     if (!result.ok) {
@@ -179,7 +206,9 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   }
 
   const enabledProductCount = Object.values(form.enabledProducts).filter(Boolean).length;
+  const enabledCommsCount = Object.values(form.enabledComms).filter(Boolean).length;
   const roleDefaultProducts = resolveRoleDefaultProducts(form.role);
+  const roleDefaultComms = resolveRoleDefaultComms(form.role);
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
@@ -187,7 +216,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         <ShellHeader
           eyebrow="Auricrux Guided Entry"
           title="Access FCA Workspace"
-          subtitle="This workspace entry routes customers into the unified FCA shell for estimating visibility, project delivery, document control, billing follow-through, academy continuity, and guided next steps."
+          subtitle="This workspace entry routes customers into the unified FCA shell for estimating visibility, project delivery, document control, billing follow-through, academy continuity, communications routing, and guided next steps."
           primaryHref={shellHeaderCtaSets.workspace.primaryHref}
           primaryLabel={shellHeaderCtaSets.workspace.primaryLabel}
           secondaryHref={shellHeaderCtaSets.workspace.secondaryHref}
@@ -198,6 +227,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
         <CustomerSessionBar requestedPath={nextHref} mode="login" />
         <CustomerProductLaunchpad session={session} title="Launch real customer product after login" />
+        <CustomerCommsLaunchpad session={session} title="Launch real customer communications lanes" />
 
         <div style={{ ...heroCardStyle, marginBottom: 20 }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
@@ -219,7 +249,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         <FounderJourneyStrip
           currentJourney="workspace"
           title="Workspace login is part of one connected customer journey"
-          detail="Login is not a dead-end form. It is the bridge from public entry into portal continuity, academy readiness, estimating control, and rollout planning."
+          detail="Login is not a dead-end form. It is the bridge from public entry into portal continuity, academy readiness, estimating control, communications routing, and rollout planning."
           ctaHref={founderJourneyCtaSets.workspace.href}
           ctaLabel={founderJourneyCtaSets.workspace.label}
         />
@@ -234,8 +264,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             items={loginContinuityItems}
             primaryHref={isAuthenticated ? nextHref : "/login"}
             primaryLabel={isAuthenticated ? "Open Active Workspace" : "Open Login Portal"}
-            secondaryHref="/portal/platform"
-            secondaryLabel="Open Platform Dashboard"
+            secondaryHref="/portal/messages"
+            secondaryLabel="Open Comms Workspace"
           />
         </div>
 
@@ -327,8 +357,39 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
               })}
             </div>
 
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Communications provisioning</div>
+            <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
+              Bind real communications lanes to the customer session so portal, academy, auricrux guidance, and support surfaces stay honest about which channels are active.
+            </div>
             <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
-              This live customer session preserves Auricrux continuity and routes directly into {nextHref}. {enabledProductCount} product surface{enabledProductCount === 1 ? " is" : "s are"} currently enabled for first entry.
+              {provisioningMode === "role-defaults"
+                ? `Role defaults are active for ${form.role}: ${Object.entries(roleDefaultComms).filter(([, enabled]) => enabled).map(([key]) => key).join(", ")}.`
+                : "Custom communications provisioning is active. Toggle the exact channels this customer should receive on first login."}
+            </div>
+            <div style={productAccessGridStyle}>
+              {commsOptions.map((channel) => {
+                const enabled = form.enabledComms[channel.key];
+                return (
+                  <label key={channel.key} style={{ ...productOptionStyle, background: enabled ? "#ecfeff" : "#f8fafc", cursor: "pointer" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
+                      <div style={{ fontWeight: 700, color: "#111827" }}>{channel.title}</div>
+                      <input
+                        type="checkbox"
+                        checked={enabled}
+                        onChange={() => handleCommsToggle(channel.key)}
+                      />
+                    </div>
+                    <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{channel.detail}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#0f766e" : "#64748b" }}>
+                      {enabled ? "Enabled for first login" : "Held back until enabled"}
+                    </div>
+                  </label>
+                );
+              })}
+            </div>
+
+            <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
+              This live customer session preserves Auricrux continuity and routes directly into {nextHref}. {enabledProductCount} product surface{enabledProductCount === 1 ? " is" : "s are"} currently enabled for first entry and {enabledCommsCount} communications lane{enabledCommsCount === 1 ? " is" : "s are"} available in the comms workspace.
             </div>
 
             {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 700 }}>{error}</div> : null}
@@ -366,6 +427,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
                   ["Auricrux", "Guided next actions, blocker visibility, and continuity across all routes"],
                   ["Document Control", "Permit sets, RFIs, submittals, and onboarding docs"],
                   ["Revenue Flow", "Invoice readiness, retainage, and commercial follow-through"],
+                  ["Comms Control", "Chat, SMS, phone, email, Teams, conference, and lecture routing"],
                 ].map(([title, detail]) => (
                   <div key={title} style={moduleStyle}>
                     <div style={{ fontWeight: 700, marginBottom: 6 }}>{title}</div>
@@ -379,7 +441,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
         <PublicActionRail
           title="Continue into the FCA workspace"
-          detail="Login closes with the same shared action rail as the other public routes so workspace entry, platform state, academy continuity, and walkthrough options remain consistently visible."
+          detail="Login closes with the same shared action rail as the other public routes so workspace entry, platform state, academy continuity, communications routing, and walkthrough options remain consistently visible."
         />
 
         <ShellFooter />

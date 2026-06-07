@@ -32,6 +32,14 @@ export default function CustomerProductLaunchpad({ session, title = "Open live p
       enabled: products.auricrux,
       detail: "Launch the live Auricrux guidance surface for blockers, next actions, continuity guidance, and operating-state narration.",
     },
+    {
+      key: "comms",
+      label: "Auricrux comms",
+      href: "/portal/messages",
+      cta: "Open Comms Workspace",
+      enabled: true,
+      detail: "Launch the real communications workspace for chat, SMS, phone, email, Teams, conference, and lecture routing across FCA.",
+    },
   ];
 
   return (
@@ -48,7 +56,7 @@ export default function CustomerProductLaunchpad({ session, title = "Open live p
       <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Authenticated product launchpad</div>
       <h2 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h2>
       <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 14 }}>
-        {session.workspaceLabel} can open real product surfaces directly from this authenticated customer session across SaaS workspace, Academy / LMS, and Auricrux.
+        {session.workspaceLabel} can open real product surfaces directly from this authenticated customer session across SaaS workspace, Academy / LMS, Auricrux, and comms coordination.
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>

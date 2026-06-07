@@ -14,6 +14,18 @@ function normalizeProductSelection(enabledProducts = {}) {
   };
 }
 
+function normalizeCommsSelection(enabledComms = {}) {
+  return {
+    chat: enabledComms.chat !== false,
+    sms: enabledComms.sms !== false,
+    phone: enabledComms.phone !== false,
+    email: enabledComms.email !== false,
+    teams: enabledComms.teams !== false,
+    conference: enabledComms.conference !== false,
+    lecture: enabledComms.lecture !== false,
+  };
+}
+
 export function resolveRoleDefaultProducts(role = "Owner / Admin") {
   const normalizedRole = (role || "").trim();
 
@@ -34,6 +46,26 @@ export function resolveRoleDefaultProducts(role = "Owner / Admin") {
   }
 }
 
+export function resolveRoleDefaultComms(role = "Owner / Admin") {
+  const normalizedRole = (role || "").trim();
+
+  switch (normalizedRole) {
+    case "Estimator":
+      return { chat: true, sms: false, phone: false, email: true, teams: false, conference: false, lecture: false };
+    case "Project Coordinator":
+      return { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: false };
+    case "Superintendent":
+      return { chat: true, sms: true, phone: true, email: true, teams: false, conference: true, lecture: false };
+    case "Accounting":
+      return { chat: true, sms: false, phone: false, email: true, teams: true, conference: false, lecture: false };
+    case "Field Operations":
+      return { chat: true, sms: true, phone: true, email: false, teams: false, conference: false, lecture: true };
+    case "Owner / Admin":
+    default:
+      return { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
+  }
+}
+
 export default function useCustomerSession() {
   const [session, setSession] = useState(null);
 
@@ -51,11 +83,13 @@ export default function useCustomerSession() {
         role = "Owner / Admin",
         nextHref = "/portal/platform",
         enabledProducts = resolveRoleDefaultProducts(role),
+        enabledComms = resolveRoleDefaultComms(role),
       }) {
         const normalizedEmail = (email || "").trim().toLowerCase();
         const normalizedCompany = (company || "").trim();
         const normalizedRole = (role || "").trim() || "Owner / Admin";
         const normalizedProducts = normalizeProductSelection(enabledProducts);
+        const normalizedComms = normalizeCommsSelection(enabledComms);
 
         if (!normalizedEmail || !normalizedCompany) {
           return { ok: false, error: "Email and company are required." };
@@ -79,6 +113,7 @@ export default function useCustomerSession() {
           nextHref,
           lastLoginAt: new Date().toISOString(),
           enabledProducts: normalizedProducts,
+          enabledComms: normalizedComms,
         });
 
         setSession(saved);
@@ -101,6 +136,24 @@ export default function useCustomerSession() {
         const saved = updateCustomerSession({
           enabledProducts: {
             [product]: enabled,
+          },
+        });
+
+        if (!saved) {
+          return { ok: false, error: "No authenticated customer session was found." };
+        }
+
+        setSession(saved);
+        return { ok: true, session: saved };
+      },
+      setCommsAccess(channel, enabled) {
+        if (!["chat", "sms", "phone", "email", "teams", "conference", "lecture"].includes(channel)) {
+          return { ok: false, error: "Unknown communications access target." };
+        }
+
+        const saved = updateCustomerSession({
+          enabledComms: {
+            [channel]: enabled,
           },
         });
 

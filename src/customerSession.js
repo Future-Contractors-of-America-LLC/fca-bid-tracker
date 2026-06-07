@@ -8,6 +8,18 @@ function normalizeEnabledProducts(enabledProducts) {
   };
 }
 
+function normalizeEnabledComms(enabledComms) {
+  return {
+    chat: enabledComms?.chat !== false,
+    sms: enabledComms?.sms !== false,
+    phone: enabledComms?.phone !== false,
+    email: enabledComms?.email !== false,
+    teams: enabledComms?.teams !== false,
+    conference: enabledComms?.conference !== false,
+    lecture: enabledComms?.lecture !== false,
+  };
+}
+
 export function readCustomerSession() {
   if (typeof window === "undefined") return null;
 
@@ -22,6 +34,7 @@ export function readCustomerSession() {
       role: parsed.role || "Owner / Admin",
       customerId: parsed.customerId || "CUST-FCA-LIVE-001",
       enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
+      enabledComms: normalizeEnabledComms(parsed.enabledComms),
     };
   } catch {
     return null;
@@ -41,6 +54,7 @@ export function writeCustomerSession(session) {
     lastLoginAt: session.lastLoginAt || new Date().toISOString(),
     nextHref: session.nextHref || "/portal/platform",
     enabledProducts: normalizeEnabledProducts(session.enabledProducts),
+    enabledComms: normalizeEnabledComms(session.enabledComms),
   };
 
   try {
@@ -62,6 +76,10 @@ export function updateCustomerSession(updates = {}) {
     enabledProducts: normalizeEnabledProducts({
       ...currentSession.enabledProducts,
       ...updates.enabledProducts,
+    }),
+    enabledComms: normalizeEnabledComms({
+      ...currentSession.enabledComms,
+      ...updates.enabledComms,
     }),
   });
 }

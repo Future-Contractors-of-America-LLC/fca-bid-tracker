@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
+import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { auricruxCommsChannels, portalMessages, routeStateOverlays } from "../../systemState";
 import { portalNarrativeCtaSets } from "../../websiteShell";
 import { portalMessagesMessaging } from "../../systemContinuity";
@@ -23,12 +25,46 @@ const highlightCardStyle = {
   border: "1px solid #e5d3a1",
 };
 
+const channelMap = {
+  chat: ["Chat"],
+  sms: ["SMS"],
+  phone: ["Phone"],
+  email: ["Email"],
+  teams: ["Teams"],
+  conference: ["Conference"],
+  lecture: ["Lecture"],
+};
+
 export default function PortalMessages() {
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const { session } = useCustomerSession();
+  const [activeChannel, setActiveChannel] = useState(() => readActiveChannel());
 
   useEffect(() => {
     refreshSyncStamp("Persisted message continuity state active");
   }, [refreshSyncStamp]);
+
+  useEffect(() => {
+    function syncChannel() {
+      setActiveChannel(readActiveChannel());
+    }
+
+    window.addEventListener("hashchange", syncChannel);
+    return () => window.removeEventListener("hashchange", syncChannel);
+  }, []);
+
+  const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
+  const filteredMessages = useMemo(() => {
+    if (!activeChannel || !channelMap[activeChannel]) return portalMessages;
+    return portalMessages.filter((message) => channelMap[activeChannel].includes(message.channel));
+  }, [activeChannel]);
+
+  const commItems = auricruxCommsChannels.map((item) => ({
+    ...item,
+    value: `${item.value}${enabledComms[item.label.toLowerCase()] === false ? " · Pending for this customer" : " · Enabled for this customer"}`,
+    href: `/portal/messages#${item.label.toLowerCase()}`,
+    ctaLabel: `Open ${item.label}`,
+  }));
 
   return (
     <PortalShell
@@ -47,17 +83,19 @@ export default function PortalMessages() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Message route is anchored to the shared operating state"
-          detail="Communication continuity now reads from the same tenant, project, next action, and blocker data that powers bids, files, billing, and academy routes."
+          detail="Communication continuity now reads from the same tenant, project, next action, blocker data, and customer channel access that power bids, files, billing, and academy routes."
         />
       </div>
+
+      <CustomerCommsLaunchpad session={session} title="Launch customer-enabled communications lanes" />
 
       <div style={{ marginBottom: 24 }}>
         <AuricruxCommsPanel
           title="Auricrux comms now spans every external and internal follow-through lane"
           detail="Chat, SMS, phone, email, Teams, conference, and lecture are now framed as one coordinated FCA and Auricrux communications system instead of disconnected handoff points."
           statusLabel="Comms command status"
-          statusValue="Unified coordination active"
-          items={auricruxCommsChannels}
+          statusValue={activeChannel ? `${activeChannel.toUpperCase()} lane active` : "Unified coordination active"}
+          items={commItems}
         />
       </div>
 
@@ -68,6 +106,7 @@ export default function PortalMessages() {
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+          <div><strong>Channel focus:</strong> {activeChannel ? activeChannel.toUpperCase() : "All channels"}</div>
         </div>
       </div>
 
@@ -95,7 +134,12 @@ export default function PortalMessages() {
 
       <div style={cardStyle}>
         <h2 style={{ marginTop: 0 }}>Coordination stream</h2>
-        {portalMessages.map((message) => (
+        <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 16 }}>
+          {activeChannel
+            ? `Showing only ${activeChannel.toUpperCase()}-aligned coordination so customer channel access stays honest to the active session.`
+            : "Showing all live coordination lanes across chat, SMS, phone, email, Teams, conference, and lecture continuity."}
+        </div>
+        {filteredMessages.length ? filteredMessages.map((message) => (
           <div key={`${message.from}-${message.subject}`} style={{ padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
               <div style={{ fontWeight: 700 }}>{message.from}</div>
@@ -109,11 +153,16 @@ export default function PortalMessages() {
             </div>
             <div style={{ color: "#6b7280", fontSize: 14, marginTop: 6 }}>{message.time}</div>
           </div>
-        ))}
+        )) : <div style={{ color: "#475569", lineHeight: 1.7 }}>No messages are currently mapped to this lane. Use the customer profile to enable additional communications channels for this workspace.</div>}
         <div style={{ marginTop: 16 }}>
           <PublicCtaRow actions={portalNarrativeCtaSets.messageStream} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
         </div>
       </div>
     </PortalShell>
   );
+}
+
+function readActiveChannel() {
+  if (typeof window === "undefined") return "";
+  return (window.location.hash || "").replace("#", "").toLowerCase();
 }
