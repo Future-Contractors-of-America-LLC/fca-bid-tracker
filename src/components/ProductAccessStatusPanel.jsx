@@ -1,3 +1,5 @@
+import { resolvePlanPreset } from "../pricingPlans";
+
 function summarizeEnabledComms(enabledComms = {}) {
   return Object.entries(enabledComms)
     .filter(([, enabled]) => enabled !== false)
@@ -10,6 +12,8 @@ export default function ProductAccessStatusPanel({ session, stateMeta }) {
   const stateProducts = stateMeta?.enabledProducts;
   const sessionComms = session?.enabledComms;
   const stateComms = stateMeta?.enabledComms;
+  const selectedPlanKey = session?.selectedPlan || stateMeta?.selectedPlan || "startup";
+  const selectedPlan = resolvePlanPreset(selectedPlanKey);
 
   if (!session?.authenticated && !stateProducts) return null;
 
@@ -30,6 +34,11 @@ export default function ProductAccessStatusPanel({ session, stateMeta }) {
   };
 
   const cards = [
+    {
+      label: "Selected plan",
+      status: `${selectedPlan.name} · ${selectedPlan.price}`,
+      detail: `Billing model: ${selectedPlan.billingModel}. This plan now acts as the commercial access baseline for the authenticated customer workspace.`,
+    },
     {
       label: "SaaS workspace",
       status: products.saas ? "Enabled" : "Pending",
@@ -65,7 +74,7 @@ export default function ProductAccessStatusPanel({ session, stateMeta }) {
     >
       <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live customer product access</div>
       <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 14 }}>
-        {(session?.workspaceLabel || stateMeta?.customerWorkspaceLabel || "Authenticated workspace")} is authenticated as {(session?.role || stateMeta?.customerRole || "Owner / Admin")}. This customer session has live product continuity across SaaS workspace, Academy/LMS, Auricrux guidance, and routed communications lanes.
+        {(session?.workspaceLabel || stateMeta?.customerWorkspaceLabel || "Authenticated workspace")} is authenticated as {(session?.role || stateMeta?.customerRole || "Owner / Admin")}. This customer session has live product continuity across SaaS workspace, Academy/LMS, Auricrux guidance, routed communications lanes, and a plan-aware commercial baseline.
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
@@ -74,7 +83,7 @@ export default function ProductAccessStatusPanel({ session, stateMeta }) {
             <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>
               {card.label}
             </div>
-            <div style={{ fontSize: card.label === "Auricrux comms" ? 16 : 22, fontWeight: 700, marginBottom: 8, color: "#111827", textTransform: card.label === "Auricrux comms" ? "none" : "initial" }}>{card.status}</div>
+            <div style={{ fontSize: ["Auricrux comms", "Selected plan"].includes(card.label) ? 16 : 22, fontWeight: 700, marginBottom: 8, color: "#111827", textTransform: card.label === "Auricrux comms" ? "none" : "initial" }}>{card.status}</div>
             <div style={{ color: "#475569", lineHeight: 1.6 }}>{card.detail}</div>
           </div>
         ))}

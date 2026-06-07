@@ -6,6 +6,7 @@ import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { routeStateOverlays } from "../../systemState";
+import { pricingPlanOptions } from "../../pricingPlans";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -31,6 +32,17 @@ const toggleButtonStyle = {
   color: "#0f172a",
 };
 
+const planButtonStyle = (active) => ({
+  border: active ? "1px solid #1d4ed8" : "1px solid #cbd5e1",
+  borderRadius: 12,
+  padding: 14,
+  background: active ? "#eff6ff" : "#fff",
+  color: "#0f172a",
+  cursor: "pointer",
+  textAlign: "left",
+  font: "inherit",
+});
+
 const commsCards = [
   { key: "chat", title: "Chat", description: "Text-first coordination across customer, project, and operator lanes.", href: "/portal/messages#chat", ctaLabel: "Open Chat Lane" },
   { key: "sms", title: "SMS", description: "Short-form field escalation and rapid customer recovery.", href: "/portal/messages#sms", ctaLabel: "Open SMS Lane" },
@@ -42,7 +54,7 @@ const commsCards = [
 ];
 
 export default function PortalProfile() {
-  const { session, isAuthenticated, setProductAccess, setCommsAccess } = useCustomerSession();
+  const { session, isAuthenticated, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
 
   useEffect(() => {
@@ -57,6 +69,7 @@ export default function PortalProfile() {
   const enabledProducts = session?.enabledProducts || { saas: true, lms: true, auricrux: true };
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
   const customerId = session?.customerId || "CUST-FCA-LIVE-001";
+  const selectedPlan = session?.selectedPlan || "startup";
 
   function toggleProduct(productKey, enabled) {
     setProductAccess(productKey, !enabled);
@@ -64,6 +77,10 @@ export default function PortalProfile() {
 
   function toggleComms(channelKey, enabled) {
     setCommsAccess(channelKey, !enabled);
+  }
+
+  function handlePlanPreset(planKey) {
+    applyPlanPreset(planKey);
   }
 
   const productCards = [
@@ -96,7 +113,7 @@ export default function PortalProfile() {
   return (
     <PortalShell
       title="Customer Identity and Workspace Profile"
-      subtitle="Live customer identity surface showing workspace ownership, construction-role continuity, Auricrux-guided next actions, and communications access inside the active FCA shell."
+      subtitle="Live customer identity surface showing workspace ownership, construction-role continuity, Auricrux-guided next actions, plan activation, and communications access inside the active FCA shell."
       activeHref="/portal/profile"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}
@@ -110,7 +127,7 @@ export default function PortalProfile() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Customer profile now reads from the live authenticated workspace"
-          detail="This profile route binds session identity, tenant continuity, project state, Auricrux guidance, and communications access into one customer-facing operating surface."
+          detail="This profile route binds session identity, tenant continuity, project state, Auricrux guidance, plan activation, and communications access into one customer-facing operating surface."
         />
       </div>
 
@@ -136,6 +153,7 @@ export default function PortalProfile() {
             <div><strong>Customer ID:</strong> {customerId}</div>
             <div><strong>Customer email:</strong> {sessionEmail}</div>
             <div><strong>Workspace role:</strong> {workspaceRole}</div>
+            <div><strong>Selected plan:</strong> {selectedPlan}</div>
             <div><strong>Session status:</strong> {isAuthenticated ? "Authenticated" : "Shell continuity mode"}</div>
             <div><strong>Last login:</strong> {sessionLogin}</div>
           </div>
@@ -153,6 +171,22 @@ export default function PortalProfile() {
       </div>
 
       <div style={{ marginTop: 16 }}>
+        <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Plan-aware customer activation</div>
+          <div style={{ color: "#475569", lineHeight: 1.8, marginBottom: 14 }}>
+            Apply a plan preset here to enforce commercial-to-product continuity. Plan selection now changes the authenticated customer's default products and communication lanes instead of remaining a website-only promise.
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+            {pricingPlanOptions.map((plan) => (
+              <button key={plan.key} type="button" onClick={() => handlePlanPreset(plan.key)} style={planButtonStyle(selectedPlan === plan.key)}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>{plan.name}</div>
+                <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 6 }}>{plan.price}</div>
+                <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700 }}>{plan.billingModel}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live customer product controls</div>
           <div style={{ color: "#475569", lineHeight: 1.8 }}>
@@ -229,7 +263,7 @@ export default function PortalProfile() {
         <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0 }}>
           The profile icon now has a real destination inside the product. Instead of routing customers into a dead-end account stub,
           this surface confirms who is signed in, what workspace they control, what project spine is active, what role they hold in the construction workflow,
-          what product layers they can access, what communications lanes are enabled, and what Auricrux says should happen next.
+          what product layers they can access, what communications lanes are enabled, what plan they are on, and what Auricrux says should happen next.
         </p>
       </div>
     </PortalShell>
