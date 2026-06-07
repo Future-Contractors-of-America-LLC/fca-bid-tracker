@@ -10,7 +10,7 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
-import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels } from "../../systemState";
 import { cardStyle, pageShellStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
@@ -26,7 +26,7 @@ const contactContinuityItems = [
   {
     label: "Walkthrough scope",
     value: "Public page to live product flow",
-    detail: "The contact route now makes the handoff into platform, portal, and academy explicit before the conversation starts.",
+    detail: "The contact route now makes the handoff into platform, portal, academy, and comms explicit before the conversation starts.",
   },
   {
     label: "Customer confidence",
@@ -35,8 +35,8 @@ const contactContinuityItems = [
   },
   {
     label: "Next action",
-    value: "Pilot, rollout, or founder review",
-    detail: "The route closes toward a concrete production step instead of ending with a generic contact form posture.",
+    value: "Pilot, growth, or enterprise review",
+    detail: "The route closes toward a concrete pricing and rollout step instead of ending with a generic contact form posture.",
   },
 ];
 
@@ -49,7 +49,7 @@ const contactProductProof = [
   },
   {
     title: "Open the operating workspace",
-    detail: "Use the portal route to prove projects, files, messages, bids, billing, support, and admin are already part of one shell.",
+    detail: "Use the portal route to prove projects, files, messages, bids, billing, support, admin, and comms are already part of one shell.",
     href: "/portal",
     label: "Open Portal Workspace",
   },
@@ -60,7 +60,7 @@ const contactProductProof = [
     label: "Open Bid Entry",
   },
   {
-    title: "Keep training in the same story",
+    title: "Keep training and channels in the same story",
     detail: "Open academy continuity before the conversation ends so rollout feels complete instead of fragmented.",
     href: "/academy",
     label: "Open Academy",
@@ -140,11 +140,11 @@ export default function Contact() {
             },
             {
               title: "Focus on your team's fit",
-              detail: "Use the conversation to match your team size, estimating flow, field coordination, rollout needs, and communication preferences to the right next step.",
+              detail: "Use the conversation to match your team size, estimating flow, field coordination, rollout needs, communication preferences, and price tier to the right next step.",
             },
             {
               title: "Leave with a practical plan",
-              detail: "End with a clear pilot, rollout, communications path, or follow-up action instead of an open-ended discussion.",
+              detail: "End with a clear Pilot Workspace, Growth Platform, or Enterprise Rollout path instead of an open-ended discussion.",
             },
           ]}
         />
@@ -152,12 +152,31 @@ export default function Contact() {
 
       <CommercialReadinessPanel
         title="Your walkthrough begins from real operating context"
-        detail="Contact is framed as a customer-ready conversion surface that inherits the same approval, revenue, rollout readiness, and communications state shown across Auricrux, platform, portal, and academy routes."
+        detail="Contact is framed as a customer-ready conversion surface that inherits the same approval, revenue, rollout readiness, product packaging, and communications state shown across Auricrux, platform, portal, and academy routes."
         primaryHref={publicActionCatalog.walkthrough.href}
         primaryLabel={publicActionCatalog.walkthrough.label}
         secondaryHref={publicActionCatalog.platform.href}
         secondaryLabel={publicActionCatalog.platform.label}
       />
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Current customer pricing paths</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
+          {pricingTiers.map((tier) => (
+            <div key={tier.name} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff" }}>
+              <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>{tier.name}</div>
+              <div style={{ fontSize: 26, fontWeight: 700, marginBottom: 8 }}>{tier.price}</div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>{tier.detail}</div>
+              <div style={{ color: "#111827", lineHeight: 1.7, fontSize: 14 }}>
+                <strong>Products:</strong> {tier.products.join(" · ")}
+              </div>
+              <div style={{ color: "#111827", lineHeight: 1.7, fontSize: 14 }}>
+                <strong>Comms:</strong> {tier.comms.join(" · ")}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={{ display: "grid", gap: 16 }}>
@@ -173,10 +192,10 @@ export default function Contact() {
             <ol style={checklistStyle}>
               <li>Review the FCA platform story from the public site.</li>
               <li>Show persisted workspace continuity before entry.</li>
-              <li>Open the platform dashboard to summarize tenant, project, support, academy, admin, and comms state.</li>
+              <li>Open the platform dashboard to summarize tenant, project, support, academy, admin, comms, and revenue state.</li>
               <li>Transition into portal, academy, bid, and communications routes based on your team's fit.</li>
-              <li>Review approvals, document-control posture, billing follow-through, field-readiness gaps, and communication cadence.</li>
-              <li>Close on pilot scope, rollout path, channel plan, and the next production action.</li>
+              <li>Review approvals, document-control posture, billing follow-through, field-readiness gaps, communication cadence, and plan pricing.</li>
+              <li>Close on pilot scope, rollout path, channel plan, pricing path, and the next production action.</li>
             </ol>
           </div>
         </div>
@@ -197,7 +216,7 @@ export default function Contact() {
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>{publicContactMessaging.immediate.title}</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-          {publicContactMessaging.immediate.detail} The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options and shared next actions already presented above.
+          {publicContactMessaging.immediate.detail} The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options, current pricing paths, and shared next actions already presented above.
         </p>
       </div>
 
