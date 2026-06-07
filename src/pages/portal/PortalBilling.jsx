@@ -4,6 +4,7 @@ import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
+import BillingActionCenter from "../../components/BillingActionCenter";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { portalNarrativeCtaSets } from "../../websiteShell";
@@ -53,7 +54,7 @@ const billingContinuityItems = [
 
 export default function PortalBilling() {
   const { state, refreshSyncStamp } = useWorkspaceState();
-  const { session } = useCustomerSession();
+  const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
 
   useEffect(() => {
     refreshSyncStamp("Persisted billing continuity state active");
@@ -64,7 +65,7 @@ export default function PortalBilling() {
   return (
     <PortalShell
       title="Billing and Account Continuity"
-      subtitle="Billing surface tied to the same tenant, project, message, Auricrux, and plan-activation state as the rest of the FCA workspace, with construction revenue controls kept visible."
+      subtitle="Billing surface tied to the same tenant, project, message, Auricrux, and plan-activation state as the rest of the FCA workspace, with construction revenue controls and one-click billing actions kept visible."
       activeHref="/portal/billing"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.billing}
@@ -84,6 +85,17 @@ export default function PortalBilling() {
 
       <div style={{ marginBottom: 24 }}>
         <CustomerPlanSummaryPanel session={session} title="Billing-aligned customer plan summary" />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <BillingActionCenter
+          session={session}
+          state={state}
+          applyPlanPreset={applyPlanPreset}
+          setProductAccess={setProductAccess}
+          setCommsAccess={setCommsAccess}
+          refreshSyncStamp={refreshSyncStamp}
+        />
       </div>
 
       <div style={{ marginBottom: 24 }}>
