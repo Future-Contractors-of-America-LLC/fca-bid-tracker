@@ -25,7 +25,10 @@ const allowedStaticPrefixes = [
 
 function normalizePath(value) {
   if (!value || typeof value !== "string") return value;
-  return value.endsWith("/") && value !== "/" ? value.slice(0, -1) : value;
+  const withoutQueryOrHash = value.split("#")[0].split("?")[0];
+  return withoutQueryOrHash.endsWith("/") && withoutQueryOrHash !== "/"
+    ? withoutQueryOrHash.slice(0, -1)
+    : withoutQueryOrHash;
 }
 
 function isSupportedTarget(target) {
@@ -33,7 +36,7 @@ function isSupportedTarget(target) {
   const normalized = normalizePath(target);
   if (routeSet.has(normalized)) return true;
   if (allowedStaticPrefixes.some((prefix) => normalized.startsWith(prefix))) return true;
-  return allowedExternalPrefixes.some((prefix) => normalized.startsWith(prefix));
+  return allowedExternalPrefixes.some((prefix) => target.startsWith(prefix));
 }
 
 function validatePair(target, label, location, failures) {
@@ -63,17 +66,30 @@ function walk(value, location, failures) {
     return;
   }
 
-  validatePair(value.href, value.label, `${location}.href`, failures);
-  validatePair(value.cta, value.label, `${location}.cta`, failures);
-  validatePair(value.primaryHref, value.primaryLabel, `${location}.primaryHref`, failures);
-  validatePair(value.secondaryHref, value.secondaryLabel, `${location}.secondaryHref`, failures);
+  const visibleLabel = value.label ?? value.ctaLabel;
+
+  if (Object.prototype.hasOwnProperty.call(value, "href") || Object.prototype.hasOwnProperty.call(value, "label") || Object.prototype.hasOwnProperty.call(value, "ctaLabel")) {
+    validatePair(value.href, visibleLabel, `${location}.href`, failures);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(value, "cta") || Object.prototype.hasOwnProperty.call(value, "ctaLabel")) {
+    validatePair(value.cta, visibleLabel, `${location}.cta`, failures);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(value, "primaryHref") || Object.prototype.hasOwnProperty.call(value, "primaryLabel")) {
+    validatePair(value.primaryHref, value.primaryLabel, `${location}.primaryHref`, failures);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(value, "secondaryHref") || Object.prototype.hasOwnProperty.call(value, "secondaryLabel")) {
+    validatePair(value.secondaryHref, value.secondaryLabel, `${location}.secondaryHref`, failures);
+  }
 
   if (("variant" in value) && !["primary", "secondary", "light"].includes(value.variant)) {
     failures.push(`${location}.variant uses an unsupported CTA variant: ${value.variant}`);
   }
 
   Object.entries(value).forEach(([key, nestedValue]) => {
-    if (["href", "label", "cta", "primaryHref", "primaryLabel", "secondaryHref", "secondaryLabel", "variant"].includes(key)) {
+    if (["href", "label", "cta", "ctaLabel", "primaryHref", "primaryLabel", "secondaryHref", "secondaryLabel", "variant"].includes(key)) {
       return;
     }
     walk(nestedValue, `${location}.${key}`, failures);
