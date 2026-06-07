@@ -21,8 +21,8 @@ import {
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
-  "Read persisted tenant, project, and workspace state rather than treating pages as disconnected views.",
-  "Surface the current recommended action and blocker so customers and teams can see what should happen next.",
+  "Read persisted tenant, project, bid, and workspace state rather than treating pages as disconnected views.",
+  "Surface the current recommended action and blocker so customers and teams can see what should happen next across approvals, permits, billing, and mobilization.",
   "Maintain continuity as users move between platform dashboard, portal routes, academy, support, and admin.",
   "Keep the experience feeling active, guided, and operational rather than static or brochure-like.",
 ];
@@ -69,7 +69,7 @@ export default function AuricruxPage() {
           <AuricruxBrandMark />
         </div>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          This page frames Auricrux as the active guidance layer that keeps tenant, project, route, and next-step context visible as users move through the FCA experience.
+          This page frames Auricrux as the active guidance layer that keeps tenant, project, route, and next-step context visible as users move through estimating, approvals, document control, billing follow-through, and workforce readiness.
         </p>
         <PublicCtaRow actions={publicBodyCtaSets.auricruxHero} />
       </div>
@@ -102,12 +102,12 @@ export default function AuricruxPage() {
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel
           eyebrow="What Auricrux improves"
-          title="Guidance that helps teams stay aligned"
-          detail="Auricrux helps teams understand what needs attention next without forcing customers to piece the workflow together on their own."
+          title="Guidance that helps contractor teams stay aligned"
+          detail="Auricrux helps teams understand what needs attention next without forcing owners, estimators, project coordinators, or field leads to piece the workflow together on their own."
           items={[
             {
               title: "Clarify next steps",
-              detail: "Make approvals, follow-ups, and rollout actions easier to see across the workspace.",
+              detail: "Make approvals, RFIs, submittals, follow-ups, and rollout actions easier to see across the workspace.",
             },
             {
               title: "Preserve continuity",
@@ -193,7 +193,7 @@ export default function AuricruxPage() {
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Why this matters</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-          Auricrux makes FCA feel active rather than static. Instead of showing disconnected pages, FCA can demonstrate a guidance layer that gives context, next actions, and continuity as customers move between sales, execution, training, support, admin, and production planning.
+          Auricrux makes FCA feel active rather than static. Instead of showing disconnected pages, FCA can demonstrate a guidance layer that gives context, next actions, and continuity as customers move between preconstruction, project execution, training, support, admin, and production planning.
         </p>
       </div>
 
