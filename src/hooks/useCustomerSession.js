@@ -5,6 +5,7 @@ import {
   updateCustomerSession,
   writeCustomerSession,
 } from "../customerSession";
+import { appendAutomationLog, clearAutomationLog } from "../sessionAutomationLog";
 import { resolvePlanPreset } from "../pricingPlans";
 
 function normalizeProductSelection(enabledProducts = {}) {
@@ -25,6 +26,10 @@ function normalizeCommsSelection(enabledComms = {}) {
     conference: enabledComms.conference !== false,
     lecture: enabledComms.lecture !== false,
   };
+}
+
+function logAutomationEvent(type, title, detail, route = "/portal/platform") {
+  appendAutomationLog({ type, title, detail, route });
 }
 
 export function resolveRoleDefaultProducts(role = "Owner / Admin") {
@@ -121,6 +126,7 @@ export default function useCustomerSession() {
         });
 
         setSession(saved);
+        logAutomationEvent("login-activation", `Workspace activated for ${normalizedCompany}`, `Auricrux activated ${planPreset.name} with ${Object.values(normalizedProducts).filter(Boolean).length} product layers and ${Object.values(normalizedComms).filter(Boolean).length} communications lanes.`, nextHref);
         return { ok: true, session: saved };
       },
       updateSession(updates = {}) {
@@ -130,6 +136,7 @@ export default function useCustomerSession() {
         }
 
         setSession(saved);
+        logAutomationEvent("session-update", `Workspace profile updated for ${saved.company}`, "Auricrux recorded a direct customer-session update and preserved it for cross-route continuity.", saved.nextHref || "/portal/platform");
         return { ok: true, session: saved };
       },
       setProductAccess(product, enabled) {
@@ -148,6 +155,7 @@ export default function useCustomerSession() {
         }
 
         setSession(saved);
+        logAutomationEvent("product-repair", `${product.toUpperCase()} access ${enabled ? "enabled" : "disabled"}`, `Auricrux ${enabled ? "enabled" : "disabled"} ${product.toUpperCase()} access and propagated the change across the workspace shell.`, saved.nextHref || "/portal/platform");
         return { ok: true, session: saved };
       },
       setCommsAccess(channel, enabled) {
@@ -166,6 +174,7 @@ export default function useCustomerSession() {
         }
 
         setSession(saved);
+        logAutomationEvent("comms-repair", `${channel.toUpperCase()} lane ${enabled ? "enabled" : "disabled"}`, `Auricrux ${enabled ? "enabled" : "disabled"} ${channel.toUpperCase()} for the current customer session and preserved the result for cross-route automation memory.`, saved.nextHref || "/portal/messages");
         return { ok: true, session: saved };
       },
       applyPlanPreset(planKey) {
@@ -181,10 +190,12 @@ export default function useCustomerSession() {
         }
 
         setSession(saved);
+        logAutomationEvent("plan-promotion", `${planPreset.name} activated`, `Auricrux applied ${planPreset.name} and aligned product access plus communications lanes to the commercial package.`, saved.nextHref || "/portal/platform");
         return { ok: true, session: saved };
       },
       logout() {
         clearCustomerSession();
+        clearAutomationLog();
         setSession(null);
       },
     }),
