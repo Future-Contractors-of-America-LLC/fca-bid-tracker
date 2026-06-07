@@ -11,6 +11,7 @@ import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import CustomerSessionBar from "../../components/CustomerSessionBar";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
+import DeploymentStatusBeacon from "../../components/DeploymentStatusBeacon";
 import LoginActionCenter from "../../components/LoginActionCenter";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
@@ -322,6 +323,10 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             {liveEntryDetail}
           </p>
           <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} />
+        </div>
+
+        <div style={{ marginBottom: 24 }}>
+          <DeploymentStatusBeacon />
         </div>
 
         <FounderJourneyStrip
