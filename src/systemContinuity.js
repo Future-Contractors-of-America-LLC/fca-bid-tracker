@@ -130,16 +130,16 @@ export const portalMessagesMessaging = {
   header: {
     title: "Messages and communication continuity",
     subtitle:
-      "This route keeps customer communication tied to execution state inside the shared FCA workspace.",
+      "This route keeps owner updates, permit coordination, field-readiness notices, and billing-adjacent communication tied to execution state inside the shared FCA workspace.",
   },
   continuity: {
-    title: "Auricrux is keeping communication tied to execution state",
+    title: "Auricrux is keeping coordination tied to approvals, permits, and mobilization state",
     recommendation:
-      "Clear approval in /portal/bids, then advance /portal/billing so communication never becomes a dead end.",
+      "Clear approval in /portal/bids, release document dependencies from /portal/files, then advance /portal/billing so communication never becomes a dead end.",
   },
   expansion: {
-    title: "Comms development is now treated as system follow-through",
+    title: "Comms development is now treated as construction follow-through",
     detail:
-      "The messages route participates in the same five-track build expansion as automation, SaaS continuity, public website conversion, academy readiness, and commercial progression.",
+      "The messages route participates in the same operating buildout as bid approval, document control, billing progression, academy readiness, and customer-facing execution visibility.",
   },
 };

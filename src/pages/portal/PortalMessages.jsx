@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import SystemStateSummary from "../../components/SystemStateSummary";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { portalMessages } from "../../portalShell";
+import { portalMessages, routeStateOverlays } from "../../systemState";
 import { portalNarrativeCtaSets } from "../../websiteShell";
 import { portalMessagesMessaging } from "../../systemContinuity";
-import { routeStateOverlays } from "../../workspaceState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -39,6 +39,17 @@ export default function PortalMessages() {
       primaryHref="/portal/billing"
       primaryLabel="Open Billing"
     >
+      <div style={{ marginBottom: 16 }}>
+        <SystemStateSummary
+          tenant={state.tenant}
+          project={state.project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
+          title="Message route is anchored to the shared operating state"
+          detail="Communication continuity now reads from the same tenant, project, next action, and blocker data that powers bids, files, billing, and academy routes."
+        />
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted message state</div>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
@@ -72,16 +83,25 @@ export default function PortalMessages() {
       </div>
 
       <div style={cardStyle}>
-        <h2 style={{ marginTop: 0 }}>Message stream</h2>
+        <h2 style={{ marginTop: 0 }}>Coordination stream</h2>
         {portalMessages.map((message) => (
-          <div key={message.subject} style={{ padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
-            <div style={{ fontWeight: 700 }}>{message.from}</div>
-            <div style={{ color: "#111827", marginTop: 4 }}>{message.subject}</div>
+          <div key={`${message.from}-${message.subject}`} style={{ padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+              <div style={{ fontWeight: 700 }}>{message.from}</div>
+              <div style={{ fontSize: 12, color: "#1d4ed8", fontWeight: 700 }}>{message.priority}</div>
+            </div>
+            <div style={{ color: "#111827", marginTop: 4, fontWeight: 700 }}>{message.subject}</div>
             <div style={{ color: "#4b5563", marginTop: 4 }}>{message.preview}</div>
-            <div style={{ color: "#6b7280", fontSize: 14, marginTop: 4 }}>{message.time}</div>
+            <div style={{ color: "#0f172a", lineHeight: 1.6, marginTop: 8 }}>
+              <div><strong>Channel:</strong> {message.channel}</div>
+              <div><strong>Next action:</strong> {message.nextAction}</div>
+            </div>
+            <div style={{ color: "#6b7280", fontSize: 14, marginTop: 6 }}>{message.time}</div>
           </div>
         ))}
-        <PublicCtaRow actions={portalNarrativeCtaSets.messageStream} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
+        <div style={{ marginTop: 16 }}>
+          <PublicCtaRow actions={portalNarrativeCtaSets.messageStream} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
+        </div>
       </div>
     </PortalShell>
   );
