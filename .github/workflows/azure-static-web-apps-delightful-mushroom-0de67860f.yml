@@ -18,8 +18,8 @@ jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    name: Build and Deploy Job
+    timeout-minutes: 25
+    name: Build, Deploy, and Smoke Verify Job
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -66,6 +66,9 @@ jobs:
           app_location: dist
           api_location: api
           output_location: ''
+
+      - name: Post-deploy live domain smoke verification
+        run: npm run verify:live-deployment
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

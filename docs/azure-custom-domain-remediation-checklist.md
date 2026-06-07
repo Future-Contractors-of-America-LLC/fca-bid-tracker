@@ -4,15 +4,25 @@
 
 Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, a raw API continuity audit page, a plain-text runtime fingerprint artifact, and the lifecycle revenue routes `/warranty` and `/referrals`, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
 
-## Why the runtime fingerprint and cross-artifact audit were added
+## New repository-side deployment hardening
 
-The FCA operating model requires artifacts for completed execution, not just claims. The master matrix makes artifact production mandatory, requires every action to map to analyze, decide, generate, execute, validate, record, and optimize, and states that no step is complete without output. The runtime fingerprint and cross-artifact audits give minimal raw witnesses that can be checked even if HTML rendering or SPA behavior is misleading.
+The SWA workflow now performs a **post-deploy live-domain smoke verification** against both apex and `www`. That smoke step checks:
+- `/deployment-status.json`
+- `/domain-continuity.json`
+- `/runtime-fingerprint.txt`
+- `/live-shell-verification.html`
+- `/host-binding-audit.html`
+- `/api-continuity-audit.html`
 
-## New repository-side continuity finding
+It also fails if:
+- either host still serves `pending-build`
+- `deployment-status.json` and `runtime-fingerprint.txt` disagree on `gitSha`
+- an expected witness route returns a non-200 response
+- a host is not declared in the continuity witness set
 
-Public lifecycle governance is now explicitly validated across four surfaces together: router registration, site metadata, sitemap coverage, and shell navigation. This was added because `/warranty` and `/referrals` had been implemented but could still drift behind validation and crawl posture if left unchecked.
+This means the GitHub workflow itself should now expose custom-domain drift immediately after deploy instead of silently succeeding while the live shell remains stale.
 
-## Required Azure checks
+## Required Azure checks if smoke still fails
 
 ### 1) Confirm the intended Static Web App resource
 1. Open **Static Web Apps**
