@@ -7,6 +7,11 @@ const checks = [
     file: path.join(root, ".github", "workflows", "azure-static-web-apps-delightful-mushroom-0de67860f.yml"),
     markers: [
       "Azure/static-web-apps-deploy@v1",
+      "AURICRUX_SWA_NAME: fca-frontend",
+      "AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net",
+      "AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net",
+      "Assert SWA deployment target configuration",
+      "test -n \"$AZURE_STATIC_WEB_APPS_API_TOKEN\"",
       "skip_app_build: true",
       "skip_api_build: false",
       "app_location: dist",
@@ -17,7 +22,10 @@ const checks = [
       "test -f dist/live-shell-verification.html",
       "test -f dist/host-binding-audit.html",
       "test -f dist/api-continuity-audit.html",
+      "Archive governed deployment payload",
+      "workspace/governed_swa_payload.tgz",
       "npm run verify:live-deployment",
+      "AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}",
       "actions/upload-artifact@v4",
       "workspace/live_deployment_smoke_summary.json",
       "workspace/live_deployment_smoke_failures.txt",
@@ -36,6 +44,9 @@ const checks = [
   {
     file: path.join(root, "scripts", "verify-live-deployment.mjs"),
     markers: [
+      'process.env.AURICRUX_LIVE_VERIFY_HOSTS',
+      'process.env.AURICRUX_SWA_DEFAULT_HOST',
+      'process.env.AURICRUX_SWA_NAME',
       '"futurecontractorsofamerica.com"',
       '"www.futurecontractorsofamerica.com"',
       '"/deployment-status.json"',
@@ -63,4 +74,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Static Web App deployment validation passed for post-deploy live smoke retries, artifact preservation, governed witness pack continuity, and API deployment wiring.");
+console.log("Static Web App deployment validation passed for target preflight, governed payload archiving, default-host continuity checks, post-deploy live smoke retries, artifact preservation, governed witness pack continuity, and API deployment wiring.");

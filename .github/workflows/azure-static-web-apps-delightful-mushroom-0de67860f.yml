@@ -10,6 +10,11 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  AURICRUX_SWA_NAME: fca-frontend
+  AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
+  AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
+
 concurrency:
   group: swa-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -26,6 +31,15 @@ jobs:
         with:
           submodules: true
           lfs: false
+
+      - name: Assert SWA deployment target configuration
+        env:
+          AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F }}
+        run: |
+          test -n "$AZURE_STATIC_WEB_APPS_API_TOKEN"
+          echo "Target Static Web App: $AURICRUX_SWA_NAME"
+          echo "Target default host: $AURICRUX_SWA_DEFAULT_HOST"
+          echo "Expected continuity hosts: $AURICRUX_EXPECTED_HOSTS"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -54,6 +68,11 @@ jobs:
           test -f api/customer-login.js
           test -f api/auricrux.js
 
+      - name: Archive governed deployment payload
+        run: |
+          mkdir -p workspace
+          tar -czf workspace/governed_swa_payload.tgz dist api staticwebapp.config.json package.json package-lock.json
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -72,6 +91,9 @@ jobs:
         env:
           AURICRUX_LIVE_VERIFY_ATTEMPTS: '4'
           AURICRUX_LIVE_VERIFY_DELAY_MS: '15000'
+          AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}
+          AURICRUX_SWA_DEFAULT_HOST: ${{ env.AURICRUX_SWA_DEFAULT_HOST }}
+          AURICRUX_SWA_NAME: ${{ env.AURICRUX_SWA_NAME }}
 
       - name: Upload live deployment smoke artifacts
         if: always()
@@ -79,6 +101,7 @@ jobs:
         with:
           name: live-deployment-smoke
           path: |
+            workspace/governed_swa_payload.tgz
             workspace/live_deployment_smoke_summary.json
             workspace/live_deployment_smoke_failures.txt
           if-no-files-found: warn

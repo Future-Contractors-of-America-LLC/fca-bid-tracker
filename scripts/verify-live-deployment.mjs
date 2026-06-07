@@ -1,10 +1,17 @@
 import fs from "fs/promises";
 import path from "path";
 
-const hosts = [
+const configuredHosts = (process.env.AURICRUX_LIVE_VERIFY_HOSTS || "")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+const hosts = [...new Set([
+  ...configuredHosts,
   "futurecontractorsofamerica.com",
   "www.futurecontractorsofamerica.com",
-];
+  process.env.AURICRUX_SWA_DEFAULT_HOST || "",
+].filter(Boolean))];
 
 const routes = [
   "/deployment-status.json",
@@ -22,6 +29,8 @@ const delayMs = Number(process.env.AURICRUX_LIVE_VERIFY_DELAY_MS || 15000);
 const workspaceDir = path.join(process.cwd(), "workspace");
 const summaryPath = path.join(workspaceDir, "live_deployment_smoke_summary.json");
 const failuresPath = path.join(workspaceDir, "live_deployment_smoke_failures.txt");
+const targetSwaName = process.env.AURICRUX_SWA_NAME || "fca-frontend";
+const targetDefaultHost = process.env.AURICRUX_SWA_DEFAULT_HOST || "unconfigured";
 
 function parseFingerprint(text) {
   return text.trim().split("\n").reduce((acc, line) => {
@@ -90,7 +99,7 @@ function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintR
     }
   }
 
-  if (continuity?.expectedHosts && !continuity.expectedHosts.includes(host)) {
+  if (continuity?.expectedHosts && !continuity.expectedHosts.includes(host) && host !== targetDefaultHost) {
     failures.push(`https://${host}/domain-continuity.json does not list ${host} as an expected host`);
   }
 
@@ -131,7 +140,12 @@ async function runAttempt(attemptNumber) {
     }
 
     const hostResult = evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, routeChecks);
-    summary.push({ attempt: attemptNumber, ...hostResult });
+    summary.push({
+      attempt: attemptNumber,
+      targetSwaName,
+      targetDefaultHost,
+      ...hostResult,
+    });
     failures.push(...hostResult.failures);
   }
 
