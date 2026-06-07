@@ -47,6 +47,10 @@ const checks = [
       'process.env.AURICRUX_LIVE_VERIFY_HOSTS',
       'process.env.AURICRUX_SWA_DEFAULT_HOST',
       'process.env.AURICRUX_SWA_NAME',
+      'process.env.GITHUB_SHA',
+      'targetCommitWitnessRoute',
+      'commit-witness-',
+      'deployment.commitWitnessRoute',
       '"futurecontractorsofamerica.com"',
       '"www.futurecontractorsofamerica.com"',
       '"/deployment-status.json"',
@@ -56,6 +60,13 @@ const checks = [
       'workspace',
       'live_deployment_smoke_summary.json',
       'live_deployment_smoke_failures.txt'
+    ]
+  },
+  {
+    file: path.join(root, "staticwebapp.config.json"),
+    markers: [
+      '"route": "/commit-witness-*.txt"',
+      '"/*.txt"'
     ]
   }
 ];
@@ -74,4 +85,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Static Web App deployment validation passed for target preflight, governed payload archiving, default-host continuity checks, post-deploy live smoke retries, artifact preservation, governed witness pack continuity, and API deployment wiring.");
+console.log("Static Web App deployment validation passed for exact commit witness verification, target preflight, governed payload archiving, default-host continuity checks, post-deploy live smoke retries, artifact preservation, governed witness pack continuity, and API deployment wiring.");

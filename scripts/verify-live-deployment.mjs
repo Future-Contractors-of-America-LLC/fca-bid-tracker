@@ -31,6 +31,8 @@ const summaryPath = path.join(workspaceDir, "live_deployment_smoke_summary.json"
 const failuresPath = path.join(workspaceDir, "live_deployment_smoke_failures.txt");
 const targetSwaName = process.env.AURICRUX_SWA_NAME || "fca-frontend";
 const targetDefaultHost = process.env.AURICRUX_SWA_DEFAULT_HOST || "unconfigured";
+const targetGitSha = process.env.GITHUB_SHA || "unconfigured";
+const targetCommitWitnessRoute = `/commit-witness-${targetGitSha}.txt`;
 
 function parseFingerprint(text) {
   return text.trim().split("\n").reduce((acc, line) => {
@@ -51,7 +53,7 @@ async function fetchText(url) {
   return { ok: response.ok, status: response.status, text };
 }
 
-function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, routeChecks) {
+function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, commitWitnessResponse, routeChecks) {
   const failures = [];
   let deployment = null;
   let continuity = null;
@@ -65,6 +67,9 @@ function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintR
   }
   if (!fingerprintResponse.ok) {
     failures.push(`https://${host}/runtime-fingerprint.txt returned ${fingerprintResponse.status}`);
+  }
+  if (!commitWitnessResponse.ok) {
+    failures.push(`https://${host}${targetCommitWitnessRoute} returned ${commitWitnessResponse.status}`);
   }
 
   if (deploymentResponse.ok) {
@@ -97,6 +102,19 @@ function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintR
     if (deployment.gitSha !== fingerprint.gitSha) {
       failures.push(`${host} has mixed witness SHA drift: deployment-status=${deployment.gitSha} runtime-fingerprint=${fingerprint.gitSha}`);
     }
+    if (deployment.gitSha !== targetGitSha) {
+      failures.push(`${host} is serving stale deployment-status SHA ${deployment.gitSha}; expected ${targetGitSha}`);
+    }
+    if (fingerprint.gitSha !== targetGitSha) {
+      failures.push(`${host} is serving stale runtime-fingerprint SHA ${fingerprint.gitSha}; expected ${targetGitSha}`);
+    }
+    if (deployment.commitWitnessRoute !== targetCommitWitnessRoute) {
+      failures.push(`${host} deployment manifest reports commit witness ${deployment.commitWitnessRoute}; expected ${targetCommitWitnessRoute}`);
+    }
+  }
+
+  if (commitWitnessResponse.ok && !commitWitnessResponse.text.includes(`gitSha=${targetGitSha}`)) {
+    failures.push(`${host} commit witness payload does not include expected SHA ${targetGitSha}`);
   }
 
   if (continuity?.expectedHosts && !continuity.expectedHosts.includes(host)) {
@@ -125,6 +143,7 @@ function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintR
     host,
     deploymentGitSha: deployment?.gitSha || "unavailable",
     runtimeGitSha: fingerprint?.gitSha || "unavailable",
+    commitWitnessRoute: deployment?.commitWitnessRoute || targetCommitWitnessRoute,
     expectedHosts: continuity?.expectedHosts || [],
     routeChecks,
     failures,
@@ -139,23 +158,26 @@ async function runAttempt(attemptNumber) {
     const deploymentUrl = `https://${host}/deployment-status.json`;
     const continuityUrl = `https://${host}/domain-continuity.json`;
     const fingerprintUrl = `https://${host}/runtime-fingerprint.txt`;
+    const commitWitnessUrl = `https://${host}${targetCommitWitnessRoute}`;
 
     const deploymentResponse = await fetchText(deploymentUrl);
     const continuityResponse = await fetchText(continuityUrl);
     const fingerprintResponse = await fetchText(fingerprintUrl);
+    const commitWitnessResponse = await fetchText(commitWitnessUrl);
 
     const routeChecks = [];
-    for (const route of routes) {
+    for (const route of [...routes, targetCommitWitnessRoute]) {
       const url = `https://${host}${route}`;
       const response = await fetchText(url);
       routeChecks.push({ route, status: response.status, ok: response.ok });
     }
 
-    const hostResult = evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, routeChecks);
+    const hostResult = evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, commitWitnessResponse, routeChecks);
     summary.push({
       attempt: attemptNumber,
       targetSwaName,
       targetDefaultHost,
+      targetGitSha,
       ...hostResult,
     });
     failures.push(...hostResult.failures);

@@ -1,1 +1,1 @@
-force rebuild 2026-06-07T21:05Z governed redeploy for stale public shell recovery
+force rebuild 2026-06-07T21:14Z exact commit witness verification for stale public shell recovery
