@@ -12,6 +12,8 @@ const explicitRoutes = new Set([
   "/pricing",
   "/contact",
   "/auricrux",
+  "/warranty",
+  "/referrals",
   "/not-found",
   "/bid-entry",
   "/bid-status",
@@ -26,6 +28,7 @@ const explicitRoutes = new Set([
   "/portal/support",
   "/portal/admin",
   "/portal/profile",
+  "/portal/auricrux",
   "/portal/academy",
   "/academy",
 ]);

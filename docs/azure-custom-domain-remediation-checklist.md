@@ -2,11 +2,15 @@
 
 ## Current bounded finding
 
-Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, a raw API continuity audit page, and a plain-text runtime fingerprint artifact, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
+Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, a raw API continuity audit page, a plain-text runtime fingerprint artifact, and the newly added lifecycle revenue routes `/warranty` and `/referrals`, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
 
 ## Why the runtime fingerprint and cross-artifact audit were added
 
-The FCA operating model requires artifacts for completed execution, not just claims. The master matrix makes artifact production mandatory, requires every action to map to analyze, decide, generate, execute, validate, record, and optimize, and states that no step is complete without output. fileciteturn0file8 The runtime fingerprint and cross-artifact audits give minimal raw witnesses that can be checked even if HTML rendering or SPA behavior is misleading.
+The FCA operating model requires artifacts for completed execution, not just claims. The master matrix makes artifact production mandatory, requires every action to map to analyze, decide, generate, execute, validate, record, and optimize, and states that no step is complete without output. The runtime fingerprint and cross-artifact audits give minimal raw witnesses that can be checked even if HTML rendering or SPA behavior is misleading.
+
+## New repository-side continuity finding
+
+Route validation and sitemap parity have now been extended to include the new lifecycle revenue routes `/warranty` and `/referrals`. This removes another repo-side drift source and ensures the public lifecycle expansion is represented in route governance and crawl surfaces.
 
 ## Required Azure checks
 
@@ -38,5 +42,7 @@ Check on both apex and `www`:
 - `/live-shell-verification.html`
 - `/host-binding-audit.html`
 - `/api-continuity-audit.html`
+- `/warranty`
+- `/referrals`
 
 The raw witnesses should agree on governed build identity, expected hosts, and API availability. In particular, `host-binding-audit.html` should report that `deployment-status.json` and `runtime-fingerprint.txt` agree on the same Git SHA.
