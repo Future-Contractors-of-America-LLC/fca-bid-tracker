@@ -6,6 +6,8 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import AutomationStatusCard from "../../components/AutomationStatusCard";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
+import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
+import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import { auricruxActions, portalMessages, portalMetrics, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -37,7 +39,7 @@ export default function PlatformDashboard() {
   return (
     <PortalShell
       title="FCA Platform Dashboard"
-      subtitle="A customer-friendly view of estimating posture, project delivery, document control, billing readiness, training continuity, and guided next steps."
+      subtitle="A customer-friendly view of estimating posture, project delivery, document control, billing readiness, training continuity, guided next steps, and enabled communications lanes."
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
@@ -45,12 +47,13 @@ export default function PlatformDashboard() {
       primaryLabel="Open Projects"
     >
       <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
+      <CustomerCommsLaunchpad session={session} title="Launch customer-enabled communications lanes" />
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live workspace dashboard</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Your platform summary is connected across bids, jobs, files, billing, and training</h2>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Your platform summary is connected across bids, jobs, files, billing, training, and customer communications</h2>
           </div>
           <div style={{ display: "grid", gap: 10 }}>
             <FcaBrandMark compact />
@@ -66,6 +69,18 @@ export default function PlatformDashboard() {
       </div>
 
       <WorkspaceQuickActions actions={platformDashboardCtaSets.quickActions} />
+
+      <div style={{ marginTop: 24 }}>
+        <CommercialReadinessPanel
+          title="Revenue and rollout readiness"
+          detail="This live dashboard now keeps approval, billing, communications access, and rollout readiness connected so revenue-facing claims stay truthful to the authenticated customer workspace."
+          primaryHref="/pricing"
+          primaryLabel="Review Commercial Packaging"
+          secondaryHref="/portal/billing"
+          secondaryLabel="Open Billing"
+          session={session}
+        />
+      </div>
 
       <div style={{ ...cardStyle, marginTop: 24, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>What needs attention now</div>
@@ -84,7 +99,7 @@ export default function PlatformDashboard() {
           </div>
           <div>
             <strong>Best path forward</strong>
-            <div>Move approval through bids, keep document dependencies visible, and carry the same context into billing and onboarding.</div>
+            <div>Move approval through bids, keep document dependencies visible, and carry the same context into billing, onboarding, and customer-facing comms.</div>
           </div>
         </div>
       </div>

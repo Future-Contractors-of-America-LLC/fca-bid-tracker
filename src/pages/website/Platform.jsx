@@ -8,6 +8,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
+import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import {
   executiveSignalCtaSets,
   founderJourneyCtaSets,
@@ -27,13 +28,13 @@ const platformContinuityItems = [
   },
   {
     label: "Customer signal",
-    value: "Portal and academy stay linked",
+    value: "Portal, academy, and comms stay linked",
     detail: "Operational visibility, communication, and training readiness remain part of one platform story.",
   },
   {
     label: "Founder review",
     value: "Conversion path stays visible",
-    detail: "A platform reader can move straight into rollout review, workspace entry, or product validation without route drift.",
+    detail: "A platform reader can move straight into rollout review, workspace entry, commercial packaging, or product validation without route drift.",
   },
 ];
 
@@ -70,7 +71,7 @@ export default function Platform() {
       <ShellHeader
         eyebrow="FCA Platform"
         title="One contractor lifecycle operating system"
-        subtitle="FCA is designed as a unified operating surface for bids, portal visibility, project follow-through, workforce enablement, and guided execution."
+        subtitle="FCA is designed as a unified operating surface for bids, portal visibility, project follow-through, workforce enablement, communications routing, and guided execution."
         primaryHref={publicRouteCtas.platform.primaryHref}
         primaryLabel={publicRouteCtas.platform.primaryLabel}
         secondaryHref={publicRouteCtas.platform.secondaryHref}
@@ -86,14 +87,14 @@ export default function Platform() {
         </div>
         <h2 style={{ marginTop: 0 }}>Built to feel like one connected system</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
-          FCA helps contractor teams move from opportunity to delivery with better visibility into bids, approvals, project files, customer updates, billing steps, and workforce readiness.
+          FCA helps contractor teams move from opportunity to delivery with better visibility into bids, approvals, project files, customer updates, billing steps, workforce readiness, and communications routing.
         </p>
       </div>
 
       <FounderJourneyStrip
         currentJourney="platform"
         title="Platform framing should lead customers into the product experience"
-        detail="This route shows the same connected customer journey used across the public site so platform framing leads naturally into workspace, portal, academy, and rollout planning."
+        detail="This route shows the same connected customer journey used across the public site so platform framing leads naturally into workspace, portal, academy, communications, and rollout planning."
         ctaHref={founderJourneyCtaSets.publicPlatform.href}
         ctaLabel={founderJourneyCtaSets.publicPlatform.label}
       />
@@ -118,9 +119,20 @@ export default function Platform() {
       <ProductProofSection
         eyebrow="Construction product proof"
         title="Platform language now reflects actual construction operations"
-        detail="The product path now speaks more directly to bid handoff, document control, customer coordination, and field readiness instead of generic SaaS movement alone."
+        detail="The product path now speaks more directly to bid handoff, document control, customer coordination, communications routing, and field readiness instead of generic SaaS movement alone."
         highlights={platformConstructionProof}
       />
+
+      <div style={{ marginTop: 24 }}>
+        <CommercialReadinessPanel
+          title="Commercial and rollout readiness"
+          detail="The public platform route now connects commercial packaging, rollout readiness, communications continuity, and live product access so revenue conversations stay attached to real operating surfaces."
+          primaryHref="/pricing"
+          primaryLabel="Review Pricing"
+          secondaryHref="/portal/platform"
+          secondaryLabel="Open Platform Dashboard"
+        />
+      </div>
 
       <div style={{ marginTop: 24 }}>
         <CustomerTrustPanel
@@ -130,15 +142,15 @@ export default function Platform() {
           items={[
             {
               title: "Track work in one place",
-              detail: "Keep opportunities, projects, files, RFIs, submittals, and customer communication connected instead of scattered across separate tools.",
+              detail: "Keep opportunities, projects, files, RFIs, submittals, customer communication, and revenue follow-through connected instead of scattered across separate tools.",
             },
             {
               title: "Stay ahead of blockers",
-              detail: "See approvals, document gaps, billing readiness, and next steps before they turn into delays.",
+              detail: "See approvals, document gaps, billing readiness, communications posture, and next steps before they turn into delays.",
             },
             {
               title: "Support rollout and training",
-              detail: "Tie onboarding, academy access, safety reinforcement, and field readiness into the same operating flow.",
+              detail: "Tie onboarding, academy access, safety reinforcement, lecture delivery, and field readiness into the same operating flow.",
             },
           ]}
         />

@@ -16,6 +16,20 @@ const cellStyle = {
   padding: 12,
 };
 
+function summarizeEnabledComms(enabledComms = {}) {
+  return Object.entries(enabledComms)
+    .filter(([, enabled]) => enabled !== false)
+    .map(([key]) => key)
+    .join(", ") || "None enabled";
+}
+
+function summarizeEnabledProducts(enabledProducts = {}) {
+  return Object.entries(enabledProducts)
+    .filter(([, enabled]) => enabled !== false)
+    .map(([key]) => key.toUpperCase())
+    .join(", ") || "None enabled";
+}
+
 export default function CommercialReadinessPanel({
   title = "Rollout readiness",
   detail = "Auricrux is keeping approval, revenue, and rollout readiness visible so your team can move forward with confidence.",
@@ -23,7 +37,19 @@ export default function CommercialReadinessPanel({
   primaryLabel = "Schedule a Walkthrough",
   secondaryHref = "/portal/platform",
   secondaryLabel = "Open Platform Dashboard",
+  session = null,
 }) {
+  const enabledProducts = session?.enabledProducts || { saas: true, lms: true, auricrux: true };
+  const enabledComms = session?.enabledComms || {
+    chat: true,
+    sms: true,
+    phone: true,
+    email: true,
+    teams: true,
+    conference: true,
+    lecture: true,
+  };
+
   return (
     <div style={panelStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
@@ -35,6 +61,7 @@ export default function CommercialReadinessPanel({
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
           <a href={primaryHref} style={buttonStyle("primary")}>{primaryLabel}</a>
           <a href={secondaryHref} style={buttonStyle("secondary")}>{secondaryLabel}</a>
+          <a href="/portal/messages" style={buttonStyle("secondary")}>Open Comms Workspace</a>
         </div>
       </div>
 
@@ -44,6 +71,9 @@ export default function CommercialReadinessPanel({
         <ReadinessCell label="Revenue impact" value={auricruxRail.blockerImpact} />
         <ReadinessCell label="Rollout move" value={auricruxRail.nextRecommendedAction} />
         <ReadinessCell label="Project spine" value={`${currentProject.id} · ${currentProject.stage}`} />
+        <ReadinessCell label="Enabled products" value={summarizeEnabledProducts(enabledProducts)} />
+        <ReadinessCell label="Enabled comms" value={summarizeEnabledComms(enabledComms)} />
+        <ReadinessCell label="Revenue truth" value="Customer-facing claims stay aligned to live product and communications access." />
       </div>
 
       <AuricruxTrustInsight mode="readiness" primaryHref={primaryHref} primaryLabel={primaryLabel} />
