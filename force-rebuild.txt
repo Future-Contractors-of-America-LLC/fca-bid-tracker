@@ -1,1 +1,1 @@
-force rebuild 2026-06-07 seeded customer auth
+force rebuild 2026-06-07 deployment hardening and public manifest

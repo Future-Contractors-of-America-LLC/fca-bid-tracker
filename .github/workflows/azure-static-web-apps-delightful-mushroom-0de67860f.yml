@@ -43,6 +43,11 @@ jobs:
         run: |
           test -f dist/index.html
           test -f dist/staticwebapp.config.json
+          test -f dist/deployment-status.json
+          test -f api/package.json
+          test -f api/host.json
+          test -f api/customer-login.js
+          test -f api/auricrux.js
 
       - name: Build And Deploy
         id: builddeploy
@@ -52,7 +57,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           skip_app_build: true
+          skip_api_build: false
           app_location: dist
+          api_location: api
           output_location: ''
 
   close_pull_request_job:

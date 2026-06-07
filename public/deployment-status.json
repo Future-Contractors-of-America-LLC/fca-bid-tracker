@@ -1,0 +1,15 @@
+{
+  "service": "fca-bid-tracker",
+  "generatedAt": "pending-build",
+  "source": "repo-default",
+  "gitRef": "main",
+  "gitSha": "pending-build",
+  "runId": "pending-build",
+  "verificationRoutes": [
+    "/deployment-status.json",
+    "/api/auricrux",
+    "/api/customer-login",
+    "/login"
+  ],
+  "deploymentIntent": "static-web-app-plus-functions"
+}
