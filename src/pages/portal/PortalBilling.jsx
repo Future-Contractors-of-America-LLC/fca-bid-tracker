@@ -3,6 +3,7 @@ import PortalShell from "../../components/PortalShell";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { portalNarrativeCtaSets } from "../../websiteShell";
@@ -79,6 +80,10 @@ export default function PortalBilling() {
           title="Billing now reads from the live workspace state"
           detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, blocker, and selected-plan modules as the other portal routes."
         />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <CustomerPlanSummaryPanel session={session} title="Billing-aligned customer plan summary" />
       </div>
 
       <div style={{ marginBottom: 24 }}>
