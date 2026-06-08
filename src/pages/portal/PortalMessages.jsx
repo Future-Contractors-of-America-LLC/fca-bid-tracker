@@ -26,6 +26,12 @@ const highlightCardStyle = {
   border: "1px solid #e5d3a1",
 };
 
+const launchCardStyle = {
+  ...cardStyle,
+  background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
+  border: "1px solid #dbe3ef",
+};
+
 const channelMap = {
   chat: ["Chat"],
   sms: ["SMS"],
@@ -55,6 +61,13 @@ export default function PortalMessages() {
   }, []);
 
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
+  const accountSource = session?.accountSource || "workspace-shell";
+  const launchReadiness = accountSource === "api"
+    ? "Production-backed login active"
+    : accountSource === "local-fallback"
+      ? "Seeded launch/test login active"
+      : "Shell continuity mode";
+
   const filteredMessages = useMemo(() => {
     if (!activeChannel || !channelMap[activeChannel]) return portalMessages;
     return portalMessages.filter((message) => channelMap[activeChannel].includes(message.channel));
@@ -84,7 +97,7 @@ export default function PortalMessages() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Message route is anchored to the shared operating state"
-          detail="Communication continuity now reads from the same tenant, project, next action, blocker data, customer channel access, warranty follow-through, and referral-growth posture that power bids, files, billing, and academy routes."
+          detail="Communication continuity now reads from the same tenant, project, next action, blocker data, customer channel access, launch posture, warranty follow-through, and referral-growth posture that power bids, files, billing, and academy routes."
         />
       </div>
 
@@ -104,11 +117,21 @@ export default function PortalMessages() {
       <div style={{ marginBottom: 24 }}>
         <AuricruxCommsPanel
           title="Auricrux comms now spans every external and internal follow-through lane"
-          detail="Chat, SMS, phone, email, Teams, conference, and lecture are now framed as one coordinated FCA and Auricrux communications system instead of disconnected handoff points, and they now support support recovery, warranty continuity, and referral conversion in the same shell."
+          detail="Chat, SMS, phone, email, Teams, conference, and lecture are now framed as one coordinated FCA and Auricrux communications system instead of disconnected handoff points, and they now support support recovery, warranty continuity, referral conversion, and launch-account truth in the same shell."
           statusLabel="Comms command status"
           statusValue={activeChannel ? `${activeChannel.toUpperCase()} lane active` : "Unified coordination active"}
           items={commItems}
         />
+      </div>
+
+      <div style={{ ...launchCardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Launch account continuity</div>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Account source:</strong> {accountSource}</div>
+          <div><strong>Launch readiness:</strong> {launchReadiness}</div>
+          <div><strong>Comms recovery posture:</strong> {accountSource === "api" ? "Production comms path verified" : "Keep seeded launch accounts visible until production auth is live"}</div>
+          <div><strong>Recommended escalation:</strong> {accountSource === "api" ? "Continue customer follow-through in active lane" : "Route login hardening and customer credential issuance into launch checklist"}</div>
+        </div>
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>

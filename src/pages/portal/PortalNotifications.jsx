@@ -21,6 +21,13 @@ export default function PortalNotifications() {
     refreshSyncStamp("Persisted notifications state active");
   }, [refreshSyncStamp]);
 
+  const accountSource = session?.accountSource || "workspace-shell";
+  const launchReadiness = accountSource === "api"
+    ? "Production-backed login active"
+    : accountSource === "local-fallback"
+      ? "Seeded launch/test login active"
+      : "Shell continuity mode";
+
   const liveNotifications = [
     ...(isAuthenticated
       ? [
@@ -31,6 +38,14 @@ export default function PortalNotifications() {
             detail: `${session.company} is now attached to ${state.project.id} through the shared FCA workspace shell.`,
             routeHint: "Continue through bids, files, messages, and billing without losing customer context.",
             time: "Live",
+          },
+          {
+            type: "launch",
+            badge: launchReadiness,
+            title: "Launch account posture recorded",
+            detail: `Account source is ${accountSource}. Notifications now keep launch-user truth visible alongside customer continuity.`,
+            routeHint: accountSource === "api" ? "Production auth verified for this workspace." : "Keep launch checklist open until production auth and billing are fully live.",
+            time: "Now",
           },
         ]
       : []),
@@ -55,7 +70,7 @@ export default function PortalNotifications() {
   return (
     <PortalShell
       title="Live Notifications and Continuity Alerts"
-      subtitle="Workspace alert surface showing approvals, permit/document dependencies, field-readiness cues, and Auricrux continuity signals in one customer-facing layer."
+      subtitle="Workspace alert surface showing approvals, permit/document dependencies, field-readiness cues, Auricrux continuity signals, and launch-account posture in one customer-facing layer."
       activeHref="/portal/notifications"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.notifications}
@@ -69,7 +84,7 @@ export default function PortalNotifications() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Notifications now read from live workspace continuity"
-          detail="This route unifies customer messages, project audit cues, and Auricrux state so the customer can see what changed and what must happen next."
+          detail="This route unifies customer messages, project audit cues, launch readiness, and Auricrux state so the customer can see what changed and what must happen next."
         />
       </div>
 
@@ -80,6 +95,8 @@ export default function PortalNotifications() {
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+          <div><strong>Account source:</strong> {accountSource}</div>
+          <div><strong>Launch readiness:</strong> {launchReadiness}</div>
         </div>
       </div>
 

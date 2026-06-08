@@ -5,33 +5,37 @@ const root = process.cwd();
 
 const checks = [
   {
-    file: path.join(root, "src", "components", "SystemStateSummary.jsx"),
+    file: path.join(root, "src", "pages", "portal", "PlatformDashboard.jsx"),
     markers: [
-      'import { resolveLiveProjectIdentity, resolveLiveTenantIdentity } from "../liveWorkspaceIdentity";',
-      "const liveTenant = resolveLiveTenantIdentity(tenant);",
-      "const liveProject = resolveLiveProjectIdentity(project);",
-      "liveTenant.authenticatedEmail",
-      "for ${liveTenant.name}",
+      'title="Platform summary now reads from the authenticated workspace"',
+      'detail="This dashboard now binds live customer session state, tenant visibility, project context, Auricrux guidance, and launch posture into one active workspace summary."',
     ],
   },
   {
-    file: path.join(root, "src", "components", "RouteStateOverlay.jsx"),
+    file: path.join(root, "src", "pages", "portal", "PortalProfile.jsx"),
     markers: [
-      'import { resolveLiveTenantIdentity } from "../liveWorkspaceIdentity";',
-      'import { portalTenant } from "../workspaceState";',
-      "const liveTenant = resolveLiveTenantIdentity(portalTenant);",
-      "Authenticated tenant context: {liveTenant.name}",
+      '<strong>Customer email:</strong> {sessionEmail}',
+      '<strong>Account source:</strong> {accountSource}',
+      '<strong>Launch readiness:</strong> {launchReadiness}',
+      'Launch real customer product access',
     ],
   },
   {
-    file: path.join(root, "src", "components", "AuricruxStatusRail.jsx"),
+    file: path.join(root, "src", "pages", "portal", "PortalMessages.jsx"),
     markers: [
-      'import { resolveLiveProjectIdentity, resolveLiveTenantIdentity } from "../liveWorkspaceIdentity";',
-      'import { portalTenant } from "../workspaceState";',
-      "const liveTenant = resolveLiveTenantIdentity(portalTenant);",
-      "const liveProject = resolveLiveProjectIdentity(project);",
-      "Authenticated tenant context: {liveTenant.name}",
-      "project={liveProject}",
+      'Launch account continuity',
+      '<strong>Account source:</strong> {accountSource}',
+      '<strong>Launch readiness:</strong> {launchReadiness}',
+      'Keep seeded launch accounts visible until production auth is live',
+    ],
+  },
+  {
+    file: path.join(root, "src", "pages", "portal", "PortalNotifications.jsx"),
+    markers: [
+      'Launch account posture recorded',
+      '<strong>Account source:</strong> {accountSource}',
+      '<strong>Launch readiness:</strong> {launchReadiness}',
+      'Notifications now keep launch-user truth visible alongside customer continuity.',
     ],
   },
 ];
@@ -41,7 +45,7 @@ for (const check of checks) {
   const source = await fs.readFile(check.file, "utf8");
   for (const marker of check.markers) {
     if (!source.includes(marker)) {
-      failures.push(`${path.basename(check.file)} is missing required live customer summary-surface marker: ${marker}`);
+      failures.push(`${path.basename(check.file)} is missing required live customer summary marker: ${marker}`);
     }
   }
 }
@@ -54,4 +58,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Live customer summary surface validation passed across state summary, route overlay, and Auricrux status rail.");
+console.log("Live customer summary surface validation passed across platform, profile, messages, notifications, and launch posture layers.");

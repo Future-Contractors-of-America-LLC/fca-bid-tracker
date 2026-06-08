@@ -12,6 +12,9 @@ const checks = [
       'routeOverlay={routeStateOverlays.notifications}',
       'primaryHref="/portal/messages"',
       'title="Notifications now read from live workspace continuity"',
+      'Launch account posture recorded',
+      '<strong>Account source:</strong> {accountSource}',
+      '<strong>Launch readiness:</strong> {launchReadiness}',
     ],
   },
   {
@@ -59,4 +62,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Live notifications route validation passed across portal route, system state, routes, and shared top nav.");
+console.log("Live notifications route validation passed across portal route, system state, routes, shared top nav, and launch posture markers.");
