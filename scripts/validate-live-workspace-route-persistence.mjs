@@ -44,7 +44,8 @@ const checks = [
     file: path.join(root, "package.json"),
     markers: [
       '"validate:live-workspace-routes": "node scripts/validate-live-workspace-route-persistence.mjs"',
-      'npm run validate:live-workspace-persistence && npm run validate:live-workspace-routes && npm run lint && npm run build',
+      'npm run validate:live-workspace-persistence && npm run validate:live-workspace-routes && npm run validate:platform-command-center && npm run validate:billing-action-center',
+      'npm run validate:seeded-customer-auth && npm run validate:swa-deployment && npm run lint && npm run build',
     ],
   },
 ];
@@ -67,4 +68,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Live workspace route persistence validation passed across projects, messages, billing, and build wiring.");
+console.log("Live workspace route persistence validation passed across projects, messages, billing, and current build wiring.");
