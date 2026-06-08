@@ -27,11 +27,13 @@ const checks = [
       "workspace/governed_swa_payload.tgz",
       "npm run verify:live-deployment",
       "AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}",
-      "actions/upload-artifact@v4",
       "workspace/live_deployment_smoke_summary.json",
       "workspace/live_deployment_smoke_failures.txt",
       "test -f api/customer-login.js",
       "test -f api/auricrux.js"
+    ],
+    oneOfMarkers: [
+      ["actions/upload-artifact@v4", "actions/upload-artifact@v6"]
     ]
   },
   {
@@ -73,8 +75,13 @@ const staticWebAppConfigs = [
 const failures = [];
 for (const check of checks) {
   const source = await fs.readFile(check.file, "utf8");
-  for (const marker of check.markers) {
+  for (const marker of check.markers ?? []) {
     if (!source.includes(marker)) failures.push(`${path.relative(root, check.file)} is missing required deployment hardening marker: ${marker}`);
+  }
+  for (const markerSet of check.oneOfMarkers ?? []) {
+    if (!markerSet.some((marker) => source.includes(marker))) {
+      failures.push(`${path.relative(root, check.file)} is missing one of the required deployment hardening markers: ${markerSet.join(" OR ")}`);
+    }
   }
 }
 
