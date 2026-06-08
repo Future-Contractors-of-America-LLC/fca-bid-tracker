@@ -45,7 +45,9 @@ const checks = [
     markers: [
       '"validate:live-workspace-routes": "node scripts/validate-live-workspace-route-persistence.mjs"',
       'npm run validate:live-workspace-persistence && npm run validate:live-workspace-routes && npm run validate:platform-command-center && npm run validate:billing-action-center',
-      'npm run validate:seeded-customer-auth && npm run validate:swa-deployment && npm run lint && npm run build',
+      'npm run validate:seeded-customer-auth && npm run validate:swa-deployment',
+      'npm run validate:product-readiness && npm run validate:operations-pipeline && npm run validate:website-market-readiness',
+      'npm run validate:file-governance && npm run validate:billing-governance && npm run validate:support-governance && npm run lint && npm run build',
     ],
   },
 ];

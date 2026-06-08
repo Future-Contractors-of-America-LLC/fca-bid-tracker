@@ -8,9 +8,9 @@ const checks = [
     file: path.join(root, "src", "bidWorkspaceStore.js"),
     markers: [
       'export const BID_WORKSPACE_KEY = "fca_bid_workspace_v1";',
-      'export function readBidWorkspace()',
-      'export function writeBidWorkspace(bids = [])',
-      'export function updateBidWorkspace(mutator)',
+      'function normalizeQualification(qualification = {}, bid = {})',
+      'qualification: normalizeQualification(bid.qualification, bid),',
+      'nextGate: "Route to estimator handoff"',
     ],
   },
   {
@@ -20,6 +20,8 @@ const checks = [
       'appendCommercialLog({',
       'updateBidStatus(bidId, status, detail)',
       'clearBidBlocker(bidId, detail',
+      'updateBidQualification(bidId, updates, detail = "Qualification command surface updated.")',
+      'routeBidToEstimate(bidId, detail = "Qualified opportunity routed into estimate production.")',
     ],
   },
   {
@@ -37,6 +39,10 @@ const checks = [
       'import BidActionCenter from "../../components/BidActionCenter";',
       'import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";',
       'import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";',
+      'Qualification command surface',
+      'Mark Budget Fit',
+      'Advance Qualification',
+      'Route to Estimate',
       '<BidActionCenter bid={bid}',
       '<CommercialContinuityFeed title="Bid revenue continuity feed"',
       '<AutomationRecoveryFeed title="Bid automation feed"',

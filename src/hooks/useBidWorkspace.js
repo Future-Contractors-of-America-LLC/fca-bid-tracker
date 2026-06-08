@@ -96,6 +96,90 @@ export default function useBidWorkspace() {
 
         return saved;
       },
+      updateBidQualification(bidId, updates, detail = "Qualification command surface updated.") {
+        const saved = updateBidWorkspace((current) =>
+          current.map((bid) =>
+            bid.id !== bidId
+              ? bid
+              : {
+                  ...bid,
+                  qualification: {
+                    ...bid.qualification,
+                    ...updates,
+                  },
+                  nextCommercialMove: updates?.nextGate || detail || bid.nextCommercialMove,
+                  lastActionAt: new Date().toISOString(),
+                  actionHistory: [
+                    stampHistoryEntry("Qualification command updated", detail),
+                    ...bid.actionHistory,
+                  ].slice(0, 12),
+                }
+          )
+        );
+
+        setBids(saved);
+        const updatedBid = saved.find((bid) => bid.id === bidId);
+        if (updatedBid) {
+          appendAutomationLog({
+            type: "bid-qualification",
+            title: `${updatedBid.package} qualification updated`,
+            detail,
+            route: "/portal/bids",
+          });
+          appendCommercialLog({
+            type: "bid-qualification",
+            title: `${updatedBid.package} qualification posture updated`,
+            detail,
+            route: "/portal/bids",
+          });
+        }
+
+        return saved;
+      },
+      routeBidToEstimate(bidId, detail = "Qualified opportunity routed into estimate production.") {
+        const saved = updateBidWorkspace((current) =>
+          current.map((bid) =>
+            bid.id !== bidId
+              ? bid
+              : {
+                  ...bid,
+                  status: "Qualified",
+                  blocker: "No active blocker",
+                  nextCommercialMove: detail,
+                  qualification: {
+                    ...bid.qualification,
+                    status: "Ready for estimate",
+                    evidence: "Qualification packet verified",
+                    nextGate: "Estimator handoff active",
+                  },
+                  lastActionAt: new Date().toISOString(),
+                  actionHistory: [
+                    stampHistoryEntry("Routed to estimate", detail),
+                    ...bid.actionHistory,
+                  ].slice(0, 12),
+                }
+          )
+        );
+
+        setBids(saved);
+        const updatedBid = saved.find((bid) => bid.id === bidId);
+        if (updatedBid) {
+          appendAutomationLog({
+            type: "bid-estimate-handoff",
+            title: `${updatedBid.package} routed to estimate`,
+            detail,
+            route: "/portal/bids",
+          });
+          appendCommercialLog({
+            type: "bid-estimate-handoff",
+            title: `${updatedBid.package} moved into estimate production`,
+            detail,
+            route: "/portal/bids",
+          });
+        }
+
+        return saved;
+      },
     }),
     [bids]
   );

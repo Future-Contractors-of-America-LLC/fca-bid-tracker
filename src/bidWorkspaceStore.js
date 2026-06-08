@@ -2,6 +2,19 @@ import { portalBids } from "./systemState";
 
 export const BID_WORKSPACE_KEY = "fca_bid_workspace_v1";
 
+function normalizeQualification(qualification = {}, bid = {}) {
+  return {
+    score: qualification.score || "62/100",
+    status: qualification.status || "Discovery in progress",
+    budgetFit: qualification.budgetFit || "Budget needs confirmation",
+    scopeFit: qualification.scopeFit || bid.scopePackage || "Scope needs validation",
+    jurisdiction: qualification.jurisdiction || "License and permit review pending",
+    travel: qualification.travel || "Travel zone review pending",
+    evidence: qualification.evidence || "Customer documents pending",
+    nextGate: qualification.nextGate || "Complete qualification command review",
+  };
+}
+
 function normalizeBidRecord(bid = {}, index = 0) {
   return {
     id: bid.id || `BID-${index + 1}`,
@@ -14,13 +27,32 @@ function normalizeBidRecord(bid = {}, index = 0) {
     dueDate: bid.dueDate || "TBD",
     tradeCoverage: bid.tradeCoverage || "Coverage pending",
     nextCommercialMove: bid.nextCommercialMove || "Advance commercial review",
+    qualification: normalizeQualification(bid.qualification, bid),
     lastActionAt: bid.lastActionAt || null,
     actionHistory: Array.isArray(bid.actionHistory) ? bid.actionHistory : [],
   };
 }
 
 function seedBidWorkspace() {
-  return portalBids.map((bid, index) => normalizeBidRecord({ ...bid, id: `BID-${index + 1}` }, index));
+  return portalBids.map((bid, index) =>
+    normalizeBidRecord(
+      {
+        ...bid,
+        id: `BID-${index + 1}`,
+        qualification: {
+          score: index === 0 ? "84/100" : index === 1 ? "71/100" : "63/100",
+          status: index === 0 ? "Ready for estimate" : index === 1 ? "Budget review" : "Discovery in progress",
+          budgetFit: index === 0 ? "Confirmed" : index === 1 ? "Pending buyer confirmation" : "Budget not verified",
+          scopeFit: bid.scopePackage,
+          jurisdiction: index === 0 ? "Licensed coverage verified" : "Municipal review pending",
+          travel: index === 0 ? "Inside standard travel zone" : "Travel premium review pending",
+          evidence: index === 0 ? "Plans, photos, and buyer notes attached" : "Awaiting full evidence packet",
+          nextGate: index === 0 ? "Route to estimator handoff" : "Complete qualification command review",
+        },
+      },
+      index
+    )
+  );
 }
 
 export function readBidWorkspace() {
