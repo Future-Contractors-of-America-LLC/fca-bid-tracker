@@ -10,6 +10,7 @@ import SupportActionCenter from "../../components/SupportActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
+import { supportGovernance } from "../../supportGovernance";
 import { auricruxCommsChannels, routeStateOverlays } from "../../systemState";
 import { resolvePlanPreset } from "../../pricingPlans";
 
@@ -101,6 +102,39 @@ export default function PortalSupport() {
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
           Customer help, escalation handling, and recovery guidance remain attached to the same tenant, project, permit/document, billing, selected-plan, warranty, referral, and Auricrux state as the rest of FCA rather than appearing as a disconnected support tool.
         </p>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Support governance layer</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA now models escalation and recovery as a governed product layer</h2>
+        <div style={{ display: "grid", gap: 16 }}>
+          {supportGovernance.lanes.map((lane) => (
+            <div key={lane.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{lane.title}</h3>
+              <p style={{ color: "#334155", lineHeight: 1.7 }}>{lane.purpose}</p>
+              <a href={lane.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{lane.label}</a>
+              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 10, marginBottom: 0 }}>
+                {lane.artifacts.map((artifact) => (
+                  <li key={artifact}>{artifact}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Response signals</div>
+            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
+              {supportGovernance.responseSignals.map((signal) => (
+                <li key={signal}>{signal}</li>
+              ))}
+            </ul>
+          </div>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Recovery actions</div>
+            <PublicCtaRow actions={supportGovernance.commsRecoveryActions} />
+          </div>
+        </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>
