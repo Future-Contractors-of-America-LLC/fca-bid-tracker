@@ -27,7 +27,7 @@ const portalShellChecks = [
     file: path.join(root, "src", "pages", "portal", "PlatformDashboard.jsx"),
     activeHref: "/portal/platform",
     primaryHref: "/portal/projects",
-    primaryLabel: "Open Project Flow",
+    primaryLabel: "Open Projects",
     currentJourney: "lead",
   },
   {
