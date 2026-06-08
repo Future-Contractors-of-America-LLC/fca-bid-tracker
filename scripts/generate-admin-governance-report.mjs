@@ -19,7 +19,7 @@ const report = {
   governanceActions: adminGovernance.governanceActions,
 };
 
-const markdown = `# FCA Admin Governance Report\n\n- Generated at: ${generatedAt}\n- Admin controls: ${report.controlCount}\n- Readiness signals: ${report.readinessSignalCount}\n- Governance actions: ${report.governanceActionCount}\n\n## Controls\n${adminGovernance.controls.map((control) => `- **${control.title}** → ${control.route} · ${control.artifacts.length} artifacts`).join("\n")}\n\n## Readiness Signals\n${adminGovernance.readinessSignals.map((signal) => `- ${signal}`).join("\n")}\n\n## Governance Actions\n${adminGovernance.governanceActions.map((action) => `- **${action.title}** → ${action.href}`).join("\n")}
+const markdown = `# FCA Admin Governance Report\n\n- Generated at: ${generatedAt}\n- Governance controls: ${report.controlCount}\n- Readiness signals: ${report.readinessSignalCount}\n- Governance actions: ${report.governanceActionCount}\n\n## Governance Controls\n${adminGovernance.controls.map((control) => `- **${control.title}** → ${control.route} · ${control.artifacts.length} artifacts`).join("\n")}\n\n## Readiness Signals\n${adminGovernance.readinessSignals.map((signal) => `- ${signal}`).join("\n")}\n\n## Governance Actions\n${adminGovernance.governanceActions.map((action) => `- **${action.title}** → ${action.href}`).join("\n")}
 `;
 
 await fs.writeFile(path.join(outputDir, "admin-governance-report.json"), JSON.stringify(report, null, 2));

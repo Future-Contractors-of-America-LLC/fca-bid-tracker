@@ -22,7 +22,31 @@ export const PRIMARY_TEST_ACCOUNT = {
   },
 };
 
-export const TEST_CUSTOMER_ACCOUNTS = [PRIMARY_TEST_ACCOUNT];
+export const LAUNCH_SINGLE_USER_ACCOUNT = {
+  email: "launch.customer@futurecontractorsofamerica.com",
+  password: "FCA-Launch-2026!",
+  company: "Future Contractors of America Launch Customer",
+  role: "Owner / Admin",
+  customerId: "CUST-FCA-LAUNCH-001",
+  workspaceLabel: "FCA Launch Customer Workspace",
+  selectedPlan: "enterprise",
+  enabledProducts: {
+    saas: true,
+    lms: false,
+    auricrux: true,
+  },
+  enabledComms: {
+    chat: true,
+    sms: true,
+    phone: true,
+    email: true,
+    teams: true,
+    conference: true,
+    lecture: false,
+  },
+};
+
+export const TEST_CUSTOMER_ACCOUNTS = [PRIMARY_TEST_ACCOUNT, LAUNCH_SINGLE_USER_ACCOUNT];
 
 export function sanitizeSeededCustomerAccount(account) {
   if (!account) return null;

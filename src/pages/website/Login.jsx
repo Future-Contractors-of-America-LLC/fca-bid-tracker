@@ -16,7 +16,7 @@ import LoginActionCenter from "../../components/LoginActionCenter";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";
+import { LAUNCH_SINGLE_USER_ACCOUNT, PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";
 import { founderJourneyCtaSets, pricingTiers, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { resolvePlanPreset } from "../../pricingPlans";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
@@ -326,6 +326,22 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     }));
   }
 
+  function handleUseLaunchAccount() {
+    setError("");
+    setAuthStatus("seeded");
+    setProvisioningMode("custom");
+    setForm((prev) => ({
+      ...prev,
+      email: LAUNCH_SINGLE_USER_ACCOUNT.email,
+      password: LAUNCH_SINGLE_USER_ACCOUNT.password,
+      company: LAUNCH_SINGLE_USER_ACCOUNT.company,
+      role: LAUNCH_SINGLE_USER_ACCOUNT.role,
+      selectedPlan: LAUNCH_SINGLE_USER_ACCOUNT.selectedPlan,
+      enabledProducts: LAUNCH_SINGLE_USER_ACCOUNT.enabledProducts,
+      enabledComms: LAUNCH_SINGLE_USER_ACCOUNT.enabledComms,
+    }));
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
@@ -459,6 +475,27 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
                 <a href="/login?seeded=1&autologin=1&next=/portal/platform" style={{ ...submitButtonStyle, textDecoration: "none", background: "#0f766e" }}>
                   Instant Platform Access
                 </a>
+              </div>
+            </div>
+
+            <div style={{ ...productOptionStyle, marginBottom: 16, background: "#fffaf0", border: "1px solid #e5d3a1" }}>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>Launch-ready single-user company account</div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>
+                This is the closest truthful launch-state artifact available in the current product shell: a seeded single-user company subscription profile with SaaS workspace and Auricrux guidance enabled. It is launch-ready in the frontend shell, but not yet a production identity-provider-backed account.
+              </div>
+              <div style={{ color: "#0f172a", lineHeight: 1.7, marginBottom: 8 }}>
+                Email: <strong>{LAUNCH_SINGLE_USER_ACCOUNT.email}</strong>
+              </div>
+              <div style={{ color: "#0f172a", lineHeight: 1.7, marginBottom: 8 }}>
+                Password: <strong>{LAUNCH_SINGLE_USER_ACCOUNT.password}</strong>
+              </div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
+                Plan: <strong>{LAUNCH_SINGLE_USER_ACCOUNT.selectedPlan}</strong> · Products: <strong>SaaS + Auricrux</strong> · Account source: <strong>seeded launch profile</strong>
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <button type="button" onClick={handleUseLaunchAccount} style={{ ...submitButtonStyle, background: "#b45309" }}>
+                  Use Launch Account
+                </button>
               </div>
             </div>
 
