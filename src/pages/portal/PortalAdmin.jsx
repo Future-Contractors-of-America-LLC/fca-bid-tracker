@@ -9,6 +9,7 @@ import AdminActionCenter from "../../components/AdminActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets } from "../../websiteShell";
+import { adminGovernance } from "../../adminGovernance";
 import { routeStateOverlays } from "../../systemState";
 import { resolvePlanPreset } from "../../pricingPlans";
 
@@ -84,6 +85,39 @@ export default function PortalAdmin() {
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
           Tenant rollout posture, seat readiness, project governance, and construction-workflow visibility remain inside the same FCA workspace, with Auricrux maintaining execution awareness rather than handing control off to a separate admin product.
         </p>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Admin governance layer</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA now models rollout, seats, and governance visibility as a governed product layer</h2>
+        <div style={{ display: "grid", gap: 16 }}>
+          {adminGovernance.controls.map((control) => (
+            <div key={control.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{control.title}</h3>
+              <p style={{ color: "#334155", lineHeight: 1.7 }}>{control.purpose}</p>
+              <a href={control.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{control.label}</a>
+              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 10, marginBottom: 0 }}>
+                {control.artifacts.map((artifact) => (
+                  <li key={artifact}>{artifact}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Readiness signals</div>
+            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
+              {adminGovernance.readinessSignals.map((signal) => (
+                <li key={signal}>{signal}</li>
+              ))}
+            </ul>
+          </div>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Governance actions</div>
+            <PublicCtaRow actions={adminGovernance.governanceActions} />
+          </div>
+        </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>

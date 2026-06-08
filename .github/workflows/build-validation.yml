@@ -66,6 +66,10 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:support-governance-report
 
+      - name: Generate admin governance evidence
+        if: ${{ always() }}
+        run: npm run generate:admin-governance-report
+
       - name: Publish product readiness summary
         if: ${{ always() }}
         run: |
@@ -110,6 +114,12 @@ jobs:
           else
             echo "Support governance report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f generated/admin-governance-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/admin-governance-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Admin governance report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload product readiness artifacts
         if: ${{ always() }}
@@ -131,6 +141,8 @@ jobs:
             generated/billing-governance-report.md
             generated/support-governance-report.json
             generated/support-governance-report.md
+            generated/admin-governance-report.json
+            generated/admin-governance-report.md
           if-no-files-found: warn
 
-# retrigger: 2026-06-08T17:55:00Z
+# retrigger: 2026-06-08T18:05:00Z
