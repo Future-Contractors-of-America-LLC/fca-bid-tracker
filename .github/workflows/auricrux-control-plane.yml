@@ -157,7 +157,7 @@ jobs:
           git add auricrux/system/control-plane.json public/auricrux/control-plane/index.json
           git commit -m "Auricrux: control plane heartbeat" || echo "No control plane changes"
           CURRENT_BRANCH="${GITHUB_REF_NAME:-main}"
-          git push origin HEAD:${CURRENT_BRANCH} || echo "Control plane push skipped"
+          git push origin "HEAD:${CURRENT_BRANCH}" || echo "Control plane push skipped"
 
       - name: Write job summary
         if: always()

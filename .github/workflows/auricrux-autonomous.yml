@@ -44,7 +44,7 @@ jobs:
           git add .
           git commit -m "Auricrux: ship advancement" || echo "No changes"
           CURRENT_BRANCH="${GITHUB_REF_NAME:-main}"
-          git push origin HEAD:${CURRENT_BRANCH}
+          git push origin "HEAD:${CURRENT_BRANCH}"
 
       - name: Write job summary
         if: always()
