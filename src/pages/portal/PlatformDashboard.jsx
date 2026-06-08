@@ -10,6 +10,7 @@ import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import ExecutionCommandCenter from "../../components/ExecutionCommandCenter";
+import SystemStateSummary from "../../components/SystemStateSummary";
 import { auricruxActions, portalMessages, portalMetrics, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -38,6 +39,13 @@ export default function PlatformDashboard() {
     refreshSyncStamp("Live workspace dashboard active");
   }, [refreshSyncStamp]);
 
+  const accountSource = session?.accountSource || "workspace-shell";
+  const launchReadiness = accountSource === "api"
+    ? "Production-backed login active"
+    : accountSource === "local-fallback"
+      ? "Seeded launch/test login active"
+      : "Shell continuity mode";
+
   return (
     <PortalShell
       title="FCA Platform Dashboard"
@@ -48,6 +56,17 @@ export default function PlatformDashboard() {
       primaryHref="/portal/projects"
       primaryLabel="Open Projects"
     >
+      <div style={{ marginBottom: 24 }}>
+        <SystemStateSummary
+          tenant={state.tenant}
+          project={state.project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
+          title="Platform summary now reads from the authenticated workspace"
+          detail="This dashboard now binds live customer session state, tenant visibility, project context, Auricrux guidance, and launch posture into one active workspace summary."
+        />
+      </div>
+
       <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
       <CustomerCommsLaunchpad session={session} title="Launch customer-enabled communications lanes" />
 
@@ -81,6 +100,8 @@ export default function PlatformDashboard() {
           <div><strong>Source:</strong> {state.meta.backingSource}</div>
           <div><strong>Workspace status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Last refresh:</strong> {state.meta.lastSyncedAt || "Pending initial refresh"}</div>
+          <div><strong>Account source:</strong> {accountSource}</div>
+          <div><strong>Launch readiness:</strong> {launchReadiness}</div>
         </div>
         <PublicCtaRow actions={publicBodyCtaSets.portalEntry} />
       </div>
@@ -90,7 +111,7 @@ export default function PlatformDashboard() {
       <div style={{ marginTop: 24 }}>
         <CommercialReadinessPanel
           title="Revenue and rollout readiness"
-          detail="This live dashboard now keeps approval, billing, communications access, rollout readiness, and executable customer controls connected so revenue-facing claims stay truthful to the authenticated workspace."
+          detail="This live dashboard now keeps approval, billing, communications access, rollout readiness, launch posture, and executable customer controls connected so revenue-facing claims stay truthful to the authenticated workspace."
           primaryHref="/pricing"
           primaryLabel="Review Commercial Packaging"
           secondaryHref="/portal/billing"
