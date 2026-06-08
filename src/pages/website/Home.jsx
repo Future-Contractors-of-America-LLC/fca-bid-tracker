@@ -13,6 +13,7 @@ import { filterVisibleActions } from "../../ctaBehavior";
 import { homeCtaSets, publicSurfaceLinks, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
 import { saasOperationalPathways } from "../../productBlueprint";
+import { websiteMarketReadiness } from "../../websiteMarketReadiness";
 import { cardStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
 const homeContinuityItems = [
@@ -138,6 +139,40 @@ export default function Home() {
               <a href={pathway.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{pathway.ctaLabel}</a>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 24, ...cardStyle }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Website market-readiness</div>
+        <h2 style={{ marginTop: 0 }}>FCA now defines buyer journeys, trust signals, and conversion actions as a canonical website layer</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 16 }}>
+          {websiteMarketReadiness.buyerJourneys.map((journey) => (
+            <div key={journey.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
+              <div style={{ color: "#475569", fontWeight: 700, marginBottom: 6 }}>{journey.audience}</div>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{journey.title}</h3>
+              <p style={{ color: "#334155", lineHeight: 1.7 }}>{journey.outcome}</p>
+              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
+                {journey.proof.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <a href={journey.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{journey.label}</a>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Trust signals</div>
+            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
+              {websiteMarketReadiness.trustSignals.map((signal) => (
+                <li key={signal.title}><strong>{signal.title}</strong> — {signal.detail}</li>
+              ))}
+            </ul>
+          </div>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Conversion actions</div>
+            <PublicCtaRow actions={websiteMarketReadiness.conversionActions} />
+          </div>
         </div>
       </div>
 

@@ -7,10 +7,19 @@ const outputDir = path.join(root, "generated");
 await fs.mkdir(outputDir, { recursive: true });
 
 const blueprintModule = await import(pathToFileURL(path.join(root, "src", "productBlueprint.js")).href);
-const routesModule = await import(pathToFileURL(path.join(root, "src", "routes.js")).href);
+const routesSource = await fs.readFile(path.join(root, "src", "routes.js"), "utf8");
+
+function extractRouteKeys(source) {
+  const routeBlockMatch = source.match(/export const routes = \{([\s\S]*?)\n\};/);
+  if (!routeBlockMatch) {
+    throw new Error("Unable to locate exported routes object in src/routes.js");
+  }
+
+  return [...routeBlockMatch[1].matchAll(/(["'])(\/[^"']*)\1\s*:/g)].map((match) => match[2]);
+}
 
 const { saasOperationalPathways = [], academyClassrooms = [], websiteEnterpriseProof = [] } = blueprintModule;
-const routeKeys = Object.keys(routesModule.routes || {});
+const routeKeys = extractRouteKeys(routesSource);
 const timestamp = new Date().toISOString();
 
 const report = {
@@ -41,4 +50,4 @@ const markdown = `# FCA Product Readiness Report\n\n- Generated at: ${timestamp}
 await fs.writeFile(path.join(outputDir, "product-readiness-report.json"), JSON.stringify(report, null, 2));
 await fs.writeFile(path.join(outputDir, "product-readiness-report.md"), markdown);
 
-console.log(`Generated product readiness report with ${report.saasPathwayCount} SaaS pathways, ${report.academyClassroomCount} classrooms, and ${report.websiteEnterpriseProofCount} website proof statements.`);
+console.log(`Generated product readiness report with ${report.saasPathwayCount} SaaS pathways, ${report.academyClassroomCount} classrooms, and ${report.websiteEnterpriseProofCount} website proof statements across ${report.routeCount} routes.`);
