@@ -45,6 +45,13 @@
       }
     },
     {
+      "route": "/commit-witness-*.txt",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Content-Type": "text/plain; charset=utf-8"
+      }
+    },
+    {
       "route": "/index.html",
       "headers": {
         "Cache-Control": "no-store, no-cache, must-revalidate"
@@ -67,6 +74,7 @@
       "/*.gif",
       "/*.svg",
       "/*.ico",
+      "/*.txt",
       "/favicon.ico",
       "/deployment-status.json",
       "/domain-continuity.json",

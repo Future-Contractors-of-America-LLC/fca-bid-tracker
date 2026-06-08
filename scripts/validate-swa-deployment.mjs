@@ -22,6 +22,7 @@ const checks = [
       "test -f dist/live-shell-verification.html",
       "test -f dist/host-binding-audit.html",
       "test -f dist/api-continuity-audit.html",
+      "find dist -maxdepth 1 -name 'commit-witness-*.txt' | grep -q .",
       "Archive governed deployment payload",
       "workspace/governed_swa_payload.tgz",
       "npm run verify:live-deployment",
@@ -61,14 +62,12 @@ const checks = [
       'live_deployment_smoke_summary.json',
       'live_deployment_smoke_failures.txt'
     ]
-  },
-  {
-    file: path.join(root, "staticwebapp.config.json"),
-    markers: [
-      '"route": "/commit-witness-*.txt"',
-      '"/*.txt"'
-    ]
   }
+];
+
+const staticWebAppConfigs = [
+  path.join(root, "staticwebapp.config.json"),
+  path.join(root, "public", "staticwebapp.config.json"),
 ];
 
 const failures = [];
@@ -79,10 +78,24 @@ for (const check of checks) {
   }
 }
 
+const configSources = await Promise.all(staticWebAppConfigs.map((file) => fs.readFile(file, "utf8")));
+const [rootConfigSource, publicConfigSource] = configSources;
+
+for (const [index, source] of configSources.entries()) {
+  const relativeFile = path.relative(root, staticWebAppConfigs[index]);
+  for (const marker of ['"route": "/commit-witness-*.txt"', '"/*.txt"']) {
+    if (!source.includes(marker)) failures.push(`${relativeFile} is missing required deployment hardening marker: ${marker}`);
+  }
+}
+
+if (rootConfigSource !== publicConfigSource) {
+  failures.push("staticwebapp.config.json and public/staticwebapp.config.json must remain byte-for-byte identical for deployed SWA routing parity.");
+}
+
 if (failures.length > 0) {
   console.error("Static Web App deployment validation failed:");
   for (const failure of failures) console.error(` - ${failure}`);
   process.exit(1);
 }
 
-console.log("Static Web App deployment validation passed for exact commit witness verification, target preflight, governed payload archiving, default-host continuity checks, post-deploy live smoke retries, artifact preservation, governed witness pack continuity, and API deployment wiring.");
+console.log("Static Web App deployment validation passed for exact commit witness verification, root/public config parity, target preflight, governed payload archiving, default-host continuity checks, post-deploy live smoke retries, artifact preservation, governed witness pack continuity, and API deployment wiring.");

@@ -63,6 +63,7 @@ jobs:
           test -f dist/live-shell-verification.html
           test -f dist/host-binding-audit.html
           test -f dist/api-continuity-audit.html
+          find dist -maxdepth 1 -name 'commit-witness-*.txt' | grep -q .
           test -f api/package.json
           test -f api/host.json
           test -f api/customer-login.js
