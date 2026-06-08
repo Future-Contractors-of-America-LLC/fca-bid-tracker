@@ -25,8 +25,8 @@ const portalPageChecks = [
     requiredMarkers: [
       'activeHref="/portal/bids"',
       'primaryHref="/bid-entry"',
-      "publicBodyCtaSets.portalCoordination",
-      "portalNarrativeCtaSets.bidSalesNarrative",
+      'PublicCtaRow actions={publicBodyCtaSets.portalCoordination}',
+      'PublicCtaRow actions={portalNarrativeCtaSets.bidSalesNarrative}',
     ],
   },
   {
@@ -34,8 +34,8 @@ const portalPageChecks = [
     requiredMarkers: [
       'activeHref="/portal/support"',
       'primaryHref="/contact"',
-      "publicBodyCtaSets.portalCoordination",
-      "portalNarrativeCtaSets.supportContext",
+      'PublicCtaRow actions={publicBodyCtaSets.portalCoordination}',
+      'PublicCtaRow actions={portalNarrativeCtaSets.supportContext}',
     ],
   },
   {
@@ -43,8 +43,9 @@ const portalPageChecks = [
     requiredMarkers: [
       'activeHref="/portal/messages"',
       'primaryHref="/portal/billing"',
-      "publicBodyCtaSets.portalCoordination",
-      "portalNarrativeCtaSets.messageStream",
+      'PublicCtaRow actions={portalNarrativeCtaSets.messageStream}',
+      'AuricruxCommsPanel',
+      'CustomerCommsLaunchpad',
     ],
   },
   {
@@ -52,8 +53,9 @@ const portalPageChecks = [
     requiredMarkers: [
       'activeHref="/portal/billing"',
       'primaryHref="/portal/admin"',
-      "publicBodyCtaSets.portalCoordination",
-      "portalNarrativeCtaSets.billingNarrative",
+      'PublicCtaRow actions={portalNarrativeCtaSets.billingNarrative}',
+      'BillingActionCenter',
+      'CommercialContinuityFeed',
     ],
   },
 ];
