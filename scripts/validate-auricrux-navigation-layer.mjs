@@ -14,11 +14,23 @@ const checks = [
     ],
   },
   {
+    file: path.join(root, "src", "components", "PublicTopNav.jsx"),
+    markers: [
+      'import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext } from "../workspaceState";',
+      "workspaceContext.currentNextAction",
+      "currentProject.id",
+      "auricruxRail.nextRecommendedAction",
+      "resolveRouteCue",
+      "const publicNavGroups = [",
+      "const portalNavGroups = [",
+    ],
+  },
+  {
     file: path.join(root, "src", "components", "ShellHeader.jsx"),
     markers: [
-      'import AuricruxNavHint from "./AuricruxNavHint";',
-      "<AuricruxNavHint item={item} />",
-      "shellPrimaryNav.map((item) =>",
+      'import PublicTopNav from "./PublicTopNav";',
+      '{showTopNav ? <PublicTopNav mode={topNavMode} /> : null}',
+      '<AuricruxPresenceLayer',
     ],
   },
   {
@@ -50,4 +62,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Auricrux navigation layer validation passed across shared header and portal navigation surfaces.");
+console.log("Auricrux navigation layer validation passed across top-nav, shared header, and portal navigation surfaces.");
