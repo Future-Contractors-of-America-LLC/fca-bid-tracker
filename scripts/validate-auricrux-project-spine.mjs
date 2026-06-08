@@ -18,8 +18,11 @@ const checks = [
     file: path.join(root, "src", "components", "ProjectSpineBar.jsx"),
     markers: [
       'import AuricruxSpineInsight from "./AuricruxSpineInsight";',
-      "<AuricruxSpineInsight tenant={tenant} project={project} />",
-      "project.auricruxSummary",
+      'import { resolveLiveProjectIdentity, resolveLiveTenantIdentity } from "../liveWorkspaceIdentity";',
+      "const liveTenant = resolveLiveTenantIdentity(tenant);",
+      "const liveProject = resolveLiveProjectIdentity(project);",
+      "liveProject.auricruxSummary",
+      "<AuricruxSpineInsight tenant={liveTenant} project={liveProject} />",
     ],
   },
 ];
