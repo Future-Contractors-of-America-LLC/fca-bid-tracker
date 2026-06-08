@@ -19,6 +19,7 @@ import {
   publicRouteCtas,
   shellJourney,
 } from "../../websiteShell";
+import { saasOperationalPathways, websiteEnterpriseProof } from "../../productBlueprint";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
 const platformContinuityItems = [
@@ -130,6 +131,26 @@ export default function Platform() {
         highlights={platformConstructionProof}
       />
 
+      <div style={{ marginTop: 24, ...cardStyle }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real SaaS pathways</div>
+        <h2 style={{ marginTop: 0 }}>FCA now presents product pathways around real contractor work instead of abstract feature buckets</h2>
+        <div style={{ ...responsiveGrid(240), marginTop: 16 }}>
+          {saasOperationalPathways.map((pathway) => (
+            <div key={pathway.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
+              <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>{pathway.audience}</div>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{pathway.title}</h3>
+              <p style={{ color: "#475569", lineHeight: 1.7 }}>{pathway.outcome}</p>
+              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155" }}>
+                {pathway.modules.map((module) => (
+                  <li key={module}>{module}</li>
+                ))}
+              </ul>
+              <a href={pathway.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{pathway.ctaLabel}</a>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div style={{ marginTop: 24 }}>
         <CommercialReadinessPanel
           title="Commercial and rollout readiness"
@@ -190,6 +211,18 @@ export default function Platform() {
           ctaHref="/login?seeded=1"
           ctaLabel="Open Live Test Login"
         />
+      </div>
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Enterprise-ready website proof</h2>
+        <div style={{ ...responsiveGrid(240), gap: 16 }}>
+          {websiteEnterpriseProof.map((item) => (
+            <div key={item.title} style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{item.title}</h3>
+              <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0 }}>{item.detail}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>

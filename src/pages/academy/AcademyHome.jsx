@@ -17,6 +17,7 @@ import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
+import { academyClassrooms, saasOperationalPathways } from "../../productBlueprint";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { pageShellStyle } from "../../publicShellStyles";
@@ -168,6 +169,54 @@ export default function AcademyHome() {
             <strong>Coordinated next move</strong>
             <div>Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning for {liveTenant.name}.</div>
           </div>
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>Real LMS classrooms</div>
+            <h2 style={{ marginTop: 0, marginBottom: 8 }}>FCA Academy now carries named classroom tracks tied to real workspace outcomes</h2>
+          </div>
+          <div style={{ color: "#475569", maxWidth: 320, lineHeight: 1.6 }}>
+            Curriculum is attached directly to estimating, project controls, field readiness, and customer-delivery continuity.
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
+          {academyClassrooms.map((classroom) => (
+            <div key={classroom.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
+              <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>{classroom.credential}</div>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{classroom.title}</h3>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 10 }}>
+                <div><strong>Cadence:</strong> {classroom.cadence}</div>
+                <div><strong>Delivery:</strong> {classroom.delivery}</div>
+              </div>
+              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
+                {classroom.modules.map((module) => (
+                  <li key={module}>{module}</li>
+                ))}
+              </ul>
+              <a href={classroom.linkedSurface} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{classroom.linkedLabel}</a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Academy tied to real SaaS pathways</div>
+        <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
+          The classroom layer is no longer treated as a disconnected learning shell. Each training track reinforces a production pathway already present in FCA.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+          {saasOperationalPathways.map((pathway) => (
+            <div key={pathway.title} style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{pathway.title}</h3>
+              <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 8 }}>
+                <div><strong>Outcome:</strong> {pathway.outcome}</div>
+              </div>
+              <a href={pathway.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{pathway.ctaLabel}</a>
+            </div>
+          ))}
         </div>
       </div>
 

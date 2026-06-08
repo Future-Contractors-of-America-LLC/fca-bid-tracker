@@ -12,6 +12,7 @@ import ProductProofSection from "../../components/ProductProofSection";
 import { filterVisibleActions } from "../../ctaBehavior";
 import { homeCtaSets, publicSurfaceLinks, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
+import { saasOperationalPathways } from "../../productBlueprint";
 import { cardStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
 const homeContinuityItems = [
@@ -124,6 +125,21 @@ export default function Home() {
         detail="Visitors can validate the dashboard, workspace, bid routes, and academy continuity directly from the public shell instead of relying on abstract claims."
         highlights={homeProductProof}
       />
+
+      <div style={{ marginTop: 24, ...cardStyle }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real customer-ready pathways</div>
+        <h2 style={{ marginTop: 0 }}>Public website messaging now points into the actual SaaS motions FCA is selling</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 16 }}>
+          {saasOperationalPathways.map((pathway) => (
+            <div key={pathway.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
+              <div style={{ color: "#475569", fontWeight: 700, marginBottom: 6 }}>{pathway.audience}</div>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{pathway.title}</h3>
+              <p style={{ color: "#334155", lineHeight: 1.7 }}>{pathway.outcome}</p>
+              <a href={pathway.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{pathway.ctaLabel}</a>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div style={{ marginTop: 28 }}>
         <CustomerTrustPanel
