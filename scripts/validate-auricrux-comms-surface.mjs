@@ -29,7 +29,7 @@ const checks = [
     file: path.join(root, "src", "pages", "website", "Contact.jsx"),
     markers: [
       'import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";',
-      "founder-demo channels active",
+      "Founder-demo channels active",
       "communications stack",
     ],
   },
