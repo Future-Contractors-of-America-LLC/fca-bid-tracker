@@ -9,6 +9,7 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { portalNarrativeCtaSets } from "../../websiteShell";
+import { billingGovernance } from "../../billingGovernance";
 import { portalBilling, routeStateOverlays } from "../../systemState";
 import { resolvePlanPreset } from "../../pricingPlans";
 
@@ -143,6 +144,39 @@ export default function PortalBilling() {
           <div><strong>Commercial next step:</strong> Convert {state.workspace.currentNextAction.toLowerCase()} into invoice follow-through under the {selectedPlan.name} plan.</div>
           <div><strong>Training continuity:</strong> Billing remains tied to learner assignment so onboarding and revenue stay visible together.</div>
           <div><strong>Lifecycle expansion:</strong> Recurring maintenance, service response, and advocacy-safe follow-through are now treated as part of the commercial picture.</div>
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Billing governance layer</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA now models revenue continuity as a governed product layer</h2>
+        <div style={{ display: "grid", gap: 16 }}>
+          {billingGovernance.lanes.map((lane) => (
+            <div key={lane.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{lane.title}</h3>
+              <p style={{ color: "#334155", lineHeight: 1.7 }}>{lane.purpose}</p>
+              <a href={lane.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{lane.label}</a>
+              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 10, marginBottom: 0 }}>
+                {lane.artifacts.map((artifact) => (
+                  <li key={artifact}>{artifact}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Revenue signals</div>
+            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
+              {billingGovernance.revenueSignals.map((signal) => (
+                <li key={signal}>{signal}</li>
+              ))}
+            </ul>
+          </div>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Conversion links</div>
+            <PublicCtaRow actions={billingGovernance.conversionLinks} />
+          </div>
         </div>
       </div>
 

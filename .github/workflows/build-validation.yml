@@ -58,6 +58,10 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:file-governance-report
 
+      - name: Generate billing governance evidence
+        if: ${{ always() }}
+        run: npm run generate:billing-governance-report
+
       - name: Publish product readiness summary
         if: ${{ always() }}
         run: |
@@ -90,6 +94,12 @@ jobs:
           else
             echo "File governance report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f generated/billing-governance-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/billing-governance-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Billing governance report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload product readiness artifacts
         if: ${{ always() }}
@@ -107,6 +117,8 @@ jobs:
             generated/website-market-readiness-report.md
             generated/file-governance-report.json
             generated/file-governance-report.md
+            generated/billing-governance-report.json
+            generated/billing-governance-report.md
           if-no-files-found: warn
 
-# retrigger: 2026-06-08T17:20:00Z
+# retrigger: 2026-06-08T17:35:00Z

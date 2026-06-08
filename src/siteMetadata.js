@@ -66,6 +66,11 @@ export const routeMetadata = {
     description:
       "View the unified FCA platform dashboard across projects, academy progress, support posture, and administrative status.",
   },
+  "/portal/operations": {
+    title: "Operations Pipeline | Future Contractors of America",
+    description:
+      "Review FCA's contractor operations pipeline spanning intake, qualification, preconstruction, award, document control, billing, closeout, warranty, and referral continuity.",
+  },
   "/portal/projects": {
     title: "Projects | Future Contractors of America",
     description:
@@ -94,7 +99,7 @@ export const routeMetadata = {
   "/portal/billing": {
     title: "Billing | Future Contractors of America",
     description:
-      "Manage FCA billing posture, subscriptions, and account continuity from the unified portal shell.",
+      "Manage FCA billing posture, subscriptions, change-order revenue continuity, and account follow-through from the unified portal shell.",
   },
   "/portal/support": {
     title: "Support | Future Contractors of America",
