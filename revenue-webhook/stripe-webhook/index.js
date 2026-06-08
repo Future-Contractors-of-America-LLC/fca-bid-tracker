@@ -13,7 +13,7 @@ app.http("stripe-webhook", {
   methods: ["POST"],
   authLevel: "anonymous",
   route: "stripe-webhook",
-  handler: async (request, context) => {
+  handler: async (request) => {
     const sig = request.headers.get("stripe-signature");
     const rawBody = await request.text();
 
@@ -24,7 +24,7 @@ app.http("stripe-webhook", {
         sig,
         process.env.STRIPE_WEBHOOK_SECRET
       );
-    } catch (err) {
+    } catch {
       return { status: 400, body: "Invalid signature" };
     }
 
