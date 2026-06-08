@@ -4,24 +4,24 @@ import RouteExperienceShell from '../../components/RouteExperienceShell';
 export default function Home() {
   return (
     <RouteExperienceShell
-      eyebrow="FCA Construction Operating System"
-      title="Win more work, coordinate delivery, and train your workforce inside one contractor platform with Auricrux embedded from first touch to field execution."
-      lead="Future Contractors of America is being shaped as a unified operating system for commercial contractors: customer-ready website motion, real SaaS pathways for bids and projects, Academy classrooms that improve production readiness, and Auricrux guidance that turns scattered activity into next-action clarity."
+      eyebrow="FCA Contractor Command"
+      title="Qualify more contractor opportunities, organize bid evidence, and give customers a live portal inside one Auricrux-guided operating workspace."
+      lead="Future Contractors of America is being shaped around a sellable flagship product spine: lead and opportunity intake, qualification, file and evidence handling, bid and estimate workflow, customer portal continuity, and Auricrux guidance that turns scattered activity into next-action clarity."
       primaryCta={{ href: '/login', label: 'Open FCA Workspace' }}
       secondaryCta={{ href: '/platform', label: 'Explore Platform Modules' }}
       proofPoints={[
-        { value: '1 platform', label: 'Public site, SaaS workspace, Academy, and Auricrux operating in one shell.' },
+        { value: '1 flagship', label: 'Contractor Command ties intake, qualification, files, bids, and customer visibility into one product story.' },
         { value: '3 buyer paths', label: 'Request demo, launch workspace, or enter Academy without losing context.' },
-        { value: 'Real next actions', label: 'Auricrux keeps bids, projects, and training aligned to production outcomes.' },
+        { value: 'Real next actions', label: 'Auricrux keeps opportunity pressure, delivery continuity, and training readiness aligned.' },
       ]}
       cards={[
         {
           title: 'Revenue path',
-          detail: 'Move from market-facing credibility into authenticated workspace motion that looks like a real contractor product, not a disconnected demo shell.',
+          detail: 'Move from market-facing credibility into authenticated opportunity and bid motion that looks like a real contractor product, not a disconnected demo shell.',
         },
         {
           title: 'Operational path',
-          detail: 'Give estimators, PMs, owners, and customers a live route into project visibility, files, messages, and execution continuity.',
+          detail: 'Give estimators, PMs, owners, and customers a live route into qualification status, files, messages, project continuity, and execution visibility.',
         },
         {
           title: 'Readiness path',
@@ -30,11 +30,11 @@ export default function Home() {
       ]}
       sections={[
         {
-          title: 'Compete like an enterprise platform',
-          lead: 'The website has to feel credible next to Autodesk, Intuit, and Procore. That means a stronger platform story, stronger navigation, and stronger proof of operational depth.',
+          title: 'Sell a real contractor product',
+          lead: 'The website has to sell a clear first product before the broader ecosystem can expand. That means sharper buyer language, sharper workflow narrative, and sharper proof of utility.',
           items: [
-            'Position FCA as a unified construction operating system instead of a single-purpose bid tool.',
-            'Show how workspace, Academy, and Auricrux reinforce each other instead of behaving like separate products.',
+            'Lead with Contractor Command as the intake, qualification, bid, and customer-portal workspace.',
+            'Show how workspace, Academy, and Auricrux reinforce one another instead of behaving like separate products.',
             'Turn every public CTA into a route toward real product interaction.'
           ],
         },
@@ -42,8 +42,8 @@ export default function Home() {
           title: 'Build real contractor journeys',
           lead: 'Customer-ready product means a contractor can enter, understand the value, log in, and immediately move into useful work with guided continuity.',
           items: [
-            'Bid and project workspaces must show current state, next action, and decision pressure.',
-            'Auricrux must help the user see what to do next and why it matters.',
+            'Opportunity and bid workspaces must show current state, next action, and decision pressure.',
+            'File and evidence handling must help the team qualify work, defend decisions, and present a trustworthy client-facing posture.',
             'Academy must close capability gaps when adoption or execution readiness is weak.'
           ],
         },
