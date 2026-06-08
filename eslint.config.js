@@ -18,4 +18,15 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
+  {
+    files: [
+      'src/routes/**/*.js',
+      'src/ui/*.js',
+      'src/components/RouteExperienceShell.jsx',
+      'src/auricrux_engine.js',
+    ],
+    rules: {
+      'no-unused-vars': ['error', { varsIgnorePattern: '^React$' }],
+    },
+  },
 ])
