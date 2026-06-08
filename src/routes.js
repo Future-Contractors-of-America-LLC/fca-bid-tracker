@@ -24,6 +24,7 @@ import PortalProfile from "./pages/portal/PortalProfile";
 import PortalAuricrux from "./pages/portal/PortalAuricrux";
 
 import AcademyHome from "./pages/academy/AcademyHome";
+import AcademyCatalog from "./pages/academy/AcademyCatalog";
 
 export const routes = {
   "/": Home,
@@ -51,8 +52,10 @@ export const routes = {
   "/portal/profile": PortalProfile,
   "/portal/auricrux": PortalAuricrux,
   "/portal/academy": AcademyHome,
+  "/portal/academy/catalog": AcademyCatalog,
 
   "/academy": AcademyHome,
+  "/academy/catalog": AcademyCatalog,
 };
 
 export function normalizePath(pathname) {

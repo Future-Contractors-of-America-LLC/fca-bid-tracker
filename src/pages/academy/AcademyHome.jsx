@@ -18,6 +18,7 @@ import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderC
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
 import { academyClassrooms, saasOperationalPathways } from "../../productBlueprint";
+import { academyCatalog } from "../../academyCatalog";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { pageShellStyle } from "../../publicShellStyles";
@@ -120,8 +121,8 @@ export default function AcademyHome() {
         <BuildExpansionCommandDeck
           title={academyContinuityMessaging.expansion.title}
           detail={academyContinuityMessaging.expansion.detail}
-          primaryHref="/portal/academy"
-          primaryLabel="Open Academy"
+          primaryHref="/portal/academy/catalog"
+          primaryLabel="Open Academy Catalog"
           secondaryHref="/portal/messages"
           secondaryLabel="Carry continuity into comms"
         />
@@ -197,6 +198,26 @@ export default function AcademyHome() {
                 ))}
               </ul>
               <a href={classroom.linkedSurface} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{classroom.linkedLabel}</a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Academy catalog depth</div>
+        <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
+          The classroom layer now includes a dedicated catalog route with named programs, course sequences, labs, and linked production surfaces for real buyer and learner review.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+          {academyCatalog.programs.map((program) => (
+            <div key={program.key} style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
+              <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 8 }}>
+                <div><strong>Credential:</strong> {program.credential}</div>
+                <div><strong>Courses:</strong> {program.courses.length}</div>
+                <div><strong>Outcomes:</strong> {program.outcomes.length}</div>
+              </div>
+              <a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Academy Catalog</a>
             </div>
           ))}
         </div>

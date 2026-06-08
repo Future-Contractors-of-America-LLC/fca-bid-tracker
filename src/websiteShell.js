@@ -29,6 +29,11 @@ export const publicActionCatalog = {
     href: "/academy",
     variant: "light",
   },
+  academyCatalog: {
+    label: "Open Academy Catalog",
+    href: "/academy/catalog",
+    variant: "secondary",
+  },
   platformOverview: {
     label: "Platform Overview",
     href: "/platform",
@@ -186,9 +191,9 @@ export const portalNarrativeCtaSets = {
 };
 
 export const academyCtaSets = {
-  continuityActions: [{ ...publicActionCatalog.academyContinuity, label: "Open Academy", variant: "primary" }, publicActionCatalog.pricing],
+  continuityActions: [{ ...publicActionCatalog.academyContinuity, label: "Open Academy", variant: "primary" }, publicActionCatalog.pricing, publicActionCatalog.academyCatalog],
   connectedPortalRoutes: [publicActionCatalog.projects, publicActionCatalog.files, publicActionCatalog.messages, publicActionCatalog.billing],
-  productionClose: [{ ...publicActionCatalog.contact, variant: "primary" }],
+  productionClose: [{ ...publicActionCatalog.contact, variant: "primary" }, publicActionCatalog.academyCatalog],
 };
 
 export const homeCtaSets = {
@@ -239,7 +244,7 @@ export const platformDashboardCtaSets = {
 export const shellHeaderCtaSets = {
   workspace: { primaryHref: publicActionCatalog.portal.href, primaryLabel: publicActionCatalog.portal.label, secondaryHref: publicActionCatalog.platform.href, secondaryLabel: publicActionCatalog.platform.label },
   conversion: { primaryHref: publicActionCatalog.walkthrough.href, primaryLabel: publicActionCatalog.walkthrough.label, secondaryHref: publicActionCatalog.platform.href, secondaryLabel: publicActionCatalog.platform.label },
-  academy: { primaryHref: publicActionCatalog.portal.href, primaryLabel: publicActionCatalog.portal.label, secondaryHref: publicActionCatalog.contact.href, secondaryLabel: publicActionCatalog.contact.label },
+  academy: { primaryHref: publicActionCatalog.portal.href, primaryLabel: publicActionCatalog.portal.label, secondaryHref: publicActionCatalog.academyCatalog.href, secondaryLabel: publicActionCatalog.academyCatalog.label },
 };
 
 export const executiveSignalCtaSets = {
@@ -247,7 +252,7 @@ export const executiveSignalCtaSets = {
   publicAuricrux: { href: publicActionCatalog.platform.href, label: publicActionCatalog.platform.label },
   conversion: { href: publicActionCatalog.contact.href, label: publicActionCatalog.contact.label },
   contact: { href: publicActionCatalog.walkthrough.href, label: publicActionCatalog.walkthrough.label },
-  academy: { href: publicActionCatalog.messages.href, label: "Preserve follow-through" },
+  academy: { href: publicActionCatalog.academyCatalog.href, label: "Open classroom catalog" },
   portal: { href: portalShellCtas.executiveSignal.href, label: portalShellCtas.executiveSignal.label },
 };
 
@@ -341,6 +346,7 @@ export const publicSurfaceLinks = [
   { key: "auricrux", title: "Auricrux Guidance", detail: "See how the operating layer keeps next steps, customer visibility, and execution continuity clear.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
   { key: "portal", title: "Customer Portal", detail: "Projects, files, notifications, billing follow-through, and customer-facing visibility.", href: "/portal", ctaLabel: "Open Portal Workspace" },
   { key: "academy", title: "FCA Academy", detail: "Training pathways, certification progress, safety reinforcement, and workforce readiness tied to the same customer journey.", href: "/academy", ctaLabel: "Open Academy" },
+  { key: "academyCatalog", title: "Academy Catalog", detail: "See named programs, credentials, labs, and classroom pathways tied directly to live contractor workflows.", href: "/academy/catalog", ctaLabel: "Open Academy Catalog" },
   { key: "warranty", title: "Warranty Continuity", detail: "Post-handover service, support posture, maintenance continuity, and recurring customer retention flow.", href: "/warranty", ctaLabel: "Open Warranty Continuity" },
   { key: "referrals", title: "Referral Continuity", detail: "Turn finished work into reviews, customer advocacy, and guided new-opportunity motion.", href: "/referrals", ctaLabel: "Open Referral Continuity" },
   { key: "pricing", title: "Plans & Rollout", detail: "Move from interest into rollout planning, guided setup, and next implementation steps.", href: "/pricing", ctaLabel: "Plans & Rollout" },
@@ -386,6 +392,7 @@ export const shellWorkspaceRoutes = [
   { label: "Unified Platform Dashboard", href: "/portal/platform" },
   { label: "Customer Portal", href: "/portal" },
   { label: "FCA Academy", href: "/academy" },
+  { label: "Academy Catalog", href: "/academy/catalog" },
   { label: "Bid Entry", href: "/bid-entry" },
   { label: "Bid Status", href: "/bid-status" },
 ];
@@ -416,5 +423,5 @@ export const publicBodyCtaSets = {
   loginWorkspace: [{ ...publicActionCatalog.portal, variant: "primary" }, publicActionCatalog.platform, publicActionCatalog.academy],
   portalEntry: [{ ...publicActionCatalog.platform, variant: "primary" }, publicActionCatalog.portal, publicActionCatalog.academy],
   portalCoordination: [{ ...publicActionCatalog.platform, variant: "primary" }, publicActionCatalog.portal, publicActionCatalog.contact],
-  academyEntry: [{ ...publicActionCatalog.portal, variant: "primary" }, publicActionCatalog.platform, publicActionCatalog.contact],
+  academyEntry: [{ ...publicActionCatalog.portal, variant: "primary" }, publicActionCatalog.platform, publicActionCatalog.contact, publicActionCatalog.academyCatalog],
 };

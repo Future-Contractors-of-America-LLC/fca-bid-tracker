@@ -42,6 +42,10 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:product-readiness-report
 
+      - name: Generate academy catalog evidence
+        if: ${{ always() }}
+        run: npm run generate:academy-catalog-report
+
       - name: Publish product readiness summary
         if: ${{ always() }}
         run: |
@@ -49,6 +53,12 @@ jobs:
             cat generated/product-readiness-report.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Product readiness report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f generated/academy-catalog-report.md ]; then
+            cat generated/academy-catalog-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Academy catalog report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload product readiness artifacts
@@ -59,6 +69,8 @@ jobs:
           path: |
             generated/product-readiness-report.json
             generated/product-readiness-report.md
+            generated/academy-catalog-report.json
+            generated/academy-catalog-report.md
           if-no-files-found: warn
 
-# retrigger: 2026-06-08T15:00:00Z
+# retrigger: 2026-06-08T16:10:00Z
