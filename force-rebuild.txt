@@ -1,1 +1,2 @@
-force rebuild 2026-06-07T21:14Z exact commit witness verification for stale public shell recovery
+force rebuild 2026-06-08T01:16Z fresh SWA run requested after executive-command validator alignment on main
+latest target commit 4283cdbfc09af748916b6d6209c617a02a64a94a
