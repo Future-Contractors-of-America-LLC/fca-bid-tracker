@@ -1,5 +1,8 @@
 name: Auricrux Auto PR
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   workflow_dispatch:
   repository_dispatch:
@@ -19,7 +22,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.ref_name }}
 
@@ -41,7 +44,7 @@ jobs:
           test -s AURICRUX_DIGEST.txt || { echo "AURICRUX_DIGEST.txt was not generated"; exit 1; }
 
       - name: Upload maintenance artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: auricrux-autopr-artifacts
           path: |
