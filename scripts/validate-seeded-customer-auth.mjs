@@ -28,7 +28,7 @@ const checks = [
       "authenticateWorkspaceAccount",
       "Password",
       "Use Seeded Test Account",
-      "founder.test@futurecontractorsofamerica.com",
+      "PRIMARY_TEST_ACCOUNT.email",
       'fetch("/api/customer-login"',
       'accountSource: payload.authenticationMode || "api"',
       'accountSource: "local-fallback"',
