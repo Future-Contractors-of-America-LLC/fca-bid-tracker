@@ -38,4 +38,27 @@ jobs:
       - name: Run governed build validation
         run: npm run build:system
 
-# retrigger: 2026-06-07T22:10:00Z
+      - name: Generate product readiness evidence
+        if: ${{ always() }}
+        run: npm run generate:product-readiness-report
+
+      - name: Publish product readiness summary
+        if: ${{ always() }}
+        run: |
+          if [ -f generated/product-readiness-report.md ]; then
+            cat generated/product-readiness-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Product readiness report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload product readiness artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: fca-product-readiness-${{ github.run_id }}
+          path: |
+            generated/product-readiness-report.json
+            generated/product-readiness-report.md
+          if-no-files-found: warn
+
+# retrigger: 2026-06-08T15:00:00Z
