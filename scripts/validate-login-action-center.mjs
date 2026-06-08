@@ -22,7 +22,7 @@ const checks = [
     markers: [
       'import LoginActionCenter from "../../components/LoginActionCenter";',
       '<LoginActionCenter session={session} login={login} requestedPath={nextHref} />',
-      'reduces friction between conversion, authentication, portal entry, academy continuity, Auricrux access, and revenue-capable workspace activation',
+      'workspace entry routes customers into the unified FCA shell for estimating visibility, project delivery, document control, billing follow-through, academy continuity, communications routing, and guided next steps',
     ],
   },
 ];
