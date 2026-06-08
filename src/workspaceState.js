@@ -5,4 +5,5 @@ export {
   auricruxRail,
   routeStateOverlays,
   projectAuditEvents,
+  portalMessages,
 } from "./systemState";
