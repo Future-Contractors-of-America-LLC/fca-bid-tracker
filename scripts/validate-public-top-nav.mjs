@@ -98,7 +98,7 @@ const checks = [
   {
     file: path.join(root, "src", "pages", "website", "Platform.jsx"),
     markers: [
-      'FCA helps contractor teams move from opportunity to delivery with better visibility into bids, customer updates, files, billing steps, and workforce readiness.',
+      'FCA helps contractor teams move from opportunity to delivery with better visibility into bids, approvals, project files, customer updates, billing steps, workforce readiness, and communications routing.',
       'marginBottom: 0',
       'Linked product areas',
     ],
@@ -106,14 +106,14 @@ const checks = [
   {
     file: path.join(root, "src", "pages", "website", "Pricing.jsx"),
     markers: [
-      'Review the rollout path, then move into contact and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.',
+      'Review the rollout path, activate a real workspace if you are ready to move, then continue into contact, pricing fit, recurring-service posture, referral-readiness, and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.',
       'Immediate next actions',
     ],
   },
   {
     file: path.join(root, "src", "pages", "website", "Contact.jsx"),
     markers: [
-      'The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options and shared next actions already presented above.',
+      'The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options, current pricing paths, shared next actions, and live workspace activation already presented above.',
       'What happens in a walkthrough',
     ],
   },
@@ -146,7 +146,7 @@ const checks = [
     markers: [
       'Persisted message state',
       'BuildExpansionCommandDeck',
-      'Message stream',
+      'Coordination stream',
     ],
   },
   {
