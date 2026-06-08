@@ -19,6 +19,7 @@ const explicitRoutes = new Set([
   "/bid-status",
   "/portal",
   "/portal/platform",
+  "/portal/operations",
   "/portal/projects",
   "/portal/files",
   "/portal/messages",
