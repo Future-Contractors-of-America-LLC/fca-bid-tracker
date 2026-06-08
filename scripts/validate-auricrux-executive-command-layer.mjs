@@ -18,14 +18,16 @@ const checks = [
     file: path.join(root, "src", "components", "ExecutiveSignalBar.jsx"),
     markers: [
       'import AuricruxExecutiveCommandInsight from "./AuricruxExecutiveCommandInsight";',
-      "<AuricruxExecutiveCommandInsight mode=\"signal\" nextHref={resolvedHref} nextLabel={resolvedLabel} />",
+      '<AuricruxExecutiveCommandInsight mode="signal" nextHref={resolvedHref} nextLabel={resolvedLabel} />',
     ],
   },
   {
     file: path.join(root, "src", "components", "BuildExpansionCommandDeck.jsx"),
     markers: [
       'import AuricruxExecutiveCommandInsight from "./AuricruxExecutiveCommandInsight";',
-      "<AuricruxExecutiveCommandInsight mode=\"deck\" nextHref={primaryHref} nextLabel={primaryLabel} />",
+      "resolveActionPair(",
+      'const { primary, secondary } = resolveActionPair(',
+      '{primary ? <AuricruxExecutiveCommandInsight mode="deck" nextHref={primary.href} nextLabel={primary.label} /> : null}',
     ],
   },
 ];
