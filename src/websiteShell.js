@@ -19,6 +19,11 @@ export const publicActionCatalog = {
     href: "/portal/platform",
     variant: "secondary",
   },
+  operations: {
+    label: "Open Operations Pipeline",
+    href: "/portal/operations",
+    variant: "secondary",
+  },
   portal: {
     label: "Open Portal Workspace",
     href: "/portal",
@@ -28,11 +33,6 @@ export const publicActionCatalog = {
     label: "Open Academy",
     href: "/academy",
     variant: "light",
-  },
-  academyCatalog: {
-    label: "Open Academy Catalog",
-    href: "/academy/catalog",
-    variant: "secondary",
   },
   platformOverview: {
     label: "Platform Overview",
@@ -178,6 +178,7 @@ export const platformJourneyPath = [
 export const platformLinkedProductAreas = [
   publicActionCatalog.portal,
   publicActionCatalog.platform,
+  publicActionCatalog.operations,
   publicActionCatalog.academy,
   publicActionCatalog.bidEntry,
   publicActionCatalog.bidStatus,
@@ -191,9 +192,9 @@ export const portalNarrativeCtaSets = {
 };
 
 export const academyCtaSets = {
-  continuityActions: [{ ...publicActionCatalog.academyContinuity, label: "Open Academy", variant: "primary" }, publicActionCatalog.pricing, publicActionCatalog.academyCatalog],
+  continuityActions: [{ ...publicActionCatalog.academyContinuity, label: "Open Academy", variant: "primary" }, publicActionCatalog.pricing],
   connectedPortalRoutes: [publicActionCatalog.projects, publicActionCatalog.files, publicActionCatalog.messages, publicActionCatalog.billing],
-  productionClose: [{ ...publicActionCatalog.contact, variant: "primary" }, publicActionCatalog.academyCatalog],
+  productionClose: [{ ...publicActionCatalog.contact, variant: "primary" }],
 };
 
 export const homeCtaSets = {
@@ -229,22 +230,23 @@ export const portalEntryCtaSets = {
 export const platformDashboardCtaSets = {
   quickActions: [
     { label: publicActionCatalog.portal.label, href: publicActionCatalog.portal.href, variant: "primary" },
+    { label: publicActionCatalog.operations.label, href: publicActionCatalog.operations.href, variant: "secondary" },
     { label: publicActionCatalog.support.label, href: publicActionCatalog.support.href, variant: "secondary" },
     { label: publicActionCatalog.admin.label, href: publicActionCatalog.admin.href, variant: "secondary" },
     { label: publicActionCatalog.academy.label, href: publicActionCatalog.academy.href, variant: "light" },
   ],
   operationalCards: [
     { title: "Portal operations", detail: "Project visibility, file control, RFIs, messages, and billing continuity remain attached to one tenant and project spine.", href: publicActionCatalog.portal.href, label: publicActionCatalog.portal.label },
+    { title: "Operations pipeline", detail: "Lead intake, qualification, preconstruction, award, document control, closeout, and service continuity are now visible in one contractor pipeline.", href: publicActionCatalog.operations.href, label: publicActionCatalog.operations.label },
     { title: "Academy continuity", detail: "Workforce readiness, learner assignment, and certification visibility now participate in the same shell state.", href: publicActionCatalog.academy.href, label: publicActionCatalog.academy.label },
     { title: "Support posture", detail: "Escalations, continuity recovery, and customer help remain inside the operating shell rather than outside it.", href: publicActionCatalog.support.href, label: publicActionCatalog.support.label },
-    { title: "Admin readiness", detail: "Tenant rollout, seat readiness, governance visibility, and production posture are summarized in one control surface.", href: publicActionCatalog.admin.href, label: publicActionCatalog.admin.label },
   ],
 };
 
 export const shellHeaderCtaSets = {
   workspace: { primaryHref: publicActionCatalog.portal.href, primaryLabel: publicActionCatalog.portal.label, secondaryHref: publicActionCatalog.platform.href, secondaryLabel: publicActionCatalog.platform.label },
   conversion: { primaryHref: publicActionCatalog.walkthrough.href, primaryLabel: publicActionCatalog.walkthrough.label, secondaryHref: publicActionCatalog.platform.href, secondaryLabel: publicActionCatalog.platform.label },
-  academy: { primaryHref: publicActionCatalog.portal.href, primaryLabel: publicActionCatalog.portal.label, secondaryHref: publicActionCatalog.academyCatalog.href, secondaryLabel: publicActionCatalog.academyCatalog.label },
+  academy: { primaryHref: publicActionCatalog.portal.href, primaryLabel: publicActionCatalog.portal.label, secondaryHref: publicActionCatalog.contact.href, secondaryLabel: publicActionCatalog.contact.label },
 };
 
 export const executiveSignalCtaSets = {
@@ -252,7 +254,7 @@ export const executiveSignalCtaSets = {
   publicAuricrux: { href: publicActionCatalog.platform.href, label: publicActionCatalog.platform.label },
   conversion: { href: publicActionCatalog.contact.href, label: publicActionCatalog.contact.label },
   contact: { href: publicActionCatalog.walkthrough.href, label: publicActionCatalog.walkthrough.label },
-  academy: { href: publicActionCatalog.academyCatalog.href, label: "Open classroom catalog" },
+  academy: { href: publicActionCatalog.messages.href, label: "Preserve follow-through" },
   portal: { href: portalShellCtas.executiveSignal.href, label: portalShellCtas.executiveSignal.label },
 };
 
@@ -345,8 +347,8 @@ export const publicSurfaceLinks = [
   { key: "platform", title: "Platform Overview", detail: "See how FCA keeps bids, project visibility, communication, field documentation, and training connected in one operating system.", href: "/platform", ctaLabel: "Platform Overview" },
   { key: "auricrux", title: "Auricrux Guidance", detail: "See how the operating layer keeps next steps, customer visibility, and execution continuity clear.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
   { key: "portal", title: "Customer Portal", detail: "Projects, files, notifications, billing follow-through, and customer-facing visibility.", href: "/portal", ctaLabel: "Open Portal Workspace" },
+  { key: "operations", title: "Operations Pipeline", detail: "See the contractor execution stages from intake through warranty as one usable SaaS pathway.", href: "/portal/operations", ctaLabel: "Open Operations Pipeline" },
   { key: "academy", title: "FCA Academy", detail: "Training pathways, certification progress, safety reinforcement, and workforce readiness tied to the same customer journey.", href: "/academy", ctaLabel: "Open Academy" },
-  { key: "academyCatalog", title: "Academy Catalog", detail: "See named programs, credentials, labs, and classroom pathways tied directly to live contractor workflows.", href: "/academy/catalog", ctaLabel: "Open Academy Catalog" },
   { key: "warranty", title: "Warranty Continuity", detail: "Post-handover service, support posture, maintenance continuity, and recurring customer retention flow.", href: "/warranty", ctaLabel: "Open Warranty Continuity" },
   { key: "referrals", title: "Referral Continuity", detail: "Turn finished work into reviews, customer advocacy, and guided new-opportunity motion.", href: "/referrals", ctaLabel: "Open Referral Continuity" },
   { key: "pricing", title: "Plans & Rollout", detail: "Move from interest into rollout planning, guided setup, and next implementation steps.", href: "/pricing", ctaLabel: "Plans & Rollout" },
@@ -390,9 +392,9 @@ export const shellWorkspaceRoutes = [
   { label: "Live Test Login", href: "/login?seeded=1" },
   { label: "Instant Test Workspace", href: "/login?seeded=1&autologin=1&next=/portal/platform" },
   { label: "Unified Platform Dashboard", href: "/portal/platform" },
+  { label: "Operations Pipeline", href: "/portal/operations" },
   { label: "Customer Portal", href: "/portal" },
   { label: "FCA Academy", href: "/academy" },
-  { label: "Academy Catalog", href: "/academy/catalog" },
   { label: "Bid Entry", href: "/bid-entry" },
   { label: "Bid Status", href: "/bid-status" },
 ];
@@ -421,7 +423,7 @@ export const publicBodyCtaSets = {
   contactHero: [{ ...publicActionCatalog.platform, variant: "primary" }, publicActionCatalog.workspace, publicActionCatalog.walkthrough],
   contactImmediate: [publicActionCatalog.workspace, publicActionCatalog.platform, publicActionCatalog.walkthrough],
   loginWorkspace: [{ ...publicActionCatalog.portal, variant: "primary" }, publicActionCatalog.platform, publicActionCatalog.academy],
-  portalEntry: [{ ...publicActionCatalog.platform, variant: "primary" }, publicActionCatalog.portal, publicActionCatalog.academy],
+  portalEntry: [{ ...publicActionCatalog.platform, variant: "primary" }, publicActionCatalog.operations, publicActionCatalog.portal, publicActionCatalog.academy],
   portalCoordination: [{ ...publicActionCatalog.platform, variant: "primary" }, publicActionCatalog.portal, publicActionCatalog.contact],
-  academyEntry: [{ ...publicActionCatalog.portal, variant: "primary" }, publicActionCatalog.platform, publicActionCatalog.contact, publicActionCatalog.academyCatalog],
+  academyEntry: [{ ...publicActionCatalog.portal, variant: "primary" }, publicActionCatalog.platform, publicActionCatalog.contact],
 };

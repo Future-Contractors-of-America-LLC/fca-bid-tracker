@@ -22,9 +22,9 @@ import PortalSupport from "./pages/portal/PortalSupport";
 import PortalAdmin from "./pages/portal/PortalAdmin";
 import PortalProfile from "./pages/portal/PortalProfile";
 import PortalAuricrux from "./pages/portal/PortalAuricrux";
+import PortalOperations from "./pages/portal/PortalOperations";
 
 import AcademyHome from "./pages/academy/AcademyHome";
-import AcademyCatalog from "./pages/academy/AcademyCatalog";
 
 export const routes = {
   "/": Home,
@@ -41,6 +41,7 @@ export const routes = {
 
   "/portal": PortalHome,
   "/portal/platform": PlatformDashboard,
+  "/portal/operations": PortalOperations,
   "/portal/projects": PortalProjects,
   "/portal/files": PortalFiles,
   "/portal/messages": PortalMessages,
@@ -52,10 +53,8 @@ export const routes = {
   "/portal/profile": PortalProfile,
   "/portal/auricrux": PortalAuricrux,
   "/portal/academy": AcademyHome,
-  "/portal/academy/catalog": AcademyCatalog,
 
   "/academy": AcademyHome,
-  "/academy/catalog": AcademyCatalog,
 };
 
 export function normalizePath(pathname) {
