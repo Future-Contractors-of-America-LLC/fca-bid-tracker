@@ -54,8 +54,8 @@ jobs:
           else
             echo "Product readiness report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
-          echo "" >> "$GITHUB_STEP_SUMMARY"
           if [ -f generated/academy-catalog-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
             cat generated/academy-catalog-report.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Academy catalog report missing" >> "$GITHUB_STEP_SUMMARY"
@@ -73,4 +73,4 @@ jobs:
             generated/academy-catalog-report.md
           if-no-files-found: warn
 
-# retrigger: 2026-06-08T16:10:00Z
+# retrigger: 2026-06-08T15:20:00Z

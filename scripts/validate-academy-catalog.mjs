@@ -3,12 +3,9 @@ import path from "path";
 import { pathToFileURL } from "url";
 
 const root = process.cwd();
-const catalogModule = await import(pathToFileURL(path.join(root, "src", "academyCatalog.js")).href);
 const routesSource = await fs.readFile(path.join(root, "src", "routes.js"), "utf8");
 const academyHomeSource = await fs.readFile(path.join(root, "src", "pages", "academy", "AcademyHome.jsx"), "utf8");
-const academyCatalogSource = await fs.readFile(path.join(root, "src", "pages", "academy", "AcademyCatalog.jsx"), "utf8");
-const websiteShellSource = await fs.readFile(path.join(root, "src", "websiteShell.js"), "utf8");
-
+const catalogModule = await import(pathToFileURL(path.join(root, "src", "academyCatalog.js")).href);
 const { academyCatalog } = catalogModule;
 
 function extractRouteKeys(source) {
@@ -16,44 +13,56 @@ function extractRouteKeys(source) {
   if (!routeBlockMatch) {
     throw new Error("Unable to locate exported routes object in src/routes.js");
   }
-
   return [...routeBlockMatch[1].matchAll(/(["'])(\/[^"']*)\1\s*:/g)].map((match) => match[2]);
 }
 
 const routeSet = new Set(extractRouteKeys(routesSource));
 const failures = [];
-const programs = academyCatalog?.programs || [];
 
-if (!Array.isArray(programs) || programs.length < 4) {
-  failures.push("academyCatalog.programs must define at least 4 programs.");
+if (!academyCatalog || typeof academyCatalog !== "object") {
+  failures.push("academyCatalog export is missing.");
 }
 
-for (const [index, program] of programs.entries()) {
-  if (!program.title || !program.credential || !program.goal) {
-    failures.push(`academyCatalog.programs[${index}] is missing title, credential, or goal.`);
+if (!Array.isArray(academyCatalog.programs) || academyCatalog.programs.length < 4) {
+  failures.push("academyCatalog.programs must contain at least 4 programs.");
+}
+if (!Array.isArray(academyCatalog.credentials) || academyCatalog.credentials.length < 4) {
+  failures.push("academyCatalog.credentials must contain at least 4 credentials.");
+}
+if (!Array.isArray(academyCatalog.pathways) || academyCatalog.pathways.length < 3) {
+  failures.push("academyCatalog.pathways must contain at least 3 pathways.");
+}
+
+for (const [index, program] of (academyCatalog.programs || []).entries()) {
+  if (!program.title || !program.credential || !program.audience || !program.duration || !program.format || !program.outcome) {
+    failures.push(`academyCatalog.programs[${index}] is missing required fields.`);
   }
-  if (!Array.isArray(program.outcomes) || program.outcomes.length < 4) {
-    failures.push(`academyCatalog.programs[${index}] must define at least 4 outcomes.`);
+  if (!Array.isArray(program.classrooms) || program.classrooms.length === 0) {
+    failures.push(`academyCatalog.programs[${index}] must reference at least one classroom.`);
   }
-  if (!Array.isArray(program.courses) || program.courses.length < 3) {
-    failures.push(`academyCatalog.programs[${index}] must define at least 3 courses.`);
+  if (!Array.isArray(program.stack) || program.stack.length < 3) {
+    failures.push(`academyCatalog.programs[${index}] must list at least 3 stack surfaces.`);
   }
-  if (!routeSet.has(program.linkedSurface)) {
-    failures.push(`academyCatalog.programs[${index}] points to unsupported linkedSurface: ${program.linkedSurface}`);
+}
+
+for (const [index, pathway] of (academyCatalog.pathways || []).entries()) {
+  if (!pathway.title || !pathway.description || !pathway.label) {
+    failures.push(`academyCatalog.pathways[${index}] is missing required pathway fields.`);
+  }
+  if (!routeSet.has(pathway.route)) {
+    failures.push(`academyCatalog.pathways[${index}] points to unsupported route: ${pathway.route}`);
   }
 }
 
 const requiredMarkers = [
-  "/academy/catalog",
-  "/portal/academy/catalog",
   "academyCatalog.programs.map((program)",
-  "publicActionCatalog.academyCatalog",
+  "academyCatalog.credentials.map((credential)",
+  "academyCatalog.pathways.map((pathway)",
 ];
 
 for (const marker of requiredMarkers) {
-  const sources = [academyHomeSource, academyCatalogSource, websiteShellSource, routesSource];
-  if (!sources.some((source) => source.includes(marker))) {
-    failures.push(`Expected academy catalog marker not found: ${marker}`);
+  if (!academyHomeSource.includes(marker)) {
+    failures.push(`AcademyHome.jsx no longer references required academy catalog marker: ${marker}`);
   }
 }
 
@@ -65,4 +74,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Academy catalog validation passed for ${programs.length} programs with dedicated catalog routes and CTA coverage.`);
+console.log(`Academy catalog validation passed for ${academyCatalog.programs.length} programs, ${academyCatalog.credentials.length} credentials, and ${academyCatalog.pathways.length} pathways.`);

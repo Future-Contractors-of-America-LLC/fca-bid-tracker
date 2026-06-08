@@ -121,8 +121,8 @@ export default function AcademyHome() {
         <BuildExpansionCommandDeck
           title={academyContinuityMessaging.expansion.title}
           detail={academyContinuityMessaging.expansion.detail}
-          primaryHref="/portal/academy/catalog"
-          primaryLabel="Open Academy Catalog"
+          primaryHref="/portal/academy"
+          primaryLabel="Open Academy"
           secondaryHref="/portal/messages"
           secondaryLabel="Carry continuity into comms"
         />
@@ -204,22 +204,49 @@ export default function AcademyHome() {
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Academy catalog depth</div>
-        <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
-          The classroom layer now includes a dedicated catalog route with named programs, course sequences, labs, and linked production surfaces for real buyer and learner review.
-        </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Program catalog</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Academy now presents a real catalog of programs, credentials, and rollout pathways</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16, marginBottom: 18 }}>
           {academyCatalog.programs.map((program) => (
-            <div key={program.key} style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div key={program.key} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
+              <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>{program.credential}</div>
               <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
-              <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 8 }}>
-                <div><strong>Credential:</strong> {program.credential}</div>
-                <div><strong>Courses:</strong> {program.courses.length}</div>
-                <div><strong>Outcomes:</strong> {program.outcomes.length}</div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>
+                <div><strong>Audience:</strong> {program.audience}</div>
+                <div><strong>Duration:</strong> {program.duration}</div>
+                <div><strong>Format:</strong> {program.format}</div>
               </div>
-              <a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Academy Catalog</a>
+              <p style={{ color: "#334155", lineHeight: 1.7 }}>{program.outcome}</p>
+              <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 6 }}>Linked stack</div>
+              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
+                {program.stack.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </div>
           ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Credential governance</div>
+            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
+              {academyCatalog.credentials.map((credential) => (
+                <li key={credential.title}>
+                  <strong>{credential.title}</strong> — {credential.renewal}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Curriculum-to-product pathways</div>
+            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
+              {academyCatalog.pathways.map((pathway) => (
+                <li key={pathway.title}>
+                  <a href={pathway.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{pathway.label}</a> — {pathway.description}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
