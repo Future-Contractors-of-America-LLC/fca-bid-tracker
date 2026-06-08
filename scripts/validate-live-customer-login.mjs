@@ -74,7 +74,10 @@ const checks = [
     markers: [
       'import CustomerSessionBar from "../../components/CustomerSessionBar";',
       'import DeploymentStatusBeacon from "../../components/DeploymentStatusBeacon";',
-      'import { PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";',
+      'from "../../customerAccounts";',
+      "PRIMARY_TEST_ACCOUNT",
+      "LAUNCH_SINGLE_USER_ACCOUNT",
+      "resolveSeededCustomerAccount",
       "readLoginQueryState",
       'const seeded = params.get("seeded") === "1" || params.get("account") === "test";',
       'const autologin = seeded && params.get("autologin") === "1";',
@@ -90,6 +93,8 @@ const checks = [
       "Use Seeded Test Account",
       "Open Seeded Login URL",
       "Instant Platform Access",
+      "Launch-ready single-user company account",
+      "Use Launch Account",
       "navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));",
     ],
   },
@@ -100,6 +105,8 @@ const checks = [
       "toggleProduct(product.key, product.enabled)",
       "Disable Access",
       "Enable Access",
+      "Account source:",
+      "Launch readiness:",
     ],
   },
   {
@@ -140,4 +147,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Live customer login validation passed across session state, shared navigation, router guard, seeded auth continuity, query-driven test entry, profile controls, and authenticated launch surfaces.");
+console.log("Live customer login validation passed across session state, shared navigation, router guard, seeded auth continuity, query-driven test entry, launch single-user visibility, profile controls, and authenticated launch surfaces.");

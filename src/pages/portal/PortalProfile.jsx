@@ -70,6 +70,12 @@ export default function PortalProfile() {
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
   const customerId = session?.customerId || "CUST-FCA-LIVE-001";
   const selectedPlan = session?.selectedPlan || "startup";
+  const accountSource = session?.accountSource || "workspace-shell";
+  const launchReadiness = accountSource === "api"
+    ? "Production-backed login active"
+    : accountSource === "local-fallback"
+      ? "Seeded launch/test login active"
+      : "Shell continuity mode";
 
   function toggleProduct(productKey, enabled) {
     setProductAccess(productKey, !enabled);
@@ -127,7 +133,7 @@ export default function PortalProfile() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Customer profile now reads from the live authenticated workspace"
-          detail="This profile route binds session identity, tenant continuity, project state, Auricrux guidance, plan activation, and communications access into one customer-facing operating surface."
+          detail="This profile route binds session identity, tenant continuity, project state, Auricrux guidance, plan activation, launch posture, and communications access into one customer-facing operating surface."
         />
       </div>
 
@@ -154,6 +160,8 @@ export default function PortalProfile() {
             <div><strong>Customer email:</strong> {sessionEmail}</div>
             <div><strong>Workspace role:</strong> {workspaceRole}</div>
             <div><strong>Selected plan:</strong> {selectedPlan}</div>
+            <div><strong>Account source:</strong> {accountSource}</div>
+            <div><strong>Launch readiness:</strong> {launchReadiness}</div>
             <div><strong>Session status:</strong> {isAuthenticated ? "Authenticated" : "Shell continuity mode"}</div>
             <div><strong>Last login:</strong> {sessionLogin}</div>
           </div>
@@ -263,7 +271,7 @@ export default function PortalProfile() {
         <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0 }}>
           The profile icon now has a real destination inside the product. Instead of routing customers into a dead-end account stub,
           this surface confirms who is signed in, what workspace they control, what project spine is active, what role they hold in the construction workflow,
-          what product layers they can access, what communications lanes are enabled, what plan they are on, and what Auricrux says should happen next.
+          what product layers they can access, what communications lanes are enabled, what plan they are on, what account source is active, and what Auricrux says should happen next.
         </p>
       </div>
     </PortalShell>
