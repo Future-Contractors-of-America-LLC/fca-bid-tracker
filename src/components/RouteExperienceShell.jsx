@@ -63,6 +63,31 @@ const shellStyles = {
     border: '1px solid rgba(148, 163, 184, 0.25)',
     fontWeight: 700,
   },
+  proofGrid: {
+    display: 'grid',
+    gap: '0.9rem',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+    marginTop: '1.25rem',
+  },
+  proofCard: {
+    background: 'rgba(15, 23, 42, 0.7)',
+    border: '1px solid rgba(79, 124, 255, 0.2)',
+    borderRadius: '1rem',
+    padding: '1rem',
+  },
+  proofValue: {
+    display: 'block',
+    fontSize: '1.4rem',
+    fontWeight: 800,
+    color: '#f8fafc',
+  },
+  proofLabel: {
+    display: 'block',
+    marginTop: '0.4rem',
+    fontSize: '0.86rem',
+    color: '#cbd5e1',
+    lineHeight: 1.5,
+  },
   grid: {
     display: 'grid',
     gap: '1rem',
@@ -87,9 +112,49 @@ const shellStyles = {
     lineHeight: 1.6,
     fontSize: '0.96rem',
   },
+  sectionGrid: {
+    display: 'grid',
+    gap: '1rem',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+  },
+  section: {
+    background: 'rgba(2, 6, 23, 0.36)',
+    border: '1px solid rgba(148, 163, 184, 0.16)',
+    borderRadius: '1rem',
+    padding: '1.2rem',
+  },
+  sectionTitle: {
+    margin: 0,
+    fontSize: '1.02rem',
+    color: '#f8fafc',
+  },
+  sectionLead: {
+    margin: '0.65rem 0 0',
+    color: '#cbd5e1',
+    lineHeight: 1.65,
+    fontSize: '0.95rem',
+  },
+  list: {
+    margin: '0.9rem 0 0',
+    paddingLeft: '1.1rem',
+    color: '#dbe7f5',
+    lineHeight: 1.7,
+  },
+  listItem: {
+    marginBottom: '0.45rem',
+  },
 };
 
-export default function RouteExperienceShell({ eyebrow, title, lead, primaryCta, secondaryCta, cards = [] }) {
+export default function RouteExperienceShell({
+  eyebrow,
+  title,
+  lead,
+  primaryCta,
+  secondaryCta,
+  proofPoints = [],
+  cards = [],
+  sections = [],
+}) {
   return (
     <section style={shellStyles.page}>
       <div style={shellStyles.wrap}>
@@ -109,6 +174,16 @@ export default function RouteExperienceShell({ eyebrow, title, lead, primaryCta,
               </Link>
             ) : null}
           </div>
+          {proofPoints.length ? (
+            <div style={shellStyles.proofGrid}>
+              {proofPoints.map((point) => (
+                <article key={`${point.value}-${point.label}`} style={shellStyles.proofCard}>
+                  <span style={shellStyles.proofValue}>{point.value}</span>
+                  <span style={shellStyles.proofLabel}>{point.label}</span>
+                </article>
+              ))}
+            </div>
+          ) : null}
         </header>
         {cards.length ? (
           <div style={shellStyles.grid}>
@@ -117,6 +192,23 @@ export default function RouteExperienceShell({ eyebrow, title, lead, primaryCta,
                 <h2 style={shellStyles.cardTitle}>{card.title}</h2>
                 <p style={shellStyles.cardBody}>{card.detail}</p>
               </article>
+            ))}
+          </div>
+        ) : null}
+        {sections.length ? (
+          <div style={shellStyles.sectionGrid}>
+            {sections.map((section) => (
+              <section key={section.title} style={shellStyles.section}>
+                <h2 style={shellStyles.sectionTitle}>{section.title}</h2>
+                {section.lead ? <p style={shellStyles.sectionLead}>{section.lead}</p> : null}
+                {section.items?.length ? (
+                  <ul style={shellStyles.list}>
+                    {section.items.map((item) => (
+                      <li key={item} style={shellStyles.listItem}>{item}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </section>
             ))}
           </div>
         ) : null}
