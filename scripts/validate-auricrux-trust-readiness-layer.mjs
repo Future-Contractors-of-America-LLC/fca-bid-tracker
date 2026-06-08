@@ -18,21 +18,23 @@ const checks = [
     file: path.join(root, "src", "components", "CustomerTrustPanel.jsx"),
     markers: [
       'import AuricruxTrustInsight from "./AuricruxTrustInsight";',
-      "<AuricruxTrustInsight mode=\"trust\" primaryHref=\"/portal/platform\" primaryLabel=\"Open Platform Dashboard\" />",
+      '<AuricruxTrustInsight mode="trust" primaryHref="/portal/platform" primaryLabel="Open Platform Dashboard" />',
     ],
   },
   {
     file: path.join(root, "src", "components", "CommercialReadinessPanel.jsx"),
     markers: [
       'import AuricruxTrustInsight from "./AuricruxTrustInsight";',
-      "<AuricruxTrustInsight mode=\"readiness\" primaryHref={primaryHref} primaryLabel={primaryLabel} />",
+      '<AuricruxTrustInsight mode="readiness" primaryHref={primaryHref} primaryLabel={primaryLabel} />',
     ],
   },
   {
     file: path.join(root, "src", "components", "PublicOperationsStrip.jsx"),
     markers: [
       'import AuricruxTrustInsight from "./AuricruxTrustInsight";',
-      "<AuricruxTrustInsight mode=\"operations\" primaryHref={primaryHref} primaryLabel={primaryLabel} />",
+      'const { primary, secondary } = resolveActionPair(',
+      'resolveActionPair(',
+      '{primary ? <AuricruxTrustInsight mode="operations" primaryHref={primary.href} primaryLabel={primary.label} /> : null}',
     ],
   },
 ];
