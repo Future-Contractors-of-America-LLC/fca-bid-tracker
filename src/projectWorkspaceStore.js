@@ -1,55 +1,33 @@
-import { currentProject, portalProjects } from "./systemState";
+import { portalProjects } from "./systemState";
 
 export const PROJECT_WORKSPACE_KEY = "fca_project_workspace_v1";
 export const ACTIVE_PROJECT_KEY = "fca_active_project_v1";
 
-function normalizeProjectId(value, fallback = "A117") {
-  const source = String(value || fallback).replace(/^PRJ-?/i, "");
-  const compact = source.replace(/[^A-Za-z0-9]+/g, "");
-  return `PRJ-${compact || fallback}`;
-}
-
 function normalizeProjectRecord(project = {}, index = 0) {
-  const projectId = normalizeProjectId(project.id, `${index + 1}`);
-  const customer = project.customer || currentProject.customer || "Unassigned customer";
-  const stage = project.stage || "Estimating";
-  const nextAction = project.nextAction || "Advance project";
-  const owner = project.owner || "Unassigned";
-  const permitStatus = project.permitStatus || "Permit status pending";
-  const siteStatus = project.siteStatus || "Site status pending";
-
   return {
-    id: projectId,
-    customer,
-    name: project.name || `${customer} · ${projectId}`,
-    projectNumber: project.projectNumber || projectId,
-    opportunityId: project.opportunityId || `OPP-${projectId.replace(/^PRJ-/, "")}`,
-    clientId: project.clientId || `CLIENT-${projectId.replace(/^PRJ-/, "")}`,
-    siteId: project.siteId || `SITE-${projectId.replace(/^PRJ-/, "")}`,
-    stage,
-    nextAction,
-    owner,
+    id: project.id || `PRJ-${index + 1}`,
+    name: project.name || `${project.customer || "Unassigned customer"} Project Workspace`,
+    customer: project.customer || "Unassigned customer",
+    stage: project.stage || "Estimating",
+    nextAction: project.nextAction || "Advance project",
+    owner: project.owner || "Unassigned",
     due: project.due || "TBD",
     superintendent: project.superintendent || "Pending assignment",
-    permitStatus,
-    siteStatus,
+    permitStatus: project.permitStatus || "Permit status pending",
+    siteStatus: project.siteStatus || "Site status pending",
     commercialFocus: project.commercialFocus || "Commercial focus pending",
-    projectHealth: project.projectHealth || (stage.toLowerCase().includes("closeout") ? "Closeout watch" : stage.toLowerCase().includes("execution") ? "Field active" : "Preconstruction active"),
-    continuityAlerts: Array.isArray(project.continuityAlerts)
-      ? project.continuityAlerts
-      : [permitStatus, nextAction].filter(Boolean),
-    fileSetLabel: project.fileSetLabel || "18 linked files and operating artifacts",
+    fileSetLabel: project.fileSetLabel || "Project file spine readiness pending",
     fileSpineStatus:
       project.fileSpineStatus ||
-      `${customer} files, onboarding packets, and coordination artifacts are expected to remain attached to ${projectId}.`,
-    auditLabel: project.auditLabel || "Auricrux action log active",
+      "File, audit, and Auricrux continuity should attach to this same project root.",
+    auditLabel: project.auditLabel || "Project continuity audit active",
     auditStatus:
       project.auditStatus ||
-      `Commercial, file, and operating changes for ${projectId} should remain visible in one audit spine.`,
-    auricruxMode: project.auricruxMode || "Context-aware workspace guidance",
+      "Recent project-stage changes, file linkage, and Auricrux actions should resolve into the same audit spine.",
+    auricruxMode: project.auricruxMode || "Project-aware workspace guidance",
     auricruxSummary:
       project.auricruxSummary ||
-      `Auricrux is preserving ${projectId} as the active project spine for ${customer}.`,
+      "Auricrux is reading this project as an active operating context inside the shared FCA workspace.",
     actionHistory: Array.isArray(project.actionHistory) ? project.actionHistory : [],
     lastActionAt: project.lastActionAt || null,
   };
@@ -57,6 +35,19 @@ function normalizeProjectRecord(project = {}, index = 0) {
 
 function seedProjectWorkspace() {
   return portalProjects.map((project, index) => normalizeProjectRecord(project, index));
+}
+
+function resolveActiveProjectId(projects) {
+  if (typeof window === "undefined") return projects[0]?.id || null;
+
+  try {
+    const savedId = window.localStorage.getItem(ACTIVE_PROJECT_KEY);
+    if (savedId && projects.some((project) => project.id === savedId)) return savedId;
+  } catch {
+    // best-effort read only during shell hardening phase
+  }
+
+  return projects[0]?.id || null;
 }
 
 export function readProjectWorkspace() {
@@ -79,53 +70,44 @@ export function writeProjectWorkspace(projects = []) {
   if (typeof window !== "undefined") {
     try {
       window.localStorage.setItem(PROJECT_WORKSPACE_KEY, JSON.stringify(normalized));
+      const activeId = resolveActiveProjectId(normalized);
+      if (activeId) window.localStorage.setItem(ACTIVE_PROJECT_KEY, activeId);
     } catch {
       // best-effort persistence during shell hardening phase
     }
   }
 
   return normalized;
+}
+
+export function readActiveProjectId(projects = readProjectWorkspace()) {
+  return resolveActiveProjectId(projects);
+}
+
+export function writeActiveProjectId(projectId, projects = readProjectWorkspace()) {
+  const fallbackId = projects[0]?.id || null;
+  const nextId = projects.some((project) => project.id === projectId) ? projectId : fallbackId;
+
+  if (typeof window !== "undefined") {
+    try {
+      if (nextId) window.localStorage.setItem(ACTIVE_PROJECT_KEY, nextId);
+    } catch {
+      // best-effort persistence during shell hardening phase
+    }
+  }
+
+  return nextId;
+}
+
+export function readActiveProjectWorkspace(projects = readProjectWorkspace()) {
+  const activeId = resolveActiveProjectId(projects);
+  return projects.find((project) => project.id === activeId) || projects[0] || null;
 }
 
 export function updateProjectWorkspace(mutator) {
   const current = readProjectWorkspace();
   const next = typeof mutator === "function" ? mutator(current) : current;
-  return writeProjectWorkspace(next);
-}
-
-export function readActiveProjectId(projects = readProjectWorkspace()) {
-  const fallbackId = projects[0]?.id || normalizeProjectId(currentProject.id);
-  if (typeof window === "undefined") return fallbackId;
-
-  try {
-    const stored = window.localStorage.getItem(ACTIVE_PROJECT_KEY);
-    if (!stored) return fallbackId;
-    return normalizeProjectId(stored, fallbackId.replace(/^PRJ-/, ""));
-  } catch {
-    return fallbackId;
-  }
-}
-
-export function writeActiveProjectId(projectId) {
-  const normalized = normalizeProjectId(projectId, currentProject.id);
-
-  if (typeof window !== "undefined") {
-    try {
-      window.localStorage.setItem(ACTIVE_PROJECT_KEY, normalized);
-    } catch {
-      // best-effort persistence during shell hardening phase
-    }
-  }
-
-  return normalized;
-}
-
-export function readActiveProjectContext(projects = readProjectWorkspace()) {
-  const activeId = readActiveProjectId(projects);
-  return projects.find((project) => project.id === activeId) || projects[0] || normalizeProjectRecord(currentProject, 0);
-}
-
-export function selectActiveProject(projectId, projects = readProjectWorkspace()) {
-  const normalizedId = writeActiveProjectId(projectId);
-  return projects.find((project) => project.id === normalizedId) || projects[0] || normalizeProjectRecord(currentProject, 0);
+  const saved = writeProjectWorkspace(next);
+  writeActiveProjectId(resolveActiveProjectId(saved), saved);
+  return saved;
 }

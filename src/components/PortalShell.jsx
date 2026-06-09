@@ -78,9 +78,12 @@ export default function PortalShell({
   children,
   primaryHref = "/portal/messages",
   primaryLabel = "Open Messages",
+  workspaceState = null,
 }) {
   const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
-  const { state, refreshSyncStamp } = useWorkspaceState();
+  const workspaceApi = useWorkspaceState();
+  const resolvedState = workspaceState || workspaceApi.state;
+  const { refreshSyncStamp } = workspaceApi;
 
   return (
     <div style={shellStyle}>
@@ -119,9 +122,9 @@ export default function PortalShell({
           <AuricruxBrandMark compact />
         </div>
 
-        <ProjectSpineBar tenant={state.tenant} project={state.project} />
-        <WorkspaceContextBar tenant={state.tenant} project={state.project} workspace={state.workspace} />
-        <AuricruxStatusRail project={state.project} rail={state.auricrux} />
+        <ProjectSpineBar tenant={resolvedState.tenant} project={resolvedState.project} />
+        <WorkspaceContextBar tenant={resolvedState.tenant} project={resolvedState.project} workspace={resolvedState.workspace} />
+        <AuricruxStatusRail project={resolvedState.project} rail={resolvedState.auricrux} />
         <RouteStateOverlay overlay={routeOverlay} />
         <ExecutiveSignalBar mode="portal" nextHref={executiveSignalCtaSets.portal.href} nextLabel={executiveSignalCtaSets.portal.label} />
 

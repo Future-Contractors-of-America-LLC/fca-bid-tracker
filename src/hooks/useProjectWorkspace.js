@@ -2,11 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { appendAutomationLog } from "../sessionAutomationLog";
 import { appendCommercialLog } from "../sessionCommercialLog";
 import {
-  readActiveProjectContext,
-  readActiveProjectId,
+  readActiveProjectWorkspace,
   readProjectWorkspace,
-  selectActiveProject,
   updateProjectWorkspace,
+  writeActiveProjectId,
 } from "../projectWorkspaceStore";
 
 function stampHistoryEntry(label, detail) {
@@ -19,37 +18,41 @@ function stampHistoryEntry(label, detail) {
 
 export default function useProjectWorkspace() {
   const [projects, setProjects] = useState(() => readProjectWorkspace());
-  const [activeProjectId, setActiveProjectId] = useState(() => readActiveProjectId(readProjectWorkspace()));
+  const [activeProjectId, setActiveProjectId] = useState(() => readActiveProjectWorkspace()?.id || null);
 
   useEffect(() => {
-    const loadedProjects = readProjectWorkspace();
-    setProjects(loadedProjects);
-    setActiveProjectId(readActiveProjectId(loadedProjects));
+    const nextProjects = readProjectWorkspace();
+    setProjects(nextProjects);
+    setActiveProjectId(readActiveProjectWorkspace(nextProjects)?.id || null);
   }, []);
 
   return useMemo(() => {
-    const activeProject = projects.find((project) => project.id === activeProjectId) || readActiveProjectContext(projects);
+    const activeProject = projects.find((project) => project.id === activeProjectId) || projects[0] || null;
 
     return {
       projects,
-      activeProjectId,
       activeProject,
-      setActiveProject(projectId, detail = "Active project context selected for workspace continuity.") {
-        const selected = selectActiveProject(projectId, projects);
-        setActiveProjectId(selected.id);
-        appendAutomationLog({
-          type: "project-context",
-          title: `${selected.id} set as active project context`,
-          detail,
-          route: "/portal/projects",
-        });
-        appendCommercialLog({
-          type: "project-context",
-          title: `${selected.id} is now the project spine root`,
-          detail,
-          route: "/portal/projects",
-        });
-        return selected;
+      selectActiveProject(projectId, detail = "Active project context updated.") {
+        const nextId = writeActiveProjectId(projectId, projects);
+        setActiveProjectId(nextId);
+        const selected = projects.find((project) => project.id === nextId);
+
+        if (selected) {
+          appendAutomationLog({
+            type: "project-context",
+            title: `${selected.id} set as active project`,
+            detail,
+            route: "/portal/projects",
+          });
+          appendCommercialLog({
+            type: "project-context",
+            title: `${selected.id} selected as project root`,
+            detail,
+            route: "/portal/projects",
+          });
+        }
+
+        return selected || null;
       },
       advanceProjectStage(projectId, stage, detail) {
         const saved = updateProjectWorkspace((current) =>
@@ -60,11 +63,6 @@ export default function useProjectWorkspace() {
                   ...project,
                   stage,
                   nextAction: detail || project.nextAction,
-                  projectHealth: stage.toLowerCase().includes("closeout")
-                    ? "Closeout watch"
-                    : stage.toLowerCase().includes("execution")
-                      ? "Field active"
-                      : "Preconstruction active",
                   lastActionAt: new Date().toISOString(),
                   actionHistory: [
                     stampHistoryEntry(`Stage moved to ${stage}`, detail || `Auricrux moved ${project.id} into ${stage}.`),
@@ -75,6 +73,7 @@ export default function useProjectWorkspace() {
         );
 
         setProjects(saved);
+        setActiveProjectId(readActiveProjectWorkspace(saved)?.id || null);
         const updated = saved.find((project) => project.id === projectId);
         if (updated) {
           appendAutomationLog({
@@ -103,7 +102,6 @@ export default function useProjectWorkspace() {
                   permitStatus: "Permit cleared for next move",
                   siteStatus: "Ready for mobilization planning",
                   nextAction: detail,
-                  continuityAlerts: project.continuityAlerts?.filter((item) => item !== project.permitStatus) || [],
                   lastActionAt: new Date().toISOString(),
                   actionHistory: [
                     stampHistoryEntry("Permit blocker cleared", detail),
@@ -114,6 +112,7 @@ export default function useProjectWorkspace() {
         );
 
         setProjects(saved);
+        setActiveProjectId(readActiveProjectWorkspace(saved)?.id || null);
         const updated = saved.find((project) => project.id === projectId);
         if (updated) {
           appendAutomationLog({
