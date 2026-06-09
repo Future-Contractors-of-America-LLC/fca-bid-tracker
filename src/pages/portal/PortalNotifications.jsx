@@ -87,8 +87,8 @@ export default function PortalNotifications() {
       activeHref="/portal/notifications"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.notifications}
-      primaryHref="/portal/audit"
-      primaryLabel="Open Audit Timeline"
+      primaryHref="/portal/messages"
+      primaryLabel="Open Messages"
       workspaceState={state}
     >
       <div style={{ marginBottom: 16 }}>
