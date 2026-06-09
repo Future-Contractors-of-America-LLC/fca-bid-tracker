@@ -6,6 +6,7 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import useFileWorkspace from "../../hooks/useFileWorkspace";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -18,11 +19,14 @@ const cardStyle = {
 
 export default function PortalProjects() {
   const { state, refreshSyncStamp } = useWorkspaceState();
-  const { projects, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
+  const { projects, advanceProjectStage, clearPermitBlocker, syncProjectEvidence } = useProjectWorkspace();
+  const { getFilesForProject, attachEvidence, generateBriefing, files } = useFileWorkspace();
 
   useEffect(() => {
     refreshSyncStamp("Persisted project flow state active");
   }, [refreshSyncStamp]);
+
+  const totalFiles = files.length;
 
   return (
     <PortalShell
@@ -55,6 +59,7 @@ export default function PortalProjects() {
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+          <div><strong>Workspace file count:</strong> {totalFiles}</div>
         </div>
       </div>
 
@@ -86,30 +91,72 @@ export default function PortalProjects() {
       </div>
 
       <div style={{ display: "grid", gap: 16 }}>
-        {projects.map((project) => (
-          <div key={project.id} style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-              <div>
-                <h3 style={{ margin: "0 0 6px 0" }}>{project.id} · {project.customer}</h3>
-                <div style={{ color: "#4b5563", lineHeight: 1.6 }}>
-                  Current stage: <strong>{project.stage}</strong><br />
-                  Next action: {project.nextAction}<br />
-                  Site status: {project.siteStatus}
+        {projects.map((project) => {
+          const linkedFiles = getFilesForProject(project.id);
+          return (
+            <div key={project.id} style={cardStyle}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 6px 0" }}>{project.id} · {project.customer}</h3>
+                  <div style={{ color: "#4b5563", lineHeight: 1.6 }}>
+                    Canonical project: <strong>{project.canonicalProjectId}</strong><br />
+                    Current stage: <strong>{project.stage}</strong><br />
+                    Next action: {project.nextAction}<br />
+                    Site status: {project.siteStatus}
+                  </div>
+                </div>
+                <div style={{ minWidth: 220, color: "#0f172a", lineHeight: 1.7 }}>
+                  <div><strong>Owner:</strong> {project.owner}</div>
+                  <div><strong>Due:</strong> {project.due}</div>
+                  <div><strong>Superintendent:</strong> {project.superintendent}</div>
+                  <div><strong>Permit status:</strong> {project.permitStatus}</div>
                 </div>
               </div>
-              <div style={{ minWidth: 220, color: "#0f172a", lineHeight: 1.7 }}>
-                <div><strong>Owner:</strong> {project.owner}</div>
-                <div><strong>Due:</strong> {project.due}</div>
-                <div><strong>Superintendent:</strong> {project.superintendent}</div>
-                <div><strong>Permit status:</strong> {project.permitStatus}</div>
+              <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.6 }}>
+                <strong>Commercial focus:</strong> {project.commercialFocus}
               </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginTop: 14 }}>
+                <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fbff" }}>
+                  <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>Project spine</div>
+                  <div style={{ color: "#334155", lineHeight: 1.7 }}>
+                    <div><strong>Linked bid:</strong> {project.linkedBidId}</div>
+                    <div><strong>Lifecycle state:</strong> {project.lifecycleState}</div>
+                    <div><strong>Audit trail:</strong> {project.auditTrailStatus}</div>
+                  </div>
+                </div>
+                <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fbff" }}>
+                  <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>File + evidence spine</div>
+                  <div style={{ color: "#334155", lineHeight: 1.7 }}>
+                    <div><strong>Linked files:</strong> {linkedFiles.length || project.linkedFileCount}</div>
+                    <div><strong>Evidence status:</strong> {project.evidenceStatus}</div>
+                    <div><strong>Briefing:</strong> {project.fileBriefingStatus}</div>
+                  </div>
+                </div>
+              </div>
+              <ProjectActionCenter
+                project={project}
+                advanceProjectStage={advanceProjectStage}
+                clearPermitBlocker={clearPermitBlocker}
+                attachEvidence={(selectedProject) => {
+                  const savedFiles = attachEvidence(selectedProject);
+                  syncProjectEvidence(
+                    selectedProject.id,
+                    savedFiles.filter((file) => file.projectId === selectedProject.id).length,
+                    `Evidence spine refreshed for ${selectedProject.canonicalProjectId}.`
+                  );
+                }}
+                generateBriefing={(selectedProject) => {
+                  const savedFiles = generateBriefing(selectedProject);
+                  syncProjectEvidence(
+                    selectedProject.id,
+                    savedFiles.filter((file) => file.projectId === selectedProject.id).length,
+                    `Auricrux briefing refreshed for ${selectedProject.canonicalProjectId}.`
+                  );
+                }}
+              />
             </div>
-            <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.6 }}>
-              <strong>Commercial focus:</strong> {project.commercialFocus}
-            </div>
-            <ProjectActionCenter project={project} advanceProjectStage={advanceProjectStage} clearPermitBlocker={clearPermitBlocker} />
-          </div>
-        ))}
+          );
+        })}
       </div>
     </PortalShell>
   );

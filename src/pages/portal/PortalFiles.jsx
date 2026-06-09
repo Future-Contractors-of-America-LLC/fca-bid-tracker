@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
@@ -5,7 +6,9 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
-import { auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
+import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import useFileWorkspace from "../../hooks/useFileWorkspace";
+import { auricruxRail, currentProject, projectAuditEvents, routeStateOverlays, workspaceContext, portalTenant } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -16,6 +19,20 @@ const cardStyle = {
 };
 
 export default function PortalFiles() {
+  const { projects, syncProjectEvidence } = useProjectWorkspace();
+  const { files, getFilesForProject, attachEvidence, generateBriefing } = useFileWorkspace();
+  const [selectedProjectId, setSelectedProjectId] = useState(projects[0]?.id || currentProject.id.replace("PRJ-", ""));
+
+  const selectedProject = useMemo(
+    () => projects.find((project) => project.id === selectedProjectId) || projects[0],
+    [projects, selectedProjectId]
+  );
+
+  const selectedFiles = selectedProject ? getFilesForProject(selectedProject.id) : files;
+  const selectedAuditEvents = selectedProject
+    ? projectAuditEvents.map((event) => ({ ...event, action: `${event.action} · ${selectedProject.canonicalProjectId}` }))
+    : projectAuditEvents;
+
   return (
     <PortalShell
       title="Files, Plans, and Customer Documents"
@@ -44,11 +61,61 @@ export default function PortalFiles() {
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>File Spine Context</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-          <div><strong>Project:</strong> {currentProject.name}</div>
-          <div><strong>Project ID:</strong> {currentProject.id}</div>
-          <div><strong>File set:</strong> {currentProject.fileSetLabel}</div>
-          <div>{currentProject.fileSpineStatus}</div>
+          <div><strong>Project:</strong> {selectedProject?.customer || currentProject.name}</div>
+          <div><strong>Canonical project ID:</strong> {selectedProject?.canonicalProjectId || currentProject.id}</div>
+          <div><strong>Linked file count:</strong> {selectedFiles.length}</div>
+          <div><strong>Evidence posture:</strong> {selectedProject?.evidenceStatus || currentProject.fileSpineStatus}</div>
+          <div><strong>Briefing posture:</strong> {selectedProject?.fileBriefingStatus || "Document briefing pending"}</div>
         </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Project-linked document control</div>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "end" }}>
+          <div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Select the project spine the files belong to</h2>
+            <div style={{ color: "#334155", lineHeight: 1.7 }}>
+              Every file package must anchor to one project/job record, one evidence trail, and one Auricrux-guided next action.
+            </div>
+          </div>
+          <div>
+            <label htmlFor="project-selector" style={{ display: "block", fontWeight: 700, marginBottom: 8, color: "#0f172a" }}>Project spine</label>
+            <select
+              id="project-selector"
+              value={selectedProjectId}
+              onChange={(event) => setSelectedProjectId(event.target.value)}
+              style={{ minWidth: 280, borderRadius: 10, border: "1px solid #cbd5e1", padding: "10px 12px", font: "inherit" }}
+            >
+              {projects.map((project) => (
+                <option key={project.id} value={project.id}>{project.canonicalProjectId} · {project.customer}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        {selectedProject ? (
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+            <button
+              type="button"
+              onClick={() => {
+                const savedFiles = attachEvidence(selectedProject);
+                syncProjectEvidence(selectedProject.id, savedFiles.filter((file) => file.projectId === selectedProject.id).length, `Evidence spine refreshed for ${selectedProject.canonicalProjectId}.`);
+              }}
+              style={{ border: "1px solid #1d4ed8", background: "#1d4ed8", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer", font: "inherit" }}
+            >
+              Attach Evidence to {selectedProject.canonicalProjectId}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const savedFiles = generateBriefing(selectedProject);
+                syncProjectEvidence(selectedProject.id, savedFiles.filter((file) => file.projectId === selectedProject.id).length, `Auricrux briefing refreshed for ${selectedProject.canonicalProjectId}.`);
+              }}
+              style={{ border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer", font: "inherit" }}
+            >
+              Refresh Auricrux Briefing
+            </button>
+          </div>
+        ) : null}
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
@@ -123,7 +190,7 @@ export default function PortalFiles() {
         </div>
       </div>
 
-      <ProjectFileAuditPanel project={currentProject} files={portalFiles} auditEvents={projectAuditEvents} />
+      <ProjectFileAuditPanel project={selectedProject || currentProject} files={selectedFiles} auditEvents={selectedAuditEvents} />
     </PortalShell>
   );
 }
