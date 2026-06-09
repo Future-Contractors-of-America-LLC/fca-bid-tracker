@@ -81,6 +81,11 @@ export const routeMetadata = {
     description:
       "Review project files, operational documents, and supporting artifacts inside the FCA workspace.",
   },
+  "/portal/audit": {
+    title: "Audit | Future Contractors of America",
+    description:
+      "Review audit events, execution traceability, governance continuity, and operator-visible system history inside the FCA workspace.",
+  },
   "/portal/messages": {
     title: "Messages | Future Contractors of America",
     description:
