@@ -16,13 +16,28 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const selectButtonStyle = (isActive) => ({
+  border: isActive ? "1px solid #1d4ed8" : "1px solid #cbd5e1",
+  background: isActive ? "#1d4ed8" : "#fff",
+  color: isActive ? "#fff" : "#0f172a",
+  borderRadius: 10,
+  padding: "10px 12px",
+  fontWeight: 700,
+  cursor: "pointer",
+});
+
 export default function PortalProjects() {
-  const { state, refreshSyncStamp } = useWorkspaceState();
-  const { projects, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
+  const { state, refreshSyncStamp, syncProjectContext } = useWorkspaceState();
+  const { projects, activeProject, setActiveProject, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
 
   useEffect(() => {
+    if (activeProject) {
+      syncProjectContext(activeProject, "Persisted project flow state active");
+    }
     refreshSyncStamp("Persisted project flow state active");
-  }, [refreshSyncStamp]);
+  }, [activeProject, refreshSyncStamp, syncProjectContext]);
+
+  const currentProject = activeProject || state.project;
 
   return (
     <PortalShell
@@ -37,7 +52,7 @@ export default function PortalProjects() {
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
           tenant={state.tenant}
-          project={state.project}
+          project={currentProject}
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Project route is anchored to the live workspace state"
@@ -55,16 +70,17 @@ export default function PortalProjects() {
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+          <div><strong>Active project spine:</strong> {currentProject?.id || "No project selected"}</div>
         </div>
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>Current Project Root</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-          <div><strong>{state.project.name}</strong></div>
-          <div>Project ID: {state.project.id}</div>
-          <div>Current stage: {state.project.stage}</div>
-          <div>{state.project.auditStatus}</div>
+          <div><strong>{currentProject?.name}</strong></div>
+          <div>Project ID: {currentProject?.id}</div>
+          <div>Current stage: {currentProject?.stage}</div>
+          <div>{currentProject?.auditStatus}</div>
         </div>
       </div>
 
@@ -86,30 +102,60 @@ export default function PortalProjects() {
       </div>
 
       <div style={{ display: "grid", gap: 16 }}>
-        {projects.map((project) => (
-          <div key={project.id} style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-              <div>
-                <h3 style={{ margin: "0 0 6px 0" }}>{project.id} · {project.customer}</h3>
-                <div style={{ color: "#4b5563", lineHeight: 1.6 }}>
-                  Current stage: <strong>{project.stage}</strong><br />
-                  Next action: {project.nextAction}<br />
-                  Site status: {project.siteStatus}
+        {projects.map((project) => {
+          const isActive = currentProject?.id === project.id;
+          return (
+            <div key={project.id} style={cardStyle}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 6px 0" }}>{project.id} · {project.customer}</h3>
+                  <div style={{ color: "#4b5563", lineHeight: 1.6 }}>
+                    Current stage: <strong>{project.stage}</strong><br />
+                    Next action: {project.nextAction}<br />
+                    Site status: {project.siteStatus}
+                  </div>
+                </div>
+                <div style={{ minWidth: 220, color: "#0f172a", lineHeight: 1.7 }}>
+                  <div><strong>Owner:</strong> {project.owner}</div>
+                  <div><strong>Due:</strong> {project.due}</div>
+                  <div><strong>Superintendent:</strong> {project.superintendent}</div>
+                  <div><strong>Permit status:</strong> {project.permitStatus}</div>
                 </div>
               </div>
-              <div style={{ minWidth: 220, color: "#0f172a", lineHeight: 1.7 }}>
-                <div><strong>Owner:</strong> {project.owner}</div>
-                <div><strong>Due:</strong> {project.due}</div>
-                <div><strong>Superintendent:</strong> {project.superintendent}</div>
-                <div><strong>Permit status:</strong> {project.permitStatus}</div>
+              <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.6 }}>
+                <strong>Commercial focus:</strong> {project.commercialFocus}
               </div>
+              <div style={{ marginTop: 14, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <button
+                  type="button"
+                  style={selectButtonStyle(isActive)}
+                  onClick={() => {
+                    const selected = setActiveProject(project.id, `${project.id} selected as the active project spine.`);
+                    syncProjectContext(selected, `${selected.id} selected as active workspace context`);
+                    refreshSyncStamp(`${selected.id} selected as canonical project spine`);
+                  }}
+                >
+                  {isActive ? "Active project context" : "Set as active project"}
+                </button>
+                <a
+                  href="/portal/files"
+                  style={{
+                    textDecoration: "none",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: 10,
+                    padding: "10px 12px",
+                    fontWeight: 700,
+                    color: "#0f172a",
+                    background: "#fff",
+                  }}
+                >
+                  Open file spine
+                </a>
+              </div>
+              <ProjectActionCenter project={project} advanceProjectStage={advanceProjectStage} clearPermitBlocker={clearPermitBlocker} />
             </div>
-            <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.6 }}>
-              <strong>Commercial focus:</strong> {project.commercialFocus}
-            </div>
-            <ProjectActionCenter project={project} advanceProjectStage={advanceProjectStage} clearPermitBlocker={clearPermitBlocker} />
-          </div>
-        ))}
+          );
+        })}
       </div>
     </PortalShell>
   );

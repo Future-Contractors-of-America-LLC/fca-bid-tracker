@@ -1,11 +1,14 @@
+import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
-import { auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
+import { portalFiles, projectAuditEvents, routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -15,7 +18,56 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+function buildAuditFeed(project) {
+  const projectHistory = Array.isArray(project?.actionHistory)
+    ? project.actionHistory.map((entry) => ({
+        time: new Date(entry.at).toLocaleString(),
+        action: entry.label,
+        detail: entry.detail,
+        discipline: "Project Continuity",
+      }))
+    : [];
+
+  if (project?.id === "PRJ-A117") {
+    return [...projectHistory, ...projectAuditEvents];
+  }
+
+  return projectHistory.length
+    ? projectHistory
+    : [
+        {
+          time: "Live shell",
+          action: "Project context selected",
+          detail: `${project?.id} is now the active file/audit spine for this workspace.`,
+          discipline: "Workspace Continuity",
+        },
+      ];
+}
+
 export default function PortalFiles() {
+  const { state, refreshSyncStamp, syncProjectContext } = useWorkspaceState();
+  const { activeProject } = useProjectWorkspace();
+
+  const project = activeProject || state.project;
+
+  useEffect(() => {
+    if (project) {
+      syncProjectContext(project, "Project-linked file spine active");
+      refreshSyncStamp("Project-linked file spine active");
+    }
+  }, [project, refreshSyncStamp, syncProjectContext]);
+
+  const projectScopedFiles = useMemo(
+    () =>
+      portalFiles.map((file) => ({
+        ...file,
+        note: file.note?.replace(/Package A-117/g, project?.id || "the active project") || file.note,
+      })),
+    [project]
+  );
+
+  const auditFeed = useMemo(() => buildAuditFeed(project), [project]);
+
   return (
     <PortalShell
       title="Files, Plans, and Customer Documents"
@@ -28,12 +80,12 @@ export default function PortalFiles() {
     >
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
-          tenant={portalTenant}
-          project={currentProject}
-          workspace={workspaceContext}
-          auricrux={auricruxRail}
+          tenant={state.tenant}
+          project={project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
           title="File route now reads from the same canonical state"
-          detail="Document context, next action, qualification evidence, and blocker visibility stay attached to the shared system module rather than separate wrapper exports."
+          detail="Document context, next action, qualification evidence, and blocker visibility stay attached to the shared workspace state instead of route-local assumptions."
         />
       </div>
 
@@ -44,10 +96,10 @@ export default function PortalFiles() {
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>File Spine Context</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-          <div><strong>Project:</strong> {currentProject.name}</div>
-          <div><strong>Project ID:</strong> {currentProject.id}</div>
-          <div><strong>File set:</strong> {currentProject.fileSetLabel}</div>
-          <div>{currentProject.fileSpineStatus}</div>
+          <div><strong>Project:</strong> {project?.name}</div>
+          <div><strong>Project ID:</strong> {project?.id}</div>
+          <div><strong>File set:</strong> {project?.fileSetLabel}</div>
+          <div>{project?.fileSpineStatus}</div>
         </div>
       </div>
 
@@ -123,7 +175,7 @@ export default function PortalFiles() {
         </div>
       </div>
 
-      <ProjectFileAuditPanel project={currentProject} files={portalFiles} auditEvents={projectAuditEvents} />
+      <ProjectFileAuditPanel project={project} files={projectScopedFiles} auditEvents={auditFeed} />
     </PortalShell>
   );
 }
