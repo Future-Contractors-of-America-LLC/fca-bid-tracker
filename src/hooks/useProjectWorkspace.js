@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { appendAutomationLog } from "../sessionAutomationLog";
 import { appendCommercialLog } from "../sessionCommercialLog";
 import { readProjectWorkspace, updateProjectWorkspace } from "../projectWorkspaceStore";
+import { setActiveWorkspaceProject } from "../workspaceStateStore";
 
 function stampHistoryEntry(label, detail) {
   return {
@@ -21,6 +22,10 @@ export default function useProjectWorkspace() {
   return useMemo(
     () => ({
       projects,
+      setActiveProject(projectId, detail = "Project selected as the active workspace root.") {
+        setActiveWorkspaceProject(projectId, detail);
+        setProjects(readProjectWorkspace());
+      },
       advanceProjectStage(projectId, stage, detail) {
         const saved = updateProjectWorkspace((current) =>
           current.map((project) =>
@@ -30,6 +35,7 @@ export default function useProjectWorkspace() {
                   ...project,
                   stage,
                   nextAction: detail || project.nextAction,
+                  auditSummary: `Project ${project.id} is now in ${stage} with shared continuity preserved.`,
                   lastActionAt: new Date().toISOString(),
                   actionHistory: [
                     stampHistoryEntry(`Stage moved to ${stage}`, detail || `Auricrux moved ${project.id} into ${stage}.`),
@@ -42,6 +48,7 @@ export default function useProjectWorkspace() {
         setProjects(saved);
         const updated = saved.find((project) => project.id === projectId);
         if (updated) {
+          setActiveWorkspaceProject(projectId, `Project ${projectId} stage moved to ${stage}.`);
           appendAutomationLog({
             type: "project-stage",
             title: `${updated.id} moved to ${stage}`,
@@ -68,6 +75,7 @@ export default function useProjectWorkspace() {
                   permitStatus: "Permit cleared for next move",
                   siteStatus: "Ready for mobilization planning",
                   nextAction: detail,
+                  auditSummary: `Permit blocker cleared on ${project.id}; mobilization path restored.`,
                   lastActionAt: new Date().toISOString(),
                   actionHistory: [
                     stampHistoryEntry("Permit blocker cleared", detail),
@@ -80,6 +88,7 @@ export default function useProjectWorkspace() {
         setProjects(saved);
         const updated = saved.find((project) => project.id === projectId);
         if (updated) {
+          setActiveWorkspaceProject(projectId, `Project ${projectId} permit blocker cleared.`);
           appendAutomationLog({
             type: "project-repair",
             title: `${updated.id} permit blocker cleared`,

@@ -3,6 +3,7 @@ import { appendAutomationLog } from "../sessionAutomationLog";
 import { appendCommercialLog } from "../sessionCommercialLog";
 import { readBidWorkspace, updateBidWorkspace } from "../bidWorkspaceStore";
 import { updateProjectWorkspace } from "../projectWorkspaceStore";
+import { setActiveWorkspaceProject } from "../workspaceStateStore";
 
 function stampHistoryEntry(label, detail) {
   return {
@@ -209,9 +210,12 @@ export default function useBidWorkspace() {
         const updatedBid = saved.find((bid) => bid.id === bidId);
         if (!updatedBid) return saved;
 
+        let activatedProjectId = null;
+
         updateProjectWorkspace((current) => {
           const existing = current.find((project) => project.sourceBidId === bidId);
           if (existing) {
+            activatedProjectId = existing.id;
             return current.map((project) =>
               project.sourceBidId !== bidId
                 ? project
@@ -231,6 +235,7 @@ export default function useBidWorkspace() {
           }
 
           const nextProjectId = normalizeProjectId(bidId, current.length);
+          activatedProjectId = nextProjectId;
           return [
             {
               id: nextProjectId,
@@ -254,6 +259,10 @@ export default function useBidWorkspace() {
             ...current,
           ];
         });
+
+        if (activatedProjectId) {
+          setActiveWorkspaceProject(activatedProjectId, `Bid ${updatedBid.package} was converted and rebound as the active workspace project.`);
+        }
 
         appendAutomationLog({
           type: "bid-project-conversion",

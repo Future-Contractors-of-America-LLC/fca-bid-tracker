@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { readCustomerSession } from "../customerSession";
-import { defaultWorkspaceState, STORAGE_KEY } from "../systemState";
+import {
+  readWorkspaceState,
+  updateWorkspaceState,
+  WORKSPACE_STATE_EVENT,
+} from "../workspaceStateStore";
 
 function bindCustomerSession(baseState) {
   const session = readCustomerSession();
@@ -12,6 +16,10 @@ function bindCustomerSession(baseState) {
       ...baseState.tenant,
       name: session.company,
       roleSummary: `${session.workspaceLabel} is authenticated and running through the shared FCA workspace continuity layer.`,
+    },
+    project: {
+      ...baseState.project,
+      customer: session.company,
     },
     meta: {
       ...baseState.meta,
@@ -30,53 +38,36 @@ function bindCustomerSession(baseState) {
 }
 
 export default function useWorkspaceState() {
-  const [state, setState] = useState(bindCustomerSession(defaultWorkspaceState));
+  const [state, setState] = useState(() => bindCustomerSession(readWorkspaceState()));
 
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        const seeded = bindCustomerSession({
-          ...defaultWorkspaceState,
-          meta: {
-            ...defaultWorkspaceState.meta,
-            lastSyncedAt: new Date().toISOString(),
-          },
-        });
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
-        setState(seeded);
-        return;
-      }
-
-      const parsed = JSON.parse(raw);
-      setState(bindCustomerSession(parsed));
-    } catch {
-      setState(bindCustomerSession(defaultWorkspaceState));
+    function syncFromStorage() {
+      setState(bindCustomerSession(readWorkspaceState()));
     }
+
+    syncFromStorage();
+    window.addEventListener(WORKSPACE_STATE_EVENT, syncFromStorage);
+    window.addEventListener("storage", syncFromStorage);
+
+    return () => {
+      window.removeEventListener(WORKSPACE_STATE_EVENT, syncFromStorage);
+      window.removeEventListener("storage", syncFromStorage);
+    };
   }, []);
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(bindCustomerSession(state)));
-    } catch {
-      // persistence best-effort only for shell hardening phase
-    }
-  }, [state]);
 
   const api = useMemo(
     () => ({
       state,
       refreshSyncStamp(source = "Persisted workspace state active") {
-        setState((prev) =>
-          bindCustomerSession({
-            ...prev,
-            meta: {
-              ...prev.meta,
-              persistenceState: source,
-              lastSyncedAt: new Date().toISOString(),
-            },
-          })
-        );
+        const saved = updateWorkspaceState((prev) => ({
+          ...prev,
+          meta: {
+            ...prev.meta,
+            persistenceState: source,
+            lastSyncedAt: new Date().toISOString(),
+          },
+        }));
+        setState(bindCustomerSession(saved));
       },
     }),
     [state]

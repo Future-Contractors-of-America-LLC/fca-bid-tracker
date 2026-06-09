@@ -3,6 +3,7 @@ import { appendAutomationLog } from "../sessionAutomationLog";
 import { appendCommercialLog } from "../sessionCommercialLog";
 import { updateProjectWorkspace } from "../projectWorkspaceStore";
 import { readProjectFileWorkspace, updateProjectFileWorkspace } from "../projectFileWorkspaceStore";
+import { setActiveWorkspaceProject } from "../workspaceStateStore";
 
 function stampNow() {
   return new Date().toISOString();
@@ -119,6 +120,8 @@ export default function useProjectFileWorkspace() {
                 }
           )
         );
+
+        setActiveWorkspaceProject(projectId, `File package ${latestFile?.name || "document"} attached to active project spine.`);
 
         appendAutomationLog({
           type: "project-file-package",
