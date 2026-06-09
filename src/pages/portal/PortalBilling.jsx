@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
@@ -10,7 +10,8 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { portalNarrativeCtaSets } from "../../websiteShell";
 import { billingGovernance } from "../../billingGovernance";
-import { portalBilling, routeStateOverlays } from "../../systemState";
+import { readPortalBilling } from "../../portalContinuityStore";
+import { routeStateOverlays } from "../../systemState";
 import { resolvePlanPreset } from "../../pricingPlans";
 
 const cardStyle = {
@@ -62,6 +63,7 @@ const billingContinuityItems = [
 export default function PortalBilling() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
+  const liveBillingQueue = useMemo(() => readPortalBilling(), [state.project.id, state.workspace.currentNextAction]);
 
   useEffect(() => {
     refreshSyncStamp("Persisted billing continuity state active");
@@ -132,6 +134,7 @@ export default function PortalBilling() {
           <div><strong>Selected plan:</strong> {selectedPlan.name}</div>
           <div><strong>Billing model:</strong> {selectedPlan.billingModel}</div>
           <div><strong>Commercial packaging:</strong> {selectedPlan.price}</div>
+          <div><strong>Active project lane:</strong> {state.project.id}</div>
         </div>
       </div>
 
@@ -190,8 +193,8 @@ export default function PortalBilling() {
             <div>Status</div>
           </div>
         </div>
-        {portalBilling.map((invoice) => (
-          <div key={invoice.invoice} style={{ borderBottom: "1px solid #e5e7eb", padding: "14px 0" }}>
+        {liveBillingQueue.map((invoice) => (
+          <div key={invoice.id || invoice.invoice} style={{ borderBottom: "1px solid #e5e7eb", padding: "14px 0" }}>
             <div style={invoiceStyle}>
               <div style={{ fontWeight: 700 }}>{invoice.invoice}</div>
               <div>{invoice.customer}</div>
@@ -203,6 +206,7 @@ export default function PortalBilling() {
               <div><strong>Retainage:</strong> {invoice.retainage}</div>
               <div><strong>Aging:</strong> {invoice.aging}</div>
               <div><strong>Owner:</strong> {invoice.owner}</div>
+              <div><strong>Project lane:</strong> {invoice.projectId || state.project.id}</div>
             </div>
             <div style={{ color: "#475569", marginTop: 8 }}>
               <strong>Next action:</strong> {invoice.nextAction}

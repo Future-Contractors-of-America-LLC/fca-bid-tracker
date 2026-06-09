@@ -8,7 +8,8 @@ import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import MessageActionCenter from "../../components/MessageActionCenter";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { auricruxCommsChannels, portalMessages, routeStateOverlays } from "../../systemState";
+import { auricruxCommsChannels, routeStateOverlays } from "../../systemState";
+import { readPortalMessages } from "../../portalContinuityStore";
 import { portalNarrativeCtaSets } from "../../websiteShell";
 import { portalMessagesMessaging } from "../../systemContinuity";
 
@@ -46,6 +47,7 @@ export default function PortalMessages() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
   const [activeChannel, setActiveChannel] = useState(() => readActiveChannel());
+  const liveMessages = useMemo(() => readPortalMessages(), [state.project.id, state.workspace.currentNextAction, state.auricrux.currentBlocker]);
 
   useEffect(() => {
     refreshSyncStamp("Persisted message continuity state active");
@@ -69,9 +71,9 @@ export default function PortalMessages() {
       : "Shell continuity mode";
 
   const filteredMessages = useMemo(() => {
-    if (!activeChannel || !channelMap[activeChannel]) return portalMessages;
-    return portalMessages.filter((message) => channelMap[activeChannel].includes(message.channel));
-  }, [activeChannel]);
+    if (!activeChannel || !channelMap[activeChannel]) return liveMessages;
+    return liveMessages.filter((message) => channelMap[activeChannel].includes(message.channel));
+  }, [activeChannel, liveMessages]);
 
   const commItems = auricruxCommsChannels.map((item) => ({
     ...item,
@@ -142,6 +144,7 @@ export default function PortalMessages() {
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
           <div><strong>Channel focus:</strong> {activeChannel ? activeChannel.toUpperCase() : "All channels"}</div>
+          <div><strong>Active project lane:</strong> {state.project.id}</div>
         </div>
       </div>
 
@@ -192,7 +195,7 @@ export default function PortalMessages() {
             : "Showing all live coordination lanes across chat, SMS, phone, email, Teams, conference, lecture, warranty follow-through, and referral continuity."}
         </div>
         {filteredMessages.length ? filteredMessages.map((message) => (
-          <div key={`${message.from}-${message.subject}`} style={{ padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
+          <div key={`${message.id}-${message.subject}`} style={{ padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
               <div style={{ fontWeight: 700 }}>{message.from}</div>
               <div style={{ fontSize: 12, color: "#1d4ed8", fontWeight: 700 }}>{message.priority}</div>
@@ -202,6 +205,7 @@ export default function PortalMessages() {
             <div style={{ color: "#0f172a", lineHeight: 1.6, marginTop: 8 }}>
               <div><strong>Channel:</strong> {message.channel}</div>
               <div><strong>Next action:</strong> {message.nextAction}</div>
+              <div><strong>Project lane:</strong> {message.projectId || state.project.id}</div>
             </div>
             <div style={{ color: "#6b7280", fontSize: 14, marginTop: 6 }}>{message.time}</div>
           </div>
