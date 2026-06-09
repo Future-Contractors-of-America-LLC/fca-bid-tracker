@@ -6,6 +6,7 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
+import useEstimateWorkspace from "../../hooks/useEstimateWorkspace";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
 import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
 import { routeStateOverlays } from "../../systemState";
@@ -45,6 +46,7 @@ const actionButtonStyle = {
 export default function PortalBids() {
   const { state } = useWorkspaceState();
   const { bids, updateBidStatus, clearBidBlocker, updateBidQualification, routeBidToEstimate } = useBidWorkspace();
+  const { getEstimateForBid, generateTakeoff, buildEstimate } = useEstimateWorkspace();
 
   return (
     <PortalShell
@@ -98,6 +100,7 @@ export default function PortalBids() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
         {bids.map((bid) => {
           const evidencePacket = qualificationEvidencePackets.find((packet) => packet.bidId === bid.id);
+          const estimatePacket = getEstimateForBid(bid.id);
 
           return (
             <div key={bid.id} style={cardStyle}>
@@ -109,10 +112,12 @@ export default function PortalBids() {
                 <div><strong>Scope package:</strong> {bid.scopePackage}</div>
                 <div><strong>Decision due:</strong> {bid.dueDate}</div>
                 <div><strong>Trade coverage:</strong> {bid.tradeCoverage}</div>
+                <div><strong>Project spine:</strong> {bid.canonicalProjectId}</div>
               </div>
               <div style={{ color: "#4b5563", lineHeight: 1.6, marginTop: 12 }}>
                 <div><strong>Current blocker:</strong> {bid.blocker}</div>
                 <div><strong>Next commercial move:</strong> {bid.nextCommercialMove}</div>
+                <div><strong>Estimate readiness:</strong> {bid.estimateReadiness}</div>
               </div>
 
               <div style={qualificationCardStyle}>
@@ -195,6 +200,36 @@ export default function PortalBids() {
                 </div>
               </div>
 
+              {estimatePacket ? (
+                <div style={qualificationCardStyle}>
+                  <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Estimate and takeoff continuity</div>
+                  <div style={{ color: "#475569", lineHeight: 1.7 }}>
+                    <div><strong>Estimate status:</strong> {estimatePacket.estimateStatus}</div>
+                    <div><strong>Takeoff status:</strong> {estimatePacket.takeoffStatus}</div>
+                    <div><strong>Proposal status:</strong> {estimatePacket.proposalStatus}</div>
+                    <div><strong>Linked files:</strong> {estimatePacket.linkedFileCount}</div>
+                    <div><strong>Evidence summary:</strong> {estimatePacket.evidenceSummary}</div>
+                    <div><strong>Cost basis:</strong> {estimatePacket.costBasis}</div>
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <strong>Takeoff items</strong>
+                    <ul style={{ paddingLeft: 18, color: "#475569", lineHeight: 1.7, marginTop: 8, marginBottom: 0 }}>
+                      {estimatePacket.takeoffItems.map((item) => (
+                        <li key={item.id}>{item.label} · {item.quantity} {item.unit} · {item.status}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 14 }}>
+                    <button type="button" style={actionButtonStyle} onClick={() => generateTakeoff(bid.id)}>
+                      Generate Takeoff
+                    </button>
+                    <button type="button" style={actionButtonStyle} onClick={() => buildEstimate(bid.id)}>
+                      Build Estimate
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
               <BidActionCenter bid={bid} updateBidStatus={updateBidStatus} clearBidBlocker={clearBidBlocker} />
             </div>
           );
@@ -205,7 +240,7 @@ export default function PortalBids() {
         <h2 style={{ marginTop: 0 }}>Construction-facing narrative</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
           This shell now shows bidding as a true preconstruction control surface. FCA can hold intake qualification, estimator ownership, scope package clarity,
-          trade coverage gaps, approval timing, attached evidence packets, and the move from won work into job-start setup instead of leaving bid activity as detached CRM copy.
+          trade coverage gaps, attached evidence packets, takeoff continuity, estimate build posture, and the move from won work into job-start setup instead of leaving bid activity as detached CRM copy.
         </p>
         <PublicCtaRow actions={portalNarrativeCtaSets.bidSalesNarrative} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
       </div>

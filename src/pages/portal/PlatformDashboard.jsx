@@ -10,11 +10,15 @@ import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import ExecutionCommandCenter from "../../components/ExecutionCommandCenter";
+import CustomerOwnershipWitnessPanel from "../../components/CustomerOwnershipWitnessPanel";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import { auricruxActions, portalMessages, portalMetrics, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import useFileWorkspace from "../../hooks/useFileWorkspace";
+import useEstimateWorkspace from "../../hooks/useEstimateWorkspace";
 import { ctaPrimaryStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -34,6 +38,9 @@ const metricStyle = {
 export default function PlatformDashboard() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
+  const { projects } = useProjectWorkspace();
+  const { files } = useFileWorkspace();
+  const { estimates } = useEstimateWorkspace();
 
   useEffect(() => {
     refreshSyncStamp("Live workspace dashboard active");
@@ -83,6 +90,10 @@ export default function PlatformDashboard() {
           setCommsAccess={setCommsAccess}
           refreshSyncStamp={refreshSyncStamp}
         />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <CustomerOwnershipWitnessPanel session={session} stateMeta={state.meta} projects={projects} files={files} estimates={estimates} />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>

@@ -16,6 +16,7 @@ function normalizeQualification(qualification = {}, bid = {}) {
 }
 
 function normalizeBidRecord(bid = {}, index = 0) {
+  const projectId = bid.projectId || (index === 0 ? "A-117" : index === 1 ? "B-204" : "C-332");
   return {
     id: bid.id || `BID-${index + 1}`,
     package: bid.package || `Package-${index + 1}`,
@@ -27,6 +28,9 @@ function normalizeBidRecord(bid = {}, index = 0) {
     dueDate: bid.dueDate || "TBD",
     tradeCoverage: bid.tradeCoverage || "Coverage pending",
     nextCommercialMove: bid.nextCommercialMove || "Advance commercial review",
+    projectId,
+    canonicalProjectId: bid.canonicalProjectId || `PRJ-${String(projectId).replace(/[^A-Za-z0-9]/g, "")}`,
+    estimateReadiness: bid.estimateReadiness || "Estimate posture pending",
     qualification: normalizeQualification(bid.qualification, bid),
     lastActionAt: bid.lastActionAt || null,
     actionHistory: Array.isArray(bid.actionHistory) ? bid.actionHistory : [],
@@ -39,6 +43,8 @@ function seedBidWorkspace() {
       {
         ...bid,
         id: `BID-${index + 1}`,
+        projectId: index === 0 ? "A-117" : index === 1 ? "B-204" : "C-332",
+        estimateReadiness: index === 0 ? "Ready for estimate" : index === 1 ? "Trade leveling pending" : "Award carry-forward",
         qualification: {
           score: index === 0 ? "84/100" : index === 1 ? "71/100" : "63/100",
           status: index === 0 ? "Ready for estimate" : index === 1 ? "Budget review" : "Discovery in progress",

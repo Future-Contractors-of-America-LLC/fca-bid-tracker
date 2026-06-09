@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { readCustomerSession } from "../customerSession";
 import { appendAutomationLog } from "../sessionAutomationLog";
 import { appendCommercialLog } from "../sessionCommercialLog";
 import { readBidWorkspace, updateBidWorkspace } from "../bidWorkspaceStore";
@@ -11,11 +12,19 @@ function stampHistoryEntry(label, detail) {
   };
 }
 
+function filterBidsForSession(bids) {
+  const session = readCustomerSession();
+  if (!session?.authenticated) return bids;
+  const allowed = session.projectAccess?.projectIds || [];
+  if (!allowed.length) return bids;
+  return bids.filter((bid) => allowed.includes(bid.projectId));
+}
+
 export default function useBidWorkspace() {
-  const [bids, setBids] = useState(() => readBidWorkspace());
+  const [bids, setBids] = useState(() => filterBidsForSession(readBidWorkspace()));
 
   useEffect(() => {
-    setBids(readBidWorkspace());
+    setBids(filterBidsForSession(readBidWorkspace()));
   }, []);
 
   return useMemo(
@@ -40,7 +49,7 @@ export default function useBidWorkspace() {
           )
         );
 
-        setBids(saved);
+        setBids(filterBidsForSession(saved));
         const updatedBid = saved.find((bid) => bid.id === bidId);
         if (updatedBid) {
           appendAutomationLog({
@@ -77,7 +86,7 @@ export default function useBidWorkspace() {
           )
         );
 
-        setBids(saved);
+        setBids(filterBidsForSession(saved));
         const updatedBid = saved.find((bid) => bid.id === bidId);
         if (updatedBid) {
           appendAutomationLog({
@@ -117,7 +126,7 @@ export default function useBidWorkspace() {
           )
         );
 
-        setBids(saved);
+        setBids(filterBidsForSession(saved));
         const updatedBid = saved.find((bid) => bid.id === bidId);
         if (updatedBid) {
           appendAutomationLog({
@@ -146,6 +155,7 @@ export default function useBidWorkspace() {
                   status: "Qualified",
                   blocker: "No active blocker",
                   nextCommercialMove: detail,
+                  estimateReadiness: "Estimate handoff active",
                   qualification: {
                     ...bid.qualification,
                     status: "Ready for estimate",
@@ -161,7 +171,7 @@ export default function useBidWorkspace() {
           )
         );
 
-        setBids(saved);
+        setBids(filterBidsForSession(saved));
         const updatedBid = saved.find((bid) => bid.id === bidId);
         if (updatedBid) {
           appendAutomationLog({
