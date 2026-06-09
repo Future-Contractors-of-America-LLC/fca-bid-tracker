@@ -2,8 +2,10 @@ import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
+import ContinuityObjectsPanel from "../../components/ContinuityObjectsPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { portalFiles, projectAuditEvents } from "../../systemState";
+import { portalFiles, portalContinuityObjects, projectAuditEvents } from "../../systemState";
+import { readContinuityObjectsForProject } from "../../continuityObjectStore";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -18,11 +20,11 @@ const auditRouteOverlay = {
   summary: "Audit specializes the shared state around accountable execution, file evidence continuity, and Auricrux traceability.",
   status: "Audit state active",
   primaryFocus: "Timeline and correction continuity",
-  primaryDetail: "This route keeps project history, evidence linkage, and Auricrux actions connected to the same active project root.",
-  dependency: "Project and file continuity",
-  dependencyDetail: "Audit depends on active project context and file/evidence linkage remaining stable across routes.",
+  primaryDetail: "This route keeps project history, evidence linkage, Auricrux actions, and continuity objects connected to the same active project root.",
+  dependency: "Project, file, and continuity-object linkage",
+  dependencyDetail: "Audit depends on active project context, file/evidence linkage, and continuity objects remaining stable across routes.",
   auricruxRole: "Record and explain",
-  auricruxDetail: "Auricrux uses this route to explain what changed, why it changed, and what should happen next.",
+  auricruxDetail: "Auricrux uses this route to explain what changed, why it changed, what object is blocked, and what should happen next.",
 };
 
 function buildEventTypeSummary(events) {
@@ -39,15 +41,18 @@ function scopeFilesToProject(files, project) {
   const projectId = project?.id || "PRJ-A117";
   const projectSuffix = projectId.replace(/^PRJ-/, "");
 
-  return files.map((file, index) => ({
-    ...file,
-    fileId: `${projectId}-FILE-${index + 1}`,
-    ownerObjectType: "Project",
-    ownerObjectId: projectId,
-    linkedEvidenceTarget: file.linkedEvidenceTarget || `${projectId} continuity record`,
-    name: file.name.replace(/A117/g, projectSuffix),
-    note: `${file.note} Active project context: ${projectId}.`,
-  }));
+  return files
+    .filter((file) => (file.projectId || file.ownerObjectId || "PRJ-A117") === projectId)
+    .map((file, index) => ({
+      ...file,
+      fileId: file.fileId || `${projectId}-FILE-${index + 1}`,
+      ownerObjectType: "Project",
+      ownerObjectId: projectId,
+      projectId,
+      linkedEvidenceTarget: file.linkedEvidenceTarget || `${projectId} continuity record`,
+      name: file.name.replace(/A117/g, projectSuffix),
+      note: `${file.note} Active project context: ${projectId}.`,
+    }));
 }
 
 function scopeAuditEventsToProject(events, project) {
@@ -59,6 +64,13 @@ function scopeAuditEventsToProject(events, project) {
   }));
 }
 
+function scopeContinuityObjectsToProject(items, project) {
+  const projectId = project?.id || "PRJ-A117";
+  const seeded = items.filter((item) => item.projectId === projectId);
+  const stored = readContinuityObjectsForProject(projectId);
+  return stored.length ? stored : seeded;
+}
+
 export default function PortalAudit() {
   const { state, refreshSyncStamp } = useWorkspaceState();
 
@@ -68,12 +80,13 @@ export default function PortalAudit() {
 
   const scopedFiles = useMemo(() => scopeFilesToProject(portalFiles, state.project), [state.project]);
   const scopedAuditEvents = useMemo(() => scopeAuditEventsToProject(projectAuditEvents, state.project), [state.project]);
+  const scopedContinuityObjects = useMemo(() => scopeContinuityObjectsToProject(portalContinuityObjects, state.project), [state.project]);
   const auditSummary = useMemo(() => buildEventTypeSummary(scopedAuditEvents), [scopedAuditEvents]);
 
   return (
     <PortalShell
       title="Audit Timeline and Auricrux Record"
-      subtitle="Continuity surface showing project-linked file movement, accountable workflow mutations, and Auricrux operating history under one project spine."
+      subtitle="Continuity surface showing project-linked file movement, accountable workflow mutations, continuity objects, and Auricrux operating history under one project spine."
       activeHref="/portal/audit"
       currentJourney="coordination"
       routeOverlay={auditRouteOverlay}
@@ -88,7 +101,7 @@ export default function PortalAudit() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Audit visibility now reads from the active project workspace"
-          detail="Project-linked file movement, route actions, and Auricrux traces now resolve against the same project context used by Projects and Files."
+          detail="Project-linked file movement, continuity objects, route actions, and Auricrux traces now resolve against the same project context used by Projects and Files."
         />
       </div>
 
@@ -100,6 +113,7 @@ export default function PortalAudit() {
           <div><strong>Current stage:</strong> {state.project.stage}</div>
           <div><strong>Next action:</strong> {state.workspace.currentNextAction}</div>
           <div><strong>Audit status:</strong> {state.project.auditStatus}</div>
+          <div><strong>Continuity objects:</strong> {scopedContinuityObjects.length}</div>
         </div>
       </div>
 
@@ -114,6 +128,10 @@ export default function PortalAudit() {
       </div>
 
       <ProjectFileAuditPanel project={state.project} files={scopedFiles} auditEvents={scopedAuditEvents} />
+
+      <div style={{ marginTop: 24 }}>
+        <ContinuityObjectsPanel project={state.project} items={scopedContinuityObjects} />
+      </div>
     </PortalShell>
   );
 }

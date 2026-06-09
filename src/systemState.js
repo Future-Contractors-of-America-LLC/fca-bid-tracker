@@ -358,6 +358,7 @@ export const portalBids = [
 export const portalFiles = [
   {
     fileId: "FILE-A117-001",
+    projectId: "PRJ-A117",
     ownerObjectType: "Project",
     ownerObjectId: "PRJ-A117",
     linkedEvidenceTarget: "Estimate assumptions and owner review packet",
@@ -374,6 +375,7 @@ export const portalFiles = [
   },
   {
     fileId: "FILE-A117-002",
+    projectId: "PRJ-A117",
     ownerObjectType: "Project",
     ownerObjectId: "PRJ-A117",
     linkedEvidenceTarget: "Permit submission packet",
@@ -390,6 +392,7 @@ export const portalFiles = [
   },
   {
     fileId: "FILE-A117-003",
+    projectId: "PRJ-A117",
     ownerObjectType: "Project",
     ownerObjectId: "PRJ-A117",
     linkedEvidenceTarget: "RFI and submittal register",
@@ -406,6 +409,7 @@ export const portalFiles = [
   },
   {
     fileId: "FILE-A117-004",
+    projectId: "PRJ-A117",
     ownerObjectType: "Project",
     ownerObjectId: "PRJ-A117",
     linkedEvidenceTarget: "Field onboarding and academy readiness",
@@ -419,6 +423,53 @@ export const portalFiles = [
     status: "Ready for kickoff",
     owner: "Field Operations",
     note: "JHA orientation, worker sign-off forms, and academy-linked readiness steps are bundled together.",
+  },
+];
+
+export const portalContinuityObjects = [
+  {
+    id: "RFI-A117-001",
+    type: "RFI",
+    projectId: "PRJ-A117",
+    fileId: "FILE-A117-003",
+    title: "Mechanical coordination question on rooftop unit clearances",
+    status: "Open",
+    owner: "Project Coordinator",
+    nextAction: "Collect mechanical response and update submittal register",
+    auditImpact: "Blocks final trade leveling and permit release timing until answered.",
+  },
+  {
+    id: "CE-A117-001",
+    type: "Change Event",
+    projectId: "PRJ-A117",
+    fileId: "FILE-A117-001",
+    title: "Owner-requested alternate finish package",
+    status: "Pricing Review",
+    owner: "Estimator Team",
+    nextAction: "Issue priced change summary for owner decision",
+    auditImpact: "Touches scope approval, billing continuity, and file revision visibility.",
+  },
+  {
+    id: "CO-B204-001",
+    type: "Change Order",
+    projectId: "PRJ-B204",
+    fileId: "FILE-B204-001",
+    title: "Site logistics revision for mobilization lane closure",
+    status: "Pending Signature",
+    owner: "Project Manager",
+    nextAction: "Secure customer signature and release field logistics update",
+    auditImpact: "Protects schedule, customer notice trail, and downstream billing evidence.",
+  },
+  {
+    id: "QC-C332-001",
+    type: "QC / Punch",
+    projectId: "PRJ-C332",
+    fileId: null,
+    title: "Final owner walk punch confirmation",
+    status: "Awaiting Closeout",
+    owner: "Customer Success",
+    nextAction: "Capture signed punch confirmation and release retainage follow-through",
+    auditImpact: "Controls closeout completion, warranty posture, and final invoice readiness.",
   },
 ];
 
