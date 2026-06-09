@@ -8,6 +8,19 @@ const sectionStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const badgeStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  padding: "6px 10px",
+  borderRadius: 999,
+  border: "1px solid #dbe3ef",
+  background: "#eff6ff",
+  fontSize: 12,
+  fontWeight: 700,
+  color: "#1d4ed8",
+};
+
 export default function ProjectFileAuditPanel({ project, files = [], auditEvents = [] }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, marginTop: 24 }}>
@@ -22,16 +35,26 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
                   <div style={{ fontWeight: 700 }}>{file.name}</div>
                   <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 4 }}>
                     {file.category} · {file.updated}<br />
-                    Linked project: {project.id}
+                    Linked project: {file.ownerObjectId || project.id}
                   </div>
                 </div>
                 <div style={{ alignSelf: "center", fontWeight: 700, color: "#1d4ed8" }}>{file.action}</div>
               </div>
+
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+                {file.versionLabel ? <div style={badgeStyle}>Version {file.versionLabel}</div> : null}
+                {file.evidenceStatus ? <div style={badgeStyle}>{file.evidenceStatus}</div> : null}
+                {file.ownerObjectType ? <div style={badgeStyle}>{file.ownerObjectType} linked</div> : null}
+              </div>
+
               <div style={{ color: "#0f172a", lineHeight: 1.7, marginTop: 10 }}>
                 {file.discipline ? <div><strong>Discipline:</strong> {file.discipline}</div> : null}
                 {file.status ? <div><strong>Status:</strong> {file.status}</div> : null}
                 {file.owner ? <div><strong>Owner:</strong> {file.owner}</div> : null}
+                {file.ownerObjectType ? <div><strong>Owner object:</strong> {file.ownerObjectType} · {file.ownerObjectId || project.id}</div> : null}
+                {file.linkedEvidenceTarget ? <div><strong>Evidence target:</strong> {file.linkedEvidenceTarget}</div> : null}
               </div>
+
               {file.note ? (
                 <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 10 }}>{file.note}</div>
               ) : null}
@@ -47,9 +70,15 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
           {auditEvents.map((event) => (
             <div key={`${event.time}-${event.action}`} style={{ borderLeft: "3px solid #2563eb", paddingLeft: 12 }}>
               <div style={{ fontSize: 12, color: "#64748b", fontWeight: 700 }}>{event.time}</div>
-              <div style={{ fontWeight: 700, marginTop: 4 }}>{event.action}</div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
+                {event.eventType ? <div style={badgeStyle}>{event.eventType}</div> : null}
+                {event.actorType ? <div style={badgeStyle}>{event.actorType}</div> : null}
+                {event.targetObjectType ? <div style={badgeStyle}>{event.targetObjectType}</div> : null}
+              </div>
+              <div style={{ fontWeight: 700, marginTop: 8 }}>{event.action}</div>
               {event.discipline ? <div style={{ fontSize: 12, color: "#1d4ed8", fontWeight: 700, marginTop: 4 }}>{event.discipline}</div> : null}
               <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 4 }}>{event.detail}</div>
+              {event.reason ? <div style={{ color: "#334155", lineHeight: 1.6, marginTop: 6 }}><strong>Reason:</strong> {event.reason}</div> : null}
             </div>
           ))}
         </div>

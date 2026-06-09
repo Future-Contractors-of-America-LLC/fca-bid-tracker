@@ -1,9 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import { portalFiles, projectAuditEvents } from "../../systemState";
 
 const cardStyle = {
@@ -26,13 +25,24 @@ const auditRouteOverlay = {
   auricruxDetail: "Auricrux uses this route to explain what changed, why it changed, and what should happen next.",
 };
 
+function buildEventTypeSummary(events) {
+  const counts = events.reduce((acc, event) => {
+    const key = event.eventType || "unspecified";
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+
+  return Object.entries(counts);
+}
+
 export default function PortalAudit() {
   const { state, refreshSyncStamp } = useWorkspaceState();
-  const { activeProject } = useProjectWorkspace();
 
   useEffect(() => {
     refreshSyncStamp(`Audit route synchronized to ${state.project.id}`);
   }, [refreshSyncStamp, state.project.id]);
+
+  const auditSummary = useMemo(() => buildEventTypeSummary(projectAuditEvents), []);
 
   return (
     <PortalShell
@@ -63,8 +73,18 @@ export default function PortalAudit() {
           <div><strong>Project name:</strong> {state.project.name}</div>
           <div><strong>Current stage:</strong> {state.project.stage}</div>
           <div><strong>Next action:</strong> {state.workspace.currentNextAction}</div>
-          <div><strong>Selected project source:</strong> {activeProject?.id || state.project.id}</div>
+          <div><strong>Audit status:</strong> {state.project.auditStatus}</div>
         </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 16 }}>
+        {auditSummary.map(([eventType, count]) => (
+          <div key={eventType} style={cardStyle}>
+            <div style={{ color: "#64748b", fontWeight: 700, fontSize: 12, textTransform: "uppercase", marginBottom: 8 }}>{eventType}</div>
+            <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 6 }}>{count}</div>
+            <div style={{ color: "#475569", lineHeight: 1.6 }}>Visible continuity records for the active project spine.</div>
+          </div>
+        ))}
       </div>
 
       <ProjectFileAuditPanel project={state.project} files={portalFiles} auditEvents={projectAuditEvents} />
