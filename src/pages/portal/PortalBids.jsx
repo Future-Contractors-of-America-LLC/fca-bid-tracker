@@ -44,7 +44,7 @@ const actionButtonStyle = {
 
 export default function PortalBids() {
   const { state } = useWorkspaceState();
-  const { bids, updateBidStatus, clearBidBlocker, updateBidQualification, routeBidToEstimate } = useBidWorkspace();
+  const { bids, updateBidStatus, clearBidBlocker, updateBidQualification, routeBidToEstimate, convertBidToProject } = useBidWorkspace();
 
   return (
     <PortalShell
@@ -72,7 +72,7 @@ export default function PortalBids() {
       </div>
 
       <CommercialContinuityFeed title="Bid revenue continuity feed" detail="Recent bid-state mutations, qualification repairs, approval-path recovery, and won-package transitions remain visible here so preconstruction actions stay tied to revenue continuity." />
-      <AutomationRecoveryFeed title="Bid automation feed" detail="Recent Auricrux bid repairs, qualification commands, and status transitions remain visible across routes so the preconstruction spine is not trapped inside one card click." />
+      <AutomationRecoveryFeed title="Bid automation feed" detail="Recent Auricrux bid repairs, qualification commands, status transitions, and bid-to-project conversions remain visible across routes so the preconstruction spine is not trapped inside one card click." />
 
       <div style={{ ...continuityCardStyle, marginBottom: 16 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Approval continuity focus</div>
@@ -195,7 +195,7 @@ export default function PortalBids() {
                 </div>
               </div>
 
-              <BidActionCenter bid={bid} updateBidStatus={updateBidStatus} clearBidBlocker={clearBidBlocker} />
+              <BidActionCenter bid={bid} updateBidStatus={updateBidStatus} clearBidBlocker={clearBidBlocker} convertBidToProject={convertBidToProject} />
             </div>
           );
         })}

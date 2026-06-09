@@ -2,10 +2,12 @@ import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useProjectFileWorkspace from "../../hooks/useProjectFileWorkspace";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
-import { auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
+import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -15,7 +17,20 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const actionButtonStyle = {
+  borderRadius: 10,
+  border: "1px solid #cbd5e1",
+  background: "#ffffff",
+  color: "#0f172a",
+  fontWeight: 600,
+  padding: "10px 12px",
+  cursor: "pointer",
+};
+
 export default function PortalFiles() {
+  const { state } = useWorkspaceState();
+  const { files, auditEvents, briefings, addFilePackage } = useProjectFileWorkspace();
+
   return (
     <PortalShell
       title="Files, Plans, and Customer Documents"
@@ -28,10 +43,10 @@ export default function PortalFiles() {
     >
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
-          tenant={portalTenant}
-          project={currentProject}
-          workspace={workspaceContext}
-          auricrux={auricruxRail}
+          tenant={state.tenant}
+          project={state.project}
+          workspace={state.workspace}
+          auricrux={state.auricrux}
           title="File route now reads from the same canonical state"
           detail="Document context, next action, qualification evidence, and blocker visibility stay attached to the shared system module rather than separate wrapper exports."
         />
@@ -44,10 +59,66 @@ export default function PortalFiles() {
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>File Spine Context</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-          <div><strong>Project:</strong> {currentProject.name}</div>
-          <div><strong>Project ID:</strong> {currentProject.id}</div>
-          <div><strong>File set:</strong> {currentProject.fileSetLabel}</div>
-          <div>{currentProject.fileSpineStatus}</div>
+          <div><strong>Project:</strong> {state.project.name}</div>
+          <div><strong>Project ID:</strong> {state.project.id}</div>
+          <div><strong>File count:</strong> {files.length} linked packages</div>
+          <div>{state.project.fileSpineStatus || state.project.auditSummary || "Project-linked file spine active."}</div>
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 14 }}>
+          <button
+            type="button"
+            style={actionButtonStyle}
+            onClick={() =>
+              addFilePackage(state.project.id, {
+                name: `Owner_Approval_${state.project.id}.pdf`,
+                packageLabel: "Owner approval package",
+                category: "Approval",
+                discipline: "Commercial",
+                documentType: "Approval",
+                action: "Send for owner signoff",
+                note: "Owner approval package linked so project setup and billing can proceed from one project record.",
+                revisionLabel: "Rev A",
+              })
+            }
+          >
+            Add Approval Package
+          </button>
+          <button
+            type="button"
+            style={actionButtonStyle}
+            onClick={() =>
+              addFilePackage(state.project.id, {
+                name: `Permit_Submission_${state.project.id}.pdf`,
+                packageLabel: "Permit submission package",
+                category: "Permit",
+                discipline: "Permitting",
+                documentType: "Permit",
+                action: "Release for submission",
+                note: "Permit package attached with auditable submission readiness and document-briefing output.",
+                revisionLabel: "Permit Rev 1",
+              })
+            }
+          >
+            Add Permit Package
+          </button>
+          <button
+            type="button"
+            style={actionButtonStyle}
+            onClick={() =>
+              addFilePackage(state.project.id, {
+                name: `Field_Onboarding_${state.project.id}.pdf`,
+                packageLabel: "Field onboarding packet",
+                category: "Field",
+                discipline: "Safety",
+                documentType: "Onboarding",
+                action: "Assign field onboarding",
+                note: "Field onboarding packet linked to project setup, safety readiness, and academy continuity.",
+                revisionLabel: "Kickoff Pack",
+              })
+            }
+          >
+            Add Onboarding Packet
+          </button>
         </div>
       </div>
 
@@ -123,7 +194,7 @@ export default function PortalFiles() {
         </div>
       </div>
 
-      <ProjectFileAuditPanel project={currentProject} files={portalFiles} auditEvents={projectAuditEvents} />
+      <ProjectFileAuditPanel project={state.project} files={files} auditEvents={auditEvents} briefings={briefings.slice(0, 6)} />
     </PortalShell>
   );
 }

@@ -16,7 +16,7 @@ const buttonStyle = (tone = "primary") => ({
   font: "inherit",
 });
 
-export default function BidActionCenter({ bid, updateBidStatus, clearBidBlocker }) {
+export default function BidActionCenter({ bid, updateBidStatus, clearBidBlocker, convertBidToProject }) {
   return (
     <div style={{ ...cardStyle, marginTop: 14, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
       <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live bid actions</div>
@@ -44,6 +44,13 @@ export default function BidActionCenter({ bid, updateBidStatus, clearBidBlocker 
           style={buttonStyle()}
         >
           Mark Won
+        </button>
+        <button
+          type="button"
+          onClick={() => convertBidToProject(bid.id, `Auricrux converted ${bid.package} into a project root and preserved bid, project, file, and audit continuity.`)}
+          style={buttonStyle()}
+        >
+          Convert to Project
         </button>
       </div>
       {bid.lastActionAt ? (
