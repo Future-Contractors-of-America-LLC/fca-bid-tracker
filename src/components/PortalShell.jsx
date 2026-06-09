@@ -15,7 +15,7 @@ import AutomationRecoveryFeed from "./AutomationRecoveryFeed";
 import useCustomerSession from "../hooks/useCustomerSession";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
-import { auricruxRail, currentProject, portalJourney, portalModules, portalTenant, workspaceContext } from "../systemState";
+import { portalJourney, portalModules } from "../systemState";
 
 const shellStyle = {
   padding: 40,
@@ -80,7 +80,7 @@ export default function PortalShell({
   primaryLabel = "Open Messages",
 }) {
   const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
-  const { refreshSyncStamp } = useWorkspaceState();
+  const { state, refreshSyncStamp } = useWorkspaceState();
 
   return (
     <div style={shellStyle}>
@@ -119,9 +119,9 @@ export default function PortalShell({
           <AuricruxBrandMark compact />
         </div>
 
-        <ProjectSpineBar tenant={portalTenant} project={currentProject} />
-        <WorkspaceContextBar tenant={portalTenant} project={currentProject} workspace={workspaceContext} />
-        <AuricruxStatusRail project={currentProject} rail={auricruxRail} />
+        <ProjectSpineBar tenant={state.tenant} project={state.project} />
+        <WorkspaceContextBar tenant={state.tenant} project={state.project} workspace={state.workspace} />
+        <AuricruxStatusRail project={state.project} rail={state.auricrux} />
         <RouteStateOverlay overlay={routeOverlay} />
         <ExecutiveSignalBar mode="portal" nextHref={executiveSignalCtaSets.portal.href} nextLabel={executiveSignalCtaSets.portal.label} />
 
