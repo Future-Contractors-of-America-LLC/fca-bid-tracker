@@ -1,11 +1,15 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import ContinuityObjectsPanel from "../../components/ContinuityObjectsPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { portalFiles, portalContinuityObjects, projectAuditEvents } from "../../systemState";
-import { readContinuityObjectsForProject } from "../../continuityObjectStore";
+import {
+  completeQcPunch,
+  markContinuityObjectBillingReady,
+  readContinuityObjectsForProject,
+} from "../../continuityObjectStore";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -71,17 +75,57 @@ function scopeContinuityObjectsToProject(items, project) {
   return stored.length ? stored : seeded;
 }
 
+function buildGeneratedAuditEvents(items = []) {
+  return items
+    .flatMap((item) =>
+      (item.actionHistory || []).slice(0, 2).map((entry) => ({
+        time: new Date(entry.at).toLocaleString(),
+        eventType: "continuity-object-updated",
+        actorType: "auricrux",
+        targetObjectType: item.type,
+        action: `${item.id} · ${entry.label}`,
+        detail: entry.detail,
+        reason: item.auditImpact,
+        discipline: item.type,
+      }))
+    )
+    .slice(0, 8);
+}
+
 export default function PortalAudit() {
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const [continuityVersion, setContinuityVersion] = useState(0);
 
   useEffect(() => {
     refreshSyncStamp(`Audit route synchronized to ${state.project.id}`);
   }, [refreshSyncStamp, state.project.id]);
 
   const scopedFiles = useMemo(() => scopeFilesToProject(portalFiles, state.project), [state.project]);
-  const scopedAuditEvents = useMemo(() => scopeAuditEventsToProject(projectAuditEvents, state.project), [state.project]);
-  const scopedContinuityObjects = useMemo(() => scopeContinuityObjectsToProject(portalContinuityObjects, state.project), [state.project]);
+  const scopedContinuityObjects = useMemo(
+    () => scopeContinuityObjectsToProject(portalContinuityObjects, state.project),
+    [continuityVersion, state.project]
+  );
+  const generatedAuditEvents = useMemo(
+    () => buildGeneratedAuditEvents(scopedContinuityObjects),
+    [scopedContinuityObjects]
+  );
+  const scopedAuditEvents = useMemo(
+    () => [...generatedAuditEvents, ...scopeAuditEventsToProject(projectAuditEvents, state.project)],
+    [generatedAuditEvents, state.project]
+  );
   const auditSummary = useMemo(() => buildEventTypeSummary(scopedAuditEvents), [scopedAuditEvents]);
+
+  function handleMarkBillingReady(objectId) {
+    markContinuityObjectBillingReady(objectId);
+    setContinuityVersion((current) => current + 1);
+    refreshSyncStamp(`Continuity object ${objectId} linked to billing continuity`);
+  }
+
+  function handleCompletePunch(objectId) {
+    completeQcPunch(objectId);
+    setContinuityVersion((current) => current + 1);
+    refreshSyncStamp(`Continuity object ${objectId} moved to closeout continuity`);
+  }
 
   return (
     <PortalShell
@@ -130,7 +174,12 @@ export default function PortalAudit() {
       <ProjectFileAuditPanel project={state.project} files={scopedFiles} auditEvents={scopedAuditEvents} />
 
       <div style={{ marginTop: 24 }}>
-        <ContinuityObjectsPanel project={state.project} items={scopedContinuityObjects} />
+        <ContinuityObjectsPanel
+          project={state.project}
+          items={scopedContinuityObjects}
+          onMarkBillingReady={handleMarkBillingReady}
+          onCompletePunch={handleCompletePunch}
+        />
       </div>
     </PortalShell>
   );

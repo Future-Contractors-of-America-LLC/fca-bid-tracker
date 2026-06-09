@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import SystemStateSummary from "../../components/SystemStateSummary";
@@ -12,6 +12,7 @@ import { portalNarrativeCtaSets } from "../../websiteShell";
 import { billingGovernance } from "../../billingGovernance";
 import { portalBilling, routeStateOverlays } from "../../systemState";
 import { resolvePlanPreset } from "../../pricingPlans";
+import { readContinuityObjectsForProject } from "../../continuityObjectStore";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -68,6 +69,13 @@ export default function PortalBilling() {
   }, [refreshSyncStamp]);
 
   const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
+  const continuityBillingObjects = useMemo(
+    () =>
+      readContinuityObjectsForProject(state.project.id).filter(
+        (item) => item.type === "Change Event" || item.type === "Change Order"
+      ),
+    [state.project.id]
+  );
 
   return (
     <PortalShell
@@ -86,7 +94,7 @@ export default function PortalBilling() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Billing now reads from the live workspace state"
-          detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, blocker, selected-plan, warranty, and referral modules as the other portal routes."
+          detail="Revenue continuity is now sourced from the same shared tenant, project, next-action, blocker, selected-plan, warranty, referral, and continuity-object modules as the other portal routes."
         />
       </div>
 
@@ -105,7 +113,7 @@ export default function PortalBilling() {
         />
       </div>
 
-      <CommercialContinuityFeed title="Billing and commercial continuity feed" detail="Recent plan promotions, workspace activations, product/comms repairs, recurring-service posture changes, and revenue-shaping mutations remain visible here so billing can operate as part of one durable commercial system." />
+      <CommercialContinuityFeed title="Billing and commercial continuity feed" detail="Recent plan promotions, workspace activations, product/comms repairs, recurring-service posture changes, continuity-object billing-linkage mutations, and revenue-shaping state changes remain visible here so billing can operate as part of one durable commercial system." />
 
       <div style={{ marginBottom: 24 }}>
         <PublicOperationsStrip
@@ -137,13 +145,36 @@ export default function PortalBilling() {
 
       <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Revenue continuity focus</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Billing now echoes the same approval, plan, training, warranty, and referral state as the rest of the shell</h2>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Billing now echoes the same approval, plan, training, warranty, referral, and change-object state as the rest of the shell</h2>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Revenue blocker:</strong> {state.auricrux.currentBlocker}</div>
           <div><strong>Business impact:</strong> {state.auricrux.blockerImpact}</div>
           <div><strong>Commercial next step:</strong> Convert {state.workspace.currentNextAction.toLowerCase()} into invoice follow-through under the {selectedPlan.name} plan.</div>
           <div><strong>Training continuity:</strong> Billing remains tied to learner assignment so onboarding and revenue stay visible together.</div>
           <div><strong>Lifecycle expansion:</strong> Recurring maintenance, service response, and advocacy-safe follow-through are now treated as part of the commercial picture.</div>
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Change billing linkage</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Change objects can now surface billing readiness inside the same project spine</h2>
+        <div style={{ display: "grid", gap: 16 }}>
+          {continuityBillingObjects.length ? continuityBillingObjects.map((item) => (
+            <div key={item.id} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{item.id} · {item.title}</h3>
+              <div style={{ color: "#334155", lineHeight: 1.7 }}>
+                <div><strong>Type:</strong> {item.type}</div>
+                <div><strong>Status:</strong> {item.status}</div>
+                <div><strong>Billing linkage:</strong> {item.billingStatus || "Not linked"}</div>
+                <div><strong>Next action:</strong> {item.nextAction}</div>
+                <div><strong>Audit impact:</strong> {item.auditImpact}</div>
+              </div>
+            </div>
+          )) : (
+            <div style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff", color: "#475569", lineHeight: 1.7 }}>
+              No change-linked continuity objects are currently visible for the active project root.
+            </div>
+          )}
         </div>
       </div>
 
@@ -233,7 +264,7 @@ export default function PortalBilling() {
           <h2 style={{ marginTop: 0 }}>Why billing belongs in the same shell</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
             Billing is not just accounting. In FCA it stays tied to project progress, pay-app backup, document readiness,
-            owner approvals, customer communications, plan activation, training completion, warranty retention, and referral-driven follow-through so commercial continuity remains visible.
+            owner approvals, customer communications, plan activation, training completion, warranty retention, referral-driven follow-through, and change-object billing readiness so commercial continuity remains visible.
           </p>
           <PublicCtaRow actions={portalNarrativeCtaSets.billingNarrative} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
         </div>
