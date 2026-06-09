@@ -116,6 +116,11 @@ export const routeMetadata = {
     description:
       "Review account identity, workspace access, and customer profile continuity inside the FCA portal.",
   },
+  "/portal/audit": {
+    title: "Portal Audit | Future Contractors of America",
+    description:
+      "Audit workspace for portal governance, readiness, and operational review.",
+  },
   "/portal/auricrux": {
     title: "Portal Auricrux | Future Contractors of America",
     description:
