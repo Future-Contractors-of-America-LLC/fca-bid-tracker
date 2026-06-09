@@ -39,6 +39,12 @@ const labelStyle = {
   letterSpacing: 0.3,
 };
 
+function resolveAvailabilityLabel(backingSource = "") {
+  if (backingSource === "api") return "Live connected workspace";
+  if (backingSource === "session") return "Customer-guided workspace";
+  return "Guided rollout workspace";
+}
+
 export default function WorkspaceSnapshotCard({
   title = "Live workspace snapshot",
   detail = "This public shell now previews the same tenant, project, and guided next-step context customers see inside the platform.",
@@ -46,6 +52,7 @@ export default function WorkspaceSnapshotCard({
   ctaLabel = "Open platform dashboard",
 }) {
   const { state } = useWorkspaceState();
+  const availabilityLabel = resolveAvailabilityLabel(state.meta.backingSource);
 
   return (
     <div style={cardStyle}>
@@ -74,7 +81,7 @@ export default function WorkspaceSnapshotCard({
 
       <div style={{ marginTop: 16, color: "#475569", lineHeight: 1.7 }}>
         <div><strong>Recommended next step:</strong> {state.auricrux.nextRecommendedAction}</div>
-        <div><strong>Workspace source:</strong> {state.meta.backingSource}</div>
+        <div><strong>Workspace availability:</strong> {availabilityLabel}</div>
         {state.meta.authenticatedCustomer ? <div><strong>Signed-in customer:</strong> {state.meta.authenticatedCustomer}</div> : null}
       </div>
 

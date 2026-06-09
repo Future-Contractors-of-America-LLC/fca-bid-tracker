@@ -25,6 +25,17 @@ const initialStatus = {
   lastOutcome: null,
 };
 
+function formatMode(lastMode) {
+  if (!lastMode) return "Standard guided support";
+  if (lastMode === "repo_writeback") return "Guided rollout mode";
+  return lastMode;
+}
+
+function formatOutcome(lastOutcome) {
+  if (!lastOutcome) return "Status monitoring active";
+  return lastOutcome;
+}
+
 export default function AutomationStatusCard({
   title = "System status",
   eyebrow = "Platform reliability",
@@ -74,17 +85,17 @@ export default function AutomationStatusCard({
           <div style={{ fontWeight: 700, marginTop: 4 }}>{status.status}</div>
         </div>
         <div>
-          <div style={labelStyle}>Current mode</div>
-          <div style={{ fontWeight: 700, marginTop: 4 }}>{status.lastMode || "Standard guided support"}</div>
+          <div style={labelStyle}>Support mode</div>
+          <div style={{ fontWeight: 700, marginTop: 4 }}>{formatMode(status.lastMode)}</div>
         </div>
         <div>
           <div style={labelStyle}>Latest result</div>
-          <div style={{ fontWeight: 700, marginTop: 4 }}>{status.lastOutcome || "No check recorded yet"}</div>
+          <div style={{ fontWeight: 700, marginTop: 4 }}>{formatOutcome(status.lastOutcome)}</div>
         </div>
       </div>
 
       <div style={{ marginTop: 10, color: "#475569", lineHeight: 1.7 }}>
-        <div><strong>System path:</strong> {status.preferredPath}</div>
+        <div><strong>Customer path:</strong> {status.preferredPath}</div>
         <div><strong>Recent system check:</strong> {status.lastRunUtc || "Awaiting the first published status check"}</div>
       </div>
     </div>
