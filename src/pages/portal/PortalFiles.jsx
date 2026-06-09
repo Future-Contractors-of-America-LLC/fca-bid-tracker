@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
@@ -17,12 +17,39 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+function scopeFilesToProject(files, project) {
+  const projectId = project?.id || "PRJ-A117";
+  const projectSuffix = projectId.replace(/^PRJ-/, "");
+
+  return files.map((file, index) => ({
+    ...file,
+    fileId: `${projectId}-FILE-${index + 1}`,
+    ownerObjectType: "Project",
+    ownerObjectId: projectId,
+    linkedEvidenceTarget: file.linkedEvidenceTarget || `${projectId} continuity record`,
+    name: file.name.replace(/A117/g, projectSuffix),
+    note: `${file.note} Active project context: ${projectId}.`,
+  }));
+}
+
+function scopeAuditEventsToProject(events, project) {
+  const projectId = project?.id || "PRJ-A117";
+  return events.map((event) => ({
+    ...event,
+    detail: event.detail.replace(/PRJ-A117/g, projectId),
+    reason: event.reason?.replace(/PRJ-A117/g, projectId),
+  }));
+}
+
 export default function PortalFiles() {
   const { state, refreshSyncStamp } = useWorkspaceState();
 
   useEffect(() => {
     refreshSyncStamp(`File spine synchronized to ${state.project.id}`);
   }, [refreshSyncStamp, state.project.id]);
+
+  const scopedFiles = useMemo(() => scopeFilesToProject(portalFiles, state.project), [state.project]);
+  const scopedAuditEvents = useMemo(() => scopeAuditEventsToProject(projectAuditEvents, state.project), [state.project]);
 
   return (
     <PortalShell
@@ -132,7 +159,7 @@ export default function PortalFiles() {
         </div>
       </div>
 
-      <ProjectFileAuditPanel project={state.project} files={portalFiles} auditEvents={projectAuditEvents} />
+      <ProjectFileAuditPanel project={state.project} files={scopedFiles} auditEvents={scopedAuditEvents} />
     </PortalShell>
   );
 }

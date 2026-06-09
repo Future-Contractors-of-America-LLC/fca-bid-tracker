@@ -82,6 +82,38 @@ export default function PortalProjects() {
         </div>
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Active project detail depth</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{visibleProject?.name || state.project.name}</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+          <div>
+            <div><strong>Customer:</strong> {visibleProject?.customer}</div>
+            <div><strong>Owner:</strong> {visibleProject?.owner}</div>
+            <div><strong>Due:</strong> {visibleProject?.due}</div>
+            <div><strong>Stage:</strong> {visibleProject?.stage}</div>
+          </div>
+          <div>
+            <div><strong>Permit:</strong> {visibleProject?.permitStatus}</div>
+            <div><strong>Site status:</strong> {visibleProject?.siteStatus}</div>
+            <div><strong>Commercial focus:</strong> {visibleProject?.commercialFocus}</div>
+          </div>
+        </div>
+        {visibleProject?.actionHistory?.length ? (
+          <div style={{ marginTop: 16 }}>
+            <div style={{ fontWeight: 700, marginBottom: 8 }}>Recent project actions</div>
+            <div style={{ display: "grid", gap: 10 }}>
+              {visibleProject.actionHistory.slice(0, 3).map((entry) => (
+                <div key={`${entry.at}-${entry.label}`} style={{ borderLeft: "3px solid #2563eb", paddingLeft: 12 }}>
+                  <div style={{ fontSize: 12, color: "#64748b", fontWeight: 700 }}>{new Date(entry.at).toLocaleString()}</div>
+                  <div style={{ fontWeight: 700, marginTop: 4 }}>{entry.label}</div>
+                  <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 4 }}>{entry.detail}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>Project Lifecycle</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>

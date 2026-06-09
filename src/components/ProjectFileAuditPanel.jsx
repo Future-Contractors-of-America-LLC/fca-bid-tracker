@@ -1,4 +1,5 @@
 import AuricruxFileAuditInsight from "./AuricruxFileAuditInsight";
+import AuditEventCard from "./AuditEventCard";
 
 const sectionStyle = {
   border: "1px solid #e5e7eb",
@@ -29,7 +30,7 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Files attached to {project.id}</h2>
         <div style={{ display: "grid", gap: 12 }}>
           {files.map((file) => (
-            <div key={file.name} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
+            <div key={file.fileId || file.name} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
               <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
                 <div>
                   <div style={{ fontWeight: 700 }}>{file.name}</div>
@@ -68,18 +69,7 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Operational record for {project.id}</h2>
         <div style={{ display: "grid", gap: 12 }}>
           {auditEvents.map((event) => (
-            <div key={`${event.time}-${event.action}`} style={{ borderLeft: "3px solid #2563eb", paddingLeft: 12 }}>
-              <div style={{ fontSize: 12, color: "#64748b", fontWeight: 700 }}>{event.time}</div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
-                {event.eventType ? <div style={badgeStyle}>{event.eventType}</div> : null}
-                {event.actorType ? <div style={badgeStyle}>{event.actorType}</div> : null}
-                {event.targetObjectType ? <div style={badgeStyle}>{event.targetObjectType}</div> : null}
-              </div>
-              <div style={{ fontWeight: 700, marginTop: 8 }}>{event.action}</div>
-              {event.discipline ? <div style={{ fontSize: 12, color: "#1d4ed8", fontWeight: 700, marginTop: 4 }}>{event.discipline}</div> : null}
-              <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 4 }}>{event.detail}</div>
-              {event.reason ? <div style={{ color: "#334155", lineHeight: 1.6, marginTop: 6 }}><strong>Reason:</strong> {event.reason}</div> : null}
-            </div>
+            <AuditEventCard key={`${event.time}-${event.action}`} event={event} />
           ))}
         </div>
       </div>

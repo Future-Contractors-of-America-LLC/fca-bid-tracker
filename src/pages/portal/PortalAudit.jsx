@@ -35,6 +35,30 @@ function buildEventTypeSummary(events) {
   return Object.entries(counts);
 }
 
+function scopeFilesToProject(files, project) {
+  const projectId = project?.id || "PRJ-A117";
+  const projectSuffix = projectId.replace(/^PRJ-/, "");
+
+  return files.map((file, index) => ({
+    ...file,
+    fileId: `${projectId}-FILE-${index + 1}`,
+    ownerObjectType: "Project",
+    ownerObjectId: projectId,
+    linkedEvidenceTarget: file.linkedEvidenceTarget || `${projectId} continuity record`,
+    name: file.name.replace(/A117/g, projectSuffix),
+    note: `${file.note} Active project context: ${projectId}.`,
+  }));
+}
+
+function scopeAuditEventsToProject(events, project) {
+  const projectId = project?.id || "PRJ-A117";
+  return events.map((event) => ({
+    ...event,
+    detail: event.detail.replace(/PRJ-A117/g, projectId),
+    reason: event.reason?.replace(/PRJ-A117/g, projectId),
+  }));
+}
+
 export default function PortalAudit() {
   const { state, refreshSyncStamp } = useWorkspaceState();
 
@@ -42,7 +66,9 @@ export default function PortalAudit() {
     refreshSyncStamp(`Audit route synchronized to ${state.project.id}`);
   }, [refreshSyncStamp, state.project.id]);
 
-  const auditSummary = useMemo(() => buildEventTypeSummary(projectAuditEvents), []);
+  const scopedFiles = useMemo(() => scopeFilesToProject(portalFiles, state.project), [state.project]);
+  const scopedAuditEvents = useMemo(() => scopeAuditEventsToProject(projectAuditEvents, state.project), [state.project]);
+  const auditSummary = useMemo(() => buildEventTypeSummary(scopedAuditEvents), [scopedAuditEvents]);
 
   return (
     <PortalShell
@@ -87,7 +113,7 @@ export default function PortalAudit() {
         ))}
       </div>
 
-      <ProjectFileAuditPanel project={state.project} files={portalFiles} auditEvents={projectAuditEvents} />
+      <ProjectFileAuditPanel project={state.project} files={scopedFiles} auditEvents={scopedAuditEvents} />
     </PortalShell>
   );
 }
