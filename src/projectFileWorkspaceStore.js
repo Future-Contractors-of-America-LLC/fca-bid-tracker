@@ -59,6 +59,39 @@ export function readFilesForProject(projectId, files = readProjectFileWorkspace(
   return files.filter((file) => file.projectId === projectId || file.ownerObjectId === projectId);
 }
 
+export function createProjectFile(input = {}) {
+  const normalized = normalizeProjectFile(
+    {
+      ...input,
+      fileId: input.fileId || `FILE-${Date.now()}`,
+      updated: input.updated || "Just now",
+    },
+    0
+  );
+
+  const current = readProjectFileWorkspace();
+  return writeProjectFileWorkspace([normalized, ...current]);
+}
+
+export function updateProjectFile(fileId, updates = {}) {
+  const current = readProjectFileWorkspace();
+  const next = current.map((file, index) =>
+    file.fileId === fileId
+      ? normalizeProjectFile(
+          {
+            ...file,
+            ...updates,
+            fileId,
+            updated: updates.updated || "Just now",
+          },
+          index
+        )
+      : normalizeProjectFile(file, index)
+  );
+
+  return writeProjectFileWorkspace(next);
+}
+
 export function updateProjectFileWorkspace(mutator) {
   const current = readProjectFileWorkspace();
   const next = typeof mutator === "function" ? mutator(current) : current;

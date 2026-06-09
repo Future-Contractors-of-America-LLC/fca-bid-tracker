@@ -1,7 +1,35 @@
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { readActiveProjectId, readProjectWorkspace } from '../../projectWorkspaceStore';
-import { readFilesForProject, readProjectFileWorkspace } from '../../projectFileWorkspaceStore';
+import {
+  createProjectFile,
+  readFilesForProject,
+  readProjectFileWorkspace,
+  updateProjectFile,
+} from '../../projectFileWorkspaceStore';
+
+const REQUIRED_PACKAGE_RULES = [
+  {
+    key: 'bid-summary',
+    label: 'Bid / owner review package',
+    categories: ['Bid'],
+  },
+  {
+    key: 'permit-package',
+    label: 'Permit / drawing package',
+    categories: ['Permit', 'Drawing'],
+  },
+  {
+    key: 'coordination-log',
+    label: 'Coordination / RFI register',
+    categories: ['Coordination'],
+  },
+  {
+    key: 'field-kickoff',
+    label: 'Field / onboarding package',
+    categories: ['Field', 'Safety'],
+  },
+];
 
 const styles = {
   page: {
@@ -11,7 +39,7 @@ const styles = {
     padding: '3rem 1.5rem 4rem',
   },
   wrap: {
-    maxWidth: '1200px',
+    maxWidth: '1240px',
     margin: '0 auto',
     display: 'grid',
     gap: '1.25rem',
@@ -71,7 +99,7 @@ const styles = {
   layout: {
     display: 'grid',
     gap: '1rem',
-    gridTemplateColumns: 'minmax(0, 1.5fr) minmax(320px, 0.95fr)',
+    gridTemplateColumns: 'minmax(0, 1.5fr) minmax(360px, 0.95fr)',
     alignItems: 'start',
   },
   panel: {
@@ -176,6 +204,8 @@ const styles = {
     color: '#fff',
     textDecoration: 'none',
     fontWeight: 700,
+    border: 'none',
+    cursor: 'pointer',
   },
   secondary: {
     display: 'inline-flex',
@@ -188,6 +218,36 @@ const styles = {
     textDecoration: 'none',
     border: '1px solid rgba(148, 163, 184, 0.18)',
     fontWeight: 700,
+    cursor: 'pointer',
+  },
+  formGrid: {
+    display: 'grid',
+    gap: '0.8rem',
+    marginTop: '1rem',
+  },
+  input: {
+    width: '100%',
+    borderRadius: '0.9rem',
+    border: '1px solid rgba(148, 163, 184, 0.2)',
+    background: 'rgba(15, 23, 42, 0.72)',
+    color: '#f8fafc',
+    padding: '0.9rem 1rem',
+    fontSize: '0.95rem',
+  },
+  select: {
+    width: '100%',
+    borderRadius: '0.9rem',
+    border: '1px solid rgba(148, 163, 184, 0.2)',
+    background: 'rgba(15, 23, 42, 0.72)',
+    color: '#f8fafc',
+    padding: '0.9rem 1rem',
+    fontSize: '0.95rem',
+  },
+  helperList: {
+    margin: '0.9rem 0 0',
+    paddingLeft: '1rem',
+    color: '#dbe7f5',
+    lineHeight: 1.65,
   },
 };
 
@@ -199,35 +259,68 @@ function classifyFileTone(file) {
   return 'neutral';
 }
 
+function detectMissingPackages(files) {
+  return REQUIRED_PACKAGE_RULES.filter((rule) => !files.some((file) => rule.categories.includes(file.category)));
+}
+
 function buildDocumentBriefing(project, files) {
   if (!project) {
     return {
       headline: 'No active project selected.',
       summary: 'Select a project to resolve file continuity against the project/job spine.',
       nextMove: 'Return to the Projects route and choose the active project root.',
+      missingPackages: REQUIRED_PACKAGE_RULES,
+      riskLevel: 'blocked',
     };
   }
 
   const pendingCount = files.filter((file) => classifyFileTone(file) === 'review').length;
   const readyCount = files.filter((file) => classifyFileTone(file) === 'ready').length;
+  const missingPackages = detectMissingPackages(files);
   const categories = [...new Set(files.map((file) => file.category))].join(', ') || 'No categories yet';
+  const riskLevel = missingPackages.length ? 'blocked' : pendingCount ? 'review' : 'ready';
+
+  let nextMove = project.nextAction || 'Add the next required project file package.';
+  if (missingPackages.length) {
+    nextMove = `Add ${missingPackages[0].label.toLowerCase()} to keep the project spine complete.`;
+  } else if (pendingCount) {
+    nextMove = files.find((file) => classifyFileTone(file) === 'review')?.action || nextMove;
+  }
 
   return {
     headline: `${project.name} has ${files.length} project-linked files in the current workspace.`,
-    summary: `${readyCount} are execution-ready, ${pendingCount} still need review, and the active categories are ${categories}. This is the beginning of a project-scoped file spine, not detached storage.`,
-    nextMove: files[0]?.action || project.nextAction || 'Add the next required project file package.',
+    summary: `${readyCount} are execution-ready, ${pendingCount} still need review, and the active categories are ${categories}. ${missingPackages.length ? `Auricrux detected ${missingPackages.length} missing required package lane(s).` : 'Required package lanes are currently represented.'}`,
+    nextMove,
+    missingPackages,
+    riskLevel,
+  };
+}
+
+function initialFormState(projectId) {
+  return {
+    name: '',
+    category: 'Bid',
+    discipline: 'Preconstruction',
+    status: 'Needs review',
+    evidenceStatus: 'Classification pending',
+    linkedEvidenceTarget: '',
+    action: '',
+    owner: '',
+    note: '',
+    projectId: projectId || '',
   };
 }
 
 export default function Files() {
   const [projects] = useState(() => readProjectWorkspace());
   const [activeProjectId] = useState(() => readActiveProjectId(projects));
-  const [allFiles] = useState(() => readProjectFileWorkspace());
-
+  const [allFiles, setAllFiles] = useState(() => readProjectFileWorkspace());
   const activeProject = useMemo(
     () => projects.find((project) => project.id === activeProjectId) || projects[0] || null,
     [activeProjectId, projects]
   );
+  const [formState, setFormState] = useState(() => initialFormState(activeProject?.id));
+
   const activeFiles = useMemo(
     () => readFilesForProject(activeProject?.id, allFiles),
     [activeProject?.id, allFiles]
@@ -241,18 +334,55 @@ export default function Files() {
     { value: String(activeFiles.length), label: 'Project-attached files visible for the active job record.' },
     { value: String(activeFiles.filter((file) => classifyFileTone(file) === 'ready').length), label: 'Files already positioned for release, review, or field use.' },
     { value: String(activeFiles.filter((file) => classifyFileTone(file) === 'review').length), label: 'Packages still waiting on review, submission, or customer follow-through.' },
-    { value: activeProject?.id || 'No project', label: 'Project root currently governing file continuity in this route.' },
+    { value: String(briefing.missingPackages.length), label: 'Required package lanes Auricrux currently sees as missing.' },
   ];
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setFormState((current) => ({
+      ...current,
+      [name]: value,
+      projectId: activeProject?.id || current.projectId,
+    }));
+  }
+
+  function handleCreateFile(event) {
+    event.preventDefault();
+    if (!activeProject) return;
+
+    const nextFiles = createProjectFile({
+      ...formState,
+      projectId: activeProject.id,
+      ownerObjectId: activeProject.id,
+      ownerObjectType: 'Project',
+      versionLabel: 'Rev 1',
+      action: formState.action || 'Review new upload',
+      owner: formState.owner || activeProject.owner,
+      note: formState.note || 'Created from Packet I file intake surface.',
+    });
+
+    setAllFiles(nextFiles);
+    setFormState(initialFormState(activeProject.id));
+  }
+
+  function markReady(fileId) {
+    const nextFiles = updateProjectFile(fileId, {
+      status: 'Ready for release',
+      evidenceStatus: 'Evidence linked',
+      action: 'Move to downstream review',
+    });
+    setAllFiles(nextFiles);
+  }
 
   return (
     <section style={styles.page}>
       <div style={styles.wrap}>
         <header style={styles.hero}>
-          <div style={styles.eyebrow}>Implementation Packet H · File Spine Baseline</div>
-          <h1 style={styles.title}>Files now resolve against the active project/job spine instead of acting like a generic placeholder route.</h1>
+          <div style={styles.eyebrow}>Implementation Packet I · File Mutation + Briefing Upgrade</div>
+          <h1 style={styles.title}>The file spine now supports project-aware file creation, missing-package detection, and stronger Auricrux briefing output.</h1>
           <p style={styles.lead}>
-            This route establishes project-scoped document continuity for FCA Contractor Command. Packages, evidence targets, version labels,
-            and next actions stay attached to the same project root that Auricrux and the customer portal are already reading.
+            Packet I moves this route from read-only visibility to the start of a real workflow surface. Users can create project-linked file artifacts,
+            Auricrux can detect missing required package lanes, and the route now explains risk and next move in the context of the active project root.
           </p>
           <div style={styles.metricGrid}>
             {metrics.map((metric) => (
@@ -284,6 +414,11 @@ export default function Files() {
                   <p style={styles.fileMeta}>Evidence target: {file.linkedEvidenceTarget}</p>
                   <p style={styles.fileMeta}>Next action: {file.action}</p>
                   <p style={styles.fileMeta}>{file.note}</p>
+                  <div style={styles.actions}>
+                    <button type="button" style={styles.secondary} onClick={() => markReady(file.fileId)}>
+                      Mark Ready
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>
@@ -292,8 +427,7 @@ export default function Files() {
           <aside style={styles.panel}>
             <h2 style={styles.panelTitle}>Auricrux document briefing</h2>
             <p style={styles.panelLead}>
-              Packet H does not claim full document intelligence yet. It does add a project-aware briefing stub so the route starts behaving like
-              a continuity surface rather than static copy.
+              The briefing now identifies missing package lanes, classifies project document risk, and recommends the next action based on actual file state.
             </p>
 
             <article style={styles.sidebarCard}>
@@ -302,16 +436,49 @@ export default function Files() {
             </article>
 
             <article style={styles.sidebarCard}>
+              <span style={styles.sidebarLabel}>Risk level</span>
+              <span style={styles.sidebarValue}>{briefing.riskLevel}</span>
+            </article>
+
+            <article style={styles.sidebarCard}>
               <span style={styles.sidebarLabel}>Recommended next move</span>
               <span style={styles.sidebarValue}>{briefing.nextMove}</span>
             </article>
 
             <article style={styles.sidebarCard}>
-              <span style={styles.sidebarLabel}>Coverage enforcement</span>
-              <span style={styles.sidebarValue}>
-                Every visible file is attached to a project ID, evidence target, version state, and next action. If those links are absent,
-                the route is non-compliant with the no-gap spine.
-              </span>
+              <span style={styles.sidebarLabel}>Missing package detection</span>
+              {briefing.missingPackages.length ? (
+                <ul style={styles.helperList}>
+                  {briefing.missingPackages.map((rule) => (
+                    <li key={rule.key}>{rule.label}</li>
+                  ))}
+                </ul>
+              ) : (
+                <span style={styles.sidebarValue}>Required package lanes are currently represented in this project workspace.</span>
+              )}
+            </article>
+
+            <article style={styles.sidebarCard}>
+              <span style={styles.sidebarLabel}>Add project file artifact</span>
+              <form style={styles.formGrid} onSubmit={handleCreateFile}>
+                <input style={styles.input} name="name" value={formState.name} onChange={handleChange} placeholder="File name" required />
+                <select style={styles.select} name="category" value={formState.category} onChange={handleChange}>
+                  <option value="Bid">Bid</option>
+                  <option value="Permit">Permit</option>
+                  <option value="Drawing">Drawing</option>
+                  <option value="Coordination">Coordination</option>
+                  <option value="Field">Field</option>
+                  <option value="Safety">Safety</option>
+                  <option value="Closeout">Closeout</option>
+                  <option value="Finance">Finance</option>
+                </select>
+                <input style={styles.input} name="discipline" value={formState.discipline} onChange={handleChange} placeholder="Discipline" />
+                <input style={styles.input} name="linkedEvidenceTarget" value={formState.linkedEvidenceTarget} onChange={handleChange} placeholder="Evidence target" />
+                <input style={styles.input} name="action" value={formState.action} onChange={handleChange} placeholder="Next action" />
+                <input style={styles.input} name="owner" value={formState.owner} onChange={handleChange} placeholder="Owner" />
+                <input style={styles.input} name="note" value={formState.note} onChange={handleChange} placeholder="Operational note" />
+                <button type="submit" style={styles.primary}>Attach File to Project Spine</button>
+              </form>
             </article>
 
             <div style={styles.actions}>

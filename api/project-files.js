@@ -75,6 +75,27 @@ const sampleProjectFiles = [
   },
 ];
 
+function normalizeIncomingFile(body = {}) {
+  return {
+    fileId: body.fileId || `FILE-${Date.now()}`,
+    projectId: body.projectId || null,
+    bidId: body.bidId || null,
+    ownerObjectType: body.ownerObjectType || "Project",
+    ownerObjectId: body.ownerObjectId || body.projectId || null,
+    linkedEvidenceTarget: body.linkedEvidenceTarget || "Evidence target pending",
+    evidenceStatus: body.evidenceStatus || "Classification pending",
+    versionLabel: body.versionLabel || "Rev 1",
+    name: body.name || null,
+    category: body.category || "General",
+    updated: body.updated || "Just now",
+    action: body.action || "Review",
+    discipline: body.discipline || "Operations",
+    status: body.status || "Needs review",
+    owner: body.owner || "Unassigned",
+    note: body.note || "No file note recorded.",
+  };
+}
+
 app.http("project-files", {
   methods: ["GET", "POST"],
   authLevel: "anonymous",
@@ -99,15 +120,36 @@ app.http("project-files", {
     }
 
     const body = await request.json().catch(() => ({}));
-    const fileId = body?.fileId || `FILE-${Date.now()}`;
+    const normalized = normalizeIncomingFile(body);
+
+    if (!normalized.projectId) {
+      return {
+        status: 400,
+        jsonBody: {
+          ok: false,
+          accepted: false,
+          message: "projectId is required to attach a file to the project spine",
+        },
+      };
+    }
+
+    if (!normalized.name) {
+      return {
+        status: 400,
+        jsonBody: {
+          ok: false,
+          accepted: false,
+          message: "name is required for a project file artifact",
+        },
+      };
+    }
 
     return {
       status: 200,
       jsonBody: {
         ok: true,
         accepted: true,
-        fileId,
-        projectId: body?.projectId || null,
+        item: normalized,
         message: "Project file artifact accepted",
       },
     };
