@@ -58,8 +58,8 @@ export default function PortalFiles() {
       activeHref="/portal/files"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.files}
-      primaryHref="/portal/audit"
-      primaryLabel="Open Audit Timeline"
+      primaryHref="/portal/messages"
+      primaryLabel="Open Messages"
       workspaceState={state}
     >
       <div style={{ marginBottom: 16 }}>
