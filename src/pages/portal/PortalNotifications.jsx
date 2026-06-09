@@ -37,8 +37,8 @@ export default function PortalNotifications() {
   const { session, isAuthenticated } = useCustomerSession();
 
   useEffect(() => {
-    refreshSyncStamp(`Persisted notifications state active for ${state.project.id}`);
-  }, [refreshSyncStamp, state.project.id]);
+    refreshSyncStamp("Persisted notifications state active");
+  }, [refreshSyncStamp]);
 
   const accountSource = session?.accountSource || "workspace-shell";
   const launchReadiness = accountSource === "api"
