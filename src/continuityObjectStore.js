@@ -1,6 +1,7 @@
 import { appendAutomationLog } from "./sessionAutomationLog";
 import { appendCommercialLog } from "./sessionCommercialLog";
 import { portalContinuityObjects } from "./systemState";
+import { createContinuityObjectRemote, shouldUseRemoteContinuityApi } from "./services/continuityObjectApi";
 
 export const CONTINUITY_OBJECT_WORKSPACE_KEY = "fca_continuity_object_workspace_v1";
 
@@ -76,6 +77,64 @@ export function createContinuityObject(input = {}) {
     }),
     ...current,
   ]);
+}
+
+export async function createContinuityObjectWithFallback(input = {}) {
+  const normalizedInput = {
+    ...input,
+    id: input.id || `COBJ-${Date.now()}`,
+  };
+
+  if (shouldUseRemoteContinuityApi()) {
+    try {
+      const remoteItem = await createContinuityObjectRemote(normalizedInput);
+      const current = readContinuityObjects();
+      const saved = writeContinuityObjects([
+        normalizeContinuityObject({
+          ...remoteItem,
+          actionHistory: [stampHistoryEntry("Continuity object created", remoteItem.nextAction || "Continuity object entered through remote API")],
+          lastActionAt: new Date().toISOString(),
+        }),
+        ...current,
+      ]);
+
+      appendAutomationLog({
+        type: "continuity-object-create",
+        title: `${remoteItem.id || normalizedInput.id} created via API`,
+        detail: `Continuity object persisted through ${"/api/continuity-objects"} and attached to ${remoteItem.projectId || normalizedInput.projectId}.`,
+        route: "/portal/audit",
+      });
+
+      appendCommercialLog({
+        type: "continuity-object-create",
+        title: `${remoteItem.id || normalizedInput.id} entered into continuity spine`,
+        detail: `Creation path used API-backed persistence before local continuity hydration for ${remoteItem.projectId || normalizedInput.projectId}.`,
+        route: "/portal/audit",
+      });
+
+      return { saved, mode: "remote" };
+    } catch {
+      // degrade to local persistence
+    }
+  }
+
+  const saved = createContinuityObject(normalizedInput);
+
+  appendAutomationLog({
+    type: "continuity-object-create",
+    title: `${normalizedInput.id} created in local continuity store`,
+    detail: `Remote persistence unavailable; local continuity fallback preserved project linkage for ${normalizedInput.projectId}.`,
+    route: "/portal/audit",
+  });
+
+  appendCommercialLog({
+    type: "continuity-object-create",
+    title: `${normalizedInput.id} entered through local fallback`,
+    detail: `Continuity object creation preserved project and billing readiness context using the local shell fallback path.`,
+    route: "/portal/audit",
+  });
+
+  return { saved, mode: "local" };
 }
 
 export function updateContinuityObject(objectId, updates = {}, logDetail = "Continuity object updated") {

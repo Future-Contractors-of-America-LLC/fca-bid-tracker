@@ -7,6 +7,7 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { portalFiles, portalContinuityObjects, projectAuditEvents } from "../../systemState";
 import {
   completeQcPunch,
+  createContinuityObjectWithFallback,
   markContinuityObjectBillingReady,
   readContinuityObjectsForProject,
 } from "../../continuityObjectStore";
@@ -17,6 +18,24 @@ const cardStyle = {
   padding: 18,
   background: "#fff",
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+};
+
+const inputStyle = {
+  width: "100%",
+  borderRadius: 10,
+  border: "1px solid #dbe3ef",
+  padding: "10px 12px",
+  fontSize: 14,
+};
+
+const buttonStyle = {
+  border: "1px solid #2563eb",
+  background: "#eff6ff",
+  color: "#1d4ed8",
+  borderRadius: 10,
+  padding: "10px 12px",
+  fontWeight: 700,
+  cursor: "pointer",
 };
 
 const auditRouteOverlay = {
@@ -92,9 +111,23 @@ function buildGeneratedAuditEvents(items = []) {
     .slice(0, 8);
 }
 
+function initialFormState(projectId) {
+  return {
+    type: "RFI",
+    title: "",
+    fileId: "",
+    owner: "",
+    nextAction: "",
+    auditImpact: "",
+    projectId,
+  };
+}
+
 export default function PortalAudit() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const [continuityVersion, setContinuityVersion] = useState(0);
+  const [formState, setFormState] = useState(() => initialFormState(state.project.id));
+  const [creationMode, setCreationMode] = useState("none");
 
   useEffect(() => {
     refreshSyncStamp(`Audit route synchronized to ${state.project.id}`);
@@ -125,6 +158,31 @@ export default function PortalAudit() {
     completeQcPunch(objectId);
     setContinuityVersion((current) => current + 1);
     refreshSyncStamp(`Continuity object ${objectId} moved to closeout continuity`);
+  }
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setFormState((current) => ({
+      ...current,
+      [name]: value,
+      projectId: state.project.id,
+    }));
+  }
+
+  async function handleCreateContinuityObject(event) {
+    event.preventDefault();
+    const { mode } = await createContinuityObjectWithFallback({
+      ...formState,
+      projectId: state.project.id,
+      owner: formState.owner || state.project.owner || "Project Coordinator",
+      nextAction: formState.nextAction || "Review newly created continuity object",
+      auditImpact: formState.auditImpact || "New continuity object entered into project audit posture.",
+    });
+
+    setCreationMode(mode);
+    setContinuityVersion((current) => current + 1);
+    setFormState(initialFormState(state.project.id));
+    refreshSyncStamp(`Continuity object created through ${mode} persistence path`);
   }
 
   return (
@@ -158,6 +216,7 @@ export default function PortalAudit() {
           <div><strong>Next action:</strong> {state.workspace.currentNextAction}</div>
           <div><strong>Audit status:</strong> {state.project.auditStatus}</div>
           <div><strong>Continuity objects:</strong> {scopedContinuityObjects.length}</div>
+          <div><strong>Persistence path:</strong> {creationMode === "none" ? "No new continuity object created this session" : creationMode}</div>
         </div>
       </div>
 
@@ -172,6 +231,25 @@ export default function PortalAudit() {
       </div>
 
       <ProjectFileAuditPanel project={state.project} files={scopedFiles} auditEvents={scopedAuditEvents} />
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Create continuity object</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Enter a new RFI, change, or QC object into the active project spine</h2>
+        <form onSubmit={handleCreateContinuityObject} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+          <select name="type" value={formState.type} onChange={handleChange} style={inputStyle}>
+            <option value="RFI">RFI</option>
+            <option value="Change Event">Change Event</option>
+            <option value="Change Order">Change Order</option>
+            <option value="QC / Punch">QC / Punch</option>
+          </select>
+          <input name="title" value={formState.title} onChange={handleChange} placeholder="Continuity object title" style={inputStyle} required />
+          <input name="fileId" value={formState.fileId} onChange={handleChange} placeholder="Linked file ID (optional)" style={inputStyle} />
+          <input name="owner" value={formState.owner} onChange={handleChange} placeholder="Owner" style={inputStyle} />
+          <input name="nextAction" value={formState.nextAction} onChange={handleChange} placeholder="Next action" style={inputStyle} />
+          <input name="auditImpact" value={formState.auditImpact} onChange={handleChange} placeholder="Audit impact" style={inputStyle} />
+          <button type="submit" style={buttonStyle}>Create continuity object</button>
+        </form>
+      </div>
 
       <div style={{ marginTop: 24 }}>
         <ContinuityObjectsPanel
