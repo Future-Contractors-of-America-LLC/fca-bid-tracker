@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { readCustomerSession } from "../customerSession";
 import { appendAutomationLog } from "../sessionAutomationLog";
 import { appendCommercialLog } from "../sessionCommercialLog";
 import { readProjectWorkspace, updateProjectWorkspace } from "../projectWorkspaceStore";
@@ -11,11 +12,19 @@ function stampHistoryEntry(label, detail) {
   };
 }
 
+function filterProjectsForSession(projects) {
+  const session = readCustomerSession();
+  if (!session?.authenticated) return projects;
+  const allowed = session.projectAccess?.projectIds || [];
+  if (!allowed.length) return projects;
+  return projects.filter((project) => allowed.includes(project.id));
+}
+
 export default function useProjectWorkspace() {
-  const [projects, setProjects] = useState(() => readProjectWorkspace());
+  const [projects, setProjects] = useState(() => filterProjectsForSession(readProjectWorkspace()));
 
   useEffect(() => {
-    setProjects(readProjectWorkspace());
+    setProjects(filterProjectsForSession(readProjectWorkspace()));
   }, []);
 
   return useMemo(
@@ -41,7 +50,8 @@ export default function useProjectWorkspace() {
           )
         );
 
-        setProjects(saved);
+        const filtered = filterProjectsForSession(saved);
+        setProjects(filtered);
         const updated = saved.find((project) => project.id === projectId);
         if (updated) {
           appendAutomationLog({
@@ -80,7 +90,8 @@ export default function useProjectWorkspace() {
           )
         );
 
-        setProjects(saved);
+        const filtered = filterProjectsForSession(saved);
+        setProjects(filtered);
         const updated = saved.find((project) => project.id === projectId);
         if (updated) {
           appendAutomationLog({
@@ -118,7 +129,7 @@ export default function useProjectWorkspace() {
           )
         );
 
-        setProjects(saved);
+        setProjects(filterProjectsForSession(saved));
         return saved;
       },
     }),

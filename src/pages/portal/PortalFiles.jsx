@@ -66,6 +66,7 @@ export default function PortalFiles() {
           <div><strong>Linked file count:</strong> {selectedFiles.length}</div>
           <div><strong>Evidence posture:</strong> {selectedProject?.evidenceStatus || currentProject.fileSpineStatus}</div>
           <div><strong>Briefing posture:</strong> {selectedProject?.fileBriefingStatus || "Document briefing pending"}</div>
+          <div><strong>Ownership scope:</strong> Project-linked authenticated workspace continuity</div>
         </div>
       </div>
 

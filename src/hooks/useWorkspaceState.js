@@ -13,6 +13,18 @@ function bindCustomerSession(baseState) {
       name: session.company,
       roleSummary: `${session.workspaceLabel} is authenticated and running through the shared FCA workspace continuity layer.`,
     },
+    project: {
+      ...baseState.project,
+      id: `PRJ-${String(session.projectAccess?.primaryProjectId || "A117").replace(/[^A-Za-z0-9]/g, "")}`,
+      customer: session.company,
+      name: `${session.company} Active Contractor Command Workspace`,
+      auditStatus: `Authenticated project/file continuity is bound to ${session.projectAccess?.primaryProjectId || "A-117"}.`,
+    },
+    workspace: {
+      ...baseState.workspace,
+      stageSummary: `${baseState.workspace.stageSummary} Customer ownership is currently bound to ${session.projectAccess?.projectIds?.join(", ") || "A-117"}.`,
+      auditSummary: `Auricrux, customer-facing actions, and workspace transitions should resolve into one audit spine for ${session.projectAccess?.primaryProjectId || "A-117"}.`,
+    },
     meta: {
       ...baseState.meta,
       customerId: session.customerId,
@@ -25,6 +37,9 @@ function bindCustomerSession(baseState) {
         lms: session.enabledProducts?.lms !== false,
         auricrux: session.enabledProducts?.auricrux !== false,
       },
+      primaryProjectId: session.projectAccess?.primaryProjectId || "A-117",
+      projectIds: session.projectAccess?.projectIds || ["A-117"],
+      fileScope: session.projectAccess?.fileScope || "project-owned",
     },
   };
 }

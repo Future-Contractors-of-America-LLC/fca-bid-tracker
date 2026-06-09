@@ -20,6 +20,16 @@ function normalizeEnabledComms(enabledComms) {
   };
 }
 
+function normalizeProjectAccess(projectAccess) {
+  return {
+    primaryProjectId: projectAccess?.primaryProjectId || "A-117",
+    projectIds: Array.isArray(projectAccess?.projectIds) && projectAccess.projectIds.length > 0
+      ? projectAccess.projectIds
+      : [projectAccess?.primaryProjectId || "A-117"],
+    fileScope: projectAccess?.fileScope || "project-owned",
+  };
+}
+
 export function readCustomerSession() {
   if (typeof window === "undefined") return null;
 
@@ -37,6 +47,7 @@ export function readCustomerSession() {
       accountSource: parsed.accountSource || "workspace-shell",
       enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
       enabledComms: normalizeEnabledComms(parsed.enabledComms),
+      projectAccess: normalizeProjectAccess(parsed.projectAccess),
     };
   } catch {
     return null;
@@ -59,6 +70,7 @@ export function writeCustomerSession(session) {
     accountSource: session.accountSource || "workspace-shell",
     enabledProducts: normalizeEnabledProducts(session.enabledProducts),
     enabledComms: normalizeEnabledComms(session.enabledComms),
+    projectAccess: normalizeProjectAccess(session.projectAccess),
   };
 
   try {
@@ -84,6 +96,10 @@ export function updateCustomerSession(updates = {}) {
     enabledComms: normalizeEnabledComms({
       ...currentSession.enabledComms,
       ...updates.enabledComms,
+    }),
+    projectAccess: normalizeProjectAccess({
+      ...currentSession.projectAccess,
+      ...updates.projectAccess,
     }),
   });
 }

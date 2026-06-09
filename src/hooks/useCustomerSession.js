@@ -29,6 +29,29 @@ function normalizeCommsSelection(enabledComms = {}) {
   };
 }
 
+function resolveProjectAccess(role = "Owner / Admin", company = "FCA Workspace") {
+  const companyKey = (company || "FCA Workspace")
+    .replace(/[^a-z0-9]+/gi, "-")
+    .replace(/^-+|-+$/g, "")
+    .toUpperCase();
+
+  switch ((role || "").trim()) {
+    case "Estimator":
+      return { primaryProjectId: "A-117", projectIds: ["A-117"], fileScope: "estimating-owned" };
+    case "Project Coordinator":
+      return { primaryProjectId: "B-204", projectIds: ["B-204", "A-117"], fileScope: "execution-owned" };
+    case "Superintendent":
+      return { primaryProjectId: "B-204", projectIds: ["B-204"], fileScope: "field-owned" };
+    case "Accounting":
+      return { primaryProjectId: "C-332", projectIds: ["C-332", "B-204"], fileScope: "billing-owned" };
+    case "Field Operations":
+      return { primaryProjectId: "B-204", projectIds: ["B-204"], fileScope: "field-owned" };
+    case "Owner / Admin":
+    default:
+      return { primaryProjectId: "A-117", projectIds: ["A-117", "B-204", "C-332"], fileScope: `${companyKey || "FCA"}-workspace-owned` };
+  }
+}
+
 function logAutomationEvent(type, title, detail, route = "/portal/platform") {
   appendAutomationLog({ type, title, detail, route });
 }
@@ -106,6 +129,7 @@ export default function useCustomerSession() {
         const planPreset = resolvePlanPreset(selectedPlan);
         const normalizedProducts = normalizeProductSelection(enabledProducts || planPreset.enabledProducts || resolveRoleDefaultProducts(role));
         const normalizedComms = normalizeCommsSelection(enabledComms || planPreset.enabledComms || resolveRoleDefaultComms(role));
+        const projectAccess = resolveProjectAccess(normalizedRole, normalizedCompany);
 
         if (!normalizedEmail || !normalizedCompany) {
           return { ok: false, error: "Email and company are required." };
@@ -132,11 +156,12 @@ export default function useCustomerSession() {
           accountSource,
           enabledProducts: normalizedProducts,
           enabledComms: normalizedComms,
+          projectAccess,
         });
 
         setSession(saved);
-        logAutomationEvent("login-activation", `Workspace activated for ${normalizedCompany}`, `Auricrux activated ${planPreset.name} with ${Object.values(normalizedProducts).filter(Boolean).length} product layers and ${Object.values(normalizedComms).filter(Boolean).length} communications lanes through ${accountSource}.`, nextHref);
-        logCommercialEvent("workspace-activation", `${planPreset.name} workspace activated`, `Auricrux turned a commercial entry into a live authenticated workspace for ${normalizedCompany}.`, nextHref === "/portal/platform" ? "/pricing" : nextHref);
+        logAutomationEvent("login-activation", `Workspace activated for ${normalizedCompany}`, `Auricrux activated ${planPreset.name} with ${Object.values(normalizedProducts).filter(Boolean).length} product layers, ${Object.values(normalizedComms).filter(Boolean).length} communications lanes, and project ownership rooted at ${projectAccess.primaryProjectId} through ${accountSource}.`, nextHref);
+        logCommercialEvent("workspace-activation", `${planPreset.name} workspace activated`, `Auricrux turned a commercial entry into a live authenticated workspace for ${normalizedCompany} with project/file ownership continuity bound to ${projectAccess.primaryProjectId}.`, nextHref === "/portal/platform" ? "/pricing" : nextHref);
         return { ok: true, session: saved };
       },
       updateSession(updates = {}) {

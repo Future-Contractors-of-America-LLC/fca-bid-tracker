@@ -60,6 +60,9 @@ export default function PortalProjects() {
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
           <div><strong>Workspace file count:</strong> {totalFiles}</div>
+          <div><strong>Primary project:</strong> {state.meta.primaryProjectId || "A-117"}</div>
+          <div><strong>Project ownership:</strong> {(state.meta.projectIds || ["A-117"]).join(", ")}</div>
+          <div><strong>File scope:</strong> {state.meta.fileScope || "project-owned"}</div>
         </div>
       </div>
 

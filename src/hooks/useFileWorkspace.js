@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { readCustomerSession } from "../customerSession";
 import { appendAutomationLog } from "../sessionAutomationLog";
 import { appendCommercialLog } from "../sessionCommercialLog";
 import { readFileWorkspace, updateFileWorkspace } from "../fileWorkspaceStore";
@@ -7,11 +8,19 @@ function stampFileTime() {
   return new Date().toLocaleString();
 }
 
+function filterFilesForSession(files) {
+  const session = readCustomerSession();
+  if (!session?.authenticated) return files;
+  const allowed = session.projectAccess?.projectIds || [];
+  if (!allowed.length) return files;
+  return files.filter((file) => allowed.includes(file.projectId));
+}
+
 export default function useFileWorkspace() {
-  const [files, setFiles] = useState(() => readFileWorkspace());
+  const [files, setFiles] = useState(() => filterFilesForSession(readFileWorkspace()));
 
   useEffect(() => {
-    setFiles(readFileWorkspace());
+    setFiles(filterFilesForSession(readFileWorkspace()));
   }, []);
 
   return useMemo(
@@ -45,7 +54,7 @@ export default function useFileWorkspace() {
           ...current,
         ]);
 
-        setFiles(saved);
+        setFiles(filterFilesForSession(saved));
         appendAutomationLog({
           type: "file-attachment",
           title: `${project.canonicalProjectId} evidence attached`,
@@ -77,7 +86,7 @@ export default function useFileWorkspace() {
           )
         );
 
-        setFiles(saved);
+        setFiles(filterFilesForSession(saved));
         appendAutomationLog({
           type: "file-briefing",
           title: `${project.canonicalProjectId} document briefing refreshed`,
