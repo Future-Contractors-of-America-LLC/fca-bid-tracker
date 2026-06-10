@@ -1,39 +1,60 @@
 import { app } from "@azure/functions";
+import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { listBids, mutateBid, getWorkflowSummary } from "./workflow-store.js";
 
-const sampleBids = [
-  {
-    id: "bid-001",
-    customer: "Future Contractors of America Pilot Workspace",
-    status: "review",
-    amount: 12500,
-  },
-  {
-    id: "bid-002",
-    customer: "Auricrux Demo Account",
-    status: "submitted",
-    amount: 21800,
-  },
-];
+function resolveTenantId(request) {
+  const cookieHeader = request.headers.get("cookie") || "";
+  const token = readSessionTokenFromCookieHeader(cookieHeader);
+  const session = validateSessionToken(token);
+  return session?.customerId || "TEN-FCA-001";
+}
 
 app.http("bids", {
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "PATCH"],
   authLevel: "anonymous",
   route: "bids",
   handler: async (request) => {
+    const tenantId = resolveTenantId(request);
+
     if (request.method === "GET") {
+      const items = listBids(tenantId);
       return {
         status: 200,
         jsonBody: {
           ok: true,
-          items: sampleBids,
-          count: sampleBids.length,
+          items,
+          count: items.length,
+          summary: getWorkflowSummary(tenantId),
+          backingSource: "api-workflow-store",
         },
       };
     }
 
     const body = await request.json().catch(() => ({}));
-    const submissionId = body?.submissionId || body?.id || `bid-${Date.now()}`;
 
+    if (request.method === "PATCH") {
+      try {
+        const result = mutateBid(tenantId, body?.action, body);
+        return {
+          status: 200,
+          jsonBody: {
+            ok: true,
+            ...result,
+            backingSource: "api-workflow-store",
+          },
+        };
+      } catch (error) {
+        return {
+          status: 400,
+          jsonBody: {
+            ok: false,
+            error: error?.message || "Bid mutation failed.",
+          },
+        };
+      }
+    }
+
+    const submissionId = body?.submissionId || body?.id || `bid-${Date.now()}`;
     return {
       status: 200,
       jsonBody: {
@@ -41,6 +62,7 @@ app.http("bids", {
         accepted: true,
         submissionId,
         message: "Bid submission accepted",
+        backingSource: "api-workflow-store",
       },
     };
   },

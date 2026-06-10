@@ -28,7 +28,7 @@ const actionButtonStyle = {
 
 export default function PortalProjects() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
-  const { projects, activeProject, selectActiveProject, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
+  const { projects, activeProject, meta, selectActiveProject, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
 
   useEffect(() => {
     refreshSyncStamp("Persisted project flow state active");
@@ -64,9 +64,10 @@ export default function PortalProjects() {
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted project state</div>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Source:</strong> {state.meta.backingSource}</div>
-          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
-          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
+          <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Project workflow source:</strong> {meta.backingSource}</div>
+          <div><strong>Project workflow status:</strong> {meta.persistenceState}</div>
+          <div><strong>Last workflow sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
           <div><strong>Active project root:</strong> {visibleProject?.id || state.project.id}</div>
         </div>
@@ -96,6 +97,7 @@ export default function PortalProjects() {
             <div><strong>Permit:</strong> {visibleProject?.permitStatus}</div>
             <div><strong>Site status:</strong> {visibleProject?.siteStatus}</div>
             <div><strong>Commercial focus:</strong> {visibleProject?.commercialFocus}</div>
+            {visibleProject?.sourceBidId ? <div><strong>Source bid:</strong> {visibleProject.sourceBidId}</div> : null}
           </div>
         </div>
         {visibleProject?.actionHistory?.length ? (
@@ -151,6 +153,7 @@ export default function PortalProjects() {
                   <div><strong>Due:</strong> {project.due}</div>
                   <div><strong>Superintendent:</strong> {project.superintendent}</div>
                   <div><strong>Permit status:</strong> {project.permitStatus}</div>
+                  {project.sourceBidId ? <div><strong>Source bid:</strong> {project.sourceBidId}</div> : null}
                 </div>
               </div>
               <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.6 }}>
@@ -163,8 +166,8 @@ export default function PortalProjects() {
                 <button
                   type="button"
                   style={actionButtonStyle}
-                  onClick={() => {
-                    const selected = selectActiveProject(project.id, `${project.id} selected as the active project root.`);
+                  onClick={async () => {
+                    const selected = await selectActiveProject(project.id, `${project.id} selected as the active project root.`);
                     syncActiveProject(selected || project, `Active project root updated to ${project.id}`);
                     refreshSyncStamp(`Project root synchronized to ${project.id}`);
                   }}

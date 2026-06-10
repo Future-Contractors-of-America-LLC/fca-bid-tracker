@@ -44,7 +44,7 @@ const actionButtonStyle = {
 
 export default function PortalBids() {
   const { state } = useWorkspaceState();
-  const { bids, updateBidStatus, clearBidBlocker, updateBidQualification, routeBidToEstimate } = useBidWorkspace();
+  const { bids, meta, updateBidStatus, clearBidBlocker, updateBidQualification, routeBidToEstimate, markWonAndCreateProject } = useBidWorkspace();
 
   return (
     <PortalShell
@@ -65,6 +65,15 @@ export default function PortalBids() {
           title="Bid route now reads from the canonical operating state"
           detail="Bid approval, next action, qualification posture, and execution blocker data are now sourced from the shared system module rather than split wrapper files."
         />
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Workflow spine source</div>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Backing source:</strong> {meta.backingSource}</div>
+          <div><strong>Persistence state:</strong> {meta.persistenceState}</div>
+          <div><strong>Last sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
+        </div>
       </div>
 
       <div style={{ marginBottom: 16 }}>
@@ -113,6 +122,7 @@ export default function PortalBids() {
               <div style={{ color: "#4b5563", lineHeight: 1.6, marginTop: 12 }}>
                 <div><strong>Current blocker:</strong> {bid.blocker}</div>
                 <div><strong>Next commercial move:</strong> {bid.nextCommercialMove}</div>
+                {bid.linkedProjectId ? <div><strong>Project root:</strong> {bid.linkedProjectId}</div> : null}
               </div>
 
               <div style={qualificationCardStyle}>
@@ -195,7 +205,7 @@ export default function PortalBids() {
                 </div>
               </div>
 
-              <BidActionCenter bid={bid} updateBidStatus={updateBidStatus} clearBidBlocker={clearBidBlocker} />
+              <BidActionCenter bid={bid} updateBidStatus={updateBidStatus} clearBidBlocker={clearBidBlocker} markWonAndCreateProject={markWonAndCreateProject} />
             </div>
           );
         })}
