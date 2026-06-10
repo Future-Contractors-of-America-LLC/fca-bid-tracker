@@ -37,6 +37,53 @@ function logCommercialEvent(type, title, detail, route = "/pricing") {
   appendCommercialLog({ type, title, detail, route });
 }
 
+async function validateTokenBackedSession(session) {
+  if (!session?.authToken) {
+    return { ok: false, reason: "no-token" };
+  }
+
+  try {
+    const response = await fetch("/api/customer-auth-session", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${session.authToken}`,
+      },
+    });
+
+    const payload = await response.json().catch(() => null);
+
+    if (!response.ok || !payload?.ok || !payload?.session) {
+      if (response.status === 401) {
+        return { ok: false, reason: "invalid-token" };
+      }
+
+      return { ok: false, reason: "unavailable" };
+    }
+
+    return {
+      ok: true,
+      session: {
+        authenticated: true,
+        email: payload.session.email,
+        company: payload.session.company,
+        role: payload.session.role,
+        customerId: payload.session.sub,
+        workspaceLabel: payload.session.workspaceLabel,
+        selectedPlan: payload.session.selectedPlan,
+        enabledProducts: payload.session.enabledProducts,
+        enabledComms: payload.session.enabledComms,
+        authToken: session.authToken,
+        authMode: "token",
+        accountSource: "env-backed-customer-auth",
+        nextHref: session.nextHref || "/portal/platform",
+        lastLoginAt: session.lastLoginAt || new Date().toISOString(),
+      },
+    };
+  } catch {
+    return { ok: false, reason: "unavailable" };
+  }
+}
+
 export function resolveRoleDefaultProducts(role = "Owner / Admin") {
   const normalizedRole = (role || "").trim();
 
@@ -81,7 +128,43 @@ export default function useCustomerSession() {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    setSession(readCustomerSession());
+    const stored = readCustomerSession();
+    if (!stored) {
+      setSession(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function bootstrap() {
+      if (!stored.authToken) {
+        setSession(stored);
+        return;
+      }
+
+      const validation = await validateTokenBackedSession(stored);
+      if (cancelled) return;
+
+      if (validation.ok) {
+        const saved = writeCustomerSession(validation.session);
+        setSession(saved);
+        return;
+      }
+
+      if (validation.reason === "invalid-token") {
+        clearCustomerSession();
+        setSession(null);
+        return;
+      }
+
+      setSession(stored);
+    }
+
+    bootstrap();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return useMemo(
@@ -99,6 +182,8 @@ export default function useCustomerSession() {
         customerId,
         workspaceLabel,
         accountSource = "workspace-shell",
+        authToken = null,
+        authMode = null,
       }) {
         const normalizedEmail = (email || "").trim().toLowerCase();
         const normalizedCompany = (company || "").trim();
@@ -130,6 +215,8 @@ export default function useCustomerSession() {
           lastLoginAt: new Date().toISOString(),
           selectedPlan: planPreset.key,
           accountSource,
+          authToken,
+          authMode: authMode || (authToken ? "token" : "seeded"),
           enabledProducts: normalizedProducts,
           enabledComms: normalizedComms,
         });

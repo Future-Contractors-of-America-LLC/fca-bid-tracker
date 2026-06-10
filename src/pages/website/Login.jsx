@@ -131,31 +131,68 @@ function readLoginQueryState() {
 }
 
 async function authenticateWorkspaceAccount(email, password) {
-  const localAccount = resolveSeededCustomerAccount(email, password);
+  const normalizedEmail = (email || "").trim().toLowerCase();
+  const normalizedPassword = (password || "").trim();
+  const localAccount = resolveSeededCustomerAccount(normalizedEmail, normalizedPassword);
 
   try {
-    const response = await fetch("/api/customer-login", {
+    const trueAuthResponse = await fetch("/api/customer-auth-login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email: normalizedEmail, password: normalizedPassword }),
     });
 
-    const payload = await response.json();
+    const trueAuthPayload = await trueAuthResponse.json().catch(() => null);
 
-    if (!response.ok || !payload?.ok || !payload?.account) {
-      if (localAccount) {
-        return { ...localAccount, accountSource: "local-fallback" };
-      }
-
-      throw new Error(payload?.error || "Customer authentication failed.");
+    if (trueAuthResponse.ok && trueAuthPayload?.ok && trueAuthPayload?.account) {
+      return {
+        ...trueAuthPayload.account,
+        authToken: trueAuthPayload.token || null,
+        authMode: trueAuthPayload.token ? "token" : "seeded",
+        accountSource: trueAuthPayload.authenticationMode || "env-backed-customer-auth",
+      };
     }
 
-    return { ...payload.account, accountSource: payload.authenticationMode || "api" };
+    if ([503, 404, 405].includes(trueAuthResponse.status) || trueAuthPayload?.error?.includes("not configured")) {
+      if (localAccount) {
+        return {
+          ...localAccount,
+          authToken: null,
+          authMode: "seeded",
+          accountSource: "local-fallback",
+        };
+      }
+    }
+
+    if (localAccount && trueAuthResponse.status >= 500) {
+      return {
+        ...localAccount,
+        authToken: null,
+        authMode: "seeded",
+        accountSource: "local-fallback",
+      };
+    }
+
+    if (localAccount && !trueAuthResponse.ok && [401, 403].includes(trueAuthResponse.status) && normalizedEmail === localAccount.email) {
+      return {
+        ...localAccount,
+        authToken: null,
+        authMode: "seeded",
+        accountSource: "local-fallback",
+      };
+    }
+
+    throw new Error(trueAuthPayload?.error || "Customer authentication failed.");
   } catch (error) {
     if (localAccount) {
-      return { ...localAccount, accountSource: "local-fallback" };
+      return {
+        ...localAccount,
+        authToken: null,
+        authMode: "seeded",
+        accountSource: "local-fallback",
+      };
     }
 
     throw error;
@@ -243,6 +280,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
           customerId: authenticatedAccount.customerId,
           workspaceLabel: authenticatedAccount.workspaceLabel,
           accountSource: authenticatedAccount.accountSource,
+          authToken: authenticatedAccount.authToken,
+          authMode: authenticatedAccount.authMode,
         });
 
         if (!result.ok) {
@@ -360,6 +399,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         customerId: authenticatedAccount.customerId,
         workspaceLabel: authenticatedAccount.workspaceLabel,
         accountSource: authenticatedAccount.accountSource,
+        authToken: authenticatedAccount.authToken,
+        authMode: authenticatedAccount.authMode,
       });
 
       if (!result.ok) {
@@ -384,6 +425,11 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const enabledProductCount = Object.values(form.enabledProducts).filter(Boolean).length;
   const enabledCommsCount = Object.values(form.enabledComms).filter(Boolean).length;
   const selectedPlanPreset = resolvePlanPreset(form.selectedPlan);
+  const authTruthLabel = session?.authMode === "token"
+    ? "True auth session active"
+    : session?.authenticated
+      ? "Seeded continuity session active"
+      : "No authenticated customer session";
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
@@ -415,9 +461,10 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
               <AuricruxBrandMark compact />
             </div>
           </div>
-          <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
+          <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
             {liveEntryDetail}
           </p>
+          <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 12 }}>{authTruthLabel}</div>
           <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} />
         </div>
 
@@ -624,7 +671,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             </div>
 
             <div style={{ color: authStatus === "failed" ? "#b91c1c" : "#0f766e", marginBottom: 12, fontWeight: 700 }}>
-              {authStatus === "authenticating" ? "Authenticating seeded customer account…" : null}
+              {authStatus === "authenticating" ? "Authenticating customer account…" : null}
               {authStatus === "authenticated" ? "Customer authentication passed. Opening live workspace…" : null}
               {authStatus === "seeded" ? "Seeded test credentials loaded. Submit to enter the workspace." : null}
             </div>

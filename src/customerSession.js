@@ -35,6 +35,8 @@ export function readCustomerSession() {
       customerId: parsed.customerId || "CUST-FCA-LIVE-001",
       selectedPlan: parsed.selectedPlan || "startup",
       accountSource: parsed.accountSource || "workspace-shell",
+      authToken: parsed.authToken || null,
+      authMode: parsed.authMode || (parsed.authToken ? "token" : "seeded"),
       enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
       enabledComms: normalizeEnabledComms(parsed.enabledComms),
     };
@@ -57,6 +59,8 @@ export function writeCustomerSession(session) {
     nextHref: session.nextHref || "/portal/platform",
     selectedPlan: session.selectedPlan || "startup",
     accountSource: session.accountSource || "workspace-shell",
+    authToken: session.authToken || null,
+    authMode: session.authMode || (session.authToken ? "token" : "seeded"),
     enabledProducts: normalizeEnabledProducts(session.enabledProducts),
     enabledComms: normalizeEnabledComms(session.enabledComms),
   };
