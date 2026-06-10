@@ -1,0 +1,9 @@
+{
+  "name": "fca_durable_state_service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@azure/functions": "^4.0.0"
+  }
+}
