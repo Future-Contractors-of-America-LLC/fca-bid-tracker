@@ -91,6 +91,8 @@ const portalNavGroups = [
       { label: "Dashboard", href: "/portal/platform" },
       { label: "Projects", href: "/portal/projects" },
       { label: "Bids", href: "/portal/bids" },
+      { label: "Estimates", href: "/portal/estimates" },
+      { label: "Proposals", href: "/portal/proposals" },
       { label: "Files", href: "/portal/files" },
       { label: "Messages", href: "/portal/messages" },
       { label: "Billing", href: "/portal/billing" },
@@ -99,15 +101,6 @@ const portalNavGroups = [
     ],
   },
 ];
-
-/* Legacy validator markers retained intentionally:
-label: "Open Notifications", href: "/portal/notifications", variant: "light"
-label: "Notifications", href: "/portal/notifications", variant: "secondary"
-const actionLabel = session?.authenticated ? "Open Workspace" : "Open Live Test Login";
-const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;
-publicActionCatalog.liveTestLogin
-publicActionCatalog.instantTestWorkspace
-*/
 
 function normalizePath(value) {
   if (!value || typeof value !== "string") return "/";
@@ -124,6 +117,8 @@ function isActivePath(currentPath, href) {
 function resolveRouteCue(pathname, mode) {
   if (mode === "portal") {
     if (pathname.startsWith("/portal/projects")) return "Project continuity active";
+    if (pathname.startsWith("/portal/estimates")) return "Estimate continuity active";
+    if (pathname.startsWith("/portal/proposals")) return "Proposal continuity active";
     if (pathname.startsWith("/portal/messages")) return "Communications continuity active";
     if (pathname.startsWith("/portal/billing")) return "Revenue continuity active";
     if (pathname.startsWith("/portal/academy")) return "Academy continuity active";
@@ -219,12 +214,12 @@ export default function PublicTopNav({ mode = "public" }) {
 
         {mode === "portal" ? (
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            {portalModules.slice(0, 3).map((item) => (
+            {[...portalModules.slice(0, 2), { href: "/portal/estimates", label: "Estimates" }, { href: "/portal/proposals", label: "Proposals" }].map((item) => (
               <a
                 key={item.href}
                 href={item.href}
                 style={isActivePath(currentPath, item.href) ? activeUtilityLinkStyle : utilityLinkStyle}
-                title={item.description}
+                title={item.description || item.label}
               >
                 {item.label}
               </a>

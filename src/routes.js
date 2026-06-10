@@ -18,6 +18,8 @@ import PortalAudit from "./pages/portal/PortalAudit";
 import PortalMessages from "./pages/portal/PortalMessages";
 import PortalNotifications from "./pages/portal/PortalNotifications";
 import PortalBids from "./pages/portal/PortalBids";
+import PortalEstimates from "./pages/portal/PortalEstimates";
+import PortalProposals from "./pages/portal/PortalProposals";
 import PortalBilling from "./pages/portal/PortalBilling";
 import PortalSupport from "./pages/portal/PortalSupport";
 import PortalAdmin from "./pages/portal/PortalAdmin";
@@ -49,6 +51,8 @@ export const routes = {
   "/portal/messages": PortalMessages,
   "/portal/notifications": PortalNotifications,
   "/portal/bids": PortalBids,
+  "/portal/estimates": PortalEstimates,
+  "/portal/proposals": PortalProposals,
   "/portal/billing": PortalBilling,
   "/portal/support": PortalSupport,
   "/portal/admin": PortalAdmin,

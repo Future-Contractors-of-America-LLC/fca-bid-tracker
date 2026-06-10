@@ -80,6 +80,19 @@ const activeRouteCardStyle = {
   color: "#1d4ed8",
 };
 
+const addedPortalModules = [
+  {
+    href: "/portal/estimates",
+    label: "Estimates",
+    description: "Structured pricing, assumptions, exclusions, and commercial readiness.",
+  },
+  {
+    href: "/portal/proposals",
+    label: "Proposals",
+    description: "Customer packaging, approval-ready narrative, and project handoff posture.",
+  },
+];
+
 export default function PortalShell({
   title,
   subtitle,
@@ -95,6 +108,7 @@ export default function PortalShell({
   const workspaceApi = useWorkspaceState();
   const resolvedState = workspaceState || workspaceApi.state;
   const { refreshSyncStamp } = workspaceApi;
+  const sectionCards = [...portalModules, ...addedPortalModules];
 
   return (
     <div style={shellStyle}>
@@ -154,7 +168,7 @@ export default function PortalShell({
               Unified customer journey
             </div>
             <div style={{ color: "#334155", lineHeight: 1.6, maxWidth: 760 }}>
-              This portal shell carries the same customer from bid visibility into project execution,
+              This portal shell carries the same customer from bid visibility into estimate review, proposal packaging, project execution,
               file coordination, communication follow-through, billing readiness, and academy onboarding.
             </div>
           </div>
@@ -164,7 +178,7 @@ export default function PortalShell({
         <nav style={routeTabsWrapStyle} aria-label="Portal section navigation">
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 10 }}>Portal sections</div>
           <div style={routeGridStyle}>
-            {portalModules.map((module) => {
+            {sectionCards.map((module) => {
               const isActive = module.href === activeHref;
               return (
                 <a
@@ -182,7 +196,7 @@ export default function PortalShell({
           </div>
         </nav>
 
-        <AutomationRecoveryFeed title="Shared automation recovery feed" detail="Recent Auricrux repairs, plan activations, route readiness corrections, and comms mutations remain visible across portal routes so continuity becomes durable instead of route-local only." />
+        <AutomationRecoveryFeed title="Shared automation recovery feed" detail="Recent Auricrux repairs, plan activations, route readiness corrections, estimate/proposal mutations, and comms changes remain visible across portal routes so continuity becomes durable instead of route-local only." />
 
         {children}
 
