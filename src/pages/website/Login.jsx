@@ -210,7 +210,6 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const [authStatus, setAuthStatus] = useState("idle");
   const autologinAttemptedRef = useRef(false);
   const queryState = readLoginQueryState();
-  const sandboxMode = queryState.seeded;
   const internalMode = queryState.internal;
 
   useEffect(() => {
@@ -449,7 +448,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
           <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
             {liveEntryDetail}
           </p>
-          <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} />
+          <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }} />
         </div>
 
         <div style={{ marginBottom: 24 }}>
