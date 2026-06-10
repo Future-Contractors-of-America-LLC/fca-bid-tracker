@@ -7,12 +7,7 @@ import RouteStateOverlay from "./RouteStateOverlay";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxBrandMark from "./AuricruxBrandMark";
 import ExecutiveSignalBar from "./ExecutiveSignalBar";
-import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
-import AuricruxNavHint from "./AuricruxNavHint";
 import CustomerSessionBar from "./CustomerSessionBar";
-import RouteReadinessOverlay from "./RouteReadinessOverlay";
-import AutomationRecoveryFeed from "./AutomationRecoveryFeed";
-import useCustomerSession from "../hooks/useCustomerSession";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
 import { portalJourney, portalModules } from "../systemState";
@@ -27,25 +22,6 @@ const shellStyle = {
 const pageStyle = {
   maxWidth: 1180,
   margin: "0 auto",
-};
-
-const navGridStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-  gap: 12,
-  marginTop: 28,
-  marginBottom: 24,
-};
-
-const navCardStyle = {
-  display: "block",
-  textDecoration: "none",
-  border: "1px solid #dbe3ef",
-  borderRadius: 14,
-  background: "#fff",
-  padding: 16,
-  color: "#111827",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
 const bannerStyle = {
@@ -69,6 +45,32 @@ const bannerButtonStyle = {
   fontWeight: 700,
 };
 
+const routeTabsStyle = {
+  display: "flex",
+  gap: 10,
+  flexWrap: "wrap",
+  marginTop: 20,
+  marginBottom: 24,
+};
+
+const routeTabStyle = {
+  display: "inline-flex",
+  textDecoration: "none",
+  border: "1px solid #dbe3ef",
+  borderRadius: 999,
+  background: "#fff",
+  padding: "10px 14px",
+  color: "#334155",
+  fontWeight: 700,
+};
+
+const activeRouteTabStyle = {
+  ...routeTabStyle,
+  background: "#eff6ff",
+  border: "1px solid #bfdbfe",
+  color: "#1d4ed8",
+};
+
 export default function PortalShell({
   title,
   subtitle,
@@ -80,10 +82,8 @@ export default function PortalShell({
   primaryLabel = "Open Messages",
   workspaceState = null,
 }) {
-  const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const workspaceApi = useWorkspaceState();
   const resolvedState = workspaceState || workspaceApi.state;
-  const { refreshSyncStamp } = workspaceApi;
 
   return (
     <div style={shellStyle}>
@@ -128,29 +128,6 @@ export default function PortalShell({
         <RouteStateOverlay overlay={routeOverlay} />
         <ExecutiveSignalBar mode="portal" nextHref={executiveSignalCtaSets.portal.href} nextLabel={executiveSignalCtaSets.portal.label} />
 
-        <RouteReadinessOverlay
-          activeHref={activeHref}
-          session={session}
-          setProductAccess={setProductAccess}
-          setCommsAccess={setCommsAccess}
-          applyPlanPreset={applyPlanPreset}
-          refreshSyncStamp={refreshSyncStamp}
-        />
-
-        <AutomationRecoveryFeed title="Shared automation recovery feed" detail="Recent Auricrux repairs, plan activations, route readiness corrections, and comms mutations remain visible across portal routes so continuity becomes durable instead of route-local only." />
-
-        <div style={{ marginBottom: 20 }}>
-          <AuricruxPresenceLayer
-            surfaceLabel="Auricrux embedded in portal shell"
-            title="Auricrux is now embedded inside the route frame, not just the route content"
-            detail={routeOverlay ? `${routeOverlay.summary} ${routeOverlay.auricruxDetail}` : "Auricrux remains active at the route-frame level so shell navigation, decisions, and continuity stay under one intelligence layer."}
-            primaryHref={primaryHref}
-            primaryLabel={primaryLabel}
-            secondaryHref={executiveSignalCtaSets.portal.href}
-            secondaryLabel={executiveSignalCtaSets.portal.label}
-          />
-        </div>
-
         <div style={bannerStyle}>
           <div>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>
@@ -164,27 +141,21 @@ export default function PortalShell({
           <a href={portalShellCtas.journeyBanner.href} style={bannerButtonStyle}>{portalShellCtas.journeyBanner.label}</a>
         </div>
 
-        <div style={navGridStyle}>
+        <nav style={routeTabsStyle} aria-label="Portal section navigation">
           {portalModules.map((module) => {
             const isActive = module.href === activeHref;
             return (
-              <div key={module.href} style={{ minWidth: 0 }}>
-                <a
-                  href={module.href}
-                  style={{
-                    ...navCardStyle,
-                    border: isActive ? "1px solid #2563eb" : navCardStyle.border,
-                    background: isActive ? "#eff6ff" : navCardStyle.background,
-                  }}
-                >
-                  <div style={{ fontWeight: 700, marginBottom: 6 }}>{module.label}</div>
-                  <div style={{ color: "#4b5563", lineHeight: 1.5, fontSize: 14 }}>{module.description}</div>
-                </a>
-                <AuricruxNavHint item={module} />
-              </div>
+              <a
+                key={module.href}
+                href={module.href}
+                style={isActive ? activeRouteTabStyle : routeTabStyle}
+                title={module.description}
+              >
+                {module.label}
+              </a>
             );
           })}
-        </div>
+        </nav>
 
         {children}
 

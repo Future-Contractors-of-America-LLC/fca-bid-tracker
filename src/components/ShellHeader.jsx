@@ -1,6 +1,5 @@
 import JourneyStrip from "./JourneyStrip";
 import FcaBrandMark from "./FcaBrandMark";
-import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import PublicTopNav from "./PublicTopNav";
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
 
@@ -30,7 +29,7 @@ export default function ShellHeader({
           gap: 20,
           flexWrap: "wrap",
           alignItems: "flex-start",
-          marginBottom: 28,
+          marginBottom: 20,
         }}
       >
         <div style={{ maxWidth: 760, minWidth: 0 }}>
@@ -89,19 +88,6 @@ export default function ShellHeader({
             ) : null}
           </div>
         ) : null}
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <AuricruxPresenceLayer
-          surfaceLabel="Auricrux embedded in header"
-          title="Auricrux is present before the user takes the next action"
-          detail="Header state now carries Auricrux forward as an active operating layer instead of leaving guidance to isolated route bodies or the dock alone."
-          primaryHref={primaryHref || "/portal/platform"}
-          primaryLabel={primaryLabel || "Open Platform Dashboard"}
-          secondaryHref={secondaryHref || "/portal/messages"}
-          secondaryLabel={secondaryLabel || "Open Messages"}
-          compact
-        />
       </div>
     </>
   );
