@@ -1,0 +1,29 @@
+name: Durable State Service Validation
+
+on:
+  pull_request:
+    paths:
+      - "durable-state-service/**"
+      - "docs/FCA_DURABLE_SERVICE_DEPLOYMENT_AND_CUTOVER_PACKET.md"
+      - "docs/FCA_DURABLE_SERVICE_CUTOVER_CHECKLIST.md"
+      - "scripts/validate-durable-state-service-packet.mjs"
+      - "scripts/generate-durable-state-service-deployment-report.mjs"
+  workflow_dispatch:
+
+jobs:
+  validate-durable-state-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate durable packet
+        run: node scripts/validate-durable-state-service-packet.mjs
+
+      - name: Generate durable deployment report
+        run: node scripts/generate-durable-state-service-deployment-report.mjs
