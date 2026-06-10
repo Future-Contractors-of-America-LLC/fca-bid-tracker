@@ -17,9 +17,6 @@ const navShellStyle = {
   padding: "12px 14px",
   marginBottom: 18,
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-  position: "sticky",
-  top: 12,
-  zIndex: 40,
 };
 
 const triggerButtonStyle = {
@@ -240,6 +237,12 @@ export default function PublicTopNav({ mode = "public" }) {
   const profileHref = resolveProfileHref(session);
   const actionHref = session?.authenticated ? workspaceHref : loginHref;
   const actionLabel = session?.authenticated ? "Open Workspace" : "Open Live Test Login";
+  const resolvedNavShellStyle = {
+    ...navShellStyle,
+    position: isMobile ? "relative" : "sticky",
+    top: isMobile ? "auto" : 12,
+    zIndex: isMobile ? "auto" : 40,
+  };
 
   const profileLabel = session?.authenticated ? session.company : "Profile";
   const profileInitial = session?.authenticated ? session.company.charAt(0).toUpperCase() : "↗";
@@ -320,7 +323,7 @@ export default function PublicTopNav({ mode = "public" }) {
       : "Public continuity shell";
 
   return (
-    <div style={navShellStyle} ref={navRef}>
+    <div style={resolvedNavShellStyle} ref={navRef}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap", alignItems: isMobile ? "stretch" : "center", marginBottom: 12 }}>
         <div style={{ display: "grid", gap: 6, minWidth: 0, flex: "1 1 320px" }}>
           <div style={{ color: "#111827", fontWeight: 800, fontSize: 15 }}>{workspaceLabel}</div>
