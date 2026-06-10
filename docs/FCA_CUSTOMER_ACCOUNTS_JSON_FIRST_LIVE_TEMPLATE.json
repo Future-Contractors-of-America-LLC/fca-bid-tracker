@@ -1,0 +1,25 @@
+[
+  {
+    "email": "owner@customercompany.com",
+    "password": "ReplaceThisWithAStrongUniqueCustomerPassword1!",
+    "company": "Customer Company LLC",
+    "role": "Owner / Admin",
+    "customerId": "CUST-CUSTOMER-001",
+    "workspaceLabel": "Customer Company Workspace",
+    "selectedPlan": "enterprise",
+    "enabledProducts": {
+      "saas": true,
+      "lms": true,
+      "auricrux": true
+    },
+    "enabledComms": {
+      "chat": true,
+      "sms": true,
+      "phone": true,
+      "email": true,
+      "teams": true,
+      "conference": true,
+      "lecture": true
+    }
+  }
+]
