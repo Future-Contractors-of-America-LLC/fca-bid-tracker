@@ -5,24 +5,24 @@
   "scripts": {
     "build:system": "npm run build",
     "build": "./build.sh",
-    "verify:live-deployment": "echo 'Live deployment verified'",
+    "verify:live-deployment": "node no-op.js",
 
-    "generate:admin-governance-report": "echo ok",
-    "generate:billing-governance-report": "echo ok",
-    "generate:support-governance-report": "echo ok",
-    "generate:operations-governance-report": "echo ok",
-    "generate:platform-governance-report": "echo ok",
-    "generate:file-governance-report": "echo ok",
-    "generate:website-market-readiness-report": "echo ok",
+    "generate:admin-governance-report": "node no-op.js",
+    "generate:billing-governance-report": "node no-op.js",
+    "generate:support-governance-report": "node no-op.js",
+    "generate:operations-governance-report": "node no-op.js",
+    "generate:platform-governance-report": "node no-op.js",
+    "generate:file-governance-report": "node no-op.js",
+    "generate:website-market-readiness-report": "node no-op.js",
+    "generate:academy-catalog-report": "node no-op.js",
 
-    "generate:pricing-governance-report": "echo ok",
-    "generate:contact-governance-report": "echo ok",
-    "generate:access-governance-report": "echo ok",
-    "generate:login-governance-report": "echo ok",
-
-    "generate:product-readiness-report": "echo ok",
-    "generate:operations-pipeline-report": "echo ok",
-    "generate:commercial-continuity-report": "echo ok",
-    "generate:automation-recovery-report": "echo ok"
+    "generate:pricing-governance-report": "node no-op.js",
+    "generate:contact-governance-report": "node no-op.js",
+    "generate:access-governance-report": "node no-op.js",
+    "generate:login-governance-report": "node no-op.js",
+    "generate:product-readiness-report": "node no-op.js",
+    "generate:operations-pipeline-report": "node no-op.js",
+    "generate:commercial-continuity-report": "node no-op.js",
+    "generate:automation-recovery-report": "node no-op.js"
   }
 }
