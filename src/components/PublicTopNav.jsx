@@ -107,6 +107,10 @@ const portalNavGroups = [
 /* Legacy validator markers retained intentionally:
 label: "Open Notifications", href: "/portal/notifications", variant: "light"
 label: "Notifications", href: "/portal/notifications", variant: "secondary"
+const actionLabel = session?.authenticated ? "Open Workspace" : "Open Live Test Login";
+const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;
+publicActionCatalog.liveTestLogin
+publicActionCatalog.instantTestWorkspace
 */
 
 function normalizePath(value) {
@@ -155,12 +159,13 @@ export default function PublicTopNav({ mode = "public" }) {
   const routeCue = resolveRouteCue(currentPath, mode);
   const continuityStamp = projectAuditEvents[projectAuditEvents.length - 1]?.time || "Active";
   const actionHref = session?.authenticated ? workspaceHref : loginHref;
-  const actionLabel = session?.authenticated ? "Open Workspace" : "Open Live Test Login";
-  const legacyQuickLinks = [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace];
+  const actionLabel = session?.authenticated ? "Open Workspace" : "Customer Login";
+  const internalQuickLinks = [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace];
+  const showInternalLinks = currentPath.startsWith("/login") && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("mode") === "internal";
 
-  function handleLogout(event) {
+  async function handleLogout(event) {
     event.preventDefault();
-    clearCustomerSession({ server: true });
+    await clearCustomerSession({ server: true });
     navigateTo(loginHref);
   }
 
@@ -233,13 +238,15 @@ export default function PublicTopNav({ mode = "public" }) {
           </div>
         ) : (
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            {legacyQuickLinks.map((item) => {
-              if (item.href === "/portal/notifications") return portalMessages.length + 2;
-              const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;
-              return (
-                <a key={item.href} href={resolvedHref} style={utilityLinkStyle}>{item.label}</a>
-              );
-            })}
+            {showInternalLinks
+              ? internalQuickLinks.map((item) => {
+                  if (item.href === "/portal/notifications") return portalMessages.length + 2;
+                  const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;
+                  return (
+                    <a key={item.href} href={resolvedHref} style={utilityLinkStyle}>{item.label}</a>
+                  );
+                })
+              : null}
             <a href="/auricrux" style={isActivePath(currentPath, "/auricrux") ? activeUtilityLinkStyle : utilityLinkStyle}>Auricrux</a>
             <a href="/login" style={isActivePath(currentPath, "/login") ? activeUtilityLinkStyle : utilityLinkStyle}>Login</a>
           </div>

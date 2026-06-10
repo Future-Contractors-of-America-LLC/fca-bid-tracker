@@ -76,35 +76,35 @@ const submitButtonStyle = {
   cursor: "pointer",
 };
 
-const truthBannerStyle = {
+const trustBannerStyle = {
+  ...productOptionStyle,
+  background: "#eff6ff",
+  border: "1px solid #bfdbfe",
+  marginBottom: 16,
+};
+
+const internalBannerStyle = {
   ...productOptionStyle,
   background: "#fff7ed",
   border: "1px solid #fdba74",
   marginBottom: 16,
 };
 
-const sandboxBannerStyle = {
-  ...productOptionStyle,
-  background: "#eff6ff",
-  border: "1px solid #93c5fd",
-  marginBottom: 16,
-};
-
 const loginContinuityItems = [
   {
-    label: "Truth posture",
-    value: "Production auth is not being misrepresented",
-    detail: "This route now states clearly that current access is sandbox-only until a real identity provider and tenant-backed customer auth system are deployed.",
+    label: "Authorized entry",
+    value: "One workspace, one customer journey",
+    detail: "Customers should enter one FCA workspace where projects, files, billing, academy continuity, and Auricrux guidance stay connected.",
   },
   {
-    label: "Sandbox posture",
-    value: "Seeded validation remains available by explicit route only",
-    detail: "Internal validation access still exists for delivery testing, but it is no longer presented as launch-ready customer authentication.",
+    label: "Testing path",
+    value: "Internal test access remains separate",
+    detail: "Operator validation tools remain available in internal mode so customer-facing entry stays clean and trustworthy.",
   },
   {
-    label: "Recovery direction",
-    value: "Real auth cutover remains next",
-    detail: "The next execution step is backend identity, tenant membership, secure session validation, and role-backed customer access.",
+    label: "Launch direction",
+    value: "Single-user company launch remains the first commercial target",
+    detail: "The immediate goal is a believable single-user company subscription entry that can be tested like a real customer account.",
   },
 ];
 
@@ -141,6 +141,7 @@ function readLoginQueryState() {
     return {
       seeded: false,
       autologin: false,
+      internal: false,
       nextHref: null,
     };
   }
@@ -148,11 +149,13 @@ function readLoginQueryState() {
   const params = new URLSearchParams(window.location.search);
   const seeded = params.get("seeded") === "1" || params.get("account") === "test";
   const autologin = seeded && params.get("autologin") === "1";
+  const internal = params.get("mode") === "internal" || seeded;
   const nextHref = params.get("next");
 
   return {
     seeded,
     autologin,
+    internal,
     nextHref,
   };
 }
@@ -208,6 +211,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const autologinAttemptedRef = useRef(false);
   const queryState = readLoginQueryState();
   const sandboxMode = queryState.seeded;
+  const internalMode = queryState.internal;
 
   useEffect(() => {
     if (!session) return;
@@ -248,9 +252,9 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy"
     ? requestedWorkspaceHref
     : "/portal/platform";
-  const liveEntryDetail = sandboxMode
-    ? "Sandbox validation mode is active. This route is currently suitable for governed internal validation of portal entry and access routing, not for claiming production customer identity is live."
-    : "Production customer login is not live yet. This page now states that truth clearly while preserving the product route and the next implementation step: real tenant-backed authentication.";
+  const liveEntryDetail = internalMode
+    ? "Internal access mode is active for operator validation and seeded-account testing. Customer-facing login remains clean while internal validation stays available by explicit route only."
+    : "Sign in to your FCA workspace to access projects, files, billing, training, and guided support in one place.";
 
   useEffect(() => {
     if (!queryState.seeded || !queryState.autologin || autologinAttemptedRef.current) return;
@@ -358,9 +362,15 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     event.preventDefault();
     setError("");
 
-    if (!sandboxMode && !isAuthenticated) {
+    if (!internalMode && !form.email.trim()) {
       setAuthStatus("failed");
-      setError("Production customer login is not active yet. Use the seeded validation route only for internal testing until real auth is deployed.");
+      setError("Enter an authorized work email to access your FCA workspace.");
+      return;
+    }
+
+    if (!internalMode && !form.password.trim()) {
+      setAuthStatus("failed");
+      setError("Enter your password to continue.");
       return;
     }
 
@@ -395,8 +405,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     }
   }
 
-  function handleResetSession() {
-    logout();
+  async function handleResetSession() {
+    await logout();
     navigateTo("/login");
   }
 
@@ -408,9 +418,11 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "Arial", padding: 24 }}>
       <div style={pageShellStyle}>
         <ShellHeader
-          eyebrow="Auricrux Guided Entry"
-          title="Access FCA Workspace"
-          subtitle="This route now tells the truth: sandbox validation exists, but real production customer identity is not live yet."
+          eyebrow={internalMode ? "Auricrux Internal Validation" : "FCA Authorized Workspace Entry"}
+          title={internalMode ? "Validate FCA Workspace Access" : "Sign In to FCA Workspace"}
+          subtitle={internalMode
+            ? "Internal mode keeps seeded validation and operator controls available without exposing them on the normal customer-facing entry path."
+            : "Access your projects, files, billing, training, and guided support in one connected workspace."}
           primaryHref={shellHeaderCtaSets.workspace.primaryHref}
           primaryLabel={shellHeaderCtaSets.workspace.primaryLabel}
           secondaryHref={shellHeaderCtaSets.workspace.secondaryHref}
@@ -420,14 +432,14 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         />
 
         <CustomerSessionBar requestedPath={nextHref} mode="login" />
-        <CustomerProductLaunchpad session={session} title="Current product access tied to authenticated session state" />
-        <CustomerCommsLaunchpad session={session} title="Current communications access tied to authenticated session state" />
+        <CustomerProductLaunchpad session={session} title={internalMode ? "Current product access tied to authenticated session state" : "Authorized workspace access after sign-in"} />
+        <CustomerCommsLaunchpad session={session} title={internalMode ? "Current communications access tied to authenticated session state" : "Communications access after sign-in"} />
 
         <div style={{ ...heroCardStyle, marginBottom: 20 }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
             <div>
               <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Workspace continuity</div>
-              <h2 style={{ marginTop: 0, marginBottom: 10 }}>Login route is now truthful about current auth state</h2>
+              <h2 style={{ marginTop: 0, marginBottom: 10 }}>{internalMode ? "Internal validation is separated from customer entry" : "Authorized customers should enter one real workspace"}</h2>
             </div>
             <div style={{ display: "grid", gap: 10 }}>
               <FcaBrandMark compact />
@@ -446,24 +458,26 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
         <FounderJourneyStrip
           currentJourney="workspace"
-          title="Workspace login remains part of one connected customer journey"
-          detail="The route still carries the same customer into portal continuity, academy readiness, estimating control, and communications routing, but it no longer overstates production auth readiness."
+          title="Workspace entry remains part of one connected customer journey"
+          detail="The route carries the customer into portal continuity, academy readiness, estimating control, and communications routing without turning the main login page into an internal configuration console."
           ctaHref={founderJourneyCtaSets.workspace.href}
           ctaLabel={founderJourneyCtaSets.workspace.label}
         />
 
         <div style={{ marginBottom: 24 }}>
           <PublicOperationsStrip
-            eyebrow="Workspace auth truth strip"
-            title="Login now distinguishes sandbox validation from real customer authentication"
-            detail="The route preserves internal testability while making the production gap explicit so repo truth and live truth stay aligned."
-            statusLabel="Auth posture"
-            statusValue={sandboxMode ? "Sandbox validation route active" : "Production customer login not yet live"}
+            eyebrow={internalMode ? "Internal validation strip" : "Authorized access strip"}
+            title={internalMode ? "Operator validation remains available by explicit route only" : "Customer login should feel like a real product entry"}
+            detail={internalMode
+              ? "This mode exists for product validation, seeded account testing, and guided internal review."
+              : "Customers should see a clear sign-in route, a believable workspace destination, and a direct path to support or onboarding if they do not yet have credentials."}
+            statusLabel="Access posture"
+            statusValue={internalMode ? "Internal validation mode active" : "Authorized customer sign-in route"}
             items={loginContinuityItems}
-            primaryHref={sandboxMode ? "/login?seeded=1" : "/contact"}
-            primaryLabel={sandboxMode ? "Open Sandbox Login" : "Request Guided Demo"}
-            secondaryHref={sandboxMode ? "/login?seeded=1&autologin=1&next=/portal/platform" : "/platform"}
-            secondaryLabel={sandboxMode ? "Instant Sandbox Access" : "Review Platform"}
+            primaryHref={internalMode ? "/login?seeded=1" : "/contact"}
+            primaryLabel={internalMode ? "Open Internal Test Access" : "Request Access"}
+            secondaryHref={internalMode ? "/login?seeded=1&autologin=1&next=/portal/platform" : "/platform"}
+            secondaryLabel={internalMode ? "Instant Sandbox Access" : "Review Platform"}
           />
         </div>
 
@@ -473,18 +487,18 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
         <div style={twoColumnGridStyle}>
           <form style={cardStyle} onSubmit={handleSubmit}>
-            <div style={truthBannerStyle}>
-              <div style={{ fontWeight: 700, marginBottom: 6 }}>Production auth truth</div>
-              <div style={{ color: "#475569", lineHeight: 1.7 }}>
-                Real customer login has not been deployed yet. This route now prevents normal production sign-in claims and reserves authentication for explicit internal sandbox validation until tenant-backed auth is built.
+            {!internalMode ? (
+              <div style={trustBannerStyle}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Authorized customer access</div>
+                <div style={{ color: "#475569", lineHeight: 1.7 }}>
+                  Sign in with your FCA-authorized work email and password to access your workspace. If you do not yet have access, use the guided onboarding path below.
+                </div>
               </div>
-            </div>
-
-            {sandboxMode ? (
-              <div style={sandboxBannerStyle}>
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>Sandbox validation mode</div>
+            ) : (
+              <div style={internalBannerStyle}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Internal validation mode</div>
                 <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
-                  Seeded access is available here only because the seeded route was explicitly requested. This is for governed internal validation, not for representing production customer authentication as live.
+                  Seeded access and provisioning controls are shown here for authorized internal testing only.
                 </div>
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button type="button" onClick={handleLoadSandboxAccount} style={{ ...submitButtonStyle, background: "#1d4ed8" }}>
@@ -495,11 +509,12 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
                   </a>
                 </div>
               </div>
-            ) : null}
+            )}
 
             <label>Work Email</label>
             <input
               style={fieldStyle}
+              placeholder="name@company.com"
               value={form.email}
               onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
             />
@@ -508,6 +523,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             <input
               type="password"
               style={fieldStyle}
+              placeholder="Enter your password"
               value={form.password}
               onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
             />
@@ -515,6 +531,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             <label>Company</label>
             <input
               style={fieldStyle}
+              placeholder="Your company"
               value={form.company}
               onChange={(event) => setForm((prev) => ({ ...prev, company: event.target.value }))}
             />
@@ -538,88 +555,103 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
               ))}
             </select>
 
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Plan activation posture</div>
-            <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
-              Product and communications access still follow the selected plan preset for workspace validation, but this does not change the current truth that production customer auth remains pending.
-            </div>
-            <div style={{ ...productOptionStyle, marginBottom: 16, background: "#eff6ff" }}>
-              <div style={{ fontWeight: 700, marginBottom: 6 }}>{selectedPlanPreset.name}</div>
-              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>Price: {selectedPlanPreset.price}</div>
-              <div style={{ color: "#475569", lineHeight: 1.7 }}>Billing model: {selectedPlanPreset.billingModel}</div>
-            </div>
+            {internalMode ? (
+              <>
+                <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Plan activation posture</div>
+                <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
+                  Product and communications access follow the selected plan preset for workspace validation. Internal mode keeps these controls off the normal customer-facing entry path.
+                </div>
+                <div style={{ ...productOptionStyle, marginBottom: 16, background: "#eff6ff" }}>
+                  <div style={{ fontWeight: 700, marginBottom: 6 }}>{selectedPlanPreset.name}</div>
+                  <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>Price: {selectedPlanPreset.price}</div>
+                  <div style={{ color: "#475569", lineHeight: 1.7 }}>Billing model: {selectedPlanPreset.billingModel}</div>
+                </div>
 
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 12 }}>
-              <button
-                type="button"
-                onClick={() => handleProvisioningModeChange("plan-defaults")}
-                style={{
-                  ...submitButtonStyle,
-                  background: provisioningMode === "plan-defaults" ? "#1d4ed8" : "#e2e8f0",
-                  color: provisioningMode === "plan-defaults" ? "#fff" : "#0f172a",
-                }}
-              >
-                Use Plan Defaults
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProvisioningModeChange("custom")}
-                style={{
-                  ...submitButtonStyle,
-                  background: provisioningMode === "custom" ? "#111827" : "#e2e8f0",
-                  color: provisioningMode === "custom" ? "#fff" : "#0f172a",
-                }}
-              >
-                Customize Access
-              </button>
-            </div>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 12 }}>
+                  <button
+                    type="button"
+                    onClick={() => handleProvisioningModeChange("plan-defaults")}
+                    style={{
+                      ...submitButtonStyle,
+                      background: provisioningMode === "plan-defaults" ? "#1d4ed8" : "#e2e8f0",
+                      color: provisioningMode === "plan-defaults" ? "#fff" : "#0f172a",
+                    }}
+                  >
+                    Use Plan Defaults
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleProvisioningModeChange("custom")}
+                    style={{
+                      ...submitButtonStyle,
+                      background: provisioningMode === "custom" ? "#111827" : "#e2e8f0",
+                      color: provisioningMode === "custom" ? "#fff" : "#0f172a",
+                    }}
+                  >
+                    Customize Access
+                  </button>
+                </div>
 
-            <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
-              {provisioningMode === "plan-defaults"
-                ? `Plan defaults are active for ${selectedPlanPreset.name}.`
-                : "Custom provisioning is active for workspace validation. Toggle the exact product layers and channels this session should receive after authentication."}
-            </div>
+                <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
+                  {provisioningMode === "plan-defaults"
+                    ? `Plan defaults are active for ${selectedPlanPreset.name}.`
+                    : "Custom provisioning is active for workspace validation. Toggle the exact product layers and channels this session should receive after authentication."}
+                </div>
 
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Customer product provisioning</div>
-            <div style={productAccessGridStyle}>
-              {productAccessOptions.map((product) => {
-                const enabled = form.enabledProducts[product.key];
-                return (
-                  <label key={product.key} style={{ ...productOptionStyle, background: enabled ? "#eff6ff" : "#f8fafc", cursor: "pointer" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
-                      <div style={{ fontWeight: 700, color: "#111827" }}>{product.title}</div>
-                      <input type="checkbox" checked={enabled} onChange={() => handleProductToggle(product.key)} />
-                    </div>
-                    <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{product.detail}</div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#1d4ed8" : "#64748b" }}>
-                      {enabled ? "Enabled for workspace validation" : "Held back until enabled"}
-                    </div>
-                  </label>
-                );
-              })}
-            </div>
+                <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Customer product provisioning</div>
+                <div style={productAccessGridStyle}>
+                  {productAccessOptions.map((product) => {
+                    const enabled = form.enabledProducts[product.key];
+                    return (
+                      <label key={product.key} style={{ ...productOptionStyle, background: enabled ? "#eff6ff" : "#f8fafc", cursor: "pointer" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
+                          <div style={{ fontWeight: 700, color: "#111827" }}>{product.title}</div>
+                          <input type="checkbox" checked={enabled} onChange={() => handleProductToggle(product.key)} />
+                        </div>
+                        <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{product.detail}</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#1d4ed8" : "#64748b" }}>
+                          {enabled ? "Enabled for workspace validation" : "Held back until enabled"}
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
 
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Communications provisioning</div>
-            <div style={productAccessGridStyle}>
-              {commsOptions.map((channel) => {
-                const enabled = form.enabledComms[channel.key];
-                return (
-                  <label key={channel.key} style={{ ...productOptionStyle, background: enabled ? "#ecfeff" : "#f8fafc", cursor: "pointer" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
-                      <div style={{ fontWeight: 700, color: "#111827" }}>{channel.title}</div>
-                      <input type="checkbox" checked={enabled} onChange={() => handleCommsToggle(channel.key)} />
-                    </div>
-                    <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{channel.detail}</div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#0f766e" : "#64748b" }}>
-                      {enabled ? "Enabled for workspace validation" : "Held back until enabled"}
-                    </div>
-                  </label>
-                );
-              })}
-            </div>
+                <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Communications provisioning</div>
+                <div style={productAccessGridStyle}>
+                  {commsOptions.map((channel) => {
+                    const enabled = form.enabledComms[channel.key];
+                    return (
+                      <label key={channel.key} style={{ ...productOptionStyle, background: enabled ? "#ecfeff" : "#f8fafc", cursor: "pointer" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
+                          <div style={{ fontWeight: 700, color: "#111827" }}>{channel.title}</div>
+                          <input type="checkbox" checked={enabled} onChange={() => handleCommsToggle(channel.key)} />
+                        </div>
+                        <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{channel.detail}</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#0f766e" : "#64748b" }}>
+                          {enabled ? "Enabled for workspace validation" : "Held back until enabled"}
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
 
-            <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
-              This session is configured for {enabledProductCount} product surface{enabledProductCount === 1 ? "" : "s"} and {enabledCommsCount} communications lane{enabledCommsCount === 1 ? "" : "s"}. Real production auth still remains a separate build step.
-            </div>
+                <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
+                  This session is configured for {enabledProductCount} product surface{enabledProductCount === 1 ? "" : "s"} and {enabledCommsCount} communications lane{enabledCommsCount === 1 ? "" : "s"}.
+                </div>
+              </>
+            ) : (
+              <div style={{ ...productOptionStyle, marginBottom: 16, background: "#f8fafc" }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Need access?</div>
+                <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
+                  If you do not yet have authorized credentials, request onboarding and FCA will provision your workspace entry.
+                </div>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <a href="/contact" style={{ ...submitButtonStyle, textDecoration: "none" }}>Request Access</a>
+                  <a href="/platform" style={{ ...submitButtonStyle, textDecoration: "none", background: "#e2e8f0", color: "#0f172a" }}>Review Platform</a>
+                </div>
+              </div>
+            )}
 
             <div style={{ color: authStatus === "failed" ? "#b91c1c" : "#0f766e", marginBottom: 12, fontWeight: 700 }}>
               {authStatus === "authenticating" ? "Authenticating workspace account…" : null}
@@ -630,7 +662,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 700 }}>{error}</div> : null}
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-              <button type="submit" style={submitButtonStyle}>{sandboxMode ? "Validate Sandbox Workspace" : "Production Login Not Yet Active"}</button>
+              <button type="submit" style={submitButtonStyle}>{internalMode ? "Validate Workspace Access" : "Sign In"}</button>
               {isAuthenticated ? (
                 <>
                   <a href={nextHref} style={{ ...submitButtonStyle, textDecoration: "none" }}>Open Active Workspace</a>
@@ -646,10 +678,12 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
           <div style={{ display: "grid", gap: 16 }}>
             <WorkspaceSnapshotCard
-              title="Workspace truth before login"
-              detail="This route now shows the difference between current sandbox validation and the still-missing production customer auth system."
-              ctaHref={sandboxMode ? "/login?seeded=1" : "/platform"}
-              ctaLabel={sandboxMode ? "Open Sandbox Login" : "Review Platform"}
+              title={internalMode ? "Internal workspace validation" : "What opens after sign-in"}
+              detail={internalMode
+                ? "This route keeps seeded validation separate from the normal customer-facing sign-in surface."
+                : "Authorized customers enter one FCA workspace where projects, files, billing, academy continuity, and guided support stay connected."}
+              ctaHref={internalMode ? "/login?mode=internal&seeded=1" : "/platform"}
+              ctaLabel={internalMode ? "Open Internal Test Route" : "Review Platform"}
             />
 
             <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
@@ -676,7 +710,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
         <PublicActionRail
           title="Continue into the FCA workspace"
-          detail="The route remains connected to platform, academy, communications, and walkthrough surfaces while making current auth truth explicit."
+          detail="The route remains connected to platform, academy, communications, and walkthrough surfaces while keeping customer-facing sign-in clean and internal validation separate."
         />
 
         <ShellFooter />
