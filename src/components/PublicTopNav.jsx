@@ -6,8 +6,8 @@ import {
   resolveWorkspaceEntryHref,
 } from "../customerSession";
 import { navigateTo } from "../navigation";
-import { portalModules, workspaceContext } from "../systemState";
-import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext as workspaceStateContext } from "../workspaceState";
+import { portalModules, workspaceContext as systemWorkspaceContext } from "../systemState";
+import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext } from "../workspaceState";
 
 const navShellStyle = {
   border: "1px solid #dbe3ef",
@@ -169,10 +169,10 @@ export default function PublicTopNav({ mode = "public" }) {
         <div style={{ minWidth: 0 }}>
           <div style={{ fontWeight: 800, color: "#111827", marginBottom: 4 }}>{workspaceLabel}</div>
           <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.5 }}>
-            {mode === "portal" ? workspaceContext.currentNextAction : "Construction operating system"}
+            {mode === "portal" ? systemWorkspaceContext.currentNextAction : "Construction operating system"}
           </div>
           <div style={{ color: "#94a3b8", fontSize: 11, lineHeight: 1.5, marginTop: 4 }}>
-            {routeCue} · {workspaceStateContext.currentNextAction} · {currentProject.id} · {auricruxRail.nextRecommendedAction} · {continuityStamp}
+            {routeCue} · {workspaceContext.currentNextAction} · {currentProject.id} · {auricruxRail.nextRecommendedAction} · {continuityStamp}
           </div>
         </div>
 
