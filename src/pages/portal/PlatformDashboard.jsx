@@ -11,10 +11,12 @@ import CommercialReadinessPanel from "../../components/CommercialReadinessPanel"
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import ExecutionCommandCenter from "../../components/ExecutionCommandCenter";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import ProtectedProductDataPanel from "../../components/ProtectedProductDataPanel";
 import { auricruxActions, portalMessages, portalMetrics, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useProtectedProductData from "../../hooks/useProtectedProductData";
 import { ctaPrimaryStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -34,6 +36,11 @@ const metricStyle = {
 export default function PlatformDashboard() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
+  const protectedWorkspace = useProtectedProductData({
+    endpoint: "/api/customer-workspace-summary",
+    session,
+    productLabel: "SaaS workspace",
+  });
 
   useEffect(() => {
     refreshSyncStamp("Live workspace dashboard active");
@@ -42,9 +49,29 @@ export default function PlatformDashboard() {
   const accountSource = session?.accountSource || "workspace-shell";
   const launchReadiness = accountSource === "api"
     ? "Production-backed login active"
-    : accountSource === "local-fallback"
-      ? "Seeded launch/test login active"
-      : "Shell continuity mode";
+    : accountSource === "env-backed-customer-auth"
+      ? "True auth workspace active"
+      : accountSource === "local-fallback"
+        ? "Seeded launch/test login active"
+        : "Shell continuity mode";
+  const protectedItems = [
+    {
+      label: "Protected surface",
+      value: protectedWorkspace.data?.surface || "saas",
+      detail: "This route now attempts to read entitlement-checked backend SaaS summary data.",
+    },
+    {
+      label: "Workspace title",
+      value: protectedWorkspace.data?.workspace?.title || "FCA Contractor Command Workspace",
+      detail: protectedWorkspace.data?.workspace?.operationalStatus || "Frontend continuity shell remains available when protected backend data is not.",
+    },
+    {
+      label: "Backend next action",
+      value: protectedWorkspace.data?.workspace?.nextAction || state.workspace.currentNextAction,
+      detail: "When true auth is active, this value is served through the protected SaaS summary endpoint.",
+    },
+  ];
+  const protectedModules = protectedWorkspace.data?.workspace?.modules || ["projects", "bids", "files", "messages", "billing", "support"];
 
   return (
     <PortalShell
@@ -56,6 +83,14 @@ export default function PlatformDashboard() {
       primaryHref="/portal/projects"
       primaryLabel="Open Projects"
     >
+      <ProtectedProductDataPanel
+        title="Platform dashboard is now bound to protected SaaS summary data"
+        detail="This surface prefers entitlement-checked backend workspace data and falls back to shell continuity only when true auth is not active or protected backend data is unavailable."
+        state={protectedWorkspace}
+        session={session}
+        items={protectedItems}
+      />
+
       <div style={{ marginBottom: 24 }}>
         <SystemStateSummary
           tenant={state.tenant}
@@ -102,6 +137,7 @@ export default function PlatformDashboard() {
           <div><strong>Last refresh:</strong> {state.meta.lastSyncedAt || "Pending initial refresh"}</div>
           <div><strong>Account source:</strong> {accountSource}</div>
           <div><strong>Launch readiness:</strong> {launchReadiness}</div>
+          <div><strong>Protected workspace source:</strong> {protectedWorkspace.source}</div>
         </div>
         <PublicCtaRow actions={publicBodyCtaSets.portalEntry} />
       </div>
@@ -125,7 +161,7 @@ export default function PlatformDashboard() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7 }}>
           <div>
             <strong>Recommended next step</strong>
-            <div>{state.workspace.currentNextAction}</div>
+            <div>{protectedWorkspace.data?.workspace?.nextAction || state.workspace.currentNextAction}</div>
           </div>
           <div>
             <strong>Current blocker</strong>
@@ -156,7 +192,7 @@ export default function PlatformDashboard() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Workspace summary</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div><strong>Customer:</strong> {state.tenant.name}</div>
+            <div><strong>Customer:</strong> {protectedWorkspace.data?.customer?.company || state.tenant.name}</div>
             <div><strong>Project:</strong> {state.project.name}</div>
             <div><strong>Project ID:</strong> {state.project.id}</div>
             <div><strong>Current stage:</strong> {state.project.stage}</div>
@@ -181,6 +217,17 @@ export default function PlatformDashboard() {
         eyebrow="Platform reliability"
         detail="This dashboard shows a simple service-health summary so customers and teams can see that guided support is active without digging through internal logs."
       />
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Protected workspace modules</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+          {protectedModules.map((module) => (
+            <div key={module} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fbff", fontWeight: 700, color: "#1d4ed8" }}>
+              {module}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 24 }}>
         {platformDashboardCtaSets.operationalCards.map((item) => (

@@ -14,6 +14,7 @@ import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel"
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
+import ProtectedProductDataPanel from "../../components/ProtectedProductDataPanel";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
@@ -21,6 +22,7 @@ import { academyClassrooms, saasOperationalPathways } from "../../productBluepri
 import { academyCatalog } from "../../academyCatalog";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useProtectedProductData from "../../hooks/useProtectedProductData";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -46,6 +48,11 @@ const continuityCardStyle = {
 export default function AcademyHome() {
   const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const protectedAcademy = useProtectedProductData({
+    endpoint: "/api/customer-academy-overview",
+    session,
+    productLabel: "Academy / LMS",
+  });
   const liveTenant = state?.tenant || portalTenant;
   const liveProject = state?.project || currentProject;
   const liveWorkspace = state?.workspace || workspaceContext;
@@ -57,6 +64,24 @@ export default function AcademyHome() {
     href: `/portal/messages#${item.label.toLowerCase()}`,
     ctaLabel: `Open ${item.label}`,
   }));
+  const protectedItems = [
+    {
+      label: "Protected surface",
+      value: protectedAcademy.data?.surface || "lms",
+      detail: "This route now attempts to read entitlement-checked Academy data.",
+    },
+    {
+      label: "Readiness status",
+      value: protectedAcademy.data?.academy?.readinessStatus || "academy-shell-continuity",
+      detail: "True auth activates the protected Academy summary endpoint.",
+    },
+    {
+      label: "Learners ready",
+      value: protectedAcademy.data?.academy?.learnersReadyForAssignment ?? 2,
+      detail: protectedAcademy.data?.academy?.nextAction || "Assign learners and preserve continuity into project mobilization.",
+    },
+  ];
+  const protectedPrograms = protectedAcademy.data?.academy?.activePrograms || ["onboarding", "safety-readiness", "estimating-basics", "field-document-control"];
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -70,6 +95,14 @@ export default function AcademyHome() {
         secondaryLabel={shellHeaderCtaSets.academy.secondaryLabel}
         journey={shellJourney}
         currentJourney="academy"
+      />
+
+      <ProtectedProductDataPanel
+        title="Academy route is now bound to protected LMS overview data"
+        detail="This page now distinguishes protected LMS backend truth from seeded continuity mode so Academy stops reading as a pure informational shell."
+        state={protectedAcademy}
+        session={session}
+        items={protectedItems}
       />
 
       <div
@@ -156,7 +189,7 @@ export default function AcademyHome() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7 }}>
           <div>
             <strong>Assignment need</strong>
-            <div>Two learners are ready for onboarding assignment before mobilization for {liveProject.id}.</div>
+            <div>{protectedAcademy.data?.academy?.learnersReadyForAssignment ?? 2} learners are ready for onboarding assignment before mobilization for {liveProject.id}.</div>
           </div>
           <div>
             <strong>Dependency</strong>
@@ -168,8 +201,20 @@ export default function AcademyHome() {
           </div>
           <div>
             <strong>Coordinated next move</strong>
-            <div>Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning for {liveTenant.name}.</div>
+            <div>{protectedAcademy.data?.academy?.nextAction || `Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning for ${liveTenant.name}.`}</div>
           </div>
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Protected Academy programs</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Academy now shows backend-entitled program lanes when true auth is active</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+          {protectedPrograms.map((program) => (
+            <div key={program} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff", fontWeight: 700, color: "#1d4ed8" }}>
+              {program}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -301,7 +346,7 @@ export default function AcademyHome() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Auricrux coaching notes</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div>• Two new learners are ready for onboarding assignment under {liveTenant.name}.</div>
+            <div>• {protectedAcademy.data?.academy?.learnersReadyForAssignment ?? 2} new learners are ready for onboarding assignment under {liveTenant.name}.</div>
             <div>• One certification expires in 14 days.</div>
             <div>• Field kickoff posture for {liveProject.id} suggests scheduling a safety and document-control refresher before mobilization.</div>
           </div>
