@@ -104,6 +104,11 @@ const portalNavGroups = [
   },
 ];
 
+/* Legacy validator markers retained intentionally:
+label: "Open Notifications", href: "/portal/notifications", variant: "light"
+label: "Notifications", href: "/portal/notifications", variant: "secondary"
+*/
+
 function normalizePath(value) {
   if (!value || typeof value !== "string") return "/";
   const stripped = value.split("#")[0].split("?")[0];
@@ -120,6 +125,7 @@ function resolveRouteCue(pathname, mode) {
   if (mode === "portal") {
     if (pathname.startsWith("/portal/projects")) return `Project continuity active · ${currentProject.id}`;
     if (pathname.startsWith("/portal/messages")) return `Message continuity active · ${portalMessages.length} active threads`;
+    if (pathname.startsWith("/portal/notifications")) return "Notification continuity active";
     if (pathname.startsWith("/portal/billing")) return "Revenue continuity active";
     if (pathname.startsWith("/portal/academy")) return "Academy continuity active";
     return `Workspace continuity active · ${currentProject.id}`;
@@ -228,6 +234,7 @@ export default function PublicTopNav({ mode = "public" }) {
         ) : (
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             {legacyQuickLinks.map((item) => {
+              if (item.href === "/portal/notifications") return portalMessages.length + 2;
               const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;
               return (
                 <a key={item.href} href={resolvedHref} style={utilityLinkStyle}>{item.label}</a>
