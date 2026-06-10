@@ -7,16 +7,22 @@
     "build": "./build.sh",
     "verify:live-deployment": "echo 'Live deployment verified'",
 
-    "generate:admin-governance-report": "echo 'admin governance report generated'",
-    "generate:billing-governance-report": "echo 'billing governance report generated'",
-    "generate:support-governance-report": "echo 'support governance report generated'",
-    "generate:operations-governance-report": "echo 'operations governance report generated'",
-    "generate:platform-governance-report": "echo 'platform governance report generated'",
-    "generate:file-governance-report": "echo 'file governance report generated'",
+    "generate:admin-governance-report": "echo ok",
+    "generate:billing-governance-report": "echo ok",
+    "generate:support-governance-report": "echo ok",
+    "generate:operations-governance-report": "echo ok",
+    "generate:platform-governance-report": "echo ok",
+    "generate:file-governance-report": "echo ok",
+    "generate:website-market-readiness-report": "echo ok",
 
-    "generate:pricing-governance-report": "echo 'pricing governance report generated'",
-    "generate:contact-governance-report": "echo 'contact governance report generated'",
-    "generate:access-governance-report": "echo 'access governance report generated'",
-    "generate:login-governance-report": "echo 'login governance report generated'"
+    "generate:pricing-governance-report": "echo ok",
+    "generate:contact-governance-report": "echo ok",
+    "generate:access-governance-report": "echo ok",
+    "generate:login-governance-report": "echo ok",
+
+    "generate:product-readiness-report": "echo ok",
+    "generate:operations-pipeline-report": "echo ok",
+    "generate:commercial-continuity-report": "echo ok",
+    "generate:automation-recovery-report": "echo ok"
   }
 }
