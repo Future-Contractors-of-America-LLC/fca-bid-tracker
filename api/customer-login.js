@@ -1,5 +1,5 @@
 import { app } from "@azure/functions";
-import { resolveSeededCustomerAccount } from "../src/customerAccounts.js";
+import { validateCustomerCredentials } from "./customer-account-store.js";
 import { buildAuthBoundary, buildServerSession, createSessionCookie } from "./auth-boundary.js";
 
 app.http("customer-login", {
@@ -22,7 +22,7 @@ app.http("customer-login", {
       };
     }
 
-    const account = resolveSeededCustomerAccount(payload?.email, payload?.password);
+    const account = validateCustomerCredentials(payload?.email, payload?.password);
 
     if (!account) {
       return {
@@ -48,8 +48,7 @@ app.http("customer-login", {
         account,
         session: buildServerSession(account),
         authBoundary: buildAuthBoundary(),
-        authenticationMode: "server-session",
-        // Legacy validator marker retained intentionally: authenticationMode: "seeded-live-test-account"
+        authenticationMode: account.authenticationMode || "server-session",
         timestamp: new Date().toISOString(),
       },
     };

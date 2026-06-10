@@ -57,6 +57,7 @@ export function readCustomerSession() {
       customerId: parsed.customerId || "CUST-FCA-LIVE-001",
       selectedPlan: parsed.selectedPlan || "startup",
       accountSource: parsed.accountSource || "workspace-shell",
+      accountMode: parsed.accountMode || "seeded",
       authBoundary: normalizeAuthBoundary(parsed.authBoundary),
       enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
       enabledComms: normalizeEnabledComms(parsed.enabledComms),
@@ -80,6 +81,7 @@ export function writeCustomerSession(session) {
     nextHref: session.nextHref || "/portal/platform",
     selectedPlan: session.selectedPlan || "startup",
     accountSource: session.accountSource || "workspace-shell",
+    accountMode: session.accountMode || "seeded",
     authBoundary: normalizeAuthBoundary(session.authBoundary),
     enabledProducts: normalizeEnabledProducts(session.enabledProducts),
     enabledComms: normalizeEnabledComms(session.enabledComms),
@@ -117,6 +119,7 @@ export async function syncCustomerSessionFromServer() {
       ...payload.account,
       authenticated: true,
       accountSource: payload.session?.sessionSource || payload.authenticationMode || "server-session",
+      accountMode: payload.account?.accountMode || "seeded",
       authBoundary: payload.authBoundary,
       lastLoginAt: new Date().toISOString(),
     });
@@ -189,7 +192,6 @@ export function hasCustomerProductAccess(session, pathname = "/") {
 }
 
 export function resolveLoginHref() {
-  // Legacy validator marker retained intentionally: return "/login?seeded=1";
   return "/login";
 }
 

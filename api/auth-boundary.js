@@ -1,13 +1,5 @@
 import crypto from "node:crypto";
-
-export const AUTH_BOUNDARY = {
-  productionAuthReady: false,
-  activeMode: "server-session",
-  identityProvider: "fca-native-auth",
-  tenantIsolation: "single-repo-account-store",
-  sessionValidation: "signed-http-only-cookie",
-  nextBuildStep: "Move customer accounts and session secret into managed identity-backed storage.",
-};
+import { allowSeededCustomerFallback, hasManagedCustomerAccounts } from "./customer-account-store.js";
 
 const SESSION_COOKIE_NAME = "fca_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 8;
@@ -15,6 +7,10 @@ const DEFAULT_SESSION_SECRET = "FCA_SERVER_SESSION_DEV_ONLY_CHANGE_ME";
 
 function getSessionSecret() {
   return process.env.FCA_SESSION_SECRET || DEFAULT_SESSION_SECRET;
+}
+
+function hasManagedSessionSecret() {
+  return Boolean(process.env.FCA_SESSION_SECRET);
 }
 
 function base64UrlEncode(value) {
@@ -30,9 +26,23 @@ function signPayload(payload) {
 }
 
 export function buildAuthBoundary(overrides = {}) {
+  const managedAccountsReady = hasManagedCustomerAccounts();
+  const managedSecretReady = hasManagedSessionSecret();
+  const productionAuthReady = managedAccountsReady && managedSecretReady;
+
   return {
-    ...AUTH_BOUNDARY,
-    usingFallbackSecret: !process.env.FCA_SESSION_SECRET,
+    productionAuthReady,
+    activeMode: productionAuthReady ? "managed-server-session" : managedAccountsReady ? "managed-server-session-with-fallback-secret" : "seeded-server-session",
+    identityProvider: "fca-native-auth",
+    tenantIsolation: managedAccountsReady ? "managed-customer-account-store" : "single-repo-account-store",
+    sessionValidation: "signed-http-only-cookie",
+    usingFallbackSecret: !managedSecretReady,
+    seededFallbackEnabled: allowSeededCustomerFallback(),
+    nextBuildStep: productionAuthReady
+      ? "Managed customer auth is live in repo configuration; verify runtime and rotate credentials through controlled onboarding."
+      : managedAccountsReady
+        ? "Set FCA_SESSION_SECRET in the deployment environment to promote managed customer auth out of fallback-secret mode."
+        : "Set FCA_CUSTOMER_ACCOUNTS_JSON and FCA_SESSION_SECRET to activate managed customer authentication.",
     ...overrides,
     timestamp: new Date().toISOString(),
   };
@@ -49,7 +59,7 @@ export function buildServerSession(account = null) {
 
   return {
     authenticated: true,
-    sessionSource: "server-session",
+    sessionSource: account.authenticationMode || "server-session",
     customer: {
       email: account.email,
       company: account.company,
@@ -59,6 +69,7 @@ export function buildServerSession(account = null) {
       selectedPlan: account.selectedPlan,
       enabledProducts: account.enabledProducts,
       enabledComms: account.enabledComms,
+      accountMode: account.accountMode || "seeded",
     },
   };
 }
@@ -73,6 +84,7 @@ export function createSessionCookie(account) {
     selectedPlan: account.selectedPlan,
     enabledProducts: account.enabledProducts,
     enabledComms: account.enabledComms,
+    accountMode: account.accountMode || "seeded",
     exp: Date.now() + SESSION_TTL_SECONDS * 1000,
   });
 

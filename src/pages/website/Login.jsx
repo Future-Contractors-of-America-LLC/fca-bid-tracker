@@ -16,23 +16,10 @@ import LoginActionCenter from "../../components/LoginActionCenter";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";
+import { PRIMARY_TEST_ACCOUNT } from "../../customerAccounts";
 import { founderJourneyCtaSets, pricingTiers, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { resolvePlanPreset } from "../../pricingPlans";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
-
-/* Legacy validator markers retained intentionally:
-LAUNCH_SINGLE_USER_ACCOUNT
-Custom provisioning is active.
-Enabled for first login
-Launch real customer product after login
-Use Seeded Test Account
-Open Seeded Login URL
-Instant Platform Access
-Launch-ready single-user company account
-Use Launch Account
-workspace entry routes customers into the unified FCA shell for estimating visibility, project delivery, document control, billing follow-through, academy continuity, communications routing, and guided next steps
-*/
 
 const fieldStyle = {
   width: "100%",
@@ -103,8 +90,8 @@ const loginContinuityItems = [
   },
   {
     label: "Launch direction",
-    value: "Single-user company launch remains the first commercial target",
-    detail: "The immediate goal is a believable single-user company subscription entry that can be tested like a real customer account.",
+    value: "Managed customer accounts are now the target auth model",
+    detail: "Seeded validation can remain available for internal testing, but customer login is now being converted toward a managed customer account store.",
   },
 ];
 
@@ -161,35 +148,25 @@ function readLoginQueryState() {
 }
 
 async function authenticateWorkspaceAccount(email, password) {
-  const localAccount = resolveSeededCustomerAccount(email, password);
+  const response = await fetch("/api/customer-login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
 
-  try {
-    const response = await fetch("/api/customer-login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+  const payload = await response.json();
 
-    const payload = await response.json();
-
-    if (!response.ok || !payload?.ok || !payload?.account) {
-      if (localAccount) {
-        return { ...localAccount, accountSource: "local-fallback" };
-      }
-
-      throw new Error(payload?.error || "Customer authentication failed.");
-    }
-
-    return { ...payload.account, accountSource: payload.authenticationMode || "api" };
-  } catch (error) {
-    if (localAccount) {
-      return { ...localAccount, accountSource: "local-fallback" };
-    }
-
-    throw error;
+  if (!response.ok || !payload?.ok || !payload?.account) {
+    throw new Error(payload?.error || "Customer authentication failed.");
   }
+
+  return {
+    ...payload.account,
+    authBoundary: payload.authBoundary,
+    accountSource: payload.authenticationMode || "api",
+  };
 }
 
 export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
@@ -274,6 +251,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
           customerId: authenticatedAccount.customerId,
           workspaceLabel: authenticatedAccount.workspaceLabel,
           accountSource: authenticatedAccount.accountSource,
+          accountMode: authenticatedAccount.accountMode,
+          authBoundary: authenticatedAccount.authBoundary,
         });
 
         if (!result.ok) {
@@ -388,6 +367,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         customerId: authenticatedAccount.customerId,
         workspaceLabel: authenticatedAccount.workspaceLabel,
         accountSource: authenticatedAccount.accountSource,
+        accountMode: authenticatedAccount.accountMode,
+        authBoundary: authenticatedAccount.authBoundary,
       });
 
       if (!result.ok) {
