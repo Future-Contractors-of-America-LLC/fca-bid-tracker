@@ -1,7 +1,7 @@
 import { app } from "@azure/functions";
 import { resolveAuthenticatedSession } from "./lib/auth/requestAuth.js";
 import { requireProductEntitlement } from "./lib/auth/entitlements.js";
-import { readCustomerState } from "./lib/persistence/customerStateStore.js";
+import { readCustomerState, readCustomerStateRepositoryMode } from "./lib/persistence/customerStateStore.js";
 
 app.http("customer-auricrux-guidance", {
   methods: ["GET"],
@@ -18,19 +18,32 @@ app.http("customer-auricrux-guidance", {
       return entitlement.response;
     }
 
-    const state = readCustomerState(auth.session);
+    try {
+      const state = await readCustomerState(auth.session);
 
-    return {
-      status: 200,
-      jsonBody: {
-        ok: true,
-        surface: "auricrux",
-        customer: state.customer,
-        guidance: state.auricrux,
-        entitlements: auth.session.enabledProducts,
-        persistence: state.meta,
-        timestamp: new Date().toISOString(),
-      },
-    };
+      return {
+        status: 200,
+        jsonBody: {
+          ok: true,
+          surface: "auricrux",
+          customer: state.customer,
+          guidance: state.auricrux,
+          entitlements: auth.session.enabledProducts,
+          persistence: {
+            ...state.meta,
+            repositoryMode: readCustomerStateRepositoryMode(),
+          },
+          timestamp: new Date().toISOString(),
+        },
+      };
+    } catch (error) {
+      return {
+        status: 503,
+        jsonBody: {
+          ok: false,
+          error: error?.message || "Customer Auricrux guidance state could not be loaded.",
+        },
+      };
+    }
   },
 });

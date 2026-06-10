@@ -1,17 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
-
-const ROOT_DIR = process.env.FCA_STATE_STORE_DIR || join(tmpdir(), "fca_customer_state_store");
-
-function ensureRootDir() {
-  mkdirSync(ROOT_DIR, { recursive: true });
-}
-
-function resolveCustomerFile(customerId) {
-  ensureRootDir();
-  return join(ROOT_DIR, `${String(customerId || "unknown-customer")}.json`);
-}
+import { resolveCustomerStateRepository } from "./customerStateRepository.js";
 
 function buildDefaultState(session) {
   return {
@@ -69,79 +56,29 @@ function buildDefaultState(session) {
       commandDeck: ["open-projects", "review-files", "check-billing-readiness", "assign-academy-follow-through"],
     },
     meta: {
-      persistenceMode: "host-local-filesystem-starter",
+      persistenceMode: "filesystem",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
   };
 }
 
-export function readCustomerState(session) {
-  const file = resolveCustomerFile(session.sub);
-  if (!existsSync(file)) {
-    const seeded = buildDefaultState(session);
-    writeCustomerState(session, seeded);
-    return seeded;
-  }
+const repository = resolveCustomerStateRepository({ buildDefaultState });
 
-  try {
-    const parsed = JSON.parse(readFileSync(file, "utf8"));
-    return {
-      ...buildDefaultState(session),
-      ...parsed,
-      customer: {
-        ...buildDefaultState(session).customer,
-        ...(parsed.customer || {}),
-        customerId: session.sub,
-        email: session.email,
-        company: session.company,
-        role: session.role,
-        workspaceLabel: session.workspaceLabel,
-        selectedPlan: session.selectedPlan,
-        enabledProducts: session.enabledProducts,
-        enabledComms: session.enabledComms,
-      },
-      meta: {
-        ...buildDefaultState(session).meta,
-        ...(parsed.meta || {}),
-        persistenceMode: "host-local-filesystem-starter",
-      },
-    };
-  } catch {
-    const seeded = buildDefaultState(session);
-    writeCustomerState(session, seeded);
-    return seeded;
-  }
+export async function readCustomerState(session) {
+  return repository.read(session);
 }
 
-export function writeCustomerState(session, state) {
-  const file = resolveCustomerFile(session.sub);
-  const nextState = {
-    ...state,
-    customer: {
-      ...(state.customer || {}),
-      customerId: session.sub,
-      email: session.email,
-      company: session.company,
-      role: session.role,
-      workspaceLabel: session.workspaceLabel,
-      selectedPlan: session.selectedPlan,
-      enabledProducts: session.enabledProducts,
-      enabledComms: session.enabledComms,
-    },
-    meta: {
-      ...(state.meta || {}),
-      persistenceMode: "host-local-filesystem-starter",
-      updatedAt: new Date().toISOString(),
-    },
-  };
-
-  writeFileSync(file, JSON.stringify(nextState, null, 2), "utf8");
-  return nextState;
+export async function writeCustomerState(session, state) {
+  return repository.write(session, state);
 }
 
-export function updateCustomerState(session, mutator) {
-  const current = readCustomerState(session);
+export async function updateCustomerState(session, mutator) {
+  const current = await readCustomerState(session);
   const next = typeof mutator === "function" ? mutator(current) : current;
   return writeCustomerState(session, next);
+}
+
+export function readCustomerStateRepositoryMode() {
+  return repository.mode;
 }

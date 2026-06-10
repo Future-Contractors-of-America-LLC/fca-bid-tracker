@@ -52,7 +52,7 @@ export default function ProtectedProductDataPanel({
           <div style={{ fontWeight: 700 }}>{session?.authMode || "none"}</div>
         </div>
         <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff" }}>
-          <div style={{ color: "#64748b", fontSize: 12, fontWeight: 700, marginBottom: 6 }}>Data source</div>
+          <div style={{ color: "#64748b", fontSize: 12, fontWeight: 700, marginBottom: 6 }}>Repository mode</div>
           <div style={{ fontWeight: 700 }}>{state.source}</div>
         </div>
         <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff" }}>

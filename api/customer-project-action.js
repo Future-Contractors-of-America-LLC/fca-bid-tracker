@@ -1,7 +1,7 @@
 import { app } from "@azure/functions";
 import { resolveAuthenticatedSession } from "./lib/auth/requestAuth.js";
 import { requireProductEntitlement } from "./lib/auth/entitlements.js";
-import { updateCustomerState } from "./lib/persistence/customerStateStore.js";
+import { updateCustomerState, readCustomerStateRepositoryMode } from "./lib/persistence/customerStateStore.js";
 
 function applyProjectAction(currentProjects = [], payload = {}) {
   return currentProjects.map((project) => {
@@ -57,39 +57,52 @@ app.http("customer-project-action", {
       };
     }
 
-    const nextState = updateCustomerState(auth.session, (current) => ({
-      ...current,
-      projects: applyProjectAction(current.projects || [], payload),
-      workspace: {
-        ...current.workspace,
-        nextAction: payload.detail || current.workspace?.nextAction,
-      },
-      auricrux: {
-        ...current.auricrux,
-        nextRecommendedAction: payload.detail || current.auricrux?.nextRecommendedAction,
-        currentBlocker: payload.action === "clear-permit-blocker"
-          ? "Permit dependency cleared"
-          : current.auricrux?.currentBlocker,
-      },
-    }));
+    try {
+      const nextState = await updateCustomerState(auth.session, (current) => ({
+        ...current,
+        projects: applyProjectAction(current.projects || [], payload),
+        workspace: {
+          ...current.workspace,
+          nextAction: payload.detail || current.workspace?.nextAction,
+        },
+        auricrux: {
+          ...current.auricrux,
+          nextRecommendedAction: payload.detail || current.auricrux?.nextRecommendedAction,
+          currentBlocker: payload.action === "clear-permit-blocker"
+            ? "Permit dependency cleared"
+            : current.auricrux?.currentBlocker,
+        },
+      }));
 
-    return {
-      status: 200,
-      jsonBody: {
-        ok: true,
-        surface: "saas",
-        workflow: "project",
-        accepted: true,
-        customerId: auth.session.sub,
-        company: auth.session.company,
-        projectId: payload.projectId,
-        action: payload.action,
-        detail: payload.detail || "Project workflow action accepted.",
-        projects: nextState.projects,
-        persistence: nextState.meta,
-        executionMode: "protected-backend-persistence-starter",
-        timestamp: new Date().toISOString(),
-      },
-    };
+      return {
+        status: 200,
+        jsonBody: {
+          ok: true,
+          surface: "saas",
+          workflow: "project",
+          accepted: true,
+          customerId: auth.session.sub,
+          company: auth.session.company,
+          projectId: payload.projectId,
+          action: payload.action,
+          detail: payload.detail || "Project workflow action accepted.",
+          projects: nextState.projects,
+          persistence: {
+            ...nextState.meta,
+            repositoryMode: readCustomerStateRepositoryMode(),
+          },
+          executionMode: "protected-backend-persistence-starter",
+          timestamp: new Date().toISOString(),
+        },
+      };
+    } catch (error) {
+      return {
+        status: 503,
+        jsonBody: {
+          ok: false,
+          error: error?.message || "Project workflow persistence failed.",
+        },
+      };
+    }
   },
 });

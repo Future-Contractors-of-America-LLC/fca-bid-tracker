@@ -61,7 +61,9 @@ export default function useProtectedProductData({ endpoint, session, productLabe
         const nextStatus = resolveStatusFromResponse(response, payload);
         setState({
           status: nextStatus,
-          source: response.ok && payload?.ok ? (payload?.persistence?.persistenceMode || "entitlement-checked-backend") : "protected-fetch",
+          source: response.ok && payload?.ok
+            ? (payload?.persistence?.repositoryMode || payload?.persistence?.persistenceMode || "entitlement-checked-backend")
+            : "protected-fetch",
           data: response.ok && payload?.ok ? payload : null,
           error: response.ok && payload?.ok ? "" : payload?.error || `${productLabel} protected data could not be loaded.`,
         });

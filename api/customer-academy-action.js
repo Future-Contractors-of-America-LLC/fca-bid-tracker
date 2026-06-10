@@ -1,7 +1,7 @@
 import { app } from "@azure/functions";
 import { resolveAuthenticatedSession } from "./lib/auth/requestAuth.js";
 import { requireProductEntitlement } from "./lib/auth/entitlements.js";
-import { updateCustomerState } from "./lib/persistence/customerStateStore.js";
+import { updateCustomerState, readCustomerStateRepositoryMode } from "./lib/persistence/customerStateStore.js";
 
 function applyAcademyAction(currentAcademy = {}, payload = {}) {
   const next = {
@@ -50,31 +50,44 @@ app.http("customer-academy-action", {
       };
     }
 
-    const nextState = updateCustomerState(auth.session, (current) => ({
-      ...current,
-      academy: applyAcademyAction(current.academy || {}, payload),
-      auricrux: {
-        ...current.auricrux,
-        nextRecommendedAction: payload.detail || current.auricrux?.nextRecommendedAction,
-      },
-    }));
+    try {
+      const nextState = await updateCustomerState(auth.session, (current) => ({
+        ...current,
+        academy: applyAcademyAction(current.academy || {}, payload),
+        auricrux: {
+          ...current.auricrux,
+          nextRecommendedAction: payload.detail || current.auricrux?.nextRecommendedAction,
+        },
+      }));
 
-    return {
-      status: 200,
-      jsonBody: {
-        ok: true,
-        surface: "lms",
-        workflow: "academy",
-        accepted: true,
-        customerId: auth.session.sub,
-        company: auth.session.company,
-        action: payload.action,
-        detail: payload.detail || "Academy workflow action accepted.",
-        academy: nextState.academy,
-        persistence: nextState.meta,
-        executionMode: "protected-backend-persistence-starter",
-        timestamp: new Date().toISOString(),
-      },
-    };
+      return {
+        status: 200,
+        jsonBody: {
+          ok: true,
+          surface: "lms",
+          workflow: "academy",
+          accepted: true,
+          customerId: auth.session.sub,
+          company: auth.session.company,
+          action: payload.action,
+          detail: payload.detail || "Academy workflow action accepted.",
+          academy: nextState.academy,
+          persistence: {
+            ...nextState.meta,
+            repositoryMode: readCustomerStateRepositoryMode(),
+          },
+          executionMode: "protected-backend-persistence-starter",
+          timestamp: new Date().toISOString(),
+        },
+      };
+    } catch (error) {
+      return {
+        status: 503,
+        jsonBody: {
+          ok: false,
+          error: error?.message || "Academy workflow persistence failed.",
+        },
+      };
+    }
   },
 });
