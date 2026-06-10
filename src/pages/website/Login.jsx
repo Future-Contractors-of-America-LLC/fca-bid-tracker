@@ -16,7 +16,7 @@ import LoginActionCenter from "../../components/LoginActionCenter";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { LAUNCH_SINGLE_USER_ACCOUNT, PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";
+import { PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";
 import { founderJourneyCtaSets, pricingTiers, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { resolvePlanPreset } from "../../pricingPlans";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
@@ -63,21 +63,35 @@ const submitButtonStyle = {
   cursor: "pointer",
 };
 
+const truthBannerStyle = {
+  ...productOptionStyle,
+  background: "#fff7ed",
+  border: "1px solid #fdba74",
+  marginBottom: 16,
+};
+
+const sandboxBannerStyle = {
+  ...productOptionStyle,
+  background: "#eff6ff",
+  border: "1px solid #93c5fd",
+  marginBottom: 16,
+};
+
 const loginContinuityItems = [
   {
-    label: "Entry flow",
-    value: "Login now inherits shell continuity",
-    detail: "Workspace entry now carries the same operating strip used across the public shell so the handoff into product state feels deliberate.",
+    label: "Truth posture",
+    value: "Production auth is not being misrepresented",
+    detail: "This route now states clearly that current access is sandbox-only until a real identity provider and tenant-backed customer auth system are deployed.",
   },
   {
-    label: "Post-login path",
-    value: "Portal, platform, academy, and comms remain visible",
-    detail: "The route now keeps downstream workspace destinations obvious before entry rather than hiding the next move behind a generic form feel.",
+    label: "Sandbox posture",
+    value: "Seeded validation remains available by explicit route only",
+    detail: "Internal validation access still exists for delivery testing, but it is no longer presented as launch-ready customer authentication.",
   },
   {
-    label: "Conversion posture",
-    value: "Operational walkthrough remains active",
-    detail: "This route still supports workspace entry while keeping live dashboard review, comms routing, and rollout guidance accessible.",
+    label: "Recovery direction",
+    value: "Real auth cutover remains next",
+    detail: "The next execution step is backend identity, tenant membership, secure session validation, and role-backed customer access.",
   },
 ];
 
@@ -167,9 +181,9 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const initialPlan = session?.selectedPlan || "startup";
   const initialPreset = resolvePlanPreset(initialPlan);
   const [form, setForm] = useState({
-    email: session?.email || PRIMARY_TEST_ACCOUNT.email,
+    email: session?.email || "",
     password: "",
-    company: session?.company || "Future Contractors of America Pilot Workspace",
+    company: session?.company || "",
     role: session?.role || "Owner / Admin",
     selectedPlan: initialPlan,
     enabledProducts: session?.enabledProducts || initialPreset.enabledProducts,
@@ -180,15 +194,16 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const [authStatus, setAuthStatus] = useState("idle");
   const autologinAttemptedRef = useRef(false);
   const queryState = readLoginQueryState();
+  const sandboxMode = queryState.seeded;
 
   useEffect(() => {
     if (!session) return;
     const planKey = session.selectedPlan || "startup";
     const planPreset = resolvePlanPreset(planKey);
     setForm({
-      email: session.email || PRIMARY_TEST_ACCOUNT.email,
+      email: session.email || "",
       password: "",
-      company: session.company || "Future Contractors of America Pilot Workspace",
+      company: session.company || "",
       role: session.role || "Owner / Admin",
       selectedPlan: planKey,
       enabledProducts: session.enabledProducts || planPreset.enabledProducts,
@@ -220,9 +235,9 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy"
     ? requestedWorkspaceHref
     : "/portal/platform";
-  const liveEntryDetail = accessMode === "protected"
-    ? `Customer login is now required to enter ${requestedPath}. Auricrux is preserving continuity so the user lands inside the requested live workspace surface after authentication.`
-    : "This route carries the same visual rhythm as the rest of the public shell while keeping the clearest next step focused on entering the FCA workspace, reviewing the platform dashboard, continuing into live construction operations, and routing through the right communications lanes.";
+  const liveEntryDetail = sandboxMode
+    ? "Sandbox validation mode is active. This route is currently suitable for governed internal validation of portal entry and access routing, not for claiming production customer identity is live."
+    : "Production customer login is not live yet. This page now states that truth clearly while preserving the product route and the next implementation step: real tenant-backed authentication.";
 
   useEffect(() => {
     if (!queryState.seeded || !queryState.autologin || autologinAttemptedRef.current) return;
@@ -310,7 +325,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     }));
   }
 
-  function handleUseTestAccount() {
+  function handleLoadSandboxAccount() {
     setError("");
     setAuthStatus("seeded");
     setProvisioningMode("custom");
@@ -326,25 +341,16 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     }));
   }
 
-  function handleUseLaunchAccount() {
-    setError("");
-    setAuthStatus("seeded");
-    setProvisioningMode("custom");
-    setForm((prev) => ({
-      ...prev,
-      email: LAUNCH_SINGLE_USER_ACCOUNT.email,
-      password: LAUNCH_SINGLE_USER_ACCOUNT.password,
-      company: LAUNCH_SINGLE_USER_ACCOUNT.company,
-      role: LAUNCH_SINGLE_USER_ACCOUNT.role,
-      selectedPlan: LAUNCH_SINGLE_USER_ACCOUNT.selectedPlan,
-      enabledProducts: LAUNCH_SINGLE_USER_ACCOUNT.enabledProducts,
-      enabledComms: LAUNCH_SINGLE_USER_ACCOUNT.enabledComms,
-    }));
-  }
-
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+
+    if (!sandboxMode && !isAuthenticated) {
+      setAuthStatus("failed");
+      setError("Production customer login is not active yet. Use the seeded validation route only for internal testing until real auth is deployed.");
+      return;
+    }
+
     setAuthStatus("authenticating");
 
     try {
@@ -391,7 +397,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         <ShellHeader
           eyebrow="Auricrux Guided Entry"
           title="Access FCA Workspace"
-          subtitle="This workspace entry routes customers into the unified FCA shell for estimating visibility, project delivery, document control, billing follow-through, academy continuity, communications routing, and guided next steps."
+          subtitle="This route now tells the truth: sandbox validation exists, but real production customer identity is not live yet."
           primaryHref={shellHeaderCtaSets.workspace.primaryHref}
           primaryLabel={shellHeaderCtaSets.workspace.primaryLabel}
           secondaryHref={shellHeaderCtaSets.workspace.secondaryHref}
@@ -401,14 +407,14 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         />
 
         <CustomerSessionBar requestedPath={nextHref} mode="login" />
-        <CustomerProductLaunchpad session={session} title="Launch real customer product after login" />
-        <CustomerCommsLaunchpad session={session} title="Launch real customer communications lanes" />
+        <CustomerProductLaunchpad session={session} title="Current product access tied to authenticated session state" />
+        <CustomerCommsLaunchpad session={session} title="Current communications access tied to authenticated session state" />
 
         <div style={{ ...heroCardStyle, marginBottom: 20 }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
             <div>
               <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Workspace continuity</div>
-              <h2 style={{ marginTop: 0, marginBottom: 10 }}>Entry now feels like part of the product experience</h2>
+              <h2 style={{ marginTop: 0, marginBottom: 10 }}>Login route is now truthful about current auth state</h2>
             </div>
             <div style={{ display: "grid", gap: 10 }}>
               <FcaBrandMark compact />
@@ -427,24 +433,24 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
         <FounderJourneyStrip
           currentJourney="workspace"
-          title="Workspace login is part of one connected customer journey"
-          detail="Login is not a dead-end form. It is the bridge from public entry into portal continuity, academy readiness, estimating control, communications routing, and rollout planning."
+          title="Workspace login remains part of one connected customer journey"
+          detail="The route still carries the same customer into portal continuity, academy readiness, estimating control, and communications routing, but it no longer overstates production auth readiness."
           ctaHref={founderJourneyCtaSets.workspace.href}
           ctaLabel={founderJourneyCtaSets.workspace.label}
         />
 
         <div style={{ marginBottom: 24 }}>
           <PublicOperationsStrip
-            eyebrow="Workspace continuity strip"
-            title="Login now behaves like a guided handoff into the working shell"
-            detail="The entry route now shares the same continuity strip used across the public conversion shell so customers can see the operating path before entering FCA."
-            statusLabel="Entry posture"
-            statusValue="Workspace handoff active"
+            eyebrow="Workspace auth truth strip"
+            title="Login now distinguishes sandbox validation from real customer authentication"
+            detail="The route preserves internal testability while making the production gap explicit so repo truth and live truth stay aligned."
+            statusLabel="Auth posture"
+            statusValue={sandboxMode ? "Sandbox validation route active" : "Production customer login not yet live"}
             items={loginContinuityItems}
-            primaryHref={isAuthenticated ? nextHref : "/login?seeded=1"}
-            primaryLabel={isAuthenticated ? "Open Active Workspace" : "Open Live Test Login"}
-            secondaryHref="/login?seeded=1&autologin=1&next=/portal/platform"
-            secondaryLabel="Instant Test Workspace"
+            primaryHref={sandboxMode ? "/login?seeded=1" : "/contact"}
+            primaryLabel={sandboxMode ? "Open Sandbox Login" : "Request Guided Demo"}
+            secondaryHref={sandboxMode ? "/login?seeded=1&autologin=1&next=/portal/platform" : "/platform"}
+            secondaryLabel={sandboxMode ? "Instant Sandbox Access" : "Review Platform"}
           />
         </div>
 
@@ -454,50 +460,29 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
         <div style={twoColumnGridStyle}>
           <form style={cardStyle} onSubmit={handleSubmit}>
-            <div style={{ ...productOptionStyle, marginBottom: 16, background: "#eff6ff" }}>
-              <div style={{ fontWeight: 700, marginBottom: 6 }}>Live seeded customer test account</div>
-              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>
-                A real test account is now provisioned for public workspace validation. Use the button below to load the credentials and validate SaaS, Academy / LMS, and Auricrux access from the live login route.
-              </div>
-              <div style={{ color: "#0f172a", lineHeight: 1.7, marginBottom: 8 }}>
-                Email: <strong>{PRIMARY_TEST_ACCOUNT.email}</strong>
-              </div>
-              <div style={{ color: "#0f172a", lineHeight: 1.7, marginBottom: 12 }}>
-                Password: <strong>{PRIMARY_TEST_ACCOUNT.password}</strong>
-              </div>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                <button type="button" onClick={handleUseTestAccount} style={{ ...submitButtonStyle, background: "#1d4ed8" }}>
-                  Use Seeded Test Account
-                </button>
-                <a href="/login?seeded=1" style={{ ...submitButtonStyle, textDecoration: "none", background: "#0f172a" }}>
-                  Open Seeded Login URL
-                </a>
-                <a href="/login?seeded=1&autologin=1&next=/portal/platform" style={{ ...submitButtonStyle, textDecoration: "none", background: "#0f766e" }}>
-                  Instant Platform Access
-                </a>
+            <div style={truthBannerStyle}>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>Production auth truth</div>
+              <div style={{ color: "#475569", lineHeight: 1.7 }}>
+                Real customer login has not been deployed yet. This route now prevents normal production sign-in claims and reserves authentication for explicit internal sandbox validation until tenant-backed auth is built.
               </div>
             </div>
 
-            <div style={{ ...productOptionStyle, marginBottom: 16, background: "#fffaf0", border: "1px solid #e5d3a1" }}>
-              <div style={{ fontWeight: 700, marginBottom: 6 }}>Launch-ready single-user company account</div>
-              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>
-                This is the closest truthful launch-state artifact available in the current product shell: a seeded single-user company subscription profile with SaaS workspace and Auricrux guidance enabled. It is launch-ready in the frontend shell, but not yet a production identity-provider-backed account.
+            {sandboxMode ? (
+              <div style={sandboxBannerStyle}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Sandbox validation mode</div>
+                <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
+                  Seeded access is available here only because the seeded route was explicitly requested. This is for governed internal validation, not for representing production customer authentication as live.
+                </div>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <button type="button" onClick={handleLoadSandboxAccount} style={{ ...submitButtonStyle, background: "#1d4ed8" }}>
+                    Load Sandbox Account
+                  </button>
+                  <a href="/login?seeded=1&autologin=1&next=/portal/platform" style={{ ...submitButtonStyle, textDecoration: "none", background: "#0f766e" }}>
+                    Instant Sandbox Access
+                  </a>
+                </div>
               </div>
-              <div style={{ color: "#0f172a", lineHeight: 1.7, marginBottom: 8 }}>
-                Email: <strong>{LAUNCH_SINGLE_USER_ACCOUNT.email}</strong>
-              </div>
-              <div style={{ color: "#0f172a", lineHeight: 1.7, marginBottom: 8 }}>
-                Password: <strong>{LAUNCH_SINGLE_USER_ACCOUNT.password}</strong>
-              </div>
-              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
-                Plan: <strong>{LAUNCH_SINGLE_USER_ACCOUNT.selectedPlan}</strong> · Products: <strong>SaaS + Auricrux</strong> · Account source: <strong>seeded launch profile</strong>
-              </div>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                <button type="button" onClick={handleUseLaunchAccount} style={{ ...submitButtonStyle, background: "#b45309" }}>
-                  Use Launch Account
-                </button>
-              </div>
-            </div>
+            ) : null}
 
             <label>Work Email</label>
             <input
@@ -542,7 +527,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Plan activation posture</div>
             <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
-              The selected plan now governs the default products and communications this customer receives on first login. Choose plan defaults for honest commercial-to-product enforcement, or customize access if the rollout requires an exception.
+              Product and communications access still follow the selected plan preset for workspace validation, but this does not change the current truth that production customer auth remains pending.
             </div>
             <div style={{ ...productOptionStyle, marginBottom: 16, background: "#eff6ff" }}>
               <div style={{ fontWeight: 700, marginBottom: 6 }}>{selectedPlanPreset.name}</div>
@@ -578,7 +563,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
               {provisioningMode === "plan-defaults"
                 ? `Plan defaults are active for ${selectedPlanPreset.name}.`
-                : "Custom provisioning is active. Toggle the exact product layers and channels this customer should receive on first login."}
+                : "Custom provisioning is active for workspace validation. Toggle the exact product layers and channels this session should receive after authentication."}
             </div>
 
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Customer product provisioning</div>
@@ -593,7 +578,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
                     </div>
                     <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{product.detail}</div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#1d4ed8" : "#64748b" }}>
-                      {enabled ? "Enabled for first login" : "Held back until enabled"}
+                      {enabled ? "Enabled for workspace validation" : "Held back until enabled"}
                     </div>
                   </label>
                 );
@@ -612,7 +597,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
                     </div>
                     <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 8 }}>{channel.detail}</div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: enabled ? "#0f766e" : "#64748b" }}>
-                      {enabled ? "Enabled for first login" : "Held back until enabled"}
+                      {enabled ? "Enabled for workspace validation" : "Held back until enabled"}
                     </div>
                   </label>
                 );
@@ -620,19 +605,19 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             </div>
 
             <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 12 }}>
-              This live customer session preserves Auricrux continuity and routes directly into {nextHref}. {enabledProductCount} product surface{enabledProductCount === 1 ? " is" : "s are"} currently enabled for first entry and {enabledCommsCount} communications lane{enabledCommsCount === 1 ? " is" : "s are"} available in the comms workspace.
+              This session is configured for {enabledProductCount} product surface{enabledProductCount === 1 ? "" : "s"} and {enabledCommsCount} communications lane{enabledCommsCount === 1 ? "" : "s"}. Real production auth still remains a separate build step.
             </div>
 
             <div style={{ color: authStatus === "failed" ? "#b91c1c" : "#0f766e", marginBottom: 12, fontWeight: 700 }}>
-              {authStatus === "authenticating" ? "Authenticating seeded customer account…" : null}
-              {authStatus === "authenticated" ? "Customer authentication passed. Opening live workspace…" : null}
-              {authStatus === "seeded" ? "Seeded test credentials loaded. Submit to enter the workspace." : null}
+              {authStatus === "authenticating" ? "Authenticating workspace account…" : null}
+              {authStatus === "authenticated" ? "Authentication passed. Opening workspace…" : null}
+              {authStatus === "seeded" ? "Sandbox credentials loaded. Submit to validate workspace access." : null}
             </div>
 
             {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 700 }}>{error}</div> : null}
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-              <button type="submit" style={submitButtonStyle}>Open Live Customer Workspace</button>
+              <button type="submit" style={submitButtonStyle}>{sandboxMode ? "Validate Sandbox Workspace" : "Production Login Not Yet Active"}</button>
               {isAuthenticated ? (
                 <>
                   <a href={nextHref} style={{ ...submitButtonStyle, textDecoration: "none" }}>Open Active Workspace</a>
@@ -648,14 +633,14 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
           <div style={{ display: "grid", gap: 16 }}>
             <WorkspaceSnapshotCard
-              title="Workspace continuity before login"
-              detail="Customers can see that tenant, project, and Auricrux state already exist before entering the portal, reinforcing one continuous operating shell."
-              ctaHref="/login?seeded=1"
-              ctaLabel="Open Live Test Login"
+              title="Workspace truth before login"
+              detail="This route now shows the difference between current sandbox validation and the still-missing production customer auth system."
+              ctaHref={sandboxMode ? "/login?seeded=1" : "/platform"}
+              ctaLabel={sandboxMode ? "Open Sandbox Login" : "Review Platform"}
             />
 
             <div style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
-              <h2 style={{ marginTop: 0 }}>What opens after entry</h2>
+              <h2 style={{ marginTop: 0 }}>What opens after authentication</h2>
               <div style={responsiveGrid(180)}>
                 {[
                   ["SaaS Workspace", "Projects, bids, files, messages, billing, support, and admin continuity"],
@@ -678,7 +663,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
         <PublicActionRail
           title="Continue into the FCA workspace"
-          detail="Login closes with the same shared action rail as the other public routes so workspace entry, platform state, academy continuity, communications routing, and walkthrough options remain consistently visible."
+          detail="The route remains connected to platform, academy, communications, and walkthrough surfaces while making current auth truth explicit."
         />
 
         <ShellFooter />
