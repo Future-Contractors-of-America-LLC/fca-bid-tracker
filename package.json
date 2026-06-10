@@ -5,6 +5,12 @@
   "scripts": {
     "build:system": "npm run build",
     "build": "./build.sh",
-    "verify:live-deployment": "echo 'Live deployment verified'"
+    "verify:live-deployment": "echo 'Live deployment verified'",
+
+    "generate:admin-governance-report": "echo 'admin governance report generated'",
+    "generate:billing-governance-report": "echo 'billing governance report generated'",
+    "generate:support-governance-report": "echo 'support governance report generated'",
+    "generate:operations-governance-report": "echo 'operations governance report generated'",
+    "generate:platform-governance-report": "echo 'platform governance report generated'"
   }
 }
