@@ -1,7 +1,6 @@
 #!/bin/bash
 
 mkdir -p dist
-mkdir -p api
 
 cat > dist/index.html << 'HTML'
 <!DOCTYPE html>
@@ -19,7 +18,8 @@ cat > dist/index.html << 'HTML'
 
 <script>
 async function runTask() {
-  document.getElementById("output").textContent = "Running...";
+  const out = document.getElementById("output");
+  out.textContent = "Running...";
 
   try {
     const res = await fetch("/api/run-task", {
@@ -27,10 +27,16 @@ async function runTask() {
     });
 
     const text = await res.text();
-    document.getElementById("output").textContent = text;
+
+    if (!text || text.trim() === "") {
+      out.textContent = "EMPTY RESPONSE (API reached but no body)";
+      return;
+    }
+
+    out.textContent = text;
 
   } catch (err) {
-    document.getElementById("output").textContent = "ERROR: " + err.message;
+    out.textContent = "ERROR: " + err.message;
   }
 }
 </script>
@@ -48,29 +54,5 @@ echo "<html>host binding</html>" > dist/host-binding-audit.html
 echo "<html>api audit</html>" > dist/api-continuity-audit.html
 
 touch dist/commit-witness-1.txt
-
-cat > api/run-task.js << 'JS'
-module.exports = async function (context, req) {
-  context.res = {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-    body: {
-      message: "Proxy is working",
-      timestamp: new Date().toISOString(),
-      system: "FCA control loop active"
-    }
-  };
-};
-JS
-
-cat > api/host.json << 'JS'
-{
-  "version": "2.0"
-}
-JS
-
-echo "{}" > api/package.json
-echo "{}" > api/customer-login.js
-echo "{}" > api/auricrux.js
 
 echo "Build completed"
