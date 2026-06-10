@@ -22,7 +22,6 @@ async function runTask() {
   out.textContent = "Running...";
 
   try {
-    const res = await fetch("/api/run-task", {
       method: "POST"
     });
 
