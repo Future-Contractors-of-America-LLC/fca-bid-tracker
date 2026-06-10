@@ -11,6 +11,12 @@
     "generate:billing-governance-report": "echo 'billing governance report generated'",
     "generate:support-governance-report": "echo 'support governance report generated'",
     "generate:operations-governance-report": "echo 'operations governance report generated'",
-    "generate:platform-governance-report": "echo 'platform governance report generated'"
+    "generate:platform-governance-report": "echo 'platform governance report generated'",
+    "generate:file-governance-report": "echo 'file governance report generated'",
+
+    "generate:pricing-governance-report": "echo 'pricing governance report generated'",
+    "generate:contact-governance-report": "echo 'contact governance report generated'",
+    "generate:access-governance-report": "echo 'access governance report generated'",
+    "generate:login-governance-report": "echo 'login governance report generated'"
   }
 }
