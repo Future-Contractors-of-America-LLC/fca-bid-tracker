@@ -23,6 +23,7 @@ import { academyCatalog } from "../../academyCatalog";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProtectedProductData from "../../hooks/useProtectedProductData";
+import useProtectedWorkflowMutation from "../../hooks/useProtectedWorkflowMutation";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -48,6 +49,7 @@ const continuityCardStyle = {
 export default function AcademyHome() {
   const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const { execute, lastMutation } = useProtectedWorkflowMutation(session);
   const protectedAcademy = useProtectedProductData({
     endpoint: "/api/customer-academy-overview",
     session,
@@ -83,6 +85,14 @@ export default function AcademyHome() {
   ];
   const protectedPrograms = protectedAcademy.data?.academy?.activePrograms || ["onboarding", "safety-readiness", "estimating-basics", "field-document-control"];
 
+  async function runProtectedAcademyAction(payload) {
+    return execute({
+      endpoint: "/api/customer-academy-action",
+      payload,
+      fallbackLabel: "seeded-academy-continuity-mode",
+    });
+  }
+
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
@@ -104,6 +114,12 @@ export default function AcademyHome() {
         session={session}
         items={protectedItems}
       />
+
+      {lastMutation ? (
+        <div style={{ ...cardStyle, marginBottom: 16, border: lastMutation.ok ? "1px solid #bbf7d0" : "1px solid #fecaca", background: lastMutation.ok ? "#f0fdf4" : "#fef2f2" }}>
+          <strong>Protected workflow mutation state:</strong> {lastMutation.mode}{lastMutation.error ? ` · ${lastMutation.error}` : ""}
+        </div>
+      ) : null}
 
       <div
         style={{
@@ -138,6 +154,7 @@ export default function AcademyHome() {
         setCommsAccess={setCommsAccess}
         applyPlanPreset={applyPlanPreset}
         refreshSyncStamp={refreshSyncStamp}
+        runProtectedAction={runProtectedAcademyAction}
       />
 
       <div style={{ marginBottom: 24 }}>

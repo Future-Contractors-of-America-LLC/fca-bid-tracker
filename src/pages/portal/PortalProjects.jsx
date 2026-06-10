@@ -6,6 +6,8 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import useCustomerSession from "../../hooks/useCustomerSession";
+import useProtectedWorkflowMutation from "../../hooks/useProtectedWorkflowMutation";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -28,11 +30,21 @@ const actionButtonStyle = {
 
 export default function PortalProjects() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
+  const { session } = useCustomerSession();
+  const { execute, lastMutation } = useProtectedWorkflowMutation(session);
   const { projects, activeProject, selectActiveProject, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
 
   useEffect(() => {
     refreshSyncStamp("Persisted project flow state active");
   }, [refreshSyncStamp]);
+
+  async function runProtectedProjectAction(projectId, action, detail) {
+    return execute({
+      endpoint: "/api/customer-project-action",
+      payload: { projectId, action, detail },
+      fallbackLabel: "seeded-project-continuity-mode",
+    });
+  }
 
   const visibleProject = activeProject || state.project;
 
@@ -60,6 +72,12 @@ export default function PortalProjects() {
 
       <CommercialContinuityFeed title="Project commercial continuity feed" detail="Recent project-stage changes, permit-path repairs, and execution-to-closeout mutations remain visible here so delivery actions stay tied to revenue and rollout continuity." />
       <AutomationRecoveryFeed title="Project automation feed" detail="Recent Auricrux project repairs and stage transitions remain visible across routes so execution-state changes are durable." />
+
+      {lastMutation ? (
+        <div style={{ ...cardStyle, marginBottom: 16, border: lastMutation.ok ? "1px solid #bbf7d0" : "1px solid #fecaca", background: lastMutation.ok ? "#f0fdf4" : "#fef2f2" }}>
+          <strong>Protected workflow mutation state:</strong> {lastMutation.mode}{lastMutation.error ? ` · ${lastMutation.error}` : ""}
+        </div>
+      ) : null}
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted project state</div>
@@ -172,7 +190,12 @@ export default function PortalProjects() {
                   {isActive ? "Active project selected" : "Set as active project"}
                 </button>
               </div>
-              <ProjectActionCenter project={project} advanceProjectStage={advanceProjectStage} clearPermitBlocker={clearPermitBlocker} />
+              <ProjectActionCenter
+                project={project}
+                advanceProjectStage={advanceProjectStage}
+                clearPermitBlocker={clearPermitBlocker}
+                runProtectedAction={(action) => runProtectedProjectAction(project.id, action.action, action.detail)}
+              />
             </div>
           );
         })}

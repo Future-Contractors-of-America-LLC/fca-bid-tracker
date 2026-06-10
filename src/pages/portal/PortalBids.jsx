@@ -6,6 +6,8 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
+import useCustomerSession from "../../hooks/useCustomerSession";
+import useProtectedWorkflowMutation from "../../hooks/useProtectedWorkflowMutation";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
 import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
 import { routeStateOverlays } from "../../systemState";
@@ -44,7 +46,17 @@ const actionButtonStyle = {
 
 export default function PortalBids() {
   const { state } = useWorkspaceState();
+  const { session } = useCustomerSession();
+  const { execute, lastMutation } = useProtectedWorkflowMutation(session);
   const { bids, updateBidStatus, clearBidBlocker, updateBidQualification, routeBidToEstimate } = useBidWorkspace();
+
+  async function runProtectedBidAction(bidId, action, detail) {
+    return execute({
+      endpoint: "/api/customer-bid-action",
+      payload: { bidId, action, detail },
+      fallbackLabel: "seeded-bid-continuity-mode",
+    });
+  }
 
   return (
     <PortalShell
@@ -73,6 +85,12 @@ export default function PortalBids() {
 
       <CommercialContinuityFeed title="Bid revenue continuity feed" detail="Recent bid-state mutations, qualification repairs, approval-path recovery, and won-package transitions remain visible here so preconstruction actions stay tied to revenue continuity." />
       <AutomationRecoveryFeed title="Bid automation feed" detail="Recent Auricrux bid repairs, qualification commands, and status transitions remain visible across routes so the preconstruction spine is not trapped inside one card click." />
+
+      {lastMutation ? (
+        <div style={{ ...cardStyle, marginBottom: 16, border: lastMutation.ok ? "1px solid #bbf7d0" : "1px solid #fecaca", background: lastMutation.ok ? "#f0fdf4" : "#fef2f2" }}>
+          <strong>Protected workflow mutation state:</strong> {lastMutation.mode}{lastMutation.error ? ` · ${lastMutation.error}` : ""}
+        </div>
+      ) : null}
 
       <div style={{ ...continuityCardStyle, marginBottom: 16 }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Approval continuity focus</div>
@@ -149,7 +167,8 @@ export default function PortalBids() {
                   <button
                     type="button"
                     style={actionButtonStyle}
-                    onClick={() =>
+                    onClick={async () => {
+                      await runProtectedBidAction(bid.id, "mark-budget-fit", "Budget fit confirmed and qualification packet strengthened.");
                       updateBidQualification(
                         bid.id,
                         {
@@ -160,15 +179,16 @@ export default function PortalBids() {
                           nextGate: "Route to estimator handoff",
                         },
                         "Budget fit confirmed and qualification packet strengthened."
-                      )
-                    }
+                      );
+                    }}
                   >
                     Mark Budget Fit
                   </button>
                   <button
                     type="button"
                     style={actionButtonStyle}
-                    onClick={() =>
+                    onClick={async () => {
+                      await runProtectedBidAction(bid.id, "advance-qualification", "Qualification command advanced with verified scope, jurisdiction, and travel posture.");
                       updateBidQualification(
                         bid.id,
                         {
@@ -180,22 +200,30 @@ export default function PortalBids() {
                           nextGate: "Estimator handoff active",
                         },
                         "Qualification command advanced with verified scope, jurisdiction, and travel posture."
-                      )
-                    }
+                      );
+                    }}
                   >
                     Advance Qualification
                   </button>
                   <button
                     type="button"
                     style={actionButtonStyle}
-                    onClick={() => routeBidToEstimate(bid.id, "Qualified opportunity routed into estimating and preconstruction handoff.")}
+                    onClick={async () => {
+                      await runProtectedBidAction(bid.id, "route-to-estimate", "Qualified opportunity routed into estimating and preconstruction handoff.");
+                      routeBidToEstimate(bid.id, "Qualified opportunity routed into estimating and preconstruction handoff.");
+                    }}
                   >
                     Route to Estimate
                   </button>
                 </div>
               </div>
 
-              <BidActionCenter bid={bid} updateBidStatus={updateBidStatus} clearBidBlocker={clearBidBlocker} />
+              <BidActionCenter
+                bid={bid}
+                updateBidStatus={updateBidStatus}
+                clearBidBlocker={clearBidBlocker}
+                runProtectedAction={(action) => runProtectedBidAction(bid.id, action.action, action.detail)}
+              />
             </div>
           );
         })}

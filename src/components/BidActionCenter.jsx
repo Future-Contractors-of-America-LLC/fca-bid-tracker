@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const cardStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 12,
@@ -16,7 +18,15 @@ const buttonStyle = (tone = "primary") => ({
   font: "inherit",
 });
 
-export default function BidActionCenter({ bid, updateBidStatus, clearBidBlocker }) {
+export default function BidActionCenter({ bid, updateBidStatus, clearBidBlocker, runProtectedAction = null }) {
+  const [actionState, setActionState] = useState(null);
+
+  async function execute(action, fallback) {
+    const protectedResult = runProtectedAction ? await runProtectedAction(action) : null;
+    fallback();
+    setActionState(protectedResult || { ok: true, mode: "local-shell-only", accepted: false });
+  }
+
   return (
     <div style={{ ...cardStyle, marginTop: 14, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
       <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live bid actions</div>
@@ -26,26 +36,49 @@ export default function BidActionCenter({ bid, updateBidStatus, clearBidBlocker 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <button
           type="button"
-          onClick={() => clearBidBlocker(bid.id, `Auricrux cleared the blocker on ${bid.package} and routed it for active approval follow-through.`)}
+          onClick={() => execute(
+            {
+              action: "clear-blocker",
+              detail: `Auricrux cleared the blocker on ${bid.package} and routed it for active approval follow-through.`,
+            },
+            () => clearBidBlocker(bid.id, `Auricrux cleared the blocker on ${bid.package} and routed it for active approval follow-through.`)
+          )}
           style={buttonStyle("primary")}
         >
           Clear Blocker
         </button>
         <button
           type="button"
-          onClick={() => updateBidStatus(bid.id, "Awaiting Approval", `Auricrux routed ${bid.package} into owner approval and preserved bid-to-revenue continuity.`)}
+          onClick={() => execute(
+            {
+              action: "route-to-approval",
+              detail: `Auricrux routed ${bid.package} into owner approval and preserved bid-to-revenue continuity.`,
+            },
+            () => updateBidStatus(bid.id, "Awaiting Approval", `Auricrux routed ${bid.package} into owner approval and preserved bid-to-revenue continuity.`)
+          )}
           style={buttonStyle()}
         >
           Route to Approval
         </button>
         <button
           type="button"
-          onClick={() => updateBidStatus(bid.id, "Won", `Auricrux converted ${bid.package} into a won commercial state and cleared the path toward billing and job-start execution.`)}
+          onClick={() => execute(
+            {
+              action: "mark-won",
+              detail: `Auricrux converted ${bid.package} into a won commercial state and cleared the path toward billing and job-start execution.`,
+            },
+            () => updateBidStatus(bid.id, "Won", `Auricrux converted ${bid.package} into a won commercial state and cleared the path toward billing and job-start execution.`)
+          )}
           style={buttonStyle()}
         >
           Mark Won
         </button>
       </div>
+      {actionState ? (
+        <div style={{ color: actionState.ok ? "#0f766e" : "#b91c1c", fontSize: 13, marginTop: 10, fontWeight: 700 }}>
+          Action mode: {actionState.mode}{actionState.error ? ` · ${actionState.error}` : ""}
+        </div>
+      ) : null}
       {bid.lastActionAt ? (
         <div style={{ color: "#64748b", fontSize: 13, marginTop: 10 }}>
           Last action at {bid.lastActionAt}

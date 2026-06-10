@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { resolvePlanPreset } from "../pricingPlans";
 
 const shellStyle = {
@@ -27,7 +28,8 @@ const actionButtonStyle = (tone = "primary") => ({
   font: "inherit",
 });
 
-export default function AcademyReadinessOverlay({ session, setProductAccess, setCommsAccess, applyPlanPreset, refreshSyncStamp }) {
+export default function AcademyReadinessOverlay({ session, setProductAccess, setCommsAccess, applyPlanPreset, refreshSyncStamp, runProtectedAction = null }) {
+  const [actionState, setActionState] = useState(null);
   const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
   const enabledProducts = session?.enabledProducts || { saas: true, lms: true, auricrux: true };
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
@@ -39,6 +41,12 @@ export default function AcademyReadinessOverlay({ session, setProductAccess, set
   const missingCount = [needsLms, needsLecture, needsEmail, needsConference, needsTeams].filter(Boolean).length;
 
   if (missingCount === 0) return null;
+
+  async function execute(actionPayload, fallback) {
+    const protectedResult = runProtectedAction ? await runProtectedAction(actionPayload) : null;
+    fallback();
+    setActionState(protectedResult || { ok: true, mode: "local-shell-only", accepted: false });
+  }
 
   function repairAcademyDependencies() {
     if (needsLms) setProductAccess("lms", true);
@@ -90,13 +98,33 @@ export default function AcademyReadinessOverlay({ session, setProductAccess, set
       </div>
 
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <button type="button" onClick={repairAcademyDependencies} style={actionButtonStyle("primary")}>
+        <button
+          type="button"
+          onClick={() => execute(
+            { action: "repair-academy-dependencies", detail: "Academy product and comms dependencies repaired." },
+            repairAcademyDependencies
+          )}
+          style={actionButtonStyle("primary")}
+        >
           Repair Academy Dependencies
         </button>
-        <button type="button" onClick={activateEnterpriseAcademyReadiness} style={actionButtonStyle()}>
+        <button
+          type="button"
+          onClick={() => execute(
+            { action: "activate-enterprise-academy-readiness", detail: "Enterprise academy readiness activated." },
+            activateEnterpriseAcademyReadiness
+          )}
+          style={actionButtonStyle()}
+        >
           Activate Enterprise Academy Readiness
         </button>
       </div>
+
+      {actionState ? (
+        <div style={{ marginTop: 12, color: actionState.ok ? "#0f766e" : "#b91c1c", fontWeight: 700 }}>
+          Action mode: {actionState.mode}{actionState.error ? ` · ${actionState.error}` : ""}
+        </div>
+      ) : null}
     </div>
   );
 }
