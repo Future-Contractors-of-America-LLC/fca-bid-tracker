@@ -8,6 +8,7 @@ import {
 import { navigateTo } from "../navigation";
 import { portalModules, workspaceContext as systemWorkspaceContext } from "../systemState";
 import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext } from "../workspaceState";
+import { publicActionCatalog } from "../websiteShell";
 
 const navShellStyle = {
   border: "1px solid #dbe3ef",
@@ -147,6 +148,9 @@ export default function PublicTopNav({ mode = "public" }) {
       : "Future Contractors of America";
   const routeCue = resolveRouteCue(currentPath, mode);
   const continuityStamp = projectAuditEvents[projectAuditEvents.length - 1]?.time || "Active";
+  const actionHref = session?.authenticated ? workspaceHref : loginHref;
+  const actionLabel = session?.authenticated ? "Open Workspace" : "Open Live Test Login";
+  const legacyQuickLinks = [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace];
 
   function handleLogout(event) {
     event.preventDefault();
@@ -178,8 +182,8 @@ export default function PublicTopNav({ mode = "public" }) {
 
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
           {session?.authenticated ? <a href={profileHref} style={secondaryButtonStyle}>Profile</a> : null}
-          <a href={session?.authenticated ? workspaceHref : loginHref} style={primaryButtonStyle}>
-            {session?.authenticated ? "Open Workspace" : "Customer Login"}
+          <a href={actionHref} style={primaryButtonStyle}>
+            {actionLabel}
           </a>
           {session?.authenticated ? (
             <a href={loginHref} onClick={handleLogout} style={secondaryButtonStyle}>Logout</a>
@@ -223,6 +227,12 @@ export default function PublicTopNav({ mode = "public" }) {
           </div>
         ) : (
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            {legacyQuickLinks.map((item) => {
+              const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;
+              return (
+                <a key={item.href} href={resolvedHref} style={utilityLinkStyle}>{item.label}</a>
+              );
+            })}
             <a href="/auricrux" style={isActivePath(currentPath, "/auricrux") ? activeUtilityLinkStyle : utilityLinkStyle}>Auricrux</a>
             <a href="/login" style={isActivePath(currentPath, "/login") ? activeUtilityLinkStyle : utilityLinkStyle}>Login</a>
           </div>

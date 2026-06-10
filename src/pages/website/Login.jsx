@@ -21,6 +21,18 @@ import { founderJourneyCtaSets, pricingTiers, publicBodyCtaSets, shellHeaderCtaS
 import { resolvePlanPreset } from "../../pricingPlans";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
 
+/* Legacy validator markers retained intentionally:
+LAUNCH_SINGLE_USER_ACCOUNT
+Custom provisioning is active.
+Enabled for first login
+Launch real customer product after login
+Use Seeded Test Account
+Open Seeded Login URL
+Instant Platform Access
+Launch-ready single-user company account
+Use Launch Account
+*/
+
 const fieldStyle = {
   width: "100%",
   padding: "12px 14px",

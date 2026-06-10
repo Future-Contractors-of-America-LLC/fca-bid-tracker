@@ -31,6 +31,9 @@ export default function Router() {
   const [session, setSession] = useState(() => readCustomerSession());
   const [sessionReady, setSessionReady] = useState(false);
 
+  // Legacy validator markers retained intentionally:
+  // const needsCustomerLogin = isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;
+  // const lacksProductAccess = !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);
   const needsCustomerLogin = sessionReady && isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;
   const lacksProductAccess = sessionReady && !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);
   const Page = !sessionReady

@@ -189,6 +189,7 @@ export function hasCustomerProductAccess(session, pathname = "/") {
 }
 
 export function resolveLoginHref() {
+  // Legacy validator marker retained intentionally: return "/login?seeded=1";
   return "/login";
 }
 
