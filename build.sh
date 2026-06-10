@@ -36,7 +36,7 @@ async function runTask() {
   document.getElementById("output").textContent = "Running...";
 
   try {
-    const res = await fetch("https://auricrux-central.azurewebsites.net/api/execute", {
+    const res = await fetch("https://auricrux-central.azurewebsites.net/api/status", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
