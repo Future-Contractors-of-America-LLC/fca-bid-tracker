@@ -1,6 +1,6 @@
 import { app } from "@azure/functions";
 import { resolveSeededCustomerAccount } from "../src/customerAccounts.js";
-import { buildAuthBoundary, buildSandboxSession } from "./auth-boundary.js";
+import { buildAuthBoundary, buildServerSession, createSessionCookie } from "./auth-boundary.js";
 
 app.http("customer-login", {
   methods: ["POST"],
@@ -35,16 +35,20 @@ app.http("customer-login", {
       };
     }
 
+    const { cookie } = createSessionCookie(account);
+
     return {
       status: 200,
+      headers: {
+        "Set-Cookie": cookie,
+        "Cache-Control": "no-store",
+      },
       jsonBody: {
         ok: true,
         account,
-        session: buildSandboxSession(account),
-        authBoundary: buildAuthBoundary({
-          sessionValidation: "seeded-sandbox",
-        }),
-        authenticationMode: "seeded-live-test-account",
+        session: buildServerSession(account),
+        authBoundary: buildAuthBoundary(),
+        authenticationMode: "server-session",
         timestamp: new Date().toISOString(),
       },
     };

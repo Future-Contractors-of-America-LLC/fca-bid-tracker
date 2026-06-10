@@ -1,12 +1,13 @@
 export const CUSTOMER_SESSION_KEY = "fca_customer_session_v1";
+export const CUSTOMER_SESSION_EVENT = "fca-customer-session-updated";
 
 const DEFAULT_AUTH_BOUNDARY = {
   productionAuthReady: false,
-  activeMode: "sandbox-seeded-validation",
-  identityProvider: "not-configured",
-  tenantIsolation: "planned",
-  sessionValidation: "local-shell-only",
-  nextBuildStep: "Deploy tenant-backed identity, secure session validation, and role enforcement.",
+  activeMode: "server-session",
+  identityProvider: "fca-native-auth",
+  tenantIsolation: "single-repo-account-store",
+  sessionValidation: "signed-http-only-cookie",
+  nextBuildStep: "Move customer accounts and session secret into managed identity-backed storage.",
 };
 
 function normalizeEnabledProducts(enabledProducts) {
@@ -34,6 +35,11 @@ function normalizeAuthBoundary(authBoundary) {
     ...DEFAULT_AUTH_BOUNDARY,
     ...(authBoundary || {}),
   };
+}
+
+function broadcastCustomerSessionUpdate() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_EVENT));
 }
 
 export function readCustomerSession() {
@@ -81,11 +87,42 @@ export function writeCustomerSession(session) {
 
   try {
     window.localStorage.setItem(CUSTOMER_SESSION_KEY, JSON.stringify(payload));
+    broadcastCustomerSessionUpdate();
   } catch {
     // keep login best-effort during shell hardening phase
   }
 
   return payload;
+}
+
+export async function syncCustomerSessionFromServer() {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const response = await fetch("/api/customer-session", {
+      method: "GET",
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    const payload = await response.json();
+    if (!response.ok || !payload?.ok || !payload?.authenticated || !payload?.account) {
+      clearCustomerSession();
+      return null;
+    }
+
+    return writeCustomerSession({
+      ...payload.account,
+      authenticated: true,
+      accountSource: payload.session?.sessionSource || payload.authenticationMode || "server-session",
+      authBoundary: payload.authBoundary,
+      lastLoginAt: new Date().toISOString(),
+    });
+  } catch {
+    return readCustomerSession();
+  }
 }
 
 export function updateCustomerSession(updates = {}) {
@@ -110,13 +147,25 @@ export function updateCustomerSession(updates = {}) {
   });
 }
 
-export function clearCustomerSession() {
-  if (typeof window === "undefined") return;
+export async function clearCustomerSession({ server = false } = {}) {
+  if (typeof window !== "undefined") {
+    try {
+      window.localStorage.removeItem(CUSTOMER_SESSION_KEY);
+      broadcastCustomerSessionUpdate();
+    } catch {
+      // best-effort logout only
+    }
+  }
 
-  try {
-    window.localStorage.removeItem(CUSTOMER_SESSION_KEY);
-  } catch {
-    // best-effort logout only
+  if (server && typeof window !== "undefined") {
+    try {
+      await fetch("/api/customer-logout", {
+        method: "POST",
+        credentials: "same-origin",
+      });
+    } catch {
+      // best-effort server logout only
+    }
   }
 }
 

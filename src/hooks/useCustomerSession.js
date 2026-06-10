@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  CUSTOMER_SESSION_EVENT,
   clearCustomerSession,
   readCustomerSession,
+  syncCustomerSessionFromServer,
   updateCustomerSession,
   writeCustomerSession,
 } from "../customerSession";
@@ -78,10 +80,29 @@ export function resolveRoleDefaultComms(role = "Owner / Admin") {
 }
 
 export default function useCustomerSession() {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(() => readCustomerSession());
 
   useEffect(() => {
-    setSession(readCustomerSession());
+    let active = true;
+
+    async function hydrate() {
+      const synced = await syncCustomerSessionFromServer();
+      if (!active) return;
+      setSession(synced || readCustomerSession());
+    }
+
+    function handleSessionUpdate() {
+      if (!active) return;
+      setSession(readCustomerSession());
+    }
+
+    hydrate();
+    window.addEventListener(CUSTOMER_SESSION_EVENT, handleSessionUpdate);
+
+    return () => {
+      active = false;
+      window.removeEventListener(CUSTOMER_SESSION_EVENT, handleSessionUpdate);
+    };
   }, []);
 
   return useMemo(
@@ -209,8 +230,8 @@ export default function useCustomerSession() {
         logCommercialEvent("plan-promotion", `${planPreset.name} commercial package activated`, `Auricrux aligned pricing, product depth, and communications scope to ${planPreset.name} for stronger revenue continuity.`, saved.nextHref || "/pricing");
         return { ok: true, session: saved };
       },
-      logout() {
-        clearCustomerSession();
+      async logout() {
+        await clearCustomerSession({ server: true });
         clearAutomationLog();
         clearCommercialLog();
         setSession(null);

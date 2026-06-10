@@ -4,7 +4,9 @@ import NotFound from "./pages/website/NotFound";
 import Login from "./pages/website/Login";
 import AccessRestricted from "./pages/website/AccessRestricted";
 import {
+  CUSTOMER_SESSION_EVENT,
   readCustomerSession,
+  syncCustomerSessionFromServer,
   hasCustomerProductAccess,
   isProtectedCustomerRoute,
 } from "./customerSession";
@@ -16,20 +18,46 @@ function readCurrentPath() {
   return normalizePath(window.location.pathname);
 }
 
+function LoadingRoute() {
+  return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc", color: "#0f172a", fontFamily: "Arial" }}>
+      Loading FCA workspace session…
+    </div>
+  );
+}
+
 export default function Router() {
   const [normalizedPath, setNormalizedPath] = useState(readCurrentPath);
-  const session = readCustomerSession();
-  const needsCustomerLogin = isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;
-  const lacksProductAccess = !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);
-  const Page = needsCustomerLogin
-    ? Login
-    : lacksProductAccess
-      ? AccessRestricted
-      : routes[normalizedPath] || NotFound;
+  const [session, setSession] = useState(() => readCustomerSession());
+  const [sessionReady, setSessionReady] = useState(false);
+
+  const needsCustomerLogin = sessionReady && isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;
+  const lacksProductAccess = sessionReady && !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);
+  const Page = !sessionReady
+    ? LoadingRoute
+    : needsCustomerLogin
+      ? Login
+      : lacksProductAccess
+        ? AccessRestricted
+        : routes[normalizedPath] || NotFound;
 
   useEffect(() => {
+    let active = true;
+
+    async function hydrateSession() {
+      const synced = await syncCustomerSessionFromServer();
+      if (!active) return;
+      setSession(synced || readCustomerSession());
+      setSessionReady(true);
+    }
+
     function syncRouteFromLocation() {
       setNormalizedPath(readCurrentPath());
+    }
+
+    function handleCustomerSessionUpdate() {
+      if (!active) return;
+      setSession(readCustomerSession());
     }
 
     function handleDocumentClick(event) {
@@ -48,13 +76,17 @@ export default function Router() {
       navigateTo(href);
     }
 
+    hydrateSession();
     window.addEventListener("popstate", syncRouteFromLocation);
     window.addEventListener(NAVIGATION_EVENT, syncRouteFromLocation);
+    window.addEventListener(CUSTOMER_SESSION_EVENT, handleCustomerSessionUpdate);
     document.addEventListener("click", handleDocumentClick);
 
     return () => {
+      active = false;
       window.removeEventListener("popstate", syncRouteFromLocation);
       window.removeEventListener(NAVIGATION_EVENT, syncRouteFromLocation);
+      window.removeEventListener(CUSTOMER_SESSION_EVENT, handleCustomerSessionUpdate);
       document.removeEventListener("click", handleDocumentClick);
     };
   }, []);
