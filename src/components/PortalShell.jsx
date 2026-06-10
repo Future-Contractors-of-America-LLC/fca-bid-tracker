@@ -10,6 +10,9 @@ import ExecutiveSignalBar from "./ExecutiveSignalBar";
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import AuricruxNavHint from "./AuricruxNavHint";
 import CustomerSessionBar from "./CustomerSessionBar";
+import RouteReadinessOverlay from "./RouteReadinessOverlay";
+import AutomationRecoveryFeed from "./AutomationRecoveryFeed";
+import useCustomerSession from "../hooks/useCustomerSession";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
 import { portalJourney, portalModules } from "../systemState";
@@ -84,8 +87,10 @@ export default function PortalShell({
   primaryLabel = "Open Messages",
   workspaceState = null,
 }) {
+  const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const workspaceApi = useWorkspaceState();
   const resolvedState = workspaceState || workspaceApi.state;
+  const { refreshSyncStamp } = workspaceApi;
 
   return (
     <div style={shellStyle}>
@@ -129,6 +134,17 @@ export default function PortalShell({
         <AuricruxStatusRail project={resolvedState.project} rail={resolvedState.auricrux} />
         <RouteStateOverlay overlay={routeOverlay} />
         <ExecutiveSignalBar mode="portal" nextHref={executiveSignalCtaSets.portal.href} nextLabel={executiveSignalCtaSets.portal.label} />
+
+        <RouteReadinessOverlay
+          activeHref={activeHref}
+          session={session}
+          setProductAccess={setProductAccess}
+          setCommsAccess={setCommsAccess}
+          applyPlanPreset={applyPlanPreset}
+          refreshSyncStamp={refreshSyncStamp}
+        />
+
+        <AutomationRecoveryFeed title="Shared automation recovery feed" detail="Recent Auricrux repairs, plan activations, route readiness corrections, and comms mutations remain visible across portal routes so continuity becomes durable instead of route-local only." />
 
         <div style={{ marginBottom: 20 }}>
           <AuricruxPresenceLayer
