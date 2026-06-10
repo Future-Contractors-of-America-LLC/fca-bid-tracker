@@ -1,6 +1,51 @@
 import { app } from "@azure/functions";
 import { resolveAuthenticatedSession } from "./lib/auth/requestAuth.js";
 import { requireProductEntitlement } from "./lib/auth/entitlements.js";
+import { updateCustomerState } from "./lib/persistence/customerStateStore.js";
+
+function applyBidAction(currentBids = [], payload = {}) {
+  return currentBids.map((bid) => {
+    if (bid.id !== payload.bidId) return bid;
+
+    const next = {
+      ...bid,
+      lastActionAt: new Date().toISOString(),
+    };
+
+    switch (payload.action) {
+      case "clear-blocker":
+        next.blocker = "No active blocker";
+        next.nextCommercialMove = payload.detail || "Approval path restored.";
+        break;
+      case "route-to-approval":
+        next.status = "Awaiting Approval";
+        next.nextCommercialMove = payload.detail || "Routed to approval.";
+        break;
+      case "mark-won":
+        next.status = "Won";
+        next.blocker = "Conversion cleared";
+        next.nextCommercialMove = payload.detail || "Won commercial state active.";
+        break;
+      case "mark-budget-fit":
+        next.nextCommercialMove = payload.detail || "Budget fit confirmed.";
+        break;
+      case "advance-qualification":
+        next.status = "Qualified";
+        next.nextCommercialMove = payload.detail || "Qualification advanced.";
+        break;
+      case "route-to-estimate":
+        next.status = "Qualified";
+        next.blocker = "No active blocker";
+        next.nextCommercialMove = payload.detail || "Routed to estimate.";
+        break;
+      default:
+        next.nextCommercialMove = payload.detail || next.nextCommercialMove;
+        break;
+    }
+
+    return next;
+  });
+}
 
 app.http("customer-bid-action", {
   methods: ["POST"],
@@ -24,6 +69,19 @@ app.http("customer-bid-action", {
       };
     }
 
+    const nextState = updateCustomerState(auth.session, (current) => ({
+      ...current,
+      bids: applyBidAction(current.bids || [], payload),
+      workspace: {
+        ...current.workspace,
+        nextAction: payload.detail || current.workspace?.nextAction,
+      },
+      auricrux: {
+        ...current.auricrux,
+        nextRecommendedAction: payload.detail || current.auricrux?.nextRecommendedAction,
+      },
+    }));
+
     return {
       status: 200,
       jsonBody: {
@@ -36,7 +94,9 @@ app.http("customer-bid-action", {
         bidId: payload.bidId,
         action: payload.action,
         detail: payload.detail || "Bid workflow action accepted.",
-        executionMode: "protected-backend-starter",
+        bids: nextState.bids,
+        persistence: nextState.meta,
+        executionMode: "protected-backend-persistence-starter",
         timestamp: new Date().toISOString(),
       },
     };

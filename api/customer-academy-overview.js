@@ -1,6 +1,7 @@
 import { app } from "@azure/functions";
 import { resolveAuthenticatedSession } from "./lib/auth/requestAuth.js";
 import { requireProductEntitlement } from "./lib/auth/entitlements.js";
+import { readCustomerState } from "./lib/persistence/customerStateStore.js";
 
 app.http("customer-academy-overview", {
   methods: ["GET"],
@@ -17,29 +18,17 @@ app.http("customer-academy-overview", {
       return entitlement.response;
     }
 
+    const state = readCustomerState(auth.session);
+
     return {
       status: 200,
       jsonBody: {
         ok: true,
         surface: "lms",
-        customer: {
-          customerId: auth.session.sub,
-          company: auth.session.company,
-          workspaceLabel: auth.session.workspaceLabel,
-        },
-        academy: {
-          title: "FCA Academy",
-          readinessStatus: "academy-route-enabled",
-          learnersReadyForAssignment: 2,
-          activePrograms: [
-            "onboarding",
-            "safety-readiness",
-            "estimating-basics",
-            "field-document-control",
-          ],
-          nextAction: "Assign learners and preserve continuity into project mobilization.",
-        },
+        customer: state.customer,
+        academy: state.academy,
         entitlements: auth.session.enabledProducts,
+        persistence: state.meta,
         timestamp: new Date().toISOString(),
       },
     };

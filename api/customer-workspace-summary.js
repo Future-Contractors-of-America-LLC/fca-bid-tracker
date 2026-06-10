@@ -1,6 +1,7 @@
 import { app } from "@azure/functions";
 import { resolveAuthenticatedSession } from "./lib/auth/requestAuth.js";
 import { requireProductEntitlement } from "./lib/auth/entitlements.js";
+import { readCustomerState } from "./lib/persistence/customerStateStore.js";
 
 app.http("customer-workspace-summary", {
   methods: ["GET"],
@@ -17,33 +18,19 @@ app.http("customer-workspace-summary", {
       return entitlement.response;
     }
 
+    const state = readCustomerState(auth.session);
+
     return {
       status: 200,
       jsonBody: {
         ok: true,
         surface: "saas",
-        customer: {
-          customerId: auth.session.sub,
-          email: auth.session.email,
-          company: auth.session.company,
-          role: auth.session.role,
-          workspaceLabel: auth.session.workspaceLabel,
-          selectedPlan: auth.session.selectedPlan,
-        },
-        workspace: {
-          title: "FCA Contractor Command Workspace",
-          nextAction: "Review active projects, estimate posture, and file dependencies.",
-          modules: [
-            "projects",
-            "bids",
-            "files",
-            "messages",
-            "billing",
-            "support",
-          ],
-          operationalStatus: "customer-workspace-ready",
-        },
+        customer: state.customer,
+        workspace: state.workspace,
+        bids: state.bids,
+        projects: state.projects,
         entitlements: auth.session.enabledProducts,
+        persistence: state.meta,
         timestamp: new Date().toISOString(),
       },
     };

@@ -1,6 +1,32 @@
 import { app } from "@azure/functions";
 import { resolveAuthenticatedSession } from "./lib/auth/requestAuth.js";
 import { requireProductEntitlement } from "./lib/auth/entitlements.js";
+import { updateCustomerState } from "./lib/persistence/customerStateStore.js";
+
+function applyAcademyAction(currentAcademy = {}, payload = {}) {
+  const next = {
+    ...currentAcademy,
+    lastActionAt: new Date().toISOString(),
+  };
+
+  switch (payload.action) {
+    case "repair-academy-dependencies":
+      next.trainingDependenciesRepaired = true;
+      next.readinessStatus = "academy-dependencies-repaired";
+      next.nextAction = payload.detail || "Academy dependencies repaired.";
+      break;
+    case "activate-enterprise-academy-readiness":
+      next.enterpriseReadinessActive = true;
+      next.readinessStatus = "enterprise-academy-readiness-active";
+      next.nextAction = payload.detail || "Enterprise academy readiness active.";
+      break;
+    default:
+      next.nextAction = payload.detail || next.nextAction;
+      break;
+  }
+
+  return next;
+}
 
 app.http("customer-academy-action", {
   methods: ["POST"],
@@ -24,6 +50,15 @@ app.http("customer-academy-action", {
       };
     }
 
+    const nextState = updateCustomerState(auth.session, (current) => ({
+      ...current,
+      academy: applyAcademyAction(current.academy || {}, payload),
+      auricrux: {
+        ...current.auricrux,
+        nextRecommendedAction: payload.detail || current.auricrux?.nextRecommendedAction,
+      },
+    }));
+
     return {
       status: 200,
       jsonBody: {
@@ -35,7 +70,9 @@ app.http("customer-academy-action", {
         company: auth.session.company,
         action: payload.action,
         detail: payload.detail || "Academy workflow action accepted.",
-        executionMode: "protected-backend-starter",
+        academy: nextState.academy,
+        persistence: nextState.meta,
+        executionMode: "protected-backend-persistence-starter",
         timestamp: new Date().toISOString(),
       },
     };

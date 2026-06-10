@@ -1,6 +1,7 @@
 import { app } from "@azure/functions";
 import { resolveAuthenticatedSession } from "./lib/auth/requestAuth.js";
 import { requireProductEntitlement } from "./lib/auth/entitlements.js";
+import { readCustomerState } from "./lib/persistence/customerStateStore.js";
 
 app.http("customer-auricrux-guidance", {
   methods: ["GET"],
@@ -17,28 +18,17 @@ app.http("customer-auricrux-guidance", {
       return entitlement.response;
     }
 
+    const state = readCustomerState(auth.session);
+
     return {
       status: 200,
       jsonBody: {
         ok: true,
         surface: "auricrux",
-        customer: {
-          customerId: auth.session.sub,
-          company: auth.session.company,
-          role: auth.session.role,
-        },
-        guidance: {
-          executiveMode: "continuity-active",
-          nextRecommendedAction: "Advance project blockers, preserve file evidence, and carry plan-backed execution into billing and training.",
-          currentBlocker: "Permit dependency remains the highest leverage blocker.",
-          commandDeck: [
-            "open-projects",
-            "review-files",
-            "check-billing-readiness",
-            "assign-academy-follow-through",
-          ],
-        },
+        customer: state.customer,
+        guidance: state.auricrux,
         entitlements: auth.session.enabledProducts,
+        persistence: state.meta,
         timestamp: new Date().toISOString(),
       },
     };
