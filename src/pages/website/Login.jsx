@@ -31,6 +31,7 @@ Open Seeded Login URL
 Instant Platform Access
 Launch-ready single-user company account
 Use Launch Account
+workspace entry routes customers into the unified FCA shell for estimating visibility, project delivery, document control, billing follow-through, academy continuity, communications routing, and guided next steps
 */
 
 const fieldStyle = {
