@@ -4,6 +4,7 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useCustomerAuthState from "../../hooks/useCustomerAuthState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { routeStateOverlays } from "../../systemState";
 import { pricingPlanOptions } from "../../pricingPlans";
@@ -53,9 +54,17 @@ const commsCards = [
   { key: "lecture", title: "Lecture", description: "Academy-led instruction and rollout delivery.", href: "/portal/messages#lecture", ctaLabel: "Open Lecture Lane" },
 ];
 
+function resolveLaunchReadiness(accountSource, authBoundary) {
+  if (authBoundary?.productionAuthReady) return "Production-backed login active";
+  if (accountSource === "api") return "Sandbox server-session active";
+  if (accountSource === "local-fallback") return "Seeded launch/test login active";
+  return "Shell continuity mode";
+}
+
 export default function PortalProfile() {
   const { session, isAuthenticated, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const { state: authState, meta: authMeta } = useCustomerAuthState();
 
   useEffect(() => {
     refreshSyncStamp("Persisted customer profile state active");
@@ -71,11 +80,7 @@ export default function PortalProfile() {
   const customerId = session?.customerId || "CUST-FCA-LIVE-001";
   const selectedPlan = session?.selectedPlan || "startup";
   const accountSource = session?.accountSource || "workspace-shell";
-  const launchReadiness = accountSource === "api"
-    ? "Production-backed login active"
-    : accountSource === "local-fallback"
-      ? "Seeded launch/test login active"
-      : "Shell continuity mode";
+  const launchReadiness = resolveLaunchReadiness(accountSource, authState.authBoundary);
 
   function toggleProduct(productKey, enabled) {
     setProductAccess(productKey, !enabled);
@@ -147,6 +152,18 @@ export default function PortalProfile() {
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
+        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Authentication truth boundary</div>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Production auth ready:</strong> {authState.authBoundary?.productionAuthReady ? "Yes" : "No"}</div>
+          <div><strong>Active mode:</strong> {authState.authBoundary?.activeMode || "Unknown"}</div>
+          <div><strong>Identity provider:</strong> {authState.authBoundary?.identityProvider || "Unknown"}</div>
+          <div><strong>Validation:</strong> {authState.authBoundary?.sessionValidation || "Unknown"}</div>
+          <div><strong>Status message:</strong> {authState.message}</div>
+          <div><strong>Auth state source:</strong> {authMeta.backingSource}</div>
         </div>
       </div>
 
