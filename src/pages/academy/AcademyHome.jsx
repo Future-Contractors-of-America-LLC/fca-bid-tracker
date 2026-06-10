@@ -14,6 +14,7 @@ import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel"
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
+import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
@@ -72,20 +73,7 @@ export default function AcademyHome() {
         currentJourney="academy"
       />
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 16,
-          flexWrap: "wrap",
-          alignItems: "center",
-          marginBottom: 18,
-          padding: "14px 16px",
-          border: "1px solid #dbe3ef",
-          borderRadius: 18,
-          background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)",
-        }}
-      >
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 18, padding: "14px 16px", border: "1px solid #dbe3ef", borderRadius: 18, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
         <FcaBrandMark compact />
         <AuricruxBrandMark compact />
       </div>
@@ -106,6 +94,8 @@ export default function AcademyHome() {
         applyPlanPreset={applyPlanPreset}
         refreshSyncStamp={refreshSyncStamp}
       />
+
+      <AcademyLmsControlPanel />
 
       <div style={{ marginBottom: 24 }}>
         <AuricruxCommsPanel
