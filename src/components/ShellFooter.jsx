@@ -1,5 +1,3 @@
-import AuricruxBrandMark from "./AuricruxBrandMark";
-import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import DeploymentStatusBeacon from "./DeploymentStatusBeacon";
 import FcaBrandMark from "./FcaBrandMark";
 import {
@@ -48,22 +46,17 @@ const continuityLinks = [
   {
     href: "/live-shell-verification.html",
     label: "Open raw live verification",
-    detail: "Bypass the React shell and inspect the hosted verification artifact directly.",
+    detail: "Inspect the hosted verification artifact directly when validating runtime truth.",
   },
   {
-    href: "/login?seeded=1",
-    label: "Open seeded login",
-    detail: "Start a guided public test-account flow without needing manual credential entry.",
+    href: "/contact",
+    label: "Request guided onboarding",
+    detail: "Route prospects into a credible onboarding path instead of an internal testing path.",
   },
   {
-    href: "/login?seeded=1&autologin=1&next=/portal/platform",
-    label: "Open direct platform workspace",
-    detail: "Jump directly into the authenticated platform route for live walkthrough and revenue demos.",
-  },
-  {
-    href: "/api/customer-login",
-    label: "Open customer login API",
-    detail: "Confirm the Static Web App Functions surface is reachable from the public host.",
+    href: "/portal/platform",
+    label: "Open platform workspace",
+    detail: "Move directly into the canonical FCA portal experience.",
   },
 ];
 
@@ -76,19 +69,6 @@ export default function ShellFooter() {
         borderTop: "1px solid #e5e7eb",
       }}
     >
-      <div style={{ marginBottom: 18 }}>
-        <AuricruxPresenceLayer
-          surfaceLabel="Auricrux embedded in footer"
-          title="Auricrux now anchors the close of every shell layer"
-          detail="The footer no longer ends as passive navigation only. Auricrux remains active at the bottom of the experience so the user exits every route with live operational guidance."
-          primaryHref="/portal/platform"
-          primaryLabel="Open Platform Dashboard"
-          secondaryHref="/academy"
-          secondaryLabel="Open Academy"
-          compact
-        />
-      </div>
-
       <div
         style={{
           display: "grid",
@@ -100,15 +80,13 @@ export default function ShellFooter() {
         <div>
           <div style={{ display: "grid", gap: 14, marginBottom: 14 }}>
             <FcaBrandMark compact />
-            <AuricruxBrandMark compact />
           </div>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>
             FCA Customer Journey
           </div>
           <div style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Use this shell to explore the full contractor lifecycle: public entry,
-            platform framing, workspace visibility, academy enablement, and
-            Auricrux-guided next actions.
+            Explore the contractor lifecycle through public entry, platform framing, workspace visibility,
+            academy enablement, and guided next actions.
           </div>
         </div>
 
@@ -133,8 +111,7 @@ export default function ShellFooter() {
         <div>
           <div style={{ fontWeight: 700, marginBottom: 8 }}>Compatibility Routes</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            Legacy customer intake and status surfaces remain available for continuity,
-            but the canonical FCA shell routes above should be used first.
+            Legacy intake and status surfaces remain available for continuity, but canonical FCA shell routes should be used first.
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {shellCompatibilityRoutes.map((item) => (
@@ -144,11 +121,9 @@ export default function ShellFooter() {
         </div>
 
         <div>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Continuity Launchpad</div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Verification and Access</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            When the public shell looks stale, use these routes to verify hosted artifacts,
-            authenticate into the demo workspace faster, and confirm function continuity
-            without relying on deeper navigation.
+            Use these routes to validate runtime truth, request onboarding, or enter the canonical portal path.
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {continuityLinks.map((item) => (
@@ -173,8 +148,7 @@ export default function ShellFooter() {
         <div>
           <div style={{ fontWeight: 700, marginBottom: 8 }}>Recommended Next Actions</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            Every public route closes on the same clear actions: open workspace,
-            review platform state, or schedule a guided walkthrough.
+            Every route should close on a clear action: open workspace, review platform state, or schedule a guided walkthrough.
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             {shellProductionActions.map((action) => (

@@ -7,7 +7,6 @@ import {
 } from "../customerSession";
 import { navigateTo } from "../navigation";
 import { portalModules, workspaceContext as systemWorkspaceContext } from "../systemState";
-import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext } from "../workspaceState";
 import { publicActionCatalog } from "../websiteShell";
 
 const navShellStyle = {
@@ -17,9 +16,6 @@ const navShellStyle = {
   padding: "14px 16px",
   marginBottom: 20,
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.05)",
-  position: "sticky",
-  top: 12,
-  zIndex: 30,
 };
 
 const utilityLinkStyle = {
@@ -127,12 +123,11 @@ function isActivePath(currentPath, href) {
 
 function resolveRouteCue(pathname, mode) {
   if (mode === "portal") {
-    if (pathname.startsWith("/portal/projects")) return `Project continuity active · ${currentProject.id}`;
-    if (pathname.startsWith("/portal/messages")) return `Message continuity active · ${portalMessages.length} active threads`;
-    if (pathname.startsWith("/portal/notifications")) return "Notification continuity active";
+    if (pathname.startsWith("/portal/projects")) return "Project continuity active";
+    if (pathname.startsWith("/portal/messages")) return "Communications continuity active";
     if (pathname.startsWith("/portal/billing")) return "Revenue continuity active";
     if (pathname.startsWith("/portal/academy")) return "Academy continuity active";
-    return `Workspace continuity active · ${currentProject.id}`;
+    return "Workspace continuity active";
   }
 
   if (pathname === "/platform") return "Platform framing active";
@@ -157,7 +152,6 @@ export default function PublicTopNav({ mode = "public" }) {
       ? "Portal workspace"
       : "Future Contractors of America";
   const routeCue = resolveRouteCue(currentPath, mode);
-  const continuityStamp = projectAuditEvents[projectAuditEvents.length - 1]?.time || "Active";
   const actionHref = session?.authenticated ? workspaceHref : loginHref;
   const actionLabel = session?.authenticated ? "Open Workspace" : "Customer Login";
   const internalQuickLinks = [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace];
@@ -186,8 +180,8 @@ export default function PublicTopNav({ mode = "public" }) {
           <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.5 }}>
             {mode === "portal" ? systemWorkspaceContext.currentNextAction : "Construction operating system"}
           </div>
-          <div style={{ color: "#94a3b8", fontSize: 11, lineHeight: 1.5, marginTop: 4 }}>
-            {routeCue} · {workspaceContext.currentNextAction} · {currentProject.id} · {auricruxRail.nextRecommendedAction} · {continuityStamp}
+          <div style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.5, marginTop: 4 }}>
+            {routeCue}
           </div>
         </div>
 
@@ -230,7 +224,7 @@ export default function PublicTopNav({ mode = "public" }) {
                 key={item.href}
                 href={item.href}
                 style={isActivePath(currentPath, item.href) ? activeUtilityLinkStyle : utilityLinkStyle}
-                title={`${item.label} · ${currentProject.id}`}
+                title={item.description}
               >
                 {item.label}
               </a>
@@ -240,7 +234,6 @@ export default function PublicTopNav({ mode = "public" }) {
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             {showInternalLinks
               ? internalQuickLinks.map((item) => {
-                  if (item.href === "/portal/notifications") return portalMessages.length + 2;
                   const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;
                   return (
                     <a key={item.href} href={resolvedHref} style={utilityLinkStyle}>{item.label}</a>
