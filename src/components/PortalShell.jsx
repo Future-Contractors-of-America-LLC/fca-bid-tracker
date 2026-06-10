@@ -8,6 +8,7 @@ import FcaBrandMark from "./FcaBrandMark";
 import AuricruxBrandMark from "./AuricruxBrandMark";
 import ExecutiveSignalBar from "./ExecutiveSignalBar";
 import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
+import AuricruxNavHint from "./AuricruxNavHint";
 import CustomerSessionBar from "./CustomerSessionBar";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
@@ -159,14 +160,16 @@ export default function PortalShell({
           {portalModules.map((module) => {
             const isActive = module.href === activeHref;
             return (
-              <a
-                key={module.href}
-                href={module.href}
-                style={isActive ? activeRouteTabStyle : routeTabStyle}
-                title={module.description}
-              >
-                {module.label}
-              </a>
+              <div key={module.href} style={{ display: "grid", gap: 6 }}>
+                <a
+                  href={module.href}
+                  style={isActive ? activeRouteTabStyle : routeTabStyle}
+                  title={module.description}
+                >
+                  {module.label}
+                </a>
+                <AuricruxNavHint item={module} />
+              </div>
             );
           })}
         </nav>

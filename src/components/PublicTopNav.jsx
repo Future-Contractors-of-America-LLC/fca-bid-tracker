@@ -7,6 +7,7 @@ import {
 } from "../customerSession";
 import { navigateTo } from "../navigation";
 import { portalModules, workspaceContext } from "../systemState";
+import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext as workspaceStateContext } from "../workspaceState";
 
 const navShellStyle = {
   border: "1px solid #dbe3ef",
@@ -71,23 +72,35 @@ const secondaryButtonStyle = {
   border: "1px solid #cbd5e1",
 };
 
-const publicPrimaryLinks = [
-  { label: "Home", href: "/" },
-  { label: "Platform", href: "/platform" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Academy", href: "/academy" },
-  { label: "Contact", href: "/contact" },
+const publicNavGroups = [
+  {
+    key: "public-primary",
+    label: "Public",
+    items: [
+      { label: "Home", href: "/" },
+      { label: "Platform", href: "/platform" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Academy", href: "/academy" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
 ];
 
-const portalPrimaryLinks = [
-  { label: "Dashboard", href: "/portal/platform" },
-  { label: "Projects", href: "/portal/projects" },
-  { label: "Bids", href: "/portal/bids" },
-  { label: "Files", href: "/portal/files" },
-  { label: "Messages", href: "/portal/messages" },
-  { label: "Billing", href: "/portal/billing" },
-  { label: "Academy", href: "/portal/academy" },
-  { label: "Support", href: "/portal/support" },
+const portalNavGroups = [
+  {
+    key: "portal-primary",
+    label: "Portal",
+    items: [
+      { label: "Dashboard", href: "/portal/platform" },
+      { label: "Projects", href: "/portal/projects" },
+      { label: "Bids", href: "/portal/bids" },
+      { label: "Files", href: "/portal/files" },
+      { label: "Messages", href: "/portal/messages" },
+      { label: "Billing", href: "/portal/billing" },
+      { label: "Academy", href: "/portal/academy" },
+      { label: "Support", href: "/portal/support" },
+    ],
+  },
 ];
 
 function normalizePath(value) {
@@ -102,22 +115,42 @@ function isActivePath(currentPath, href) {
   return normalizedCurrent === normalizedHref;
 }
 
+function resolveRouteCue(pathname, mode) {
+  if (mode === "portal") {
+    if (pathname.startsWith("/portal/projects")) return `Project continuity active · ${currentProject.id}`;
+    if (pathname.startsWith("/portal/messages")) return `Message continuity active · ${portalMessages.length} active threads`;
+    if (pathname.startsWith("/portal/billing")) return "Revenue continuity active";
+    if (pathname.startsWith("/portal/academy")) return "Academy continuity active";
+    return `Workspace continuity active · ${currentProject.id}`;
+  }
+
+  if (pathname === "/platform") return "Platform framing active";
+  if (pathname === "/pricing") return "Commercial rollout active";
+  if (pathname === "/academy") return "Academy continuity active";
+  if (pathname === "/contact") return "Guided contact route active";
+  if (pathname === "/login") return "Customer login route active";
+  return "Public shell entry active";
+}
+
 export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
   const currentPath = typeof window === "undefined" ? "/" : normalizePath(window.location.pathname);
   const loginHref = resolveLoginHref();
   const workspaceHref = resolveWorkspaceEntryHref(session, "/portal/platform");
   const profileHref = resolveProfileHref(session);
-  const primaryLinks = mode === "portal" ? portalPrimaryLinks : publicPrimaryLinks;
+  const navGroups = mode === "portal" ? portalNavGroups : publicNavGroups;
+  const primaryLinks = navGroups[0]?.items || [];
   const workspaceLabel = session?.authenticated
     ? session.workspaceLabel || session.company
     : mode === "portal"
       ? "Portal workspace"
       : "Future Contractors of America";
+  const routeCue = resolveRouteCue(currentPath, mode);
+  const continuityStamp = projectAuditEvents[projectAuditEvents.length - 1]?.time || "Active";
 
   function handleLogout(event) {
     event.preventDefault();
-    clearCustomerSession();
+    clearCustomerSession({ server: true });
     navigateTo(loginHref);
   }
 
@@ -137,6 +170,9 @@ export default function PublicTopNav({ mode = "public" }) {
           <div style={{ fontWeight: 800, color: "#111827", marginBottom: 4 }}>{workspaceLabel}</div>
           <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.5 }}>
             {mode === "portal" ? workspaceContext.currentNextAction : "Construction operating system"}
+          </div>
+          <div style={{ color: "#94a3b8", fontSize: 11, lineHeight: 1.5, marginTop: 4 }}>
+            {routeCue} · {workspaceStateContext.currentNextAction} · {currentProject.id} · {auricruxRail.nextRecommendedAction} · {continuityStamp}
           </div>
         </div>
 
@@ -179,6 +215,7 @@ export default function PublicTopNav({ mode = "public" }) {
                 key={item.href}
                 href={item.href}
                 style={isActivePath(currentPath, item.href) ? activeUtilityLinkStyle : utilityLinkStyle}
+                title={`${item.label} · ${currentProject.id}`}
               >
                 {item.label}
               </a>
