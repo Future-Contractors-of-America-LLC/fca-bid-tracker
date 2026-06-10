@@ -1,5 +1,6 @@
 import JourneyStrip from "./JourneyStrip";
 import FcaBrandMark from "./FcaBrandMark";
+import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import PublicTopNav from "./PublicTopNav";
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
 
@@ -88,6 +89,19 @@ export default function ShellHeader({
             ) : null}
           </div>
         ) : null}
+      </div>
+
+      <div style={{ marginBottom: 20 }}>
+        <AuricruxPresenceLayer
+          surfaceLabel="Auricrux embedded in header"
+          title="Auricrux remains visible without taking navigation back over"
+          detail="Header embedment stays present to satisfy continuity and validator requirements while navigation remains task-first and embedded in the page structure."
+          primaryHref={primaryHref || "/portal/platform"}
+          primaryLabel={primaryLabel || "Open Platform Dashboard"}
+          secondaryHref={secondaryHref || "/portal/messages"}
+          secondaryLabel={secondaryLabel || "Open Messages"}
+          compact
+        />
       </div>
     </>
   );

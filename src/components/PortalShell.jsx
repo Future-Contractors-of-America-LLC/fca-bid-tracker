@@ -7,6 +7,7 @@ import RouteStateOverlay from "./RouteStateOverlay";
 import FcaBrandMark from "./FcaBrandMark";
 import AuricruxBrandMark from "./AuricruxBrandMark";
 import ExecutiveSignalBar from "./ExecutiveSignalBar";
+import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
 import CustomerSessionBar from "./CustomerSessionBar";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import { executiveSignalCtaSets, portalShellCtas } from "../websiteShell";
@@ -127,6 +128,19 @@ export default function PortalShell({
         <AuricruxStatusRail project={resolvedState.project} rail={resolvedState.auricrux} />
         <RouteStateOverlay overlay={routeOverlay} />
         <ExecutiveSignalBar mode="portal" nextHref={executiveSignalCtaSets.portal.href} nextLabel={executiveSignalCtaSets.portal.label} />
+
+        <div style={{ marginBottom: 20 }}>
+          <AuricruxPresenceLayer
+            surfaceLabel="Auricrux embedded in portal shell"
+            title="Auricrux remains embedded while portal navigation stays simpler"
+            detail={routeOverlay ? `${routeOverlay.summary} ${routeOverlay.auricruxDetail}` : "Auricrux remains embedded in the portal shell while the page keeps task-first embedded navigation instead of heavy overlay navigation."}
+            primaryHref={primaryHref}
+            primaryLabel={primaryLabel}
+            secondaryHref={executiveSignalCtaSets.portal.href}
+            secondaryLabel={executiveSignalCtaSets.portal.label}
+            compact
+          />
+        </div>
 
         <div style={bannerStyle}>
           <div>
