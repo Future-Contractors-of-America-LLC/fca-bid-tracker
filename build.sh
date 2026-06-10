@@ -49,12 +49,28 @@ echo "<html>api audit</html>" > dist/api-continuity-audit.html
 
 touch dist/commit-witness-1.txt
 
-echo "{}" > api/package.json
-echo "{}" > api/host.json
-echo "module.exports = async function (context, req) {
+cat > api/run-task.js << 'JS'
+module.exports = async function (context, req) {
   context.res = {
     status: 200,
-    body: 'Proxy working'
+    headers: { "Content-Type": "application/json" },
+    body: {
+      message: "Proxy is working",
+      timestamp: new Date().toISOString(),
+      system: "FCA control loop active"
+    }
   };
+};
+JS
+
+cat > api/host.json << 'JS'
+{
+  "version": "2.0"
+}
+JS
+
+echo "{}" > api/package.json
+echo "{}" > api/customer-login.js
+echo "{}" > api/auricrux.js
 
 echo "Build completed"
