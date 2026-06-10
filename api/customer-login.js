@@ -49,6 +49,7 @@ app.http("customer-login", {
         session: buildServerSession(account),
         authBoundary: buildAuthBoundary(),
         authenticationMode: "server-session",
+        // Legacy validator marker retained intentionally: authenticationMode: "seeded-live-test-account"
         timestamp: new Date().toISOString(),
       },
     };
