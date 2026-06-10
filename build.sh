@@ -56,6 +56,5 @@ echo "module.exports = async function (context, req) {
     status: 200,
     body: 'Proxy working'
   };
-};" > api/run-task.js
 
 echo "Build completed"
