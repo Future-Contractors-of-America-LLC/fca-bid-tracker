@@ -1,5 +1,6 @@
 import { app } from "@azure/functions";
 import { resolveSeededCustomerAccount } from "../src/customerAccounts.js";
+import { buildAuthBoundary, buildSandboxSession } from "./auth-boundary.js";
 
 app.http("customer-login", {
   methods: ["POST"],
@@ -16,6 +17,7 @@ app.http("customer-login", {
         jsonBody: {
           ok: false,
           error: "A valid JSON payload is required.",
+          authBoundary: buildAuthBoundary(),
         },
       };
     }
@@ -28,6 +30,7 @@ app.http("customer-login", {
         jsonBody: {
           ok: false,
           error: "The customer email or password is invalid.",
+          authBoundary: buildAuthBoundary(),
         },
       };
     }
@@ -37,6 +40,10 @@ app.http("customer-login", {
       jsonBody: {
         ok: true,
         account,
+        session: buildSandboxSession(account),
+        authBoundary: buildAuthBoundary({
+          sessionValidation: "seeded-sandbox",
+        }),
         authenticationMode: "seeded-live-test-account",
         timestamp: new Date().toISOString(),
       },

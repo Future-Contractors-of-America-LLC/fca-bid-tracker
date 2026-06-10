@@ -1,5 +1,14 @@
 export const CUSTOMER_SESSION_KEY = "fca_customer_session_v1";
 
+const DEFAULT_AUTH_BOUNDARY = {
+  productionAuthReady: false,
+  activeMode: "sandbox-seeded-validation",
+  identityProvider: "not-configured",
+  tenantIsolation: "planned",
+  sessionValidation: "local-shell-only",
+  nextBuildStep: "Deploy tenant-backed identity, secure session validation, and role enforcement.",
+};
+
 function normalizeEnabledProducts(enabledProducts) {
   return {
     saas: enabledProducts?.saas !== false,
@@ -20,6 +29,13 @@ function normalizeEnabledComms(enabledComms) {
   };
 }
 
+function normalizeAuthBoundary(authBoundary) {
+  return {
+    ...DEFAULT_AUTH_BOUNDARY,
+    ...(authBoundary || {}),
+  };
+}
+
 export function readCustomerSession() {
   if (typeof window === "undefined") return null;
 
@@ -35,6 +51,7 @@ export function readCustomerSession() {
       customerId: parsed.customerId || "CUST-FCA-LIVE-001",
       selectedPlan: parsed.selectedPlan || "startup",
       accountSource: parsed.accountSource || "workspace-shell",
+      authBoundary: normalizeAuthBoundary(parsed.authBoundary),
       enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
       enabledComms: normalizeEnabledComms(parsed.enabledComms),
     };
@@ -57,6 +74,7 @@ export function writeCustomerSession(session) {
     nextHref: session.nextHref || "/portal/platform",
     selectedPlan: session.selectedPlan || "startup",
     accountSource: session.accountSource || "workspace-shell",
+    authBoundary: normalizeAuthBoundary(session.authBoundary),
     enabledProducts: normalizeEnabledProducts(session.enabledProducts),
     enabledComms: normalizeEnabledComms(session.enabledComms),
   };
@@ -77,6 +95,10 @@ export function updateCustomerSession(updates = {}) {
   return writeCustomerSession({
     ...currentSession,
     ...updates,
+    authBoundary: normalizeAuthBoundary({
+      ...currentSession.authBoundary,
+      ...updates.authBoundary,
+    }),
     enabledProducts: normalizeEnabledProducts({
       ...currentSession.enabledProducts,
       ...updates.enabledProducts,
@@ -118,7 +140,11 @@ export function hasCustomerProductAccess(session, pathname = "/") {
 }
 
 export function resolveLoginHref() {
-  return "/login?seeded=1";
+  return "/login";
+}
+
+export function resolveSandboxLoginHref(next = "/portal/platform") {
+  return `/login?seeded=1&next=${encodeURIComponent(next)}`;
 }
 
 export function resolveProfileHref(session = readCustomerSession()) {

@@ -99,6 +99,7 @@ export default function useCustomerSession() {
         customerId,
         workspaceLabel,
         accountSource = "workspace-shell",
+        authBoundary,
       }) {
         const normalizedEmail = (email || "").trim().toLowerCase();
         const normalizedCompany = (company || "").trim();
@@ -130,6 +131,7 @@ export default function useCustomerSession() {
           lastLoginAt: new Date().toISOString(),
           selectedPlan: planPreset.key,
           accountSource,
+          authBoundary,
           enabledProducts: normalizedProducts,
           enabledComms: normalizedComms,
         });
