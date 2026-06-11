@@ -33,6 +33,8 @@ The governing source of truth is in `Future-Contractors-of-America-LLC/auricrux-
 3. New UX work should prefer shared components, shared state, and route continuity over isolated page edits
 4. Product changes should move toward Project / File / Audit spine completeness rather than disconnected features
 5. Auricrux should remain embedded as operating intelligence without degrading usability
+6. Mixed persistence modes must be disclosed truthfully; local workflow continuity is not the same as canonical bounded persistence
+7. Project/job shell behavior should align to the Phase 2 bounded persistence lane in `auricrux-bid-api-node` without breaking customer-facing continuity during migration
 
 ## Immediate Continuity Priorities
 
@@ -43,6 +45,7 @@ The highest-value continuity work in this repo remains:
 - file/evidence surface readiness
 - academy linkage from operational next actions
 - customer-visible continuity across messages, billing, support, and platform state
+- project persistence authority alignment between shell continuity and bounded API truth
 
 ## Execution Guard
 
