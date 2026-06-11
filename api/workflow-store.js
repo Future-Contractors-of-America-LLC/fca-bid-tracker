@@ -71,8 +71,44 @@ function normalizeProjectRecord(project = {}, index = 0) {
   };
 }
 
-function normalizeFileRecord(file = {}, index = 0) {
+function normalizeBriefingRecord(briefing = {}, file = {}) {
+  if (!briefing && !file.briefingTitle && !file.briefingSummary) return null;
+
   return {
+    title: briefing?.title || file.briefingTitle || `Auricrux Briefing — ${file.name || "Governed file"}`,
+    summary:
+      briefing?.summary ||
+      file.briefingSummary ||
+      file.note ||
+      `Auricrux generated a governed briefing for ${file.name || "this file"}.`,
+    generatedAt: briefing?.generatedAt || file.briefingGeneratedAt || file.updated || new Date().toISOString(),
+    generatedBy: briefing?.generatedBy || file.briefingGeneratedBy || "Auricrux",
+    keyFacts: Array.isArray(briefing?.keyFacts)
+      ? briefing.keyFacts
+      : Array.isArray(file.briefingKeyFacts)
+        ? file.briefingKeyFacts
+        : [
+            `${file.category || "Document"} artifact attached to ${file.ownerObjectId || "the active project root"}.`,
+            `${file.discipline || "Document Control"} continuity remains linked to governed evidence routing.`,
+          ],
+    detectedGaps: Array.isArray(briefing?.detectedGaps)
+      ? briefing.detectedGaps
+      : Array.isArray(file.briefingDetectedGaps)
+        ? file.briefingDetectedGaps
+        : ["Downstream estimate, schedule, and approval dependencies should be confirmed before advancing execution state."],
+    recommendedNextActions: Array.isArray(briefing?.recommendedNextActions)
+      ? briefing.recommendedNextActions
+      : Array.isArray(file.briefingRecommendedNextActions)
+        ? file.briefingRecommendedNextActions
+        : [
+            `Confirm ${file.name || "this file"} is linked to the correct governed evidence target.`,
+            `Use this briefing to advance ${file.ownerObjectId || "the active project"} without breaking continuity.`,
+          ],
+  };
+}
+
+function normalizeFileRecord(file = {}, index = 0) {
+  const normalized = {
     fileId: file.fileId || `FILE-${index + 1}`,
     ownerObjectType: file.ownerObjectType || "Project",
     ownerObjectId: file.ownerObjectId || "PRJ-A117",
@@ -87,7 +123,17 @@ function normalizeFileRecord(file = {}, index = 0) {
     status: file.status || "Active",
     owner: file.owner || "Unassigned",
     note: file.note || "Workflow-backed file record active.",
+    briefingTitle: file.briefingTitle || null,
+    briefingSummary: file.briefingSummary || null,
+    briefingGeneratedAt: file.briefingGeneratedAt || null,
+    briefingGeneratedBy: file.briefingGeneratedBy || null,
+    briefingKeyFacts: Array.isArray(file.briefingKeyFacts) ? file.briefingKeyFacts : [],
+    briefingDetectedGaps: Array.isArray(file.briefingDetectedGaps) ? file.briefingDetectedGaps : [],
+    briefingRecommendedNextActions: Array.isArray(file.briefingRecommendedNextActions) ? file.briefingRecommendedNextActions : [],
   };
+
+  normalized.briefing = normalizeBriefingRecord(file.briefing, normalized);
+  return normalized;
 }
 
 function normalizeAuditEvent(event = {}, index = 0) {
@@ -228,6 +274,47 @@ function touchProjectForFileMutation(workflow, projectId, detail) {
   return updatedProject;
 }
 
+function buildBriefingPayload(file, projectId, payload = {}) {
+  const title = payload.briefingTitle || `Auricrux Briefing — ${file.name}`;
+  const summary = payload.briefingSummary || payload.detail || `Auricrux generated a governed briefing for ${file.name} under ${projectId}.`;
+  const keyFacts = Array.isArray(payload.briefingKeyFacts) && payload.briefingKeyFacts.length
+    ? payload.briefingKeyFacts
+    : [
+        `${file.category || "Document"} artifact linked to ${projectId}.`,
+        `${file.discipline || "Document Control"} continuity preserved through the governed file spine.`,
+      ];
+  const detectedGaps = Array.isArray(payload.briefingDetectedGaps) && payload.briefingDetectedGaps.length
+    ? payload.briefingDetectedGaps
+    : [
+        "Confirm downstream estimate, schedule, and approval dependencies before advancing execution state.",
+      ];
+  const recommendedNextActions = Array.isArray(payload.briefingRecommendedNextActions) && payload.briefingRecommendedNextActions.length
+    ? payload.briefingRecommendedNextActions
+    : [
+        `Link ${file.name} to the correct governed evidence target if not already confirmed.`,
+        `Use this briefing to guide the next action for ${projectId}.`,
+      ];
+
+  return {
+    briefingTitle: title,
+    briefingSummary: summary,
+    briefingGeneratedAt: new Date().toISOString(),
+    briefingGeneratedBy: "Auricrux",
+    briefingKeyFacts: keyFacts,
+    briefingDetectedGaps: detectedGaps,
+    briefingRecommendedNextActions: recommendedNextActions,
+    briefing: {
+      title,
+      summary,
+      generatedAt: new Date().toISOString(),
+      generatedBy: "Auricrux",
+      keyFacts,
+      detectedGaps,
+      recommendedNextActions,
+    },
+  };
+}
+
 export function listBids(tenantId) {
   return clone(getTenantWorkflow(tenantId).bids);
 }
@@ -261,7 +348,18 @@ export function listFiles(tenantId, options = {}) {
 
   if (normalizedQuery) {
     items = items.filter((file) => {
-      const haystack = [file.name, file.category, file.status, file.owner, file.discipline, file.linkedEvidenceTarget, file.note]
+      const haystack = [
+        file.name,
+        file.category,
+        file.status,
+        file.owner,
+        file.discipline,
+        file.linkedEvidenceTarget,
+        file.note,
+        file.briefingTitle,
+        file.briefingSummary,
+        ...(Array.isArray(file.briefingKeyFacts) ? file.briefingKeyFacts : []),
+      ]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
@@ -317,6 +415,7 @@ export function getWorkflowSummary(tenantId) {
     bidCount: workflow.bids.length,
     projectCount: workflow.projects.length,
     fileCount: workflow.files.length,
+    briefingCount: workflow.files.filter((file) => file.briefing || file.briefingTitle || file.briefingSummary).length,
     auditCount: workflow.audit.length,
     updatedAt: workflow.updatedAt,
   });
@@ -741,8 +840,10 @@ export function mutateFile(tenantId, action, payload = {}) {
       break;
     }
     case "create-briefing": {
+      const briefingPayload = buildBriefingPayload(currentFile, currentFile.ownerObjectId, payload);
       updatedFile = normalizeFileRecord({
         ...currentFile,
+        ...briefingPayload,
         evidenceStatus: payload.evidenceStatus || "Briefing generated",
         status: payload.status || "Auricrux briefing ready",
         action: payload.actionLabel || "Open briefing",

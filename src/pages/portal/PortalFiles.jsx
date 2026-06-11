@@ -66,6 +66,27 @@ function isBriefingReady(file = {}) {
   return haystack.includes("briefing");
 }
 
+function buildBriefingMutation(file, visibleProject) {
+  return {
+    evidenceStatus: "Briefing generated",
+    status: "Auricrux briefing ready",
+    actionLabel: "Open briefing",
+    briefingTitle: `Auricrux Briefing — ${file.name}`,
+    briefingSummary: `Auricrux generated a governed briefing placeholder for ${file.name} under ${visibleProject.id}.`,
+    briefingKeyFacts: [
+      `${file.category || "Document"} artifact is attached to ${visibleProject.id}.`,
+      `${file.discipline || "Document Control"} continuity remains governed inside the active file spine.`,
+    ],
+    briefingDetectedGaps: [
+      "Confirm downstream estimate, schedule, and approval dependencies before execution state advances.",
+    ],
+    briefingRecommendedNextActions: [
+      `Confirm ${file.name} is linked to the correct governed evidence target for ${visibleProject.id}.`,
+      `Use this briefing artifact to support the next project action without breaking continuity.`,
+    ],
+  };
+}
+
 export default function PortalFiles() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
   const { activeProject, meta: projectMeta } = useProjectWorkspace();
@@ -374,11 +395,7 @@ export default function PortalFiles() {
           })
         }
         onCreateBriefing={(file) =>
-          handleFileAction(file, "create-briefing", `Auricrux generated a briefing placeholder for ${file.name} under ${visibleProject.id}.`, {
-            evidenceStatus: "Briefing generated",
-            status: "Auricrux briefing ready",
-            actionLabel: "Open briefing",
-          })
+          handleFileAction(file, "create-briefing", `Auricrux generated a briefing placeholder for ${file.name} under ${visibleProject.id}.`, buildBriefingMutation(file, visibleProject))
         }
       />
     </PortalShell>

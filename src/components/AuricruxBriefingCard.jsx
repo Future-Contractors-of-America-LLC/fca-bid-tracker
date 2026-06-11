@@ -20,11 +20,10 @@ const badgeStyle = {
 };
 
 function hasBriefing(file = {}) {
-  const status = `${file.status || ""} ${file.evidenceStatus || ""} ${file.action || ""}`.toLowerCase();
-  return status.includes("briefing");
+  return Boolean(file.briefing || file.briefingTitle || file.briefingSummary || `${file.status || ""} ${file.evidenceStatus || ""} ${file.action || ""}`.toLowerCase().includes("briefing"));
 }
 
-function buildRecommendedNextActions(file = {}, project = {}) {
+function fallbackBriefing(file = {}, project = {}) {
   const actions = [];
 
   if (!(file.linkedEvidenceTarget || "").trim()) {
@@ -47,17 +46,33 @@ function buildRecommendedNextActions(file = {}, project = {}) {
     actions.push(`Advance ${project.id || "the active project"} using this briefing as a governed evidence reference.`);
   }
 
-  return actions.slice(0, 3);
+  return {
+    title: file.briefingTitle || `Auricrux Briefing — ${file.name || "Governed file"}`,
+    summary:
+      file.briefingSummary ||
+      file.note ||
+      `Auricrux generated a governed briefing for ${file.name || "this file"} and attached it to ${project.id || "the active project root"}.`,
+    generatedAt: file.briefingGeneratedAt || file.updated,
+    generatedBy: file.briefingGeneratedBy || "Auricrux",
+    keyFacts: file.briefingKeyFacts?.length
+      ? file.briefingKeyFacts
+      : [
+          `${file.category || "Document"} artifact attached to ${project.id || file.ownerObjectId || "the active project root"}.`,
+          `${file.discipline || "Document Control"} continuity remains linked to governed evidence routing.`,
+        ],
+    detectedGaps: file.briefingDetectedGaps?.length
+      ? file.briefingDetectedGaps
+      : ["Downstream estimate, schedule, and approval dependencies should be confirmed before advancing execution state."],
+    recommendedNextActions: file.briefingRecommendedNextActions?.length
+      ? file.briefingRecommendedNextActions
+      : actions.slice(0, 3),
+  };
 }
 
 export default function AuricruxBriefingCard({ file, project }) {
   if (!hasBriefing(file)) return null;
 
-  const summary =
-    file.note ||
-    `Auricrux generated a governed briefing for ${file.name} and attached it to ${project.id || "the active project root"}.`;
-
-  const recommendedNextActions = buildRecommendedNextActions(file, project);
+  const briefing = file.briefing || fallbackBriefing(file, project);
 
   return (
     <div style={cardStyle}>
@@ -66,8 +81,12 @@ export default function AuricruxBriefingCard({ file, project }) {
         <div style={badgeStyle}>{file.evidenceStatus || "Briefing generated"}</div>
       </div>
 
-      <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 6 }}>{file.name}</div>
-      <div style={{ color: "#334155", lineHeight: 1.7 }}>{summary}</div>
+      <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 6 }}>{briefing.title}</div>
+      <div style={{ color: "#334155", lineHeight: 1.7 }}>{briefing.summary}</div>
+
+      <div style={{ color: "#64748b", fontSize: 13, marginTop: 8 }}>
+        Generated {briefing.generatedAt ? new Date(briefing.generatedAt).toLocaleString() : "recently"} by {briefing.generatedBy || "Auricrux"}
+      </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginTop: 12 }}>
         <div>
@@ -80,9 +99,28 @@ export default function AuricruxBriefingCard({ file, project }) {
           </div>
         </div>
         <div>
+          <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800, textTransform: "uppercase", marginBottom: 6 }}>Key facts</div>
+          <ul style={{ margin: 0, paddingLeft: 18, color: "#334155", lineHeight: 1.7 }}>
+            {(briefing.keyFacts || []).map((fact) => (
+              <li key={fact}>{fact}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginTop: 12 }}>
+        <div>
+          <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800, textTransform: "uppercase", marginBottom: 6 }}>Detected gaps</div>
+          <ul style={{ margin: 0, paddingLeft: 18, color: "#334155", lineHeight: 1.7 }}>
+            {(briefing.detectedGaps || []).map((gap) => (
+              <li key={gap}>{gap}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
           <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800, textTransform: "uppercase", marginBottom: 6 }}>Recommended next actions</div>
           <ul style={{ margin: 0, paddingLeft: 18, color: "#334155", lineHeight: 1.7 }}>
-            {recommendedNextActions.map((action) => (
+            {(briefing.recommendedNextActions || []).map((action) => (
               <li key={action}>{action}</li>
             ))}
           </ul>
