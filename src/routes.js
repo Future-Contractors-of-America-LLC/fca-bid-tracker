@@ -27,6 +27,7 @@ import PortalProfile from "./pages/portal/PortalProfile";
 import PortalAuricrux from "./pages/portal/PortalAuricrux";
 import PortalOperations from "./pages/portal/PortalOperations";
 import PortalOpportunityDetail from "./pages/portal/PortalOpportunityDetail";
+import PortalProjectDetail from "./pages/portal/PortalProjectDetail";
 
 import AcademyHome from "./pages/academy/AcademyHome";
 
@@ -68,6 +69,10 @@ export const routePatterns = [
   {
     pattern: "/portal/opportunities/:opportunityId",
     Page: PortalOpportunityDetail,
+  },
+  {
+    pattern: "/portal/projects/:projectId",
+    Page: PortalProjectDetail,
   },
 ];
 
