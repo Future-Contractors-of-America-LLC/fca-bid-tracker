@@ -6,6 +6,7 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
+import useOpportunityWorkspaceDetail from "../../hooks/useOpportunityWorkspaceDetail";
 import { publicBodyCtaSets } from "../../websiteShell";
 
 const cardStyle = {
@@ -36,9 +37,37 @@ function resolveOpportunityIdentity(requestedPath, routeParams, bids) {
 
 export default function PortalOpportunityDetail({ requestedPath, routeParams = {} }) {
   const { state } = useWorkspaceState();
-  const { bids, meta } = useBidWorkspace();
+  const { bids, meta: bidMeta } = useBidWorkspace();
   const { opportunityId, bid } = resolveOpportunityIdentity(requestedPath, routeParams, bids);
+  const { item, meta } = useOpportunityWorkspaceDetail(opportunityId, bid);
   const apiBacked = meta.backingSource === "api-workflow-store";
+
+  const visible = item || (bid
+    ? {
+        opportunityId: bid.id,
+        tenantId: state.tenant.id,
+        status: bid.status,
+        estimateSummary: {
+          estimateId: `EST-${bid.id}`,
+          status: bid.qualification?.status || "Discovery in progress",
+          versionCount: bid.status === "Qualified" || bid.status === "Won" ? 2 : 1,
+        },
+        fileSummary: {
+          total: 0,
+          linked: 0,
+          unlinked: 0,
+        },
+        conversionReadiness: {
+          canConvertToProject: Boolean(bid.linkedProjectId),
+          blockingReason: bid.linkedProjectId ? null : bid.blocker,
+        },
+        auricruxSummary: {
+          nextAction: bid.qualification?.nextGate || bid.nextCommercialMove,
+        },
+        serviceLine: "estimating",
+        projectIntent: bid.scopePackage,
+      }
+    : null);
 
   return (
     <PortalShell
@@ -53,18 +82,18 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
       <div style={{ marginBottom: 16 }}>
         <ExecutionTruthBanner
           title="Opportunity workspace shell is active"
-          status={apiBacked ? "API-backed read posture" : "Shell continuity active"}
-          source={meta.backingSource}
+          status={apiBacked ? "API-backed workspace read" : "Fallback shell continuity active"}
+          source={`workspace=${meta.backingSource} · bids=${bidMeta.backingSource}`}
           tone={apiBacked ? "info" : "warning"}
           whatIsLive={[
-            "A dynamic routed opportunity workspace now exists at /portal/opportunities/:opportunityId.",
-            "Opportunity identity is resolved from the route and tied to current bid/preconstruction continuity state.",
-            "Estimate readiness, commercial posture, and downstream project-conversion framing are visible in one place.",
+            "A dynamic routed opportunity workspace exists at /portal/opportunities/:opportunityId.",
+            "The route now prefers a canonical backend workspace read for opportunity detail.",
+            "Estimate readiness, file summary posture, and conversion readiness are grouped into one opportunity surface.",
           ]}
           whatIsNotLiveYet={[
-            "This route currently maps opportunity continuity through the bid workspace spine rather than a dedicated governed Opportunity API object.",
-            "Direct opportunity-specific backend actions and full file-linkage workflow are not yet implemented on this route.",
-            "This route should not be treated as proof that governed project conversion is fully live end-to-end.",
+            "When backend truth is unavailable, the route still falls back to shell continuity derived from the bid spine.",
+            "Direct opportunity-specific file actions and estimate mutations are not yet fully implemented on this route.",
+            "This route should not be treated as proof that governed project conversion is fully live end to end.",
           ]}
         />
       </div>
@@ -75,8 +104,8 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
           project={state.project}
           workspace={state.workspace}
           auricrux={state.auricrux}
-          title="Opportunity route now exists in live router truth"
-          detail="This route introduces the first flagship opportunity workspace shell so lead-to-estimate-to-project continuity can stop being implied only through docs."
+          title="Opportunity route now prefers canonical workspace reads"
+          detail="This route now attempts to resolve opportunity detail from a backend workspace model before falling back to shell continuity state."
         />
       </div>
 
@@ -92,74 +121,54 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
         <div style={{ color: "#334155", lineHeight: 1.8 }}>
           <div><strong>Route pattern:</strong> /portal/opportunities/:opportunityId</div>
           <div><strong>Requested opportunity ID:</strong> {opportunityId || "None provided"}</div>
-          <div><strong>Backing source:</strong> {meta.backingSource}</div>
+          <div><strong>Workspace source:</strong> {meta.backingSource}</div>
           <div><strong>Persistence state:</strong> {meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
         </div>
       </div>
 
-      {bid ? (
+      {visible ? (
         <>
           <div style={{ ...cardStyle, marginBottom: 16 }}>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>{bid.package}</h2>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>{bid?.package || visible.projectIntent || visible.opportunityId}</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#334155", lineHeight: 1.8 }}>
               <div>
-                <div><strong>Opportunity ID:</strong> {bid.id}</div>
-                <div><strong>Status:</strong> {bid.status}</div>
-                <div><strong>Estimator:</strong> {bid.estimator}</div>
-                <div><strong>Decision due:</strong> {bid.dueDate}</div>
+                <div><strong>Opportunity ID:</strong> {visible.opportunityId}</div>
+                <div><strong>Status:</strong> {visible.status}</div>
+                <div><strong>Service line:</strong> {visible.serviceLine || "estimating"}</div>
+                <div><strong>Project intent:</strong> {visible.projectIntent || "Not yet captured"}</div>
               </div>
               <div>
-                <div><strong>Value:</strong> {bid.value}</div>
-                <div><strong>Scope package:</strong> {bid.scopePackage}</div>
-                <div><strong>Trade coverage:</strong> {bid.tradeCoverage}</div>
-                <div><strong>Current blocker:</strong> {bid.blocker}</div>
+                <div><strong>Estimate ID:</strong> {visible.estimateSummary?.estimateId || "Not yet assigned"}</div>
+                <div><strong>Estimate status:</strong> {visible.estimateSummary?.status || "Not yet started"}</div>
+                <div><strong>Estimate versions:</strong> {visible.estimateSummary?.versionCount ?? 0}</div>
+                <div><strong>Next action:</strong> {visible.auricruxSummary?.nextAction || state.workspace.currentNextAction}</div>
               </div>
             </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginBottom: 16 }}>
             <div style={statCardStyle}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Qualification status</div>
-              <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{bid.qualification.status}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>File summary total</div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{visible.fileSummary?.total ?? 0}</div>
             </div>
             <div style={statCardStyle}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Qualification score</div>
-              <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{bid.qualification.score}</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Linked files</div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{visible.fileSummary?.linked ?? 0}</div>
             </div>
             <div style={statCardStyle}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Next gate</div>
-              <div style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{bid.qualification.nextGate}</div>
-            </div>
-          </div>
-
-          <div style={{ ...cardStyle, marginBottom: 16 }}>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Opportunity continuity posture</h2>
-            <div style={{ color: "#475569", lineHeight: 1.8 }}>
-              <div><strong>Budget fit:</strong> {bid.qualification.budgetFit}</div>
-              <div><strong>Scope fit:</strong> {bid.qualification.scopeFit}</div>
-              <div><strong>Jurisdiction:</strong> {bid.qualification.jurisdiction}</div>
-              <div><strong>Travel posture:</strong> {bid.qualification.travel}</div>
-              <div><strong>Evidence packet:</strong> {bid.qualification.evidence}</div>
-              <div><strong>Next commercial move:</strong> {bid.nextCommercialMove}</div>
-              <div><strong>Linked project root:</strong> {bid.linkedProjectId || "Not yet created"}</div>
-            </div>
-          </div>
-
-          <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #fffbeb 0%, #ffffff 100%)", border: "1px solid #fcd34d" }}>
-            <div style={{ color: "#b45309", fontWeight: 800, marginBottom: 8 }}>Missing-wiring guard</div>
-            <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-              This route currently presents the opportunity through the bid/preconstruction spine. Dedicated governed opportunity reads, direct estimate/file linkage blocks,
-              and explicit convert-to-project actions still need their own backend contract before this route can be described as fully product-capable.
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Conversion readiness</div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>
+                {visible.conversionReadiness?.canConvertToProject ? "Project-capable" : visible.conversionReadiness?.blockingReason || "Blocked"}
+              </div>
             </div>
           </div>
         </>
       ) : (
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #fffbeb 0%, #ffffff 100%)", border: "1px solid #fcd34d" }}>
-          <div style={{ color: "#b45309", fontWeight: 800, marginBottom: 8 }}>Opportunity not found in current shell continuity state</div>
+          <div style={{ color: "#b45309", fontWeight: 800, marginBottom: 8 }}>Opportunity not found in current continuity state</div>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            No opportunity record matching <strong>{opportunityId || "the requested route"}</strong> was found in the current workspace shell.
-            This route now exists, but it still depends on the current preconstruction continuity store until a dedicated opportunity object spine is live.
+            No opportunity record matching <strong>{opportunityId || "the requested route"}</strong> was found through the current backend or shell continuity sources.
           </div>
         </div>
       )}

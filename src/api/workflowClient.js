@@ -136,3 +136,79 @@ export async function fetchWorkflowAudit(params = {}) {
 
   return payload;
 }
+
+export async function fetchOpportunityWorkspace(opportunityId) {
+  const response = await fetch(`/api/opportunities/${encodeURIComponent(opportunityId)}/workspace`, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok || !payload?.item) {
+    throw new Error(payload?.error || "Unable to load opportunity workspace.");
+  }
+
+  return payload;
+}
+
+export async function fetchProjectWorkspace(projectId) {
+  const response = await fetch(`/api/projects/${encodeURIComponent(projectId)}/workspace`, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok || !payload?.item) {
+    throw new Error(payload?.error || "Unable to load project workspace.");
+  }
+
+  return payload;
+}
+
+export async function fetchFileSummary(ownerObjectType, ownerObjectId) {
+  const search = new URLSearchParams();
+  if (ownerObjectType) search.set("ownerObjectType", ownerObjectType);
+  if (ownerObjectId) search.set("ownerObjectId", ownerObjectId);
+
+  const response = await fetch(`/api/files/summary?${search.toString()}`, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok || !payload?.summary) {
+    throw new Error(payload?.error || "Unable to load file summary.");
+  }
+
+  return payload;
+}
+
+export async function fetchAuditSummary(relatedObjectType, relatedObjectId) {
+  const search = new URLSearchParams();
+  if (relatedObjectType) search.set("relatedObjectType", relatedObjectType);
+  if (relatedObjectId) search.set("relatedObjectId", relatedObjectId);
+
+  const response = await fetch(`/api/audit-events/summary?${search.toString()}`, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok || !payload?.summary) {
+    throw new Error(payload?.error || "Unable to load audit summary.");
+  }
+
+  return payload;
+}
