@@ -26,6 +26,7 @@ import PortalAdmin from "./pages/portal/PortalAdmin";
 import PortalProfile from "./pages/portal/PortalProfile";
 import PortalAuricrux from "./pages/portal/PortalAuricrux";
 import PortalOperations from "./pages/portal/PortalOperations";
+import PortalOpportunityDetail from "./pages/portal/PortalOpportunityDetail";
 
 import AcademyHome from "./pages/academy/AcademyHome";
 
@@ -63,7 +64,67 @@ export const routes = {
   "/academy": AcademyHome,
 };
 
+export const routePatterns = [
+  {
+    pattern: "/portal/opportunities/:opportunityId",
+    Page: PortalOpportunityDetail,
+  },
+];
+
 export function normalizePath(pathname) {
   if (!pathname || pathname === "/") return "/";
   return pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+}
+
+export function matchRoutePattern(pattern, pathname) {
+  const normalizedPattern = normalizePath(pattern);
+  const normalizedPath = normalizePath(pathname);
+
+  const patternParts = normalizedPattern.split("/").filter(Boolean);
+  const pathParts = normalizedPath.split("/").filter(Boolean);
+
+  if (patternParts.length !== pathParts.length) return null;
+
+  const params = {};
+
+  for (let index = 0; index < patternParts.length; index += 1) {
+    const patternPart = patternParts[index];
+    const pathPart = pathParts[index];
+
+    if (patternPart.startsWith(":")) {
+      params[patternPart.slice(1)] = pathPart;
+      continue;
+    }
+
+    if (patternPart !== pathPart) return null;
+  }
+
+  return params;
+}
+
+export function resolveRoute(pathname) {
+  const normalizedPath = normalizePath(pathname);
+
+  if (routes[normalizedPath]) {
+    return {
+      Page: routes[normalizedPath],
+      params: {},
+      matchedPath: normalizedPath,
+      pattern: normalizedPath,
+    };
+  }
+
+  for (const entry of routePatterns) {
+    const params = matchRoutePattern(entry.pattern, normalizedPath);
+    if (params) {
+      return {
+        Page: entry.Page,
+        params,
+        matchedPath: normalizedPath,
+        pattern: entry.pattern,
+      };
+    }
+  }
+
+  return null;
 }

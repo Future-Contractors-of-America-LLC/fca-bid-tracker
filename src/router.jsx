@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import NotFound from "./pages/website/NotFound";
 import Login from "./pages/website/Login";
@@ -11,7 +11,7 @@ import {
   isProtectedCustomerRoute,
 } from "./customerSession";
 import { NAVIGATION_EVENT, isManagedNavigationTarget, navigateTo } from "./navigation";
-import { routes, normalizePath } from "./routes";
+import { normalizePath, resolveRoute } from "./routes";
 import { syncDocumentMetadata } from "./siteMetadata";
 
 function readCurrentPath() {
@@ -31,6 +31,8 @@ export default function Router() {
   const [session, setSession] = useState(() => readCustomerSession());
   const [sessionReady, setSessionReady] = useState(false);
 
+  const routeMatch = useMemo(() => resolveRoute(normalizedPath), [normalizedPath]);
+
   // Legacy validator markers retained intentionally:
   // const needsCustomerLogin = isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;
   // const lacksProductAccess = !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);
@@ -42,7 +44,7 @@ export default function Router() {
       ? Login
       : lacksProductAccess
         ? AccessRestricted
-        : routes[normalizedPath] || NotFound;
+        : routeMatch?.Page || NotFound;
 
   useEffect(() => {
     let active = true;
@@ -98,5 +100,12 @@ export default function Router() {
     syncDocumentMetadata(needsCustomerLogin ? "/login" : normalizedPath);
   }, [needsCustomerLogin, normalizedPath]);
 
-  return <Page requestedPath={normalizedPath} accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"} />;
+  return (
+    <Page
+      requestedPath={normalizedPath}
+      routeParams={routeMatch?.params || {}}
+      matchedPattern={routeMatch?.pattern || normalizedPath}
+      accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"}
+    />
+  );
 }
