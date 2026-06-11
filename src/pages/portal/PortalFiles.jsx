@@ -4,6 +4,7 @@ import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import AuricruxBriefingCard from "../../components/AuricruxBriefingCard";
+import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
@@ -112,6 +113,7 @@ export default function PortalFiles() {
 
   const categoryOptions = useMemo(() => ["All", ...Object.keys(summary.byCategory).sort()], [summary.byCategory]);
   const statusOptions = useMemo(() => ["All", ...Object.keys(summary.byStatus).sort()], [summary.byStatus]);
+  const apiBacked = evidenceMeta.backingSource === "api-workflow-store";
 
   useEffect(() => {
     if (activeProject) {
@@ -176,6 +178,27 @@ export default function PortalFiles() {
       primaryLabel="Open Messages"
       workspaceState={state}
     >
+      {!apiBacked ? (
+        <div style={{ marginBottom: 16 }}>
+          <ExecutionTruthBanner
+            title="File spine shell is active"
+            status="Shell continuity active"
+            source={evidenceMeta.backingSource}
+            tone="warning"
+            whatIsLive={[
+              "Active project-aware file context inside the shared workspace shell.",
+              "Owner-linkage modeling, file review surfaces, and continuity-oriented summaries.",
+              "Shell-level classification, evidence, and briefing posture tied to the active project root.",
+            ]}
+            whatIsNotLiveYet={[
+              "This route is not currently using fully verified canonical file register/upload behavior for all actions.",
+              "Visible file actions can fall back to seeded continuity state when backend workflow calls are unavailable.",
+              "This route does not verify full native document intelligence or production-grade durable upload completion.",
+            ]}
+          />
+        </div>
+      ) : null}
+
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
           tenant={state.tenant}
@@ -200,6 +223,7 @@ export default function PortalFiles() {
           <div><strong>Evidence workflow source:</strong> {evidenceMeta.backingSource}</div>
           <div><strong>Evidence workflow status:</strong> {evidenceMeta.persistenceState}</div>
           <div><strong>Last evidence sync:</strong> {evidenceMeta.lastSyncedAt || "Pending initial sync"}</div>
+          {!apiBacked ? <div><strong>Execution note:</strong> File actions on this route currently preserve shell continuity but may not represent fully governed backend persistence for every visible action.</div> : null}
         </div>
       </div>
 
@@ -280,6 +304,11 @@ export default function PortalFiles() {
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Governed file registration</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Create a project-linked file record</h2>
+        {!apiBacked ? (
+          <div style={{ marginBottom: 12, color: "#92400e", lineHeight: 1.7 }}>
+            This form currently stages shell continuity state and may not represent fully canonical governed upload/register behavior while fallback workflow state is active.
+          </div>
+        ) : null}
         <form onSubmit={handleCreateFileRecord} style={{ display: "grid", gap: 12 }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
             <label>
@@ -312,7 +341,7 @@ export default function PortalFiles() {
           </label>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <button type="submit" style={buttonStyle} disabled={creating || !draft.name.trim()}>
-              {creating ? "Creating…" : "Create file record"}
+              {creating ? "Creating…" : apiBacked ? "Create file record" : "Stage file shell record"}
             </button>
             <button type="button" style={secondaryButtonStyle} disabled={creating} onClick={() => setDraft(defaultDraft)}>
               Reset draft

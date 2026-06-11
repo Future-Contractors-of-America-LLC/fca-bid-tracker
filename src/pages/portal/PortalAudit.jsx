@@ -2,6 +2,7 @@ import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
+import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
@@ -54,6 +55,7 @@ export default function PortalAudit() {
 
   const eventTypeOptions = useMemo(() => ["All", ...Object.keys(summary.byEventType).sort()], [summary.byEventType]);
   const actorTypeOptions = useMemo(() => ["All", ...Object.keys(summary.byActorType).sort()], [summary.byActorType]);
+  const apiBacked = auditMeta.backingSource === "api-workflow-store";
 
   useEffect(() => {
     if (activeProject) {
@@ -73,6 +75,27 @@ export default function PortalAudit() {
       primaryLabel="Open Project Flow"
       workspaceState={state}
     >
+      {!apiBacked ? (
+        <div style={{ marginBottom: 16 }}>
+          <ExecutionTruthBanner
+            title="Audit continuity shell is active"
+            status="Shell continuity active"
+            source={auditMeta.backingSource}
+            tone="warning"
+            whatIsLive={[
+              "Audit timeline layout and project-scoping controls.",
+              "Actor-type and event-type filtering inside the shell.",
+              "Continuity-oriented review of project/file/Auricrux history posture.",
+            ]}
+            whatIsNotLiveYet={[
+              "This route is not currently using fully verified governed audit truth for all displayed records.",
+              "Fallback audit history can appear when API-backed audit evidence is unavailable.",
+              "Full correction, reversal, and production-grade audit lifecycle support is not yet verified here.",
+            ]}
+          />
+        </div>
+      ) : null}
+
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
           tenant={state.tenant}
@@ -96,6 +119,7 @@ export default function PortalAudit() {
           <div><strong>Audit workflow status:</strong> {auditMeta.persistenceState}</div>
           <div><strong>Visible audit records:</strong> {summary.total}</div>
           <div><strong>Audit status:</strong> {visibleProject.auditStatus}</div>
+          {!apiBacked ? <div><strong>Execution note:</strong> When API-backed audit evidence is unavailable, this route is showing continuity scaffolding and fallback audit history for workspace validation only.</div> : null}
         </div>
       </div>
 

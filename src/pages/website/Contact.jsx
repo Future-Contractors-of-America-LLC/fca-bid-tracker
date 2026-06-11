@@ -12,6 +12,7 @@ import ProductProofSection from "../../components/ProductProofSection";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import ContactActionCenter from "../../components/ContactActionCenter";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
+import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
@@ -89,6 +90,25 @@ export default function Contact() {
           primaryLabel="Open Platform Dashboard"
           secondaryHref="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
           secondaryLabel="Schedule a Walkthrough"
+        />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <ExecutionTruthBanner
+          title="Walkthrough activation is not yet governed lead intake"
+          status="Demo access path only"
+          source="Local authenticated walkthrough session activation"
+          tone="warning"
+          whatIsLive={[
+            "Guided workspace preview activation for planning and demonstration.",
+            "Plan-matched session posture across portal surfaces.",
+            "Conversion routing into portal, billing, messaging, and admin demo paths.",
+          ]}
+          whatIsNotLiveYet={[
+            "This route does not yet create a governed Lead record.",
+            "No qualification decision or tracked intake object is created here yet.",
+            "No lead-created audit event is emitted from this walkthrough activation path.",
+          ]}
         />
       </div>
 

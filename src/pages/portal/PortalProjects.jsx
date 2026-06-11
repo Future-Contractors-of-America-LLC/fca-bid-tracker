@@ -4,6 +4,7 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectActionCenter from "../../components/ProjectActionCenter";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
+import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import { routeStateOverlays } from "../../systemState";
@@ -35,6 +36,7 @@ export default function PortalProjects() {
   }, [refreshSyncStamp]);
 
   const visibleProject = activeProject || state.project;
+  const apiBacked = meta.backingSource === "api-workflow-store";
 
   return (
     <PortalShell
@@ -47,6 +49,27 @@ export default function PortalProjects() {
       primaryLabel="Open Files"
       workspaceState={state}
     >
+      {!apiBacked ? (
+        <div style={{ marginBottom: 16 }}>
+          <ExecutionTruthBanner
+            title="Project continuity shell is active"
+            status="Shell continuity active"
+            source={meta.backingSource}
+            tone="warning"
+            whatIsLive={[
+              "Active project selection inside the shared workspace shell.",
+              "Project continuity presentation tied to the current workspace context.",
+              "Project-to-files and project-to-audit routing posture.",
+            ]}
+            whatIsNotLiveYet={[
+              "This route is not currently using fully verified API-backed project workflow state for all actions.",
+              "Mutations can fall back to local continuity state when backend workflow calls are unavailable.",
+              "The governed project detail home at /portal/projects/:projectId is not live yet.",
+            ]}
+          />
+        </div>
+      ) : null}
+
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
           tenant={state.tenant}
@@ -70,6 +93,7 @@ export default function PortalProjects() {
           <div><strong>Last workflow sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
           <div><strong>Active project root:</strong> {visibleProject?.id || state.project.id}</div>
+          {!apiBacked ? <div><strong>Execution note:</strong> This route is currently acting as the project selector and continuity launcher while the governed project detail home is still being built.</div> : null}
         </div>
       </div>
 
