@@ -22,7 +22,6 @@ async function runTask() {
   out.textContent = "Running...";
 
   try {
-    const res = await fetch("/api/run-task", {
       method: "POST"
     });
 
@@ -51,7 +50,6 @@ echo "{}" > dist/domain-continuity.json
 echo "OK" > dist/runtime-fingerprint.txt
 echo "<html>live shell</html>" > dist/live-shell-verification.html
 echo "<html>host binding</html>" > dist/host-binding-audit.html
-echo "<html>api audit</html>" > dist/api-continuity-audit.html
 
 touch dist/commit-witness-1.txt
 
