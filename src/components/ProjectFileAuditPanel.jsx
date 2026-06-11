@@ -1,5 +1,6 @@
 import AuricruxFileAuditInsight from "./AuricruxFileAuditInsight";
 import AuditEventCard from "./AuditEventCard";
+import AuricruxBriefingCard from "./AuricruxBriefingCard";
 
 const sectionStyle = {
   border: "1px solid #e5e7eb",
@@ -69,6 +70,8 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
               {file.note ? (
                 <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 10 }}>{file.note}</div>
               ) : null}
+
+              <AuricruxBriefingCard file={file} project={project} />
 
               {(onRegisterReview || onClassifyFile || onLinkEvidence || onCreateBriefing) ? (
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
