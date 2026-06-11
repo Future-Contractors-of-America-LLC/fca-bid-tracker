@@ -88,6 +88,25 @@ export async function fetchWorkflowFiles(projectId) {
   return payload;
 }
 
+export async function mutateWorkflowFile(action, body = {}) {
+  const response = await fetch("/api/files", {
+    method: "PATCH",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ action, ...body }),
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok) {
+    throw new Error(payload?.error || "Unable to mutate workflow file state.");
+  }
+
+  return payload;
+}
+
 export async function fetchWorkflowAudit(projectId) {
   const query = projectId ? `?projectId=${encodeURIComponent(projectId)}` : "";
   const response = await fetch(`/api/workflow-audit${query}`, {

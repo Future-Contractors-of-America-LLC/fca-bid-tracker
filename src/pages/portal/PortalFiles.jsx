@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
@@ -22,9 +22,10 @@ const cardStyle = {
 export default function PortalFiles() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
   const { activeProject, meta: projectMeta } = useProjectWorkspace();
+  const [busyFileId, setBusyFileId] = useState(null);
 
   const visibleProject = activeProject || state.project;
-  const { files, auditEvents, meta: evidenceMeta } = useWorkflowEvidence(visibleProject?.id);
+  const { files, auditEvents, meta: evidenceMeta, mutateFile } = useWorkflowEvidence(visibleProject?.id);
   const evidencePackets = qualificationEvidenceByProject?.[visibleProject?.id] || qualificationEvidencePackets;
 
   useEffect(() => {
@@ -33,6 +34,20 @@ export default function PortalFiles() {
     }
     refreshSyncStamp(`File spine synchronized to ${visibleProject.id}`);
   }, [activeProject, refreshSyncStamp, syncActiveProject, visibleProject.id]);
+
+  async function handleFileAction(file, action, detail, extra = {}) {
+    setBusyFileId(file.fileId);
+    try {
+      await mutateFile(action, {
+        fileId: file.fileId,
+        detail,
+        ...extra,
+      });
+      refreshSyncStamp(detail);
+    } finally {
+      setBusyFileId(null);
+    }
+  }
 
   return (
     <PortalShell
@@ -80,6 +95,7 @@ export default function PortalFiles() {
           <div><strong>File set:</strong> {visibleProject.fileSetLabel}</div>
           <div>{visibleProject.fileSpineStatus}</div>
           <div><strong>Workflow-backed file records:</strong> {files.length}</div>
+          <div><strong>Workflow-backed audit records:</strong> {auditEvents.length}</div>
         </div>
       </div>
 
@@ -155,7 +171,38 @@ export default function PortalFiles() {
         </div>
       </div>
 
-      <ProjectFileAuditPanel project={visibleProject} files={files} auditEvents={auditEvents} />
+      <ProjectFileAuditPanel
+        project={visibleProject}
+        files={files}
+        auditEvents={auditEvents}
+        busyFileId={busyFileId}
+        onRegisterReview={(file) =>
+          handleFileAction(file, "register-review", `${file.name} queued for governed review under ${visibleProject.id}.`)
+        }
+        onClassifyFile={(file) =>
+          handleFileAction(file, "classify-file", `Auricrux classified ${file.name} for ${visibleProject.id}.`, {
+            category: file.category,
+            evidenceStatus: "Classification complete",
+            status: "Classified",
+            actionLabel: "Classification saved",
+          })
+        }
+        onLinkEvidence={(file) =>
+          handleFileAction(file, "link-evidence", `${file.name} linked to governed evidence target for ${visibleProject.id}.`, {
+            linkedEvidenceTarget: `${visibleProject.id} governed evidence chain`,
+            evidenceStatus: "Evidence linked",
+            status: "Linked to governed object",
+            actionLabel: "Evidence linked",
+          })
+        }
+        onCreateBriefing={(file) =>
+          handleFileAction(file, "create-briefing", `Auricrux generated a briefing placeholder for ${file.name} under ${visibleProject.id}.`, {
+            evidenceStatus: "Briefing generated",
+            status: "Auricrux briefing ready",
+            actionLabel: "Open briefing",
+          })
+        }
+      />
     </PortalShell>
   );
 }

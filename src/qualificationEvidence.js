@@ -50,3 +50,24 @@ export const qualificationEvidencePackets = [
     nextAction: "Carry evidence packet into project and billing continuity",
   },
 ];
+
+export const qualificationEvidenceByProject = {
+  "A-117": qualificationEvidencePackets,
+  "PRJ-A117": qualificationEvidencePackets,
+  "B-204": qualificationEvidencePackets.map((packet, index) => ({
+    ...packet,
+    bidId: `BID-B-${index + 1}`,
+    packageName: packet.packageName.replace("A-117", "B-204"),
+    summary: packet.summary.replace(/A-117/g, "B-204"),
+    files: packet.files.map((file) => file.replace(/A117/g, "B204")),
+    nextAction: index === 0 ? "Release mobilization-linked evidence set" : packet.nextAction,
+  })),
+  "C-332": qualificationEvidencePackets.map((packet, index) => ({
+    ...packet,
+    bidId: `BID-C-${index + 1}`,
+    packageName: packet.packageName.replace("A-117", "C-332"),
+    summary: packet.summary.replace(/A-117/g, "C-332"),
+    files: packet.files.map((file) => file.replace(/A117/g, "C332")),
+    nextAction: index === 2 ? "Preserve closeout and retainage evidence continuity" : packet.nextAction,
+  })),
+};

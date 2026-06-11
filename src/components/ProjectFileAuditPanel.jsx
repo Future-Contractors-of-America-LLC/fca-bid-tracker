@@ -22,7 +22,17 @@ const badgeStyle = {
   color: "#1d4ed8",
 };
 
-export default function ProjectFileAuditPanel({ project, files = [], auditEvents = [] }) {
+const actionButtonStyle = {
+  border: "1px solid #2563eb",
+  background: "#eff6ff",
+  color: "#1d4ed8",
+  borderRadius: 10,
+  padding: "8px 10px",
+  fontWeight: 700,
+  cursor: "pointer",
+};
+
+export default function ProjectFileAuditPanel({ project, files = [], auditEvents = [], onRegisterReview, onClassifyFile, onLinkEvidence, onCreateBriefing, busyFileId = null }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, marginTop: 24 }}>
       <div style={sectionStyle}>
@@ -58,6 +68,31 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
 
               {file.note ? (
                 <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 10 }}>{file.note}</div>
+              ) : null}
+
+              {(onRegisterReview || onClassifyFile || onLinkEvidence || onCreateBriefing) ? (
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
+                  {onRegisterReview ? (
+                    <button type="button" style={actionButtonStyle} disabled={busyFileId === file.fileId} onClick={() => onRegisterReview(file)}>
+                      {busyFileId === file.fileId ? "Working…" : "Register review"}
+                    </button>
+                  ) : null}
+                  {onClassifyFile ? (
+                    <button type="button" style={actionButtonStyle} disabled={busyFileId === file.fileId} onClick={() => onClassifyFile(file)}>
+                      {busyFileId === file.fileId ? "Working…" : "Classify"}
+                    </button>
+                  ) : null}
+                  {onLinkEvidence ? (
+                    <button type="button" style={actionButtonStyle} disabled={busyFileId === file.fileId} onClick={() => onLinkEvidence(file)}>
+                      {busyFileId === file.fileId ? "Working…" : "Link evidence"}
+                    </button>
+                  ) : null}
+                  {onCreateBriefing ? (
+                    <button type="button" style={actionButtonStyle} disabled={busyFileId === file.fileId} onClick={() => onCreateBriefing(file)}>
+                      {busyFileId === file.fileId ? "Working…" : "Create briefing"}
+                    </button>
+                  ) : null}
+                </div>
               ) : null}
             </div>
           ))}

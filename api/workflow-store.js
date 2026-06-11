@@ -140,12 +140,18 @@ function seedAudit() {
 }
 
 function seedTenantWorkflow() {
+  const projects = seedProjects();
+  const activeProjectId = projects[0]?.id || null;
   return {
     bids: seedBids(),
-    projects: seedProjects(),
-    files: seedFiles(),
+    projects,
+    files: seedFiles().map((file, index) => ({
+      ...file,
+      fileId: file.fileId || `${activeProjectId || "PRJ-A117"}-FILE-${index + 1}`,
+      ownerObjectId: file.ownerObjectId || activeProjectId || "PRJ-A117",
+    })),
     audit: seedAudit(),
-    activeProjectId: seedProjects()[0]?.id || null,
+    activeProjectId,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -221,7 +227,7 @@ export function listFiles(tenantId, options = {}) {
     ? workflow.files.filter((file) => file.ownerObjectId === projectId)
     : workflow.files;
 
-  return clone(items.map((file) => normalizeFileRecord(file)));
+  return clone(items.map((file, index) => normalizeFileRecord(file, index)));
 }
 
 export function listAuditEvents(tenantId, options = {}) {
@@ -237,7 +243,7 @@ export function listAuditEvents(tenantId, options = {}) {
       )
     : workflow.audit;
 
-  return clone(items.map((event) => normalizeAuditEvent(event)));
+  return clone(items.map((event, index) => normalizeAuditEvent(event, index)));
 }
 
 export function getWorkflowSummary(tenantId) {
@@ -540,6 +546,120 @@ export function mutateProject(tenantId, action, payload = {}) {
   return clone({
     project: updatedProject,
     activeProjectId: workflow.activeProjectId,
+    summary: getWorkflowSummary(tenantId),
+  });
+}
+
+export function mutateFile(tenantId, action, payload = {}) {
+  const workflow = getTenantWorkflow(tenantId);
+  const fileIndex = workflow.files.findIndex((file) => file.fileId === payload.fileId);
+  if (fileIndex === -1) {
+    throw new Error(`File not found: ${payload.fileId}`);
+  }
+
+  const currentFile = workflow.files[fileIndex];
+  let updatedFile = currentFile;
+  const detail = payload.detail || "Workflow-backed file mutation recorded.";
+
+  switch (action) {
+    case "register-review": {
+      updatedFile = normalizeFileRecord({
+        ...currentFile,
+        status: "In review",
+        action: "Review queued",
+        updated: new Date().toISOString(),
+        note: detail,
+      }, fileIndex);
+
+      appendAudit(workflow, {
+        eventType: "file-review",
+        actorType: "user",
+        targetObjectType: "FileAsset",
+        targetObjectId: currentFile.ownerObjectId,
+        action: `${currentFile.name} queued for review`,
+        detail,
+        reason: "Document review state must stay attached to the active project spine.",
+        discipline: currentFile.discipline || "Document Control",
+      });
+      break;
+    }
+    case "classify-file": {
+      updatedFile = normalizeFileRecord({
+        ...currentFile,
+        evidenceStatus: payload.evidenceStatus || "Classification complete",
+        status: payload.status || "Classified",
+        action: payload.actionLabel || "Classification saved",
+        category: payload.category || currentFile.category,
+        updated: new Date().toISOString(),
+        note: detail,
+      }, fileIndex);
+
+      appendAudit(workflow, {
+        eventType: "file-classified",
+        actorType: "auricrux",
+        targetObjectType: "FileAsset",
+        targetObjectId: currentFile.ownerObjectId,
+        action: `${currentFile.name} classified`,
+        detail,
+        reason: "File categorization and evidence status must be durable and auditable.",
+        discipline: currentFile.discipline || "Document Control",
+      });
+      break;
+    }
+    case "link-evidence": {
+      updatedFile = normalizeFileRecord({
+        ...currentFile,
+        linkedEvidenceTarget: payload.linkedEvidenceTarget || currentFile.linkedEvidenceTarget,
+        evidenceStatus: payload.evidenceStatus || "Evidence linked",
+        status: payload.status || "Linked to governed object",
+        action: payload.actionLabel || "Evidence linked",
+        updated: new Date().toISOString(),
+        note: detail,
+      }, fileIndex);
+
+      appendAudit(workflow, {
+        eventType: "file-linked",
+        actorType: "auricrux",
+        targetObjectType: "FileAsset",
+        targetObjectId: currentFile.ownerObjectId,
+        action: `${currentFile.name} linked to evidence target`,
+        detail,
+        reason: "Contractor Command requires file-to-evidence continuity on governed objects.",
+        discipline: currentFile.discipline || "Document Control",
+      });
+      break;
+    }
+    case "create-briefing": {
+      updatedFile = normalizeFileRecord({
+        ...currentFile,
+        evidenceStatus: payload.evidenceStatus || "Briefing generated",
+        status: payload.status || "Auricrux briefing ready",
+        action: payload.actionLabel || "Open briefing",
+        updated: new Date().toISOString(),
+        note: detail,
+      }, fileIndex);
+
+      appendAudit(workflow, {
+        eventType: "file-briefing",
+        actorType: "auricrux",
+        targetObjectType: "FileAsset",
+        targetObjectId: currentFile.ownerObjectId,
+        action: `${currentFile.name} briefing generated`,
+        detail,
+        reason: "Auricrux briefing output must be visible as a durable project-linked artifact.",
+        discipline: currentFile.discipline || "Document Control",
+      });
+      break;
+    }
+    default:
+      throw new Error(`Unsupported file action: ${action}`);
+  }
+
+  workflow.files[fileIndex] = updatedFile;
+  workflow.updatedAt = new Date().toISOString();
+
+  return clone({
+    file: updatedFile,
     summary: getWorkflowSummary(tenantId),
   });
 }
