@@ -19,10 +19,46 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const inputStyle = {
+  width: "100%",
+  border: "1px solid #cbd5e1",
+  borderRadius: 10,
+  padding: "10px 12px",
+  font: "inherit",
+  background: "#fff",
+  color: "#0f172a",
+};
+
+const buttonStyle = {
+  border: "1px solid #2563eb",
+  background: "#2563eb",
+  color: "#fff",
+  borderRadius: 10,
+  padding: "10px 14px",
+  fontWeight: 700,
+  cursor: "pointer",
+};
+
+const secondaryButtonStyle = {
+  ...buttonStyle,
+  background: "#eff6ff",
+  color: "#1d4ed8",
+};
+
+const defaultDraft = {
+  name: "",
+  category: "Document",
+  discipline: "Document Control",
+  owner: "Project Coordinator",
+  linkedEvidenceTarget: "",
+};
+
 export default function PortalFiles() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
   const { activeProject, meta: projectMeta } = useProjectWorkspace();
   const [busyFileId, setBusyFileId] = useState(null);
+  const [creating, setCreating] = useState(false);
+  const [draft, setDraft] = useState(defaultDraft);
 
   const visibleProject = activeProject || state.project;
   const { files, auditEvents, meta: evidenceMeta, mutateFile } = useWorkflowEvidence(visibleProject?.id);
@@ -46,6 +82,32 @@ export default function PortalFiles() {
       refreshSyncStamp(detail);
     } finally {
       setBusyFileId(null);
+    }
+  }
+
+  async function handleCreateFileRecord(event) {
+    event.preventDefault();
+    if (!draft.name.trim()) return;
+
+    setCreating(true);
+    try {
+      const detail = `${draft.name.trim()} registered under governed file spine for ${visibleProject.id}.`;
+      await mutateFile("create-file-record", {
+        projectId: visibleProject.id,
+        name: draft.name.trim(),
+        category: draft.category,
+        discipline: draft.discipline,
+        owner: draft.owner,
+        linkedEvidenceTarget: draft.linkedEvidenceTarget.trim() || `${visibleProject.id} governed evidence chain`,
+        detail,
+        status: "Registered",
+        evidenceStatus: "Pending review",
+        actionLabel: "Review",
+      });
+      setDraft(defaultDraft);
+      refreshSyncStamp(detail);
+    } finally {
+      setCreating(false);
     }
   }
 
@@ -97,6 +159,50 @@ export default function PortalFiles() {
           <div><strong>Workflow-backed file records:</strong> {files.length}</div>
           <div><strong>Workflow-backed audit records:</strong> {auditEvents.length}</div>
         </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Governed file registration</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Create a project-linked file record</h2>
+        <form onSubmit={handleCreateFileRecord} style={{ display: "grid", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+            <label>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>File name</div>
+              <input style={inputStyle} value={draft.name} onChange={(event) => setDraft((current) => ({ ...current, name: event.target.value }))} placeholder="Example: Owner_Approval_Log.pdf" />
+            </label>
+            <label>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>Category</div>
+              <select style={inputStyle} value={draft.category} onChange={(event) => setDraft((current) => ({ ...current, category: event.target.value }))}>
+                <option>Document</option>
+                <option>Bid</option>
+                <option>Permit</option>
+                <option>Coordination</option>
+                <option>Field</option>
+                <option>Closeout</option>
+              </select>
+            </label>
+            <label>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>Discipline</div>
+              <input style={inputStyle} value={draft.discipline} onChange={(event) => setDraft((current) => ({ ...current, discipline: event.target.value }))} placeholder="Document Control" />
+            </label>
+            <label>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>Owner</div>
+              <input style={inputStyle} value={draft.owner} onChange={(event) => setDraft((current) => ({ ...current, owner: event.target.value }))} placeholder="Project Coordinator" />
+            </label>
+          </div>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Evidence target</div>
+            <input style={inputStyle} value={draft.linkedEvidenceTarget} onChange={(event) => setDraft((current) => ({ ...current, linkedEvidenceTarget: event.target.value }))} placeholder={`${visibleProject.id} governed evidence chain`} />
+          </label>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <button type="submit" style={buttonStyle} disabled={creating || !draft.name.trim()}>
+              {creating ? "Creating…" : "Create file record"}
+            </button>
+            <button type="button" style={secondaryButtonStyle} disabled={creating} onClick={() => setDraft(defaultDraft)}>
+              Reset draft
+            </button>
+          </div>
+        </form>
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>

@@ -206,6 +206,28 @@ function appendAudit(workflow, event) {
   return normalized;
 }
 
+function touchProjectForFileMutation(workflow, projectId, detail) {
+  const projectIndex = workflow.projects.findIndex((project) => project.id === projectId);
+  if (projectIndex === -1) return null;
+
+  const currentProject = workflow.projects[projectIndex];
+  const fileCount = workflow.files.filter((file) => file.ownerObjectId === projectId).length;
+  const updatedProject = normalizeProjectRecord(
+    {
+      ...currentProject,
+      fileSetLabel: `${fileCount} workflow-backed file records linked to ${projectId}`,
+      fileSpineStatus: detail || currentProject.fileSpineStatus,
+      auditStatus: `Recent file and audit continuity actions are preserved under ${projectId}.`,
+      lastActionAt: new Date().toISOString(),
+      actionHistory: [stampHistoryEntry("File spine updated", detail || `Workflow-backed file continuity updated for ${projectId}.`), ...currentProject.actionHistory].slice(0, 12),
+    },
+    projectIndex
+  );
+
+  workflow.projects[projectIndex] = updatedProject;
+  return updatedProject;
+}
+
 export function listBids(tenantId) {
   return clone(getTenantWorkflow(tenantId).bids);
 }
@@ -552,6 +574,54 @@ export function mutateProject(tenantId, action, payload = {}) {
 
 export function mutateFile(tenantId, action, payload = {}) {
   const workflow = getTenantWorkflow(tenantId);
+  const detail = payload.detail || "Workflow-backed file mutation recorded.";
+
+  if (action === "create-file-record") {
+    const projectId = payload.projectId || workflow.activeProjectId;
+    if (!projectId) {
+      throw new Error("Project context is required to create a file record.");
+    }
+
+    const fileId = payload.fileId || `${projectId}-FILE-${Date.now()}`;
+    const createdFile = normalizeFileRecord({
+      fileId,
+      ownerObjectType: payload.ownerObjectType || "Project",
+      ownerObjectId: payload.ownerObjectId || projectId,
+      linkedEvidenceTarget: payload.linkedEvidenceTarget || `${projectId} governed evidence chain`,
+      evidenceStatus: payload.evidenceStatus || "Pending review",
+      versionLabel: payload.versionLabel || "Rev 1",
+      name: payload.name || `New file record ${workflow.files.length + 1}`,
+      category: payload.category || "Document",
+      updated: new Date().toISOString(),
+      action: payload.actionLabel || "Review",
+      discipline: payload.discipline || "Document Control",
+      status: payload.status || "Registered",
+      owner: payload.owner || "Project Coordinator",
+      note: detail,
+    }, workflow.files.length);
+
+    workflow.files.unshift(createdFile);
+    touchProjectForFileMutation(workflow, projectId, `File register expanded for ${projectId}.`);
+
+    appendAudit(workflow, {
+      eventType: "file-created",
+      actorType: "auricrux",
+      targetObjectType: "FileAsset",
+      targetObjectId: projectId,
+      action: `${createdFile.name} created in governed file register`,
+      detail,
+      reason: "Every new file record must attach to a governed project root and emit continuity evidence.",
+      discipline: createdFile.discipline,
+    });
+
+    workflow.updatedAt = new Date().toISOString();
+
+    return clone({
+      file: createdFile,
+      summary: getWorkflowSummary(tenantId),
+    });
+  }
+
   const fileIndex = workflow.files.findIndex((file) => file.fileId === payload.fileId);
   if (fileIndex === -1) {
     throw new Error(`File not found: ${payload.fileId}`);
@@ -559,7 +629,6 @@ export function mutateFile(tenantId, action, payload = {}) {
 
   const currentFile = workflow.files[fileIndex];
   let updatedFile = currentFile;
-  const detail = payload.detail || "Workflow-backed file mutation recorded.";
 
   switch (action) {
     case "register-review": {
@@ -656,6 +725,7 @@ export function mutateFile(tenantId, action, payload = {}) {
   }
 
   workflow.files[fileIndex] = updatedFile;
+  touchProjectForFileMutation(workflow, currentFile.ownerObjectId, `File continuity updated for ${currentFile.ownerObjectId}.`);
   workflow.updatedAt = new Date().toISOString();
 
   return clone({
