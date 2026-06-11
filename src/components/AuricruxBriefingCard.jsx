@@ -87,7 +87,10 @@ export default function AuricruxBriefingCard({ file, project }) {
 
   const briefing = file.briefing || fallbackBriefing(file, project);
   const targetProjectId = project.id || file.ownerObjectId || "active-project";
-  const fileTargetHref = `/portal/files?project=${encodeURIComponent(targetProjectId)}&file=${encodeURIComponent(file.fileId || file.name || "briefing-file")}`;
+  const encodedProjectId = encodeURIComponent(targetProjectId);
+  const encodedFileId = encodeURIComponent(file.fileId || file.name || "briefing-file");
+  const fileTargetHref = `/portal/files?project=${encodedProjectId}&file=${encodedFileId}`;
+  const auditTargetHref = `/portal/audit?project=${encodedProjectId}&file=${encodedFileId}`;
 
   return (
     <div style={cardStyle}>
@@ -144,7 +147,7 @@ export default function AuricruxBriefingCard({ file, project }) {
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
         <a href="/portal/projects" style={actionLinkStyle}>Open Project Spine</a>
-        <a href="/portal/audit" style={actionLinkStyle}>Open Audit Timeline</a>
+        <a href={auditTargetHref} style={actionLinkStyle}>Open Audit Target</a>
         <a href={fileTargetHref} style={actionLinkStyle}>Open File Briefing Target</a>
       </div>
     </div>
