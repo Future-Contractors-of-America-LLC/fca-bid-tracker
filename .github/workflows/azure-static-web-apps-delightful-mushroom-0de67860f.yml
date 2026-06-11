@@ -54,6 +54,9 @@ jobs:
       - name: Run governed build validation
         run: npm run build:system
 
+      - name: Ensure SWA config present in app artifact root
+        run: cp staticwebapp.config.json dist/staticwebapp.config.json
+
       - name: Verify build artifact exists
         run: |
           pwd
