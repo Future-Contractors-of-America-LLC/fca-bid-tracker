@@ -16,7 +16,10 @@ app.http("workflow-audit", {
   handler: async (request) => {
     const tenantId = resolveTenantId(request);
     const projectId = request.query.get("projectId") || null;
-    const items = listAuditEvents(tenantId, { projectId });
+    const eventType = request.query.get("eventType") || null;
+    const actorType = request.query.get("actorType") || null;
+    const q = request.query.get("q") || null;
+    const items = listAuditEvents(tenantId, { projectId, eventType, actorType, q });
 
     return {
       status: 200,
@@ -25,6 +28,7 @@ app.http("workflow-audit", {
         items,
         count: items.length,
         projectId,
+        filters: { eventType, actorType, q },
         summary: getWorkflowSummary(tenantId),
         backingSource: "api-workflow-store",
       },

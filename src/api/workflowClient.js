@@ -113,8 +113,14 @@ export async function mutateWorkflowFile(action, body = {}) {
   return payload;
 }
 
-export async function fetchWorkflowAudit(projectId) {
-  const query = projectId ? `?projectId=${encodeURIComponent(projectId)}` : "";
+export async function fetchWorkflowAudit(params = {}) {
+  const search = new URLSearchParams();
+  if (params.projectId) search.set("projectId", params.projectId);
+  if (params.eventType && params.eventType !== "All") search.set("eventType", params.eventType);
+  if (params.actorType && params.actorType !== "All") search.set("actorType", params.actorType);
+  if (params.q) search.set("q", params.q);
+
+  const query = search.toString() ? `?${search.toString()}` : "";
   const response = await fetch(`/api/workflow-audit${query}`, {
     method: "GET",
     credentials: "same-origin",

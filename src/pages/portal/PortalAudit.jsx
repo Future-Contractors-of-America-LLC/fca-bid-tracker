@@ -5,6 +5,7 @@ import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
+import useWorkflowAudit from "../../hooks/useWorkflowAudit";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -12,6 +13,23 @@ const cardStyle = {
   padding: 18,
   background: "#fff",
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+};
+
+const statCardStyle = {
+  border: "1px solid #dbe3ef",
+  borderRadius: 12,
+  padding: 14,
+  background: "#f8fbff",
+};
+
+const inputStyle = {
+  width: "100%",
+  border: "1px solid #cbd5e1",
+  borderRadius: 10,
+  padding: "10px 12px",
+  font: "inherit",
+  background: "#fff",
+  color: "#0f172a",
 };
 
 const auditRouteOverlay = {
@@ -26,23 +44,16 @@ const auditRouteOverlay = {
   auricruxDetail: "Auricrux uses this route to explain what changed, why it changed, and what should happen next.",
 };
 
-function buildEventTypeSummary(events) {
-  const counts = events.reduce((acc, event) => {
-    const key = event.eventType || "unspecified";
-    acc[key] = (acc[key] || 0) + 1;
-    return acc;
-  }, {});
-
-  return Object.entries(counts);
-}
-
 export default function PortalAudit() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
   const { activeProject, meta: projectMeta } = useProjectWorkspace();
 
   const visibleProject = activeProject || state.project;
-  const { files, auditEvents, meta: evidenceMeta } = useWorkflowEvidence(visibleProject?.id);
-  const auditSummary = useMemo(() => buildEventTypeSummary(auditEvents), [auditEvents]);
+  const { files } = useWorkflowEvidence(visibleProject?.id);
+  const { auditEvents, meta: auditMeta, filters, setFilters, summary } = useWorkflowAudit(visibleProject?.id);
+
+  const eventTypeOptions = useMemo(() => ["All", ...Object.keys(summary.byEventType).sort()], [summary.byEventType]);
+  const actorTypeOptions = useMemo(() => ["All", ...Object.keys(summary.byActorType).sort()], [summary.byActorType]);
 
   useEffect(() => {
     if (activeProject) {
@@ -81,21 +92,49 @@ export default function PortalAudit() {
           <div><strong>Current stage:</strong> {visibleProject.stage}</div>
           <div><strong>Next action:</strong> {visibleProject.nextAction || state.workspace.currentNextAction}</div>
           <div><strong>Project workflow source:</strong> {projectMeta.backingSource}</div>
-          <div><strong>Evidence workflow source:</strong> {evidenceMeta.backingSource}</div>
-          <div><strong>Evidence workflow status:</strong> {evidenceMeta.persistenceState}</div>
-          <div><strong>Audit records loaded:</strong> {auditEvents.length}</div>
+          <div><strong>Audit workflow source:</strong> {auditMeta.backingSource}</div>
+          <div><strong>Audit workflow status:</strong> {auditMeta.persistenceState}</div>
+          <div><strong>Visible audit records:</strong> {summary.total}</div>
           <div><strong>Audit status:</strong> {visibleProject.auditStatus}</div>
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 16 }}>
-        {auditSummary.map(([eventType, count]) => (
-          <div key={eventType} style={cardStyle}>
-            <div style={{ color: "#64748b", fontWeight: 700, fontSize: 12, textTransform: "uppercase", marginBottom: 8 }}>{eventType}</div>
-            <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 6 }}>{count}</div>
-            <div style={{ color: "#475569", lineHeight: 1.6 }}>Visible continuity records for the active project spine.</div>
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Audit summary</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
+          <div style={statCardStyle}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Visible audit records</div>
+            <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{summary.total}</div>
           </div>
-        ))}
+          {Object.entries(summary.byEventType).slice(0, 3).map(([label, count]) => (
+            <div key={label} style={statCardStyle}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>{label}</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{count}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Search</div>
+            <input style={inputStyle} value={filters.q} onChange={(event) => setFilters((current) => ({ ...current, q: event.target.value }))} placeholder="Search action, reason, discipline, event type" />
+          </label>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Event type</div>
+            <select style={inputStyle} value={filters.eventType} onChange={(event) => setFilters((current) => ({ ...current, eventType: event.target.value }))}>
+              {eventTypeOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Actor type</div>
+            <select style={inputStyle} value={filters.actorType} onChange={(event) => setFilters((current) => ({ ...current, actorType: event.target.value }))}>
+              {actorTypeOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+        </div>
       </div>
 
       <ProjectFileAuditPanel project={visibleProject} files={files} auditEvents={auditEvents} />

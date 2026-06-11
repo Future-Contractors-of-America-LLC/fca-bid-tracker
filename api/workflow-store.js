@@ -275,7 +275,11 @@ export function listFiles(tenantId, options = {}) {
 export function listAuditEvents(tenantId, options = {}) {
   const workflow = getTenantWorkflow(tenantId);
   const projectId = options?.projectId || workflow.activeProjectId || null;
-  const items = projectId
+  const normalizedEventType = options?.eventType && options.eventType !== "All" ? options.eventType.toLowerCase() : null;
+  const normalizedActorType = options?.actorType && options.actorType !== "All" ? options.actorType.toLowerCase() : null;
+  const normalizedQuery = options?.q ? options.q.trim().toLowerCase() : null;
+
+  let items = projectId
     ? workflow.audit.filter(
         (event) =>
           !event.targetObjectId ||
@@ -284,6 +288,24 @@ export function listAuditEvents(tenantId, options = {}) {
           event.reason?.includes(projectId)
       )
     : workflow.audit;
+
+  if (normalizedEventType) {
+    items = items.filter((event) => (event.eventType || "").toLowerCase() === normalizedEventType);
+  }
+
+  if (normalizedActorType) {
+    items = items.filter((event) => (event.actorType || "").toLowerCase() === normalizedActorType);
+  }
+
+  if (normalizedQuery) {
+    items = items.filter((event) => {
+      const haystack = [event.action, event.detail, event.reason, event.discipline, event.targetObjectType, event.actorType, event.eventType]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(normalizedQuery);
+    });
+  }
 
   return clone(items.map((event, index) => normalizeAuditEvent(event, index)));
 }
