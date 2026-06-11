@@ -1,4 +1,4 @@
-import { portalBids, portalProjects, projectAuditEvents } from "../src/systemState.js";
+import { portalBids, portalProjects, portalFiles, projectAuditEvents } from "../src/systemState.js";
 
 const STORE_KEY = "__FCA_CONTRACTOR_COMMAND_WORKFLOW_STORE__";
 const DEFAULT_TENANT_ID = "TEN-FCA-001";
@@ -71,6 +71,25 @@ function normalizeProjectRecord(project = {}, index = 0) {
   };
 }
 
+function normalizeFileRecord(file = {}, index = 0) {
+  return {
+    fileId: file.fileId || `FILE-${index + 1}`,
+    ownerObjectType: file.ownerObjectType || "Project",
+    ownerObjectId: file.ownerObjectId || "PRJ-A117",
+    linkedEvidenceTarget: file.linkedEvidenceTarget || "Project continuity record",
+    evidenceStatus: file.evidenceStatus || "Evidence linked",
+    versionLabel: file.versionLabel || "Rev 1",
+    name: file.name || `Workflow file ${index + 1}`,
+    category: file.category || "Document",
+    updated: file.updated || new Date().toISOString(),
+    action: file.action || "Review",
+    discipline: file.discipline || "Operations",
+    status: file.status || "Active",
+    owner: file.owner || "Unassigned",
+    note: file.note || "Workflow-backed file record active.",
+  };
+}
+
 function normalizeAuditEvent(event = {}, index = 0) {
   return {
     id: event.id || `AUD-${index + 1}`,
@@ -112,6 +131,10 @@ function seedProjects() {
   return portalProjects.map((project, index) => normalizeProjectRecord(project, index));
 }
 
+function seedFiles() {
+  return portalFiles.map((file, index) => normalizeFileRecord(file, index));
+}
+
 function seedAudit() {
   return projectAuditEvents.map((event, index) => normalizeAuditEvent(event, index));
 }
@@ -120,6 +143,7 @@ function seedTenantWorkflow() {
   return {
     bids: seedBids(),
     projects: seedProjects(),
+    files: seedFiles(),
     audit: seedAudit(),
     activeProjectId: seedProjects()[0]?.id || null,
     updatedAt: new Date().toISOString(),
@@ -190,8 +214,30 @@ export function listProjects(tenantId) {
   );
 }
 
-export function listAuditEvents(tenantId) {
-  return clone(getTenantWorkflow(tenantId).audit);
+export function listFiles(tenantId, options = {}) {
+  const workflow = getTenantWorkflow(tenantId);
+  const projectId = options?.projectId || workflow.activeProjectId || null;
+  const items = projectId
+    ? workflow.files.filter((file) => file.ownerObjectId === projectId)
+    : workflow.files;
+
+  return clone(items.map((file) => normalizeFileRecord(file)));
+}
+
+export function listAuditEvents(tenantId, options = {}) {
+  const workflow = getTenantWorkflow(tenantId);
+  const projectId = options?.projectId || workflow.activeProjectId || null;
+  const items = projectId
+    ? workflow.audit.filter(
+        (event) =>
+          !event.targetObjectId ||
+          event.targetObjectId === projectId ||
+          event.detail?.includes(projectId) ||
+          event.reason?.includes(projectId)
+      )
+    : workflow.audit;
+
+  return clone(items.map((event) => normalizeAuditEvent(event)));
 }
 
 export function getWorkflowSummary(tenantId) {
@@ -200,6 +246,7 @@ export function getWorkflowSummary(tenantId) {
     activeProjectId: workflow.activeProjectId,
     bidCount: workflow.bids.length,
     projectCount: workflow.projects.length,
+    fileCount: workflow.files.length,
     auditCount: workflow.audit.length,
     updatedAt: workflow.updatedAt,
   });

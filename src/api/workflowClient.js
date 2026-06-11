@@ -70,8 +70,27 @@ export async function mutateWorkflowProject(action, body = {}) {
   return payload;
 }
 
-export async function fetchWorkflowAudit() {
-  const response = await fetch("/api/workflow-audit", {
+export async function fetchWorkflowFiles(projectId) {
+  const query = projectId ? `?projectId=${encodeURIComponent(projectId)}` : "";
+  const response = await fetch(`/api/files${query}`, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok) {
+    throw new Error(payload?.error || "Unable to load workflow file state.");
+  }
+
+  return payload;
+}
+
+export async function fetchWorkflowAudit(projectId) {
+  const query = projectId ? `?projectId=${encodeURIComponent(projectId)}` : "";
+  const response = await fetch(`/api/workflow-audit${query}`, {
     method: "GET",
     credentials: "same-origin",
     headers: {

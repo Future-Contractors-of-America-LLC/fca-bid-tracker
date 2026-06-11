@@ -1,14 +1,15 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { fileGovernance } from "../../fileGovernance";
-import { qualificationEvidencePackets } from "../../qualificationEvidence";
-import { portalFiles, projectAuditEvents, routeStateOverlays } from "../../systemState";
+import { qualificationEvidencePackets, qualificationEvidenceByProject } from "../../qualificationEvidence";
+import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -18,40 +19,13 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-function scopeFilesToProject(files, project) {
-  const projectId = project?.id || "PRJ-A117";
-  const projectSuffix = projectId.replace(/^PRJ-/, "");
-
-  return files
-    .filter((file) => !file.ownerObjectId || file.ownerObjectId === "PRJ-A117" || file.ownerObjectId === projectId)
-    .map((file, index) => ({
-      ...file,
-      fileId: `${projectId}-FILE-${index + 1}`,
-      ownerObjectType: file.ownerObjectType || "Project",
-      ownerObjectId: projectId,
-      linkedEvidenceTarget: file.linkedEvidenceTarget || `${projectId} continuity record`,
-      name: file.name.replace(/A117/g, projectSuffix),
-      note: `${file.note} Active project context: ${projectId}.`,
-    }));
-}
-
-function scopeAuditEventsToProject(events, project) {
-  const projectId = project?.id || "PRJ-A117";
-  return events
-    .filter((event) => !event.targetObjectId || event.targetObjectId === projectId || event.detail?.includes("PRJ-A117") || event.reason?.includes("PRJ-A117"))
-    .map((event) => ({
-      ...event,
-      targetObjectId: event.targetObjectId || projectId,
-      detail: event.detail.replace(/PRJ-A117/g, projectId),
-      reason: event.reason?.replace(/PRJ-A117/g, projectId),
-    }));
-}
-
 export default function PortalFiles() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
-  const { activeProject, meta } = useProjectWorkspace();
+  const { activeProject, meta: projectMeta } = useProjectWorkspace();
 
   const visibleProject = activeProject || state.project;
+  const { files, auditEvents, meta: evidenceMeta } = useWorkflowEvidence(visibleProject?.id);
+  const evidencePackets = qualificationEvidenceByProject?.[visibleProject?.id] || qualificationEvidencePackets;
 
   useEffect(() => {
     if (activeProject) {
@@ -59,9 +33,6 @@ export default function PortalFiles() {
     }
     refreshSyncStamp(`File spine synchronized to ${visibleProject.id}`);
   }, [activeProject, refreshSyncStamp, syncActiveProject, visibleProject.id]);
-
-  const scopedFiles = useMemo(() => scopeFilesToProject(portalFiles, visibleProject), [visibleProject]);
-  const scopedAuditEvents = useMemo(() => scopeAuditEventsToProject(projectAuditEvents, visibleProject), [visibleProject]);
 
   return (
     <PortalShell
@@ -94,9 +65,10 @@ export default function PortalFiles() {
         <div style={{ color: "#334155", lineHeight: 1.8 }}>
           <div><strong>Project root:</strong> {visibleProject.id}</div>
           <div><strong>Project name:</strong> {visibleProject.name}</div>
-          <div><strong>Workflow source:</strong> {meta.backingSource}</div>
-          <div><strong>Workflow status:</strong> {meta.persistenceState}</div>
-          <div><strong>Last workflow sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
+          <div><strong>Project workflow source:</strong> {projectMeta.backingSource}</div>
+          <div><strong>Evidence workflow source:</strong> {evidenceMeta.backingSource}</div>
+          <div><strong>Evidence workflow status:</strong> {evidenceMeta.persistenceState}</div>
+          <div><strong>Last evidence sync:</strong> {evidenceMeta.lastSyncedAt || "Pending initial sync"}</div>
         </div>
       </div>
 
@@ -107,6 +79,7 @@ export default function PortalFiles() {
           <div><strong>Project ID:</strong> {visibleProject.id}</div>
           <div><strong>File set:</strong> {visibleProject.fileSetLabel}</div>
           <div>{visibleProject.fileSpineStatus}</div>
+          <div><strong>Workflow-backed file records:</strong> {files.length}</div>
         </div>
       </div>
 
@@ -114,7 +87,7 @@ export default function PortalFiles() {
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Qualification evidence handoff</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>The file spine now proves why a bid was allowed to advance</h2>
         <div style={{ display: "grid", gap: 16 }}>
-          {qualificationEvidencePackets.map((packet) => (
+          {evidencePackets.map((packet) => (
             <div key={packet.bidId} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
               <h3 style={{ marginTop: 0, marginBottom: 8 }}>{packet.packageName}</h3>
               <div style={{ color: "#334155", lineHeight: 1.7 }}>
@@ -182,7 +155,7 @@ export default function PortalFiles() {
         </div>
       </div>
 
-      <ProjectFileAuditPanel project={visibleProject} files={scopedFiles} auditEvents={scopedAuditEvents} />
+      <ProjectFileAuditPanel project={visibleProject} files={files} auditEvents={auditEvents} />
     </PortalShell>
   );
 }

@@ -4,7 +4,7 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
-import { portalFiles, projectAuditEvents } from "../../systemState";
+import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -36,40 +36,13 @@ function buildEventTypeSummary(events) {
   return Object.entries(counts);
 }
 
-function scopeFilesToProject(files, project) {
-  const projectId = project?.id || "PRJ-A117";
-  const projectSuffix = projectId.replace(/^PRJ-/, "");
-
-  return files
-    .filter((file) => !file.ownerObjectId || file.ownerObjectId === "PRJ-A117" || file.ownerObjectId === projectId)
-    .map((file, index) => ({
-      ...file,
-      fileId: `${projectId}-FILE-${index + 1}`,
-      ownerObjectType: file.ownerObjectType || "Project",
-      ownerObjectId: projectId,
-      linkedEvidenceTarget: file.linkedEvidenceTarget || `${projectId} continuity record`,
-      name: file.name.replace(/A117/g, projectSuffix),
-      note: `${file.note} Active project context: ${projectId}.`,
-    }));
-}
-
-function scopeAuditEventsToProject(events, project) {
-  const projectId = project?.id || "PRJ-A117";
-  return events
-    .filter((event) => !event.targetObjectId || event.targetObjectId === projectId || event.detail?.includes("PRJ-A117") || event.reason?.includes("PRJ-A117"))
-    .map((event) => ({
-      ...event,
-      targetObjectId: event.targetObjectId || projectId,
-      detail: event.detail.replace(/PRJ-A117/g, projectId),
-      reason: event.reason?.replace(/PRJ-A117/g, projectId),
-    }));
-}
-
 export default function PortalAudit() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
-  const { activeProject, meta } = useProjectWorkspace();
+  const { activeProject, meta: projectMeta } = useProjectWorkspace();
 
   const visibleProject = activeProject || state.project;
+  const { files, auditEvents, meta: evidenceMeta } = useWorkflowEvidence(visibleProject?.id);
+  const auditSummary = useMemo(() => buildEventTypeSummary(auditEvents), [auditEvents]);
 
   useEffect(() => {
     if (activeProject) {
@@ -77,10 +50,6 @@ export default function PortalAudit() {
     }
     refreshSyncStamp(`Audit route synchronized to ${visibleProject.id}`);
   }, [activeProject, refreshSyncStamp, syncActiveProject, visibleProject.id]);
-
-  const scopedFiles = useMemo(() => scopeFilesToProject(portalFiles, visibleProject), [visibleProject]);
-  const scopedAuditEvents = useMemo(() => scopeAuditEventsToProject(projectAuditEvents, visibleProject), [visibleProject]);
-  const auditSummary = useMemo(() => buildEventTypeSummary(scopedAuditEvents), [scopedAuditEvents]);
 
   return (
     <PortalShell
@@ -111,8 +80,10 @@ export default function PortalAudit() {
           <div><strong>Project name:</strong> {visibleProject.name}</div>
           <div><strong>Current stage:</strong> {visibleProject.stage}</div>
           <div><strong>Next action:</strong> {visibleProject.nextAction || state.workspace.currentNextAction}</div>
-          <div><strong>Workflow source:</strong> {meta.backingSource}</div>
-          <div><strong>Workflow status:</strong> {meta.persistenceState}</div>
+          <div><strong>Project workflow source:</strong> {projectMeta.backingSource}</div>
+          <div><strong>Evidence workflow source:</strong> {evidenceMeta.backingSource}</div>
+          <div><strong>Evidence workflow status:</strong> {evidenceMeta.persistenceState}</div>
+          <div><strong>Audit records loaded:</strong> {auditEvents.length}</div>
           <div><strong>Audit status:</strong> {visibleProject.auditStatus}</div>
         </div>
       </div>
@@ -127,7 +98,7 @@ export default function PortalAudit() {
         ))}
       </div>
 
-      <ProjectFileAuditPanel project={visibleProject} files={scopedFiles} auditEvents={scopedAuditEvents} />
+      <ProjectFileAuditPanel project={visibleProject} files={files} auditEvents={auditEvents} />
     </PortalShell>
   );
 }

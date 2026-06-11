@@ -1,6 +1,6 @@
 import { app } from "@azure/functions";
 import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
-import { listAuditEvents, getWorkflowSummary } from "./workflow-store.js";
+import { listFiles, getWorkflowSummary } from "./workflow-store.js";
 
 function resolveTenantId(request) {
   const cookieHeader = request.headers.get("cookie") || "";
@@ -9,14 +9,14 @@ function resolveTenantId(request) {
   return session?.customerId || "TEN-FCA-001";
 }
 
-app.http("workflow-audit", {
+app.http("files", {
   methods: ["GET"],
   authLevel: "anonymous",
-  route: "workflow-audit",
+  route: "files",
   handler: async (request) => {
     const tenantId = resolveTenantId(request);
     const projectId = request.query.get("projectId") || null;
-    const items = listAuditEvents(tenantId, { projectId });
+    const items = listFiles(tenantId, { projectId });
 
     return {
       status: 200,
