@@ -1,10 +1,8 @@
 #!/bin/bash
 set -e
+rm -rf dist
 mkdir -p dist
-cp public/favicon.svg dist/favicon.svg
-cp public/site.webmanifest dist/site.webmanifest
-cp public/robots.txt dist/robots.txt
-cp public/social-card.svg dist/social-card.svg
+cp -R public/. dist/
 
 cat > dist/index.html << 'HTML'
 <!doctype html>
@@ -102,7 +100,7 @@ h1{font-size:clamp(36px,6vw,64px);line-height:1.02;margin:18px 0 16px}
       <a href="#workflow">Workflow</a>
       <a href="#academy">Academy</a>
       <a href="#access">Access</a>
-      <a class="btn btn-secondary" href="/login">Login</a>
+      <a class="btn btn-secondary" href="/login/">Login</a>
     </nav>
   </header>
 
@@ -114,8 +112,8 @@ h1{font-size:clamp(36px,6vw,64px);line-height:1.02;margin:18px 0 16px}
           <h1>The contractor operating system for intake, estimating, proposals, and job setup.</h1>
           <p>FCA is not supposed to open like a customer portal shell. It should present a clear public front door with brand, login, flagship product framing, and a visible path into the first sellable workflow: <strong>Lead → Bid → Proposal → Award → Job Setup</strong>.</p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="#access">Open intake path</a>
-            <a class="btn btn-secondary" href="/login">Customer login</a>
+            <a class="btn btn-primary" href="/intake/">Open intake path</a>
+            <a class="btn btn-secondary" href="/login/">Customer login</a>
           </div>
           <div class="signal-row">
             <span class="signal">Auricrux integrated</span>
@@ -193,16 +191,16 @@ h1{font-size:clamp(36px,6vw,64px);line-height:1.02;margin:18px 0 16px}
           <h2>Access and intake</h2>
           <p>Use the public front door to route visitors correctly.</p>
           <div class="list">
-            <div class="row"><span class="dot"></span><div><strong>Customer login</strong><p><a href="/login">/login</a> is the explicit access route for returning users.</p></div></div>
-            <div class="row"><span class="dot"></span><div><strong>Intake path</strong><p><a href="/intake">/intake</a> is the contractor-facing start point for new opportunities and qualification.</p></div></div>
-            <div class="row"><span class="dot"></span><div><strong>Product detail</strong><p><a href="/product">/product</a> is the product framing route for FCA Contractor Command.</p></div></div>
+            <div class="row"><span class="dot"></span><div><strong>Customer login</strong><p><a href="/login/">/login</a> now resolves to a working route with truthful status and validation access options.</p></div></div>
+            <div class="row"><span class="dot"></span><div><strong>Intake path</strong><p><a href="/intake/">/intake</a> is the contractor-facing start point for new opportunities and qualification.</p></div></div>
+            <div class="row"><span class="dot"></span><div><strong>Product detail</strong><p><a href="/product/">/product</a> remains the product framing route for FCA Contractor Command.</p></div></div>
           </div>
         </article>
         <article class="card">
           <span class="state">Execution note: Auricrux-Central connectivity preserved</span>
           <div class="metric">
             <div class="mini"><strong>Brand</strong><span>FCA logo and identity restored to root layer.</span></div>
-            <div class="mini"><strong>Login</strong><span>Visible entry restored to the primary navigation.</span></div>
+            <div class="mini"><strong>Login</strong><span>Working route restored to the primary navigation.</span></div>
             <div class="mini"><strong>Product</strong><span>Flagship product named and framed on the homepage.</span></div>
             <div class="mini"><strong>Intent</strong><span>Public website first, not portal-first root experience.</span></div>
           </div>
@@ -227,7 +225,96 @@ h1{font-size:clamp(36px,6vw,64px);line-height:1.02;margin:18px 0 16px}
 </html>
 HTML
 
-echo '{}' > dist/staticwebapp.config.json
+mkdir -p dist/login
+cat > dist/login/index.html << 'HTML'
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FCA Login | Future Contractors of America</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<style>
+:root{--navy:#0C1A2A;--blue:#2364FF;--orange:#FF7A1A;--white:#fff;--line:rgba(255,255,255,.1);--muted:#c6d4ec;--panel:rgba(255,255,255,.06)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#091525 0%,#0C1A2A 60%,#13263b 100%);color:var(--white)}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:24px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0 24px}
+.brand{display:flex;gap:12px;align-items:center}.brand img{width:40px;height:40px}.brand strong{display:block}.brand span{display:block;color:var(--muted);font-size:12px}
+.back{padding:10px 14px;border:1px solid #3556af;border-radius:12px;color:#d9e4ff}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;padding:16px 0 28px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 48px rgba(0,0,0,.2)}
+h1{font-size:42px;line-height:1.05;margin:10px 0 14px}h2{margin:0 0 12px}p{line-height:1.6;color:var(--muted)}
+.notice{display:inline-block;padding:8px 12px;border-radius:999px;background:rgba(255,122,26,.14);border:1px solid rgba(255,122,26,.34);color:#ffd9bd;font-weight:700;font-size:13px}
+.form{display:grid;gap:14px;margin-top:16px}.field label{display:block;font-weight:700;margin-bottom:6px}.field input,.field select{width:100%;padding:12px 13px;border-radius:12px;border:1px solid #355075;background:#07111e;color:#fff}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:12px;font-weight:800;border:1px solid transparent}.btn-primary{background:var(--orange);color:#201208}.btn-secondary{background:transparent;border-color:#4c77ff;color:#fff}
+.list{display:grid;gap:10px;margin-top:14px}.row{padding:12px 0;border-top:1px solid rgba(255,255,255,.08)}.row:first-child{border-top:0;padding-top:0}
+.status{margin-top:14px;padding:14px 16px;border-radius:14px;background:rgba(35,100,255,.12);border:1px solid rgba(35,100,255,.28);color:#d9e4ff}
+.small{font-size:13px;color:#9db4d8}
+@media(max-width:900px){.hero{grid-template-columns:1fr}h1{font-size:34px}.wrap{padding:18px}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <img src="/favicon.svg" alt="FCA logo" />
+        <div>
+          <strong>Future Contractors of America</strong>
+          <span>FCA Contractor Command Access</span>
+        </div>
+      </div>
+      <a class="back" href="/">Back to home</a>
+    </div>
+
+    <section class="hero">
+      <article>
+        <span class="notice">Truthful access boundary</span>
+        <h1>Login route restored.</h1>
+        <p>This page now works as a real route and correctly distinguishes between <strong>production customer login</strong> and the currently available <strong>validation surfaces</strong>. It no longer dead-ends at a missing page.</p>
+        <div class="status">
+          Production tenant-backed authentication is still a separate build step. Current working access is through the live bid intake and customer status validation surfaces.
+        </div>
+        <div class="list">
+          <div class="row"><strong>What works now</strong><p>Login route resolves, branding is present, and users can route into working intake and status surfaces.</p></div>
+          <div class="row"><strong>What does not yet exist</strong><p>Real tenant-backed authentication, password validation, protected session issuance, and role-based product access enforcement.</p></div>
+          <div class="row"><strong>Why this is still better</strong><p>The site now tells the truth and gives a usable next step instead of failing or implying a live auth system that is not actually deployed.</p></div>
+        </div>
+      </article>
+
+      <aside class="card">
+        <h2>Customer access</h2>
+        <form class="form" onsubmit="event.preventDefault(); window.location.href='/fca-customer-status/';">
+          <div class="field">
+            <label for="email">Work email</label>
+            <input id="email" type="email" placeholder="name@company.com" />
+          </div>
+          <div class="field">
+            <label for="company">Company</label>
+            <input id="company" type="text" placeholder="Customer company name" />
+          </div>
+          <div class="field">
+            <label for="mode">Access mode</label>
+            <select id="mode">
+              <option>Validation workspace</option>
+              <option>Customer bid status</option>
+              <option>Bid intake</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" type="submit">Open customer status</button>
+            <a class="btn btn-secondary" href="/fca-customer-entry/">Open bid intake</a>
+          </div>
+          <p class="small">This is a truthful interim access surface. It provides usable routing while real production auth is built.</p>
+        </form>
+      </aside>
+    </section>
+  </div>
+</body>
+</html>
+HTML
+
 echo '{"status":"restored-public-front","shell":"FCA Contractor Command","execution":"Auricrux-Central"}' > dist/deployment-status.json
 echo '{"primary":"futurecontractorsofamerica.com","www":"www.futurecontractorsofamerica.com","swa":"delightful-mushroom-0de67860f.7.azurestaticapps.net","status":"continuity-preserved"}' > dist/domain-continuity.json
 echo "FCA public landing shell restored" > dist/runtime-fingerprint.txt
