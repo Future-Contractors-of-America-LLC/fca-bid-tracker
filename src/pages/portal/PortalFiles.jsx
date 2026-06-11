@@ -4,6 +4,7 @@ import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
@@ -21,35 +22,46 @@ function scopeFilesToProject(files, project) {
   const projectId = project?.id || "PRJ-A117";
   const projectSuffix = projectId.replace(/^PRJ-/, "");
 
-  return files.map((file, index) => ({
-    ...file,
-    fileId: `${projectId}-FILE-${index + 1}`,
-    ownerObjectType: "Project",
-    ownerObjectId: projectId,
-    linkedEvidenceTarget: file.linkedEvidenceTarget || `${projectId} continuity record`,
-    name: file.name.replace(/A117/g, projectSuffix),
-    note: `${file.note} Active project context: ${projectId}.`,
-  }));
+  return files
+    .filter((file) => !file.ownerObjectId || file.ownerObjectId === "PRJ-A117" || file.ownerObjectId === projectId)
+    .map((file, index) => ({
+      ...file,
+      fileId: `${projectId}-FILE-${index + 1}`,
+      ownerObjectType: file.ownerObjectType || "Project",
+      ownerObjectId: projectId,
+      linkedEvidenceTarget: file.linkedEvidenceTarget || `${projectId} continuity record`,
+      name: file.name.replace(/A117/g, projectSuffix),
+      note: `${file.note} Active project context: ${projectId}.`,
+    }));
 }
 
 function scopeAuditEventsToProject(events, project) {
   const projectId = project?.id || "PRJ-A117";
-  return events.map((event) => ({
-    ...event,
-    detail: event.detail.replace(/PRJ-A117/g, projectId),
-    reason: event.reason?.replace(/PRJ-A117/g, projectId),
-  }));
+  return events
+    .filter((event) => !event.targetObjectId || event.targetObjectId === projectId || event.detail?.includes("PRJ-A117") || event.reason?.includes("PRJ-A117"))
+    .map((event) => ({
+      ...event,
+      targetObjectId: event.targetObjectId || projectId,
+      detail: event.detail.replace(/PRJ-A117/g, projectId),
+      reason: event.reason?.replace(/PRJ-A117/g, projectId),
+    }));
 }
 
 export default function PortalFiles() {
-  const { state, refreshSyncStamp } = useWorkspaceState();
+  const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
+  const { activeProject, meta } = useProjectWorkspace();
+
+  const visibleProject = activeProject || state.project;
 
   useEffect(() => {
-    refreshSyncStamp(`File spine synchronized to ${state.project.id}`);
-  }, [refreshSyncStamp, state.project.id]);
+    if (activeProject) {
+      syncActiveProject(activeProject, `File spine synchronized to ${activeProject.id}`);
+    }
+    refreshSyncStamp(`File spine synchronized to ${visibleProject.id}`);
+  }, [activeProject, refreshSyncStamp, syncActiveProject, visibleProject.id]);
 
-  const scopedFiles = useMemo(() => scopeFilesToProject(portalFiles, state.project), [state.project]);
-  const scopedAuditEvents = useMemo(() => scopeAuditEventsToProject(projectAuditEvents, state.project), [state.project]);
+  const scopedFiles = useMemo(() => scopeFilesToProject(portalFiles, visibleProject), [visibleProject]);
+  const scopedAuditEvents = useMemo(() => scopeAuditEventsToProject(projectAuditEvents, visibleProject), [visibleProject]);
 
   return (
     <PortalShell
@@ -65,11 +77,11 @@ export default function PortalFiles() {
       <div style={{ marginBottom: 16 }}>
         <SystemStateSummary
           tenant={state.tenant}
-          project={state.project}
+          project={visibleProject}
           workspace={state.workspace}
           auricrux={state.auricrux}
-          title="File route now reads from the same canonical state"
-          detail="Document context, next action, qualification evidence, and blocker visibility stay attached to the shared system module rather than separate wrapper exports."
+          title="File route now reads from the active project workspace"
+          detail="Document context, next action, qualification evidence, and blocker visibility stay attached to the same active project root used by Projects and Audit."
         />
       </div>
 
@@ -77,13 +89,24 @@ export default function PortalFiles() {
         <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Active file workspace</div>
+        <div style={{ color: "#334155", lineHeight: 1.8 }}>
+          <div><strong>Project root:</strong> {visibleProject.id}</div>
+          <div><strong>Project name:</strong> {visibleProject.name}</div>
+          <div><strong>Workflow source:</strong> {meta.backingSource}</div>
+          <div><strong>Workflow status:</strong> {meta.persistenceState}</div>
+          <div><strong>Last workflow sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
+        </div>
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>File Spine Context</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-          <div><strong>Project:</strong> {state.project.name}</div>
-          <div><strong>Project ID:</strong> {state.project.id}</div>
-          <div><strong>File set:</strong> {state.project.fileSetLabel}</div>
-          <div>{state.project.fileSpineStatus}</div>
+          <div><strong>Project:</strong> {visibleProject.name}</div>
+          <div><strong>Project ID:</strong> {visibleProject.id}</div>
+          <div><strong>File set:</strong> {visibleProject.fileSetLabel}</div>
+          <div>{visibleProject.fileSpineStatus}</div>
         </div>
       </div>
 
@@ -159,7 +182,7 @@ export default function PortalFiles() {
         </div>
       </div>
 
-      <ProjectFileAuditPanel project={state.project} files={scopedFiles} auditEvents={scopedAuditEvents} />
+      <ProjectFileAuditPanel project={visibleProject} files={scopedFiles} auditEvents={scopedAuditEvents} />
     </PortalShell>
   );
 }
