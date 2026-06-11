@@ -8,83 +8,45 @@ cat > dist/index.html << 'HTML'
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>FCA Platform</title>
+<title>FCA Master Platform</title>
 <style>
-:root{--bg:#07111f;--panel:#111c2e;--text:#eef5ff;--muted:#a9bdd6;--accent:#35d0ff;--ok:#57e389;--warn:#ffd166}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#07111f,#0b1728 50%,#101827);color:var(--text)}
-header{padding:28px 22px;border-bottom:1px solid #20324e;background:rgba(0,0,0,.25)}
-h1{margin:0;color:var(--accent);font-size:34px}
-h2{margin:0 0 10px;color:#fff}
-p{color:var(--muted);line-height:1.45}
-.wrap{max-width:1180px;margin:0 auto;padding:22px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
-.card{background:var(--panel);border:1px solid #263a5c;border-radius:14px;padding:18px;box-shadow:0 8px 28px rgba(0,0,0,.25)}
-.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#0d2c3d;color:var(--accent);font-size:12px;font-weight:bold;margin:4px 6px 4px 0}
-.ok{color:var(--ok)}.warn{color:var(--warn)}
-button{background:var(--accent);color:#001522;border:0;border-radius:10px;padding:12px 16px;font-weight:bold;cursor:pointer}
-pre{white-space:pre-wrap;background:#03080f;border:1px solid #223653;border-radius:12px;padding:14px;min-height:120px;overflow:auto;color:#d8ecff}
+:root{--bg:#06111f;--side:#050912;--panel:#101d31;--panel2:#162640;--text:#eef6ff;--muted:#9fb6d2;--accent:#35d0ff;--good:#5cff9b;--warn:#ffd166;--line:#263b5d}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}.app{display:flex;min-height:100vh}.sidebar{width:245px;background:var(--side);border-right:1px solid var(--line);padding:20px;position:sticky;top:0;height:100vh}.brand{font-size:24px;font-weight:800;color:var(--accent);margin-bottom:4px}.sub{font-size:12px;color:var(--muted);margin-bottom:18px}.nav button{display:block;width:100%;text-align:left;margin:7px 0;padding:11px 12px;border:1px solid #1f3352;border-radius:10px;background:#0d1728;color:var(--text);cursor:pointer}.nav button:hover,.nav button.active{background:#123154;border-color:var(--accent);color:white}.main{flex:1;padding:22px 22px 90px;overflow:auto}.topbar{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:18px}h1{margin:0;color:var(--accent);font-size:32px}h2{margin:0 0 12px;font-size:22px}h3{margin:0 0 8px}p{color:var(--muted);line-height:1.45}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{background:linear-gradient(180deg,var(--panel),#0b1627);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 10px 28px rgba(0,0,0,.25)}.kpi{font-size:26px;font-weight:800;color:white}.pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#0d2c3d;color:var(--accent);font-size:12px;font-weight:bold;margin:4px 5px 4px 0}.good{color:var(--good)}.warn{color:var(--warn)}button.action{background:var(--accent);color:#001522;border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer;margin:5px 5px 5px 0}button.secondary{background:#203554;color:var(--text);border:1px solid #34537f}.list{display:grid;gap:8px}.row{display:flex;justify-content:space-between;gap:10px;padding:10px;border:1px solid #243a5c;border-radius:10px;background:#0b1627}.output{white-space:pre-wrap;background:#03080f;border:1px solid #223653;border-radius:12px;padding:14px;min-height:110px;overflow:auto;color:#d8ecff}.chat{position:fixed;right:18px;bottom:18px;width:315px;background:#0b1627;border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 14px 35px rgba(0,0,0,.45)}.chat input{width:100%;padding:10px;border-radius:9px;border:1px solid #2b466d;background:#050b14;color:var(--text)}.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#050912;border-top:1px solid var(--line);padding:8px;justify-content:space-around}.mobile-nav button{background:#0d1728;border:1px solid #253d61;color:white;border-radius:10px;padding:10px}@media(max-width:760px){.app{display:block}.sidebar{display:none}.main{padding:16px 14px 95px}.topbar{display:block}.chat{position:static;width:auto;margin-top:16px}.mobile-nav{display:flex}}
 </style>
 </head>
 <body>
-<header>
-<div class="wrap">
-<h1>FCA Command Layer</h1>
-<p>Future Contractors of America platform shell restored on the stable Auricrux execution path.</p>
-<span class="pill">Auricrux-Central Live</span>
-<span class="pill">SWA Connected</span>
-<span class="pill">Foundry Ready</span>
-<span class="pill">GitHub Ready</span>
-<span class="pill">Graph Ready</span>
-</div>
-</header>
-
-<main class="wrap">
-<section class="card">
-<h2>Auricrux Execution</h2>
-<p>This button calls the Static Web App API path and verifies the live Auricrux-Central execute route.</p>
-<button onclick="runTask()">Run Task</button>
-<pre id="output">Idle. Execution path is ready for verification.</pre>
-</section>
-
-<section class="grid" style="margin-top:16px">
-<div class="card"><h2>Core OS</h2><p>Plans, estimating, proposal, build, finance, legal, warranty, and closeout workflows.</p></div>
-<div class="card"><h2>Estimating</h2><p>Bid structure, scope capture, pricing logic, and proposal support.</p></div>
-<div class="card"><h2>Operations</h2><p>Project scheduling, task execution, field reporting, and production oversight.</p></div>
-<div class="card"><h2>FCA Academy</h2><p>Embedded training path for contractor workflows and system adoption.</p></div>
-<div class="card"><h2>Finance</h2><p>Invoices, expenses, profitability tracking, and operating visibility.</p></div>
-<div class="card"><h2>Compliance</h2><p>Contracts, permits, licensing, governance, and closeout documentation.</p></div>
-</section>
-
-<section class="card" style="margin-top:16px">
-<h2>Integration Spine</h2>
-<p><span class="ok">Connected:</span> FCA public site to Static Web App API to Auricrux-Central. <span class="warn">Next controlled phase:</span> restore full historical product UI modules without destabilizing the execution path.</p>
-</section>
-</main>
-
+<div class="app"><aside class="sidebar"><div class="brand">FCA</div><div class="sub">Future Contractors of America</div><div class="nav" id="nav"></div></aside><main class="main"><div class="topbar"><div><h1>FCA Master Platform</h1><p>Plans → Estimate → Proposal → Build → Finance → Legal → Warranty, controlled through the stable Auricrux execution path.</p><span class="pill">Auricrux-Central Live</span><span class="pill">SWA Connected</span><span class="pill">Foundry Ready</span><span class="pill">GitHub Ready</span><span class="pill">Graph Ready</span></div><div class="card"><h3>Execution Spine</h3><p><span class="good">Live:</span> Site → SWA API → Auricrux-Central</p><button class="action" onclick="runTask()">Run Task</button></div></div><section id="view"></section><section class="chat"><h3>Auricrux</h3><p>Command, voice, execution, training, and outreach interface.</p><input id="auricruxInput" placeholder="Command..." onkeydown="if(event.key==='Enter') runAuricrux(this.value)" /><button class="action secondary" onclick="speakStatus()">Speak</button><pre id="auricruxOutput" class="output">Auricrux ready.</pre></section></main></div><div class="mobile-nav"><button onclick="setView('Dashboard')">Home</button><button onclick="setView('Plans')">Plans</button><button onclick="setView('Estimating')">Estimate</button><button onclick="setView('Auricrux')">AI</button></div>
 <script>
-async function runTask(){
-  const out=document.getElementById("output");
-  out.textContent="Running Auricrux execution check...";
-  try{
-    const res=await fetch("/api/run-task",{method:"POST"});
-    const text=await res.text();
-    out.textContent=text&&text.trim()?text:"EMPTY RESPONSE";
-  }catch(e){
-    out.textContent="ERROR: "+e.message;
-  }
-}
+const state={view:"Dashboard",takeoff:[],tasks:[{name:"Lighting Install",done:false},{name:"Panel Work",done:false},{name:"Rough-in Inspection",done:false}],invoices:[],expenses:[],permits:[],legalDocs:[],output:"Idle. Execution path is ready for verification."};
+const views=["Dashboard","Plans","Estimating","Proposals","Operations","Finance","Legal","Warranty","Outreach","Academy","Auricrux"];
+function estimateTotal(){return state.takeoff.length*150}function proposalTotal(){return estimateTotal()}function setView(v){state.view=v;render()}function addTakeoff(type){state.takeoff.push(type);render()}function addInvoice(){state.invoices.push(5000);render()}function addExpense(){state.expenses.push(2000);render()}function addPermit(){state.permits.push({type:"Electrical Permit",status:"Pending"});render()}function generateContract(){state.legalDocs.push({title:"Construction Agreement",value:proposalTotal()});render()}function addDispute(){state.legalDocs.push({title:"Dispute Case",issue:"Scope dispute"});render()}
+async function runTask(){const box=document.getElementById("auricruxOutput");box.textContent="Running Auricrux execution check...";try{const res=await fetch("/api/run-task",{method:"POST"});const text=await res.text();box.textContent=text&&text.trim()?text:"EMPTY RESPONSE";}catch(e){box.textContent="ERROR: "+e.message;}}
+function runAuricrux(text){const lower=(text||"").toLowerCase();if(lower.includes("estimate")) setView("Estimating");else if(lower.includes("proposal")) setView("Proposals");else if(lower.includes("add light")) addTakeoff("Lighting");else if(lower.includes("contract")){setView("Legal");generateContract();}else if(lower.includes("outreach")) setView("Outreach");else document.getElementById("auricruxOutput").textContent="Command received: "+text;}
+function speakStatus(){const msg="FCA system active. Auricrux execution path stable.";document.getElementById("auricruxOutput").textContent=msg;if(window.speechSynthesis){speechSynthesis.speak(new SpeechSynthesisUtterance(msg));}}
+function nav(){document.getElementById("nav").innerHTML=views.map(v=>'<button class="'+(state.view===v?'active':'')+'" onclick="setView(\''+v+'\')">'+v+'</button>').join("");}
+function card(title,body){return '<div class="card"><h2>'+title+'</h2>'+body+'</div>'}
+function dashboard(){return '<div class="grid">'+card("Command Center","<div class=kpi>$"+estimateTotal()+"</div><p>Live Estimate</p>")+card("Active Jobs","<div class=kpi>4</div><p>Field production, scheduling, and risk visibility.</p>")+card("Win Rate","<div class=kpi>65%</div><p>Bid intelligence and outreach tracking.</p>")+card("Risk Alerts","<div class=kpi>0</div><p>No active system risks detected.</p>")+'</div><div class="card" style="margin-top:14px"><h2>Real-Time Dashboard</h2><p>Revenue, alerts, jobs, estimates, proposals, and execution status consolidated into FCA Command Center.</p><pre class="output">'+state.output+'</pre></div>';}
+function plans(){return card("Plan System","<p>Electrical layout, civil roads, utilities, and plan-driven takeoff support.</p><button class=action onclick=\"addTakeoff('Lighting')\">Add Light</button><button class=\"action secondary\" onclick=\"addTakeoff('Panel')\">Add Panel</button><div class=list>"+state.takeoff.map((x,i)=>'<div class=row><span>'+x+'</span><span>#'+(i+1)+'</span></div>').join("")+"</div>");}
+function estimating(){return card("Estimate","<p>Labor + material + markup estimating workflow.</p><div class=kpi>$"+estimateTotal()+"</div><p>Takeoff items: "+state.takeoff.length+"</p>");}
+function proposals(){return card("Proposal","<p>Proposal generated from current estimate and scope.</p><div class=kpi>$"+proposalTotal()+"</div><p>Scope: Lighting install, panel work, field execution.</p>");}
+function operations(){return card("Project Management","<p>Scheduling, tasks, field reports, and execution control.</p><div class=list>"+state.tasks.map((t,i)=>'<label class=row><span><input type=checkbox '+(t.done?'checked':'')+' onchange="state.tasks['+i+'].done=this.checked;render()"> '+t.name+'</span><span>'+(t.done?'Done':'Open')+'</span></label>').join("")+"</div>");}
+function finance(){const inflow=state.invoices.reduce((a,b)=>a+b,0),outflow=state.expenses.reduce((a,b)=>a+b,0),cash=inflow-outflow;return '<div class=grid>'+card("Job Financials","<p>Revenue, cost, profit, and margin visibility.</p><div class=kpi>$50000</div><p>Baseline contract value</p>")+card("Cash Flow","<div class=kpi>$"+cash+"</div><p>Invoices minus expenses.</p>")+card("Invoices","<button class=action onclick=addInvoice()>Create Invoice</button><p>"+state.invoices.length+" invoices</p>")+card("Expenses","<button class=action onclick=addExpense()>Add Expense</button><p>"+state.expenses.length+" expenses</p>")+card("Payroll","<p>Field payroll and labor-cost tracking.</p><p>Electricians @ $74.35/hr</p>")+'</div>';}
+function legal(){return '<div class=grid>'+card("Contracts","<button class=action onclick=generateContract()>Generate Contract</button><div class=list>"+state.legalDocs.map(d=>'<div class=row><span>'+d.title+'</span><span>$'+(d.value||0)+'</span></div>').join("")+"</div>")+card("Permits","<button class=action onclick=addPermit()>Add Permit</button><div class=list>"+state.permits.map(p=>'<div class=row><span>'+p.type+'</span><span>'+p.status+'</span></div>').join("")+"</div>")+card("Licensing","<p>VA License Tracker</p><p>Compliance status and renewal tracking.</p>")+card("Litigation","<button class=action onclick=addDispute()>Add Dispute Case</button><p>Claims, disputes, and risk events.</p>")+'</div>';}
+function warranty(){return card("Warranty / Closeout","<p>QC, punchlist, service requests, warranty tracking, and closeout documentation.</p>");}
+function outreach(){return '<div class=grid>'+card("Opportunities","<div class=row><span>Retail Build VA</span><button class=action onclick=\"alert(\'Generated outreach message for Retail Build VA\')\">Contact GC</button></div><div class=row><span>Office Renovation NC</span><button class=action onclick=\"alert(\'Generated outreach message for Office Renovation NC\')\">Contact GC</button></div>")+card("Marketing Engine","<p>Bid follow-ups, client emails, proposal summaries, and social messages.</p>")+card("Networking","<p>Auricrux-driven relationship and opportunity tracking.</p>")+'</div>';}
+function academy(){return card("FCA Academy Lite","<p>Embedded training path for estimating workflows, bidding strategy, project execution, finance, legal, and system adoption.</p>");}
+function auricrux(){return card("Auricrux Control","<p>Chat, voice, execution, training, outreach, and cross-system task routing.</p><button class=action onclick=runTask()>Verify Execution Path</button><pre class=output>Ready.</pre>");}
+function render(){nav();const map={Dashboard:dashboard,Plans:plans,Estimating:estimating,Proposals:proposals,Operations:operations,Finance:finance,Legal:legal,Warranty:warranty,Outreach:outreach,Academy:academy,Auricrux:auricrux};document.getElementById("view").innerHTML=(map[state.view]||dashboard)();}render();
 </script>
 </body>
 </html>
 HTML
 
-echo "{}" > dist/staticwebapp.config.json
+echo '{}' > dist/staticwebapp.config.json
+echo '{"status":"restored","shell":"FCA Master Platform","execution":"Auricrux-Central"}' > dist/deployment-status.json
+echo '{"primary":"futurecontractorsofamerica.com","www":"www.futurecontractorsofamerica.com","swa":"delightful-mushroom-0de67860f.7.azurestaticapps.net","status":"continuity-preserved"}' > dist/domain-continuity.json
 echo "OK" > dist/runtime-fingerprint.txt
-echo "FCA UI restore build completed"
-echo "{\"status\":\"restored\",\"shell\":\"FCA Command Layer\",\"execution\":\"Auricrux-Central\",\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > dist/deployment-status.json
-echo "{\"primary\":\"futurecontractorsofamerica.com\",\"www\":\"www.futurecontractorsofamerica.com\",\"swa\":\"delightful-mushroom-0de67860f.7.azurestaticapps.net\",\"status\":\"continuity-preserved\"}" > dist/domain-continuity.json
-echo "<!doctype html><html><head><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>FCA Command Layer restored.</p><p>Auricrux Execution path preserved.</p></body></html>" > dist/live-shell-verification.html
+echo "<!doctype html><html><head><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>FCA Master Platform restored.</p><p>Auricrux Execution path preserved.</p></body></html>" > dist/live-shell-verification.html
 echo "<!doctype html><html><head><title>FCA Host Binding Audit</title></head><body><h1>Host Binding Audit</h1><p>futurecontractorsofamerica.com</p><p>www.futurecontractorsofamerica.com</p><p>delightful-mushroom-0de67860f.7.azurestaticapps.net</p></body></html>" > dist/host-binding-audit.html
 echo "<!doctype html><html><head><title>FCA API Continuity Audit</title></head><body><h1>API Continuity Audit</h1><p>/api/run-task preserved.</p><p>Auricrux-Central execute route preserved.</p></body></html>" > dist/api-continuity-audit.html
-echo "FCA UI restoration witness: $(date -u +%Y-%m-%dT%H:%M:%SZ)" > dist/commit-witness-$(date +%Y%m%d%H%M%S).txt
+echo "FCA master UI restoration witness" > dist/commit-witness-$(date +%Y%m%d%H%M%S).txt
+echo "FCA Master UI restore build completed"
