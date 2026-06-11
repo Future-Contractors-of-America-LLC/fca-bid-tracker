@@ -66,17 +66,49 @@ function isBriefingReady(file = {}) {
   return haystack.includes("briefing");
 }
 
+function buildBriefingMutation(file, visibleProject) {
+  return {
+    evidenceStatus: "Briefing generated",
+    status: "Auricrux briefing ready",
+    actionLabel: "Open briefing",
+    briefingTitle: `Auricrux Briefing — ${file.name}`,
+    briefingSummary: `Auricrux generated a governed briefing placeholder for ${file.name} under ${visibleProject.id}.`,
+    briefingKeyFacts: [
+      `${file.category || "Document"} artifact is attached to ${visibleProject.id}.`,
+      `${file.discipline || "Document Control"} continuity remains governed inside the active file spine.`,
+    ],
+    briefingDetectedGaps: [
+      "Confirm downstream estimate, schedule, and approval dependencies before execution state advances.",
+    ],
+    briefingRecommendedNextActions: [
+      `Confirm ${file.name} is linked to the correct governed evidence target for ${visibleProject.id}.`,
+      `Use this briefing artifact to support the next project action without breaking continuity.`,
+    ],
+  };
+}
+
+function readDeepLinkParams() {
+  if (typeof window === "undefined") return { projectId: "", fileId: "" };
+  const params = new URLSearchParams(window.location.search);
+  return {
+    projectId: params.get("project") || "",
+    fileId: params.get("file") || "",
+  };
+}
+
 export default function PortalFiles() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
   const { activeProject, meta: projectMeta } = useProjectWorkspace();
   const [busyFileId, setBusyFileId] = useState(null);
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState(defaultDraft);
+  const [deepLink] = useState(() => readDeepLinkParams());
 
   const visibleProject = activeProject || state.project;
   const { files, auditEvents, meta: evidenceMeta, mutateFile, filters, setFilters, summary } = useWorkflowEvidence(visibleProject?.id);
   const evidencePackets = qualificationEvidenceByProject?.[visibleProject?.id] || qualificationEvidencePackets;
   const briefingFiles = useMemo(() => files.filter((file) => isBriefingReady(file)), [files]);
+  const targetedFile = useMemo(() => files.find((file) => file.fileId === deepLink.fileId) || null, [files, deepLink.fileId]);
 
   const categoryOptions = useMemo(() => ["All", ...Object.keys(summary.byCategory).sort()], [summary.byCategory]);
   const statusOptions = useMemo(() => ["All", ...Object.keys(summary.byStatus).sort()], [summary.byStatus]);
@@ -87,6 +119,11 @@ export default function PortalFiles() {
     }
     refreshSyncStamp(`File spine synchronized to ${visibleProject.id}`);
   }, [activeProject, refreshSyncStamp, syncActiveProject, visibleProject.id]);
+
+  useEffect(() => {
+    if (!deepLink.fileId || !targetedFile) return;
+    setFilters((current) => (current.q === targetedFile.name ? current : { ...current, q: targetedFile.name }));
+  }, [deepLink.fileId, targetedFile, setFilters]);
 
   async function handleFileAction(file, action, detail, extra = {}) {
     setBusyFileId(file.fileId);
@@ -165,6 +202,13 @@ export default function PortalFiles() {
           <div><strong>Last evidence sync:</strong> {evidenceMeta.lastSyncedAt || "Pending initial sync"}</div>
         </div>
       </div>
+
+      {targetedFile ? (
+        <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #2563eb" }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Targeted file briefing focus</div>
+          <AuricruxBriefingCard file={targetedFile} project={visibleProject} />
+        </div>
+      ) : null}
 
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>File Spine Context</h2>
@@ -354,6 +398,7 @@ export default function PortalFiles() {
         files={files}
         auditEvents={auditEvents}
         busyFileId={busyFileId}
+        targetedFileId={deepLink.fileId}
         onRegisterReview={(file) =>
           handleFileAction(file, "register-review", `${file.name} queued for governed review under ${visibleProject.id}.`)
         }
@@ -374,11 +419,7 @@ export default function PortalFiles() {
           })
         }
         onCreateBriefing={(file) =>
-          handleFileAction(file, "create-briefing", `Auricrux generated a briefing placeholder for ${file.name} under ${visibleProject.id}.`, {
-            evidenceStatus: "Briefing generated",
-            status: "Auricrux briefing ready",
-            actionLabel: "Open briefing",
-          })
+          handleFileAction(file, "create-briefing", `Auricrux generated a briefing placeholder for ${file.name} under ${visibleProject.id}.`, buildBriefingMutation(file, visibleProject))
         }
       />
     </PortalShell>
