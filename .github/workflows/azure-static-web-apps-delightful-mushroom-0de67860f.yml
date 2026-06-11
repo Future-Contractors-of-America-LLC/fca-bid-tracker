@@ -56,6 +56,13 @@ jobs:
 
       - name: Verify build artifact exists
         run: |
+          pwd
+          find dist -maxdepth 2 -type f -print | sort
+          find api -maxdepth 2 -type f -print | sort
+          ls -la
+          ls -la dist || true
+          ls -la api || true
+
           test -f dist/index.html
           test -f dist/staticwebapp.config.json
           test -f dist/deployment-status.json
@@ -69,6 +76,7 @@ jobs:
           test -f api/host.json
           test -f api/customer-login.js
           test -f api/auricrux.js
+          test -f api/run-task.js
 
       - name: Archive governed deployment payload
         run: |
