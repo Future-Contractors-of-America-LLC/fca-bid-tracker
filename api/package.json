@@ -1,7 +1,5 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "dependencies": {
-    "@azure/functions": "^4.0.0"
-  }
+  "name": "fca-bid-tracker-api",
+  "version": "1.0.0"
 }
+// CI FORCE Thu Jun 11 01:29:18 PM UTC 2026
