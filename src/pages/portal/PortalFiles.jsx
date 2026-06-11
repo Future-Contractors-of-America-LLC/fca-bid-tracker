@@ -3,6 +3,7 @@ import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
+import AuricruxBriefingCard from "../../components/AuricruxBriefingCard";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
@@ -60,6 +61,11 @@ const defaultDraft = {
   linkedEvidenceTarget: "",
 };
 
+function isBriefingReady(file = {}) {
+  const haystack = `${file.status || ""} ${file.evidenceStatus || ""} ${file.action || ""} ${file.note || ""}`.toLowerCase();
+  return haystack.includes("briefing");
+}
+
 export default function PortalFiles() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
   const { activeProject, meta: projectMeta } = useProjectWorkspace();
@@ -70,6 +76,7 @@ export default function PortalFiles() {
   const visibleProject = activeProject || state.project;
   const { files, auditEvents, meta: evidenceMeta, mutateFile, filters, setFilters, summary } = useWorkflowEvidence(visibleProject?.id);
   const evidencePackets = qualificationEvidenceByProject?.[visibleProject?.id] || qualificationEvidencePackets;
+  const briefingFiles = useMemo(() => files.filter((file) => isBriefingReady(file)), [files]);
 
   const categoryOptions = useMemo(() => ["All", ...Object.keys(summary.byCategory).sort()], [summary.byCategory]);
   const statusOptions = useMemo(() => ["All", ...Object.keys(summary.byStatus).sort()], [summary.byStatus]);
@@ -168,6 +175,7 @@ export default function PortalFiles() {
           <div>{visibleProject.fileSpineStatus}</div>
           <div><strong>Visible file records:</strong> {summary.total}</div>
           <div><strong>Workflow-backed audit records:</strong> {auditEvents.length}</div>
+          <div><strong>Briefing-ready artifacts:</strong> {briefingFiles.length}</div>
         </div>
       </div>
 
@@ -178,7 +186,11 @@ export default function PortalFiles() {
             <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Visible files</div>
             <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{summary.total}</div>
           </div>
-          {Object.entries(summary.byStatus).slice(0, 3).map(([label, count]) => (
+          <div style={statCardStyle}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Briefings ready</div>
+            <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{briefingFiles.length}</div>
+          </div>
+          {Object.entries(summary.byStatus).slice(0, 2).map(([label, count]) => (
             <div key={label} style={statCardStyle}>
               <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>{label}</div>
               <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{count}</div>
@@ -208,6 +220,18 @@ export default function PortalFiles() {
           </label>
         </div>
       </div>
+
+      {briefingFiles.length ? (
+        <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Auricrux briefing surface</div>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Governed briefing artifacts ready for action</h2>
+          <div style={{ display: "grid", gap: 12 }}>
+            {briefingFiles.map((file) => (
+              <AuricruxBriefingCard key={`briefing-${file.fileId}`} file={file} project={visibleProject} />
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Governed file registration</div>
