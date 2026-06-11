@@ -245,9 +245,29 @@ export function listProjects(tenantId) {
 export function listFiles(tenantId, options = {}) {
   const workflow = getTenantWorkflow(tenantId);
   const projectId = options?.projectId || workflow.activeProjectId || null;
-  const items = projectId
-    ? workflow.files.filter((file) => file.ownerObjectId === projectId)
-    : workflow.files;
+  const normalizedCategory = options?.category && options.category !== "All" ? options.category.toLowerCase() : null;
+  const normalizedStatus = options?.status && options.status !== "All" ? options.status.toLowerCase() : null;
+  const normalizedQuery = options?.q ? options.q.trim().toLowerCase() : null;
+
+  let items = projectId ? workflow.files.filter((file) => file.ownerObjectId === projectId) : workflow.files;
+
+  if (normalizedCategory) {
+    items = items.filter((file) => (file.category || "").toLowerCase() === normalizedCategory);
+  }
+
+  if (normalizedStatus) {
+    items = items.filter((file) => (file.status || "").toLowerCase() === normalizedStatus);
+  }
+
+  if (normalizedQuery) {
+    items = items.filter((file) => {
+      const haystack = [file.name, file.category, file.status, file.owner, file.discipline, file.linkedEvidenceTarget, file.note]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(normalizedQuery);
+    });
+  }
 
   return clone(items.map((file, index) => normalizeFileRecord(file, index)));
 }

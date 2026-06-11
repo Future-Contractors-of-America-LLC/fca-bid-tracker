@@ -2,15 +2,28 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchWorkflowAudit, fetchWorkflowFiles, mutateWorkflowFile } from "../api/workflowClient";
 import { portalFiles, projectAuditEvents } from "../systemState";
 
-function scopeSeedFiles(files, projectId) {
-  return files
-    .filter((file) => !projectId || !file.ownerObjectId || file.ownerObjectId === "PRJ-A117" || file.ownerObjectId === projectId)
-    .map((file, index) => ({
-      ...file,
-      fileId: file.fileId || `${projectId || "PRJ-A117"}-FILE-${index + 1}`,
-      ownerObjectType: file.ownerObjectType || "Project",
-      ownerObjectId: projectId || file.ownerObjectId || "PRJ-A117",
-    }));
+function scopeSeedFiles(files, projectId, filters = {}) {
+  let items = files.filter((file) => !projectId || !file.ownerObjectId || file.ownerObjectId === "PRJ-A117" || file.ownerObjectId === projectId);
+
+  if (filters.category && filters.category !== "All") {
+    items = items.filter((file) => file.category === filters.category);
+  }
+
+  if (filters.status && filters.status !== "All") {
+    items = items.filter((file) => file.status === filters.status);
+  }
+
+  if (filters.q) {
+    const q = filters.q.toLowerCase();
+    items = items.filter((file) => [file.name, file.category, file.status, file.owner, file.discipline, file.linkedEvidenceTarget, file.note].filter(Boolean).join(" ").toLowerCase().includes(q));
+  }
+
+  return items.map((file, index) => ({
+    ...file,
+    fileId: file.fileId || `${projectId || "PRJ-A117"}-FILE-${index + 1}`,
+    ownerObjectType: file.ownerObjectType || "Project",
+    ownerObjectId: projectId || file.ownerObjectId || "PRJ-A117",
+  }));
 }
 
 function scopeSeedAudit(events, projectId) {
@@ -25,7 +38,8 @@ function scopeSeedAudit(events, projectId) {
 }
 
 export default function useWorkflowEvidence(projectId) {
-  const [files, setFiles] = useState(() => scopeSeedFiles(portalFiles, projectId));
+  const [filters, setFilters] = useState({ category: "All", status: "All", q: "" });
+  const [files, setFiles] = useState(() => scopeSeedFiles(portalFiles, projectId, filters));
   const [auditEvents, setAuditEvents] = useState(() => scopeSeedAudit(projectAuditEvents, projectId));
   const [meta, setMeta] = useState({
     backingSource: "seeded-system-state",
@@ -36,7 +50,7 @@ export default function useWorkflowEvidence(projectId) {
   const hydrate = useCallback(async () => {
     try {
       const [filesPayload, auditPayload] = await Promise.all([
-        fetchWorkflowFiles(projectId),
+        fetchWorkflowFiles({ projectId, ...filters }),
         fetchWorkflowAudit(projectId),
       ]);
 
@@ -48,7 +62,7 @@ export default function useWorkflowEvidence(projectId) {
         lastSyncedAt: new Date().toISOString(),
       });
     } catch {
-      setFiles(scopeSeedFiles(portalFiles, projectId));
+      setFiles(scopeSeedFiles(portalFiles, projectId, filters));
       setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId));
       setMeta({
         backingSource: "seeded-system-state",
@@ -56,7 +70,7 @@ export default function useWorkflowEvidence(projectId) {
         lastSyncedAt: null,
       });
     }
-  }, [projectId]);
+  }, [projectId, filters]);
 
   useEffect(() => {
     let active = true;
@@ -64,7 +78,7 @@ export default function useWorkflowEvidence(projectId) {
     async function run() {
       try {
         const [filesPayload, auditPayload] = await Promise.all([
-          fetchWorkflowFiles(projectId),
+          fetchWorkflowFiles({ projectId, ...filters }),
           fetchWorkflowAudit(projectId),
         ]);
 
@@ -79,7 +93,7 @@ export default function useWorkflowEvidence(projectId) {
         });
       } catch {
         if (!active) return;
-        setFiles(scopeSeedFiles(portalFiles, projectId));
+        setFiles(scopeSeedFiles(portalFiles, projectId, filters));
         setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId));
         setMeta({
           backingSource: "seeded-system-state",
@@ -94,7 +108,7 @@ export default function useWorkflowEvidence(projectId) {
     return () => {
       active = false;
     };
-  }, [projectId]);
+  }, [projectId, filters]);
 
   const mutateFile = useCallback(
     async (action, body = {}) => {
@@ -105,14 +119,37 @@ export default function useWorkflowEvidence(projectId) {
     [hydrate, projectId]
   );
 
+  const summary = useMemo(() => {
+    const byCategory = files.reduce((acc, file) => {
+      const key = file.category || "Document";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    const byStatus = files.reduce((acc, file) => {
+      const key = file.status || "Active";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+
+    return {
+      total: files.length,
+      byCategory,
+      byStatus,
+    };
+  }, [files]);
+
   return useMemo(
     () => ({
       files,
       auditEvents,
       meta,
+      filters,
+      setFilters,
+      summary,
       mutateFile,
       refreshEvidence: hydrate,
     }),
-    [auditEvents, files, hydrate, meta, mutateFile]
+    [auditEvents, files, filters, hydrate, meta, mutateFile, summary]
   );
 }

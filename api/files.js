@@ -16,9 +16,12 @@ app.http("files", {
   handler: async (request) => {
     const tenantId = resolveTenantId(request);
     const projectId = request.query.get("projectId") || null;
+    const category = request.query.get("category") || null;
+    const status = request.query.get("status") || null;
+    const q = request.query.get("q") || null;
 
     if (request.method === "GET") {
-      const items = listFiles(tenantId, { projectId });
+      const items = listFiles(tenantId, { projectId, category, status, q });
 
       return {
         status: 200,
@@ -27,6 +30,7 @@ app.http("files", {
           items,
           count: items.length,
           projectId,
+          filters: { category, status, q },
           summary: getWorkflowSummary(tenantId),
           backingSource: "api-workflow-store",
         },

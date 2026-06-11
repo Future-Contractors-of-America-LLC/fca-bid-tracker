@@ -70,8 +70,14 @@ export async function mutateWorkflowProject(action, body = {}) {
   return payload;
 }
 
-export async function fetchWorkflowFiles(projectId) {
-  const query = projectId ? `?projectId=${encodeURIComponent(projectId)}` : "";
+export async function fetchWorkflowFiles(params = {}) {
+  const search = new URLSearchParams();
+  if (params.projectId) search.set("projectId", params.projectId);
+  if (params.category && params.category !== "All") search.set("category", params.category);
+  if (params.status && params.status !== "All") search.set("status", params.status);
+  if (params.q) search.set("q", params.q);
+
+  const query = search.toString() ? `?${search.toString()}` : "";
   const response = await fetch(`/api/files${query}`, {
     method: "GET",
     credentials: "same-origin",

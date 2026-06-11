@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
@@ -45,6 +45,13 @@ const secondaryButtonStyle = {
   color: "#1d4ed8",
 };
 
+const statCardStyle = {
+  border: "1px solid #dbe3ef",
+  borderRadius: 12,
+  padding: 14,
+  background: "#f8fbff",
+};
+
 const defaultDraft = {
   name: "",
   category: "Document",
@@ -61,8 +68,11 @@ export default function PortalFiles() {
   const [draft, setDraft] = useState(defaultDraft);
 
   const visibleProject = activeProject || state.project;
-  const { files, auditEvents, meta: evidenceMeta, mutateFile } = useWorkflowEvidence(visibleProject?.id);
+  const { files, auditEvents, meta: evidenceMeta, mutateFile, filters, setFilters, summary } = useWorkflowEvidence(visibleProject?.id);
   const evidencePackets = qualificationEvidenceByProject?.[visibleProject?.id] || qualificationEvidencePackets;
+
+  const categoryOptions = useMemo(() => ["All", ...Object.keys(summary.byCategory).sort()], [summary.byCategory]);
+  const statusOptions = useMemo(() => ["All", ...Object.keys(summary.byStatus).sort()], [summary.byStatus]);
 
   useEffect(() => {
     if (activeProject) {
@@ -156,8 +166,46 @@ export default function PortalFiles() {
           <div><strong>Project ID:</strong> {visibleProject.id}</div>
           <div><strong>File set:</strong> {visibleProject.fileSetLabel}</div>
           <div>{visibleProject.fileSpineStatus}</div>
-          <div><strong>Workflow-backed file records:</strong> {files.length}</div>
+          <div><strong>Visible file records:</strong> {summary.total}</div>
           <div><strong>Workflow-backed audit records:</strong> {auditEvents.length}</div>
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>File register summary</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
+          <div style={statCardStyle}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Visible files</div>
+            <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{summary.total}</div>
+          </div>
+          {Object.entries(summary.byStatus).slice(0, 3).map(([label, count]) => (
+            <div key={label} style={statCardStyle}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>{label}</div>
+              <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{count}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Search</div>
+            <input style={inputStyle} value={filters.q} onChange={(event) => setFilters((current) => ({ ...current, q: event.target.value }))} placeholder="Search file name, owner, evidence target, note" />
+          </label>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Category</div>
+            <select style={inputStyle} value={filters.category} onChange={(event) => setFilters((current) => ({ ...current, category: event.target.value }))}>
+              {categoryOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Status</div>
+            <select style={inputStyle} value={filters.status} onChange={(event) => setFilters((current) => ({ ...current, status: event.target.value }))}>
+              {statusOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </label>
         </div>
       </div>
 
