@@ -1,6 +1,6 @@
 import { app } from "@azure/functions";
 import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
-import { getFileSummary } from "./workflow-store.js";
+import { getFileSummary } from "./workspace-read-models.js";
 
 function resolveTenantId(request) {
   const cookieHeader = request.headers.get("cookie") || "";
