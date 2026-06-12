@@ -212,3 +212,25 @@ export async function fetchAuditSummary(relatedObjectType, relatedObjectId) {
 
   return payload;
 }
+
+export async function fetchAcademyAssignments(params = {}) {
+  const search = new URLSearchParams();
+  if (params.projectId) search.set("projectId", params.projectId);
+  if (params.learnerId) search.set("learnerId", params.learnerId);
+
+  const query = search.toString() ? `?${search.toString()}` : "";
+  const response = await fetch(`/api/academy-assignments${query}`, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok) {
+    throw new Error(payload?.error || "Unable to load academy assignments.");
+  }
+
+  return payload;
+}

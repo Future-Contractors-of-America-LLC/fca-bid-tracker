@@ -65,19 +65,20 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
           byActorType: {},
           mostRecent: [],
         },
+        academyReadiness: null,
         auricruxSummary: {
           nextAction: project.nextAction || state.workspace.currentNextAction,
         },
       }
     : null);
 
-  const fullyApiBacked = meta.projectSource === "api-workflow-store" && meta.fileSource === "api-workflow-store" && meta.auditSource === "api-workflow-store";
+  const fullyApiBacked = meta.projectSource === "api-unified-project-spine" && meta.fileSource === "api-workflow-store" && meta.auditSource === "api-workflow-store";
   const recentAudit = useMemo(() => visible?.auditSummary?.mostRecent || [], [visible]);
 
   return (
     <PortalShell
       title="Project Workspace"
-      subtitle="Project continuity home for route-bound project identity, file summary, audit summary, and Auricrux next-action posture without overstating backend completion."
+      subtitle="Project continuity home for route-bound project identity, file summary, audit summary, Academy readiness, and Auricrux next-action posture without overstating backend completion."
       activeHref="/portal/projects"
       currentJourney="job"
       primaryHref="/portal/files"
@@ -87,13 +88,13 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
       <div style={{ marginBottom: 16 }}>
         <ExecutionTruthBanner
           title="Project continuity home is now live in router truth"
-          status={fullyApiBacked ? "API-backed workspace reads" : "Fallback shell continuity active"}
+          status={fullyApiBacked ? "Unified API-backed workspace reads" : "Fallback shell continuity active"}
           source={`project=${meta.projectSource} · files=${meta.fileSource} · audit=${meta.auditSource}`}
           tone={fullyApiBacked ? "info" : "warning"}
           whatIsLive={[
             "A dynamic routed project workspace exists at /portal/projects/:projectId.",
-            "The route now prefers canonical backend reads for project workspace, file summary, and audit summary.",
-            "File summary, audit summary, and Auricrux next-action visibility are grouped into one project home.",
+            "The route now prefers canonical backend reads for project workspace, file summary, audit summary, and Academy readiness.",
+            "File summary, audit summary, Academy readiness, and Auricrux next-action visibility are grouped into one project home.",
           ]}
           whatIsNotLiveYet={[
             "When backend truth is unavailable, the route still falls back to shell continuity state.",
@@ -110,7 +111,7 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Project detail route now prefers canonical workspace reads"
-          detail="This route now attempts to resolve project detail, file summary, and audit summary from backend read models before falling back to shell continuity state."
+          detail="This route now attempts to resolve project detail, file summary, audit summary, and Academy readiness from backend read models before falling back to shell continuity state."
         />
       </div>
 
@@ -166,6 +167,22 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
             <div style={statCardStyle}>
               <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Audit records</div>
               <div style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{visible.auditSummary?.total ?? 0}</div>
+            </div>
+            <div style={statCardStyle}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Academy readiness</div>
+              <div style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{visible.academyReadiness?.readinessStatus || "unknown"}</div>
+            </div>
+          </div>
+
+          <div style={{ ...cardStyle, marginBottom: 16 }}>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Academy readiness</h2>
+            <div style={{ color: "#475569", lineHeight: 1.8 }}>
+              <div><strong>Assignments in scope:</strong> {visible.academyReadiness?.assignmentCount ?? 0}</div>
+              <div><strong>Completed assignments:</strong> {visible.academyReadiness?.completedCount ?? 0}</div>
+              <div><strong>Average completion:</strong> {visible.academyReadiness?.averageCompletionPercent ?? 0}%</div>
+              <div><strong>Feature gate effect:</strong> {visible.academyReadiness?.featureGateEffect || "No effect reported"}</div>
+              <div><strong>Blocking reason:</strong> {visible.academyReadiness?.blockingReason || "No academy blocker"}</div>
+              <div><strong>Next academy action:</strong> {visible.academyReadiness?.nextAcademyAction || "No academy next action"}</div>
             </div>
           </div>
 

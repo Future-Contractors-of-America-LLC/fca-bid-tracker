@@ -22,6 +22,7 @@ import { academyClassrooms, saasOperationalPathways } from "../../productBluepri
 import { academyCatalog } from "../../academyCatalog";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useAcademyProjectReadiness from "../../hooks/useAcademyProjectReadiness";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -51,6 +52,7 @@ export default function AcademyHome() {
   const liveProject = state?.project || currentProject;
   const liveWorkspace = state?.workspace || workspaceContext;
   const liveAuricrux = state?.auricrux || auricruxRail;
+  const { items: academyAssignments, readiness, meta: readinessMeta } = useAcademyProjectReadiness(liveProject.id);
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
   const commItems = auricruxCommsChannels.map((item) => ({
     ...item,
@@ -93,9 +95,43 @@ export default function AcademyHome() {
         setCommsAccess={setCommsAccess}
         applyPlanPreset={applyPlanPreset}
         refreshSyncStamp={refreshSyncStamp}
+        readiness={readiness}
       />
 
       <AcademyLmsControlPanel />
+
+      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #ecfeff 0%, #ffffff 100%)", border: "1px solid #a5f3fc" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
+          <div>
+            <div style={{ color: "#0f766e", fontWeight: 700, marginBottom: 8 }}>Project-linked academy runtime</div>
+            <h2 style={{ marginTop: 0, marginBottom: 8 }}>Academy readiness is now tied to the active project spine</h2>
+          </div>
+          <div style={{ color: "#475569", lineHeight: 1.6, maxWidth: 340 }}>
+            Source: {readinessMeta.backingSource}. Academy is no longer presented only as catalog posture; readiness is now project-aware runtime state.
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
+          <div>
+            <strong>Active project</strong>
+            <div>{liveProject.id}</div>
+          </div>
+          <div>
+            <strong>Readiness</strong>
+            <div>{readiness?.readinessStatus || "Unknown"}</div>
+          </div>
+          <div>
+            <strong>Completion</strong>
+            <div>{readiness?.averageCompletionPercent ?? 0}%</div>
+          </div>
+          <div>
+            <strong>Assignments</strong>
+            <div>{readiness?.assignmentCount ?? 0}</div>
+          </div>
+        </div>
+        <div style={{ color: "#475569", lineHeight: 1.7, marginTop: 12 }}>
+          {readiness?.blockingReason || readiness?.nextAcademyAction || "No governed project-linked Academy readiness is currently available."}
+        </div>
+      </div>
 
       <div style={{ marginBottom: 24 }}>
         <AuricruxCommsPanel
@@ -146,7 +182,7 @@ export default function AcademyHome() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7 }}>
           <div>
             <strong>Assignment need</strong>
-            <div>Two learners are ready for onboarding assignment before mobilization for {liveProject.id}.</div>
+            <div>{academyAssignments.length} governed academy assignment{academyAssignments.length === 1 ? "" : "s"} are linked to {liveProject.id}.</div>
           </div>
           <div>
             <strong>Dependency</strong>
@@ -158,7 +194,7 @@ export default function AcademyHome() {
           </div>
           <div>
             <strong>Coordinated next move</strong>
-            <div>Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning for {liveTenant.name}.</div>
+            <div>{readiness?.nextAcademyAction || `Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning for ${liveTenant.name}.`}</div>
           </div>
         </div>
       </div>
@@ -271,7 +307,7 @@ export default function AcademyHome() {
         </div>
         <div style={cardStyle}>
           <div style={{ color: "#6b7280" }}>Completion rate</div>
-          <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>87%</div>
+          <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>{readiness?.averageCompletionPercent ?? 87}%</div>
           <div>Workspace KPI for rollout confidence and job-start readiness</div>
         </div>
       </div>
@@ -291,9 +327,9 @@ export default function AcademyHome() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Auricrux coaching notes</h2>
           <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div>• Two new learners are ready for onboarding assignment under {liveTenant.name}.</div>
-            <div>• One certification expires in 14 days.</div>
-            <div>• Field kickoff posture for {liveProject.id} suggests scheduling a safety and document-control refresher before mobilization.</div>
+            <div>• {academyAssignments.length} governed assignment{academyAssignments.length === 1 ? " is" : "s are"} attached to {liveProject.id}.</div>
+            <div>• Readiness status: {readiness?.readinessStatus || "unknown"}.</div>
+            <div>• Next action: {readiness?.nextAcademyAction || `Schedule a safety and document-control refresher before mobilization for ${liveProject.id}.`}</div>
           </div>
         </div>
       </div>

@@ -27,7 +27,7 @@ const actionButtonStyle = (tone = "primary") => ({
   font: "inherit",
 });
 
-export default function AcademyReadinessOverlay({ session, setProductAccess, setCommsAccess, applyPlanPreset, refreshSyncStamp }) {
+export default function AcademyReadinessOverlay({ session, setProductAccess, setCommsAccess, applyPlanPreset, refreshSyncStamp, readiness = null }) {
   const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
   const enabledProducts = session?.enabledProducts || { saas: true, lms: true, auricrux: true };
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
@@ -36,9 +36,11 @@ export default function AcademyReadinessOverlay({ session, setProductAccess, set
   const needsEmail = enabledComms.email === false;
   const needsConference = enabledComms.conference === false;
   const needsTeams = enabledComms.teams === false;
-  const missingCount = [needsLms, needsLecture, needsEmail, needsConference, needsTeams].filter(Boolean).length;
+  const academyBlocked = readiness?.readinessStatus === "blocked";
+  const academyInProgress = readiness?.readinessStatus === "in-progress";
+  const missingCount = [needsLms, needsLecture, needsEmail, needsConference, needsTeams, academyBlocked].filter(Boolean).length;
 
-  if (missingCount === 0) return null;
+  if (missingCount === 0 && !academyInProgress) return null;
 
   function repairAcademyDependencies() {
     if (needsLms) setProductAccess("lms", true);
@@ -61,7 +63,7 @@ export default function AcademyReadinessOverlay({ session, setProductAccess, set
           <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Proactive academy readiness</div>
           <h2 style={{ marginTop: 0, marginBottom: 8 }}>Academy should repair training dependencies before learners hit continuity gaps</h2>
           <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 920 }}>
-            Auricrux now checks whether LMS, lecture delivery, training follow-through, and executive coaching channels are ready before academy continuity breaks downstream.
+            Auricrux now checks LMS, coaching lanes, and project-linked training readiness before academy continuity breaks downstream.
           </div>
         </div>
         <div style={{ ...cardStyle, minWidth: 240 }}>
@@ -81,6 +83,11 @@ export default function AcademyReadinessOverlay({ session, setProductAccess, set
           <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Lecture and coaching lanes</div>
           <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 6 }}>{[needsLecture, needsConference, needsTeams].filter(Boolean).length}</div>
           <div style={{ color: "#475569", lineHeight: 1.7 }}>Lecture, conference, and Teams channels should stay available for training delivery and multi-party coaching.</div>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Project readiness</div>
+          <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 6 }}>{readiness?.readinessStatus || "Unknown"}</div>
+          <div style={{ color: "#475569", lineHeight: 1.7 }}>{readiness?.blockingReason || readiness?.nextAcademyAction || "Project-linked academy readiness has not been loaded yet."}</div>
         </div>
         <div style={cardStyle}>
           <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Follow-through lane</div>
