@@ -80,19 +80,6 @@ const activeRouteCardStyle = {
   color: "#1d4ed8",
 };
 
-const addedPortalModules = [
-  {
-    href: "/portal/estimates",
-    label: "Estimates",
-    description: "Structured pricing, assumptions, exclusions, and commercial readiness.",
-  },
-  {
-    href: "/portal/proposals",
-    label: "Proposals",
-    description: "Customer packaging, approval-ready narrative, and project handoff posture.",
-  },
-];
-
 export default function PortalShell({
   title,
   subtitle,
@@ -108,7 +95,6 @@ export default function PortalShell({
   const workspaceApi = useWorkspaceState();
   const resolvedState = workspaceState || workspaceApi.state;
   const { refreshSyncStamp } = workspaceApi;
-  const sectionCards = [...portalModules, ...addedPortalModules];
 
   return (
     <div style={shellStyle}>
@@ -178,7 +164,7 @@ export default function PortalShell({
         <nav style={routeTabsWrapStyle} aria-label="Portal section navigation">
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 10 }}>Portal sections</div>
           <div style={routeGridStyle}>
-            {sectionCards.map((module) => {
+            {portalModules.map((module) => {
               const isActive = module.href === activeHref;
               return (
                 <a
