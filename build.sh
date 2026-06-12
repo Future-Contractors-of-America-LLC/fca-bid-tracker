@@ -168,7 +168,7 @@ const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");
 const rows=document.getElementById("projectRows");
 const projectName=rec?.company?rec.company+" — Initial Opportunity":"Launch Demo Project";
 const customer=rec?.company||"Launch Customer Workspace";
-rows.innerHTML='<tr><td>'+projectName+'</td><td>Qualified</td><td>'+customer+'</td><td>Proposal preparation / file review</td></tr>';
+rows.innerHTML=`<tr><td>${projectName}</td><td>Qualified</td><td>${customer}</td><td>Proposal preparation / file review</td></tr>`;
 </script>'
 
 create_page "/portal/files" "FCA Files" '
