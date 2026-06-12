@@ -1,20 +1,16 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { resolveTenantContextFromRequest } from "./auth-boundary.js";
 import { getProjectWorkspace } from "./workspace-read-models.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 app.http("projects-workspace", {
   methods: ["GET"],
   authLevel: "anonymous",
   route: "projects/{projectId}/workspace",
   handler: async (request, context) => {
-    const tenantId = resolveTenantId(request);
+    const tenantContext = resolveTenantContextFromRequest(request, {
+      allowSeededFallback: true,
+    });
+    const tenantId = tenantContext.tenantId;
     const projectId = context?.triggerMetadata?.projectId || request.params?.projectId;
 
     try {
@@ -24,6 +20,11 @@ app.http("projects-workspace", {
         jsonBody: {
           ok: true,
           item,
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-workflow-store",
         },
       };
@@ -33,6 +34,11 @@ app.http("projects-workspace", {
         jsonBody: {
           ok: false,
           error: error?.message || "Project workspace not found.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
