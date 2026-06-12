@@ -83,6 +83,24 @@ jobs:
           mkdir -p workspace
           tar -czf workspace/governed_swa_payload.tgz dist api staticwebapp.config.json package.json package-lock.json
 
+      - name: Record pre-deploy diagnostics
+        run: |
+          mkdir -p workspace
+          {
+            echo "workflow=${{ github.workflow }}"
+            echo "run_id=${{ github.run_id }}"
+            echo "run_attempt=${{ github.run_attempt }}"
+            echo "ref=${{ github.ref }}"
+            echo "sha=${{ github.sha }}"
+            echo "event_name=${{ github.event_name }}"
+            echo "pull_request_number=${{ github.event.pull_request.number || '' }}"
+            echo "swa_name=$AURICRUX_SWA_NAME"
+            echo "swa_default_host=$AURICRUX_SWA_DEFAULT_HOST"
+            echo "expected_hosts=$AURICRUX_EXPECTED_HOSTS"
+            echo "dist_index_present=$(test -f dist/index.html && echo yes || echo no)"
+            echo "api_host_present=$(test -f api/host.json && echo yes || echo no)"
+          } > workspace/swa_predeploy_diagnostics.txt
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -95,6 +113,19 @@ jobs:
           app_location: dist
           api_location: api
           output_location: ''
+
+      - name: Capture deploy diagnostics
+        if: always()
+        run: |
+          mkdir -p workspace
+          {
+            echo "builddeploy_outcome=${{ steps.builddeploy.outcome }}"
+            echo "builddeploy_conclusion=${{ steps.builddeploy.conclusion }}"
+            echo "swa_name=$AURICRUX_SWA_NAME"
+            echo "swa_default_host=$AURICRUX_SWA_DEFAULT_HOST"
+            echo "expected_hosts=$AURICRUX_EXPECTED_HOSTS"
+            echo "timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } > workspace/swa_deploy_diagnostics.txt
 
       - name: Post-deploy live domain smoke verification
         run: npm run verify:live-deployment
@@ -114,6 +145,8 @@ jobs:
             workspace/governed_swa_payload.tgz
             workspace/live_deployment_smoke_summary.json
             workspace/live_deployment_smoke_failures.txt
+            workspace/swa_predeploy_diagnostics.txt
+            workspace/swa_deploy_diagnostics.txt
           if-no-files-found: warn
 
   close_pull_request_job:
