@@ -38,6 +38,9 @@ jobs:
       - name: Run governed build validation
         run: npm run build:system
 
+      - name: Run unified single-release validation
+        run: npm run validate:unified-single-release
+
       - name: Generate product readiness evidence
         if: ${{ always() }}
         run: npm run generate:product-readiness-report
@@ -73,6 +76,7 @@ jobs:
       - name: Publish product readiness summary
         if: ${{ always() }}
         run: |
+          echo "Unified single-release validation is wired into the governed build chain." >> "$GITHUB_STEP_SUMMARY"
           if [ -f generated/product-readiness-report.md ]; then
             cat generated/product-readiness-report.md >> "$GITHUB_STEP_SUMMARY"
           else

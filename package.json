@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build:system": "npm run build",
+    "build:system": "npm run build && npm run validate:unified-single-release",
     "build": "bash ./build.sh",
     "verify:live-deployment": "node no-op.js",
+    "validate:unified-single-release": "node scripts/validate-unified-single-release.mjs",
 
     "generate:admin-governance-report": "node no-op.js",
     "generate:billing-governance-report": "node no-op.js",
