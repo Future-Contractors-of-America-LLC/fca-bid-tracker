@@ -1,6 +1,7 @@
 import { app } from "@azure/functions";
 import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
-import { listProjects, mutateProject, getWorkflowSummary } from "./workflow-store.js";
+import { mutateProject, getWorkflowSummary } from "./workflow-store.js";
+import { listUnifiedProjects } from "./workspace-read-models.js";
 
 function resolveTenantId(request) {
   const cookieHeader = request.headers.get("cookie") || "";
@@ -17,7 +18,7 @@ app.http("projects", {
     const tenantId = resolveTenantId(request);
 
     if (request.method === "GET") {
-      const items = listProjects(tenantId);
+      const items = listUnifiedProjects(tenantId);
       return {
         status: 200,
         jsonBody: {
@@ -25,7 +26,7 @@ app.http("projects", {
           items,
           count: items.length,
           summary: getWorkflowSummary(tenantId),
-          backingSource: "api-workflow-store",
+          backingSource: "api-unified-project-spine",
         },
       };
     }

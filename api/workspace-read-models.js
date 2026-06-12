@@ -1,4 +1,6 @@
 import { listBids, listProjects, listFiles, listAuditEvents } from "./workflow-store.js";
+import { getLeadProject, listLeadProjects } from "./leads-store.js";
+import { getProjectReadiness } from "./academy-store.js";
 
 function countBy(items = [], selector) {
   return items.reduce((acc, item) => {
@@ -6,6 +8,55 @@ function countBy(items = [], selector) {
     acc[key] = (acc[key] || 0) + 1;
     return acc;
   }, {});
+}
+
+function normalizeUnifiedProject(project = {}) {
+  if (project.projectId) {
+    return {
+      id: project.projectId,
+      name: project.projectName,
+      customer: project.clientId || "Governed client",
+      stage: project.status || "active",
+      nextAction: project.nextAction || "Release startup checklist",
+      owner: project.owner || "Project Coordinator",
+      due: project.updatedAt || project.createdAt || null,
+      superintendent: "Pending assignment",
+      permitStatus: project.permitStatus || "Permit intake pending",
+      siteStatus: project.siteStatus || "Startup packet ready for mobilization planning",
+      commercialFocus: project.commercialFocus || `Converted from ${project.sourceOpportunityId || "governed opportunity"}.`,
+      fileSetLabel: `Lead-converted project ${project.projectId} attached to the shared workspace spine`,
+      fileSpineStatus: `Files, evidence, and Academy readiness should normalize against ${project.projectId}.`,
+      auditLabel: "Project continuity audit active",
+      auditStatus: `Lead-converted project ${project.projectId} is now visible in canonical workspace truth.`,
+      auricruxMode: "Project-aware workspace guidance",
+      auricruxSummary: `Auricrux is reading ${project.projectId} as part of the unified project spine.`,
+      sourceBidId: project.sourceOpportunityId || null,
+      sourceType: "lead-converted-project",
+      lastActionAt: project.updatedAt || project.createdAt || null,
+      actionHistory: [],
+      isCanonical: true,
+    };
+  }
+
+  return {
+    ...project,
+    sourceType: project.sourceType || "workflow-project",
+    isCanonical: true,
+  };
+}
+
+export function listUnifiedProjects(tenantId) {
+  const workflowProjects = listProjects(tenantId).map((project) => normalizeUnifiedProject(project));
+  const leadProjects = listLeadProjects(tenantId).map((project) => normalizeUnifiedProject(project));
+  const byId = new Map();
+
+  [...workflowProjects, ...leadProjects].forEach((project) => {
+    if (!byId.has(project.id)) {
+      byId.set(project.id, project);
+    }
+  });
+
+  return Array.from(byId.values());
 }
 
 export function getOpportunityWorkspace(tenantId, opportunityId) {
@@ -48,8 +99,8 @@ export function getOpportunityWorkspace(tenantId, opportunityId) {
 }
 
 export function getProjectWorkspace(tenantId, projectId) {
-  const projects = listProjects(tenantId);
-  const project = projects.find((item) => item.id === projectId);
+  const unifiedProjects = listUnifiedProjects(tenantId);
+  const project = unifiedProjects.find((item) => item.id === projectId);
 
   if (!project) {
     throw new Error(`Project workspace not found: ${projectId}`);
@@ -57,6 +108,7 @@ export function getProjectWorkspace(tenantId, projectId) {
 
   const files = listFiles(tenantId, { projectId });
   const auditEvents = listAuditEvents(tenantId, { projectId });
+  const academyReadiness = getProjectReadiness(tenantId, projectId);
 
   return {
     projectId: project.id,
@@ -69,6 +121,7 @@ export function getProjectWorkspace(tenantId, projectId) {
     owner: project.owner,
     permitStatus: project.permitStatus,
     siteStatus: project.siteStatus,
+    sourceType: project.sourceType || "workflow-project",
     fileSummary: {
       total: files.length,
       briefingsReady: files.filter((file) => `${file.status || ""} ${file.evidenceStatus || ""}`.toLowerCase().includes("briefing")).length,
@@ -79,8 +132,9 @@ export function getProjectWorkspace(tenantId, projectId) {
       total: auditEvents.length,
       recentEventTypes: countBy(auditEvents.slice(0, 10), (event) => event.eventType || "workflow-event"),
     },
+    academyReadiness,
     auricruxSummary: {
-      nextAction: project.nextAction,
+      nextAction: academyReadiness.nextAcademyAction || project.nextAction,
     },
   };
 }

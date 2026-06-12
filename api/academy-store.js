@@ -99,6 +99,80 @@ function seedEnrollments() {
   ];
 }
 
+function seedAssignments() {
+  return [
+    {
+      assignmentId: "ASN-001",
+      tenantId: DEFAULT_TENANT_ID,
+      projectId: "A-117",
+      learnerId: "LRN-001",
+      programKey: "project-controls",
+      status: "active",
+      dueAt: null,
+      completionPercent: 42,
+      credentialImpact: "Project Controls Certificate",
+      featureGateEffect: "document-control-guidance-enabled",
+      nextAction: "Complete RFI and submittal simulation",
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+      auditTrail: [
+        {
+          at: nowIso(),
+          eventType: "assignment-created",
+          actorType: "auricrux",
+          reason: "Project controls readiness required for live workspace continuity.",
+        },
+      ],
+    },
+    {
+      assignmentId: "ASN-002",
+      tenantId: DEFAULT_TENANT_ID,
+      projectId: "A-117",
+      learnerId: "LRN-002",
+      programKey: "precon-estimating",
+      status: "active",
+      dueAt: null,
+      completionPercent: 67,
+      credentialImpact: "Preconstruction Readiness Certificate",
+      featureGateEffect: "estimate-review-guidance-enabled",
+      nextAction: "Complete vendor leveling drill",
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+      auditTrail: [
+        {
+          at: nowIso(),
+          eventType: "assignment-created",
+          actorType: "auricrux",
+          reason: "Estimating readiness required before proposal acceleration.",
+        },
+      ],
+    },
+    {
+      assignmentId: "ASN-003",
+      tenantId: DEFAULT_TENANT_ID,
+      projectId: "B-204",
+      learnerId: "LRN-003",
+      programKey: "field-readiness",
+      status: "assigned",
+      dueAt: null,
+      completionPercent: 0,
+      credentialImpact: "Field Readiness Badge",
+      featureGateEffect: "field-mobilization-locked-until-complete",
+      nextAction: "Begin mobilization and safety kickoff",
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+      auditTrail: [
+        {
+          at: nowIso(),
+          eventType: "assignment-created",
+          actorType: "auricrux",
+          reason: "Field readiness must be governed before mobilization.",
+        },
+      ],
+    },
+  ];
+}
+
 function seedCertificates() {
   return [];
 }
@@ -120,6 +194,7 @@ function getStore() {
         [DEFAULT_TENANT_ID]: {
           learners: seedLearners(),
           enrollments: seedEnrollments(),
+          assignments: seedAssignments(),
           certificates: seedCertificates(),
           updatedAt: nowIso(),
         },
@@ -136,11 +211,53 @@ function getTenantStore(tenantId = DEFAULT_TENANT_ID) {
     store.tenants[key] = {
       learners: seedLearners(),
       enrollments: seedEnrollments(),
+      assignments: seedAssignments(),
       certificates: seedCertificates(),
       updatedAt: nowIso(),
     };
   }
   return store.tenants[key];
+}
+
+function upsertAssignmentForEnrollment(tenantStore, learnerId, enrollment) {
+  const learner = tenantStore.learners.find((item) => item.learnerId === learnerId);
+  const projectId = learner?.assignedProjectId || null;
+  if (!projectId) return;
+
+  const assignmentIndex = tenantStore.assignments.findIndex(
+    (item) => item.learnerId === learnerId && item.programKey === enrollment.programKey && item.projectId === projectId
+  );
+
+  const nextAssignment = {
+    assignmentId: assignmentIndex >= 0 ? tenantStore.assignments[assignmentIndex].assignmentId : `ASN-${Date.now()}`,
+    tenantId: DEFAULT_TENANT_ID,
+    projectId,
+    learnerId,
+    programKey: enrollment.programKey,
+    status: enrollment.status === "Completed" ? "completed" : enrollment.status.toLowerCase(),
+    dueAt: assignmentIndex >= 0 ? tenantStore.assignments[assignmentIndex].dueAt : null,
+    completionPercent: enrollment.progressPercent,
+    credentialImpact: enrollment.credentialTitle,
+    featureGateEffect: enrollment.status === "Completed" ? "workflow-unlocked" : "training-in-progress",
+    nextAction: enrollment.status === "Completed" ? "Issue credential and unlock governed workflow" : enrollment.nextLesson,
+    createdAt: assignmentIndex >= 0 ? tenantStore.assignments[assignmentIndex].createdAt : nowIso(),
+    updatedAt: nowIso(),
+    auditTrail: [
+      {
+        at: nowIso(),
+        eventType: assignmentIndex >= 0 ? "assignment-updated" : "assignment-created",
+        actorType: "auricrux",
+        reason: "Academy assignment must stay attached to project-linked readiness truth.",
+      },
+      ...((assignmentIndex >= 0 ? tenantStore.assignments[assignmentIndex].auditTrail : []) || []),
+    ].slice(0, 10),
+  };
+
+  if (assignmentIndex >= 0) {
+    tenantStore.assignments[assignmentIndex] = nextAssignment;
+  } else {
+    tenantStore.assignments.unshift(nextAssignment);
+  }
 }
 
 function refreshLearnerSnapshot(tenantStore, learnerId) {
@@ -153,6 +270,64 @@ function refreshLearnerSnapshot(tenantStore, learnerId) {
   learner.status = enrollment.status === "Completed" ? "Completed" : enrollment.status;
   learner.certificateStatus = tenantStore.certificates.some((item) => item.learnerId === learnerId && item.programKey === enrollment.programKey && item.status === "Issued") ? "Issued" : enrollment.status === "Completed" ? "Ready to Issue" : "In Progress";
   learner.lastActivityAt = nowIso();
+  upsertAssignmentForEnrollment(tenantStore, learnerId, enrollment);
+}
+
+function buildProjectReadiness(tenantStore) {
+  const totals = {};
+
+  tenantStore.assignments.forEach((assignment) => {
+    const key = assignment.projectId || "unassigned";
+    if (!totals[key]) {
+      totals[key] = {
+        projectId: key,
+        assignmentCount: 0,
+        completedCount: 0,
+        averageCompletionPercent: 0,
+        readinessStatus: "blocked",
+        nextAcademyAction: "Assign learner and program",
+        featureGateEffect: "academy-readiness-pending",
+      };
+    }
+
+    totals[key].assignmentCount += 1;
+    totals[key].completedCount += assignment.status === "completed" ? 1 : 0;
+    totals[key].averageCompletionPercent += assignment.completionPercent || 0;
+    if (assignment.nextAction) {
+      totals[key].nextAcademyAction = assignment.nextAction;
+    }
+    if (assignment.featureGateEffect) {
+      totals[key].featureGateEffect = assignment.featureGateEffect;
+    }
+  });
+
+  return Object.values(totals).map((item) => {
+    const average = item.assignmentCount ? Math.round(item.averageCompletionPercent / item.assignmentCount) : 0;
+    const readinessStatus = average >= 80 ? "ready" : average >= 40 ? "in-progress" : "blocked";
+    return {
+      ...item,
+      averageCompletionPercent: average,
+      readinessStatus,
+      blockingReason: readinessStatus === "ready" ? null : "Academy assignments must progress before workflow is fully unlocked.",
+    };
+  });
+}
+
+export function getProjectReadiness(tenantId, projectId) {
+  const tenantStore = getTenantStore(tenantId);
+  const readiness = buildProjectReadiness(tenantStore).find((item) => item.projectId === projectId);
+  return clone(
+    readiness || {
+      projectId,
+      assignmentCount: 0,
+      completedCount: 0,
+      averageCompletionPercent: 0,
+      readinessStatus: "blocked",
+      blockingReason: "No governed Academy assignments exist for this project.",
+      nextAcademyAction: "Assign learner and program",
+      featureGateEffect: "academy-readiness-pending",
+    }
+  );
 }
 
 export function getAcademySnapshot(tenantId) {
@@ -160,12 +335,15 @@ export function getAcademySnapshot(tenantId) {
   return clone({
     learners: tenantStore.learners,
     enrollments: tenantStore.enrollments,
+    assignments: tenantStore.assignments,
+    projectReadiness: buildProjectReadiness(tenantStore),
     certificates: tenantStore.certificates,
     catalog: academyCatalog,
     summary: {
       learnerCount: tenantStore.learners.length,
       activeEnrollmentCount: tenantStore.enrollments.filter((item) => item.status === "Active" || item.status === "Assigned").length,
       completedEnrollmentCount: tenantStore.enrollments.filter((item) => item.status === "Completed").length,
+      assignmentCount: tenantStore.assignments.length,
       issuedCertificateCount: tenantStore.certificates.filter((item) => item.status === "Issued").length,
       updatedAt: tenantStore.updatedAt,
     },
@@ -181,6 +359,9 @@ export function mutateAcademy(tenantId, action, payload = {}) {
       const program = getProgram(payload.programKey);
       if (!learner) throw new Error(`Learner not found: ${payload.learnerId}`);
       if (!program) throw new Error(`Program not found: ${payload.programKey}`);
+      if (payload.projectId) {
+        learner.assignedProjectId = payload.projectId;
+      }
       const existing = tenantStore.enrollments.find((item) => item.learnerId === learner.learnerId && item.programKey === program.key);
       if (existing) {
         existing.status = existing.progressPercent > 0 ? "Active" : "Assigned";
@@ -195,7 +376,7 @@ export function mutateAcademy(tenantId, action, payload = {}) {
           status: "Assigned",
           progressPercent: 0,
           completedModules: 0,
-          totalModules: Number.parseInt(program.duration, 10) || program.classrooms?.length || 4,
+          totalModules: Number.parseInt(program.duration, 10) || 4,
           nextLesson: `Begin ${program.title}`,
           coach: payload.coach || "Auricrux",
           assignedAt: nowIso(),
