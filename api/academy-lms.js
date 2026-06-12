@@ -1,20 +1,16 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { resolveTenantContextFromRequest } from "./auth-boundary.js";
 import { getAcademySnapshot, mutateAcademy } from "./academy-store.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 app.http("academy-lms", {
   methods: ["GET", "PATCH"],
   authLevel: "anonymous",
   route: "academy-lms",
   handler: async (request) => {
-    const tenantId = resolveTenantId(request);
+    const tenantContext = resolveTenantContextFromRequest(request, {
+      allowSeededFallback: request.method === "GET",
+    });
+    const tenantId = tenantContext.tenantId;
 
     if (request.method === "GET") {
       const snapshot = getAcademySnapshot(tenantId);
@@ -23,7 +19,27 @@ app.http("academy-lms", {
         jsonBody: {
           ok: true,
           ...snapshot,
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-academy-store",
+        },
+      };
+    }
+
+    if (!tenantContext.authenticated || !tenantContext.tenantId) {
+      return {
+        status: 401,
+        jsonBody: {
+          ok: false,
+          error: "Authenticated tenant session required for academy mutations.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
@@ -37,6 +53,11 @@ app.http("academy-lms", {
         jsonBody: {
           ok: true,
           ...snapshot,
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-academy-store",
         },
       };
@@ -46,6 +67,11 @@ app.http("academy-lms", {
         jsonBody: {
           ok: false,
           error: error?.message || "Academy LMS mutation failed.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
