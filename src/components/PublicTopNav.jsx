@@ -151,6 +151,7 @@ export default function PublicTopNav({ mode = "public" }) {
   const actionLabel = session?.authenticated ? "Open Workspace" : "Customer Login";
   const internalQuickLinks = [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace];
   const showInternalLinks = currentPath.startsWith("/login") && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("mode") === "internal";
+  const portalUtilityLinks = portalModules.filter((item) => ["/portal/platform", "/portal", "/portal/estimates", "/portal/proposals"].includes(item.href));
 
   async function handleLogout(event) {
     event.preventDefault();
@@ -214,7 +215,7 @@ export default function PublicTopNav({ mode = "public" }) {
 
         {mode === "portal" ? (
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            {[...portalModules.slice(0, 2), { href: "/portal/estimates", label: "Estimates" }, { href: "/portal/proposals", label: "Proposals" }].map((item) => (
+            {portalUtilityLinks.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
