@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FCA Platform Dashboard | Live Control Plane Proof</title>
+  <style>
+    :root { --navy:#0c1a2a; --blue:#2563eb; --indigo:#4338ca; --line:#dbe3ef; --bg:#f8fbff; --text:#0f172a; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial,Helvetica,sans-serif; background:linear-gradient(180deg,#eef4ff 0%, #ffffff 100%); color:var(--text); }
+    .wrap { max-width:1120px; margin:0 auto; padding:32px 20px 64px; }
+    .hero, .card { background:#fff; border:1px solid var(--line); border-radius:20px; box-shadow:0 18px 40px rgba(15,23,42,.06); }
+    .hero { padding:28px; }
+    .eyebrow { color:var(--indigo); font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    h1 { margin:10px 0 12px; font-size:40px; line-height:1.05; }
+    p { line-height:1.7; color:#334155; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:18px; }
+    .card { padding:20px; }
+    .pill { display:inline-block; padding:8px 12px; border-radius:999px; background:#eef2ff; border:1px solid #c7d2fe; color:var(--indigo); font-size:13px; font-weight:700; margin-right:8px; margin-bottom:8px; }
+    .cta { display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding:12px 16px; border-radius:12px; text-decoration:none; font-weight:700; border:1px solid #c7d2fe; color:var(--indigo); background:#fff; }
+    .btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+    .status { margin-top:18px; padding:16px; border-radius:14px; border:1px solid #c7d2fe; background:#eef2ff; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Live platform advancement</div>
+      <h1>FCA now exposes machine-native control-plane proof on the live surface</h1>
+      <p>This route is a direct customer-visible proof surface for deployment continuity. It makes the Auricrux control plane, run digest, and deployment-state evidence visible on the live domain instead of hiding progress inside repository-only status.</p>
+      <div>
+        <span class="pill">Control-plane continuity active</span>
+        <span class="pill">Run digest published</span>
+        <span class="pill">Next target: MNCL-001</span>
+      </div>
+      <div class="status">
+        <strong>What changed</strong><br />
+        FCA now publishes repo-backed machine-native state through live public surfaces so runtime posture and next action are directly inspectable.
+      </div>
+      <div class="cta">
+        <a class="btn primary" href="/auricrux/run-digest/index.json">Open Live Run Digest</a>
+        <a class="btn" href="/deployment-status.json">Open Deployment Status</a>
+        <a class="btn" href="/auricrux/control-plane/index.json">Open Control Plane State</a>
+        <a class="btn" href="/">Back to Home</a>
+      </div>
+    </section>
+    <section class="grid">
+      <article class="card">
+        <div class="eyebrow">Canonical writer</div>
+        <h2>Repo truth now drives live proof</h2>
+        <p>The control-plane workflow now writes canonical state artifacts for system state, next action, work queue, and run digest.</p>
+      </article>
+      <article class="card">
+        <div class="eyebrow">Bounded continuation</div>
+        <h2>MNCL-001 is the active next build target</h2>
+        <p>The next concrete product lane is Project / File / Audit spine advancement, rather than commentary-only continuation.</p>
+      </article>
+      <article class="card">
+        <div class="eyebrow">Live inspection</div>
+        <h2>Founder-visible evidence</h2>
+        <p>This route exists so the founder can verify visible movement on the public domain without needing to inspect GitHub first.</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

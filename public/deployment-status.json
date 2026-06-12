@@ -1,20 +1,12 @@
 {
-  "service": "fca-bid-tracker",
-  "generatedAt": "pending-build",
-  "source": "repo-default",
-  "gitRef": "main",
-  "gitSha": "pending-build",
-  "runId": "pending-build",
-  "expectedHosts": [
-    "futurecontractorsofamerica.com",
-    "www.futurecontractorsofamerica.com"
-  ],
-  "verificationRoutes": [
-    "/deployment-status.json",
-    "/live-shell-verification.html",
-    "/api/auricrux",
-    "/api/customer-login",
-    "/login"
-  ],
-  "deploymentIntent": "static-web-app-plus-functions"
+  "status": "control-plane-live-proof-active",
+  "shell": "FCA Contractor Command",
+  "execution": "Auricrux-Central",
+  "liveSurfaceAdvancement": {
+    "publicProofRoute": "/auricrux/live-proof/",
+    "platformProofRoute": "/portal/platform/",
+    "runDigestRoute": "/auricrux/run-digest/index.json",
+    "controlPlaneRoute": "/auricrux/control-plane/index.json"
+  },
+  "nextAction": "MNCL-001"
 }
