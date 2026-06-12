@@ -1,22 +1,33 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { resolveTenantContextFromRequest } from "./auth-boundary.js";
 import { qualifyLead } from "./leads-store.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 app.http("lead-qualify", {
   methods: ["POST"],
   authLevel: "anonymous",
   route: "leads/{leadId}/qualify",
   handler: async (request, context) => {
-    const tenantId = resolveTenantId(request);
+    const tenantContext = resolveTenantContextFromRequest(request, {
+      allowSeededFallback: false,
+    });
+    const tenantId = tenantContext.tenantId;
     const leadId = context?.triggerMetadata?.leadId || request.params?.leadId;
     const body = await request.json().catch(() => ({}));
+
+    if (!tenantContext.authenticated || !tenantContext.tenantId) {
+      return {
+        status: 401,
+        jsonBody: {
+          ok: false,
+          error: "Authenticated tenant session required for lead qualification.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
+        },
+      };
+    }
 
     try {
       const result = qualifyLead(tenantId, leadId, body);
@@ -27,6 +38,11 @@ app.http("lead-qualify", {
           lead: result.lead,
           opportunity: result.opportunity,
           auditEvents: result.auditEvents,
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-workflow-store",
         },
       };
@@ -36,6 +52,11 @@ app.http("lead-qualify", {
         jsonBody: {
           ok: false,
           error: error?.message || "Lead qualification failed.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
