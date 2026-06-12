@@ -1,13 +1,6 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { resolveTenantContextFromRequest } from "./auth-boundary.js";
 import { listFiles, mutateFile, getWorkflowSummary, listAuditEvents } from "./workflow-store.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 function resolveLatestAuditEventId(tenantId, projectId, eventType) {
   const items = listAuditEvents(tenantId, { projectId, eventType, actorType: null, q: null });
@@ -19,7 +12,10 @@ app.http("files", {
   authLevel: "anonymous",
   route: "files",
   handler: async (request) => {
-    const tenantId = resolveTenantId(request);
+    const tenantContext = resolveTenantContextFromRequest(request, {
+      allowSeededFallback: request.method === "GET",
+    });
+    const tenantId = tenantContext.tenantId;
     const projectId = request.query.get("projectId") || null;
     const category = request.query.get("category") || null;
     const status = request.query.get("status") || null;
@@ -37,7 +33,27 @@ app.http("files", {
           projectId,
           filters: { category, status, q },
           summary: getWorkflowSummary(tenantId),
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-workflow-store",
+        },
+      };
+    }
+
+    if (!tenantContext.authenticated || !tenantContext.tenantId) {
+      return {
+        status: 401,
+        jsonBody: {
+          ok: false,
+          error: "Authenticated tenant session required for file mutations.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
@@ -91,6 +107,11 @@ app.http("files", {
             ok: true,
             items: created,
             auditEventId: resolveLatestAuditEventId(tenantId, ownerObjectId, "file-created"),
+            authContext: {
+              authenticated: tenantContext.authenticated,
+              source: tenantContext.source,
+              usedFallback: tenantContext.usedFallback,
+            },
             backingSource: "api-workflow-store",
           },
         };
@@ -100,6 +121,11 @@ app.http("files", {
           jsonBody: {
             ok: false,
             error: error?.message || "File registration failed.",
+            authContext: {
+              authenticated: tenantContext.authenticated,
+              source: tenantContext.source,
+              usedFallback: tenantContext.usedFallback,
+            },
           },
         };
       }
@@ -112,6 +138,11 @@ app.http("files", {
         jsonBody: {
           ok: true,
           ...result,
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-workflow-store",
         },
       };
@@ -121,6 +152,11 @@ app.http("files", {
         jsonBody: {
           ok: false,
           error: error?.message || "File mutation failed.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
