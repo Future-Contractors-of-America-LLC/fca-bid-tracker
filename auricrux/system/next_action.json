@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "id": "MNCL-001",
+  "title": "Implement Project/File/Audit control-loop wiring as the canonical next product build action",
+  "mode": "build",
+  "priority": "critical",
+  "status": "ready",
+  "owner": "auricrux-control-plane",
+  "blockedBy": [],
+  "produces": [
+    "project entity wiring",
+    "file spine routing",
+    "audit event persistence contract"
+  ],
+  "updatedAtUtc": null
+}

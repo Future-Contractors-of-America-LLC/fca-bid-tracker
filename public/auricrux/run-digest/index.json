@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "controller": "auricrux-control-plane",
+  "generatedAtUtc": null,
+  "event": "bootstrap",
+  "mode": "status",
+  "outcome": "pending",
+  "canonicalStateFiles": [
+    "auricrux/system/control-plane.json",
+    "auricrux/system/system_state.json",
+    "auricrux/system/next_action.json",
+    "auricrux/system/work_queue.json",
+    "auricrux/system/run_digest.json"
+  ],
+  "nextAction": {
+    "id": "MNCL-001",
+    "title": "Implement Project/File/Audit control-loop wiring as the canonical next product build action",
+    "status": "ready"
+  },
+  "queueDepth": 3,
+  "status": "pending"
+}

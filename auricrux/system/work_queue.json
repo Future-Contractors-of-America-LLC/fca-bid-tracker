@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "queueName": "auricrux-machine-native-queue",
+  "updatedAtUtc": null,
+  "items": [
+    {
+      "id": "MNCL-001",
+      "title": "Project spine execution baseline",
+      "lane": "product",
+      "priority": "critical",
+      "status": "ready"
+    },
+    {
+      "id": "MNCL-002",
+      "title": "File spine execution baseline",
+      "lane": "product",
+      "priority": "critical",
+      "status": "queued"
+    },
+    {
+      "id": "MNCL-003",
+      "title": "Audit event persistence baseline",
+      "lane": "governance",
+      "priority": "high",
+      "status": "queued"
+    }
+  ]
+}

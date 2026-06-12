@@ -66,15 +66,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p auricrux/system public/auricrux/control-plane
+          mkdir -p auricrux/system public/auricrux/control-plane public/auricrux/run-digest
           node <<'NODE'
           const fs = require('fs');
           const statePath = 'auricrux/system/control-plane.json';
-          const publicPath = 'public/auricrux/control-plane/index.json';
+          const systemStatePath = 'auricrux/system/system_state.json';
+          const nextActionPath = 'auricrux/system/next_action.json';
+          const workQueuePath = 'auricrux/system/work_queue.json';
+          const runDigestPath = 'auricrux/system/run_digest.json';
+          const publicControlPath = 'public/auricrux/control-plane/index.json';
+          const publicDigestPath = 'public/auricrux/run-digest/index.json';
           const mode = process.env.MODE;
           const eventName = process.env.EVENT_NAME;
           const now = new Date().toISOString();
-          let state = {
+
+          const readJson = (path, fallback) => {
+            if (!fs.existsSync(path)) return fallback;
+            try {
+              return JSON.parse(fs.readFileSync(path, 'utf8'));
+            } catch {
+              return fallback;
+            }
+          };
+
+          let state = readJson(statePath, {
             version: 1,
             controller: 'auricrux-control-plane',
             status: 'online',
@@ -84,10 +99,73 @@ jobs:
             lastEvent: null,
             lastOutcome: null,
             history: []
-          };
-          if (fs.existsSync(statePath)) {
-            state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
-          }
+          });
+
+          let systemState = readJson(systemStatePath, {
+            version: 1,
+            system: 'FCA Contractor Command',
+            automation: {
+              authorityMode: 'continuous_automation',
+              canonicalWriter: 'auricrux-control-plane',
+              currentMode: 'status',
+              currentPhase: 'flagship-spine-buildout',
+              currentPacket: 'machine-native-control-loops-v1',
+              status: 'online'
+            },
+            productSpine: {
+              flagship: 'FCA Contractor Command',
+              requiredObjects: ['lead', 'opportunity', 'project', 'file', 'audit_event'],
+              currentFocus: ['project-spine', 'file-spine', 'audit-spine']
+            },
+            lastUpdatedUtc: null
+          });
+
+          let nextAction = readJson(nextActionPath, {
+            version: 1,
+            id: 'MNCL-001',
+            title: 'Implement Project/File/Audit control-loop wiring as the canonical next product build action',
+            mode: 'build',
+            priority: 'critical',
+            status: 'ready',
+            owner: 'auricrux-control-plane',
+            blockedBy: [],
+            produces: [
+              'project entity wiring',
+              'file spine routing',
+              'audit event persistence contract'
+            ],
+            updatedAtUtc: null
+          });
+
+          let workQueue = readJson(workQueuePath, {
+            version: 1,
+            queueName: 'auricrux-machine-native-queue',
+            updatedAtUtc: null,
+            items: [
+              {
+                id: 'MNCL-001',
+                title: 'Project spine execution baseline',
+                lane: 'product',
+                priority: 'critical',
+                status: 'ready'
+              },
+              {
+                id: 'MNCL-002',
+                title: 'File spine execution baseline',
+                lane: 'product',
+                priority: 'critical',
+                status: 'queued'
+              },
+              {
+                id: 'MNCL-003',
+                title: 'Audit event persistence baseline',
+                lane: 'governance',
+                priority: 'high',
+                status: 'queued'
+              }
+            ]
+          });
+
           state.lastRunUtc = now;
           state.lastMode = mode;
           state.lastEvent = eventName;
@@ -95,9 +173,45 @@ jobs:
           state.history = Array.isArray(state.history) ? state.history : [];
           state.history.unshift({ at: now, event: eventName, mode, outcome: 'running' });
           state.history = state.history.slice(0, 20);
-          const serialized = JSON.stringify(state, null, 2) + '\n';
-          fs.writeFileSync(statePath, serialized);
-          fs.writeFileSync(publicPath, serialized);
+
+          systemState.lastUpdatedUtc = now;
+          systemState.automation.currentMode = mode;
+          systemState.automation.status = 'running';
+
+          nextAction.updatedAtUtc = now;
+          workQueue.updatedAtUtc = now;
+
+          const digest = {
+            version: 1,
+            controller: 'auricrux-control-plane',
+            generatedAtUtc: now,
+            event: eventName,
+            mode,
+            outcome: 'running',
+            canonicalStateFiles: [
+              'auricrux/system/control-plane.json',
+              'auricrux/system/system_state.json',
+              'auricrux/system/next_action.json',
+              'auricrux/system/work_queue.json',
+              'auricrux/system/run_digest.json'
+            ],
+            nextAction: {
+              id: nextAction.id,
+              title: nextAction.title,
+              status: nextAction.status
+            },
+            queueDepth: Array.isArray(workQueue.items) ? workQueue.items.length : 0,
+            status: 'running'
+          };
+
+          const write = (path, data) => fs.writeFileSync(path, JSON.stringify(data, null, 2) + '\n');
+          write(statePath, state);
+          write(systemStatePath, systemState);
+          write(nextActionPath, nextAction);
+          write(workQueuePath, workQueue);
+          write(runDigestPath, digest);
+          write(publicControlPath, state);
+          write(publicDigestPath, digest);
           NODE
         env:
           MODE: ${{ steps.resolve.outputs.mode }}
@@ -121,16 +235,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p auricrux/system public/auricrux/control-plane
+          mkdir -p auricrux/system public/auricrux/control-plane public/auricrux/run-digest
           node <<'NODE'
           const fs = require('fs');
           const statePath = 'auricrux/system/control-plane.json';
-          const publicPath = 'public/auricrux/control-plane/index.json';
+          const systemStatePath = 'auricrux/system/system_state.json';
+          const nextActionPath = 'auricrux/system/next_action.json';
+          const workQueuePath = 'auricrux/system/work_queue.json';
+          const runDigestPath = 'auricrux/system/run_digest.json';
+          const publicControlPath = 'public/auricrux/control-plane/index.json';
+          const publicDigestPath = 'public/auricrux/run-digest/index.json';
           const mode = process.env.MODE;
           const eventName = process.env.EVENT_NAME;
           const jobStatus = process.env.JOB_STATUS;
           const now = new Date().toISOString();
-          let state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+          const read = (path) => JSON.parse(fs.readFileSync(path, 'utf8'));
+          const write = (path, data) => fs.writeFileSync(path, JSON.stringify(data, null, 2) + '\n');
+
+          let state = read(statePath);
+          let systemState = read(systemStatePath);
+          let nextAction = read(nextActionPath);
+          let workQueue = read(workQueuePath);
+          let digest = read(runDigestPath);
+
           state.lastRunUtc = now;
           state.lastMode = mode;
           state.lastEvent = eventName;
@@ -141,9 +268,33 @@ jobs:
           } else {
             state.history.unshift({ at: now, event: eventName, mode, outcome: jobStatus });
           }
-          const serialized = JSON.stringify(state, null, 2) + '\n';
-          fs.writeFileSync(statePath, serialized);
-          fs.writeFileSync(publicPath, serialized);
+
+          systemState.lastUpdatedUtc = now;
+          systemState.automation.currentMode = mode;
+          systemState.automation.status = jobStatus;
+
+          nextAction.updatedAtUtc = now;
+          workQueue.updatedAtUtc = now;
+
+          digest.generatedAtUtc = now;
+          digest.event = eventName;
+          digest.mode = mode;
+          digest.outcome = jobStatus;
+          digest.status = jobStatus;
+          digest.nextAction = {
+            id: nextAction.id,
+            title: nextAction.title,
+            status: nextAction.status
+          };
+          digest.queueDepth = Array.isArray(workQueue.items) ? workQueue.items.length : 0;
+
+          write(statePath, state);
+          write(systemStatePath, systemState);
+          write(nextActionPath, nextAction);
+          write(workQueuePath, workQueue);
+          write(runDigestPath, digest);
+          write(publicControlPath, state);
+          write(publicDigestPath, digest);
           NODE
         env:
           MODE: ${{ steps.resolve.outputs.mode }}
@@ -157,7 +308,14 @@ jobs:
           set -euo pipefail
           git config user.name "auricrux"
           git config user.email "auricrux@ai.system"
-          git add auricrux/system/control-plane.json public/auricrux/control-plane/index.json
+          git add \
+            auricrux/system/control-plane.json \
+            auricrux/system/system_state.json \
+            auricrux/system/next_action.json \
+            auricrux/system/work_queue.json \
+            auricrux/system/run_digest.json \
+            public/auricrux/control-plane/index.json \
+            public/auricrux/run-digest/index.json
           git commit -m "Auricrux: control plane heartbeat" || echo "No control plane changes"
           CURRENT_BRANCH="${GITHUB_REF_NAME:-main}"
           git push origin "HEAD:${CURRENT_BRANCH}" || echo "Control plane push skipped"
@@ -171,7 +329,7 @@ jobs:
             echo "- Event: ${{ steps.resolve.outputs.event_name }}"
             echo "- Mode: ${{ steps.resolve.outputs.mode }}"
             echo "- Outcome: ${{ job.status }}"
-            echo "- State file: auricrux/system/control-plane.json"
-            echo "- Public status surface: public/auricrux/control-plane/index.json"
-            echo "- Paths: status = heartbeat only, executive = auricrux/exec/index.mjs, engine = auricrux_engine.js"
+            echo "- Canonical state files: auricrux/system/control-plane.json, auricrux/system/system_state.json, auricrux/system/next_action.json, auricrux/system/work_queue.json, auricrux/system/run_digest.json"
+            echo "- Public status surfaces: public/auricrux/control-plane/index.json, public/auricrux/run-digest/index.json"
+            echo "- Paths: status = heartbeat plus canonical state write, executive = auricrux/exec/index.mjs, engine = auricrux_engine.js"
           } >> "$GITHUB_STEP_SUMMARY"
