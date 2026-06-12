@@ -106,6 +106,34 @@ export default function PlatformDashboard() {
         <PublicCtaRow actions={publicBodyCtaSets.portalEntry} />
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #c7d2fe", background: "linear-gradient(135deg, #eef2ff 0%, #ffffff 100%)" }}>
+        <div style={{ color: "#4338ca", fontWeight: 700, marginBottom: 8 }}>Machine-native control-loop proof</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>This live workspace now exposes the Auricrux control plane as a visible product surface</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#334155", lineHeight: 1.7 }}>
+          <div>
+            <strong>Canonical writer</strong>
+            <div>The repo control plane now publishes system state, next action, queue state, and a live run digest.</div>
+          </div>
+          <div>
+            <strong>Current next action</strong>
+            <div>MNCL-001 is now the bounded next product build target for the Project / File / Audit spine.</div>
+          </div>
+          <div>
+            <strong>Customer-visible proof</strong>
+            <div>The live site now exposes direct runtime proof routes instead of relying only on hidden repo status.</div>
+          </div>
+        </div>
+        <div style={{ marginTop: 16 }}>
+          <PublicCtaRow
+            actions={[
+              { href: "/auricrux/run-digest/index.json", label: "Open Live Run Digest", variant: "primary" },
+              { href: "/deployment-status.json", label: "Open Deployment Status", variant: "secondary" },
+              { href: "/portal/projects", label: "Open Projects", variant: "secondary" },
+            ]}
+          />
+        </div>
+      </div>
+
       <WorkspaceQuickActions actions={platformDashboardCtaSets.quickActions} />
 
       <div style={{ marginTop: 24 }}>

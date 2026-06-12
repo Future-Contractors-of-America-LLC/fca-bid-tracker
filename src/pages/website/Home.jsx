@@ -127,6 +127,35 @@ export default function Home() {
         highlights={homeProductProof}
       />
 
+      <div style={{ marginTop: 24, ...cardStyle, border: "1px solid #c7d2fe", background: "linear-gradient(135deg, #eef2ff 0%, #ffffff 100%)" }}>
+        <div style={{ color: "#4338ca", fontWeight: 700, marginBottom: 8 }}>Live machine-native control plane</div>
+        <h2 style={{ marginTop: 0 }}>The public surface now exposes governed runtime proof instead of hiding execution state</h2>
+        <p style={{ color: "#334155", lineHeight: 1.7 }}>
+          FCA now publishes a live Auricrux run digest and control-plane state as public artifacts so deployment continuity, next action, and runtime posture can be checked directly from the live site.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 16, marginBottom: 14 }}>
+          <div style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#ffffff" }}>
+            <div style={{ color: "#475569", fontWeight: 700, marginBottom: 6 }}>Canonical state</div>
+            <div style={{ color: "#111827" }}>Repo-backed machine-native state surfaces are now part of the live deployment story.</div>
+          </div>
+          <div style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#ffffff" }}>
+            <div style={{ color: "#475569", fontWeight: 700, marginBottom: 6 }}>Next product target</div>
+            <div style={{ color: "#111827" }}>MNCL-001 now drives the next visible build lane for Project / File / Audit spine work.</div>
+          </div>
+          <div style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#ffffff" }}>
+            <div style={{ color: "#475569", fontWeight: 700, marginBottom: 6 }}>Live proof route</div>
+            <div style={{ color: "#111827" }}>Check the live run digest directly on the public domain to verify deployment advancement.</div>
+          </div>
+        </div>
+        <PublicCtaRow
+          actions={[
+            { href: "/auricrux/run-digest/index.json", label: "Open Live Run Digest", variant: "primary" },
+            { href: "/deployment-status.json", label: "Open Deployment Status", variant: "secondary" },
+            { href: "/portal/platform", label: "Open Platform Dashboard", variant: "secondary" },
+          ]}
+        />
+      </div>
+
       <div style={{ marginTop: 24, ...cardStyle }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real customer-ready pathways</div>
         <h2 style={{ marginTop: 0 }}>Public website messaging now points into the actual SaaS motions FCA is selling</h2>
