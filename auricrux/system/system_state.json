@@ -7,7 +7,7 @@
     "currentMode": "status",
     "currentPhase": "flagship-spine-buildout",
     "currentPacket": "machine-native-control-loops-v1",
-    "status": "online"
+    "status": "success"
   },
   "productSpine": {
     "flagship": "FCA Contractor Command",
@@ -24,5 +24,5 @@
       "audit-spine"
     ]
   },
-  "lastUpdatedUtc": null
+  "lastUpdatedUtc": "2026-06-12T14:14:50.167Z"
 }

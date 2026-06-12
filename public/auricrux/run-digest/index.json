@@ -1,10 +1,10 @@
 {
   "version": 1,
   "controller": "auricrux-control-plane",
-  "generatedAtUtc": null,
-  "event": "bootstrap",
+  "generatedAtUtc": "2026-06-12T14:14:50.167Z",
+  "event": "schedule",
   "mode": "status",
-  "outcome": "pending",
+  "outcome": "success",
   "canonicalStateFiles": [
     "auricrux/system/control-plane.json",
     "auricrux/system/system_state.json",
@@ -18,5 +18,5 @@
     "status": "ready"
   },
   "queueDepth": 3,
-  "status": "pending"
+  "status": "success"
 }
