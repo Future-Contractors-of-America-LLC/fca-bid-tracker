@@ -1,20 +1,16 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { resolveTenantContextFromRequest } from "./auth-boundary.js";
 import { getLead, updateLead } from "./leads-store.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 app.http("lead-detail", {
   methods: ["GET", "PATCH"],
   authLevel: "anonymous",
   route: "leads/{leadId}",
   handler: async (request, context) => {
-    const tenantId = resolveTenantId(request);
+    const tenantContext = resolveTenantContextFromRequest(request, {
+      allowSeededFallback: request.method === "GET",
+    });
+    const tenantId = tenantContext.tenantId;
     const leadId = context?.triggerMetadata?.leadId || request.params?.leadId;
 
     if (request.method === "GET") {
@@ -25,6 +21,11 @@ app.http("lead-detail", {
           jsonBody: {
             ok: true,
             item,
+            authContext: {
+              authenticated: tenantContext.authenticated,
+              source: tenantContext.source,
+              usedFallback: tenantContext.usedFallback,
+            },
             backingSource: "api-workflow-store",
           },
         };
@@ -34,9 +35,29 @@ app.http("lead-detail", {
           jsonBody: {
             ok: false,
             error: error?.message || "Lead not found.",
+            authContext: {
+              authenticated: tenantContext.authenticated,
+              source: tenantContext.source,
+              usedFallback: tenantContext.usedFallback,
+            },
           },
         };
       }
+    }
+
+    if (!tenantContext.authenticated || !tenantContext.tenantId) {
+      return {
+        status: 401,
+        jsonBody: {
+          ok: false,
+          error: "Authenticated tenant session required for lead updates.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
+        },
+      };
     }
 
     const body = await request.json().catch(() => ({}));
@@ -49,6 +70,11 @@ app.http("lead-detail", {
           ok: true,
           item: result.item,
           auditEventId: result.auditEvent.auditEventId,
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-workflow-store",
         },
       };
@@ -58,6 +84,11 @@ app.http("lead-detail", {
         jsonBody: {
           ok: false,
           error: error?.message || "Lead update failed.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
