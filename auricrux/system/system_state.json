@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "system": "FCA Contractor Command",
+  "automation": {
+    "authorityMode": "continuous_automation",
+    "canonicalWriter": "auricrux-control-plane",
+    "currentMode": "status",
+    "currentPhase": "flagship-spine-buildout",
+    "currentPacket": "machine-native-control-loops-v1",
+    "status": "online"
+  },
+  "productSpine": {
+    "flagship": "FCA Contractor Command",
+    "requiredObjects": [
+      "lead",
+      "opportunity",
+      "project",
+      "file",
+      "audit_event"
+    ],
+    "currentFocus": [
+      "project-spine",
+      "file-spine",
+      "audit-spine"
+    ]
+  },
+  "lastUpdatedUtc": null
+}
