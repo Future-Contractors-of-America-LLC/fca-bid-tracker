@@ -1,31 +1,46 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { resolveTenantContextFromRequest } from "./auth-boundary.js";
 import { convertOpportunityToProject } from "./leads-store.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 app.http("opportunity-convert", {
   methods: ["POST"],
   authLevel: "anonymous",
   route: "opportunities/{opportunityId}/convert-to-project",
   handler: async (request, context) => {
-    const tenantId = resolveTenantId(request);
+    const tenantContext = resolveTenantContextFromRequest(request, {
+      allowSeededFallback: false,
+    });
     const opportunityId = context?.triggerMetadata?.opportunityId || request.params?.opportunityId;
     const body = await request.json().catch(() => ({}));
 
+    if (!tenantContext.authenticated || !tenantContext.tenantId) {
+      return {
+        status: 401,
+        jsonBody: {
+          ok: false,
+          error: "Authenticated tenant session required for opportunity conversion.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
+        },
+      };
+    }
+
     try {
-      const result = convertOpportunityToProject(tenantId, opportunityId, body);
+      const result = convertOpportunityToProject(tenantContext.tenantId, opportunityId, body);
       return {
         status: 200,
         jsonBody: {
           ok: true,
           item: result.item,
           auditEvents: result.auditEvents,
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-workflow-store",
         },
       };
@@ -35,6 +50,11 @@ app.http("opportunity-convert", {
         jsonBody: {
           ok: false,
           error: error?.message || "Opportunity conversion failed.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
