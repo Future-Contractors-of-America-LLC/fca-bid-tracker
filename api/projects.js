@@ -1,31 +1,46 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { resolveTenantContextFromRequest } from "./auth-boundary.js";
 import { listProjects, mutateProject, getWorkflowSummary } from "./workflow-store.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 app.http("projects", {
   methods: ["GET", "PATCH"],
   authLevel: "anonymous",
   route: "projects",
   handler: async (request) => {
-    const tenantId = resolveTenantId(request);
+    const tenantContext = resolveTenantContextFromRequest(request, {
+      allowSeededFallback: request.method === "GET",
+    });
 
     if (request.method === "GET") {
-      const items = listProjects(tenantId);
+      const items = listProjects(tenantContext.tenantId);
       return {
         status: 200,
         jsonBody: {
           ok: true,
           items,
           count: items.length,
-          summary: getWorkflowSummary(tenantId),
+          summary: getWorkflowSummary(tenantContext.tenantId),
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-workflow-store",
+        },
+      };
+    }
+
+    if (!tenantContext.authenticated || !tenantContext.tenantId) {
+      return {
+        status: 401,
+        jsonBody: {
+          ok: false,
+          error: "Authenticated tenant session required for project mutations.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
@@ -33,12 +48,17 @@ app.http("projects", {
     const body = await request.json().catch(() => ({}));
 
     try {
-      const result = mutateProject(tenantId, body?.action, body);
+      const result = mutateProject(tenantContext.tenantId, body?.action, body);
       return {
         status: 200,
         jsonBody: {
           ok: true,
           ...result,
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
           backingSource: "api-workflow-store",
         },
       };
@@ -48,6 +68,11 @@ app.http("projects", {
         jsonBody: {
           ok: false,
           error: error?.message || "Project mutation failed.",
+          authContext: {
+            authenticated: tenantContext.authenticated,
+            source: tenantContext.source,
+            usedFallback: tenantContext.usedFallback,
+          },
         },
       };
     }
