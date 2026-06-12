@@ -4,6 +4,7 @@ import { allowSeededCustomerFallback, hasManagedCustomerAccounts } from "./custo
 const SESSION_COOKIE_NAME = "fca_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 8;
 const DEFAULT_SESSION_SECRET = "FCA_SERVER_SESSION_DEV_ONLY_CHANGE_ME";
+const DEFAULT_FALLBACK_TENANT_ID = "TEN-FCA-001";
 
 function getSessionSecret() {
   return process.env.FCA_SESSION_SECRET || DEFAULT_SESSION_SECRET;
@@ -125,4 +126,40 @@ export function validateSessionToken(token) {
   } catch {
     return null;
   }
+}
+
+export function resolveTenantContextFromRequest(request, options = {}) {
+  const cookieHeader = request.headers.get("cookie") || "";
+  const token = readSessionTokenFromCookieHeader(cookieHeader);
+  const session = validateSessionToken(token);
+  const fallbackTenantId = options.fallbackTenantId || DEFAULT_FALLBACK_TENANT_ID;
+  const allowSeededFallback = options.allowSeededFallback !== false;
+
+  if (session?.customerId) {
+    return {
+      tenantId: session.customerId,
+      authenticated: true,
+      source: "signed-session-cookie",
+      usedFallback: false,
+      session,
+    };
+  }
+
+  if (allowSeededFallback) {
+    return {
+      tenantId: fallbackTenantId,
+      authenticated: false,
+      source: "seeded-fallback",
+      usedFallback: true,
+      session: null,
+    };
+  }
+
+  return {
+    tenantId: null,
+    authenticated: false,
+    source: "missing-session",
+    usedFallback: false,
+    session: null,
+  };
 }
