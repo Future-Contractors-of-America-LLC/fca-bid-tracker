@@ -516,14 +516,24 @@ export const portalModules = [
     description: "Customer account summary and next actions",
   },
   {
-    href: "/portal/projects",
-    label: "Projects",
-    description: "Execution visibility and stage tracking",
-  },
-  {
     href: "/portal/bids",
     label: "Bids",
     description: "Pipeline, approvals, and conversion readiness",
+  },
+  {
+    href: "/portal/estimates",
+    label: "Estimates",
+    description: "Structured pricing, assumptions, exclusions, and commercial readiness",
+  },
+  {
+    href: "/portal/proposals",
+    label: "Proposals",
+    description: "Customer packaging, approval-ready narrative, and project handoff posture",
+  },
+  {
+    href: "/portal/projects",
+    label: "Projects",
+    description: "Execution visibility and stage tracking",
   },
   {
     href: "/portal/files",
