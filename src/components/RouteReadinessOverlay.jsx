@@ -28,6 +28,24 @@ const actionButtonStyle = (tone = "primary") => ({
 });
 
 function resolveRouteDependencies(activeHref = "/portal/platform") {
+  if (activeHref.startsWith("/portal/estimates")) {
+    return {
+      title: "Estimate route readiness",
+      detail: "Estimate review should keep pricing continuity, customer-response channels, and Auricrux guidance live before proposal generation is attempted.",
+      products: ["saas", "auricrux"],
+      comms: ["email", "chat"],
+    };
+  }
+
+  if (activeHref.startsWith("/portal/proposals")) {
+    return {
+      title: "Proposal route readiness",
+      detail: "Proposal packaging depends on commercial continuity and approval-channel readiness before handoff to project setup becomes believable.",
+      products: ["saas", "auricrux"],
+      comms: ["email", "sms", "phone"],
+    };
+  }
+
   if (activeHref.startsWith("/portal/messages")) {
     return {
       title: "Message route readiness",
