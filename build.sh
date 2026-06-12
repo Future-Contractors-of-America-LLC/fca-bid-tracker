@@ -4,11 +4,68 @@ set -euo pipefail
 rm -rf dist
 mkdir -p dist
 cp -R public/. dist/
+mkdir -p dist/data
 
 cat > dist/styles.css <<'CSS'
 :root{--navy:#0c1a2a;--navy2:#13263b;--blue:#2563eb;--orange:#f97316;--gold:#d4a017;--gold-dark:#8a6116;--bg:#f8fbff;--line:#dbe3ef;--text:#0f172a;--muted:#475569;--white:#fff}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#edf4ff 0%,#ffffff 100%);color:var(--text)}a{text-decoration:none;color:inherit}.wrap{max-width:1180px;margin:0 auto;padding:0 20px}.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.topbar-inner{display:flex;justify-content:space-between;align-items:center;gap:18px;min-height:78px}.brand{display:flex;align-items:center;gap:14px}.brand img{width:54px;height:54px}.brand-copy strong{display:block;font-size:18px}.brand-copy span{display:block;font-size:12px;color:var(--muted)}.nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.nav a{padding:10px 12px;border-radius:12px;font-weight:700;color:#1e293b}.nav a:hover{background:#eff6ff}.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:12px;font-weight:700;border:1px solid #c7d2fe}.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn-secondary{background:#fff;color:#1d4ed8}.btn-gold{background:linear-gradient(135deg,var(--gold-dark) 0%,var(--gold) 100%);border-color:var(--gold-dark);color:#fff}.hero{padding:46px 0 26px}.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 40px rgba(15,23,42,.06)}.eyebrow{display:inline-block;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.eyebrow-blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8}.eyebrow-gold{background:#fff7e1;border:1px solid #ecd089;color:var(--gold-dark)}h1{font-size:clamp(38px,5vw,64px);line-height:1.03;margin:16px 0 12px}h2{font-size:32px;line-height:1.1;margin:0 0 12px}h3{margin:0 0 10px}.lead{font-size:18px;line-height:1.7;color:#334155}.muted{color:#475569;line-height:1.7}.grid-2,.grid-3,.grid-4{display:grid;gap:16px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}.section{padding:24px 0}.logo-band{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:18px}.logo-box{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;border:1px solid var(--line);background:#fff}.auricrux-box{background:linear-gradient(135deg,#fff8e7 0%,#ffffff 100%);border-color:#ecd089}.auricrux-token{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--gold-dark) 0%,var(--gold) 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;font-weight:900}.status{padding:16px;border-radius:14px;background:#eef2ff;border:1px solid #c7d2fe;color:#312e81}.status.success{background:#ecfdf5;border-color:#86efac;color:#166534}.status.warn{background:#fff7ed;border-color:#fdba74;color:#9a3412}.pill-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.pill{padding:8px 12px;border-radius:999px;background:#f8fafc;border:1px solid var(--line);font-size:13px;font-weight:700;color:#334155}.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.field{display:grid;gap:6px}.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid #cbd5e1;border-radius:12px;background:#fff;color:#0f172a}.field textarea{min-height:120px}.small{font-size:13px;color:#64748b}.code{font-family:monospace;background:#f1f5f9;border-radius:8px;padding:2px 6px}.footer{padding:32px 0 50px;color:#475569}.footer strong{color:#0f172a}.proof{border:1px solid #dbeafe;background:#f8fbff}.proof-gold{border:1px solid #ecd089;background:#fffaf0}.list{padding-left:18px;line-height:1.8;color:#334155}.split{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.metric{font-size:28px;font-weight:800;margin:6px 0}.divider{height:1px;background:var(--line);margin:16px 0}.full{grid-column:1/-1}.data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{padding:12px;border-bottom:1px solid var(--line);text-align:left}.mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.mini-card{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff}.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}@media(max-width:980px){.hero-grid,.grid-2,.grid-3,.grid-4,.split{grid-template-columns:1fr}.topbar-inner{flex-direction:column;align-items:flex-start;padding:14px 0}.nav{width:100%}}
 CSS
+
+cat > dist/data/live-workspace-pack.json <<'JSON'
+{
+  "version": 1,
+  "workspace": {
+    "id": "fca-live-proof-workspace",
+    "status": "active",
+    "currentPhase": "qualified-opportunity"
+  },
+  "project": {
+    "id": "PRJ-001",
+    "name": "Launch Demo Project",
+    "stage": "Qualified",
+    "nextStep": "Proposal preparation / file review"
+  },
+  "files": [
+    {
+      "name": "Intake Summary.pdf",
+      "category": "intake",
+      "status": "staged"
+    },
+    {
+      "name": "Proposal-Draft-v1.docx",
+      "category": "proposal",
+      "status": "draft"
+    },
+    {
+      "name": "Plans-Package.zip",
+      "category": "plans",
+      "status": "placeholder"
+    }
+  ],
+  "audit": [
+    {
+      "event": "Customer intake created",
+      "actor": "User",
+      "status": "Recorded"
+    },
+    {
+      "event": "Activation path opened",
+      "actor": "System",
+      "status": "Recorded"
+    },
+    {
+      "event": "Login-backed platform proof opened",
+      "actor": "System",
+      "status": "Recorded"
+    },
+    {
+      "event": "Run digest linked on live surface",
+      "actor": "Auricrux",
+      "status": "Recorded"
+    }
+  ]
+}
+JSON
 
 header_markup='\
 <header class="topbar">\
@@ -154,37 +211,63 @@ document.getElementById("loginForm").addEventListener("submit",function(e){e.pre
 </script>'
 
 create_page "/portal/platform" "FCA Platform Dashboard" '
-<main class="section"><div class="wrap"><span class="eyebrow eyebrow-blue">Live product proof</span><h1>FCA Platform Dashboard</h1><p class="lead">This is the current live product-proof surface for the contractor command experience. It now includes interactive customer-specific project, file, bid, and audit proof so the surface behaves like more than a static brochure.</p><div class="mini-grid"><div class="mini-card"><strong>Project</strong><div id="projectName">Loading…</div></div><div class="mini-card"><strong>Customer</strong><div id="customerName">Loading…</div></div><div class="mini-card"><strong>Workspace status</strong><div>Authenticated proof surface</div></div><div class="mini-card"><strong>Next action</strong><div>MNCL-002 — live product proof expansion</div></div></div><div class="tabs"><a class="btn btn-primary" href="/portal/projects/">Projects</a><a class="btn btn-secondary" href="/portal/files/">Files</a><a class="btn btn-secondary" href="/portal/audit/">Audit</a><a class="btn btn-secondary" href="/auricrux/live-proof/">Auricrux Proof</a></div><div class="divider"></div><div class="grid-3"><article class="card proof"><h3>Customer path now works</h3><p class="muted">One intake flow creates a unique sign-in. Login routes here as the live product proof surface.</p></article><article class="card proof"><h3>Control-plane proof is public</h3><p class="muted">Runtime proof, deployment proof, and control-plane state are linked directly from the live domain.</p></article><article class="card proof-gold"><h3>Auricrux visible in-product</h3><p class="muted">Auricrux remains a gold-command guide across live proof surfaces so customers can see the guided lane clearly.</p></article></div><div class="cta-row"><a class="btn btn-primary" href="/auricrux/run-digest/index.json">Open Live Run Digest</a><a class="btn btn-secondary" href="/deployment-status.json">Open Deployment Status</a><a class="btn btn-secondary" href="/auricrux/live-proof/">Open Auricrux Live Proof</a></div><div class="divider"></div><div class="grid-2"><div class="card"><h2>Visible product lanes</h2><ul class="list"><li>Interactive project summary based on current customer record</li><li>Files surface with customer-specific package placeholders</li><li>Audit surface showing visible system events</li><li>Direct links to runtime proof routes</li></ul></div><div class="card"><h2>Current workspace snapshot</h2><table class="data-table"><tr><th>Bid posture</th><td>Qualified opportunity ready for proposal handoff</td></tr><tr><th>Files package</th><td>Plans, proposal draft, and intake evidence staged</td></tr><tr><th>Billing readiness</th><td>Founder free-code / standard activation path visible</td></tr><tr><th>Customer proof</th><td>Login-backed live product surface active</td></tr></table></div></div></div></main>
+<main class="section"><div class="wrap"><span class="eyebrow eyebrow-blue">Live product proof</span><h1>FCA Platform Dashboard</h1><p class="lead">This is the current live product-proof surface for the contractor command experience. It now includes shared workspace data so project, files, and audit routes read from one visible data pack.</p><div class="mini-grid"><div class="mini-card"><strong>Project</strong><div id="projectName">Loading…</div></div><div class="mini-card"><strong>Customer</strong><div id="customerName">Loading…</div></div><div class="mini-card"><strong>Workspace status</strong><div id="workspaceStatus">Loading…</div></div><div class="mini-card"><strong>Next action</strong><div id="nextAction">Loading…</div></div></div><div class="tabs"><a class="btn btn-primary" href="/portal/projects/">Projects</a><a class="btn btn-secondary" href="/portal/files/">Files</a><a class="btn btn-secondary" href="/portal/audit/">Audit</a><a class="btn btn-secondary" href="/auricrux/live-proof/">Auricrux Proof</a></div><div class="divider"></div><div class="grid-3"><article class="card proof"><h3>Customer path now works</h3><p class="muted">One intake flow creates a unique sign-in. Login routes here as the live product proof surface.</p></article><article class="card proof"><h3>Shared data pack active</h3><p class="muted">Projects, files, and audit proof now resolve from one workspace data pack instead of isolated placeholders.</p></article><article class="card proof-gold"><h3>Auricrux visible in-product</h3><p class="muted">Auricrux remains a gold-command guide across live proof surfaces so customers can see the guided lane clearly.</p></article></div><div class="cta-row"><a class="btn btn-primary" href="/auricrux/run-digest/index.json">Open Live Run Digest</a><a class="btn btn-secondary" href="/deployment-status.json">Open Deployment Status</a><a class="btn btn-secondary" href="/auricrux/live-proof/">Open Auricrux Live Proof</a></div><div class="divider"></div><div class="grid-2"><div class="card"><h2>Visible product lanes</h2><ul class="list"><li>Interactive project summary based on current customer record</li><li>Files surface reading from shared workspace data</li><li>Audit surface reading from shared workspace data</li><li>Direct links to runtime proof routes</li></ul></div><div class="card"><h2>Current workspace snapshot</h2><table class="data-table" id="snapshotTable"><tr><th>Loading</th><td>Loading…</td></tr></table></div></div></div></main>
 <script>
-const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");
-document.getElementById("customerName").textContent=rec?.company||"Launch Customer Workspace";
-document.getElementById("projectName").textContent=(rec?.company?rec.company+" — Initial Opportunity":"Launch Demo Project");
+async function hydrate(){
+  const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");
+  const pack=await fetch('/data/live-workspace-pack.json').then(r=>r.json());
+  const customer=rec?.company||'Launch Customer Workspace';
+  const project=rec?.company?`${rec.company} — Initial Opportunity`:pack.project.name;
+  document.getElementById('customerName').textContent=customer;
+  document.getElementById('projectName').textContent=project;
+  document.getElementById('workspaceStatus').textContent=pack.workspace.status;
+  document.getElementById('nextAction').textContent=pack.project.nextStep;
+  document.getElementById('snapshotTable').innerHTML=`<tr><th>Bid posture</th><td>${pack.project.stage}</td></tr><tr><th>Files package</th><td>${pack.files.map(f=>f.name).join(', ')}</td></tr><tr><th>Billing readiness</th><td>Founder free-code / standard activation path visible</td></tr><tr><th>Customer proof</th><td>Login-backed live product surface active</td></tr>`;
+}
+hydrate();
 </script>'
 
 create_page "/portal/projects" "FCA Projects" '
 <main class="section"><div class="wrap"><span class="eyebrow eyebrow-blue">Projects proof</span><h1>Projects</h1><p class="lead">This live route proves project-context continuity on the public deployment lane.</p><div class="card"><table class="data-table"><thead><tr><th>Project</th><th>Stage</th><th>Customer</th><th>Next Step</th></tr></thead><tbody id="projectRows"><tr><td>Loading…</td><td>—</td><td>—</td><td>—</td></tr></tbody></table><div class="cta-row"><a class="btn btn-secondary" href="/portal/platform/">Back to Platform</a><a class="btn btn-secondary" href="/portal/files/">Open Files</a></div></div></div></main>
 <script>
-const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");
-const rows=document.getElementById("projectRows");
-const projectName=rec?.company?rec.company+" — Initial Opportunity":"Launch Demo Project";
-const customer=rec?.company||"Launch Customer Workspace";
-rows.innerHTML=`<tr><td>${projectName}</td><td>Qualified</td><td>${customer}</td><td>Proposal preparation / file review</td></tr>`;
+async function hydrate(){
+ const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");
+ const pack=await fetch('/data/live-workspace-pack.json').then(r=>r.json());
+ const projectName=rec?.company?`${rec.company} — Initial Opportunity`:pack.project.name;
+ const customer=rec?.company||'Launch Customer Workspace';
+ document.getElementById('projectRows').innerHTML=`<tr><td>${projectName}</td><td>${pack.project.stage}</td><td>${customer}</td><td>${pack.project.nextStep}</td></tr>`;
+}
+hydrate();
 </script>'
 
 create_page "/portal/files" "FCA Files" '
-<main class="section"><div class="wrap"><span class="eyebrow eyebrow-blue">Files proof</span><h1>Files</h1><p class="lead">This live route proves visible file-spine posture on the deployed customer surface.</p><div class="grid-3"><article class="card"><h3>Intake Summary.pdf</h3><p class="muted">Customer intake and commercial fit notes.</p></article><article class="card"><h3>Proposal-Draft-v1.docx</h3><p class="muted">Initial proposal package tied to the current opportunity.</p></article><article class="card proof-gold"><h3>Plans-Package.zip</h3><p class="muted">Placeholder proof for future project file spine expansion.</p></article></div><div class="cta-row"><a class="btn btn-secondary" href="/portal/platform/">Back to Platform</a><a class="btn btn-secondary" href="/portal/audit/">Open Audit</a></div></div></main>'
+<main class="section"><div class="wrap"><span class="eyebrow eyebrow-blue">Files proof</span><h1>Files</h1><p class="lead">This live route proves visible file-spine posture on the deployed customer surface.</p><div class="grid-3" id="fileGrid"><article class="card"><h3>Loading…</h3><p class="muted">Loading…</p></article></div><div class="cta-row"><a class="btn btn-secondary" href="/portal/platform/">Back to Platform</a><a class="btn btn-secondary" href="/portal/audit/">Open Audit</a></div></div></main>
+<script>
+async function hydrate(){
+ const pack=await fetch('/data/live-workspace-pack.json').then(r=>r.json());
+ document.getElementById('fileGrid').innerHTML=pack.files.map(file=>`<article class="card${file.category==='plans'?' proof-gold':''}"><h3>${file.name}</h3><p class="muted">Category: ${file.category} · Status: ${file.status}</p></article>`).join('');
+}
+hydrate();
+</script>'
 
 create_page "/portal/audit" "FCA Audit" '
-<main class="section"><div class="wrap"><span class="eyebrow eyebrow-blue">Audit proof</span><h1>Audit</h1><p class="lead">This live route proves visible audit posture and customer-facing evidence of state changes.</p><div class="card"><table class="data-table"><thead><tr><th>Event</th><th>Actor</th><th>Status</th></tr></thead><tbody><tr><td>Customer intake created</td><td>User</td><td>Recorded</td></tr><tr><td>Activation path opened</td><td>System</td><td>Recorded</td></tr><tr><td>Login-backed platform proof opened</td><td>System</td><td>Recorded</td></tr><tr><td>Run digest linked on live surface</td><td>Auricrux</td><td>Recorded</td></tr></tbody></table><div class="cta-row"><a class="btn btn-secondary" href="/portal/platform/">Back to Platform</a><a class="btn btn-secondary" href="/auricrux/run-digest/index.json">Open Run Digest</a></div></div></div></main>'
+<main class="section"><div class="wrap"><span class="eyebrow eyebrow-blue">Audit proof</span><h1>Audit</h1><p class="lead">This live route proves visible audit posture and customer-facing evidence of state changes.</p><div class="card"><table class="data-table"><thead><tr><th>Event</th><th>Actor</th><th>Status</th></tr></thead><tbody id="auditRows"><tr><td>Loading…</td><td>—</td><td>—</td></tr></tbody></table><div class="cta-row"><a class="btn btn-secondary" href="/portal/platform/">Back to Platform</a><a class="btn btn-secondary" href="/auricrux/run-digest/index.json">Open Run Digest</a></div></div></div></main>
+<script>
+async function hydrate(){
+ const pack=await fetch('/data/live-workspace-pack.json').then(r=>r.json());
+ document.getElementById('auditRows').innerHTML=pack.audit.map(event=>`<tr><td>${event.event}</td><td>${event.actor}</td><td>${event.status}</td></tr>`).join('');
+}
+hydrate();
+</script>'
 
 create_page "/auricrux/live-proof" "Auricrux Live Proof" '
 <main class="section"><div class="wrap"><section class="card proof-gold"><span class="eyebrow eyebrow-gold">Auricrux live proof</span><h1>Machine-native control-loop proof is now part of the live customer-facing surface.</h1><p class="lead">Use this route to verify that deployment, run digest, and control-plane visibility are exposed directly on the domain.</p><div class="cta-row"><a class="btn btn-gold" href="/auricrux/run-digest/index.json">Run Digest</a><a class="btn btn-secondary" href="/auricrux/control-plane/index.json">Control Plane State</a><a class="btn btn-secondary" href="/portal/platform/">Platform Proof</a></div></section></div></main>'
 
-echo '{"status":"live-product-proof-v4-active","shell":"FCA Contractor Command","execution":"Auricrux-Central","nextAction":"MNCL-003","proofRoutes":["/portal/platform/","/portal/projects/","/portal/files/","/portal/audit/","/auricrux/live-proof/","/auricrux/run-digest/index.json","/deployment-status.json"]}' > dist/deployment-status.json
+echo '{"status":"live-proof-data-pack-v5-active","shell":"FCA Contractor Command","execution":"Auricrux-Central","nextAction":"MNCL-004","proofRoutes":["/portal/platform/","/portal/projects/","/portal/files/","/portal/audit/","/auricrux/live-proof/","/auricrux/run-digest/index.json","/deployment-status.json"],"dataPack":"/data/live-workspace-pack.json"}' > dist/deployment-status.json
 echo '{"primary":"futurecontractorsofamerica.com","www":"www.futurecontractorsofamerica.com","swa":"delightful-mushroom-0de67860f.7.azurestaticapps.net","status":"continuity-preserved"}' > dist/domain-continuity.json
-echo 'FCA live product proof v4 active' > dist/runtime-fingerprint.txt
+echo 'FCA live proof data pack v5 active' > dist/runtime-fingerprint.txt
 cat > dist/live-shell-verification.html <<'HTML'
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Persistent static navbar active. Home tab restored. FCA and Auricrux identity visible on-page. Unique intake-created sign-in path active. Live product proof routes active at /portal/platform/, /portal/projects/, /portal/files/, and /portal/audit/.</p></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Persistent static navbar active. Home tab restored. FCA and Auricrux identity visible on-page. Unique intake-created sign-in path active. Shared workspace data pack active at /data/live-workspace-pack.json and powering /portal/platform/, /portal/projects/, /portal/files/, and /portal/audit/.</p></body></html>
 HTML
 cat > dist/host-binding-audit.html <<'HTML'
 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Host Binding Audit</title></head><body><h1>Host Binding Audit</h1><p>futurecontractorsofamerica.com</p><p>www.futurecontractorsofamerica.com</p><p>delightful-mushroom-0de67860f.7.azurestaticapps.net</p></body></html>
@@ -193,6 +276,6 @@ cat > dist/api-continuity-audit.html <<'HTML'
 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA API Continuity Audit</title></head><body><h1>API Continuity Audit</h1><p>/api/customer-login preserved as optional validation endpoint.</p><p>/api/run-task preserved.</p><p>Auricrux-Central execute route preserved.</p></body></html>
 HTML
 
-echo "FCA live product proof v4 witness" > dist/commit-witness-$(date +%Y%m%d%H%M%S).txt
+echo "FCA live proof data pack v5 witness" > dist/commit-witness-$(date +%Y%m%d%H%M%S).txt
 
-echo "FCA live product proof v4 build completed"
+echo "FCA live proof data pack v5 build completed"
