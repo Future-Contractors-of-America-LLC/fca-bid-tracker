@@ -1,4 +1,5 @@
 import { buildApiBackedTranscript } from "../academyApiViewModels";
+import AcademyProviderTelemetryPanel from "./AcademyProviderTelemetryPanel";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -19,20 +20,31 @@ const buttonStyle = {
 export default function AcademyTranscriptPanel({ academyLms, refreshKey = null }) {
   const { academyState, meta, loading, mutationState, issueCertificate } = academyLms;
   const transcript = buildApiBackedTranscript(academyState);
+  const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);
 
   return (
     <div style={cardStyle} key={refreshKey || "academy-transcript"}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
         <div>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Learner transcript</div>
-          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Transcript, cohort status, and credential issuance now read from the Academy API spine</h2>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Transcript, cohort, and credential issuance now read from the Academy API spine</h2>
         </div>
-        <div style={{ minWidth: 250, border: "1px solid #dbe3ef", borderRadius: 12, padding: 12, background: "#f8fbff" }}>
-          <div style={{ color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Persistence source</div>
-          <div style={{ fontWeight: 700 }}>{meta.backingSource}</div>
-          <div style={{ color: "#475569", lineHeight: 1.6 }}>{meta.persistenceState}</div>
-        </div>
+        <AcademyProviderTelemetryPanel
+          meta={meta}
+          loading={loading}
+          mutationState={mutationState}
+          title="Transcript panel telemetry"
+        />
       </div>
+
+      {degraded ? (
+        <div style={{ marginBottom: 16, border: "1px solid #f59e0b", background: "#fffbeb", color: "#78350f", borderRadius: 12, padding: 14, lineHeight: 1.7 }}>
+          <div style={{ fontWeight: 700, marginBottom: 6 }}>Transcript truth caution</div>
+          <div>
+            Transcript, cohort, and credential posture are visible for continuity, but they should not be treated as final operational truth until the Academy API provider returns to authoritative health.
+          </div>
+        </div>
+      ) : null}
       <div style={{ display: "grid", gap: 16 }}>
         {transcript.map((entry) => (
           <div id={entry.programKey} key={entry.programKey} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>

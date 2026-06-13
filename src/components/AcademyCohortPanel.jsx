@@ -1,5 +1,6 @@
 import { buildProgramHref } from "../academyCatalog";
 import { buildApiBackedCohorts } from "../academyApiViewModels";
+import AcademyProviderTelemetryPanel from "./AcademyProviderTelemetryPanel";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -28,8 +29,18 @@ export default function AcademyCohortPanel({ academyLms, refreshKey = null }) {
 
   return (
     <div style={cardStyle} key={refreshKey || "academy-cohorts"}>
-      <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Cohort operations</div>
-      <h2 style={{ marginTop: 0, marginBottom: 10 }}>Enrollment, seat posture, and program cadence now read and mutate through the Academy API</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
+        <div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Cohort operations</div>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Enrollment, seat posture, and program cadence now read and mutate through the Academy API</h2>
+        </div>
+        <AcademyProviderTelemetryPanel
+          meta={meta}
+          loading={loading}
+          mutationState={mutationState}
+          title="Cohort panel telemetry"
+        />
+      </div>
 
       {degraded ? (
         <div style={{ marginBottom: 16, border: "1px solid #f59e0b", background: "#fffbeb", color: "#78350f", borderRadius: 12, padding: 14, lineHeight: 1.7 }}>

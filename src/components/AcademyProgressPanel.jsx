@@ -1,5 +1,6 @@
 import { academyCatalog, buildCourseHref, buildProgramHref } from "../academyCatalog";
 import { getApiCourseProgress, getApiProgramProgress } from "../academyApiViewModels";
+import AcademyProviderTelemetryPanel from "./AcademyProviderTelemetryPanel";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -21,10 +22,12 @@ export default function AcademyProgressPanel({ academyLms, programKey = null }) 
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Progress and credential posture</div>
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>Real LMS progression now tracks lesson, course, and program completion through the Academy API spine</h2>
         </div>
-        <div style={{ color: "#475569", lineHeight: 1.6 }}>
-          <div><strong>Source:</strong> {meta.backingSource}</div>
-          <div>{meta.persistenceState}</div>
-        </div>
+        <AcademyProviderTelemetryPanel
+          meta={meta}
+          loading={loading}
+          mutationState={mutationState}
+          title="Progress panel telemetry"
+        />
       </div>
 
       {degraded ? (
