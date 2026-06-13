@@ -6,6 +6,7 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import AdminActionCenter from "../../components/AdminActionCenter";
+import CredentialIssuanceLedger from "../../components/CredentialIssuanceLedger";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { publicBodyCtaSets } from "../../websiteShell";
@@ -34,7 +35,7 @@ export default function PortalAdmin() {
   return (
     <PortalShell
       title="Admin, Rollout, and Governance Control"
-      subtitle="Administrative surface for tenant status, seat visibility, construction-workflow rollout, commercial package awareness, Auricrux governance control, and one-click admin actions."
+      subtitle="Administrative surface for tenant status, seat visibility, construction-workflow rollout, commercial package awareness, Auricrux governance control, academic credential issuance, and one-click admin actions."
       activeHref="/portal/admin"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.admin}
@@ -48,7 +49,7 @@ export default function PortalAdmin() {
           workspace={state.workspace}
           auricrux={state.auricrux}
           title="Admin route now reads from the canonical control state"
-          detail="Tenant rollout, governance visibility, commercial packaging, and next-action context now come from the same shared system module as the rest of the FCA shell."
+          detail="Tenant rollout, governance visibility, commercial packaging, academic issuance posture, and next-action context now come from the same shared system module as the rest of the FCA shell."
         />
       </div>
 
@@ -68,6 +69,10 @@ export default function PortalAdmin() {
       </div>
 
       <div style={{ marginBottom: 24 }}>
+        <CredentialIssuanceLedger session={session} />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
         <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
@@ -75,7 +80,7 @@ export default function PortalAdmin() {
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Governance continuity</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA administration now reads as a construction control surface</h2>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA administration now reads as a construction and academy control surface</h2>
           </div>
           <div style={{ display: "grid", gap: 10 }}>
             <FcaBrandMark compact />
@@ -83,13 +88,13 @@ export default function PortalAdmin() {
           </div>
         </div>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Tenant rollout posture, seat readiness, project governance, and construction-workflow visibility remain inside the same FCA workspace, with Auricrux maintaining execution awareness rather than handing control off to a separate admin product.
+          Tenant rollout posture, seat readiness, project governance, academic issuance visibility, and construction-workflow continuity remain inside the same FCA workspace, with Auricrux maintaining execution awareness rather than handing control off to separate admin and LMS products.
         </p>
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Admin governance layer</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA now models rollout, seats, and governance visibility as a governed product layer</h2>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA now models rollout, seats, governance visibility, and academic issuance as one governed product layer</h2>
         <div style={{ display: "grid", gap: 16 }}>
           {adminGovernance.controls.map((control) => (
             <div key={control.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
@@ -150,14 +155,14 @@ export default function PortalAdmin() {
             <li>Confirm tenant rollout sequence and seat assignment by role</li>
             <li>Validate project-linked file, permit, and audit continuity</li>
             <li>Track billing, retainage, training readiness, and selected-plan growth together</li>
-            <li>Preserve Auricrux visibility across estimating, job, closeout, and commercial upgrade routes</li>
+            <li>Preserve Auricrux visibility across estimating, job, closeout, credential issuance, and commercial upgrade routes</li>
           </ul>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Production posture</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
             This control surface is the beginning of the broader platform spine: tenant summary, seat/readiness view,
-            rollout status, selected plan ({selectedPlan.name}), and governance visibility inside the same FCA shell for construction operations.
+            rollout status, selected plan ({selectedPlan.name}), academic credential issuance, and governance visibility inside the same FCA shell for construction operations.
           </p>
         </div>
       </div>

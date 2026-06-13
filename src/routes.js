@@ -34,6 +34,7 @@ import AcademyCatalog from "./pages/academy/AcademyCatalog";
 import AcademyProgramDetail from "./pages/academy/AcademyProgramDetail";
 import AcademyCourseDetail from "./pages/academy/AcademyCourseDetail";
 import AcademyLessonView from "./pages/academy/AcademyLessonView";
+import AcademyTranscript from "./pages/academy/AcademyTranscript";
 
 export const routes = {
   "/": Home,
@@ -65,9 +66,11 @@ export const routes = {
   "/portal/profile": PortalProfile,
   "/portal/auricrux": PortalAuricrux,
   "/portal/academy": AcademyHome,
+  "/portal/academy/transcript": AcademyTranscript,
 
   "/academy": AcademyHome,
   "/academy/catalog": AcademyCatalog,
+  "/academy/transcript": AcademyTranscript,
 };
 
 export const routePatterns = [

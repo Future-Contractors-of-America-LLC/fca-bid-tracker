@@ -15,6 +15,9 @@ import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
 import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
+import AcademyProgressPanel from "../../components/AcademyProgressPanel";
+import AcademyCohortPanel from "../../components/AcademyCohortPanel";
+import AcademyTranscriptPanel from "../../components/AcademyTranscriptPanel";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
@@ -163,16 +166,21 @@ export default function AcademyHome() {
         </div>
       </div>
 
+      <div style={{ marginBottom: 24 }}>
+        <AcademyProgressPanel session={session} />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <AcademyCohortPanel session={session} />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <AcademyTranscriptPanel session={session} />
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
-          <div>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>Real LMS classrooms</div>
-            <h2 style={{ marginTop: 0, marginBottom: 8 }}>FCA Academy now carries named classroom tracks tied to real workspace outcomes</h2>
-          </div>
-          <div style={{ color: "#475569", maxWidth: 320, lineHeight: 1.6 }}>
-            Curriculum is attached directly to estimating, project controls, field readiness, and customer-delivery continuity.
-          </div>
-        </div>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real LMS classrooms</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA Academy now carries named classroom tracks tied to real workspace outcomes</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
           {academyClassrooms.map((classroom) => (
             <div key={classroom.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
@@ -304,6 +312,9 @@ export default function AcademyHome() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Connected portal routes</h2>
           <PublicCtaRow actions={academyCtaSets.connectedPortalRoutes} style={{ display: "grid", gap: 12 }} />
+          <div style={{ marginTop: 12 }}>
+            <a href="/academy/transcript" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open transcript and certificate surface</a>
+          </div>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Production close</h2>

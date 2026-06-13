@@ -1,0 +1,52 @@
+import { buildCredentialLedger, issueCredential } from "../academyRecordsStore";
+
+const cardStyle = {
+  border: "1px solid #e5e7eb",
+  borderRadius: 14,
+  padding: 18,
+  background: "#fff",
+  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+};
+
+export default function CredentialIssuanceLedger({ session }) {
+  const ledger = buildCredentialLedger(session);
+
+  function handleIssue(programKey) {
+    issueCredential(session, programKey);
+    window.location.reload();
+  }
+
+  return (
+    <div style={cardStyle}>
+      <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Credential issuance ledger</div>
+      <h2 style={{ marginTop: 0, marginBottom: 10 }}>Admin can now review program readiness, issued credentials, and cohort-linked academic posture</h2>
+      <div style={{ display: "grid", gap: 12 }}>
+        {ledger.map((entry) => (
+          <div key={entry.programKey} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fbff" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+              <div>
+                <div style={{ fontWeight: 700 }}>{entry.title}</div>
+                <div style={{ color: "#475569", lineHeight: 1.7 }}>{entry.credentialTitle}</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontWeight: 700 }}>{entry.issuedStatus}</div>
+                <div style={{ color: "#475569" }}>{entry.percentComplete}% complete</div>
+              </div>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, color: "#334155", lineHeight: 1.7, marginTop: 10 }}>
+              <div><strong>Readiness:</strong> {entry.readiness}</div>
+              <div><strong>Cohort status:</strong> {entry.cohortStatus}</div>
+              <div><strong>Credential ID:</strong> {entry.issuedCredential?.credentialId || "Pending"}</div>
+              <div><strong>Issued at:</strong> {entry.issuedCredential?.issuedAt || "Pending"}</div>
+            </div>
+            {!entry.issuedCredential && entry.readiness === "Ready for issuance" ? (
+              <button type="button" onClick={() => handleIssue(entry.programKey)} style={{ marginTop: 12, border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
+                Issue credential
+              </button>
+            ) : null}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
