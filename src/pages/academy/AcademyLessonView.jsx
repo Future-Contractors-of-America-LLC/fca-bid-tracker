@@ -1,6 +1,7 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
+import AcademyProviderTelemetryPanel from "../../components/AcademyProviderTelemetryPanel";
 import { buildCourseHref, getLessonByKey } from "../../academyCatalog";
 import { buildApiBackedTranscript, getApiLessonStatus } from "../../academyApiViewModels";
 import { AcademyLmsProvider, useAcademyLmsContext } from "../../context/AcademyLmsContext";
@@ -44,6 +45,7 @@ function AcademyLessonViewInner({ routeParams = {} }) {
   const transcriptEntry = transcript.find((entry) => entry.programKey === routeParams.programKey);
   const status = getApiLessonStatus(academyState, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
   const actionBlocked = loading || mutationState.activeAction !== null || !transcriptEntry?.enrollmentId || !meta.authoritativeState;
+  const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);
 
   async function handleStart() {
     if (actionBlocked) return;
@@ -73,11 +75,30 @@ function AcademyLessonViewInner({ routeParams = {} }) {
       <AcademyStateAuthorityBanner meta={meta} mutationState={mutationState} loading={loading} />
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "#eff6ff", border: "1px solid #2563eb" }}>
-        <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Lesson-progress spine</div>
-        <div style={{ color: "#1e3a8a", lineHeight: 1.7 }}>
-          Lesson progress is now converging on the shared Academy API-backed LMS spine. This route no longer presents lesson completion as browser-local truth; it reads from and writes to the same Academy state family as transcript, cohort, and credential posture.
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "flex-start", marginBottom: 10 }}>
+          <div>
+            <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Lesson-progress spine</div>
+            <div style={{ color: "#1e3a8a", lineHeight: 1.7, maxWidth: 820 }}>
+              Lesson progress is now converging on the shared Academy API-backed LMS spine. This route no longer presents lesson completion as browser-local truth; it reads from and writes to the same Academy state family as transcript, cohort, and credential posture.
+            </div>
+          </div>
+          <AcademyProviderTelemetryPanel
+            meta={meta}
+            loading={loading}
+            mutationState={mutationState}
+            title="Lesson detail telemetry"
+            style={{ minWidth: 320, background: "#ffffff" }}
+          />
         </div>
         <div style={{ color: "#475569", marginTop: 10 }}><strong>Source:</strong> {meta.backingSource} · {meta.persistenceState}</div>
+        {degraded ? (
+          <div style={{ marginTop: 12, border: "1px solid #f59e0b", background: "#fffbeb", color: "#78350f", borderRadius: 12, padding: 14, lineHeight: 1.7 }}>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Lesson truth caution</div>
+            <div>
+              Start and complete actions remain bounded to provider authority. If warnings or mutation errors appear here, treat lesson status as provisional until the Academy provider returns to authoritative health.
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>

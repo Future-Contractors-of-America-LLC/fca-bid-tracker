@@ -1,9 +1,11 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
+import AcademyProviderTelemetryPanel from "../../components/AcademyProviderTelemetryPanel";
 import { buildLessonHref, buildProgramHref, getCourseByKey } from "../../academyCatalog";
-import { getCourseProgress } from "../../academyProgressStore";
+import { getApiCourseProgress } from "../../academyApiViewModels";
+import { AcademyLmsProvider, useAcademyLmsContext } from "../../context/AcademyLmsContext";
 import { pageShellStyle } from "../../publicShellStyles";
-import useCustomerSession from "../../hooks/useCustomerSession";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -13,8 +15,9 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-export default function AcademyCourseDetail({ routeParams = {} }) {
-  const { session } = useCustomerSession();
+function AcademyCourseDetailInner({ routeParams = {} }) {
+  const academyLms = useAcademyLmsContext();
+  const { academyState, meta, loading, mutationState } = academyLms;
   const course = getCourseByKey(routeParams.programKey, routeParams.courseKey);
 
   if (!course) {
@@ -28,7 +31,8 @@ export default function AcademyCourseDetail({ routeParams = {} }) {
     );
   }
 
-  const progress = getCourseProgress(session, routeParams.programKey, routeParams.courseKey);
+  const progress = getApiCourseProgress(academyState, routeParams.programKey, routeParams.courseKey);
+  const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -42,19 +46,41 @@ export default function AcademyCourseDetail({ routeParams = {} }) {
         secondaryLabel="Back to program"
       />
 
+      <AcademyStateAuthorityBanner meta={meta} mutationState={mutationState} loading={loading} />
+
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Course progress</div>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
-          <div style={{ color: "#334155", lineHeight: 1.7 }}>
-            <div><strong>Program:</strong> {course.programTitle}</div>
-            <div><strong>Lab:</strong> {course.lab}</div>
-            <div><strong>Completion:</strong> {progress.completedLessons}/{progress.totalLessons} lessons</div>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "flex-start", marginBottom: 12 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Course progress</div>
+            <div style={{ color: "#334155", lineHeight: 1.7 }}>
+              <div><strong>Program:</strong> {course.programTitle}</div>
+              <div><strong>Lab:</strong> {course.lab}</div>
+              <div><strong>Completion:</strong> {progress.completedLessons}/{progress.totalLessons} lessons</div>
+            </div>
           </div>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: 30, fontWeight: 700 }}>{progress.percentComplete}%</div>
-            <div style={{ color: "#475569" }}>{progress.completed ? "Course complete" : "Course in progress"}</div>
+          <div style={{ display: "grid", gap: 12, justifyItems: "end" }}>
+            <div style={{ textAlign: "right" }}>
+              <div style={{ fontSize: 30, fontWeight: 700 }}>{progress.percentComplete}%</div>
+              <div style={{ color: "#475569" }}>{progress.completed ? "Course complete" : "Course in progress"}</div>
+            </div>
+            <AcademyProviderTelemetryPanel
+              meta={meta}
+              loading={loading}
+              mutationState={mutationState}
+              title="Course detail telemetry"
+              style={{ minWidth: 320 }}
+            />
           </div>
         </div>
+
+        {degraded ? (
+          <div style={{ border: "1px solid #f59e0b", background: "#fffbeb", color: "#78350f", borderRadius: 12, padding: 14, lineHeight: 1.7 }}>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Course truth caution</div>
+            <div>
+              Lesson completion percentages on this course page now come from the shared Academy provider. Keep them informational only until the provider is authoritative and free of warnings or mutation errors.
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div style={{ display: "grid", gap: 16 }}>
@@ -76,5 +102,13 @@ export default function AcademyCourseDetail({ routeParams = {} }) {
 
       <ShellFooter />
     </div>
+  );
+}
+
+export default function AcademyCourseDetail(props) {
+  return (
+    <AcademyLmsProvider>
+      <AcademyCourseDetailInner {...props} />
+    </AcademyLmsProvider>
   );
 }

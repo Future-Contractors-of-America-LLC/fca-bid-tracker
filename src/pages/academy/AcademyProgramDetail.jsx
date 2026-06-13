@@ -3,6 +3,8 @@ import ShellFooter from "../../components/ShellFooter";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import AcademyProgressPanel from "../../components/AcademyProgressPanel";
+import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
+import AcademyProviderTelemetryPanel from "../../components/AcademyProviderTelemetryPanel";
 import { buildCourseHref, getProgramByKey } from "../../academyCatalog";
 import { AcademyLmsProvider, useAcademyLmsContext } from "../../context/AcademyLmsContext";
 import { pageShellStyle } from "../../publicShellStyles";
@@ -17,7 +19,9 @@ const cardStyle = {
 
 function AcademyProgramDetailInner({ routeParams = {} }) {
   const academyLms = useAcademyLmsContext();
+  const { meta, loading, mutationState } = academyLms;
   const program = getProgramByKey(routeParams.programKey);
+  const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);
 
   if (!program) {
     return (
@@ -47,8 +51,33 @@ function AcademyProgramDetailInner({ routeParams = {} }) {
         <AuricruxBrandMark compact />
       </div>
 
+      <AcademyStateAuthorityBanner meta={meta} mutationState={mutationState} loading={loading} />
+
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Program architecture</div>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Program architecture</div>
+            <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 760 }}>
+              Program detail now reads under the same Academy provider authority lane as control, transcript, cohort, and progress surfaces.
+            </div>
+          </div>
+          <AcademyProviderTelemetryPanel
+            meta={meta}
+            loading={loading}
+            mutationState={mutationState}
+            title="Program detail telemetry"
+          />
+        </div>
+
+        {degraded ? (
+          <div style={{ marginBottom: 16, border: "1px solid #f59e0b", background: "#fffbeb", color: "#78350f", borderRadius: 12, padding: 14, lineHeight: 1.7 }}>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Program truth caution</div>
+            <div>
+              Program completion posture is visible for continuity, but course and lesson readiness on this page should not be treated as final operational truth until the Academy API provider is authoritative.
+            </div>
+          </div>
+        ) : null}
+
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
           <div style={{ color: "#334155", lineHeight: 1.7 }}>
             <div><strong>Audience:</strong> {program.audience}</div>
