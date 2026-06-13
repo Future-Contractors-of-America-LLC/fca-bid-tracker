@@ -3,6 +3,7 @@ import fs from "fs";
 const checks = [
   { path: "src/academyCatalog.js", includes: ["goal:", "lessonsData", "buildLessonHref", "getLessonByKey"] },
   { path: "src/academyCoverageMatrix.js", includes: ["Single-release hold", "credentialFamilies", "gatingPrinciples"] },
+  { path: "src/api/academyClient.js", includes: ["readCustomerSession", "X-FCA-Customer-Id", "customerName"] },
   { path: "src/routes.js", includes: ["/academy/catalog", "/academy/transcript", "/portal/academy/transcript", "/academy/programs/:programKey/courses/:courseKey/lessons/:lessonKey"] },
   { path: "src/pages/academy/AcademyProgramDetail.jsx", includes: ["Program architecture", "AcademyProgressPanel"] },
   { path: "src/pages/academy/AcademyCourseDetail.jsx", includes: ["Course progress", "Open lesson view"] },
