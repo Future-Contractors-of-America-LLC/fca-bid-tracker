@@ -23,7 +23,7 @@ export default function AcademyTranscript() {
       <ShellHeader
         eyebrow="FCA Academy Transcript"
         title="Transcript, cohort, and credential control"
-        subtitle="This surface turns FCA Academy into an operational LMS layer with learner transcript visibility, cohort enrollment state, and completion-certificate issuance tied to real pathway completion."
+        subtitle="This surface now routes transcript, cohort, and completion-certificate truth through the shared Academy API-backed LMS spine."
         primaryHref="/portal/academy"
         primaryLabel="Open Academy"
         secondaryHref="/portal/admin"
@@ -46,10 +46,10 @@ export default function AcademyTranscript() {
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <AcademyTranscriptPanel session={session} />
+        <AcademyTranscriptPanel />
       </div>
 
-      <AcademyCohortPanel session={session} />
+      <AcademyCohortPanel />
 
       <ShellFooter />
     </div>

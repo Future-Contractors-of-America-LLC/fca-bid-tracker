@@ -1,5 +1,6 @@
-import { enrollInCohort, getLearnerCohortRecords, withdrawFromCohort } from "../academyRecordsStore";
 import { buildProgramHref } from "../academyCatalog";
+import { buildApiBackedCohorts } from "../academyApiViewModels";
+import useAcademyLms from "../hooks/useAcademyLms";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -16,26 +17,23 @@ const buttonStyle = {
   cursor: "pointer",
 };
 
-export default function AcademyCohortPanel({ session, refreshKey = null }) {
-  const cohorts = getLearnerCohortRecords(session);
+export default function AcademyCohortPanel({ refreshKey = null }) {
+  const { academyState, assignProgram, withdrawEnrollment } = useAcademyLms();
+  const cohorts = buildApiBackedCohorts(academyState);
+  const learners = academyState.learners || [];
 
-  function handleEnroll(cohortId) {
-    enrollInCohort(session, cohortId);
-    window.location.reload();
-  }
-
-  function handleWithdraw(cohortId) {
-    withdrawFromCohort(session, cohortId);
-    window.location.reload();
+  function resolveLearnerIdForProgram(programKey) {
+    return learners.find((learner) => learner.assignedProgramKey === programKey)?.learnerId || learners[0]?.learnerId || null;
   }
 
   return (
     <div style={cardStyle} key={refreshKey || "academy-cohorts"}>
       <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Cohort operations</div>
-      <h2 style={{ marginTop: 0, marginBottom: 10 }}>Enrollment, seat posture, and program cadence now behave like operational Academy controls</h2>
+      <h2 style={{ marginTop: 0, marginBottom: 10 }}>Enrollment, seat posture, and program cadence now read and mutate through the Academy API</h2>
       <div style={{ display: "grid", gap: 16 }}>
         {cohorts.map((cohort) => {
-          const isEnrolled = cohort.enrollment?.status === "enrolled";
+          const isEnrolled = cohort.enrollment && cohort.enrollment.status !== "withdrawn";
+          const learnerId = cohort.enrollment?.learnerId || resolveLearnerIdForProgram(cohort.programKey);
           return (
             <div key={cohort.cohortId} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
               <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
@@ -56,9 +54,16 @@ export default function AcademyCohortPanel({ session, refreshKey = null }) {
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 12 }}>
                 <a href={buildProgramHref(cohort.programKey)} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open program pathway</a>
                 {isEnrolled ? (
-                  <button type="button" onClick={() => handleWithdraw(cohort.cohortId)} style={{ ...buttonStyle, border: "1px solid #f59e0b", background: "#fffbeb", color: "#92400e" }}>Withdraw from cohort</button>
+                  <button type="button" onClick={() => cohort.enrollment?.enrollmentId && withdrawEnrollment(cohort.enrollment.enrollmentId)} style={{ ...buttonStyle, border: "1px solid #f59e0b", background: "#fffbeb", color: "#92400e" }}>Withdraw from cohort</button>
                 ) : (
-                  <button type="button" onClick={() => handleEnroll(cohort.cohortId)} style={{ ...buttonStyle, border: "1px solid #2563eb", background: "#2563eb", color: "#fff" }}>Enroll in cohort</button>
+                  <button
+                    type="button"
+                    disabled={!learnerId}
+                    onClick={() => learnerId && assignProgram(learnerId, cohort.programKey)}
+                    style={{ ...buttonStyle, border: "1px solid #2563eb", background: learnerId ? "#2563eb" : "#cbd5e1", color: "#fff" }}
+                  >
+                    Enroll in cohort
+                  </button>
                 )}
               </div>
             </div>

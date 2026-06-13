@@ -69,7 +69,7 @@ export default function PortalAdmin() {
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <CredentialIssuanceLedger session={session} />
+        <CredentialIssuanceLedger />
       </div>
 
       <div style={{ marginBottom: 24 }}>

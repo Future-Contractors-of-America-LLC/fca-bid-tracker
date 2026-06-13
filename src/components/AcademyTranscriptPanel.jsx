@@ -1,4 +1,5 @@
-import { buildLearnerTranscript, issueCredential } from "../academyRecordsStore";
+import useAcademyLms from "../hooks/useAcademyLms";
+import { buildApiBackedTranscript } from "../academyApiViewModels";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -16,18 +17,23 @@ const buttonStyle = {
   cursor: "pointer",
 };
 
-export default function AcademyTranscriptPanel({ session, refreshKey = null }) {
-  const transcript = buildLearnerTranscript(session);
-
-  function handleIssue(programKey) {
-    issueCredential(session, programKey);
-    window.location.reload();
-  }
+export default function AcademyTranscriptPanel({ refreshKey = null }) {
+  const { academyState, meta, issueCertificate } = useAcademyLms();
+  const transcript = buildApiBackedTranscript(academyState);
 
   return (
     <div style={cardStyle} key={refreshKey || "academy-transcript"}>
-      <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Learner transcript</div>
-      <h2 style={{ marginTop: 0, marginBottom: 10 }}>Pathway completion, cohort status, and credential issuance now read like a real transcript surface</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
+        <div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Learner transcript</div>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Transcript, cohort status, and credential issuance now read from the Academy API spine</h2>
+        </div>
+        <div style={{ minWidth: 250, border: "1px solid #dbe3ef", borderRadius: 12, padding: 12, background: "#f8fbff" }}>
+          <div style={{ color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Persistence source</div>
+          <div style={{ fontWeight: 700 }}>{meta.backingSource}</div>
+          <div style={{ color: "#475569", lineHeight: 1.6 }}>{meta.persistenceState}</div>
+        </div>
+      </div>
       <div style={{ display: "grid", gap: 16 }}>
         {transcript.map((entry) => (
           <div id={entry.programKey} key={entry.programKey} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
@@ -59,14 +65,14 @@ export default function AcademyTranscriptPanel({ session, refreshKey = null }) {
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 <button
                   type="button"
-                  onClick={() => handleIssue(entry.programKey)}
-                  disabled={!entry.credentialReady}
+                  onClick={() => entry.enrollmentId && issueCertificate(entry.enrollmentId)}
+                  disabled={!entry.credentialReady || !entry.enrollmentId}
                   style={{
                     ...buttonStyle,
-                    background: entry.credentialReady ? "#2563eb" : "#e2e8f0",
-                    color: entry.credentialReady ? "#fff" : "#64748b",
-                    borderColor: entry.credentialReady ? "#2563eb" : "#cbd5e1",
-                    cursor: entry.credentialReady ? "pointer" : "not-allowed",
+                    background: entry.credentialReady && entry.enrollmentId ? "#2563eb" : "#e2e8f0",
+                    color: entry.credentialReady && entry.enrollmentId ? "#fff" : "#64748b",
+                    borderColor: entry.credentialReady && entry.enrollmentId ? "#2563eb" : "#cbd5e1",
+                    cursor: entry.credentialReady && entry.enrollmentId ? "pointer" : "not-allowed",
                   }}
                 >
                   Generate completion certificate

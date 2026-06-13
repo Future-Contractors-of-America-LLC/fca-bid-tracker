@@ -1,4 +1,5 @@
-import { buildCredentialLedger, issueCredential } from "../academyRecordsStore";
+import useAcademyLms from "../hooks/useAcademyLms";
+import { buildApiBackedCredentialLedger } from "../academyApiViewModels";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -8,18 +9,22 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-export default function CredentialIssuanceLedger({ session }) {
-  const ledger = buildCredentialLedger(session);
-
-  function handleIssue(programKey) {
-    issueCredential(session, programKey);
-    window.location.reload();
-  }
+export default function CredentialIssuanceLedger() {
+  const { academyState, issueCertificate, meta } = useAcademyLms();
+  const ledger = buildApiBackedCredentialLedger(academyState);
 
   return (
     <div style={cardStyle}>
-      <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Credential issuance ledger</div>
-      <h2 style={{ marginTop: 0, marginBottom: 10 }}>Admin can now review program readiness, issued credentials, and cohort-linked academic posture</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 10 }}>
+        <div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Credential issuance ledger</div>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Admin now reviews API-backed readiness, cohort posture, and issued credentials</h2>
+        </div>
+        <div style={{ color: "#475569", lineHeight: 1.6 }}>
+          <div><strong>Source:</strong> {meta.backingSource}</div>
+          <div>{meta.persistenceState}</div>
+        </div>
+      </div>
       <div style={{ display: "grid", gap: 12 }}>
         {ledger.map((entry) => (
           <div key={entry.programKey} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fbff" }}>
@@ -40,7 +45,7 @@ export default function CredentialIssuanceLedger({ session }) {
               <div><strong>Issued at:</strong> {entry.issuedCredential?.issuedAt || "Pending"}</div>
             </div>
             {!entry.issuedCredential && entry.readiness === "Ready for issuance" ? (
-              <button type="button" onClick={() => handleIssue(entry.programKey)} style={{ marginTop: 12, border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
+              <button type="button" onClick={() => entry.enrollmentId && issueCertificate(entry.enrollmentId)} style={{ marginTop: 12, border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
                 Issue credential
               </button>
             ) : null}

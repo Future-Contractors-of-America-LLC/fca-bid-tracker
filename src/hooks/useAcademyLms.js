@@ -77,6 +77,14 @@ export default function useAcademyLms() {
       appendCommercialLog({ type: "academy-progress", title: `${enrollmentId} learner progress advanced`, detail: `Learner progress now supports mobilization and readiness continuity.`, route: "/academy" });
       return payload;
     },
+    async withdrawEnrollment(enrollmentId) {
+      const payload = await mutateAcademyLms("withdraw-enrollment", { enrollmentId });
+      setAcademyState(payload);
+      setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy withdrawal active", lastSyncedAt: new Date().toISOString() });
+      appendAutomationLog({ type: "academy-withdrawal", title: `${enrollmentId} withdrawn`, detail: `Auricrux withdrew the enrollment and preserved audit continuity.`, route: "/academy/transcript" });
+      appendCommercialLog({ type: "academy-withdrawal", title: `${enrollmentId} withdrawn from pathway`, detail: `Enrollment withdrawal was preserved through the Academy API so customer readiness state remains truthful.`, route: "/academy/transcript" });
+      return payload;
+    },
     async issueCertificate(enrollmentId) {
       const payload = await mutateAcademyLms("issue-certificate", { enrollmentId });
       setAcademyState(payload);
