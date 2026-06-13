@@ -14,7 +14,7 @@ Date: 2026-06-13
 
 Convert the deployment-continuity findings from Packet 052C into explicit closure work.
 
-Packet 052D exists to remove the specific classes of gaps that block truthful progression toward 60A:
+Packet 052D removes the specific classes of gaps that block truthful progression toward 60A:
 
 - route gaps
 - auth gaps
@@ -25,9 +25,6 @@ Packet 052D exists to remove the specific classes of gaps that block truthful pr
 - deployment-verification gaps
 
 052D is a closure packet.
-It is not a discovery packet.
-It is not a branding packet.
-It is not a speculative expansion packet.
 
 ---
 
@@ -64,8 +61,6 @@ Every customer-facing or operator-facing route relevant to current deployment mu
 - blocked and removed from navigation
 - redirected to truthful fallback
 
-No route may remain visible in nav if it is neither live nor truthfully bounded.
-
 ### Closure Class C — Auth gap closure
 The system must truthfully enforce protected access behavior.
 
@@ -92,126 +87,24 @@ Normal platform usage must not depend on the founder to explain:
 - what happens next
 - where the current usable workflow lives
 
-Any such dependency is a design defect to be removed in 052D.
-
 ### Closure Class F — Deployment-verification closure
 The repository must contain a durable artifact that states what has been checked and what remains unverified.
-
-No deployment claim may remain undocumented.
 
 ---
 
 ## 052D Required Artifacts
 
-The following artifacts are mandatory outputs of this packet family.
-
 ### 052D-A — Public truth closure artifact
-Filename target:
 `docs/FCA_PACKET_052D_PUBLIC_ENTRY_TRUTH_CLOSURE.md`
 
-Must define:
-- current public pages
-- current live CTAs
-- current truthful capability claims
-- removed / hidden / redirected surfaces
-- exact public-language constraints
-
 ### 052D-B — Route closure artifact
-Filename target:
 `docs/FCA_PACKET_052D_ROUTE_GAP_CLOSURE.md`
 
-Must define:
-- route inventory
-- route state: live / hidden / redirect / remove
-- canonical owner object per route
-- dead-end closures
-- navigation corrections
-
 ### 052D-C — Auth closure artifact
-Filename target:
 `docs/FCA_PACKET_052D_AUTH_GAP_CLOSURE.md`
 
-Must define:
-- active auth entry path
-- protected-route enforcement expectation
-- failure-safe redirects
-- auth truth boundaries
-- remaining auth blockers
-
 ### 052D-D — Deployment verification artifact
-Filename target:
 `docs/FCA_PACKET_052D_DEPLOYMENT_VERIFICATION_CLOSURE.md`
-
-Must define:
-- repo-verified surfaces
-- deployment-verified surfaces
-- live-verified surfaces
-- not-yet-verified surfaces
-- explicit go / no-go posture for advancing beyond 052D
-
----
-
-## Mandatory Working Inventory
-
-052D assumes the current FCA deployment spine is organized around these object classes:
-
-- Tenant
-- User
-- Client
-- Opportunity
-- Project
-- File
-- AuditEvent
-- AuricruxAction
-
-Any route or workflow not anchored to this object chain must either:
-- be bound correctly, or
-- be removed from active deployment claims
-
----
-
-## Closure Workflow
-
-### Step 1 — classify surfaces
-For each currently exposed surface:
-- identify route
-- identify owner object
-- identify live status
-- identify auth requirement
-- identify persistence truth
-- identify customer-facing claim boundary
-
-### Step 2 — close false exposure
-For each exposed but non-truthful surface:
-- hide it
-- remove it
-- redirect it
-- or downgrade language to truthful bounded status
-
-### Step 3 — close founder-routing defects
-For each step still requiring founder explanation:
-- encode the instruction in-product
-- or collapse the path to a smaller deterministic flow
-
-### Step 4 — publish verification state
-State exactly what is:
-- repo true
-- deployment true
-- live true
-- still blocked
-
----
-
-## Hard Failure Conditions
-
-052D fails if any of the following remain true at completion claim time:
-
-1. public page promises capability not actually reachable
-2. nav exposes dead routes
-3. auth failure produces confusing or false-success behavior
-4. save-state language implies persistence without durable backing
-5. founder must manually route a normal user into the right flow
-6. deployment status is claimed without written verification artifact
 
 ---
 
@@ -228,32 +121,6 @@ Packet 052D is complete only when:
 
 ---
 
-## Not Allowed
-
-052D may not be used to justify:
-- new broad feature lanes
-- unbounded Academy expansion
-- speculative future-module planning
-- purely cosmetic shell work
-- new surface claims without deployment proof
-
----
-
 ## Next Packet
 
 `FCA_PACKET_052E_DEPLOYMENT_EXECUTION_ALIGNMENT_v0.md`
-
-052E must:
-- bind closure artifacts to exact execution tasks
-- convert verified 052D closure state into active implementation sequencing
-- narrow the remaining path from 052E through 60A complete deployment
-
----
-
-## Sequence Preservation Rule
-
-Do not regress to pre-052 packet families.
-Do not reopen discovery already settled in 052C.
-Do not treat unresolved visibility gaps as permission to improvise sequence identity.
-
-052D exists to close deployment truth gaps and preserve forward motion to 60A.
