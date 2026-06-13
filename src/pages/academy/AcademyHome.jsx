@@ -18,6 +18,7 @@ import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
 import AcademyProgressPanel from "../../components/AcademyProgressPanel";
 import AcademyCohortPanel from "../../components/AcademyCohortPanel";
 import AcademyTranscriptPanel from "../../components/AcademyTranscriptPanel";
+import AcademyCoverageMatrixPanel from "../../components/AcademyCoverageMatrixPanel";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
@@ -164,6 +165,10 @@ export default function AcademyHome() {
             <div>Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning for {liveTenant.name}.</div>
           </div>
         </div>
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <AcademyCoverageMatrixPanel />
       </div>
 
       <div style={{ marginBottom: 24 }}>
