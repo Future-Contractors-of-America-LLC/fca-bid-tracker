@@ -1,4 +1,4 @@
-import useAcademyLms from "../hooks/useAcademyLms";
+import { useAcademyLmsContext } from "../context/AcademyLmsContext";
 
 const shellStyle = {
   border: "1px solid #dbe3ef",
@@ -16,6 +16,11 @@ const cardStyle = {
   background: "#fff",
 };
 
+const telemetryCardStyle = {
+  ...cardStyle,
+  background: "linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)",
+};
+
 const buttonStyle = (tone = "primary") => ({
   border: tone === "primary" ? "1px solid #1d4ed8" : "1px solid #cbd5e1",
   borderRadius: 10,
@@ -27,28 +32,73 @@ const buttonStyle = (tone = "primary") => ({
   font: "inherit",
 });
 
+const statusTone = {
+  ready: {
+    badge: "#dcfce7",
+    color: "#166534",
+    label: "Provider active",
+  },
+  warning: {
+    badge: "#fef3c7",
+    color: "#92400e",
+    label: "Fallback active",
+  },
+  loading: {
+    badge: "#dbeafe",
+    color: "#1d4ed8",
+    label: "Syncing academy spine",
+  },
+};
+
+function resolveTelemetryState({ loading, meta, mutationState }) {
+  if (loading) return statusTone.loading;
+  if (!meta?.authoritativeState || meta?.warning || mutationState?.error) return statusTone.warning;
+  return statusTone.ready;
+}
+
 export default function AcademyLmsControlPanel() {
-  const { academyState, meta, assignProgram, advanceProgress, issueCertificate } = useAcademyLms();
+  const {
+    academyState,
+    meta,
+    loading,
+    mutationState,
+    assignProgram,
+    advanceProgress,
+    issueCertificate,
+  } = useAcademyLmsContext();
   const learners = academyState.learners || [];
   const enrollments = academyState.enrollments || [];
   const certificates = academyState.certificates || [];
   const summary = academyState.summary || {};
+  const telemetryState = resolveTelemetryState({ loading, meta, mutationState });
 
   return (
     <div style={shellStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 14 }}>
         <div>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real Academy LMS spine</div>
-          <h2 style={{ marginTop: 0, marginBottom: 8 }}>Assignments, learner progress, and credential issuance now route through an API-backed LMS layer</h2>
+          <h2 style={{ marginTop: 0, marginBottom: 8 }}>Assignments, learner progress, and credential issuance now route through one provider-backed LMS state</h2>
           <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 900 }}>
-            Academy is now moving beyond narrative-only continuity. Learners, enrollments, progress, and certificates are managed as durable LMS objects through the backend workflow surface.
+            The academy control surface now reads the same provider state as the rest of the Academy route. This removes duplicate fetches, keeps control actions bound to one authoritative workspace state, and exposes telemetry directly where mutations happen.
           </div>
         </div>
-        <div style={{ ...cardStyle, minWidth: 260 }}>
-          <div style={{ fontSize: 12, color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Persistence source</div>
+        <div style={{ ...telemetryCardStyle, minWidth: 300 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 10, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 12, color: "#64748b", fontWeight: 700 }}>Provider telemetry</div>
+            <div style={{ background: telemetryState.badge, color: telemetryState.color, borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 12 }}>
+              {telemetryState.label}
+            </div>
+          </div>
           <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>{meta.backingSource}</div>
-          <div style={{ color: "#475569", lineHeight: 1.6 }}>{meta.persistenceState}</div>
-          <div style={{ color: "#64748b", marginTop: 8 }}>Last sync: {meta.lastSyncedAt || "Pending initial sync"}</div>
+          <div style={{ color: "#475569", lineHeight: 1.6, marginBottom: 10 }}>{meta.persistenceState}</div>
+          <div style={{ display: "grid", gap: 6, color: "#334155", fontSize: 14 }}>
+            <div><strong>Authority:</strong> {meta.authoritativeState ? "Authoritative API state" : "Fallback / non-authoritative state"}</div>
+            <div><strong>Last sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
+            <div><strong>Active action:</strong> {mutationState.activeAction || "None"}</div>
+            <div><strong>Last action:</strong> {mutationState.lastAction || "None yet"}</div>
+            <div><strong>Mutation error:</strong> {mutationState.error || "None"}</div>
+            <div><strong>Warning:</strong> {meta.warning || "None"}</div>
+          </div>
         </div>
       </div>
 
@@ -78,9 +128,9 @@ export default function AcademyLmsControlPanel() {
                     </div>
                   </div>
                   <div style={{ minWidth: 230, display: "grid", gap: 10, alignContent: "start" }}>
-                    <button type="button" style={buttonStyle("primary")} onClick={() => assignProgram(learner.learnerId, learner.assignedProgramKey || "ops-core")}>Assign Program</button>
-                    {enrollment ? <button type="button" style={buttonStyle()} onClick={() => advanceProgress(enrollment.enrollmentId, 20, "Advance next live module")}>Advance Progress</button> : null}
-                    {enrollment ? <button type="button" style={buttonStyle()} onClick={() => issueCertificate(enrollment.enrollmentId)}>Issue Credential</button> : null}
+                    <button type="button" style={buttonStyle("primary")} disabled={loading || mutationState.activeAction === "assign-program"} onClick={() => assignProgram(learner.learnerId, learner.assignedProgramKey || "ops-core")}>Assign Program</button>
+                    {enrollment ? <button type="button" style={buttonStyle()} disabled={loading || mutationState.activeAction === "advance-progress"} onClick={() => advanceProgress(enrollment.enrollmentId, 20, "Advance next live module")}>Advance Progress</button> : null}
+                    {enrollment ? <button type="button" style={buttonStyle()} disabled={loading || mutationState.activeAction === "issue-certificate"} onClick={() => issueCertificate(enrollment.enrollmentId)}>Issue Credential</button> : null}
                   </div>
                 </div>
               </div>
