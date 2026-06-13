@@ -103,6 +103,9 @@ function AcademyHomeInner() {
         setCommsAccess={setCommsAccess}
         applyPlanPreset={applyPlanPreset}
         refreshSyncStamp={refreshSyncStamp}
+        meta={meta}
+        loading={loading}
+        mutationState={mutationState}
       />
 
       <AcademyLmsControlPanel />

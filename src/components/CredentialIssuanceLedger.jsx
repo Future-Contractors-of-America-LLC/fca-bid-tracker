@@ -1,4 +1,6 @@
 import { buildApiBackedCredentialLedger } from "../academyApiViewModels";
+import AcademyProviderTelemetryPanel from "./AcademyProviderTelemetryPanel";
+import { getAcademyAuthoritySnapshot } from "../academyAuthorityVocabulary";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -11,7 +13,8 @@ const cardStyle = {
 export default function CredentialIssuanceLedger({ academyLms }) {
   const { academyState, issueCertificate, meta, loading, mutationState } = academyLms;
   const ledger = buildApiBackedCredentialLedger(academyState);
-  const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);
+  const authority = getAcademyAuthoritySnapshot({ meta, loading, mutationState });
+  const degraded = authority.state !== "authoritative";
 
   return (
     <div style={cardStyle}>
@@ -20,17 +23,19 @@ export default function CredentialIssuanceLedger({ academyLms }) {
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Credential issuance ledger</div>
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>Admin now reviews API-backed readiness, cohort posture, and issued credentials</h2>
         </div>
-        <div style={{ color: "#475569", lineHeight: 1.6 }}>
-          <div><strong>Source:</strong> {meta.backingSource}</div>
-          <div>{meta.persistenceState}</div>
-        </div>
+        <AcademyProviderTelemetryPanel
+          meta={meta}
+          loading={loading}
+          mutationState={mutationState}
+          title="Credential ledger telemetry"
+        />
       </div>
 
       {degraded ? (
         <div style={{ marginBottom: 16, border: "1px solid #f59e0b", background: "#fffbeb", color: "#78350f", borderRadius: 12, padding: 14, lineHeight: 1.7 }}>
           <div style={{ fontWeight: 700, marginBottom: 6 }}>Credential authority caution</div>
           <div>
-            Credential issuance posture is currently degraded or unverified. Do not issue or trust credentials from this surface until Academy API authority is restored.
+            Credential issuance posture is currently degraded or unverified. Do not issue or trust credentials from this surface until the Academy provider returns to authoritative health.
           </div>
         </div>
       ) : null}

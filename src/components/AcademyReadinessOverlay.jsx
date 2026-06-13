@@ -1,4 +1,6 @@
 import { resolvePlanPreset } from "../pricingPlans";
+import AcademyProviderTelemetryPanel from "./AcademyProviderTelemetryPanel";
+import { getAcademyAuthoritySnapshot } from "../academyAuthorityVocabulary";
 
 const shellStyle = {
   border: "1px solid #e5d3a1",
@@ -27,7 +29,16 @@ const actionButtonStyle = (tone = "primary") => ({
   font: "inherit",
 });
 
-export default function AcademyReadinessOverlay({ session, setProductAccess, setCommsAccess, applyPlanPreset, refreshSyncStamp }) {
+export default function AcademyReadinessOverlay({
+  session,
+  setProductAccess,
+  setCommsAccess,
+  applyPlanPreset,
+  refreshSyncStamp,
+  meta = null,
+  loading = false,
+  mutationState = null,
+}) {
   const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
   const enabledProducts = session?.enabledProducts || { saas: true, lms: true, auricrux: true };
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
@@ -37,6 +48,7 @@ export default function AcademyReadinessOverlay({ session, setProductAccess, set
   const needsConference = enabledComms.conference === false;
   const needsTeams = enabledComms.teams === false;
   const missingCount = [needsLms, needsLecture, needsEmail, needsConference, needsTeams].filter(Boolean).length;
+  const authority = meta ? getAcademyAuthoritySnapshot({ meta, loading, mutationState }) : null;
 
   if (missingCount === 0) return null;
 
@@ -56,7 +68,7 @@ export default function AcademyReadinessOverlay({ session, setProductAccess, set
 
   return (
     <div style={shellStyle}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "flex-start", marginBottom: 12 }}>
         <div>
           <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Proactive academy readiness</div>
           <h2 style={{ marginTop: 0, marginBottom: 8 }}>Academy should repair training dependencies before learners hit continuity gaps</h2>
@@ -64,12 +76,32 @@ export default function AcademyReadinessOverlay({ session, setProductAccess, set
             Auricrux now checks whether LMS, lecture delivery, training follow-through, and executive coaching channels are ready before academy continuity breaks downstream.
           </div>
         </div>
-        <div style={{ ...cardStyle, minWidth: 240 }}>
-          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Active academy posture</div>
-          <div style={{ fontSize: 22, fontWeight: 700, color: "#111827", marginBottom: 6 }}>{selectedPlan.name}</div>
-          <div style={{ color: "#475569", lineHeight: 1.6 }}>{missingCount} academy dependency{missingCount === 1 ? "" : "ies"} need repair</div>
+        <div style={{ display: "grid", gap: 12 }}>
+          <div style={{ ...cardStyle, minWidth: 240 }}>
+            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Active academy posture</div>
+            <div style={{ fontSize: 22, fontWeight: 700, color: "#111827", marginBottom: 6 }}>{selectedPlan.name}</div>
+            <div style={{ color: "#475569", lineHeight: 1.6 }}>{missingCount} academy dependency{missingCount === 1 ? "" : "ies"} need repair</div>
+          </div>
+          {meta ? (
+            <AcademyProviderTelemetryPanel
+              meta={meta}
+              loading={loading}
+              mutationState={mutationState}
+              title="Readiness overlay telemetry"
+              style={{ minWidth: 280, background: "#fff" }}
+            />
+          ) : null}
         </div>
       </div>
+
+      {authority && authority.state !== "authoritative" ? (
+        <div style={{ marginBottom: 14, border: "1px solid #f59e0b", background: "#fffbeb", color: "#78350f", borderRadius: 12, padding: 14, lineHeight: 1.7 }}>
+          <div style={{ fontWeight: 700, marginBottom: 6 }}>Readiness truth caution</div>
+          <div>
+            Readiness repairs can still remove obvious customer-facing continuity gaps, but training authority posture is currently not fully authoritative. Treat readiness posture as provisional until the Academy provider returns to healthy truth state.
+          </div>
+        </div>
+      ) : null}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginBottom: 14 }}>
         <div style={cardStyle}>
