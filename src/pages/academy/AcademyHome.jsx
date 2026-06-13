@@ -19,6 +19,7 @@ import AcademyProgressPanel from "../../components/AcademyProgressPanel";
 import AcademyCohortPanel from "../../components/AcademyCohortPanel";
 import AcademyTranscriptPanel from "../../components/AcademyTranscriptPanel";
 import AcademyCoverageMatrixPanel from "../../components/AcademyCoverageMatrixPanel";
+import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
@@ -26,6 +27,7 @@ import { academyClassrooms, saasOperationalPathways } from "../../productBluepri
 import { academyCatalog } from "../../academyCatalog";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useAcademyLms from "../../hooks/useAcademyLms";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -51,6 +53,7 @@ const continuityCardStyle = {
 export default function AcademyHome() {
   const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const { meta, mutationState, loading } = useAcademyLms();
   const liveTenant = state?.tenant || portalTenant;
   const liveProject = state?.project || currentProject;
   const liveWorkspace = state?.workspace || workspaceContext;
@@ -81,6 +84,8 @@ export default function AcademyHome() {
         <FcaBrandMark compact />
         <AuricruxBrandMark compact />
       </div>
+
+      <AcademyStateAuthorityBanner meta={meta} mutationState={mutationState} loading={loading} />
 
       <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
       <CustomerCommsLaunchpad session={session} title="Launch enabled training and customer communications lanes" />
@@ -172,15 +177,15 @@ export default function AcademyHome() {
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <AcademyProgressPanel session={session} />
+        <AcademyProgressPanel />
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <AcademyCohortPanel session={session} />
+        <AcademyCohortPanel />
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <AcademyTranscriptPanel session={session} />
+        <AcademyTranscriptPanel />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>

@@ -11,8 +11,9 @@ const cardStyle = {
 };
 
 export default function AcademyProgressPanel({ programKey = null }) {
-  const { academyState, meta } = useAcademyLms();
+  const { academyState, meta, loading, mutationState } = useAcademyLms();
   const programs = programKey ? academyCatalog.programs.filter((program) => program.key === programKey) : academyCatalog.programs;
+  const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);
 
   return (
     <div style={cardStyle}>
@@ -26,6 +27,16 @@ export default function AcademyProgressPanel({ programKey = null }) {
           <div>{meta.persistenceState}</div>
         </div>
       </div>
+
+      {degraded ? (
+        <div style={{ marginBottom: 16, border: "1px solid #f59e0b", background: "#fffbeb", color: "#78350f", borderRadius: 12, padding: 14, lineHeight: 1.7 }}>
+          <div style={{ fontWeight: 700, marginBottom: 6 }}>Progress truth caution</div>
+          <div>
+            Progress metrics are currently being shown while Academy API authority is degraded or unverified. Do not treat lesson/course/program percentages as final operational truth until the API spine is healthy.
+          </div>
+        </div>
+      ) : null}
+
       <div style={{ display: "grid", gap: 16 }}>
         {programs.map((program) => {
           const programProgress = getApiProgramProgress(academyState, program.key);

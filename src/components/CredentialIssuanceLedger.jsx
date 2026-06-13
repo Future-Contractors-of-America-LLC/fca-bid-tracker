@@ -10,8 +10,9 @@ const cardStyle = {
 };
 
 export default function CredentialIssuanceLedger() {
-  const { academyState, issueCertificate, meta } = useAcademyLms();
+  const { academyState, issueCertificate, meta, loading, mutationState } = useAcademyLms();
   const ledger = buildApiBackedCredentialLedger(academyState);
+  const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);
 
   return (
     <div style={cardStyle}>
@@ -25,6 +26,16 @@ export default function CredentialIssuanceLedger() {
           <div>{meta.persistenceState}</div>
         </div>
       </div>
+
+      {degraded ? (
+        <div style={{ marginBottom: 16, border: "1px solid #f59e0b", background: "#fffbeb", color: "#78350f", borderRadius: 12, padding: 14, lineHeight: 1.7 }}>
+          <div style={{ fontWeight: 700, marginBottom: 6 }}>Credential authority caution</div>
+          <div>
+            Credential issuance posture is currently degraded or unverified. Do not issue or trust credentials from this surface until Academy API authority is restored.
+          </div>
+        </div>
+      ) : null}
+
       <div style={{ display: "grid", gap: 12 }}>
         {ledger.map((entry) => (
           <div key={entry.programKey} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fbff" }}>
@@ -45,7 +56,7 @@ export default function CredentialIssuanceLedger() {
               <div><strong>Issued at:</strong> {entry.issuedCredential?.issuedAt || "Pending"}</div>
             </div>
             {!entry.issuedCredential && entry.readiness === "Ready for issuance" ? (
-              <button type="button" onClick={() => entry.enrollmentId && issueCertificate(entry.enrollmentId)} style={{ marginTop: 12, border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
+              <button type="button" disabled={degraded || !entry.enrollmentId} onClick={() => entry.enrollmentId && issueCertificate(entry.enrollmentId)} style={{ marginTop: 12, border: degraded ? "1px solid #cbd5e1" : "1px solid #2563eb", background: degraded ? "#e2e8f0" : "#2563eb", color: degraded ? "#64748b" : "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: degraded ? "not-allowed" : "pointer" }}>
                 Issue credential
               </button>
             ) : null}

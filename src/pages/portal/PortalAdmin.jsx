@@ -7,8 +7,10 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import AdminActionCenter from "../../components/AdminActionCenter";
 import CredentialIssuanceLedger from "../../components/CredentialIssuanceLedger";
+import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useAcademyLms from "../../hooks/useAcademyLms";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { adminGovernance } from "../../adminGovernance";
 import { routeStateOverlays } from "../../systemState";
@@ -25,6 +27,7 @@ const cardStyle = {
 export default function PortalAdmin() {
   const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const { meta, mutationState, loading } = useAcademyLms();
 
   useEffect(() => {
     refreshSyncStamp("Persisted admin governance state active");
@@ -42,6 +45,8 @@ export default function PortalAdmin() {
       primaryHref="/pricing"
       primaryLabel="Plans & Rollout"
     >
+      <AcademyStateAuthorityBanner meta={meta} mutationState={mutationState} loading={loading} />
+
       <div style={{ marginBottom: 24 }}>
         <SystemStateSummary
           tenant={state.tenant}

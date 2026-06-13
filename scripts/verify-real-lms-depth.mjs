@@ -12,14 +12,14 @@ const checks = [
   { path: "src/pages/academy/AcademyCourseDetail.jsx", includes: ["Course progress", "Open lesson view"] },
   { path: "src/pages/academy/AcademyLessonView.jsx", includes: ["shared Academy API-backed LMS spine", "Lesson mutation blocked:", "AcademyStateAuthorityBanner", "authoritativeState"] },
   { path: "src/pages/academy/AcademyTranscript.jsx", includes: ["shared Academy API-backed LMS spine", "AcademyTranscriptPanel", "AcademyCohortPanel", "AcademyStateAuthorityBanner"] },
+  { path: "src/pages/academy/AcademyHome.jsx", includes: ["AcademyCoverageMatrixPanel", "Open transcript and certificate surface", "AcademyStateAuthorityBanner"] },
   { path: "src/components/AcademyTranscriptPanel.jsx", includes: ["buildApiBackedTranscript", "Academy API spine"] },
-  { path: "src/components/AcademyCohortPanel.jsx", includes: ["buildApiBackedCohorts", "withdrawEnrollment"] },
-  { path: "src/components/AcademyProgressPanel.jsx", includes: ["getApiCourseProgress", "getApiProgramProgress", "Academy API spine"] },
+  { path: "src/components/AcademyCohortPanel.jsx", includes: ["buildApiBackedCohorts", "withdrawEnrollment", "Cohort authority caution"] },
+  { path: "src/components/AcademyProgressPanel.jsx", includes: ["getApiCourseProgress", "getApiProgramProgress", "Academy API spine", "Progress truth caution"] },
   { path: "src/components/AcademyCoverageMatrixPanel.jsx", includes: ["Breadth + depth coverage matrix", "Single-release gating principles"] },
-  { path: "src/components/CredentialIssuanceLedger.jsx", includes: ["buildApiBackedCredentialLedger", "API-backed readiness"] },
-  { path: "src/pages/portal/PortalAdmin.jsx", includes: ["CredentialIssuanceLedger", "academic credential issuance"] },
+  { path: "src/components/CredentialIssuanceLedger.jsx", includes: ["buildApiBackedCredentialLedger", "API-backed readiness", "Credential authority caution"] },
+  { path: "src/pages/portal/PortalAdmin.jsx", includes: ["CredentialIssuanceLedger", "academic credential issuance", "AcademyStateAuthorityBanner"] },
   { path: "src/pages/portal/PortalHome.jsx", includes: ["Training readiness", "Training pathways linked to real work"] },
-  { path: "src/pages/academy/AcademyHome.jsx", includes: ["AcademyCoverageMatrixPanel", "Open transcript and certificate surface"] },
   { path: "src/academyProgressStore.js", includes: ["Quarantined fallback only.", "should not be treated as", "authoritative product path"] }
 ];
 
