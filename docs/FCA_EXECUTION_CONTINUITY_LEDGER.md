@@ -9,8 +9,8 @@ Last Updated: 2026-06-13
 
 ## Controlling Sequence
 
-- Active packet: `052N`
-- Next packet: `052O`
+- Active packet: `052O`
+- Next packet: `052P`
 - Deployment target: `060A` complete deployment
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 
@@ -20,7 +20,7 @@ Last Updated: 2026-06-13
 
 The controlling build state for FCA is the 052-range deployment sequence.
 
-Auricrux must treat `052N` as the current working packet, with `052O` as next, while preserving the stricter truth boundary that repository-visible history does not yet prove live end-to-end implementation completion.
+Auricrux must treat `052O` as the current working packet, with `052P` as next, while preserving the stricter truth boundary that repository-visible history does not yet prove live end-to-end implementation completion.
 
 ---
 
@@ -32,9 +32,9 @@ Auricrux must treat `052N` as the current working packet, with `052O` as next, w
 - The repository contains executed implementation packet artifacts through `implementation-packet-045-executed.md`.
 - The repository contains deployment and route hardening artifacts.
 - The repository contains restored 052C / 052D / 052E continuity anchors.
-- The repository contains packet continuity artifacts through `052N`.
+- The repository contains packet continuity artifacts through `052O`.
 - The repository now contains:
-  - `docs/FCA_PACKET_052N_RUNTIME_FILE_APPLY_EXECUTION_PACKET.md`
+  - `docs/FCA_PACKET_052O_DIRECT_RUNTIME_FILE_PUSH_PACKET.md`
 
 ### Not yet repo-proven
 - applied runtime code files for the first contract/validation/route wave
@@ -47,7 +47,7 @@ Auricrux must treat `052N` as the current working packet, with `052O` as next, w
 ## Current Blocker
 
 ### Blocker 1 — durable implementation gap
-The repository now preserves packet continuity through `052N`, but the codebase does not yet repo-prove applied runtime implementation of the first-wave file set.
+The repository now preserves packet continuity through `052O`, but the codebase does not yet repo-prove actual runtime file push execution for the first-wave file set.
 
 ### Required behavior
 This blocker does **not** authorize sequence guessing, packet regression, or continuity loss.
@@ -71,8 +71,8 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `052N`
-- Next packet: `052O`
+- Current packet: `052O`
+- Next packet: `052P`
 - Target packet: `060A`
 - Current blocker: durable implementation gap
 - Next concrete action: continue saving every meaningful continuity change in-repo while advancing the 052-range execution chain
