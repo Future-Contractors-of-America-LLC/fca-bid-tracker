@@ -6,6 +6,7 @@
     "build:system": "npm run build",
     "build": "bash ./build.sh",
     "verify:live-deployment": "node no-op.js",
+    "verify:real-lms-depth": "node scripts/verify-real-lms-depth.mjs",
 
     "generate:admin-governance-report": "node no-op.js",
     "generate:billing-governance-report": "node no-op.js",

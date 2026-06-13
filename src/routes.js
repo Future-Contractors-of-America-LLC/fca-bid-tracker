@@ -30,6 +30,10 @@ import PortalOpportunityDetail from "./pages/portal/PortalOpportunityDetail";
 import PortalProjectDetail from "./pages/portal/PortalProjectDetail";
 
 import AcademyHome from "./pages/academy/AcademyHome";
+import AcademyCatalog from "./pages/academy/AcademyCatalog";
+import AcademyProgramDetail from "./pages/academy/AcademyProgramDetail";
+import AcademyCourseDetail from "./pages/academy/AcademyCourseDetail";
+import AcademyLessonView from "./pages/academy/AcademyLessonView";
 
 export const routes = {
   "/": Home,
@@ -63,6 +67,7 @@ export const routes = {
   "/portal/academy": AcademyHome,
 
   "/academy": AcademyHome,
+  "/academy/catalog": AcademyCatalog,
 };
 
 export const routePatterns = [
@@ -73,6 +78,18 @@ export const routePatterns = [
   {
     pattern: "/portal/projects/:projectId",
     Page: PortalProjectDetail,
+  },
+  {
+    pattern: "/academy/programs/:programKey",
+    Page: AcademyProgramDetail,
+  },
+  {
+    pattern: "/academy/programs/:programKey/courses/:courseKey",
+    Page: AcademyCourseDetail,
+  },
+  {
+    pattern: "/academy/programs/:programKey/courses/:courseKey/lessons/:lessonKey",
+    Page: AcademyLessonView,
   },
 ];
 

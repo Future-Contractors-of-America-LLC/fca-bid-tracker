@@ -3,7 +3,7 @@ import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
-import { academyCatalog } from "../../academyCatalog";
+import { academyCatalog, buildProgramHref } from "../../academyCatalog";
 import { academyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -20,8 +20,8 @@ export default function AcademyCatalog() {
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
         eyebrow="FCA Academy Catalog"
-        title="Real classroom programs tied to contractor operations"
-        subtitle="Each FCA Academy program is mapped to real SaaS workflows so curriculum, labs, and credentials support live project execution rather than detached training theory."
+        title="Graduate-grade contractor programs tied to live operating surfaces"
+        subtitle="Each FCA Academy program is now designed as a real instructional pathway with seminar goals, course architecture, lesson objectives, applied labs, and direct continuity into FCA workspace routes."
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
@@ -36,10 +36,10 @@ export default function AcademyCatalog() {
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy catalog</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Programs, credentials, outcomes, and linked production surfaces are now visible in one place</h2>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real LMS catalog</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Programs, courses, lessons, credentials, and linked FCA workflows are now visible in one place</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          This catalog turns the Academy into a real classroom layer with named programs, course sequences, labs, and operational outcomes that map directly into FCA workspace routes.
+          This catalog no longer reads like a branded summary surface. Each program now carries a defined instructional goal, measurable outcomes, course sequence, lesson-level intellectual objective, and operational handoff into real contractor workflows.
         </p>
       </div>
 
@@ -56,7 +56,7 @@ export default function AcademyCatalog() {
                   <div><strong>Format:</strong> {program.format}</div>
                 </div>
               </div>
-              <div style={{ maxWidth: 380, color: "#334155", lineHeight: 1.7 }}>
+              <div style={{ maxWidth: 420, color: "#334155", lineHeight: 1.7 }}>
                 <strong>Program goal</strong>
                 <div>{program.goal}</div>
               </div>
@@ -81,6 +81,7 @@ export default function AcademyCatalog() {
                       <div style={{ color: "#475569", lineHeight: 1.7 }}>
                         <div><strong>Lessons:</strong> {course.lessons}</div>
                         <div><strong>Lab:</strong> {course.lab}</div>
+                        <div>{course.summary}</div>
                       </div>
                     </div>
                   ))}
@@ -88,7 +89,8 @@ export default function AcademyCatalog() {
               </div>
             </div>
 
-            <div style={{ marginTop: 16 }}>
+            <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap" }}>
+              <a href={buildProgramHref(program.key)} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open program detail</a>
               <a href={program.linkedSurface} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{program.linkedLabel}</a>
             </div>
           </section>

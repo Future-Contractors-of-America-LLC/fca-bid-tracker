@@ -7,6 +7,8 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
+import TrainingReadinessPanel from "../../components/TrainingReadinessPanel";
+import { academyCatalog, buildProgramHref } from "../../academyCatalog";
 import { auricruxActions, portalMessages, portalMetrics, portalProjects, routeStateOverlays } from "../../systemState";
 import { portalEntryCtaSets, publicBodyCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -115,6 +117,10 @@ export default function PortalHome() {
         ))}
       </div>
 
+      <div style={{ marginTop: 24, marginBottom: 24 }}>
+        <TrainingReadinessPanel session={session} activeProject={state.project} />
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 16, marginTop: 24 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Auricrux next actions</h2>
@@ -155,6 +161,27 @@ export default function PortalHome() {
               <div style={{ fontWeight: 700 }}>{project.id} · {project.customer}</div>
               <div style={{ color: "#4b5563", lineHeight: 1.6 }}>{project.stage} · Next: {project.nextAction}</div>
               <div style={{ color: "#475569", fontSize: 14, marginTop: 4 }}>Permit: {project.permitStatus}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Training pathways linked to real work</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Academy pathways now connect directly into live FCA operating surfaces</h2>
+        <div style={{ display: "grid", gap: 12 }}>
+          {academyCatalog.programs.map((program) => (
+            <div key={program.key} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 12, background: "#f8fbff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <div>
+                  <div style={{ fontWeight: 700 }}>{program.title}</div>
+                  <div style={{ color: "#475569", lineHeight: 1.7 }}>{program.outcome}</div>
+                </div>
+                <div style={{ display: "grid", gap: 8, justifyItems: "end" }}>
+                  <a href={buildProgramHref(program.key)} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open pathway</a>
+                  <a href={program.linkedSurface} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{program.linkedLabel}</a>
+                </div>
+              </div>
             </div>
           ))}
         </div>
