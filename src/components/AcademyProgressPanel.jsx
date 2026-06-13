@@ -1,5 +1,6 @@
 import { academyCatalog, buildCourseHref, buildProgramHref } from "../academyCatalog";
-import { getCourseProgress, getProgramProgress } from "../academyProgressStore";
+import { getApiCourseProgress, getApiProgramProgress } from "../academyApiViewModels";
+import useAcademyLms from "../hooks/useAcademyLms";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -9,17 +10,25 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-export default function AcademyProgressPanel({ session, programKey = null }) {
+export default function AcademyProgressPanel({ programKey = null }) {
+  const { academyState, meta } = useAcademyLms();
   const programs = programKey ? academyCatalog.programs.filter((program) => program.key === programKey) : academyCatalog.programs;
 
   return (
     <div style={cardStyle}>
-      <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Progress and credential posture</div>
-      <h2 style={{ marginTop: 0, marginBottom: 10 }}>Real LMS progression now tracks lesson, course, and program completion</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 10 }}>
+        <div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Progress and credential posture</div>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Real LMS progression now tracks lesson, course, and program completion through the Academy API spine</h2>
+        </div>
+        <div style={{ color: "#475569", lineHeight: 1.6 }}>
+          <div><strong>Source:</strong> {meta.backingSource}</div>
+          <div>{meta.persistenceState}</div>
+        </div>
+      </div>
       <div style={{ display: "grid", gap: 16 }}>
         {programs.map((program) => {
-          const programProgress = getProgramProgress(session, program.key);
-
+          const programProgress = getApiProgramProgress(academyState, program.key);
           return (
             <div key={program.key} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
               <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
@@ -41,7 +50,7 @@ export default function AcademyProgressPanel({ session, programKey = null }) {
               </div>
               <div style={{ display: "grid", gap: 10 }}>
                 {program.courses.map((course) => {
-                  const courseProgress = getCourseProgress(session, program.key, course.key);
+                  const courseProgress = getApiCourseProgress(academyState, program.key, course.key);
                   return (
                     <div key={course.key} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 12, background: "#fff" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>

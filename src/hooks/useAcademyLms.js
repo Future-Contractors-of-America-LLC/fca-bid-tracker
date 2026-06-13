@@ -8,11 +8,14 @@ function buildFallbackState() {
     learners: [],
     enrollments: [],
     certificates: [],
+    lessonProgress: [],
     summary: {
       learnerCount: 0,
       activeEnrollmentCount: 0,
       completedEnrollmentCount: 0,
       issuedCertificateCount: 0,
+      startedLessonCount: 0,
+      completedLessonCount: 0,
       updatedAt: null,
     },
     backingSource: "unavailable",
@@ -21,41 +24,24 @@ function buildFallbackState() {
 
 export default function useAcademyLms() {
   const [academyState, setAcademyState] = useState(buildFallbackState);
-  const [meta, setMeta] = useState({
-    backingSource: "unavailable",
-    persistenceState: "Academy API pending",
-    lastSyncedAt: null,
-  });
+  const [meta, setMeta] = useState({ backingSource: "unavailable", persistenceState: "Academy API pending", lastSyncedAt: null });
 
   useEffect(() => {
     let active = true;
-
     async function hydrate() {
       try {
         const payload = await fetchAcademyLms();
         if (!active) return;
         setAcademyState(payload);
-        setMeta({
-          backingSource: payload.backingSource || "api-academy-store",
-          persistenceState: "API academy LMS spine active",
-          lastSyncedAt: new Date().toISOString(),
-        });
+        setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy LMS spine active", lastSyncedAt: new Date().toISOString() });
       } catch {
         if (!active) return;
         setAcademyState(buildFallbackState());
-        setMeta({
-          backingSource: "unavailable",
-          persistenceState: "Academy API unavailable",
-          lastSyncedAt: null,
-        });
+        setMeta({ backingSource: "unavailable", persistenceState: "Academy API unavailable", lastSyncedAt: null });
       }
     }
-
     hydrate();
-
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, []);
 
   return useMemo(() => ({
@@ -91,6 +77,20 @@ export default function useAcademyLms() {
       setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy certificate issuance active", lastSyncedAt: new Date().toISOString() });
       appendAutomationLog({ type: "academy-certificate", title: `${enrollmentId} certificate issued`, detail: `Auricrux issued the completion credential for ${enrollmentId}.`, route: "/academy" });
       appendCommercialLog({ type: "academy-certificate", title: `${enrollmentId} credential issued`, detail: `Credential issuance now reinforces customer trust and workforce readiness continuity.`, route: "/academy" });
+      return payload;
+    },
+    async startLesson(enrollmentId, programKey, courseKey, lessonKey) {
+      const payload = await mutateAcademyLms("start-lesson", { enrollmentId, programKey, courseKey, lessonKey });
+      setAcademyState(payload);
+      setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API lesson progression active", lastSyncedAt: new Date().toISOString() });
+      appendAutomationLog({ type: "academy-lesson-start", title: `${lessonKey} started`, detail: `Auricrux recorded lesson-start state for ${courseKey}/${lessonKey}.`, route: "/academy" });
+      return payload;
+    },
+    async completeLesson(enrollmentId, programKey, courseKey, lessonKey, derivedPercent = 0) {
+      const payload = await mutateAcademyLms("complete-lesson", { enrollmentId, programKey, courseKey, lessonKey, derivedPercent });
+      setAcademyState(payload);
+      setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API lesson completion active", lastSyncedAt: new Date().toISOString() });
+      appendAutomationLog({ type: "academy-lesson-complete", title: `${lessonKey} completed`, detail: `Auricrux recorded lesson completion for ${courseKey}/${lessonKey}.`, route: "/academy" });
       return payload;
     },
   }), [academyState, meta]);

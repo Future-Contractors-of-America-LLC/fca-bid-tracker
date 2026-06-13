@@ -2,11 +2,10 @@ import { academyCatalog, getCourseByKey, getProgramByKey } from "./academyCatalo
 
 const STORAGE_KEY = "fca_academy_progress_v1";
 
-// Transitional truth boundary:
-// This module still exists only for lesson-level start/completion behavior on the lesson route.
-// Transcript, cohort, credential, and admin issuance surfaces have already converged on the
-// Academy API-backed LMS spine. Do not expand this file into broader Academy record storage.
-// The next durable step is replacing lesson progression with shared API-backed progression objects.
+// Quarantined fallback only.
+// Packet 048W moves surfaced lesson progression to the Academy API-backed LMS spine.
+// This file is retained only as an emergency fallback utility and should not be treated as
+// the authoritative product path for transcript, cohort, credential, or surfaced lesson truth.
 
 function canUseStorage() {
   return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
@@ -14,7 +13,6 @@ function canUseStorage() {
 
 function readStore() {
   if (!canUseStorage()) return {};
-
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : {};
@@ -41,10 +39,7 @@ function getLearnerEntry(session) {
 
 function saveLearnerEntry(session, learner) {
   const { store, learnerKey } = getLearnerEntry(session);
-  store[learnerKey] = {
-    ...learner,
-    updatedAt: new Date().toISOString(),
-  };
+  store[learnerKey] = { ...learner, updatedAt: new Date().toISOString() };
   writeStore(store);
   return store[learnerKey];
 }
@@ -53,16 +48,11 @@ export function markLessonStarted(session, programKey, courseKey, lessonKey) {
   const { learner } = getLearnerEntry(session);
   const lessonId = `${programKey}:${courseKey}:${lessonKey}`;
   const current = learner.lessons[lessonId] || {};
-
   return saveLearnerEntry(session, {
     ...learner,
     lessons: {
       ...learner.lessons,
-      [lessonId]: {
-        status: current.status === "completed" ? "completed" : "started",
-        startedAt: current.startedAt || new Date().toISOString(),
-        completedAt: current.completedAt || null,
-      },
+      [lessonId]: { status: current.status === "completed" ? "completed" : "started", startedAt: current.startedAt || new Date().toISOString(), completedAt: current.completedAt || null },
     },
   });
 }
@@ -71,16 +61,11 @@ export function markLessonCompleted(session, programKey, courseKey, lessonKey) {
   const { learner } = getLearnerEntry(session);
   const lessonId = `${programKey}:${courseKey}:${lessonKey}`;
   const current = learner.lessons[lessonId] || {};
-
   return saveLearnerEntry(session, {
     ...learner,
     lessons: {
       ...learner.lessons,
-      [lessonId]: {
-        status: "completed",
-        startedAt: current.startedAt || new Date().toISOString(),
-        completedAt: new Date().toISOString(),
-      },
+      [lessonId]: { status: "completed", startedAt: current.startedAt || new Date().toISOString(), completedAt: new Date().toISOString() },
     },
   });
 }
@@ -92,9 +77,7 @@ export function getLessonStatus(session, programKey, courseKey, lessonKey) {
 
 export function getProgramProgress(session, programKey) {
   const program = getProgramByKey(programKey);
-  if (!program) {
-    return { completedLessons: 0, totalLessons: 0, completedCourses: 0, totalCourses: 0, percentComplete: 0, credentialReady: false };
-  }
+  if (!program) return { completedLessons: 0, totalLessons: 0, completedCourses: 0, totalCourses: 0, percentComplete: 0, credentialReady: false };
 
   let totalLessons = 0;
   let completedLessons = 0;
@@ -102,7 +85,6 @@ export function getProgramProgress(session, programKey) {
 
   program.courses.forEach((course) => {
     let completedCourseLessons = 0;
-
     course.lessonsData.forEach((lesson) => {
       totalLessons += 1;
       const status = getLessonStatus(session, programKey, course.key, lesson.key);
@@ -111,63 +93,30 @@ export function getProgramProgress(session, programKey) {
         completedCourseLessons += 1;
       }
     });
-
-    if (completedCourseLessons === course.lessonsData.length) {
-      completedCourses += 1;
-    }
+    if (completedCourseLessons === course.lessonsData.length) completedCourses += 1;
   });
 
   const percentComplete = totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0;
-
-  return {
-    completedLessons,
-    totalLessons,
-    completedCourses,
-    totalCourses: program.courses.length,
-    percentComplete,
-    credentialReady: completedLessons === totalLessons && totalLessons > 0,
-  };
+  return { completedLessons, totalLessons, completedCourses, totalCourses: program.courses.length, percentComplete, credentialReady: completedLessons === totalLessons && totalLessons > 0 };
 }
 
 export function getCourseProgress(session, programKey, courseKey) {
   const course = getCourseByKey(programKey, courseKey);
-  if (!course) {
-    return { completedLessons: 0, totalLessons: 0, percentComplete: 0, completed: false };
-  }
+  if (!course) return { completedLessons: 0, totalLessons: 0, percentComplete: 0, completed: false };
 
   const totalLessons = course.lessonsData.length;
   const completedLessons = course.lessonsData.filter((lesson) => getLessonStatus(session, programKey, courseKey, lesson.key).status === "completed").length;
-
-  return {
-    completedLessons,
-    totalLessons,
-    percentComplete: totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0,
-    completed: completedLessons === totalLessons && totalLessons > 0,
-  };
+  return { completedLessons, totalLessons, percentComplete: totalLessons ? Math.round((completedLessons / totalLessons) * 100) : 0, completed: completedLessons === totalLessons && totalLessons > 0 };
 }
 
 export function resolveTrainingReadinessSnapshot(session, activeProject) {
-  const programSnapshots = academyCatalog.programs.map((program) => ({
-    key: program.key,
-    title: program.title,
-    credential: program.credential,
-    ...getProgramProgress(session, program.key),
-  }));
-
-  const completionAverage = programSnapshots.length
-    ? Math.round(programSnapshots.reduce((sum, item) => sum + item.percentComplete, 0) / programSnapshots.length)
-    : 0;
+  const programSnapshots = academyCatalog.programs.map((program) => ({ key: program.key, title: program.title, credential: program.credential, ...getProgramProgress(session, program.key) }));
+  const completionAverage = programSnapshots.length ? Math.round(programSnapshots.reduce((sum, item) => sum + item.percentComplete, 0) / programSnapshots.length) : 0;
 
   let readinessLabel = "Training not started";
   if (completionAverage >= 80) readinessLabel = "Operationally ready";
   else if (completionAverage >= 40) readinessLabel = "Partially ready";
   else if (completionAverage > 0) readinessLabel = "In progress";
 
-  return {
-    tenantLabel: session?.company || session?.workspaceLabel || "FCA Workspace",
-    projectLabel: activeProject?.name || activeProject?.id || "No active project",
-    readinessLabel,
-    completionAverage,
-    programSnapshots,
-  };
+  return { tenantLabel: session?.company || session?.workspaceLabel || "FCA Workspace", projectLabel: activeProject?.name || activeProject?.id || "No active project", readinessLabel, completionAverage, programSnapshots };
 }

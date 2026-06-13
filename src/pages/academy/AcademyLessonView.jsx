@@ -1,9 +1,10 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import { buildCourseHref, getLessonByKey } from "../../academyCatalog";
-import { getLessonStatus, markLessonCompleted, markLessonStarted } from "../../academyProgressStore";
+import { buildApiBackedTranscript, getApiLessonStatus } from "../../academyApiViewModels";
 import { pageShellStyle } from "../../publicShellStyles";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useAcademyLms from "../../hooks/useAcademyLms";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -22,7 +23,8 @@ const buttonStyle = {
 };
 
 export default function AcademyLessonView({ routeParams = {} }) {
-  const { session, updateSession } = useCustomerSession();
+  const { updateSession } = useCustomerSession();
+  const { academyState, meta, startLesson, completeLesson } = useAcademyLms();
   const lesson = getLessonByKey(routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
 
   if (!lesson) {
@@ -36,18 +38,21 @@ export default function AcademyLessonView({ routeParams = {} }) {
     );
   }
 
-  const status = getLessonStatus(session, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
+  const transcript = buildApiBackedTranscript(academyState);
+  const transcriptEntry = transcript.find((entry) => entry.programKey === routeParams.programKey);
+  const status = getApiLessonStatus(academyState, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
 
-  function handleStart() {
-    markLessonStarted(session, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
+  async function handleStart() {
+    if (!transcriptEntry?.enrollmentId) return;
+    await startLesson(transcriptEntry.enrollmentId, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
     updateSession({ nextHref: buildCourseHref(routeParams.programKey, routeParams.courseKey) });
-    window.location.reload();
   }
 
-  function handleComplete() {
-    markLessonCompleted(session, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
+  async function handleComplete() {
+    if (!transcriptEntry?.enrollmentId) return;
+    const derivedPercent = transcriptEntry?.totalLessons ? Math.min(100, Math.round(((transcriptEntry.completedLessons + 1) / transcriptEntry.totalLessons) * 100)) : 0;
+    await completeLesson(transcriptEntry.enrollmentId, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey, derivedPercent);
     updateSession({ nextHref: lesson.linkedSurface });
-    window.location.reload();
   }
 
   return (
@@ -62,11 +67,12 @@ export default function AcademyLessonView({ routeParams = {} }) {
         secondaryLabel="Back to course"
       />
 
-      <div style={{ ...cardStyle, marginBottom: 24, background: "#fffbeb", border: "1px solid #f59e0b" }}>
-        <div style={{ color: "#92400e", fontWeight: 700, marginBottom: 8 }}>Lesson-progress truth boundary</div>
-        <div style={{ color: "#78350f", lineHeight: 1.7 }}>
-          Transcript, cohort, and credential surfaces now converge on the Academy API-backed LMS spine. Lesson-level start/completion state here is still a transitional browser-local workflow until the next shared lesson-progression API packet lands. This route remains intentionally marked as transitional so deployment is not overstated.
+      <div style={{ ...cardStyle, marginBottom: 24, background: "#eff6ff", border: "1px solid #2563eb" }}>
+        <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Lesson-progress spine</div>
+        <div style={{ color: "#1e3a8a", lineHeight: 1.7 }}>
+          Lesson progress is now converging on the shared Academy API-backed LMS spine. This route no longer presents lesson completion as browser-local truth; it reads from and writes to the same Academy state family as transcript, cohort, and credential posture.
         </div>
+        <div style={{ color: "#475569", marginTop: 10 }}><strong>Source:</strong> {meta.backingSource} · {meta.persistenceState}</div>
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
@@ -77,11 +83,12 @@ export default function AcademyLessonView({ routeParams = {} }) {
               <div><strong>Status:</strong> {status.status}</div>
               <div><strong>Started:</strong> {status.startedAt || "Not yet started"}</div>
               <div><strong>Completed:</strong> {status.completedAt || "Not yet completed"}</div>
+              <div><strong>Enrollment:</strong> {transcriptEntry?.enrollmentId || "No active enrollment"}</div>
             </div>
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button type="button" onClick={handleStart} style={{ ...buttonStyle, background: "#eff6ff", color: "#1d4ed8" }}>Mark Started</button>
-            <button type="button" onClick={handleComplete} style={{ ...buttonStyle, background: "#2563eb", color: "#fff" }}>Mark Completed</button>
+            <button type="button" onClick={handleStart} disabled={!transcriptEntry?.enrollmentId} style={{ ...buttonStyle, background: "#eff6ff", color: "#1d4ed8", cursor: transcriptEntry?.enrollmentId ? "pointer" : "not-allowed" }}>Mark Started</button>
+            <button type="button" onClick={handleComplete} disabled={!transcriptEntry?.enrollmentId} style={{ ...buttonStyle, background: "#2563eb", color: "#fff", cursor: transcriptEntry?.enrollmentId ? "pointer" : "not-allowed" }}>Mark Completed</button>
           </div>
         </div>
       </div>
