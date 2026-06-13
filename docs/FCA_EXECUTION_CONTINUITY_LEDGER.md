@@ -37,7 +37,7 @@ Auricrux must treat `052J` as the current working packet, with `052K` as next, w
   - `docs/FCA_PACKET_052J_EXACT_FILE_CONTENT_PACKET.md`
 
 ### Not yet repo-proven
-- applied code files for the 052J exact content packet
+- application of the 052J code blocks into runtime files
 - route-level validation enforcement across all new project-spine endpoints
 - shared shell UI consuming all canonical contract files
 - deployed end-to-end SaaS ↔ Academy remediation flow
@@ -47,7 +47,7 @@ Auricrux must treat `052J` as the current working packet, with `052K` as next, w
 ## Current Blocker
 
 ### Blocker 1 — durable implementation gap
-The repository now preserves packet continuity through `052J`, but the codebase does not yet repo-prove applied implementation of the exact file-content packet.
+The repository now preserves packet continuity through `052J`, but the codebase does not yet repo-prove applied route and validation implementation from the exact code packet.
 
 ### Required behavior
 This blocker does **not** authorize sequence guessing, packet regression, or continuity loss.

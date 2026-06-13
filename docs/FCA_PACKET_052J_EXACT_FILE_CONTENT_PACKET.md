@@ -1,7 +1,7 @@
 # FCA_PACKET_052J_EXACT_FILE_CONTENT_PACKET
 
 Status: Active
-Classification: Binding implementation packet
+Classification: Binding exact-code packet
 Repository: `Future-Contractors-of-America-LLC/fca-bid-tracker`
 Current Packet: `052J`
 Next Packet: `052K`
@@ -11,26 +11,39 @@ Target Packet: `060A`
 
 ## Issue
 
-`052I` fixed the file map and apply order.
-`052J` now supplies exact starter file contents for the first canonical contract layer, validation layer, and initial route stubs so repo execution can begin without ambiguity.
+`052I` fixed the repo file map and apply order.
+`052J` must now provide exact starter file contents for the first shared contract and validation layer so implementation can begin without ambiguity.
 
 ---
 
 ## Truth Boundary
 
-This packet provides exact file contents intended for repository application.
+This packet provides exact file content.
 
 It does **not** claim:
-- these files are already applied as live repo code
-- these stubs satisfy final production acceptance
+- these files are already applied in runtime code
+- all imports match current repo structure without adaptation
 - route business logic is complete
-- deploy/runtime validation has passed
+- deployment is complete
 
-It **does** provide exact repo-ready starter contents for the first code application wave.
+It **does** provide exact starter content for the first implementation wave.
 
 ---
 
-## 1. File: `src/lib/contracts/fcaEnums.ts`
+## Apply Order
+
+1. `src/lib/contracts/fcaEnums.ts`
+2. `src/types/fca-contracts.ts`
+3. `src/lib/api/fcaApiTypes.ts`
+4. `src/lib/contracts/fcaSchemas.ts`
+5. `api/_lib/contracts/fcaEnums.js`
+6. `api/_lib/contracts/fcaContracts.js`
+7. `api/_lib/validation/fcaSchemas.js`
+8. `api/_lib/validation/assertValid.js`
+
+---
+
+## File 1 — `src/lib/contracts/fcaEnums.ts`
 
 ```ts
 export const PROJECT_STATES = [
@@ -109,7 +122,7 @@ export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number]
 
 ---
 
-## 2. File: `src/types/fca-contracts.ts`
+## File 2 — `src/types/fca-contracts.ts`
 
 ```ts
 import type {
@@ -117,13 +130,12 @@ import type {
   AuricruxMode,
   FileStatus,
   ProjectState,
-  RecordStatus,
 } from '../lib/contracts/fcaEnums'
 
 export interface BaseRecord {
   id: string
   tenantId: string
-  status: RecordStatus | string
+  status: string
   createdAt: string
   updatedAt: string
   createdBy: string
@@ -304,7 +316,34 @@ export interface AuditEvent extends BaseRecord {
 
 ---
 
-## 3. File: `src/lib/contracts/fcaSchemas.ts`
+## File 3 — `src/lib/api/fcaApiTypes.ts`
+
+```ts
+export interface ApiSuccess<T> {
+  ok: true
+  data: T
+  meta?: {
+    requestId?: string
+    timestamp?: string
+    packet?: string
+  }
+}
+
+export interface ApiError {
+  ok: false
+  error: {
+    code: string
+    message: string
+    details?: unknown
+  }
+}
+
+export type ApiResult<T> = ApiSuccess<T> | ApiError
+```
+
+---
+
+## File 4 — `src/lib/contracts/fcaSchemas.ts`
 
 ```ts
 import { z } from 'zod'
@@ -317,14 +356,14 @@ import {
   TRAINING_STATUSES,
 } from './fcaEnums'
 
-export const RecordStatusSchema = z.enum(RECORD_STATUSES)
 export const ProjectStateSchema = z.enum(PROJECT_STATES)
+export const RecordStatusSchema = z.enum(RECORD_STATUSES)
 export const FileStatusSchema = z.enum(FILE_STATUSES)
 export const TrainingStatusSchema = z.enum(TRAINING_STATUSES)
 export const AuricruxModeSchema = z.enum(AURICRUX_MODES)
 export const AuditEventTypeSchema = z.enum(AUDIT_EVENT_TYPES)
 
-export const StringArraySchema = z.array(z.string()).default([])
+export const StringArraySchema = z.array(z.string())
 
 export const BaseRecordSchema = z.object({
   id: z.string().min(1),
@@ -359,14 +398,7 @@ export const InitiateFileUploadPayloadSchema = z.object({
   fileName: z.string().min(1),
   artifactType: z.string().min(1),
   contentType: z.string().min(1),
-  sizeBytes: z.number().int().nonnegative().optional(),
-})
-
-export const CompleteFileUploadPayloadSchema = z.object({
-  fileId: z.string().min(1),
-  blobPath: z.string().min(1),
-  hash: z.string().optional(),
-  version: z.number().int().min(1),
+  sizeBytes: z.number().nonnegative().optional(),
 })
 
 export const CreateTakeoffItemPayloadSchema = z.object({
@@ -417,10 +449,10 @@ export const CreateAuricruxActionPayloadSchema = z.object({
 
 ---
 
-## 4. File: `api/_lib/contracts/fcaEnums.js`
+## File 5 — `api/_lib/contracts/fcaEnums.js`
 
 ```js
-export const PROJECT_STATES = [
+const PROJECT_STATES = [
   'lead',
   'qualified',
   'pre_design',
@@ -436,7 +468,7 @@ export const PROJECT_STATES = [
   'feedback',
 ]
 
-export const RECORD_STATUSES = [
+const RECORD_STATUSES = [
   'draft',
   'open',
   'in_review',
@@ -447,7 +479,7 @@ export const RECORD_STATUSES = [
   'archived',
 ]
 
-export const FILE_STATUSES = [
+const FILE_STATUSES = [
   'uploaded',
   'processing',
   'indexed',
@@ -456,7 +488,7 @@ export const FILE_STATUSES = [
   'archived',
 ]
 
-export const TRAINING_STATUSES = [
+const TRAINING_STATUSES = [
   'assigned',
   'in_progress',
   'passed',
@@ -466,9 +498,9 @@ export const TRAINING_STATUSES = [
   'revoked',
 ]
 
-export const AURICRUX_MODES = ['explain', 'recommend', 'execute', 'teach']
+const AURICRUX_MODES = ['explain', 'recommend', 'execute', 'teach']
 
-export const AUDIT_EVENT_TYPES = [
+const AUDIT_EVENT_TYPES = [
   'create',
   'update',
   'delete',
@@ -480,61 +512,72 @@ export const AUDIT_EVENT_TYPES = [
   'feature_gate_evaluated',
   'auricrux_action',
 ]
+
+module.exports = {
+  PROJECT_STATES,
+  RECORD_STATUSES,
+  FILE_STATUSES,
+  TRAINING_STATUSES,
+  AURICRUX_MODES,
+  AUDIT_EVENT_TYPES,
+}
 ```
 
 ---
 
-## 5. File: `api/_lib/contracts/fcaContracts.js`
+## File 6 — `api/_lib/contracts/fcaContracts.js`
 
 ```js
-export function makeApiSuccess(data, meta = {}) {
+function makeApiSuccess(data, meta = {}) {
   return {
     ok: true,
     data,
-    meta: {
-      timestamp: new Date().toISOString(),
-      ...meta,
-    },
+    meta,
   }
 }
 
-export function makeApiError(code, message, details = undefined) {
+function makeApiError(code, message, details) {
   return {
     ok: false,
     error: {
       code,
       message,
-      ...(details ? { details } : {}),
+      details,
     },
   }
+}
+
+module.exports = {
+  makeApiSuccess,
+  makeApiError,
 }
 ```
 
 ---
 
-## 6. File: `api/_lib/validation/fcaSchemas.js`
+## File 7 — `api/_lib/validation/fcaSchemas.js`
 
 ```js
-import { z } from 'zod'
-import {
-  AUDIT_EVENT_TYPES,
-  AURICRUX_MODES,
-  FILE_STATUSES,
+const { z } = require('zod')
+const {
   PROJECT_STATES,
   RECORD_STATUSES,
+  FILE_STATUSES,
   TRAINING_STATUSES,
-} from '../contracts/fcaEnums.js'
+  AURICRUX_MODES,
+  AUDIT_EVENT_TYPES,
+} = require('../contracts/fcaEnums')
 
-export const RecordStatusSchema = z.enum(RECORD_STATUSES)
-export const ProjectStateSchema = z.enum(PROJECT_STATES)
-export const FileStatusSchema = z.enum(FILE_STATUSES)
-export const TrainingStatusSchema = z.enum(TRAINING_STATUSES)
-export const AuricruxModeSchema = z.enum(AURICRUX_MODES)
-export const AuditEventTypeSchema = z.enum(AUDIT_EVENT_TYPES)
+const ProjectStateSchema = z.enum(PROJECT_STATES)
+const RecordStatusSchema = z.enum(RECORD_STATUSES)
+const FileStatusSchema = z.enum(FILE_STATUSES)
+const TrainingStatusSchema = z.enum(TRAINING_STATUSES)
+const AuricruxModeSchema = z.enum(AURICRUX_MODES)
+const AuditEventTypeSchema = z.enum(AUDIT_EVENT_TYPES)
 
-export const StringArraySchema = z.array(z.string()).default([])
+const StringArraySchema = z.array(z.string())
 
-export const CreateProjectPayloadSchema = z.object({
+const CreateProjectPayloadSchema = z.object({
   name: z.string().min(1),
   code: z.string().optional(),
   customerId: z.string().optional(),
@@ -544,14 +587,14 @@ export const CreateProjectPayloadSchema = z.object({
   opportunityId: z.string().optional(),
 })
 
-export const InitiateFileUploadPayloadSchema = z.object({
+const InitiateFileUploadPayloadSchema = z.object({
   fileName: z.string().min(1),
   artifactType: z.string().min(1),
   contentType: z.string().min(1),
-  sizeBytes: z.number().int().nonnegative().optional(),
+  sizeBytes: z.number().nonnegative().optional(),
 })
 
-export const CreateTakeoffItemPayloadSchema = z.object({
+const CreateTakeoffItemPayloadSchema = z.object({
   drawingSetId: z.string().optional(),
   sheetId: z.string().optional(),
   detailRef: z.string().optional(),
@@ -566,7 +609,7 @@ export const CreateTakeoffItemPayloadSchema = z.object({
   sourceObjectIds: StringArraySchema.optional(),
 })
 
-export const CreateRFIPayloadSchema = z.object({
+const CreateRFIPayloadSchema = z.object({
   number: z.string().optional(),
   drawingSetId: z.string().optional(),
   sheetId: z.string().optional(),
@@ -578,7 +621,7 @@ export const CreateRFIPayloadSchema = z.object({
   sourceObjectIds: StringArraySchema.optional(),
 })
 
-export const CreateRemediationLinkPayloadSchema = z.object({
+const CreateRemediationLinkPayloadSchema = z.object({
   projectId: z.string().optional(),
   sourceObjectType: z.string().min(1),
   sourceObjectId: z.string().min(1),
@@ -587,7 +630,7 @@ export const CreateRemediationLinkPayloadSchema = z.object({
   rationale: z.string().min(1),
 })
 
-export const CreateAuricruxActionPayloadSchema = z.object({
+const CreateAuricruxActionPayloadSchema = z.object({
   mode: AuricruxModeSchema,
   targetObjectType: z.string().min(1),
   targetObjectId: z.string().min(1),
@@ -595,294 +638,51 @@ export const CreateAuricruxActionPayloadSchema = z.object({
   beforeSnapshotJson: z.string().optional(),
   afterSnapshotJson: z.string().optional(),
 })
+
+module.exports = {
+  ProjectStateSchema,
+  RecordStatusSchema,
+  FileStatusSchema,
+  TrainingStatusSchema,
+  AuricruxModeSchema,
+  AuditEventTypeSchema,
+  StringArraySchema,
+  CreateProjectPayloadSchema,
+  InitiateFileUploadPayloadSchema,
+  CreateTakeoffItemPayloadSchema,
+  CreateRFIPayloadSchema,
+  CreateRemediationLinkPayloadSchema,
+  CreateAuricruxActionPayloadSchema,
+}
 ```
 
 ---
 
-## 7. File: `api/_lib/validation/assertValid.js`
+## File 8 — `api/_lib/validation/assertValid.js`
 
 ```js
-export function assertValid(schema, payload) {
+function assertValid(schema, payload) {
   const result = schema.safeParse(payload)
 
   if (!result.success) {
-    const details = result.error.flatten()
-    const error = new Error('Payload validation failed')
+    const error = new Error('Validation failed')
     error.statusCode = 400
-    error.code = 'INVALID_PAYLOAD'
-    error.details = details
+    error.code = 'VALIDATION_FAILED'
+    error.details = result.error.flatten()
     throw error
   }
 
   return result.data
 }
-```
 
----
-
-## 8. File: `api/projects/index.js`
-
-```js
-import { CreateProjectPayloadSchema } from '../_lib/validation/fcaSchemas.js'
-import { assertValid } from '../_lib/validation/assertValid.js'
-import { makeApiError, makeApiSuccess } from '../_lib/contracts/fcaContracts.js'
-
-export default async function handler(req, res) {
-  if (req.method === 'GET') {
-    return res.status(200).json(
-      makeApiSuccess(
-        {
-          route: '/api/projects',
-          items: [],
-          notYetImplemented: true,
-        },
-        { packet: '052J' },
-      ),
-    )
-  }
-
-  if (req.method === 'POST') {
-    try {
-      const payload = assertValid(CreateProjectPayloadSchema, req.body ?? {})
-
-      return res.status(202).json(
-        makeApiSuccess(
-          {
-            route: '/api/projects',
-            acceptedPayload: payload,
-            notYetImplemented: true,
-          },
-          { packet: '052J' },
-        ),
-      )
-    } catch (error) {
-      return res.status(error.statusCode || 500).json(
-        makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
-      )
-    }
-  }
-
-  return res.status(405).json(makeApiError('METHOD_NOT_ALLOWED', 'Method not allowed'))
+module.exports = {
+  assertValid,
 }
 ```
 
 ---
 
-## 9. File: `api/projects/[projectId]/takeoffs/index.js`
-
-```js
-import { CreateTakeoffItemPayloadSchema } from '../../../../_lib/validation/fcaSchemas.js'
-import { assertValid } from '../../../../_lib/validation/assertValid.js'
-import { makeApiError, makeApiSuccess } from '../../../../_lib/contracts/fcaContracts.js'
-
-export default async function handler(req, res) {
-  const { projectId } = req.query
-
-  if (!projectId) {
-    return res.status(400).json(makeApiError('MISSING_PROJECT_ID', 'projectId is required'))
-  }
-
-  if (req.method === 'GET') {
-    return res.status(200).json(
-      makeApiSuccess(
-        {
-          route: `/api/projects/${projectId}/takeoffs`,
-          items: [],
-          notYetImplemented: true,
-        },
-        { packet: '052J' },
-      ),
-    )
-  }
-
-  if (req.method === 'POST') {
-    try {
-      const payload = assertValid(CreateTakeoffItemPayloadSchema, req.body ?? {})
-
-      return res.status(202).json(
-        makeApiSuccess(
-          {
-            route: `/api/projects/${projectId}/takeoffs`,
-            projectId,
-            acceptedPayload: payload,
-            notYetImplemented: true,
-          },
-          { packet: '052J' },
-        ),
-      )
-    } catch (error) {
-      return res.status(error.statusCode || 500).json(
-        makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
-      )
-    }
-  }
-
-  return res.status(405).json(makeApiError('METHOD_NOT_ALLOWED', 'Method not allowed'))
-}
-```
-
----
-
-## 10. File: `api/projects/[projectId]/rfis/index.js`
-
-```js
-import { CreateRFIPayloadSchema } from '../../../../_lib/validation/fcaSchemas.js'
-import { assertValid } from '../../../../_lib/validation/assertValid.js'
-import { makeApiError, makeApiSuccess } from '../../../../_lib/contracts/fcaContracts.js'
-
-export default async function handler(req, res) {
-  const { projectId } = req.query
-
-  if (!projectId) {
-    return res.status(400).json(makeApiError('MISSING_PROJECT_ID', 'projectId is required'))
-  }
-
-  if (req.method === 'GET') {
-    return res.status(200).json(
-      makeApiSuccess(
-        {
-          route: `/api/projects/${projectId}/rfis`,
-          items: [],
-          notYetImplemented: true,
-        },
-        { packet: '052J' },
-      ),
-    )
-  }
-
-  if (req.method === 'POST') {
-    try {
-      const payload = assertValid(CreateRFIPayloadSchema, req.body ?? {})
-
-      return res.status(202).json(
-        makeApiSuccess(
-          {
-            route: `/api/projects/${projectId}/rfis`,
-            projectId,
-            acceptedPayload: payload,
-            notYetImplemented: true,
-          },
-          { packet: '052J' },
-        ),
-      )
-    } catch (error) {
-      return res.status(error.statusCode || 500).json(
-        makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
-      )
-    }
-  }
-
-  return res.status(405).json(makeApiError('METHOD_NOT_ALLOWED', 'Method not allowed'))
-}
-```
-
----
-
-## 11. File: `api/projects/[projectId]/remediation-links/index.js`
-
-```js
-import { CreateRemediationLinkPayloadSchema } from '../../../../_lib/validation/fcaSchemas.js'
-import { assertValid } from '../../../../_lib/validation/assertValid.js'
-import { makeApiError, makeApiSuccess } from '../../../../_lib/contracts/fcaContracts.js'
-
-export default async function handler(req, res) {
-  const { projectId } = req.query
-
-  if (!projectId) {
-    return res.status(400).json(makeApiError('MISSING_PROJECT_ID', 'projectId is required'))
-  }
-
-  if (req.method === 'GET') {
-    return res.status(200).json(
-      makeApiSuccess(
-        {
-          route: `/api/projects/${projectId}/remediation-links`,
-          items: [],
-          notYetImplemented: true,
-        },
-        { packet: '052J' },
-      ),
-    )
-  }
-
-  if (req.method === 'POST') {
-    try {
-      const payload = assertValid(CreateRemediationLinkPayloadSchema, req.body ?? {})
-
-      return res.status(202).json(
-        makeApiSuccess(
-          {
-            route: `/api/projects/${projectId}/remediation-links`,
-            projectId,
-            acceptedPayload: payload,
-            notYetImplemented: true,
-          },
-          { packet: '052J' },
-        ),
-      )
-    } catch (error) {
-      return res.status(error.statusCode || 500).json(
-        makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
-      )
-    }
-  }
-
-  return res.status(405).json(makeApiError('METHOD_NOT_ALLOWED', 'Method not allowed'))
-}
-```
-
----
-
-## 12. File: `api/auricrux/actions/index.js`
-
-```js
-import { CreateAuricruxActionPayloadSchema } from '../../../_lib/validation/fcaSchemas.js'
-import { assertValid } from '../../../_lib/validation/assertValid.js'
-import { makeApiError, makeApiSuccess } from '../../../_lib/contracts/fcaContracts.js'
-
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json(makeApiError('METHOD_NOT_ALLOWED', 'Method not allowed'))
-  }
-
-  try {
-    const payload = assertValid(CreateAuricruxActionPayloadSchema, req.body ?? {})
-
-    return res.status(202).json(
-      makeApiSuccess(
-        {
-          route: '/api/auricrux/actions',
-          acceptedPayload: payload,
-          notYetImplemented: true,
-        },
-        { packet: '052J' },
-      ),
-    )
-  } catch (error) {
-    return res.status(error.statusCode || 500).json(
-      makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
-    )
-  }
-}
-```
-
----
-
-## 13. Apply Order
-
-1. apply `src/lib/contracts/fcaEnums.ts`
-2. apply `src/types/fca-contracts.ts`
-3. apply `src/lib/contracts/fcaSchemas.ts`
-4. apply `api/_lib/contracts/fcaEnums.js`
-5. apply `api/_lib/contracts/fcaContracts.js`
-6. apply `api/_lib/validation/fcaSchemas.js`
-7. apply `api/_lib/validation/assertValid.js`
-8. apply route stubs
-9. run validation
-
----
-
-## 14. Validation Commands
+## Validation Commands
 
 ```bash
 npm install
@@ -890,37 +690,44 @@ npm run lint
 npm run build
 ```
 
-Minimum route smoke checks next step:
-- import success for `api/projects/index.js`
-- import success for `api/projects/[projectId]/takeoffs/index.js`
-- import success for `api/projects/[projectId]/rfis/index.js`
-- import success for `api/projects/[projectId]/remediation-links/index.js`
-- import success for `api/auricrux/actions/index.js`
+If build scripts differ, minimum required checks remain:
+- import integrity
+- lint pass
+- production build pass
 
 ---
 
-## 15. Acceptance Criteria
+## Non-Regression Rules
+
+- Do not rename existing packet files.
+- Do not split shared enums into separate SaaS/LMS copies.
+- Do not add alternate contract filenames for the same objects.
+- Do not claim route completion from contract-file creation alone.
+
+---
+
+## Acceptance Criteria
 
 `052J` is complete only if:
-- exact file contents exist for first shared contract layer
-- exact file contents exist for first validation layer
-- exact file contents exist for first route stubs
-- apply order is fixed
-- validation commands are fixed
-- no naming drift remains between schema packet and file-content packet
+- exact content exists for the first contract files
+- exact content exists for the first validation files
+- frontend/backend contract naming is aligned
+- validation commands are stated
+- non-regression rules are stated
+- the next packet can build route stubs from these files directly
 
 ---
 
-## 16. Next Packet
+## Next Packet
 
-`052K = Code Apply and Non-Regression Patch Packet`
+`052K = First Route Stub Packet`
 
-Must deliver:
-- exact repo patch plan against current tree
-- file replacement vs file creation classification
-- import-path verification notes
-- compatibility notes with current bid tracker structure
-- commit batch order
+Must deliver exact code for:
+- `api/projects/index.js`
+- `api/projects/[projectId].js`
+- `api/projects/[projectId]/takeoffs/index.js`
+- `api/projects/[projectId]/rfis/index.js`
+- `api/auricrux/actions/index.js`
 
 ---
 
