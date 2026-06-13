@@ -62,6 +62,13 @@ export default function AcademyLessonView({ routeParams = {} }) {
         secondaryLabel="Back to course"
       />
 
+      <div style={{ ...cardStyle, marginBottom: 24, background: "#fffbeb", border: "1px solid #f59e0b" }}>
+        <div style={{ color: "#92400e", fontWeight: 700, marginBottom: 8 }}>Lesson-progress truth boundary</div>
+        <div style={{ color: "#78350f", lineHeight: 1.7 }}>
+          Transcript, cohort, and credential surfaces now converge on the Academy API-backed LMS spine. Lesson-level start/completion state here is still a transitional browser-local workflow until the next shared lesson-progression API packet lands. This route remains intentionally marked as transitional so deployment is not overstated.
+        </div>
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
           <div>

@@ -2,6 +2,12 @@ import { academyCatalog, getCourseByKey, getProgramByKey } from "./academyCatalo
 
 const STORAGE_KEY = "fca_academy_progress_v1";
 
+// Transitional truth boundary:
+// This module still exists only for lesson-level start/completion behavior on the lesson route.
+// Transcript, cohort, credential, and admin issuance surfaces have already converged on the
+// Academy API-backed LMS spine. Do not expand this file into broader Academy record storage.
+// The next durable step is replacing lesson progression with shared API-backed progression objects.
+
 function canUseStorage() {
   return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 }
