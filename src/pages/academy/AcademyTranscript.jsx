@@ -5,8 +5,8 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import AcademyTranscriptPanel from "../../components/AcademyTranscriptPanel";
 import AcademyCohortPanel from "../../components/AcademyCohortPanel";
 import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
+import { AcademyLmsProvider, useAcademyLmsContext } from "../../context/AcademyLmsContext";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import useAcademyLms from "../../hooks/useAcademyLms";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -17,9 +17,10 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-export default function AcademyTranscript() {
+function AcademyTranscriptInner() {
   const { session } = useCustomerSession();
-  const { meta, mutationState, loading } = useAcademyLms();
+  const academyLms = useAcademyLmsContext();
+  const { meta, mutationState, loading } = academyLms;
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -51,12 +52,20 @@ export default function AcademyTranscript() {
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <AcademyTranscriptPanel />
+        <AcademyTranscriptPanel academyLms={academyLms} />
       </div>
 
-      <AcademyCohortPanel />
+      <AcademyCohortPanel academyLms={academyLms} />
 
       <ShellFooter />
     </div>
+  );
+}
+
+export default function AcademyTranscript() {
+  return (
+    <AcademyLmsProvider>
+      <AcademyTranscriptInner />
+    </AcademyLmsProvider>
   );
 }

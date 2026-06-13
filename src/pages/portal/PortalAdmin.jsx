@@ -8,9 +8,9 @@ import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel"
 import AdminActionCenter from "../../components/AdminActionCenter";
 import CredentialIssuanceLedger from "../../components/CredentialIssuanceLedger";
 import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
+import { AcademyLmsProvider, useAcademyLmsContext } from "../../context/AcademyLmsContext";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import useAcademyLms from "../../hooks/useAcademyLms";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { adminGovernance } from "../../adminGovernance";
 import { routeStateOverlays } from "../../systemState";
@@ -24,10 +24,11 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-export default function PortalAdmin() {
+function PortalAdminInner() {
   const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
-  const { meta, mutationState, loading } = useAcademyLms();
+  const academyLms = useAcademyLmsContext();
+  const { meta, mutationState, loading } = academyLms;
 
   useEffect(() => {
     refreshSyncStamp("Persisted admin governance state active");
@@ -74,7 +75,7 @@ export default function PortalAdmin() {
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <CredentialIssuanceLedger />
+        <CredentialIssuanceLedger academyLms={academyLms} />
       </div>
 
       <div style={{ marginBottom: 24 }}>
@@ -172,5 +173,13 @@ export default function PortalAdmin() {
         </div>
       </div>
     </PortalShell>
+  );
+}
+
+export default function PortalAdmin() {
+  return (
+    <AcademyLmsProvider>
+      <PortalAdminInner />
+    </AcademyLmsProvider>
   );
 }

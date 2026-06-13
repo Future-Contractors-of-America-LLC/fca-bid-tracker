@@ -1,6 +1,5 @@
 import { academyCatalog, buildCourseHref, buildProgramHref } from "../academyCatalog";
 import { getApiCourseProgress, getApiProgramProgress } from "../academyApiViewModels";
-import useAcademyLms from "../hooks/useAcademyLms";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -10,8 +9,8 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-export default function AcademyProgressPanel({ programKey = null }) {
-  const { academyState, meta, loading, mutationState } = useAcademyLms();
+export default function AcademyProgressPanel({ academyLms, programKey = null }) {
+  const { academyState, meta, loading, mutationState } = academyLms;
   const programs = programKey ? academyCatalog.programs.filter((program) => program.key === programKey) : academyCatalog.programs;
   const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);
 

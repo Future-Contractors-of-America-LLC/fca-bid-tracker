@@ -3,9 +3,9 @@ import ShellFooter from "../../components/ShellFooter";
 import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
 import { buildCourseHref, getLessonByKey } from "../../academyCatalog";
 import { buildApiBackedTranscript, getApiLessonStatus } from "../../academyApiViewModels";
+import { AcademyLmsProvider, useAcademyLmsContext } from "../../context/AcademyLmsContext";
 import { pageShellStyle } from "../../publicShellStyles";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import useAcademyLms from "../../hooks/useAcademyLms";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -23,9 +23,10 @@ const buttonStyle = {
   cursor: "pointer",
 };
 
-export default function AcademyLessonView({ routeParams = {} }) {
+function AcademyLessonViewInner({ routeParams = {} }) {
   const { updateSession } = useCustomerSession();
-  const { academyState, meta, mutationState, loading, startLesson, completeLesson } = useAcademyLms();
+  const academyLms = useAcademyLmsContext();
+  const { academyState, meta, mutationState, loading, startLesson, completeLesson } = academyLms;
   const lesson = getLessonByKey(routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
 
   if (!lesson) {
@@ -132,5 +133,13 @@ export default function AcademyLessonView({ routeParams = {} }) {
 
       <ShellFooter />
     </div>
+  );
+}
+
+export default function AcademyLessonView(props) {
+  return (
+    <AcademyLmsProvider>
+      <AcademyLessonViewInner {...props} />
+    </AcademyLmsProvider>
   );
 }

@@ -1,4 +1,3 @@
-import useAcademyLms from "../hooks/useAcademyLms";
 import { buildApiBackedCredentialLedger } from "../academyApiViewModels";
 
 const cardStyle = {
@@ -9,8 +8,8 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-export default function CredentialIssuanceLedger() {
-  const { academyState, issueCertificate, meta, loading, mutationState } = useAcademyLms();
+export default function CredentialIssuanceLedger({ academyLms }) {
+  const { academyState, issueCertificate, meta, loading, mutationState } = academyLms;
   const ledger = buildApiBackedCredentialLedger(academyState);
   const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);
 

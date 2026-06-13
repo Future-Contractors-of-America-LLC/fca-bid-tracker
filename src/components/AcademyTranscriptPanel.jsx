@@ -1,4 +1,3 @@
-import useAcademyLms from "../hooks/useAcademyLms";
 import { buildApiBackedTranscript } from "../academyApiViewModels";
 
 const cardStyle = {
@@ -17,8 +16,8 @@ const buttonStyle = {
   cursor: "pointer",
 };
 
-export default function AcademyTranscriptPanel({ refreshKey = null }) {
-  const { academyState, meta, issueCertificate } = useAcademyLms();
+export default function AcademyTranscriptPanel({ academyLms, refreshKey = null }) {
+  const { academyState, meta, loading, mutationState, issueCertificate } = academyLms;
   const transcript = buildApiBackedTranscript(academyState);
 
   return (
@@ -66,13 +65,13 @@ export default function AcademyTranscriptPanel({ refreshKey = null }) {
                 <button
                   type="button"
                   onClick={() => entry.enrollmentId && issueCertificate(entry.enrollmentId)}
-                  disabled={!entry.credentialReady || !entry.enrollmentId}
+                  disabled={loading || mutationState.activeAction !== null || !meta.authoritativeState || !entry.credentialReady || !entry.enrollmentId}
                   style={{
                     ...buttonStyle,
-                    background: entry.credentialReady && entry.enrollmentId ? "#2563eb" : "#e2e8f0",
-                    color: entry.credentialReady && entry.enrollmentId ? "#fff" : "#64748b",
-                    borderColor: entry.credentialReady && entry.enrollmentId ? "#2563eb" : "#cbd5e1",
-                    cursor: entry.credentialReady && entry.enrollmentId ? "pointer" : "not-allowed",
+                    background: !loading && !mutationState.activeAction && meta.authoritativeState && entry.credentialReady && entry.enrollmentId ? "#2563eb" : "#e2e8f0",
+                    color: !loading && !mutationState.activeAction && meta.authoritativeState && entry.credentialReady && entry.enrollmentId ? "#fff" : "#64748b",
+                    borderColor: !loading && !mutationState.activeAction && meta.authoritativeState && entry.credentialReady && entry.enrollmentId ? "#2563eb" : "#cbd5e1",
+                    cursor: !loading && !mutationState.activeAction && meta.authoritativeState && entry.credentialReady && entry.enrollmentId ? "pointer" : "not-allowed",
                   }}
                 >
                   Generate completion certificate

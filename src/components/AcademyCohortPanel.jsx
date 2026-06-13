@@ -1,6 +1,5 @@
 import { buildProgramHref } from "../academyCatalog";
 import { buildApiBackedCohorts } from "../academyApiViewModels";
-import useAcademyLms from "../hooks/useAcademyLms";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -17,8 +16,8 @@ const buttonStyle = {
   cursor: "pointer",
 };
 
-export default function AcademyCohortPanel({ refreshKey = null }) {
-  const { academyState, meta, loading, mutationState, assignProgram, withdrawEnrollment } = useAcademyLms();
+export default function AcademyCohortPanel({ academyLms, refreshKey = null }) {
+  const { academyState, meta, loading, mutationState, assignProgram, withdrawEnrollment } = academyLms;
   const cohorts = buildApiBackedCohorts(academyState);
   const learners = academyState.learners || [];
   const degraded = loading || !meta.authoritativeState || Boolean(meta.warning || mutationState.error);

@@ -4,8 +4,8 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import AcademyProgressPanel from "../../components/AcademyProgressPanel";
 import { buildCourseHref, getProgramByKey } from "../../academyCatalog";
+import { AcademyLmsProvider, useAcademyLmsContext } from "../../context/AcademyLmsContext";
 import { pageShellStyle } from "../../publicShellStyles";
-import useCustomerSession from "../../hooks/useCustomerSession";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -15,8 +15,8 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-export default function AcademyProgramDetail({ routeParams = {} }) {
-  const { session } = useCustomerSession();
+function AcademyProgramDetailInner({ routeParams = {} }) {
+  const academyLms = useAcademyLmsContext();
   const program = getProgramByKey(routeParams.programKey);
 
   if (!program) {
@@ -68,7 +68,7 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <AcademyProgressPanel session={session} programKey={program.key} />
+        <AcademyProgressPanel academyLms={academyLms} programKey={program.key} />
       </div>
 
       <div style={{ display: "grid", gap: 16 }}>
@@ -99,5 +99,13 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
 
       <ShellFooter />
     </div>
+  );
+}
+
+export default function AcademyProgramDetail(props) {
+  return (
+    <AcademyLmsProvider>
+      <AcademyProgramDetailInner {...props} />
+    </AcademyLmsProvider>
   );
 }

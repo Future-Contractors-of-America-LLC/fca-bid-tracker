@@ -20,6 +20,7 @@ import AcademyCohortPanel from "../../components/AcademyCohortPanel";
 import AcademyTranscriptPanel from "../../components/AcademyTranscriptPanel";
 import AcademyCoverageMatrixPanel from "../../components/AcademyCoverageMatrixPanel";
 import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
+import { AcademyLmsProvider, useAcademyLmsContext } from "../../context/AcademyLmsContext";
 import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { academyContinuityMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
@@ -27,7 +28,6 @@ import { academyClassrooms, saasOperationalPathways } from "../../productBluepri
 import { academyCatalog } from "../../academyCatalog";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import useAcademyLms from "../../hooks/useAcademyLms";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -50,10 +50,11 @@ const continuityCardStyle = {
   border: "1px solid #e5d3a1",
 };
 
-export default function AcademyHome() {
+function AcademyHomeInner() {
   const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
-  const { meta, mutationState, loading } = useAcademyLms();
+  const academyLms = useAcademyLmsContext();
+  const { meta, mutationState, loading } = academyLms;
   const liveTenant = state?.tenant || portalTenant;
   const liveProject = state?.project || currentProject;
   const liveWorkspace = state?.workspace || workspaceContext;
@@ -177,15 +178,15 @@ export default function AcademyHome() {
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <AcademyProgressPanel />
+        <AcademyProgressPanel academyLms={academyLms} />
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <AcademyCohortPanel />
+        <AcademyCohortPanel academyLms={academyLms} />
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <AcademyTranscriptPanel />
+        <AcademyTranscriptPanel academyLms={academyLms} />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
@@ -344,5 +345,13 @@ export default function AcademyHome() {
 
       <ShellFooter />
     </div>
+  );
+}
+
+export default function AcademyHome() {
+  return (
+    <AcademyLmsProvider>
+      <AcademyHomeInner />
+    </AcademyLmsProvider>
   );
 }
