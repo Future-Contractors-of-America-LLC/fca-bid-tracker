@@ -1,3 +1,5 @@
+import { getAcademyAuthoritySnapshot } from "../academyAuthorityVocabulary";
+
 const bannerStyle = (tone = "warning") => ({
   border: tone === "ok" ? "1px solid #2563eb" : "1px solid #f59e0b",
   background: tone === "ok" ? "#eff6ff" : "#fffbeb",
@@ -9,21 +11,14 @@ const bannerStyle = (tone = "warning") => ({
 });
 
 export default function AcademyStateAuthorityBanner({ meta, mutationState, loading }) {
-  const hasWarning = Boolean(meta?.warning || mutationState?.error);
-  const tone = !loading && meta?.authoritativeState && !hasWarning ? "ok" : "warning";
+  const authority = getAcademyAuthoritySnapshot({ meta, loading, mutationState });
 
   return (
-    <div style={bannerStyle(tone)}>
+    <div style={bannerStyle(authority.bannerTone)}>
       <div style={{ fontWeight: 700, marginBottom: 8 }}>
-        {tone === "ok" ? "Authoritative Academy state active" : "Academy truth boundary / API caution"}
+        {authority.bannerTitle}
       </div>
-      <div>
-        {loading
-          ? "Academy LMS state is still loading. Do not treat the current surface as fully authoritative until the API sync resolves."
-          : tone === "ok"
-            ? "Academy transcript, cohort, credential, and lesson progression surfaces are currently reading from the API-backed LMS spine for this session."
-            : meta?.warning || mutationState?.error || "Academy API state is degraded or unverified. Treat the current screen as non-authoritative until backend state is restored."}
-      </div>
+      <div>{authority.bannerDetail}</div>
       <div style={{ marginTop: 8 }}>
         <strong>Source:</strong> {meta?.backingSource || "unavailable"} · {meta?.persistenceState || "unknown"}
       </div>

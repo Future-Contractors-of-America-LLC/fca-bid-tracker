@@ -3,7 +3,10 @@ import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import AcademyProviderTelemetryPanel from "../../components/AcademyProviderTelemetryPanel";
+import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
 import { academyCatalog, buildProgramHref } from "../../academyCatalog";
+import { AcademyLmsProvider, useAcademyLmsContext } from "../../context/AcademyLmsContext";
 import { academyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -15,7 +18,10 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-export default function AcademyCatalog() {
+function AcademyCatalogInner() {
+  const academyLms = useAcademyLmsContext();
+  const { meta, loading, mutationState } = academyLms;
+
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
@@ -35,12 +41,24 @@ export default function AcademyCatalog() {
         <AuricruxBrandMark compact />
       </div>
 
+      <AcademyStateAuthorityBanner meta={meta} mutationState={mutationState} loading={loading} />
+
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real LMS catalog</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Programs, courses, lessons, credentials, and linked FCA workflows are now visible in one place</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          This catalog no longer reads like a branded summary surface. Each program now carries a defined instructional goal, measurable outcomes, course sequence, lesson-level intellectual objective, and operational handoff into real contractor workflows.
-        </p>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "flex-start", marginBottom: 12 }}>
+          <div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real LMS catalog</div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Programs, courses, lessons, credentials, and linked FCA workflows are now visible in one place</h2>
+            <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0, maxWidth: 820 }}>
+              This catalog no longer reads like a branded summary surface. Each program now carries a defined instructional goal, measurable outcomes, course sequence, lesson-level intellectual objective, and operational handoff into real contractor workflows.
+            </p>
+          </div>
+          <AcademyProviderTelemetryPanel
+            meta={meta}
+            loading={loading}
+            mutationState={mutationState}
+            title="Catalog telemetry"
+          />
+        </div>
       </div>
 
       <div style={{ display: "grid", gap: 18 }}>
@@ -107,5 +125,13 @@ export default function AcademyCatalog() {
 
       <ShellFooter />
     </div>
+  );
+}
+
+export default function AcademyCatalog() {
+  return (
+    <AcademyLmsProvider>
+      <AcademyCatalogInner />
+    </AcademyLmsProvider>
   );
 }
