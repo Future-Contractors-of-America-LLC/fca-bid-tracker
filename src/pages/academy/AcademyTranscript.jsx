@@ -4,7 +4,9 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import AcademyTranscriptPanel from "../../components/AcademyTranscriptPanel";
 import AcademyCohortPanel from "../../components/AcademyCohortPanel";
+import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useAcademyLms from "../../hooks/useAcademyLms";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -17,6 +19,7 @@ const cardStyle = {
 
 export default function AcademyTranscript() {
   const { session } = useCustomerSession();
+  const { meta, mutationState, loading } = useAcademyLms();
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -34,6 +37,8 @@ export default function AcademyTranscript() {
         <FcaBrandMark compact />
         <AuricruxBrandMark compact />
       </div>
+
+      <AcademyStateAuthorityBanner meta={meta} mutationState={mutationState} loading={loading} />
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Learner identity</div>

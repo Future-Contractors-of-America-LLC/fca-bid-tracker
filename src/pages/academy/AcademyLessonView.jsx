@@ -1,5 +1,6 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import AcademyStateAuthorityBanner from "../../components/AcademyStateAuthorityBanner";
 import { buildCourseHref, getLessonByKey } from "../../academyCatalog";
 import { buildApiBackedTranscript, getApiLessonStatus } from "../../academyApiViewModels";
 import { pageShellStyle } from "../../publicShellStyles";
@@ -24,7 +25,7 @@ const buttonStyle = {
 
 export default function AcademyLessonView({ routeParams = {} }) {
   const { updateSession } = useCustomerSession();
-  const { academyState, meta, startLesson, completeLesson } = useAcademyLms();
+  const { academyState, meta, mutationState, loading, startLesson, completeLesson } = useAcademyLms();
   const lesson = getLessonByKey(routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
 
   if (!lesson) {
@@ -41,18 +42,19 @@ export default function AcademyLessonView({ routeParams = {} }) {
   const transcript = buildApiBackedTranscript(academyState);
   const transcriptEntry = transcript.find((entry) => entry.programKey === routeParams.programKey);
   const status = getApiLessonStatus(academyState, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
+  const actionBlocked = loading || mutationState.activeAction !== null || !transcriptEntry?.enrollmentId || !meta.authoritativeState;
 
   async function handleStart() {
-    if (!transcriptEntry?.enrollmentId) return;
-    await startLesson(transcriptEntry.enrollmentId, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
-    updateSession({ nextHref: buildCourseHref(routeParams.programKey, routeParams.courseKey) });
+    if (actionBlocked) return;
+    const result = await startLesson(transcriptEntry.enrollmentId, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey);
+    if (result?.ok) updateSession({ nextHref: buildCourseHref(routeParams.programKey, routeParams.courseKey) });
   }
 
   async function handleComplete() {
-    if (!transcriptEntry?.enrollmentId) return;
+    if (actionBlocked) return;
     const derivedPercent = transcriptEntry?.totalLessons ? Math.min(100, Math.round(((transcriptEntry.completedLessons + 1) / transcriptEntry.totalLessons) * 100)) : 0;
-    await completeLesson(transcriptEntry.enrollmentId, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey, derivedPercent);
-    updateSession({ nextHref: lesson.linkedSurface });
+    const result = await completeLesson(transcriptEntry.enrollmentId, routeParams.programKey, routeParams.courseKey, routeParams.lessonKey, derivedPercent);
+    if (result?.ok) updateSession({ nextHref: lesson.linkedSurface });
   }
 
   return (
@@ -66,6 +68,8 @@ export default function AcademyLessonView({ routeParams = {} }) {
         secondaryHref={buildCourseHref(routeParams.programKey, routeParams.courseKey)}
         secondaryLabel="Back to course"
       />
+
+      <AcademyStateAuthorityBanner meta={meta} mutationState={mutationState} loading={loading} />
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "#eff6ff", border: "1px solid #2563eb" }}>
         <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Lesson-progress spine</div>
@@ -87,10 +91,11 @@ export default function AcademyLessonView({ routeParams = {} }) {
             </div>
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button type="button" onClick={handleStart} disabled={!transcriptEntry?.enrollmentId} style={{ ...buttonStyle, background: "#eff6ff", color: "#1d4ed8", cursor: transcriptEntry?.enrollmentId ? "pointer" : "not-allowed" }}>Mark Started</button>
-            <button type="button" onClick={handleComplete} disabled={!transcriptEntry?.enrollmentId} style={{ ...buttonStyle, background: "#2563eb", color: "#fff", cursor: transcriptEntry?.enrollmentId ? "pointer" : "not-allowed" }}>Mark Completed</button>
+            <button type="button" onClick={handleStart} disabled={actionBlocked} style={{ ...buttonStyle, background: "#eff6ff", color: actionBlocked ? "#64748b" : "#1d4ed8", cursor: actionBlocked ? "not-allowed" : "pointer", borderColor: actionBlocked ? "#cbd5e1" : "#2563eb" }}>Mark Started</button>
+            <button type="button" onClick={handleComplete} disabled={actionBlocked} style={{ ...buttonStyle, background: actionBlocked ? "#e2e8f0" : "#2563eb", color: actionBlocked ? "#64748b" : "#fff", cursor: actionBlocked ? "not-allowed" : "pointer", borderColor: actionBlocked ? "#cbd5e1" : "#2563eb" }}>Mark Completed</button>
           </div>
         </div>
+        {mutationState.error ? <div style={{ marginTop: 12, color: "#b91c1c", fontWeight: 700 }}>Lesson mutation blocked: {mutationState.error}</div> : null}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 24 }}>
