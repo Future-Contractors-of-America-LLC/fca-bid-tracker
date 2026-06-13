@@ -9,8 +9,8 @@ Last Updated: 2026-06-13
 
 ## Controlling Sequence
 
-- Active packet: `053M`
-- Next packet: `053N`
+- Active packet: `053O`
+- Next packet: `053P`
 - Deployment target: `060A` complete deployment
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 
@@ -20,7 +20,7 @@ Last Updated: 2026-06-13
 
 The controlling build state for FCA is the 052-range deployment sequence extended into 053 hardening/remediation control.
 
-Auricrux must treat `053M` as the current working packet, with `053N` as next, while preserving the stricter truth boundary that repository-visible history does not yet prove live end-to-end implementation completion.
+Auricrux must treat `053O` as the current working packet, with `053P` as next, while preserving the stricter truth boundary that repository-visible history does not yet prove live end-to-end implementation completion.
 
 ---
 
@@ -32,21 +32,22 @@ Auricrux must treat `053M` as the current working packet, with `053N` as next, w
 - The repository contains executed implementation packet artifacts through `implementation-packet-045-executed.md`.
 - The repository contains deployment and route hardening artifacts.
 - The repository contains restored 052C / 052D / 052E continuity anchors.
-- The repository contains packet continuity artifacts through `053M`.
+- The repository contains packet continuity artifacts through `053O`.
 - The repository now contains:
   - `src/lib/contracts/fcaEnums.ts`
   - `src/types/fca-contracts.ts`
   - `src/lib/api/fcaApiTypes.ts`
   - `api/_lib/contracts/fcaEnums.js`
   - `api/_lib/contracts/fcaContracts.js`
-  - `docs/FCA_PACKET_053M_BATCH_A_RUNTIME_CREATION_RESULT.md`
-- The docs chain itself is repo-proven through `053M`.
-- Batch A runtime files are now repo-proven present.
+  - `src/lib/contracts/fcaSchemas.ts`
+  - `api/_lib/validation/fcaSchemas.js`
+  - `api/_lib/validation/assertValid.js`
+  - `docs/FCA_PACKET_053N_BATCH_B_RUNTIME_CREATION_RESULT.md`
+  - `docs/FCA_PACKET_053O_BATCH_B_REPO_PROOF_GATE.md`
+- The docs chain itself is repo-proven through `053O`.
+- Batch A and Batch B runtime files are now repo-proven present.
 
 ### Not yet repo-proven
-- `src/lib/contracts/fcaSchemas.ts`
-- `api/_lib/validation/fcaSchemas.js`
-- `api/_lib/validation/assertValid.js`
 - `api/projects/index.js`
 - `api/projects/[projectId].js`
 - `api/projects/[projectId]/takeoffs/index.js`
@@ -62,10 +63,10 @@ Auricrux must treat `053M` as the current working packet, with `053N` as next, w
 ## Current Blocker
 
 ### Blocker 1 — runtime wave partially absent
-Batch A is present, but Batch B and Batch C runtime files are not yet repo-proven.
+Batch A and Batch B are present, but Batch C runtime files are not yet repo-proven.
 
 ### Required behavior
-Proceed to Batch B creation, then Batch C, then run the first-wave repo proof gate.
+Proceed to Batch C creation, then run the first-wave repo proof gate.
 
 ---
 
@@ -85,13 +86,13 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `053M`
-- Next packet: `053N`
+- Current packet: `053O`
+- Next packet: `053P`
 - Target packet: `060A`
 - Current blocker: runtime wave partially absent
-- Last verified repo truth: Batch A runtime files are repo-proven present; docs chain is repo-proven through `053M`
-- Last verified deployment truth: Batch B and C runtime files not yet repo-proven
-- Next concrete action: create Batch B runtime files and save repo proof
+- Last verified repo truth: Batch A and Batch B runtime files are repo-proven present; docs chain is repo-proven through `053O`
+- Last verified deployment truth: Batch C runtime files not yet repo-proven
+- Next concrete action: create Batch C runtime files and save repo proof
 
 ---
 
