@@ -1,5 +1,5 @@
 {
-  "packet": "061N",
+  "packet": "061O",
   "generatedAt": "2026-06-14T17:30:00Z",
   "provenance": "github_actions_ci",
   "ciPersisted": true,
@@ -8,6 +8,6 @@
     "build-validation CI provenance remains unconfirmed",
     "runtime-smoke remains the only directly confirmed passing proof lane"
   ],
-  "ciRunId": "27508608880",
-  "ciCommitSha": "b34598a78f8ad49ad7d21c0e62752604c7a8613e"
+  "ciRunId": "27508793208",
+  "ciCommitSha": "fda59d91a31273f0ee74920214cfc25dcaca3685"
 }
