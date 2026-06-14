@@ -40,6 +40,10 @@ jobs:
       - name: Run governed build validation
         run: npm run build:system
 
+      - name: Validate managed auth and commercial runtime
+        if: ${{ always() }}
+        run: npm run validate:managed-auth-commercial-runtime
+
       - name: Capture build evidence index
         if: ${{ always() }}
         run: |
@@ -58,6 +62,10 @@ jobs:
       - name: Generate academy catalog evidence
         if: ${{ always() }}
         run: npm run generate:academy-catalog-report
+
+      - name: Generate managed auth and commercial runtime evidence
+        if: ${{ always() }}
+        run: npm run generate:managed-auth-commercial-runtime-report
 
       - name: Generate operations pipeline evidence
         if: ${{ always() }}
@@ -94,6 +102,8 @@ jobs:
           cp generated/product-readiness-report.md docs/runtime-proof/build-validation/product-readiness-report.md || true
           cp generated/academy-catalog-report.json docs/runtime-proof/build-validation/academy-catalog-report.json || true
           cp generated/academy-catalog-report.md docs/runtime-proof/build-validation/academy-catalog-report.md || true
+          cp generated/managed-auth-commercial-runtime-report.json docs/runtime-proof/build-validation/managed-auth-commercial-runtime-report.json || true
+          cp generated/managed-auth-commercial-runtime-report.md docs/runtime-proof/build-validation/managed-auth-commercial-runtime-report.md || true
           cp generated/operations-pipeline-report.json docs/runtime-proof/build-validation/operations-pipeline-report.json || true
           cp generated/operations-pipeline-report.md docs/runtime-proof/build-validation/operations-pipeline-report.md || true
           cp generated/website-market-readiness-report.json docs/runtime-proof/build-validation/website-market-readiness-report.json || true
@@ -122,6 +132,12 @@ jobs:
             cat generated/academy-catalog-report.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Academy catalog report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f generated/managed-auth-commercial-runtime-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/managed-auth-commercial-runtime-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Managed auth and commercial runtime report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f generated/operations-pipeline-report.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -175,6 +191,8 @@ jobs:
             generated/product-readiness-report.md
             generated/academy-catalog-report.json
             generated/academy-catalog-report.md
+            generated/managed-auth-commercial-runtime-report.json
+            generated/managed-auth-commercial-runtime-report.md
             generated/operations-pipeline-report.json
             generated/operations-pipeline-report.md
             generated/website-market-readiness-report.json

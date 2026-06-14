@@ -28,34 +28,42 @@ expectIncludes(authBoundarySource, "managed-server-session", "api/auth-boundary.
 expectIncludes(authBoundarySource, "selectedPlan", "api/auth-boundary.js");
 expectIncludes(authBoundarySource, "enabledProducts", "api/auth-boundary.js");
 expectIncludes(authBoundarySource, "enabledComms", "api/auth-boundary.js");
+expectIncludes(authBoundarySource, "signed-http-only-cookie", "api/auth-boundary.js");
 
 expectIncludes(authStateSource, 'route: "customer-auth-state"', "api/customer-auth-state.js");
 expectIncludes(authStateSource, "authBoundary", "api/customer-auth-state.js");
+expectIncludes(authStateSource, "production-ready", "api/customer-auth-state.js");
 
 expectIncludes(customerSessionSource, 'route: "customer-session"', "api/customer-session.js");
 expectIncludes(customerSessionSource, "selectedPlan", "api/customer-session.js");
 expectIncludes(customerSessionSource, "enabledProducts", "api/customer-session.js");
 expectIncludes(customerSessionSource, "enabledComms", "api/customer-session.js");
+expectIncludes(customerSessionSource, "authBoundary", "api/customer-session.js");
 
 expectIncludes(customerLoginSource, "route: 'customer-login'", "api/customer-login.js");
 expectIncludes(customerLoginSource, "validateCustomerCredentials", "api/customer-login.js");
 expectIncludes(customerLoginSource, "Set-Cookie", "api/customer-login.js");
+expectIncludes(customerLoginSource, "authBoundary", "api/customer-login.js");
 
 expectIncludes(loginPageSource, "authenticateWorkspaceAccount", "src/pages/website/Login.jsx");
 expectIncludes(loginPageSource, 'fetch("/api/customer-login"', "src/pages/website/Login.jsx");
 expectIncludes(loginPageSource, "selectedPlan", "src/pages/website/Login.jsx");
 expectIncludes(loginPageSource, "enabledProducts", "src/pages/website/Login.jsx");
 expectIncludes(loginPageSource, "enabledComms", "src/pages/website/Login.jsx");
+expectIncludes(loginPageSource, "CustomerProductLaunchpad", "src/pages/website/Login.jsx");
+expectIncludes(loginPageSource, "CustomerCommsLaunchpad", "src/pages/website/Login.jsx");
 
 expectIncludes(pricingPlansSource, "pricingPlanCatalog", "src/pricingPlans.js");
 expectIncludes(pricingPlansSource, "billingModel", "src/pricingPlans.js");
 expectIncludes(pricingPlansSource, "enabledProducts", "src/pricingPlans.js");
 expectIncludes(pricingPlansSource, "enabledComms", "src/pricingPlans.js");
 expectIncludes(pricingPlansSource, "enterprise", "src/pricingPlans.js");
+expectIncludes(pricingPlansSource, "$3,500+/mo", "src/pricingPlans.js");
 
 expectIncludes(academyLmsSource, 'route: "academy-lms"', "api/academy-lms.js");
 expectIncludes(academyLmsSource, "validateSessionToken", "api/academy-lms.js");
-expectIncludes(academyLmsSource, "selectedPlan", "api/academy-lms.js");
+expectIncludes(academyLmsSource, "customerId", "api/academy-lms.js");
+expectIncludes(academyLmsSource, "backingSource", "api/academy-lms.js");
 
 expectIncludes(academyRemediationSummarySource, 'route: "academy/remediation-summary"', "api/academy-remediation-summary.js");
 
