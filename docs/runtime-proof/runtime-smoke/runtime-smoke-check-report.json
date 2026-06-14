@@ -1,0 +1,100 @@
+{
+  "packet": "060Y",
+  "generatedAt": "2026-06-14T12:53:53.250Z",
+  "emissionGuaranteed": true,
+  "total": 10,
+  "passed": 0,
+  "failed": 10,
+  "results": [
+    {
+      "name": "projects_collection_get",
+      "statusCode": null,
+      "expectStatus": 200,
+      "bodyType": "exception",
+      "expectType": "success",
+      "passed": false,
+      "error": "Error: Cannot find module 'zod'\nRequire stack:\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/_lib/validation/fcaSchemas.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/index.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/scripts/runtime_smoke_check.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1500:15)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1116:12)\n    at Module._load (node:internal/modules/cjs/loader:1285:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1600:12)\n    at require (node:internal/modules/helpers:153:16)\n    at Object.<anonymous> (/home/runner/work/fca-bid-tracker/fca-bid-tracker/api/_lib/validation/fcaSchemas.js:1:15)\n    at Module._compile (node:internal/modules/cjs/loader:1854:14)"
+    },
+    {
+      "name": "projects_collection_post",
+      "statusCode": null,
+      "expectStatus": 202,
+      "bodyType": "exception",
+      "expectType": "success",
+      "passed": false,
+      "error": "Error: Cannot find module 'zod'\nRequire stack:\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/_lib/validation/fcaSchemas.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/index.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/scripts/runtime_smoke_check.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1500:15)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1116:12)\n    at Module._load (node:internal/modules/cjs/loader:1285:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1600:12)\n    at require (node:internal/modules/helpers:153:16)\n    at Object.<anonymous> (/home/runner/work/fca-bid-tracker/fca-bid-tracker/api/_lib/validation/fcaSchemas.js:1:15)\n    at Module._compile (node:internal/modules/cjs/loader:1854:14)"
+    },
+    {
+      "name": "project_item_get",
+      "statusCode": 200,
+      "expectStatus": 200,
+      "bodyType": "unknown",
+      "expectType": "success",
+      "passed": false,
+      "error": null
+    },
+    {
+      "name": "project_item_patch",
+      "statusCode": 200,
+      "expectStatus": 202,
+      "bodyType": "unknown",
+      "expectType": "success",
+      "passed": false,
+      "error": null
+    },
+    {
+      "name": "takeoffs_get",
+      "statusCode": null,
+      "expectStatus": 200,
+      "bodyType": "exception",
+      "expectType": "success",
+      "passed": false,
+      "error": "Error: Cannot find module '../../../../_lib/validation/fcaSchemas'\nRequire stack:\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/[projectId]/takeoffs/index.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/scripts/runtime_smoke_check.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1500:15)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1116:12)\n    at Module._load (node:internal/modules/cjs/loader:1285:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1600:12)\n    at require (node:internal/modules/helpers:153:16)\n    at Object.<anonymous> (/home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/[projectId]/takeoffs/index.js:1:44)\n    at Module._compile (node:internal/modules/cjs/loader:1854:14)"
+    },
+    {
+      "name": "takeoffs_post",
+      "statusCode": null,
+      "expectStatus": 202,
+      "bodyType": "exception",
+      "expectType": "success",
+      "passed": false,
+      "error": "Error: Cannot find module '../../../../_lib/validation/fcaSchemas'\nRequire stack:\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/[projectId]/takeoffs/index.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/scripts/runtime_smoke_check.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1500:15)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1116:12)\n    at Module._load (node:internal/modules/cjs/loader:1285:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1600:12)\n    at require (node:internal/modules/helpers:153:16)\n    at Object.<anonymous> (/home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/[projectId]/takeoffs/index.js:1:44)\n    at Module._compile (node:internal/modules/cjs/loader:1854:14)"
+    },
+    {
+      "name": "rfis_get",
+      "statusCode": null,
+      "expectStatus": 200,
+      "bodyType": "exception",
+      "expectType": "success",
+      "passed": false,
+      "error": "Error: Cannot find module '../../../../_lib/validation/fcaSchemas'\nRequire stack:\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/[projectId]/rfis/index.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/scripts/runtime_smoke_check.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1500:15)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1116:12)\n    at Module._load (node:internal/modules/cjs/loader:1285:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1600:12)\n    at require (node:internal/modules/helpers:153:16)\n    at Object.<anonymous> (/home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/[projectId]/rfis/index.js:1:36)\n    at Module._compile (node:internal/modules/cjs/loader:1854:14)"
+    },
+    {
+      "name": "rfis_post",
+      "statusCode": null,
+      "expectStatus": 202,
+      "bodyType": "exception",
+      "expectType": "success",
+      "passed": false,
+      "error": "Error: Cannot find module '../../../../_lib/validation/fcaSchemas'\nRequire stack:\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/[projectId]/rfis/index.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/scripts/runtime_smoke_check.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1500:15)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1116:12)\n    at Module._load (node:internal/modules/cjs/loader:1285:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1600:12)\n    at require (node:internal/modules/helpers:153:16)\n    at Object.<anonymous> (/home/runner/work/fca-bid-tracker/fca-bid-tracker/api/projects/[projectId]/rfis/index.js:1:36)\n    at Module._compile (node:internal/modules/cjs/loader:1854:14)"
+    },
+    {
+      "name": "auricrux_actions_post",
+      "statusCode": null,
+      "expectStatus": 202,
+      "bodyType": "exception",
+      "expectType": "success",
+      "passed": false,
+      "error": "Error: Cannot find module 'zod'\nRequire stack:\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/_lib/validation/fcaSchemas.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/auricrux/actions/index.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/scripts/runtime_smoke_check.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1500:15)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1116:12)\n    at Module._load (node:internal/modules/cjs/loader:1285:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1600:12)\n    at require (node:internal/modules/helpers:153:16)\n    at Object.<anonymous> (/home/runner/work/fca-bid-tracker/fca-bid-tracker/api/_lib/validation/fcaSchemas.js:1:15)\n    at Module._compile (node:internal/modules/cjs/loader:1854:14)"
+    },
+    {
+      "name": "auricrux_actions_method_guard",
+      "statusCode": null,
+      "expectStatus": 405,
+      "bodyType": "exception",
+      "expectType": "error",
+      "passed": false,
+      "error": "Error: Cannot find module 'zod'\nRequire stack:\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/_lib/validation/fcaSchemas.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/api/auricrux/actions/index.js\n- /home/runner/work/fca-bid-tracker/fca-bid-tracker/scripts/runtime_smoke_check.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1500:15)\n    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)\n    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1116:12)\n    at Module._load (node:internal/modules/cjs/loader:1285:25)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1600:12)\n    at require (node:internal/modules/helpers:153:16)\n    at Object.<anonymous> (/home/runner/work/fca-bid-tracker/fca-bid-tracker/api/_lib/validation/fcaSchemas.js:1:15)\n    at Module._compile (node:internal/modules/cjs/loader:1854:14)"
+    }
+  ]
+}

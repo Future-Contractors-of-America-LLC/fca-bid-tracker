@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-06-14T12:53:53.835Z",
+  "activePacket": "060Y",
+  "runtimeSmokeScript": {
+    "emissionGuaranteedFlag": true,
+    "perRouteExceptionCapture": true,
+    "writesSummaryBeforeFailureExit": true,
+    "fatalCatchWritesSummary": true
+  },
+  "packageScripts": {
+    "validatePresent": true,
+    "reportPresent": true
+  },
+  "workflow": {
+    "validatesEmission": true,
+    "generatesEmissionReport": true,
+    "persistsEmissionReport": true
+  },
+  "status": "pass"
+}
