@@ -1,6 +1,19 @@
 const fs = require('fs')
 const path = require('path')
 
+function readContinuityPacket(repoRoot) {
+  const ledgerPath = path.join(repoRoot, 'docs', 'FCA_EXECUTION_CONTINUITY_LEDGER.md')
+  const fallbackPacket = 'UNLOCKED'
+
+  if (!fs.existsSync(ledgerPath)) {
+    return fallbackPacket
+  }
+
+  const ledger = fs.readFileSync(ledgerPath, 'utf8')
+  const match = ledger.match(/- Active packet: `([^`]+)`/)
+  return match ? match[1] : fallbackPacket
+}
+
 function main() {
   const repoRoot = path.join(__dirname, '..')
   const packageJsonPath = path.join(repoRoot, 'package.json')
@@ -10,9 +23,10 @@ function main() {
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
   const buildScript = fs.readFileSync(buildScriptPath, 'utf8')
   const workflow = fs.readFileSync(workflowPath, 'utf8')
+  const activePacket = readContinuityPacket(repoRoot)
 
   const evidence = {
-    packet: '055A',
+    packet: activePacket,
     generatedAt: new Date().toISOString(),
     packageScripts: {
       buildSystem: packageJson.scripts['build:system'],
@@ -28,7 +42,7 @@ function main() {
     },
     buildScriptChecks: {
       createsDist: buildScript.includes('mkdir -p dist'),
-      generatesStyles: buildScript.includes("dist/styles.css"),
+      generatesStyles: buildScript.includes('dist/styles.css'),
       generatesWorkspacePack: buildScript.includes('live-workspace-pack.json'),
       generatesPlatformProof: buildScript.includes('/portal/platform/'),
       emitsCompletionLine: buildScript.includes('FCA live proof data pack v5 build completed'),
@@ -61,7 +75,7 @@ function main() {
     ].join('\n'),
   )
 
-  console.log('Build evidence captured.')
+  console.log(`Build evidence captured for packet ${activePacket}.`)
 }
 
 main()

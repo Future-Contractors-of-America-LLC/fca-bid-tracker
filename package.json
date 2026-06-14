@@ -10,6 +10,8 @@
     "capture:build-evidence": "node scripts/build_evidence_capture.js",
     "validate:managed-auth-commercial-runtime": "node scripts/validate-managed-auth-and-commercial-runtime.mjs",
     "generate:managed-auth-commercial-runtime-report": "node scripts/generate-managed-auth-commercial-runtime-report.mjs",
+    "validate:runtime-proof-integrity": "node scripts/validate-runtime-proof-integrity.mjs",
+    "generate:runtime-proof-integrity-report": "node scripts/generate-runtime-proof-integrity-report.mjs",
 
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
