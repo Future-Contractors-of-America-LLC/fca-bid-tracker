@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { fetchWorkflowAudit, fetchWorkflowFiles, mutateWorkflowFile } from "../api/workflowClient";
+import {
+  createCanonicalDocumentBriefing,
+  fetchCanonicalDocumentBriefings,
+  fetchCanonicalFiles,
+  fetchWorkflowAudit,
+  fetchWorkflowFiles,
+  mutateWorkflowFile,
+  registerCanonicalFiles,
+  upsertCanonicalFile,
+} from "../api/workflowClient";
 import { portalFiles, projectAuditEvents } from "../systemState";
 
 function scopeSeedFiles(files, projectId, filters = {}) {
@@ -37,6 +46,58 @@ function scopeSeedAudit(events, projectId) {
   );
 }
 
+function filterCanonicalFiles(items = [], filters = {}) {
+  let files = Array.isArray(items) ? items : [];
+
+  if (filters.category && filters.category !== "All") {
+    files = files.filter((file) => file.category === filters.category);
+  }
+
+  if (filters.status && filters.status !== "All") {
+    files = files.filter((file) => file.status === filters.status || file.evidenceStatus === filters.status);
+  }
+
+  if (filters.q) {
+    const q = filters.q.toLowerCase();
+    files = files.filter((file) =>
+      [file.fileName, file.name, file.category, file.status, file.owner, file.discipline, file.linkedEvidenceTarget, file.note]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(q)
+    );
+  }
+
+  return files;
+}
+
+function mergeBriefingsIntoFiles(files = [], briefings = []) {
+  const sourceMap = new Map();
+
+  for (const briefing of briefings) {
+    for (const fileId of briefing.sourceFileIds || []) {
+      sourceMap.set(fileId, briefing);
+    }
+  }
+
+  return files.map((file) => {
+    const briefing = sourceMap.get(file.fileId);
+    if (!briefing) return file;
+
+    return {
+      ...file,
+      status: file.status === "registered" ? "briefing-ready" : file.status,
+      evidenceStatus: "Briefing generated",
+      actionLabel: "Open briefing",
+      briefingTitle: briefing.title,
+      briefingSummary: briefing.summary,
+      briefingKeyFacts: briefing.keyFindings || [],
+      briefingDetectedGaps: briefing.risks || [],
+      briefingRecommendedNextActions: ["Review briefing and preserve downstream continuity before advancing the project state."],
+    };
+  });
+}
+
 export default function useWorkflowEvidence(projectId) {
   const [filters, setFilters] = useState({ category: "All", status: "All", q: "" });
   const [files, setFiles] = useState(() => scopeSeedFiles(portalFiles, projectId, filters));
@@ -49,40 +110,26 @@ export default function useWorkflowEvidence(projectId) {
 
   const hydrate = useCallback(async () => {
     try {
-      const [filesPayload, auditPayload] = await Promise.all([
-        fetchWorkflowFiles({ projectId, ...filters }),
+      const [canonicalFiles, auditPayload, canonicalBriefings] = await Promise.all([
+        fetchCanonicalFiles({ projectId, ...filters }),
         fetchWorkflowAudit(projectId),
+        fetchCanonicalDocumentBriefings({ projectId }),
       ]);
 
-      setFiles(Array.isArray(filesPayload.items) ? filesPayload.items : []);
+      const mergedFiles = mergeBriefingsIntoFiles(filterCanonicalFiles(canonicalFiles, filters), canonicalBriefings);
+      setFiles(mergedFiles);
       setAuditEvents(Array.isArray(auditPayload.items) ? auditPayload.items : []);
       setMeta({
-        backingSource: "api-workflow-store",
-        persistenceState: "Workflow-backed file and audit evidence active",
+        backingSource: "canonical-phase-a-files",
+        persistenceState: "Canonical Phase A file and briefing spine active",
         lastSyncedAt: new Date().toISOString(),
       });
     } catch {
-      setFiles(scopeSeedFiles(portalFiles, projectId, filters));
-      setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId));
-      setMeta({
-        backingSource: "seeded-system-state",
-        persistenceState: "Fallback workflow evidence active",
-        lastSyncedAt: null,
-      });
-    }
-  }, [projectId, filters]);
-
-  useEffect(() => {
-    let active = true;
-
-    async function run() {
       try {
         const [filesPayload, auditPayload] = await Promise.all([
           fetchWorkflowFiles({ projectId, ...filters }),
           fetchWorkflowAudit(projectId),
         ]);
-
-        if (!active) return;
 
         setFiles(Array.isArray(filesPayload.items) ? filesPayload.items : []);
         setAuditEvents(Array.isArray(auditPayload.items) ? auditPayload.items : []);
@@ -92,7 +139,6 @@ export default function useWorkflowEvidence(projectId) {
           lastSyncedAt: new Date().toISOString(),
         });
       } catch {
-        if (!active) return;
         setFiles(scopeSeedFiles(portalFiles, projectId, filters));
         setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId));
         setMeta({
@@ -100,6 +146,57 @@ export default function useWorkflowEvidence(projectId) {
           persistenceState: "Fallback workflow evidence active",
           lastSyncedAt: null,
         });
+      }
+    }
+  }, [projectId, filters]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function run() {
+      try {
+        const [canonicalFiles, auditPayload, canonicalBriefings] = await Promise.all([
+          fetchCanonicalFiles({ projectId, ...filters }),
+          fetchWorkflowAudit(projectId),
+          fetchCanonicalDocumentBriefings({ projectId }),
+        ]);
+
+        if (!active) return;
+
+        const mergedFiles = mergeBriefingsIntoFiles(filterCanonicalFiles(canonicalFiles, filters), canonicalBriefings);
+        setFiles(mergedFiles);
+        setAuditEvents(Array.isArray(auditPayload.items) ? auditPayload.items : []);
+        setMeta({
+          backingSource: "canonical-phase-a-files",
+          persistenceState: "Canonical Phase A file and briefing spine active",
+          lastSyncedAt: new Date().toISOString(),
+        });
+      } catch {
+        try {
+          const [filesPayload, auditPayload] = await Promise.all([
+            fetchWorkflowFiles({ projectId, ...filters }),
+            fetchWorkflowAudit(projectId),
+          ]);
+
+          if (!active) return;
+
+          setFiles(Array.isArray(filesPayload.items) ? filesPayload.items : []);
+          setAuditEvents(Array.isArray(auditPayload.items) ? auditPayload.items : []);
+          setMeta({
+            backingSource: "api-workflow-store",
+            persistenceState: "Workflow-backed file and audit evidence active",
+            lastSyncedAt: new Date().toISOString(),
+          });
+        } catch {
+          if (!active) return;
+          setFiles(scopeSeedFiles(portalFiles, projectId, filters));
+          setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId));
+          setMeta({
+            backingSource: "seeded-system-state",
+            persistenceState: "Fallback workflow evidence active",
+            lastSyncedAt: null,
+          });
+        }
       }
     }
 
@@ -112,11 +209,62 @@ export default function useWorkflowEvidence(projectId) {
 
   const mutateFile = useCallback(
     async (action, body = {}) => {
+      try {
+        if (action === "create-file-record") {
+          await registerCanonicalFiles({
+            projectId,
+            ownerObjectType: body.ownerObjectType || "Project",
+            ownerObjectId: body.ownerObjectId || body.projectId || projectId,
+            uploadedBy: body.owner || body.uploadedBy || "system",
+            linkedEvidenceTarget: body.linkedEvidenceTarget,
+            files: [
+              {
+                fileName: body.name || body.fileName,
+                category: body.category,
+                discipline: body.discipline,
+                versionLabel: body.versionLabel,
+              },
+            ],
+          });
+          await hydrate();
+          return { ok: true, backingSource: "canonical-phase-a-files" };
+        }
+
+        if (action === "create-briefing") {
+          await createCanonicalDocumentBriefing({
+            projectId,
+            fileIds: [body.fileId],
+            createdBy: "auricrux",
+          });
+          await hydrate();
+          return { ok: true, backingSource: "canonical-phase-a-files" };
+        }
+
+        if (["register-review", "classify-file", "link-evidence"].includes(action)) {
+          const currentFile = files.find((file) => file.fileId === body.fileId) || {};
+          await upsertCanonicalFile({
+            ...currentFile,
+            ...body,
+            fileId: body.fileId || currentFile.fileId,
+            id: body.fileId || currentFile.fileId,
+            projectId,
+            ownerObjectId: currentFile.ownerObjectId || projectId,
+            ownerObjectType: currentFile.ownerObjectType || "Project",
+            fileName: currentFile.fileName || currentFile.name || body.name,
+            name: currentFile.fileName || currentFile.name || body.name,
+          });
+          await hydrate();
+          return { ok: true, backingSource: "canonical-phase-a-files" };
+        }
+      } catch {
+        // fall through to workflow-backed mutation path
+      }
+
       const result = await mutateWorkflowFile(action, { ...body, projectId });
       await hydrate();
       return result;
     },
-    [hydrate, projectId]
+    [files, hydrate, projectId]
   );
 
   const summary = useMemo(() => {
