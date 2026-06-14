@@ -139,49 +139,41 @@ function classifyBody(body) {
 }
 
 async function invoke(def) {
-  delete require.cache[require.resolve(def.file)]
-  const handler = require(def.file)
-  const res = createRes(def.name)
-  await handler(def.req, res)
-  const bodyType = classifyBody(res.body)
-  const passed = res.statusCode === def.expectStatus && bodyType === def.expectType && res.finished
+  try {
+    delete require.cache[require.resolve(def.file)]
+    const handler = require(def.file)
+    const res = createRes(def.name)
+    await handler(def.req, res)
+    const bodyType = classifyBody(res.body)
+    const passed = res.statusCode === def.expectStatus && bodyType === def.expectType && res.finished
 
-  return {
-    name: def.name,
-    statusCode: res.statusCode,
-    expectStatus: def.expectStatus,
-    bodyType,
-    expectType: def.expectType,
-    passed,
-    body: res.body,
+    return {
+      name: def.name,
+      statusCode: res.statusCode,
+      expectStatus: def.expectStatus,
+      bodyType,
+      expectType: def.expectType,
+      passed,
+      finished: res.finished,
+      body: res.body,
+      error: null,
+    }
+  } catch (error) {
+    return {
+      name: def.name,
+      statusCode: null,
+      expectStatus: def.expectStatus,
+      bodyType: 'exception',
+      expectType: def.expectType,
+      passed: false,
+      finished: false,
+      body: null,
+      error: error && error.stack ? error.stack : String(error),
+    }
   }
 }
 
-async function main() {
-  const repoRoot = path.join(__dirname, '..')
-  const activePacket = readContinuityPacket(repoRoot)
-  const results = []
-  for (const route of routes) {
-    results.push(await invoke(route))
-  }
-
-  const failed = results.filter((item) => !item.passed)
-  const summary = {
-    packet: activePacket,
-    generatedAt: new Date().toISOString(),
-    total: results.length,
-    passed: results.length - failed.length,
-    failed: failed.length,
-    results: results.map((item) => ({
-      name: item.name,
-      statusCode: item.statusCode,
-      expectStatus: item.expectStatus,
-      bodyType: item.bodyType,
-      expectType: item.expectType,
-      passed: item.passed,
-    })),
-  }
-
+function writeSummary(repoRoot, summary, results) {
   const generatedDir = path.join(repoRoot, 'generated')
   fs.mkdirSync(generatedDir, { recursive: true })
   fs.writeFileSync(path.join(generatedDir, 'runtime-smoke-check-report.json'), JSON.stringify(summary, null, 2))
@@ -195,13 +187,45 @@ async function main() {
       `- Total routes checked: ${summary.total}`,
       `- Passed: ${summary.passed}`,
       `- Failed: ${summary.failed}`,
+      `- Emission guaranteed: ${summary.emissionGuaranteed}`,
       '',
-      '| Route | Status | Expected | Body Type | Expected Type | Passed |',
-      '|---|---:|---:|---|---|---|',
-      ...results.map((item) => `| ${item.name} | ${item.statusCode} | ${item.expectStatus} | ${item.bodyType} | ${item.expectType} | ${item.passed ? 'yes' : 'no'} |`),
+      '| Route | Status | Expected | Body Type | Expected Type | Passed | Error |',
+      '|---|---:|---:|---|---|---|---|',
+      ...results.map((item) => `| ${item.name} | ${item.statusCode ?? 'ERR'} | ${item.expectStatus} | ${item.bodyType} | ${item.expectType} | ${item.passed ? 'yes' : 'no'} | ${item.error ? 'yes' : 'no'} |`),
       '',
     ].join('\n'),
   )
+}
+
+async function main() {
+  const repoRoot = path.join(__dirname, '..')
+  const activePacket = readContinuityPacket(repoRoot)
+  const results = []
+
+  for (const route of routes) {
+    results.push(await invoke(route))
+  }
+
+  const failed = results.filter((item) => !item.passed)
+  const summary = {
+    packet: activePacket,
+    generatedAt: new Date().toISOString(),
+    emissionGuaranteed: true,
+    total: results.length,
+    passed: results.length - failed.length,
+    failed: failed.length,
+    results: results.map((item) => ({
+      name: item.name,
+      statusCode: item.statusCode,
+      expectStatus: item.expectStatus,
+      bodyType: item.bodyType,
+      expectType: item.expectType,
+      passed: item.passed,
+      error: item.error,
+    })),
+  }
+
+  writeSummary(repoRoot, summary, results)
 
   if (failed.length > 0) {
     console.error('Runtime smoke check failed for routes:', failed.map((item) => item.name).join(', '))
@@ -212,6 +236,20 @@ async function main() {
 }
 
 main().catch((error) => {
+  const repoRoot = path.join(__dirname, '..')
+  const activePacket = readContinuityPacket(repoRoot)
+  const summary = {
+    packet: activePacket,
+    generatedAt: new Date().toISOString(),
+    emissionGuaranteed: true,
+    total: routes.length,
+    passed: 0,
+    failed: routes.length,
+    results: [],
+    fatalError: error && error.stack ? error.stack : String(error),
+  }
+
+  writeSummary(repoRoot, summary, [])
   console.error(error)
   process.exit(1)
 })

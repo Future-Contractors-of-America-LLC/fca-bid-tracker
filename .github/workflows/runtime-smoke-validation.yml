@@ -48,6 +48,10 @@ jobs:
         if: ${{ always() }}
         run: npm run validate:runtime-smoke-proof-lane
 
+      - name: Validate runtime smoke report emission
+        if: ${{ always() }}
+        run: npm run validate:runtime-smoke-report-emission
+
       - name: Execute bounded runtime smoke checks
         run: npm run validate:runtime-smoke
 
@@ -63,6 +67,10 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:runtime-smoke-proof-lane-report
 
+      - name: Generate runtime smoke report emission evidence
+        if: ${{ always() }}
+        run: npm run generate:runtime-smoke-report-emission-report
+
       - name: Persist runtime proof artifacts into repo
         if: ${{ always() }}
         run: |
@@ -77,6 +85,8 @@ jobs:
           cp generated/runtime-proof-integrity-report.md docs/runtime-proof/runtime-smoke/runtime-proof-integrity-report.md || true
           cp generated/runtime-smoke-proof-lane-report.json docs/runtime-proof/runtime-smoke/runtime-smoke-proof-lane-report.json || true
           cp generated/runtime-smoke-proof-lane-report.md docs/runtime-proof/runtime-smoke/runtime-smoke-proof-lane-report.md || true
+          cp generated/runtime-smoke-report-emission-report.json docs/runtime-proof/runtime-smoke/runtime-smoke-report-emission-report.json || true
+          cp generated/runtime-smoke-report-emission-report.md docs/runtime-proof/runtime-smoke/runtime-smoke-report-emission-report.md || true
 
       - name: Publish smoke-check summary
         if: ${{ always() }}
@@ -110,6 +120,12 @@ jobs:
           else
             echo "Runtime smoke proof lane report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f generated/runtime-smoke-report-emission-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/runtime-smoke-report-emission-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Runtime smoke report emission report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload smoke-check artifacts
         if: ${{ always() }}
@@ -127,6 +143,8 @@ jobs:
             generated/runtime-proof-integrity-report.md
             generated/runtime-smoke-proof-lane-report.json
             generated/runtime-smoke-proof-lane-report.md
+            generated/runtime-smoke-report-emission-report.json
+            generated/runtime-smoke-report-emission-report.md
           if-no-files-found: warn
 
       - name: Commit runtime proof artifacts

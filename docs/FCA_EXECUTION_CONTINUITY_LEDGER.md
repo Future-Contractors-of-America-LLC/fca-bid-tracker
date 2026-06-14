@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `060X`
-- Next packet: `060Y`
+- Active packet: `060Y`
+- Next packet: `060Z`
 - Deployment target: `060Z` hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -19,26 +19,27 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The active 060 range continues with real execution. Packet `060X` repaired the runtime-smoke proof lane by removing stale packet constants from runtime-smoke and CI-proof generators and by wiring the missing `capture:ci-proof-index` package script plus dedicated lane validation into the runtime-smoke workflow.
+The active 060 range continues with real execution. Packet `060Y` hardened runtime-smoke proof emission so the primary smoke report is generated even when the smoke lane fails, reducing the remaining observability gap revealed by the refreshed `060X` proof commit.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `060X` now exists in sequence.
-- `package.json` now exposes `capture:ci-proof-index`, `validate:runtime-smoke-proof-lane`, and `generate:runtime-smoke-proof-lane-report`.
-- `scripts/runtime_smoke_check.js` now derives packet identity from `docs/FCA_EXECUTION_CONTINUITY_LEDGER.md`.
-- `scripts/ci_proof_index.js` now derives packet identity from `docs/FCA_EXECUTION_CONTINUITY_LEDGER.md`.
-- `scripts/validate-runtime-smoke-proof-lane.mjs` now exists as a repo-proven proof-lane validator.
-- `scripts/generate-runtime-smoke-proof-lane-report.mjs` now exists as a repo-proven proof-lane evidence generator.
-- `.github/workflows/runtime-smoke-validation.yml` now validates and publishes the repaired runtime-smoke proof lane.
+- `060Y` now exists in sequence.
+- A post-`060X` runtime-smoke proof commit was observed on `main`: `0f8ad8c0fe0e361ac0db7043d9695334d5f83c8a`.
+- That refreshed proof commit now includes packet-accurate `build-evidence-report.*`, `ci-proof-index.*`, `runtime-proof-integrity-report.*`, and `runtime-smoke-proof-lane-report.*` artifacts.
+- `ci-proof-index.json` from the refreshed proof commit explicitly reported `runtimeSmokePresent: false`, proving the runtime-smoke report emission gap was still real after `060X`.
+- `scripts/runtime_smoke_check.js` is now hardened to emit a report on failure paths.
+- `scripts/validate-runtime-smoke-report-emission.mjs` now exists as a repo-proven validator.
+- `scripts/generate-runtime-smoke-report-emission-report.mjs` now exists as a repo-proven evidence generator.
+- `.github/workflows/runtime-smoke-validation.yml` now validates and persists runtime-smoke report-emission evidence.
 
 ### Not yet repo-proven
-- `060Y` and later packets in the 060 range
-- actual current-head execution success of the repaired runtime-smoke proof workflow
-- refreshed current-head runtime-smoke artifacts including `runtime-smoke-check-report.*` and `ci-proof-index.*`
-- actual current-head live deployment verifier success after `060X`
+- `060Z` final packet completion truth
+- a refreshed post-`060Y` proof commit containing `runtime-smoke-check-report.*`
+- successful runtime-smoke route execution across all bounded routes
+- actual current-head live deployment verifier success after `060Y`
 - deployed managed auth runtime proof
 - deployed Academy runtime parity proof
 - verified live commercial/revenue runtime path
@@ -48,11 +49,11 @@ The active 060 range continues with real execution. Packet `060X` repaired the r
 
 ## Current Blocker
 
-### Blocker 1 — refreshed runtime-smoke workflow proof still unresolved
-Repo truth is stronger and the runtime-smoke proof lane is now wired coherently, but refreshed proof artifacts from a post-`060X` workflow execution have not yet been observed in-session.
+### Blocker 1 — final refreshed proof after emission hardening still unresolved
+Repo truth now explains and repairs the missing runtime-smoke report path, but a post-`060Y` proof commit demonstrating the repaired emission behavior has not yet been observed in-session.
 
 ### Required behavior
-Continue with the next consecutive 060 packet only if it either captures refreshed proof artifacts/check-run truth or further reduces remaining live-proof ambiguity.
+Continue with the final `060Z` packet only if it truthfully inspects the next refreshed proof commit and closes the remaining deployment-proof bundle without overstating live success.
 
 ---
 
@@ -72,13 +73,13 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `060X`
-- Next packet: `060Y`
+- Current packet: `060Y`
+- Next packet: `060Z`
 - Target packet: `060Z`
-- Current blocker: refreshed runtime-smoke workflow proof still unresolved
-- Last verified repo truth: runtime-smoke and CI-proof packet drift are corrected and the runtime-smoke proof lane is fully wired through `060X`
+- Current blocker: final refreshed proof after emission hardening still unresolved
+- Last verified repo truth: runtime-smoke proof artifacts refreshed after `060X`, and runtime-smoke report emission is hardened through `060Y`
 - Last verified deployment truth: deployed auth/runtime/commercial proof remains unproven in-session
-- Next concrete action: use `060Y` to inspect the next proof commit or workflow evidence and verify refreshed runtime-smoke artifacts now include the missing reports on `main`
+- Next concrete action: use `060Z` to inspect the next proof commit, verify whether `runtime-smoke-check-report.*` now persists, and close the remaining deployment-proof bundle truthfully
 
 ---
 
@@ -86,6 +87,6 @@ Every future status response must include:
 
 Auricrux must not skip packet letters inside the active numbered range.
 
-Auricrux must not treat repo-level runtime-smoke proof-lane repair as equivalent to refreshed workflow-run truth or deployed proof.
+Auricrux must not treat repo-level report-emission hardening as equivalent to refreshed workflow-run truth or deployed proof.
 
 Auricrux must save after every meaningful prompt.

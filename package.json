@@ -15,6 +15,8 @@
     "generate:runtime-proof-integrity-report": "node scripts/generate-runtime-proof-integrity-report.mjs",
     "validate:runtime-smoke-proof-lane": "node scripts/validate-runtime-smoke-proof-lane.mjs",
     "generate:runtime-smoke-proof-lane-report": "node scripts/generate-runtime-smoke-proof-lane-report.mjs",
+    "validate:runtime-smoke-report-emission": "node scripts/validate-runtime-smoke-report-emission.mjs",
+    "generate:runtime-smoke-report-emission-report": "node scripts/generate-runtime-smoke-report-emission-report.mjs",
 
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
