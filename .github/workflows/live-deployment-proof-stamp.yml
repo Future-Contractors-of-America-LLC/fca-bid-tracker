@@ -41,6 +41,10 @@ jobs:
         if: ${{ always() }}
         run: node scripts/stamp-live-deployment-proof.mjs
 
+      - name: Emit live deployment run witness
+        if: ${{ always() }}
+        run: node scripts/emit-live-deployment-run-witness.mjs
+
       - name: Validate live deployment proof surface
         if: ${{ always() }}
         run: node scripts/validate-live-deployment-proof-surface.mjs
@@ -49,12 +53,16 @@ jobs:
         if: ${{ always() }}
         run: node scripts/validate-live-deployment-proof-workflow.mjs
 
+      - name: Validate live deployment run witness
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-run-witness.mjs
+
       - name: Commit CI-backed live deployment proof
         if: ${{ always() }}
         run: |
           git config user.name "auricrux-ci"
           git config user.email "auricrux-ci@futurecontractorsofamerica.com"
-          git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md generated/live-deployment-proof-workflow-validation.json generated/live-deployment-proof-workflow-validation.md
+          git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md generated/live-deployment-proof-workflow-validation.json generated/live-deployment-proof-workflow-validation.md generated/live-deployment-run-witness-validation.json generated/live-deployment-run-witness-validation.md
           if git diff --cached --quiet; then
             echo "No CI-backed live deployment proof changes to commit."
           else
