@@ -19,6 +19,8 @@
     "generate:runtime-smoke-report-emission-report": "node scripts/generate-runtime-smoke-report-emission-report.mjs",
     "validate:build-proof-lane": "node scripts/validate-build-proof-lane.mjs",
     "generate:build-proof-lane-report": "node scripts/generate-build-proof-lane-report.mjs",
+    "validate:packet-letter-lock": "node scripts/validate-packet-letter-lock.mjs",
+    "generate:packet-letter-lock-report": "node scripts/generate-packet-letter-lock-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",

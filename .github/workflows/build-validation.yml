@@ -56,6 +56,10 @@ jobs:
         if: ${{ always() }}
         run: npm run validate:build-proof-lane
 
+      - name: Validate packet letter lock
+        if: ${{ always() }}
+        run: npm run validate:packet-letter-lock
+
       - name: Verify live deployment
         if: ${{ always() && github.ref == 'refs/heads/main' }}
         env:
@@ -81,6 +85,10 @@ jobs:
       - name: Generate build proof lane evidence
         if: ${{ always() }}
         run: npm run generate:build-proof-lane-report
+
+      - name: Generate packet letter lock evidence
+        if: ${{ always() }}
+        run: npm run generate:packet-letter-lock-report
 
       - name: Generate operations pipeline evidence
         if: ${{ always() }}
@@ -117,6 +125,10 @@ jobs:
           cp generated/build-proof-lane-validation.md docs/runtime-proof/build-validation/build-proof-lane-validation.md || true
           cp generated/build-proof-lane-report.json docs/runtime-proof/build-validation/build-proof-lane-report.json || true
           cp generated/build-proof-lane-report.md docs/runtime-proof/build-validation/build-proof-lane-report.md || true
+          cp generated/packet-letter-lock-validation.json docs/runtime-proof/build-validation/packet-letter-lock-validation.json || true
+          cp generated/packet-letter-lock-validation.md docs/runtime-proof/build-validation/packet-letter-lock-validation.md || true
+          cp generated/packet-letter-lock-report.json docs/runtime-proof/build-validation/packet-letter-lock-report.json || true
+          cp generated/packet-letter-lock-report.md docs/runtime-proof/build-validation/packet-letter-lock-report.md || true
           cp generated/product-readiness-report.json docs/runtime-proof/build-validation/product-readiness-report.json || true
           cp generated/product-readiness-report.md docs/runtime-proof/build-validation/product-readiness-report.md || true
           cp generated/academy-catalog-report.json docs/runtime-proof/build-validation/academy-catalog-report.json || true
@@ -171,6 +183,12 @@ jobs:
             cat generated/build-proof-lane-report.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Build proof lane report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f generated/packet-letter-lock-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/packet-letter-lock-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Packet letter lock report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f generated/operations-pipeline-report.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -232,6 +250,10 @@ jobs:
             generated/build-proof-lane-validation.md
             generated/build-proof-lane-report.json
             generated/build-proof-lane-report.md
+            generated/packet-letter-lock-validation.json
+            generated/packet-letter-lock-validation.md
+            generated/packet-letter-lock-report.json
+            generated/packet-letter-lock-report.md
             generated/operations-pipeline-report.json
             generated/operations-pipeline-report.md
             generated/website-market-readiness-report.json
@@ -263,4 +285,4 @@ jobs:
             git push
           fi
 
-# retrigger: 2026-06-14T16:20:00Z
+# retrigger: 2026-06-14T16:32:00Z
