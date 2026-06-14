@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-14T16:13:11.143Z",
-  "activePacket": "061B",
+  "generatedAt": "2026-06-14T16:20:34.522Z",
+  "activePacket": "061C",
   "packageScripts": {
     "captureCiProofIndexPresent": true,
     "validateLanePresent": true,
