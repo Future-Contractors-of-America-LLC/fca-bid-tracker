@@ -8,6 +8,7 @@
     "verify:live-deployment": "node scripts/verify-live-deployment.mjs",
     "validate:runtime-smoke": "node scripts/runtime_smoke_check.js",
     "capture:build-evidence": "node scripts/build_evidence_capture.js",
+    "validate:managed-auth-commercial-runtime": "node scripts/validate-managed-auth-and-commercial-runtime.mjs",
 
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",

@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `060T`
-- Next packet: `060U`
+- Active packet: `060U`
+- Next packet: `060V`
 - Deployment target: `060Z` hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -19,37 +19,39 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The active 060 range continues with real execution. Packets `060P-060T` materially improved the Academy runtime parity lane by adding a dedicated runtime summary surface that unifies remediation, learner, enrollment, and certificate state.
+The active 060 range continues with real execution. Packet `060U` converted the post-`060T` next-step ambiguity into a repo-proven gate: managed auth readiness and commercial/runtime continuity are now validated as real repository surfaces, not only planning claims.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `060P-060T` now exist in sequence.
-- `api/academy-remediation-summary.js` now exists as a repo-proven runtime parity surface.
-- design-level Academy runtime parity surface gate passed.
-- Academy runtime parity blocker is materially reduced in repo truth.
+- `060U` now exists in sequence.
+- `api/auth-boundary.js`, `api/customer-auth-state.js`, `api/customer-login.js`, and `api/customer-session.js` together form a repo-proven managed-auth readiness lane.
+- `src/pricingPlans.js` and `src/pages/website/Login.jsx` form a repo-proven commercial/runtime configuration lane.
+- `scripts/validate-managed-auth-and-commercial-runtime.mjs` now exists as a repo-proven validator for this gate.
+- Academy runtime parity remains repo-proven through the prior `060T` lane.
 
 ### Not yet repo-proven
-- `060U` and later packets in the 060 range
-- actual current-head build pass
-- actual current-head runtime smoke pass
-- actual current-head live deployment verifier success
-- live managed auth readiness
+- `060V` and later packets in the 060 range
+- actual current-head execution of the new managed-auth/commercial validator
+- actual current-head build pass after `060U`
+- actual current-head runtime smoke pass after `060U`
+- actual current-head live deployment verifier success after `060U`
+- deployed managed auth runtime proof
 - deployed Academy runtime parity proof
-- verified commercial/revenue runtime path
-- final 060Z deployment-complete proof bundle
+- verified live commercial/revenue runtime path
+- final `060Z` deployment-complete proof bundle
 
 ---
 
 ## Current Blocker
 
-### Blocker 1 — actual current-head runtime/deployment proof still unresolved
-The repo keeps getting stronger, but the session still lacks direct proof of current-head build/runtime/deployment success.
+### Blocker 1 — current-head deployed proof still unresolved
+Repo truth is stronger, but deployed runtime proof is still not established in-session.
 
 ### Required behavior
-Continue with the next consecutive 060 packet only if it solves a remaining blocker or passes a remaining gate.
+Continue with the next consecutive 060 packet only if it either reduces deployed-proof ambiguity or converts the new repo-truth gate into stronger repeatable validation evidence.
 
 ---
 
@@ -69,13 +71,13 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `060T`
-- Next packet: `060U`
+- Current packet: `060U`
+- Next packet: `060V`
 - Target packet: `060Z`
-- Current blocker: actual current-head runtime/deployment proof still unresolved
-- Last verified repo truth: Academy runtime parity surface is now repo-proven through `060T`
-- Last verified deployment truth: deployed parity/build/runtime/live verification remains unproven in-session
-- Next concrete action: use `060U` to attack commercial/runtime verification or managed auth runtime proof
+- Current blocker: current-head deployed proof still unresolved
+- Last verified repo truth: managed auth readiness and commercial/runtime continuity are repo-proven through `060U`; Academy runtime parity remains repo-proven from `060T`
+- Last verified deployment truth: deployed auth/runtime/commercial proof remains unproven in-session
+- Next concrete action: use `060V` to wire the new validator into repeatable validation flow and tighten the deployed-proof delta
 
 ---
 
@@ -83,6 +85,6 @@ Every future status response must include:
 
 Auricrux must not skip packet letters inside the active numbered range.
 
-Auricrux must not treat repo-level runtime surfaces as equivalent to deployed proof.
+Auricrux must not treat repo-level readiness gates as equivalent to deployed proof.
 
 Auricrux must save after every meaningful prompt.
