@@ -192,6 +192,14 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:build-proof-persistence-commit-signal-report
 
+      - name: Validate build proof double absence
+        if: ${{ always() }}
+        run: npm run validate:build-proof-double-absence
+
+      - name: Generate build proof double absence report
+        if: ${{ always() }}
+        run: npm run generate:build-proof-double-absence-report
+
       - name: Publish product readiness summary
         if: ${{ always() }}
         run: |
@@ -259,6 +267,12 @@ jobs:
             cat generated/build-proof-persistence-commit-signal-report.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Build proof persistence commit signal report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f generated/build-proof-double-absence-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/build-proof-double-absence-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Build proof double absence report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f generated/operations-pipeline-report.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -344,6 +358,10 @@ jobs:
             generated/build-proof-persistence-commit-signal-validation.md
             generated/build-proof-persistence-commit-signal-report.json
             generated/build-proof-persistence-commit-signal-report.md
+            generated/build-proof-double-absence-validation.json
+            generated/build-proof-double-absence-validation.md
+            generated/build-proof-double-absence-report.json
+            generated/build-proof-double-absence-report.md
             generated/operations-pipeline-report.json
             generated/operations-pipeline-report.md
             generated/website-market-readiness-report.json
@@ -375,4 +393,4 @@ jobs:
             git push
           fi
 
-# retrigger: 2026-06-14T17:09:00Z
+# retrigger: 2026-06-14T17:15:00Z
