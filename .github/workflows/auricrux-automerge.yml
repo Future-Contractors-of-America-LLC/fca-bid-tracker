@@ -2,7 +2,7 @@ name: Auricrux Auto Merge
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   pull-requests: write
@@ -11,10 +11,11 @@ permissions:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'auricrux-automerge')
+    if: startsWith(github.head_ref, 'auricrux/')
+
     steps:
-      - name: Enable auto-merge (squash)
-        run: |
-          gh pr merge ${{ github.event.pull_request.number }} --squash --auto
+      - name: Enable auto-merge
+        run: gh pr merge --auto --squash "${PR_URL}"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
