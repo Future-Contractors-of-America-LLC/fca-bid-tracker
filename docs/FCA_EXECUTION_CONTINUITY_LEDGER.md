@@ -9,9 +9,9 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `059Z`
-- Next packet: `060A`
-- Deployment target: `060A` complete deployment gate
+- Active packet: `060E`
+- Next packet: `060F`
+- Deployment target: `060Z` hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
 
@@ -19,38 +19,37 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The controlling build state remains inside the `059` release-gate family with enforced A-Z continuity. Real code remediation now extends through `059Z`. The canonical project spine and repo-level auth route inconsistency have both been materially reduced in repo truth. The next valid move is a 60A gate evaluation against the corrected repo state, not a premature 60A completion claim.
+The active range has now advanced into the 060 packet family under an explicit user directive that the hard deployment target is `060Z`. Real code remediation has been executed in `060A-060E`, and a named remaining blocker — lifecycle-tail closeout/warranty continuity proof — has been materially solved at repo level.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `060A` is still reserved and unavailable for activation.
-- `059A` failed.
-- `059B` failed.
-- Sequential packet continuity is preserved through `059Z`.
-- Canonical project, takeoff, and RFI routes are materially remediated in repo truth.
-- Login route now uses shared auth-boundary and customer-account-store logic in repo truth.
-- Auth inconsistency at the route/code level is materially reduced in repo truth.
+- Hard deployment target is now `060Z` by user directive.
+- `060A-060E` now exist as active packets in sequence.
+- Closeout-package continuity now exists as a repo-proven API surface.
+- Warranty-case continuity now exists as a repo-proven API surface.
+- The prior lifecycle-tail blocker for closeout/warranty is materially reduced in repo truth.
 
 ### Not yet repo-proven
-- actual deployed managed auth readiness
-- current-head deployment/runtime proof
-- rerun results for 059A and 059B after all remediations
-- `060A` complete deployment pass
-- full Academy/licensure/apprenticeship parity proof
-- fully verified commercial/revenue path completion
+- `060F` and later packets in the 060 range
+- current-head build pass
+- current-head runtime smoke pass
+- live managed auth readiness
+- Academy remediation parity at runtime
+- verified commercial/revenue runtime path
+- final 060Z deployment-complete proof bundle
 
 ---
 
 ## Current Blocker
 
 ### Blocker 1 — deployment/runtime proof still unresolved
-Repo truth is materially improved, but 60A still cannot be reached without deployment/runtime evidence and release-gate reruns on the corrected state.
+Repo truth continues to improve, but hard target `060Z` still cannot be reached without deployment/runtime evidence and remaining gate closures.
 
 ### Required behavior
-Do not claim `060A` complete. Evaluate `060A` only as a gate against the corrected repo state and current proof boundaries.
+Continue with the next consecutive 060 packet only if it solves a remaining blocker or passes a remaining gate.
 
 ---
 
@@ -70,13 +69,13 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `059Z`
-- Next packet: `060A`
-- Target packet: `060A`
+- Current packet: `060E`
+- Next packet: `060F`
+- Target packet: `060Z`
 - Current blocker: deployment/runtime proof still unresolved
-- Last verified repo truth: canonical project spine and repo-level auth route inconsistency are materially remediated through `059Z`
-- Last verified deployment truth: deployment/runtime proof remains insufficient for 60A
-- Next concrete action: execute `060A` only as a gate evaluation against corrected repo truth, not as an assumption of completion
+- Last verified repo truth: closeout and warranty continuity are now repo-proven through `060E`
+- Last verified deployment truth: deployment/runtime proof remains insufficient for hard target `060Z`
+- Next concrete action: use `060F` to attack deployment/runtime proof capture directly
 
 ---
 
