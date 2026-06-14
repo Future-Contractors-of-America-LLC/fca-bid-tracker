@@ -19,18 +19,18 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The active 060 range continues with real execution. Packets `060F-060J` improved CI proof durability by making build-validation and runtime-smoke workflows persist their proof outputs back into canonical repo paths. This does not yet prove success, but it materially upgrades the system's ability to capture and retain success or failure truth.
+The active range remains inside the 060 packet family under the hard target `060Z`. Real execution has now advanced through `060J`, and the deployment/runtime proof lane has been materially improved by replacing placeholder package-script wiring with real generator and verifier commands.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `060F-060J` now exist as active packets in sequence.
-- CI proof persistence scripts and workflow changes are repo-proven.
-- build-validation workflow can now commit proof artifacts into `docs/runtime-proof/build-validation/`.
-- runtime-smoke workflow can now commit proof artifacts into `docs/runtime-proof/runtime-smoke/`.
-- canonical proof directory standards now exist in repo.
+- Hard deployment target remains `060Z`.
+- `060A-060J` now exist in sequence.
+- closeout and warranty continuity are repo-proven.
+- build-validation evidence generation commands are now wired to real scripts in `package.json`.
+- `verify:live-deployment` is now wired to a real deployment verifier script in `package.json`.
 
 ### Not yet repo-proven
 - `060K` and later packets in the 060 range
@@ -45,8 +45,8 @@ The active 060 range continues with real execution. Packets `060F-060J` improved
 
 ## Current Blocker
 
-### Blocker 1 — current-head proof production still unresolved
-The repo can now retain proof, but the actual successful proof artifacts for current head are not yet repo-proven.
+### Blocker 1 — current-head workflow/runtime evidence still unresolved
+Repo wiring is materially stronger, but the session still lacks direct proof of current-head workflow success and live runtime verification.
 
 ### Required behavior
 Continue with the next consecutive 060 packet only if it solves a remaining blocker or passes a remaining gate.
@@ -72,10 +72,10 @@ Every future status response must include:
 - Current packet: `060J`
 - Next packet: `060K`
 - Target packet: `060Z`
-- Current blocker: current-head proof production still unresolved
-- Last verified repo truth: CI proof persistence and canonical proof directories are now implemented through `060J`
-- Last verified deployment truth: successful current-head proof artifacts are still not yet repo-proven
-- Next concrete action: use `060K` to target runtime-managed auth proof or current-head proof production
+- Current blocker: current-head workflow/runtime evidence still unresolved
+- Last verified repo truth: build-proof and deployment-verifier script wiring are materially improved through `060J`
+- Last verified deployment truth: direct current-head workflow/runtime success remains unproven in-session
+- Next concrete action: use `060K` to attack a remaining runtime-proof or runtime-parity blocker directly
 
 ---
 
@@ -83,6 +83,6 @@ Every future status response must include:
 
 Auricrux must not skip packet letters inside the active numbered range.
 
-Auricrux must not treat proof-persistence capability as equivalent to successful proof output.
+Auricrux must not treat repo-level script wiring improvements as equivalent to workflow-pass truth.
 
 Auricrux must save after every meaningful prompt.

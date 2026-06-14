@@ -10,16 +10,16 @@ Target Packet: `060Z`
 ---
 
 ## Continuity decision
-Packets `060F` through `060J` have now materially improved deployment/runtime proof capture capability.
+Packets `060F` through `060J` have now strengthened the deployment/runtime proof lane with real package-script wiring and verifier activation.
 
-## What was solved or passed in this range
-- proof visibility/durability blocker materially reduced
-- build proof persistence design gate passed
-- runtime-smoke proof persistence design gate passed
-- canonical proof directory ambiguity materially reduced
+## What blocker was solved or reduced
+A real remaining blocker was placeholder-style proof generation wiring. That blocker is now materially reduced because core evidence-generation and live-deployment verification commands are wired to real scripts.
 
 ## Next required objective
-Use `060K` to attack the next remaining blocker: runtime-managed auth proof or current-head proof production.
+Use `060K` to continue direct work on runtime-proof capture, Academy runtime parity, or commercial/runtime verification.
+
+## Rule
+Every remaining 060 packet must continue to either solve one blocker or pass one gate.
 
 ## Progress Lock
 - Current packet: `060J`
