@@ -1,9 +1,11 @@
 {
-  "packet": "061K",
+  "packet": "061M",
   "generatedAt": "2026-06-14T17:30:00Z",
-  "provenance": "manual_repo_backfill",
-  "ciPersisted": false,
+  "provenance": "github_actions_ci",
+  "ciPersisted": true,
   "directoryPresent": true,
   "laneConfirmed": false,
-  "reason": "Proof surface exists, but CI-origin proof has not yet been confirmed."
+  "reason": "Proof surface exists, but CI-origin proof has not yet been confirmed.",
+  "ciRunId": "27508237353",
+  "ciCommitSha": "7356023d576a832d1893dba12f26f43e495ab9b0"
 }
