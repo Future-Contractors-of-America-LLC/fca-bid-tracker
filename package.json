@@ -29,6 +29,8 @@
     "generate:build-proof-first-missing-artifact-report": "node scripts/generate-build-proof-first-missing-artifact-report.mjs",
     "validate:build-proof-directory-absence": "node scripts/validate-build-proof-directory-absence.mjs",
     "generate:build-proof-directory-absence-report": "node scripts/generate-build-proof-directory-absence-report.mjs",
+    "validate:build-proof-persistence-commit-signal": "node scripts/validate-build-proof-persistence-commit-signal.mjs",
+    "generate:build-proof-persistence-commit-signal-report": "node scripts/generate-build-proof-persistence-commit-signal-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",
