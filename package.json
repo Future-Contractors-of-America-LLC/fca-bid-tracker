@@ -53,6 +53,8 @@
     "generate:live-deployment-ci-rewrite-transition-report": "node scripts/generate-live-deployment-ci-rewrite-transition-report.mjs",
     "validate:live-deployment-proof-zero-dependency-workflow": "node scripts/validate-live-deployment-proof-zero-dependency-workflow.mjs",
     "generate:live-deployment-proof-zero-dependency-workflow-report": "node scripts/generate-live-deployment-proof-zero-dependency-workflow-report.mjs",
+    "validate:live-deployment-proof-commit-signal": "node scripts/validate-live-deployment-proof-commit-signal.mjs",
+    "generate:live-deployment-proof-commit-signal-report": "node scripts/generate-live-deployment-proof-commit-signal-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",
