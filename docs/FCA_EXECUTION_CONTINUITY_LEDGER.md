@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `060E`
-- Next packet: `060F`
+- Active packet: `060J`
+- Next packet: `060K`
 - Deployment target: `060Z` hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -19,21 +19,21 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The active range has now advanced into the 060 packet family under an explicit user directive that the hard deployment target is `060Z`. Real code remediation has been executed in `060A-060E`, and a named remaining blocker — lifecycle-tail closeout/warranty continuity proof — has been materially solved at repo level.
+The active 060 range continues with real execution. Packets `060F-060J` improved CI proof durability by making build-validation and runtime-smoke workflows persist their proof outputs back into canonical repo paths. This does not yet prove success, but it materially upgrades the system's ability to capture and retain success or failure truth.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- Hard deployment target is now `060Z` by user directive.
-- `060A-060E` now exist as active packets in sequence.
-- Closeout-package continuity now exists as a repo-proven API surface.
-- Warranty-case continuity now exists as a repo-proven API surface.
-- The prior lifecycle-tail blocker for closeout/warranty is materially reduced in repo truth.
+- `060F-060J` now exist as active packets in sequence.
+- CI proof persistence scripts and workflow changes are repo-proven.
+- build-validation workflow can now commit proof artifacts into `docs/runtime-proof/build-validation/`.
+- runtime-smoke workflow can now commit proof artifacts into `docs/runtime-proof/runtime-smoke/`.
+- canonical proof directory standards now exist in repo.
 
 ### Not yet repo-proven
-- `060F` and later packets in the 060 range
+- `060K` and later packets in the 060 range
 - current-head build pass
 - current-head runtime smoke pass
 - live managed auth readiness
@@ -45,8 +45,8 @@ The active range has now advanced into the 060 packet family under an explicit u
 
 ## Current Blocker
 
-### Blocker 1 — deployment/runtime proof still unresolved
-Repo truth continues to improve, but hard target `060Z` still cannot be reached without deployment/runtime evidence and remaining gate closures.
+### Blocker 1 — current-head proof production still unresolved
+The repo can now retain proof, but the actual successful proof artifacts for current head are not yet repo-proven.
 
 ### Required behavior
 Continue with the next consecutive 060 packet only if it solves a remaining blocker or passes a remaining gate.
@@ -69,13 +69,13 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `060E`
-- Next packet: `060F`
+- Current packet: `060J`
+- Next packet: `060K`
 - Target packet: `060Z`
-- Current blocker: deployment/runtime proof still unresolved
-- Last verified repo truth: closeout and warranty continuity are now repo-proven through `060E`
-- Last verified deployment truth: deployment/runtime proof remains insufficient for hard target `060Z`
-- Next concrete action: use `060F` to attack deployment/runtime proof capture directly
+- Current blocker: current-head proof production still unresolved
+- Last verified repo truth: CI proof persistence and canonical proof directories are now implemented through `060J`
+- Last verified deployment truth: successful current-head proof artifacts are still not yet repo-proven
+- Next concrete action: use `060K` to target runtime-managed auth proof or current-head proof production
 
 ---
 
@@ -83,6 +83,6 @@ Every future status response must include:
 
 Auricrux must not skip packet letters inside the active numbered range.
 
-Auricrux must not treat repo-level remediation as equivalent to deployment-pass truth.
+Auricrux must not treat proof-persistence capability as equivalent to successful proof output.
 
 Auricrux must save after every meaningful prompt.

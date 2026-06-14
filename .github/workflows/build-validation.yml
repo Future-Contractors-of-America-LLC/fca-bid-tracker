@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: fca-build-validation-${{ github.ref }}
@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v5
@@ -37,6 +39,12 @@ jobs:
 
       - name: Run governed build validation
         run: npm run build:system
+
+      - name: Capture build evidence index
+        if: ${{ always() }}
+        run: |
+          npm run capture:build-evidence
+          npm run capture:ci-proof-index
 
       - name: Generate product readiness evidence
         if: ${{ always() }}
@@ -69,6 +77,31 @@ jobs:
       - name: Generate admin governance evidence
         if: ${{ always() }}
         run: npm run generate:admin-governance-report
+
+      - name: Persist build proof artifacts into repo
+        if: ${{ always() }}
+        run: |
+          mkdir -p docs/runtime-proof/build-validation
+          cp generated/build-evidence-report.json docs/runtime-proof/build-validation/build-evidence-report.json || true
+          cp generated/build-evidence-report.md docs/runtime-proof/build-validation/build-evidence-report.md || true
+          cp generated/ci-proof-index.json docs/runtime-proof/build-validation/ci-proof-index.json || true
+          cp generated/ci-proof-index.md docs/runtime-proof/build-validation/ci-proof-index.md || true
+          cp generated/product-readiness-report.json docs/runtime-proof/build-validation/product-readiness-report.json || true
+          cp generated/product-readiness-report.md docs/runtime-proof/build-validation/product-readiness-report.md || true
+          cp generated/academy-catalog-report.json docs/runtime-proof/build-validation/academy-catalog-report.json || true
+          cp generated/academy-catalog-report.md docs/runtime-proof/build-validation/academy-catalog-report.md || true
+          cp generated/operations-pipeline-report.json docs/runtime-proof/build-validation/operations-pipeline-report.json || true
+          cp generated/operations-pipeline-report.md docs/runtime-proof/build-validation/operations-pipeline-report.md || true
+          cp generated/website-market-readiness-report.json docs/runtime-proof/build-validation/website-market-readiness-report.json || true
+          cp generated/website-market-readiness-report.md docs/runtime-proof/build-validation/website-market-readiness-report.md || true
+          cp generated/file-governance-report.json docs/runtime-proof/build-validation/file-governance-report.json || true
+          cp generated/file-governance-report.md docs/runtime-proof/build-validation/file-governance-report.md || true
+          cp generated/billing-governance-report.json docs/runtime-proof/build-validation/billing-governance-report.json || true
+          cp generated/billing-governance-report.md docs/runtime-proof/build-validation/billing-governance-report.md || true
+          cp generated/support-governance-report.json docs/runtime-proof/build-validation/support-governance-report.json || true
+          cp generated/support-governance-report.md docs/runtime-proof/build-validation/support-governance-report.md || true
+          cp generated/admin-governance-report.json docs/runtime-proof/build-validation/admin-governance-report.json || true
+          cp generated/admin-governance-report.md docs/runtime-proof/build-validation/admin-governance-report.md || true
 
       - name: Publish product readiness summary
         if: ${{ always() }}
@@ -120,6 +153,12 @@ jobs:
           else
             echo "Admin governance report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f generated/ci-proof-index.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/ci-proof-index.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "CI proof index missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload product readiness artifacts
         if: ${{ always() }}
@@ -143,6 +182,23 @@ jobs:
             generated/support-governance-report.md
             generated/admin-governance-report.json
             generated/admin-governance-report.md
+            generated/build-evidence-report.json
+            generated/build-evidence-report.md
+            generated/ci-proof-index.json
+            generated/ci-proof-index.md
           if-no-files-found: warn
+
+      - name: Commit build proof artifacts
+        if: ${{ always() && github.ref == 'refs/heads/main' }}
+        run: |
+          git config user.name "auricrux-ci"
+          git config user.email "auricrux-ci@futurecontractorsofamerica.com"
+          git add docs/runtime-proof/build-validation
+          if git diff --cached --quiet; then
+            echo "No build proof artifact changes to commit."
+          else
+            git commit -m "Persist build validation proof artifacts for run ${GITHUB_RUN_ID}"
+            git push
+          fi
 
 # retrigger: 2026-06-08T18:05:00Z

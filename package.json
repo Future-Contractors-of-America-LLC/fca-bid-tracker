@@ -8,6 +8,7 @@
     "verify:live-deployment": "node no-op.js",
     "validate:runtime-smoke": "node scripts/runtime_smoke_check.js",
     "capture:build-evidence": "node scripts/build_evidence_capture.js",
+    "capture:ci-proof-index": "node scripts/ci_proof_index.js",
 
     "generate:admin-governance-report": "node no-op.js",
     "generate:billing-governance-report": "node no-op.js",

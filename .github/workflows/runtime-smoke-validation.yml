@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: fca-runtime-smoke-${{ github.ref }}
@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v5
@@ -41,6 +43,21 @@ jobs:
       - name: Execute bounded runtime smoke checks
         run: npm run validate:runtime-smoke
 
+      - name: Capture CI proof index
+        if: ${{ always() }}
+        run: npm run capture:ci-proof-index
+
+      - name: Persist runtime proof artifacts into repo
+        if: ${{ always() }}
+        run: |
+          mkdir -p docs/runtime-proof/runtime-smoke
+          cp generated/runtime-smoke-check-report.json docs/runtime-proof/runtime-smoke/runtime-smoke-check-report.json || true
+          cp generated/runtime-smoke-check-report.md docs/runtime-proof/runtime-smoke/runtime-smoke-check-report.md || true
+          cp generated/build-evidence-report.json docs/runtime-proof/runtime-smoke/build-evidence-report.json || true
+          cp generated/build-evidence-report.md docs/runtime-proof/runtime-smoke/build-evidence-report.md || true
+          cp generated/ci-proof-index.json docs/runtime-proof/runtime-smoke/ci-proof-index.json || true
+          cp generated/ci-proof-index.md docs/runtime-proof/runtime-smoke/ci-proof-index.md || true
+
       - name: Publish smoke-check summary
         if: ${{ always() }}
         run: |
@@ -55,6 +72,12 @@ jobs:
           else
             echo "Build evidence report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f generated/ci-proof-index.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/ci-proof-index.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "CI proof index missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload smoke-check artifacts
         if: ${{ always() }}
@@ -66,4 +89,19 @@ jobs:
             generated/runtime-smoke-check-report.md
             generated/build-evidence-report.json
             generated/build-evidence-report.md
+            generated/ci-proof-index.json
+            generated/ci-proof-index.md
           if-no-files-found: warn
+
+      - name: Commit runtime proof artifacts
+        if: ${{ always() && github.ref == 'refs/heads/main' }}
+        run: |
+          git config user.name "auricrux-ci"
+          git config user.email "auricrux-ci@futurecontractorsofamerica.com"
+          git add docs/runtime-proof/runtime-smoke
+          if git diff --cached --quiet; then
+            echo "No runtime proof artifact changes to commit."
+          else
+            git commit -m "Persist runtime smoke proof artifacts for run ${GITHUB_RUN_ID}"
+            git push
+          fi
