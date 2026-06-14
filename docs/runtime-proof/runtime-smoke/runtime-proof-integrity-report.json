@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-14T16:27:00.874Z",
-  "activePacket": "061D",
+  "generatedAt": "2026-06-14T16:32:07.172Z",
+  "activePacket": "061E",
   "buildEvidence": {
     "readsContinuityLedger": true,
     "derivesPacketFromLedger": true,
