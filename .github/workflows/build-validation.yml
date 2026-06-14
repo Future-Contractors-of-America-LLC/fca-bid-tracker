@@ -50,8 +50,11 @@ jobs:
 
       - name: Capture build evidence index
         if: ${{ always() }}
-        run: |
-          npm run capture:build-evidence
+        run: npm run capture:build-evidence
+
+      - name: Validate build proof lane
+        if: ${{ always() }}
+        run: npm run validate:build-proof-lane
 
       - name: Verify live deployment
         if: ${{ always() && github.ref == 'refs/heads/main' }}
@@ -74,6 +77,10 @@ jobs:
       - name: Generate runtime proof integrity evidence
         if: ${{ always() }}
         run: npm run generate:runtime-proof-integrity-report
+
+      - name: Generate build proof lane evidence
+        if: ${{ always() }}
+        run: npm run generate:build-proof-lane-report
 
       - name: Generate operations pipeline evidence
         if: ${{ always() }}
@@ -106,6 +113,10 @@ jobs:
           mkdir -p docs/runtime-proof/live-deployment
           cp generated/build-evidence-report.json docs/runtime-proof/build-validation/build-evidence-report.json || true
           cp generated/build-evidence-report.md docs/runtime-proof/build-validation/build-evidence-report.md || true
+          cp generated/build-proof-lane-validation.json docs/runtime-proof/build-validation/build-proof-lane-validation.json || true
+          cp generated/build-proof-lane-validation.md docs/runtime-proof/build-validation/build-proof-lane-validation.md || true
+          cp generated/build-proof-lane-report.json docs/runtime-proof/build-validation/build-proof-lane-report.json || true
+          cp generated/build-proof-lane-report.md docs/runtime-proof/build-validation/build-proof-lane-report.md || true
           cp generated/product-readiness-report.json docs/runtime-proof/build-validation/product-readiness-report.json || true
           cp generated/product-readiness-report.md docs/runtime-proof/build-validation/product-readiness-report.md || true
           cp generated/academy-catalog-report.json docs/runtime-proof/build-validation/academy-catalog-report.json || true
@@ -154,6 +165,12 @@ jobs:
             cat generated/runtime-proof-integrity-report.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Runtime proof integrity report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f generated/build-proof-lane-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/build-proof-lane-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Build proof lane report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f generated/operations-pipeline-report.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -211,6 +228,10 @@ jobs:
             generated/managed-auth-commercial-runtime-report.md
             generated/runtime-proof-integrity-report.json
             generated/runtime-proof-integrity-report.md
+            generated/build-proof-lane-validation.json
+            generated/build-proof-lane-validation.md
+            generated/build-proof-lane-report.json
+            generated/build-proof-lane-report.md
             generated/operations-pipeline-report.json
             generated/operations-pipeline-report.md
             generated/website-market-readiness-report.json
@@ -242,4 +263,4 @@ jobs:
             git push
           fi
 
-# retrigger: 2026-06-08T18:05:00Z
+# retrigger: 2026-06-14T16:20:00Z

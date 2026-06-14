@@ -17,7 +17,8 @@
     "generate:runtime-smoke-proof-lane-report": "node scripts/generate-runtime-smoke-proof-lane-report.mjs",
     "validate:runtime-smoke-report-emission": "node scripts/validate-runtime-smoke-report-emission.mjs",
     "generate:runtime-smoke-report-emission-report": "node scripts/generate-runtime-smoke-report-emission-report.mjs",
-
+    "validate:build-proof-lane": "node scripts/validate-build-proof-lane.mjs",
+    "generate:build-proof-lane-report": "node scripts/generate-build-proof-lane-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",
@@ -26,7 +27,6 @@
     "generate:file-governance-report": "node scripts/generate-file-governance-report.mjs",
     "generate:website-market-readiness-report": "node scripts/generate-website-market-readiness-report.mjs",
     "generate:academy-catalog-report": "node scripts/generate-academy-catalog-report.mjs",
-
     "generate:pricing-governance-report": "node scripts/generate-website-market-readiness-report.mjs",
     "generate:contact-governance-report": "node scripts/generate-website-market-readiness-report.mjs",
     "generate:access-governance-report": "node scripts/generate-admin-governance-report.mjs",

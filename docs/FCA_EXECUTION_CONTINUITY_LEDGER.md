@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `061B`
-- Next packet: `061C`
+- Active packet: `061C`
+- Next packet: `061D`
 - Deployment target: `061Z` hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -20,26 +20,25 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The `060` range remains truthfully closed as a failed hard deployment target. `061A` performed blocker-first code remediation. `061B` rebases the active hard deployment target to `061Z`, installs the `061A`-`061Z` execution floor, adds no-gap coverage control, and restores missing autonomy workflow artifacts in repo truth.
+The `060` range remains truthfully closed as a failed hard deployment target. `061A` performed blocker-first code remediation. `061B` rebased the target to `061Z` and restored no-gap control artifacts. `061C` now installs explicit build-proof-lane validation and reporting so build-validation proof persistence can be judged against repo-visible contract rules instead of assumption.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `061A` remains the most recent repo-visible code remediation packet before this sequence rebase.
-- `061B` now exists in sequence.
-- deployment target is now explicitly rebased to `061Z` in repo truth.
-- `FCA_COVERAGE_MATRIX.md` now exists in repo truth.
-- `.github/workflows/auricrux-autopr.yml` now exists in repo truth.
-- `.github/workflows/auricrux-automerge.yml` now exists in repo truth.
-- `.github/workflows/auricrux-runner.yml` now exists in repo truth.
-- `061C` through `061Z` bounded execution controls are now documented in repo truth.
+- `061C` now exists in sequence.
+- `scripts/validate-build-proof-lane.mjs` now exists in repo truth.
+- `scripts/generate-build-proof-lane-report.mjs` now exists in repo truth.
+- `package.json` now registers `validate:build-proof-lane` and `generate:build-proof-lane-report`.
+- `.github/workflows/build-validation.yml` now invokes the build proof lane validator and generator.
+- `.github/workflows/build-validation.yml` now persists `build-proof-lane-validation.*` and `build-proof-lane-report.*` into `docs/runtime-proof/build-validation/`.
 
 ### Not yet repo-proven
 - successful current-head runtime smoke pass after `061A`
 - refreshed runtime smoke proof artifacts for post-`061A` current head on `main`
-- repo-visible build-validation proof persistence on `main`
+- successful current-head build-validation run after `061C`
+- repo-visible refreshed build-proof-lane artifacts committed by CI on `main`
 - actual current-head live deployment verifier success
 - deployed managed auth runtime proof
 - deployed Academy runtime parity proof
@@ -50,11 +49,11 @@ The `060` range remains truthfully closed as a failed hard deployment target. `0
 
 ## Current Blocker
 
-### Blocker 1 — proof lanes remain unverified after the 061 target rebase
-The sequence is now structurally aligned to `061Z`, but the proof-bearing runtime, build-validation, auth, academy, commercial, and live deployment lanes remain unverified in-session.
+### Blocker 1 — proof wiring is strengthened but current-head proof results remain unverified
+The build-validation lane is now explicitly wired for proof-lane validation, but no fresh current-head CI result has yet been inspected in-session to prove the lane passes and persists artifacts on `main`.
 
 ### Required behavior
-Begin `061C` and onward with blocker-first proof restoration and flagship product spine advancement. Do not claim deployment completion until the required `061Z` proof bundle is actually passing.
+Begin `061D` with refreshed proof inspection and blocker-first triage of the first failing current-head validation lane.
 
 ---
 
@@ -74,20 +73,20 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `061B`
-- Next packet: `061C`
+- Current packet: `061C`
+- Next packet: `061D`
 - Target packet: `061Z` hard deployment target
-- Current blocker: proof lanes remain unverified after the 061 target rebase
-- Last verified repo truth: target rebase, execution floor, coverage matrix, autonomy workflows, and `061C`-`061Z` control artifacts are now saved on `main`
+- Current blocker: proof wiring is strengthened but current-head proof results remain unverified
+- Last verified repo truth: build proof lane validator, report generator, workflow wiring, and persistence paths are now saved on `main`
 - Last verified deployment truth: deployed auth/runtime/commercial proof remains unproven in-session
-- Next concrete action: begin `061C` by refreshing runtime/build proof lanes and aligning them to the `061Z` closeout criteria
+- Next concrete action: begin `061D` by inspecting the newest current-head build-validation and runtime-smoke proof outputs for the first surviving failing lane
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must not reinterpret the `061Z` target rebase as proof that deployment is complete.
+Auricrux must not reinterpret improved proof wiring as proof that current-head CI or deployment now passes.
 
-Auricrux must not treat control artifacts as substitutes for proof-bearing runtime, build, auth, academy, commercial, or live verification evidence.
+Auricrux must not treat validator installation as equivalent to fresh proof artifacts landing successfully on `main`.
 
 Auricrux must save after every meaningful prompt.
