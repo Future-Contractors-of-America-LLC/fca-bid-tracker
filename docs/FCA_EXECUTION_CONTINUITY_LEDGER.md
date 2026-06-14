@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `060J`
-- Next packet: `060K`
+- Active packet: `060O`
+- Next packet: `060P`
 - Deployment target: `060Z` hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -19,23 +19,23 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The active range remains inside the 060 packet family under the hard target `060Z`. Real execution has now advanced through `060J`, and the deployment/runtime proof lane has been materially improved by replacing placeholder package-script wiring with real generator and verifier commands.
+The active 060 range continues with real execution. Packets `060K-060O` extended the CI proof lane into live deployment proof capture by wiring the verifier into build-validation and persisting live deployment smoke artifacts into canonical repo paths.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- Hard deployment target remains `060Z`.
-- `060A-060J` now exist in sequence.
-- closeout and warranty continuity are repo-proven.
-- build-validation evidence generation commands are now wired to real scripts in `package.json`.
-- `verify:live-deployment` is now wired to a real deployment verifier script in `package.json`.
+- `060K-060O` now exist in sequence.
+- build-validation workflow now attempts real live deployment verification on `main`.
+- live deployment smoke artifacts now have canonical repo persistence paths under `docs/runtime-proof/live-deployment/`.
+- live deployment proof location ambiguity is materially reduced.
 
 ### Not yet repo-proven
-- `060K` and later packets in the 060 range
-- current-head build pass
-- current-head runtime smoke pass
+- `060P` and later packets in the 060 range
+- actual current-head build pass
+- actual current-head runtime smoke pass
+- actual current-head live deployment verifier success
 - live managed auth readiness
 - Academy remediation parity at runtime
 - verified commercial/revenue runtime path
@@ -45,8 +45,8 @@ The active range remains inside the 060 packet family under the hard target `060
 
 ## Current Blocker
 
-### Blocker 1 — current-head workflow/runtime evidence still unresolved
-Repo wiring is materially stronger, but the session still lacks direct proof of current-head workflow success and live runtime verification.
+### Blocker 1 — actual current-head proof outputs still unresolved
+The workflows are stronger, but the session still lacks repo-visible evidence that the current head has already passed build validation, runtime smoke, and live deployment verification.
 
 ### Required behavior
 Continue with the next consecutive 060 packet only if it solves a remaining blocker or passes a remaining gate.
@@ -69,13 +69,13 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `060J`
-- Next packet: `060K`
+- Current packet: `060O`
+- Next packet: `060P`
 - Target packet: `060Z`
-- Current blocker: current-head workflow/runtime evidence still unresolved
-- Last verified repo truth: build-proof and deployment-verifier script wiring are materially improved through `060J`
-- Last verified deployment truth: direct current-head workflow/runtime success remains unproven in-session
-- Next concrete action: use `060K` to attack a remaining runtime-proof or runtime-parity blocker directly
+- Current blocker: actual current-head proof outputs still unresolved
+- Last verified repo truth: live deployment verifier execution and proof persistence are materially improved through `060O`
+- Last verified deployment truth: actual current-head success remains unproven in-session
+- Next concrete action: use `060P` to attack runtime-managed auth proof or another remaining runtime parity blocker directly
 
 ---
 
@@ -83,6 +83,6 @@ Every future status response must include:
 
 Auricrux must not skip packet letters inside the active numbered range.
 
-Auricrux must not treat repo-level script wiring improvements as equivalent to workflow-pass truth.
+Auricrux must not treat workflow-wiring improvements as equivalent to actual current-head proof success.
 
 Auricrux must save after every meaningful prompt.

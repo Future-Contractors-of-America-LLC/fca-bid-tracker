@@ -20,7 +20,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -44,7 +44,12 @@ jobs:
         if: ${{ always() }}
         run: |
           npm run capture:build-evidence
-          npm run capture:ci-proof-index
+
+      - name: Verify live deployment
+        if: ${{ always() && github.ref == 'refs/heads/main' }}
+        env:
+          AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
+        run: npm run verify:live-deployment
 
       - name: Generate product readiness evidence
         if: ${{ always() }}
@@ -82,10 +87,9 @@ jobs:
         if: ${{ always() }}
         run: |
           mkdir -p docs/runtime-proof/build-validation
+          mkdir -p docs/runtime-proof/live-deployment
           cp generated/build-evidence-report.json docs/runtime-proof/build-validation/build-evidence-report.json || true
           cp generated/build-evidence-report.md docs/runtime-proof/build-validation/build-evidence-report.md || true
-          cp generated/ci-proof-index.json docs/runtime-proof/build-validation/ci-proof-index.json || true
-          cp generated/ci-proof-index.md docs/runtime-proof/build-validation/ci-proof-index.md || true
           cp generated/product-readiness-report.json docs/runtime-proof/build-validation/product-readiness-report.json || true
           cp generated/product-readiness-report.md docs/runtime-proof/build-validation/product-readiness-report.md || true
           cp generated/academy-catalog-report.json docs/runtime-proof/build-validation/academy-catalog-report.json || true
@@ -102,6 +106,8 @@ jobs:
           cp generated/support-governance-report.md docs/runtime-proof/build-validation/support-governance-report.md || true
           cp generated/admin-governance-report.json docs/runtime-proof/build-validation/admin-governance-report.json || true
           cp generated/admin-governance-report.md docs/runtime-proof/build-validation/admin-governance-report.md || true
+          cp workspace/live_deployment_smoke_summary.json docs/runtime-proof/live-deployment/live_deployment_smoke_summary.json || true
+          cp workspace/live_deployment_smoke_failures.txt docs/runtime-proof/live-deployment/live_deployment_smoke_failures.txt || true
 
       - name: Publish product readiness summary
         if: ${{ always() }}
@@ -153,11 +159,10 @@ jobs:
           else
             echo "Admin governance report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
-          if [ -f generated/ci-proof-index.md ]; then
+          if [ -f workspace/live_deployment_smoke_failures.txt ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/ci-proof-index.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "CI proof index missing" >> "$GITHUB_STEP_SUMMARY"
+            echo "## Live deployment smoke failures" >> "$GITHUB_STEP_SUMMARY"
+            cat workspace/live_deployment_smoke_failures.txt >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload product readiness artifacts
@@ -184,8 +189,8 @@ jobs:
             generated/admin-governance-report.md
             generated/build-evidence-report.json
             generated/build-evidence-report.md
-            generated/ci-proof-index.json
-            generated/ci-proof-index.md
+            workspace/live_deployment_smoke_summary.json
+            workspace/live_deployment_smoke_failures.txt
           if-no-files-found: warn
 
       - name: Commit build proof artifacts
@@ -193,11 +198,11 @@ jobs:
         run: |
           git config user.name "auricrux-ci"
           git config user.email "auricrux-ci@futurecontractorsofamerica.com"
-          git add docs/runtime-proof/build-validation
+          git add docs/runtime-proof/build-validation docs/runtime-proof/live-deployment
           if git diff --cached --quiet; then
             echo "No build proof artifact changes to commit."
           else
-            git commit -m "Persist build validation proof artifacts for run ${GITHUB_RUN_ID}"
+            git commit -m "Persist build validation and live deployment proof artifacts for run ${GITHUB_RUN_ID}"
             git push
           fi
 
