@@ -7,6 +7,10 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function nowIso() {
+  return new Date().toISOString();
+}
+
 function normalizeQualification(qualification = {}, bid = {}) {
   return {
     score: qualification.score || "62/100",
@@ -81,7 +85,7 @@ function normalizeFileRecord(file = {}, index = 0) {
     versionLabel: file.versionLabel || "Rev 1",
     name: file.name || `Workflow file ${index + 1}`,
     category: file.category || "Document",
-    updated: file.updated || new Date().toISOString(),
+    updated: file.updated || nowIso(),
     action: file.action || "Review",
     discipline: file.discipline || "Operations",
     status: file.status || "Active",
@@ -93,7 +97,7 @@ function normalizeFileRecord(file = {}, index = 0) {
 function normalizeAuditEvent(event = {}, index = 0) {
   return {
     id: event.id || `AUD-${index + 1}`,
-    time: event.time || new Date().toISOString(),
+    time: event.time || nowIso(),
     eventType: event.eventType || "workflow-event",
     actorType: event.actorType || "auricrux",
     targetObjectType: event.targetObjectType || "WorkflowObject",
@@ -102,6 +106,47 @@ function normalizeAuditEvent(event = {}, index = 0) {
     detail: event.detail || "Auricrux recorded a workflow mutation.",
     reason: event.reason || "Continuity event captured.",
     discipline: event.discipline || "Operations",
+  };
+}
+
+function normalizeTakeoffRecord(item = {}, index = 0) {
+  return {
+    takeoffId: item.takeoffId || `TKO-${index + 1}`,
+    projectId: item.projectId,
+    drawingSetId: item.drawingSetId || null,
+    sheetId: item.sheetId || null,
+    detailRef: item.detailRef || null,
+    zoneRef: item.zoneRef || null,
+    assemblyCode: item.assemblyCode || null,
+    description: item.description || `Takeoff item ${index + 1}`,
+    quantity: item.quantity || 0,
+    unit: item.unit || "EA",
+    wasteFactorPct: item.wasteFactorPct ?? 0,
+    productionRate: item.productionRate ?? null,
+    fileIds: Array.isArray(item.fileIds) ? item.fileIds : [],
+    sourceObjectIds: Array.isArray(item.sourceObjectIds) ? item.sourceObjectIds : [],
+    status: item.status || "open",
+    note: item.note || "Governed takeoff continuity record active.",
+    updatedAt: item.updatedAt || nowIso(),
+  };
+}
+
+function normalizeRfiRecord(item = {}, index = 0) {
+  return {
+    rfiId: item.rfiId || `RFI-${index + 1}`,
+    projectId: item.projectId,
+    number: item.number || null,
+    drawingSetId: item.drawingSetId || null,
+    sheetId: item.sheetId || null,
+    redlineId: item.redlineId || null,
+    question: item.question || `RFI item ${index + 1}`,
+    suggestedResponse: item.suggestedResponse || null,
+    dueAt: item.dueAt || null,
+    fileIds: Array.isArray(item.fileIds) ? item.fileIds : [],
+    sourceObjectIds: Array.isArray(item.sourceObjectIds) ? item.sourceObjectIds : [],
+    status: item.status || "open",
+    note: item.note || "Governed RFI continuity record active.",
+    updatedAt: item.updatedAt || nowIso(),
   };
 }
 
@@ -122,8 +167,8 @@ function seedBids() {
           nextGate: index === 0 ? "Route to estimator handoff" : "Complete qualification command review",
         },
       },
-      index
-    )
+      index,
+    ),
   );
 }
 
@@ -139,6 +184,53 @@ function seedAudit() {
   return projectAuditEvents.map((event, index) => normalizeAuditEvent(event, index));
 }
 
+function seedTakeoffs(projects) {
+  const primaryProjectId = projects[0]?.id || "PRJ-1";
+  return [
+    normalizeTakeoffRecord(
+      {
+        takeoffId: "TKO-A-117-01",
+        projectId: primaryProjectId,
+        drawingSetId: "DS-A-117",
+        sheetId: "A1.1",
+        detailRef: "Lobby power plan",
+        zoneRef: "Level 1",
+        assemblyCode: "ELEC-LP-01",
+        description: "Lobby lighting circuit quantity",
+        quantity: 24,
+        unit: "EA",
+        wasteFactorPct: 5,
+        productionRate: 8,
+        sourceObjectIds: ["BID-1"],
+        status: "in_review",
+      },
+      0,
+    ),
+  ];
+}
+
+function seedRfis(projects) {
+  const primaryProjectId = projects[0]?.id || "PRJ-1";
+  return [
+    normalizeRfiRecord(
+      {
+        rfiId: "RFI-A-117-01",
+        projectId: primaryProjectId,
+        number: "RFI-001",
+        drawingSetId: "DS-A-117",
+        sheetId: "A3.2",
+        redlineId: "RED-001",
+        question: "Confirm access-control hardware scope at lobby entry revisions.",
+        suggestedResponse: "Awaiting architect confirmation on revised device count.",
+        dueAt: nowIso(),
+        sourceObjectIds: ["TKO-A-117-01"],
+        status: "open",
+      },
+      0,
+    ),
+  ];
+}
+
 function seedTenantWorkflow() {
   const projects = seedProjects();
   const activeProjectId = projects[0]?.id || null;
@@ -150,9 +242,11 @@ function seedTenantWorkflow() {
       fileId: file.fileId || `${activeProjectId || "PRJ-A117"}-FILE-${index + 1}`,
       ownerObjectId: file.ownerObjectId || activeProjectId || "PRJ-A117",
     })),
+    takeoffs: seedTakeoffs(projects),
+    rfis: seedRfis(projects),
     audit: seedAudit(),
     activeProjectId,
-    updatedAt: new Date().toISOString(),
+    updatedAt: nowIso(),
   };
 }
 
@@ -185,7 +279,7 @@ function getTenantWorkflow(tenantId = DEFAULT_TENANT_ID) {
 
 function stampHistoryEntry(label, detail) {
   return {
-    at: new Date().toISOString(),
+    at: nowIso(),
     label,
     detail,
   };
@@ -196,13 +290,13 @@ function appendAudit(workflow, event) {
     {
       ...event,
       id: `AUD-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      time: new Date().toISOString(),
+      time: nowIso(),
     },
-    workflow.audit.length
+    workflow.audit.length,
   );
 
-  workflow.audit = [normalized, ...workflow.audit].slice(0, 60);
-  workflow.updatedAt = new Date().toISOString();
+  workflow.audit = [normalized, ...workflow.audit].slice(0, 120);
+  workflow.updatedAt = nowIso();
   return normalized;
 }
 
@@ -218,12 +312,48 @@ function touchProjectForFileMutation(workflow, projectId, detail) {
       fileSetLabel: `${fileCount} workflow-backed file records linked to ${projectId}`,
       fileSpineStatus: detail || currentProject.fileSpineStatus,
       auditStatus: `Recent file and audit continuity actions are preserved under ${projectId}.`,
-      lastActionAt: new Date().toISOString(),
+      lastActionAt: nowIso(),
       actionHistory: [stampHistoryEntry("File spine updated", detail || `Workflow-backed file continuity updated for ${projectId}.`), ...currentProject.actionHistory].slice(0, 12),
     },
-    projectIndex
+    projectIndex,
   );
 
+  workflow.projects[projectIndex] = updatedProject;
+  return updatedProject;
+}
+
+function touchProjectForTakeoffMutation(workflow, projectId, detail) {
+  const projectIndex = workflow.projects.findIndex((project) => project.id === projectId);
+  if (projectIndex === -1) return null;
+  const currentProject = workflow.projects[projectIndex];
+  const updatedProject = normalizeProjectRecord(
+    {
+      ...currentProject,
+      nextAction: detail || currentProject.nextAction,
+      auditStatus: `Takeoff continuity preserved under ${projectId}.`,
+      lastActionAt: nowIso(),
+      actionHistory: [stampHistoryEntry("Takeoff continuity updated", detail || `Takeoff continuity updated for ${projectId}.`), ...currentProject.actionHistory].slice(0, 12),
+    },
+    projectIndex,
+  );
+  workflow.projects[projectIndex] = updatedProject;
+  return updatedProject;
+}
+
+function touchProjectForRfiMutation(workflow, projectId, detail) {
+  const projectIndex = workflow.projects.findIndex((project) => project.id === projectId);
+  if (projectIndex === -1) return null;
+  const currentProject = workflow.projects[projectIndex];
+  const updatedProject = normalizeProjectRecord(
+    {
+      ...currentProject,
+      nextAction: detail || currentProject.nextAction,
+      auditStatus: `RFI continuity preserved under ${projectId}.`,
+      lastActionAt: nowIso(),
+      actionHistory: [stampHistoryEntry("RFI continuity updated", detail || `RFI continuity updated for ${projectId}.`), ...currentProject.actionHistory].slice(0, 12),
+    },
+    projectIndex,
+  );
   workflow.projects[projectIndex] = updatedProject;
   return updatedProject;
 }
@@ -238,8 +368,62 @@ export function listProjects(tenantId) {
     workflow.projects.map((project) => ({
       ...project,
       isActive: project.id === workflow.activeProjectId,
-    }))
+    })),
   );
+}
+
+export function getProjectById(tenantId, projectId) {
+  const workflow = getTenantWorkflow(tenantId);
+  const item = workflow.projects.find((project) => project.id === projectId);
+  if (!item) {
+    throw new Error(`Project not found: ${projectId}`);
+  }
+  return clone({ ...item, isActive: item.id === workflow.activeProjectId });
+}
+
+export function createProject(tenantId, payload = {}) {
+  const workflow = getTenantWorkflow(tenantId);
+  const projectId = payload.code || payload.projectId || `PRJ-${Date.now()}`;
+  const existing = workflow.projects.find((project) => project.id === projectId);
+  if (existing) {
+    throw new Error(`Project already exists: ${projectId}`);
+  }
+
+  const createdProject = normalizeProjectRecord(
+    {
+      id: projectId,
+      name: payload.name,
+      customer: payload.customerName || payload.customerId || "Unassigned customer",
+      stage: "Lead",
+      nextAction: payload.description || "Complete project qualification and setup.",
+      owner: "Auricrux",
+      due: "TBD",
+      superintendent: "Pending assignment",
+      permitStatus: "Permit review pending",
+      siteStatus: payload.siteAddress || "Site not yet verified",
+      commercialFocus: payload.description || "Project record created from canonical project route.",
+      auricruxSummary: `Auricrux created ${projectId} through the canonical project spine.`,
+      sourceBidId: payload.opportunityId || null,
+      lastActionAt: nowIso(),
+      actionHistory: [stampHistoryEntry("Project created", `Canonical project route created ${projectId}.`)],
+    },
+    workflow.projects.length,
+  );
+
+  workflow.projects.unshift(createdProject);
+  workflow.activeProjectId = createdProject.id;
+  appendAudit(workflow, {
+    eventType: "project-created",
+    actorType: "auricrux",
+    targetObjectType: "Project",
+    targetObjectId: createdProject.id,
+    action: `${createdProject.id} created from canonical route`,
+    detail: `Canonical project spine created ${createdProject.name}.`,
+    reason: "Project root must be durable and non-stub for 60A readiness.",
+    discipline: "Project Setup",
+  });
+
+  return clone({ project: createdProject, summary: getWorkflowSummary(tenantId) });
 }
 
 export function listFiles(tenantId, options = {}) {
@@ -285,7 +469,7 @@ export function listAuditEvents(tenantId, options = {}) {
           !event.targetObjectId ||
           event.targetObjectId === projectId ||
           event.detail?.includes(projectId) ||
-          event.reason?.includes(projectId)
+          event.reason?.includes(projectId),
       )
     : workflow.audit;
 
@@ -310,6 +494,161 @@ export function listAuditEvents(tenantId, options = {}) {
   return clone(items.map((event, index) => normalizeAuditEvent(event, index)));
 }
 
+export function listTakeoffs(tenantId, projectId) {
+  const workflow = getTenantWorkflow(tenantId);
+  const items = workflow.takeoffs.filter((item) => item.projectId === projectId);
+  return clone(items.map((item, index) => normalizeTakeoffRecord(item, index)));
+}
+
+export function createTakeoff(tenantId, payload = {}) {
+  const workflow = getTenantWorkflow(tenantId);
+  const created = normalizeTakeoffRecord(
+    {
+      takeoffId: `TKO-${Date.now()}`,
+      projectId: payload.projectId,
+      drawingSetId: payload.drawingSetId,
+      sheetId: payload.sheetId,
+      detailRef: payload.detailRef,
+      zoneRef: payload.zoneRef,
+      assemblyCode: payload.assemblyCode,
+      description: payload.description,
+      quantity: payload.quantity,
+      unit: payload.unit,
+      wasteFactorPct: payload.wasteFactorPct,
+      productionRate: payload.productionRate,
+      fileIds: payload.fileIds,
+      sourceObjectIds: payload.sourceObjectIds,
+      status: "open",
+      note: "Canonical takeoff route created governed takeoff continuity.",
+      updatedAt: nowIso(),
+    },
+    workflow.takeoffs.length,
+  );
+  workflow.takeoffs.unshift(created);
+  touchProjectForTakeoffMutation(workflow, payload.projectId, `Takeoff ${created.takeoffId} added to ${payload.projectId}.`);
+  appendAudit(workflow, {
+    eventType: "takeoff-created",
+    actorType: "auricrux",
+    targetObjectType: "Project",
+    targetObjectId: payload.projectId,
+    action: `${created.takeoffId} created`,
+    detail: `Canonical takeoff route created ${created.description}.`,
+    reason: "Takeoff continuity must be project-linked and non-stub for 60A readiness.",
+    discipline: "Estimating",
+  });
+  return clone({ takeoff: created, summary: getWorkflowSummary(tenantId) });
+}
+
+export function updateTakeoff(tenantId, payload = {}) {
+  const workflow = getTenantWorkflow(tenantId);
+  const index = workflow.takeoffs.findIndex((item) => item.takeoffId === payload.takeoffId && item.projectId === payload.projectId);
+  if (index === -1) {
+    throw new Error(`Takeoff not found: ${payload.takeoffId}`);
+  }
+  const current = workflow.takeoffs[index];
+  const updated = normalizeTakeoffRecord(
+    {
+      ...current,
+      status: payload.status || current.status,
+      description: payload.description || current.description,
+      quantity: payload.quantity ?? current.quantity,
+      unit: payload.unit || current.unit,
+      note: payload.note || current.note,
+      updatedAt: nowIso(),
+    },
+    index,
+  );
+  workflow.takeoffs[index] = updated;
+  touchProjectForTakeoffMutation(workflow, payload.projectId, `Takeoff ${updated.takeoffId} updated for ${payload.projectId}.`);
+  appendAudit(workflow, {
+    eventType: "takeoff-updated",
+    actorType: "auricrux",
+    targetObjectType: "Project",
+    targetObjectId: payload.projectId,
+    action: `${updated.takeoffId} updated`,
+    detail: payload.note || `Canonical takeoff route updated ${updated.description}.`,
+    reason: "Takeoff lifecycle changes must remain durable and auditable.",
+    discipline: "Estimating",
+  });
+  return clone({ takeoff: updated, summary: getWorkflowSummary(tenantId) });
+}
+
+export function listRfis(tenantId, projectId) {
+  const workflow = getTenantWorkflow(tenantId);
+  const items = workflow.rfis.filter((item) => item.projectId === projectId);
+  return clone(items.map((item, index) => normalizeRfiRecord(item, index)));
+}
+
+export function createRfi(tenantId, payload = {}) {
+  const workflow = getTenantWorkflow(tenantId);
+  const created = normalizeRfiRecord(
+    {
+      rfiId: `RFI-${Date.now()}`,
+      projectId: payload.projectId,
+      number: payload.number,
+      drawingSetId: payload.drawingSetId,
+      sheetId: payload.sheetId,
+      redlineId: payload.redlineId,
+      question: payload.question,
+      suggestedResponse: payload.suggestedResponse,
+      dueAt: payload.dueAt,
+      fileIds: payload.fileIds,
+      sourceObjectIds: payload.sourceObjectIds,
+      status: "open",
+      note: "Canonical RFI route created governed RFI continuity.",
+      updatedAt: nowIso(),
+    },
+    workflow.rfis.length,
+  );
+  workflow.rfis.unshift(created);
+  touchProjectForRfiMutation(workflow, payload.projectId, `RFI ${created.rfiId} added to ${payload.projectId}.`);
+  appendAudit(workflow, {
+    eventType: "rfi-created",
+    actorType: "auricrux",
+    targetObjectType: "Project",
+    targetObjectId: payload.projectId,
+    action: `${created.rfiId} created`,
+    detail: `Canonical RFI route created ${created.question}.`,
+    reason: "RFI continuity must be project-linked and non-stub for 60A readiness.",
+    discipline: "Project Controls",
+  });
+  return clone({ rfi: created, summary: getWorkflowSummary(tenantId) });
+}
+
+export function updateRfi(tenantId, payload = {}) {
+  const workflow = getTenantWorkflow(tenantId);
+  const index = workflow.rfis.findIndex((item) => item.rfiId === payload.rfiId && item.projectId === payload.projectId);
+  if (index === -1) {
+    throw new Error(`RFI not found: ${payload.rfiId}`);
+  }
+  const current = workflow.rfis[index];
+  const updated = normalizeRfiRecord(
+    {
+      ...current,
+      status: payload.status || current.status,
+      question: payload.question || current.question,
+      suggestedResponse: payload.suggestedResponse || current.suggestedResponse,
+      dueAt: payload.dueAt || current.dueAt,
+      note: payload.note || current.note,
+      updatedAt: nowIso(),
+    },
+    index,
+  );
+  workflow.rfis[index] = updated;
+  touchProjectForRfiMutation(workflow, payload.projectId, `RFI ${updated.rfiId} updated for ${payload.projectId}.`);
+  appendAudit(workflow, {
+    eventType: "rfi-updated",
+    actorType: "auricrux",
+    targetObjectType: "Project",
+    targetObjectId: payload.projectId,
+    action: `${updated.rfiId} updated`,
+    detail: payload.note || `Canonical RFI route updated ${updated.question}.`,
+    reason: "RFI lifecycle changes must remain durable and auditable.",
+    discipline: "Project Controls",
+  });
+  return clone({ rfi: updated, summary: getWorkflowSummary(tenantId) });
+}
+
 export function getWorkflowSummary(tenantId) {
   const workflow = getTenantWorkflow(tenantId);
   return clone({
@@ -317,6 +656,8 @@ export function getWorkflowSummary(tenantId) {
     bidCount: workflow.bids.length,
     projectCount: workflow.projects.length,
     fileCount: workflow.files.length,
+    takeoffCount: workflow.takeoffs.length,
+    rfiCount: workflow.rfis.length,
     auditCount: workflow.audit.length,
     updatedAt: workflow.updatedAt,
   });
@@ -340,7 +681,7 @@ export function mutateBid(tenantId, action, payload = {}) {
         status: payload.status || currentBid.status,
         blocker: payload.status === "Won" ? "Conversion cleared" : currentBid.blocker,
         nextCommercialMove: payload.detail || currentBid.nextCommercialMove,
-        lastActionAt: new Date().toISOString(),
+        lastActionAt: nowIso(),
         actionHistory: [
           stampHistoryEntry(`Status changed to ${payload.status || currentBid.status}`, payload.detail || `Auricrux moved ${currentBid.package} into ${payload.status || currentBid.status}.`),
           ...currentBid.actionHistory,
@@ -364,7 +705,7 @@ export function mutateBid(tenantId, action, payload = {}) {
         ...currentBid,
         blocker: "No active blocker",
         nextCommercialMove: payload.detail || "Approval blocker cleared and package ready for next commercial move.",
-        lastActionAt: new Date().toISOString(),
+        lastActionAt: nowIso(),
         actionHistory: [
           stampHistoryEntry("Blocker cleared", payload.detail || "Approval blocker cleared and package ready for next commercial move."),
           ...currentBid.actionHistory,
@@ -391,7 +732,7 @@ export function mutateBid(tenantId, action, payload = {}) {
           ...(payload.updates || {}),
         },
         nextCommercialMove: payload.updates?.nextGate || payload.detail || currentBid.nextCommercialMove,
-        lastActionAt: new Date().toISOString(),
+        lastActionAt: nowIso(),
         actionHistory: [
           stampHistoryEntry("Qualification command updated", payload.detail || "Qualification command surface updated."),
           ...currentBid.actionHistory,
@@ -422,7 +763,7 @@ export function mutateBid(tenantId, action, payload = {}) {
           evidence: "Qualification packet verified",
           nextGate: "Estimator handoff active",
         },
-        lastActionAt: new Date().toISOString(),
+        lastActionAt: nowIso(),
         actionHistory: [
           stampHistoryEntry("Routed to estimate", payload.detail || "Qualified opportunity routed into estimate production."),
           ...currentBid.actionHistory,
@@ -463,7 +804,7 @@ export function mutateBid(tenantId, action, payload = {}) {
           actionHistory: [
             stampHistoryEntry("Project auto-created from won bid", payload.detail || `Auricrux converted ${currentBid.package} into ${projectId}.`),
           ],
-          lastActionAt: new Date().toISOString(),
+          lastActionAt: nowIso(),
         }, workflow.projects.length);
         workflow.projects.unshift(createdProject);
       } else {
@@ -482,7 +823,7 @@ export function mutateBid(tenantId, action, payload = {}) {
           status: "Awarded",
           nextGate: `Project ${createdProject.id} active`,
         },
-        lastActionAt: new Date().toISOString(),
+        lastActionAt: nowIso(),
         actionHistory: [
           stampHistoryEntry("Marked won and converted to project", payload.detail || `Auricrux converted ${currentBid.package} into ${createdProject.id}.`),
           ...currentBid.actionHistory,
@@ -517,7 +858,7 @@ export function mutateBid(tenantId, action, payload = {}) {
   }
 
   workflow.bids[bidIndex] = updatedBid;
-  workflow.updatedAt = new Date().toISOString();
+  workflow.updatedAt = nowIso();
 
   return clone({
     bid: updatedBid,
@@ -556,7 +897,7 @@ export function mutateProject(tenantId, action, payload = {}) {
         ...currentProject,
         stage: payload.stage || currentProject.stage,
         nextAction: payload.detail || currentProject.nextAction,
-        lastActionAt: new Date().toISOString(),
+        lastActionAt: nowIso(),
         actionHistory: [
           stampHistoryEntry(`Stage moved to ${payload.stage || currentProject.stage}`, payload.detail || `Auricrux moved ${currentProject.id} into ${payload.stage || currentProject.stage}.`),
           ...currentProject.actionHistory,
@@ -581,7 +922,7 @@ export function mutateProject(tenantId, action, payload = {}) {
         permitStatus: "Permit cleared for next move",
         siteStatus: "Ready for mobilization planning",
         nextAction: payload.detail || "Permit dependency cleared and project routed toward mobilization.",
-        lastActionAt: new Date().toISOString(),
+        lastActionAt: nowIso(),
         actionHistory: [
           stampHistoryEntry("Permit blocker cleared", payload.detail || "Permit dependency cleared and project routed toward mobilization."),
           ...currentProject.actionHistory,
@@ -605,7 +946,7 @@ export function mutateProject(tenantId, action, payload = {}) {
   }
 
   workflow.projects[projectIndex] = updatedProject;
-  workflow.updatedAt = new Date().toISOString();
+  workflow.updatedAt = nowIso();
 
   return clone({
     project: updatedProject,
@@ -634,7 +975,7 @@ export function mutateFile(tenantId, action, payload = {}) {
       versionLabel: payload.versionLabel || "Rev 1",
       name: payload.name || `New file record ${workflow.files.length + 1}`,
       category: payload.category || "Document",
-      updated: new Date().toISOString(),
+      updated: nowIso(),
       action: payload.actionLabel || "Review",
       discipline: payload.discipline || "Document Control",
       status: payload.status || "Registered",
@@ -656,7 +997,7 @@ export function mutateFile(tenantId, action, payload = {}) {
       discipline: createdFile.discipline,
     });
 
-    workflow.updatedAt = new Date().toISOString();
+    workflow.updatedAt = nowIso();
 
     return clone({
       file: createdFile,
@@ -678,7 +1019,7 @@ export function mutateFile(tenantId, action, payload = {}) {
         ...currentFile,
         status: "In review",
         action: "Review queued",
-        updated: new Date().toISOString(),
+        updated: nowIso(),
         note: detail,
       }, fileIndex);
 
@@ -701,7 +1042,7 @@ export function mutateFile(tenantId, action, payload = {}) {
         status: payload.status || "Classified",
         action: payload.actionLabel || "Classification saved",
         category: payload.category || currentFile.category,
-        updated: new Date().toISOString(),
+        updated: nowIso(),
         note: detail,
       }, fileIndex);
 
@@ -724,7 +1065,7 @@ export function mutateFile(tenantId, action, payload = {}) {
         evidenceStatus: payload.evidenceStatus || "Evidence linked",
         status: payload.status || "Linked to governed object",
         action: payload.actionLabel || "Evidence linked",
-        updated: new Date().toISOString(),
+        updated: nowIso(),
         note: detail,
       }, fileIndex);
 
@@ -746,7 +1087,7 @@ export function mutateFile(tenantId, action, payload = {}) {
         evidenceStatus: payload.evidenceStatus || "Briefing generated",
         status: payload.status || "Auricrux briefing ready",
         action: payload.actionLabel || "Open briefing",
-        updated: new Date().toISOString(),
+        updated: nowIso(),
         note: detail,
       }, fileIndex);
 
@@ -768,7 +1109,7 @@ export function mutateFile(tenantId, action, payload = {}) {
 
   workflow.files[fileIndex] = updatedFile;
   touchProjectForFileMutation(workflow, currentFile.ownerObjectId, `File continuity updated for ${currentFile.ownerObjectId}.`);
-  workflow.updatedAt = new Date().toISOString();
+  workflow.updatedAt = nowIso();
 
   return clone({
     file: updatedFile,

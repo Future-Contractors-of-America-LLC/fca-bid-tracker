@@ -3,6 +3,7 @@ const { assertValid } = require('../../../../_lib/validation/assertValid')
 const { makeApiSuccess, makeApiError } = require('../../../../_lib/contracts/fcaContracts')
 
 module.exports = async function handler(req, res) {
+  const workflowStore = await import('../../../../workflow-store.js')
   const { projectId } = req.query || {}
 
   if (!projectId) {
@@ -10,17 +11,21 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
+    const items = workflowStore.listRfis('TEN-FCA-001', projectId)
+    const summary = workflowStore.getWorkflowSummary('TEN-FCA-001')
     return res.status(200).json(
       makeApiSuccess(
         {
           route: `/api/projects/${projectId}/rfis`,
           projectId,
-          items: [],
-          notYetImplemented: true,
+          items,
+          count: items.length,
+          backingSource: 'workflow-store',
         },
         {
-          packet: '052K',
+          packet: '059Q',
           timestamp: new Date().toISOString(),
+          summary,
         },
       ),
     )
@@ -29,18 +34,19 @@ module.exports = async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const payload = assertValid(CreateRFIPayloadSchema, req.body || {})
-
-      return res.status(202).json(
+      const result = workflowStore.createRfi('TEN-FCA-001', { ...payload, projectId })
+      return res.status(201).json(
         makeApiSuccess(
           {
             route: `/api/projects/${projectId}/rfis`,
             projectId,
-            acceptedPayload: payload,
-            notYetImplemented: true,
+            item: result.rfi,
+            backingSource: 'workflow-store',
           },
           {
-            packet: '052K',
+            packet: '059Q',
             timestamp: new Date().toISOString(),
+            summary: result.summary,
           },
         ),
       )
@@ -48,6 +54,29 @@ module.exports = async function handler(req, res) {
       return res.status(error.statusCode || 500).json(
         makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
       )
+    }
+  }
+
+  if (req.method === 'PATCH') {
+    try {
+      const result = workflowStore.updateRfi('TEN-FCA-001', { ...req.body, projectId })
+      return res.status(200).json(
+        makeApiSuccess(
+          {
+            route: `/api/projects/${projectId}/rfis`,
+            projectId,
+            item: result.rfi,
+            backingSource: 'workflow-store',
+          },
+          {
+            packet: '059Q',
+            timestamp: new Date().toISOString(),
+            summary: result.summary,
+          },
+        ),
+      )
+    } catch (error) {
+      return res.status(400).json(makeApiError('RFI_MUTATION_FAILED', error.message, error.details))
     }
   }
 
