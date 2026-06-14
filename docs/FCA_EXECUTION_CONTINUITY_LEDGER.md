@@ -9,16 +9,17 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `059A`
-- Next packet: `059B`
+- Active packet: `059F`
+- Next packet: `059G`
 - Deployment target: `060A` complete deployment gate
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
+- Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
 
 ---
 
 ## Current Executive State
 
-The controlling build state for FCA is now in explicit release-gate execution. Packet `059A` has been executed against current repo-visible SaaS and deployment surfaces. The result is FAIL because multiple required SaaS lanes remain incomplete or stub-bound, while deployment proof remains insufficient rather than passable.
+The controlling build state is now in explicit release-gate execution with enforced letter continuity. `059A` has been executed and failed. `059B` has now been executed and failed. Supporting sub-packets through `059F` are saved consecutively so the sequence does not skip letters. `060A` remains reserved and unavailable for activation.
 
 ---
 
@@ -26,31 +27,32 @@ The controlling build state for FCA is now in explicit release-gate execution. P
 
 ### Verified
 - `060A` is a reserved complete-deployment gate, not an assumed state.
-- `059A` has now been executed as a real gate assessment against current repo-visible surfaces.
-- seeded validation login still exists and explicitly reports `productionAuthReady: false`.
-- canonical `api/projects` routes remain stub-oriented.
-- canonical takeoff and RFI child routes remain stub-oriented.
-- file and audit surfaces exist beyond simple stubs.
-- dedicated billing / pay-app / job-cost / change-order continuity is not repo-proven in the inspected API inventory.
+- `059A` has been executed and failed against current repo-visible SaaS and deployment surfaces.
+- `059B` has been executed and failed against current repo-visible Academy and commercial surfaces.
+- Academy LMS/catalog/credentialing surfaces exist in bounded form.
+- remediation-link parity is not repo-proven.
+- commercial intake/onboarding surfaces exist in bounded form.
+- payment/revenue path remains pilot-grade rather than 60A-grade verified.
+- supporting consecutive packet artifacts are now saved through `059F` without letter skipping.
 
 ### Not yet repo-proven
-- `059B` gate pass or fail
+- `059G` and later letter packets in the 059 range
 - `060A` complete deployment pass
 - build success on current head
 - runtime smoke success on current head
-- complete non-stub project/job, takeoff, RFI/change-order, billing/job-cost, and warranty continuity
-- Academy/LMS parity proof on live product surfaces
-- truthful end-to-end public commercial/revenue path proof
+- complete non-stub SaaS spine
+- complete apprenticeship/licensure/remediation-parity Academy spine
+- fully verified commercial/revenue path proof
 
 ---
 
 ## Current Blocker
 
-### Blocker 1 — 059A gate failed
-The SaaS spine is not yet complete enough for 60A because auth is still seeded-validation grade, core project routes are stub-bound, takeoff/RFI routes are stub-bound, and finance/change-order continuity is not repo-proven.
+### Blocker 1 — 059A and 059B both failed
+The SaaS spine and Academy/commercial spine are both incomplete for 60A.
 
 ### Required behavior
-Do not claim `060A` complete. Execute `059B` separately, then return to remediation of failed 059A lanes.
+Do not claim `060A` complete. Continue sequentially with `059G` or later consecutive letters only if they close real remediation gaps rather than just narrate status.
 
 ---
 
@@ -70,18 +72,20 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `059A`
-- Next packet: `059B`
+- Current packet: `059F`
+- Next packet: `059G`
 - Target packet: `060A`
-- Current blocker: 059A gate failed
-- Last verified repo truth: 059A result is FAIL; auth remains seeded-validation grade; core project/takeoff/RFI routes remain stub-bound; finance/change-order continuity is not repo-proven
-- Last verified deployment truth: deployment proof remains insufficient rather than passable
-- Next concrete action: execute `059B` against Academy and commercial surfaces and classify PASS / FAIL / INSUFFICIENT
+- Current blocker: 059A and 059B both failed
+- Last verified repo truth: Academy exists in bounded LMS/catalog form, but remediation parity and full apprenticeship/licensure depth are not repo-proven; commercial path exists in bounded form, but revenue/payment remains pilot-grade
+- Last verified deployment truth: deployment proof remains insufficient rather than passable for 60A
+- Next concrete action: execute `059G` only if it closes a real failed lane; otherwise use the next consecutive letter for remediation implementation rather than more narration
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must not jump from partial shell progress to complete-deployment claims.
+Auricrux must not skip packet letters inside the active numbered range.
+
+Auricrux must not jump from partial Academy/commercial progress to complete-deployment claims.
 
 Auricrux must save after every meaningful prompt.
