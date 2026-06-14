@@ -152,6 +152,14 @@ jobs:
           cp workspace/live_deployment_smoke_summary.json docs/runtime-proof/live-deployment/live_deployment_smoke_summary.json || true
           cp workspace/live_deployment_smoke_failures.txt docs/runtime-proof/live-deployment/live_deployment_smoke_failures.txt || true
 
+      - name: Validate build proof presence after persistence
+        if: ${{ always() }}
+        run: npm run validate:build-proof-presence
+
+      - name: Generate build proof presence report
+        if: ${{ always() }}
+        run: npm run generate:build-proof-presence-report
+
       - name: Publish product readiness summary
         if: ${{ always() }}
         run: |
@@ -189,6 +197,12 @@ jobs:
             cat generated/packet-letter-lock-report.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "Packet letter lock report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f generated/build-proof-presence-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/build-proof-presence-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Build proof presence report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f generated/operations-pipeline-report.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -254,6 +268,10 @@ jobs:
             generated/packet-letter-lock-validation.md
             generated/packet-letter-lock-report.json
             generated/packet-letter-lock-report.md
+            generated/build-proof-presence-validation.json
+            generated/build-proof-presence-validation.md
+            generated/build-proof-presence-report.json
+            generated/build-proof-presence-report.md
             generated/operations-pipeline-report.json
             generated/operations-pipeline-report.md
             generated/website-market-readiness-report.json
@@ -285,4 +303,4 @@ jobs:
             git push
           fi
 
-# retrigger: 2026-06-14T16:32:00Z
+# retrigger: 2026-06-14T16:40:00Z

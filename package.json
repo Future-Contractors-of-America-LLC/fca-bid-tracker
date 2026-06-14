@@ -21,6 +21,8 @@
     "generate:build-proof-lane-report": "node scripts/generate-build-proof-lane-report.mjs",
     "validate:packet-letter-lock": "node scripts/validate-packet-letter-lock.mjs",
     "generate:packet-letter-lock-report": "node scripts/generate-packet-letter-lock-report.mjs",
+    "validate:build-proof-presence": "node scripts/validate-build-proof-presence.mjs",
+    "generate:build-proof-presence-report": "node scripts/generate-build-proof-presence-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",
