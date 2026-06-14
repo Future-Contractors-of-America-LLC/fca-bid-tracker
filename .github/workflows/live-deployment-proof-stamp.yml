@@ -1,0 +1,63 @@
+name: FCA Live Deployment Proof Stamp
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fca-live-deployment-proof-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stamp-live-deployment-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify live deployment
+        env:
+          AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
+        run: npm run verify:live-deployment
+
+      - name: Stamp live deployment proof
+        if: ${{ always() }}
+        run: npm run stamp:live-deployment-proof
+
+      - name: Validate live deployment proof surface
+        if: ${{ always() }}
+        run: npm run validate:live-deployment-proof-surface
+
+      - name: Commit CI-backed live deployment proof
+        if: ${{ always() }}
+        run: |
+          git config user.name "auricrux-ci"
+          git config user.email "auricrux-ci@futurecontractorsofamerica.com"
+          git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md
+          if git diff --cached --quiet; then
+            echo "No CI-backed live deployment proof changes to commit."
+          else
+            git commit -m "Persist CI-backed live deployment proof for run ${GITHUB_RUN_ID}"
+            git push
+          fi
