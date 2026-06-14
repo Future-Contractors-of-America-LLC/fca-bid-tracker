@@ -1,7 +1,7 @@
-const { CreateTakeoffItemPayloadSchema } = require('../../../../_lib/validation/fcaSchemas')
-const { assertValid } = require('../../../../_lib/validation/assertValid')
-const { makeApiSuccess, makeApiError } = require('../../../../_lib/contracts/fcaContracts')
-const { getProject, listTakeoffs, createTakeoff } = require('../../../../_lib/runtime/fcaRuntimeStore')
+const { CreateTakeoffItemPayloadSchema } = require('../../../_lib/validation/fcaSchemas')
+const { assertValid } = require('../../../_lib/validation/assertValid')
+const { makeApiSuccess, makeApiError } = require('../../../_lib/contracts/fcaContracts')
+const { getProject, listTakeoffs, createTakeoff } = require('../../../_lib/runtime/fcaRuntimeStore')
 
 module.exports = async function handler(req, res) {
   const { projectId } = req.query || {}
@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
           count: items.length,
         },
         {
-          packet: '059R',
+          packet: '061A',
           timestamp: new Date().toISOString(),
           backingSource: 'fca-runtime-store',
         },
@@ -39,7 +39,7 @@ module.exports = async function handler(req, res) {
       const payload = assertValid(CreateTakeoffItemPayloadSchema, req.body || {})
       const item = createTakeoff(projectId, payload)
 
-      return res.status(201).json(
+      return res.status(202).json(
         makeApiSuccess(
           {
             route: `/api/projects/${projectId}/takeoffs`,
@@ -47,7 +47,7 @@ module.exports = async function handler(req, res) {
             item,
           },
           {
-            packet: '059R',
+            packet: '061A',
             timestamp: new Date().toISOString(),
             backingSource: 'fca-runtime-store',
           },

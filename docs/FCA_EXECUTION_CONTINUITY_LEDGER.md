@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `060Z`
-- Next packet: `061A`
+- Active packet: `061A`
+- Next packet: `061B`
 - Deployment target: `060Z` hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -19,22 +19,22 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The active `060` range is now truthfully closed. Packet `060Z` inspected the refreshed proof commits and confirmed that the hard deployment target was **not** met. Repo truth improved materially, but current-head runtime smoke still fails and deployment-complete proof is still incomplete.
+The `060` range remains truthfully closed as a failed hard deployment target. `061A` performs blocker-first code remediation against the repo-visible current-head runtime smoke failures identified in `060Z`.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `060Z` now exists in sequence.
-- Post-`060Y` runtime-smoke proof artifacts are repo-visible on `main`.
-- `runtime-smoke-check-report.json` now persists on failure paths and proves emission hardening worked.
-- current-head runtime smoke still fails, with repo-visible causes including missing `zod`, broken nested relative imports, and route response-contract mismatches.
-- `060Z` hard deployment target is not met.
+- `061A` now exists in sequence.
+- the prior `zod` runtime dependency was removed from `api/_lib/validation/fcaSchemas.js` by repo-visible remediation.
+- broken nested imports in `api/projects/[projectId]/takeoffs/index.js` and `api/projects/[projectId]/rfis/index.js` were corrected in repo truth.
+- API success/error contracts now emit `success` alongside `ok`, allowing the current smoke classifier to recognize success and error bodies.
+- mutation handlers that the bounded smoke harness expects to return `202` were aligned in repo truth.
 
 ### Not yet repo-proven
-- `061A` and later packets
-- successful current-head runtime smoke pass
+- successful current-head runtime smoke pass after `061A`
+- refreshed runtime smoke proof artifacts for `061A` on `main`
 - repo-visible build-validation proof persistence on `main`
 - actual current-head live deployment verifier success
 - deployed managed auth runtime proof
@@ -46,11 +46,11 @@ The active `060` range is now truthfully closed. Packet `060Z` inspected the ref
 
 ## Current Blocker
 
-### Blocker 1 — runtime smoke root cause remains active
-The refreshed proof stream is finally truthful, but current-head runtime smoke still fails due to concrete code/dependency defects.
+### Blocker 1 — post-remediation proof still unverified
+`061A` removes the known code-level root causes, but the bounded runtime smoke lane and downstream proof lanes remain unverified until a fresh current-head proof run lands on `main`.
 
 ### Required behavior
-Begin `061A` with blocker-first remediation. Do not claim deployment completion until runtime smoke, build-validation proof, and live proof lanes are actually passing.
+Begin `061B` with proof refresh and validation-first inspection. Do not claim deployment completion until runtime smoke, build-validation proof, and live proof lanes are actually passing.
 
 ---
 
@@ -70,20 +70,20 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `060Z`
-- Next packet: `061A`
+- Current packet: `061A`
+- Next packet: `061B`
 - Target packet: `060Z` hard deployment target
-- Current blocker: runtime smoke root cause remains active
-- Last verified repo truth: refreshed runtime-smoke proof now persists and truthfully exposes current-head failures through `060Z`
+- Current blocker: post-remediation proof still unverified
+- Last verified repo truth: current-head runtime smoke root causes identified in `060Z` were remediated in repo code at `061A`
 - Last verified deployment truth: deployed auth/runtime/commercial proof remains unproven in-session
-- Next concrete action: begin `061A` to remediate missing `zod`, broken nested imports, and route response-contract mismatches
+- Next concrete action: begin `061B` to refresh runtime smoke proof and inspect whether current-head failures remain
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must not reinterpret `060Z` closeout as deployment success.
+Auricrux must not reinterpret `061A` remediation as runtime-smoke success.
 
-Auricrux must treat the refreshed proof commits as evidence of better observability, not evidence of production readiness.
+Auricrux must not treat code-level blocker removal as deployment success unless refreshed proof artifacts confirm the lanes are actually passing.
 
 Auricrux must save after every meaningful prompt.

@@ -1,4 +1,3 @@
-const { z } = require('zod')
 const {
   PROJECT_STATES,
   RECORD_STATUSES,
@@ -8,76 +7,173 @@ const {
   AUDIT_EVENT_TYPES,
 } = require('../contracts/fcaEnums')
 
-const ProjectStateSchema = z.enum(PROJECT_STATES)
-const RecordStatusSchema = z.enum(RECORD_STATUSES)
-const FileStatusSchema = z.enum(FILE_STATUSES)
-const TrainingStatusSchema = z.enum(TRAINING_STATUSES)
-const AuricruxModeSchema = z.enum(AURICRUX_MODES)
-const AuditEventTypeSchema = z.enum(AUDIT_EVENT_TYPES)
+function issue(path, message) {
+  return { path: Array.isArray(path) ? path : [path], message }
+}
 
-const StringArraySchema = z.array(z.string())
+function success(data) {
+  return {
+    success: true,
+    data,
+  }
+}
 
-const CreateProjectPayloadSchema = z.object({
-  name: z.string().min(1),
-  code: z.string().optional(),
-  customerId: z.string().optional(),
-  customerName: z.string().optional(),
-  description: z.string().optional(),
-  siteAddress: z.string().optional(),
-  opportunityId: z.string().optional(),
-})
+function failure(issues) {
+  return {
+    success: false,
+    error: {
+      flatten() {
+        const fieldErrors = {}
+        for (const entry of issues) {
+          const key = Array.isArray(entry.path) ? entry.path.join('.') : String(entry.path || '')
+          if (!fieldErrors[key]) {
+            fieldErrors[key] = []
+          }
+          fieldErrors[key].push(entry.message)
+        }
+        return {
+          formErrors: [],
+          fieldErrors,
+        }
+      },
+    },
+  }
+}
 
-const InitiateFileUploadPayloadSchema = z.object({
-  fileName: z.string().min(1),
-  artifactType: z.string().min(1),
-  contentType: z.string().min(1),
-  sizeBytes: z.number().nonnegative().optional(),
-})
+function validateString(value, field, { min = 0, optional = false } = {}) {
+  if (value === undefined || value === null) {
+    return optional ? [] : [issue(field, `${field} is required`)]
+  }
+  if (typeof value !== 'string') {
+    return [issue(field, `${field} must be a string`)]
+  }
+  if (value.length < min) {
+    return [issue(field, `${field} must be at least ${min} character${min === 1 ? '' : 's'}`)]
+  }
+  return []
+}
 
-const CreateTakeoffItemPayloadSchema = z.object({
-  drawingSetId: z.string().optional(),
-  sheetId: z.string().optional(),
-  detailRef: z.string().optional(),
-  zoneRef: z.string().optional(),
-  assemblyCode: z.string().optional(),
-  description: z.string().min(1),
-  quantity: z.number().positive(),
-  unit: z.string().min(1),
-  wasteFactorPct: z.number().min(0).max(100).optional(),
-  productionRate: z.number().nonnegative().optional(),
-  fileIds: StringArraySchema.optional(),
-  sourceObjectIds: StringArraySchema.optional(),
-})
+function validateNumber(value, field, { positive = false, nonnegative = false, min, max, optional = false } = {}) {
+  if (value === undefined || value === null) {
+    return optional ? [] : [issue(field, `${field} is required`)]
+  }
+  if (typeof value !== 'number' || Number.isNaN(value)) {
+    return [issue(field, `${field} must be a number`)]
+  }
+  if (positive && !(value > 0)) {
+    return [issue(field, `${field} must be greater than 0`)]
+  }
+  if (nonnegative && value < 0) {
+    return [issue(field, `${field} must be greater than or equal to 0`)]
+  }
+  if (typeof min === 'number' && value < min) {
+    return [issue(field, `${field} must be greater than or equal to ${min}`)]
+  }
+  if (typeof max === 'number' && value > max) {
+    return [issue(field, `${field} must be less than or equal to ${max}`)]
+  }
+  return []
+}
 
-const CreateRFIPayloadSchema = z.object({
-  number: z.string().optional(),
-  drawingSetId: z.string().optional(),
-  sheetId: z.string().optional(),
-  redlineId: z.string().optional(),
-  question: z.string().min(1),
-  suggestedResponse: z.string().optional(),
-  dueAt: z.string().optional(),
-  fileIds: StringArraySchema.optional(),
-  sourceObjectIds: StringArraySchema.optional(),
-})
+function validateStringArray(value, field, { optional = false } = {}) {
+  if (value === undefined || value === null) {
+    return optional ? [] : [issue(field, `${field} is required`)]
+  }
+  if (!Array.isArray(value) || value.some((item) => typeof item !== 'string')) {
+    return [issue(field, `${field} must be an array of strings`)]
+  }
+  return []
+}
 
-const CreateRemediationLinkPayloadSchema = z.object({
-  projectId: z.string().optional(),
-  sourceObjectType: z.string().min(1),
-  sourceObjectId: z.string().min(1),
-  targetType: z.enum(['course', 'module', 'lesson', 'checklist', 'assessment']),
-  targetId: z.string().min(1),
-  rationale: z.string().min(1),
-})
+function validateEnum(value, field, values, { optional = false } = {}) {
+  if (value === undefined || value === null) {
+    return optional ? [] : [issue(field, `${field} is required`)]
+  }
+  if (!values.includes(value)) {
+    return [issue(field, `${field} must be one of: ${values.join(', ')}`)]
+  }
+  return []
+}
 
-const CreateAuricruxActionPayloadSchema = z.object({
-  mode: AuricruxModeSchema,
-  targetObjectType: z.string().min(1),
-  targetObjectId: z.string().min(1),
-  rationale: z.string().min(1),
-  beforeSnapshotJson: z.string().optional(),
-  afterSnapshotJson: z.string().optional(),
-})
+function createSchema(validator) {
+  return {
+    safeParse(payload) {
+      const normalized = payload && typeof payload === 'object' ? payload : {}
+      const issues = validator(normalized)
+      return issues.length === 0 ? success(normalized) : failure(issues)
+    },
+  }
+}
+
+const ProjectStateSchema = { values: PROJECT_STATES }
+const RecordStatusSchema = { values: RECORD_STATUSES }
+const FileStatusSchema = { values: FILE_STATUSES }
+const TrainingStatusSchema = { values: TRAINING_STATUSES }
+const AuricruxModeSchema = { values: AURICRUX_MODES }
+const AuditEventTypeSchema = { values: AUDIT_EVENT_TYPES }
+const StringArraySchema = { type: 'string-array' }
+
+const CreateProjectPayloadSchema = createSchema((payload) => [
+  ...validateString(payload.name, 'name', { min: 1 }),
+  ...validateString(payload.code, 'code', { optional: true }),
+  ...validateString(payload.customerId, 'customerId', { optional: true }),
+  ...validateString(payload.customerName, 'customerName', { optional: true }),
+  ...validateString(payload.description, 'description', { optional: true }),
+  ...validateString(payload.siteAddress, 'siteAddress', { optional: true }),
+  ...validateString(payload.opportunityId, 'opportunityId', { optional: true }),
+])
+
+const InitiateFileUploadPayloadSchema = createSchema((payload) => [
+  ...validateString(payload.fileName, 'fileName', { min: 1 }),
+  ...validateString(payload.artifactType, 'artifactType', { min: 1 }),
+  ...validateString(payload.contentType, 'contentType', { min: 1 }),
+  ...validateNumber(payload.sizeBytes, 'sizeBytes', { nonnegative: true, optional: true }),
+])
+
+const CreateTakeoffItemPayloadSchema = createSchema((payload) => [
+  ...validateString(payload.drawingSetId, 'drawingSetId', { optional: true }),
+  ...validateString(payload.sheetId, 'sheetId', { optional: true }),
+  ...validateString(payload.detailRef, 'detailRef', { optional: true }),
+  ...validateString(payload.zoneRef, 'zoneRef', { optional: true }),
+  ...validateString(payload.assemblyCode, 'assemblyCode', { optional: true }),
+  ...validateString(payload.description, 'description', { min: 1 }),
+  ...validateNumber(payload.quantity, 'quantity', { positive: true }),
+  ...validateString(payload.unit, 'unit', { min: 1 }),
+  ...validateNumber(payload.wasteFactorPct, 'wasteFactorPct', { min: 0, max: 100, optional: true }),
+  ...validateNumber(payload.productionRate, 'productionRate', { nonnegative: true, optional: true }),
+  ...validateStringArray(payload.fileIds, 'fileIds', { optional: true }),
+  ...validateStringArray(payload.sourceObjectIds, 'sourceObjectIds', { optional: true }),
+])
+
+const CreateRFIPayloadSchema = createSchema((payload) => [
+  ...validateString(payload.number, 'number', { optional: true }),
+  ...validateString(payload.drawingSetId, 'drawingSetId', { optional: true }),
+  ...validateString(payload.sheetId, 'sheetId', { optional: true }),
+  ...validateString(payload.redlineId, 'redlineId', { optional: true }),
+  ...validateString(payload.question, 'question', { min: 1 }),
+  ...validateString(payload.suggestedResponse, 'suggestedResponse', { optional: true }),
+  ...validateString(payload.dueAt, 'dueAt', { optional: true }),
+  ...validateStringArray(payload.fileIds, 'fileIds', { optional: true }),
+  ...validateStringArray(payload.sourceObjectIds, 'sourceObjectIds', { optional: true }),
+])
+
+const CreateRemediationLinkPayloadSchema = createSchema((payload) => [
+  ...validateString(payload.projectId, 'projectId', { optional: true }),
+  ...validateString(payload.sourceObjectType, 'sourceObjectType', { min: 1 }),
+  ...validateString(payload.sourceObjectId, 'sourceObjectId', { min: 1 }),
+  ...validateEnum(payload.targetType, 'targetType', ['course', 'module', 'lesson', 'checklist', 'assessment']),
+  ...validateString(payload.targetId, 'targetId', { min: 1 }),
+  ...validateString(payload.rationale, 'rationale', { min: 1 }),
+])
+
+const CreateAuricruxActionPayloadSchema = createSchema((payload) => [
+  ...validateEnum(payload.mode, 'mode', AURICRUX_MODES),
+  ...validateString(payload.targetObjectType, 'targetObjectType', { min: 1 }),
+  ...validateString(payload.targetObjectId, 'targetObjectId', { min: 1 }),
+  ...validateString(payload.rationale, 'rationale', { min: 1 }),
+  ...validateString(payload.beforeSnapshotJson, 'beforeSnapshotJson', { optional: true }),
+  ...validateString(payload.afterSnapshotJson, 'afterSnapshotJson', { optional: true }),
+])
 
 module.exports = {
   ProjectStateSchema,

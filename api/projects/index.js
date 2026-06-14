@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
           count: items.length,
         },
         {
-          packet: '059Q',
+          packet: '061A',
           timestamp: new Date().toISOString(),
           backingSource: 'fca-runtime-store',
         },
@@ -28,14 +28,14 @@ module.exports = async function handler(req, res) {
       const payload = assertValid(CreateProjectPayloadSchema, req.body || {})
       const item = createProject(payload)
 
-      return res.status(201).json(
+      return res.status(202).json(
         makeApiSuccess(
           {
             route: '/api/projects',
             item,
           },
           {
-            packet: '059Q',
+            packet: '061A',
             timestamp: new Date().toISOString(),
             backingSource: 'fca-runtime-store',
           },

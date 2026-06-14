@@ -23,7 +23,7 @@ module.exports = async function handler(req, res) {
           item,
         },
         {
-          packet: '059Q',
+          packet: '061A',
           timestamp: new Date().toISOString(),
           backingSource: 'fca-runtime-store',
         },
@@ -38,7 +38,7 @@ module.exports = async function handler(req, res) {
       return res.status(404).json(makeApiError('PROJECT_NOT_FOUND', `Project not found: ${projectId}`))
     }
 
-    return res.status(200).json(
+    return res.status(202).json(
       makeApiSuccess(
         {
           route: `/api/projects/${projectId}`,
@@ -46,7 +46,7 @@ module.exports = async function handler(req, res) {
           item,
         },
         {
-          packet: '059Q',
+          packet: '061A',
           timestamp: new Date().toISOString(),
           backingSource: 'fca-runtime-store',
         },
