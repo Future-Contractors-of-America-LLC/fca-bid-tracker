@@ -10,8 +10,8 @@ Target Packet: `061Z`
 ---
 
 ## Unverified items removed this packet
-1. missing CI provenance verification for live deployment proof artifacts
-2. missing rewrite-transition validation path for live deployment proof artifacts
+1. dependency-install friction in the dedicated live deployment proof workflow
+2. missing zero-dependency validation path for the dedicated live deployment proof workflow
 
 ## Minimum reduction requirement
 Required reduction: at least 2

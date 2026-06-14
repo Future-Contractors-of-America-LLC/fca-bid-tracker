@@ -31,30 +31,30 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: "24"
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Verify live deployment
         env:
           AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
-        run: npm run verify:live-deployment
+        run: node scripts/verify-live-deployment.mjs
 
       - name: Stamp live deployment proof
         if: ${{ always() }}
-        run: npm run stamp:live-deployment-proof
+        run: node scripts/stamp-live-deployment-proof.mjs
 
       - name: Validate live deployment proof surface
         if: ${{ always() }}
-        run: npm run validate:live-deployment-proof-surface
+        run: node scripts/validate-live-deployment-proof-surface.mjs
+
+      - name: Validate live deployment proof workflow contract
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-proof-workflow.mjs
 
       - name: Commit CI-backed live deployment proof
         if: ${{ always() }}
         run: |
           git config user.name "auricrux-ci"
           git config user.email "auricrux-ci@futurecontractorsofamerica.com"
-          git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md
+          git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md generated/live-deployment-proof-workflow-validation.json generated/live-deployment-proof-workflow-validation.md
           if git diff --cached --quiet; then
             echo "No CI-backed live deployment proof changes to commit."
           else

@@ -9,7 +9,7 @@ Target Packet: `061Z`
 
 ---
 
-## Confirmed for 061P
+## Confirmed for 061Q
 - minimum 10 artifacts delivered
 - minimum 7 real actions executed
 - current blocker corrected at the current layer
