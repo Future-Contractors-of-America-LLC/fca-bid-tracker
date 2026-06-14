@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `061G`
-- Next packet: `061H`
+- Active packet: `061H`
+- Next packet: `061I`
 - Deployment target: `061Z` hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -22,25 +22,26 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The `060` range remains truthfully closed as a failed hard deployment target. `061A` removed the original runtime smoke code blockers. `061B` rebased the target to `061Z`. `061C` wired explicit build-proof-lane validation. `061D` verified runtime-smoke pass in repo-visible proof. `061E` wired build-proof presence enforcement. `061F` locked the CI verification boundary and confirmed that build-validation persistence was still unconfirmed. `061G` now isolates the next blocker object more precisely by wiring first-missing-build-proof-artifact detection so the next verification step can name the exact missing proof surface instead of only describing general absence.
+The `060` range remains truthfully closed as a failed hard deployment target. `061A` removed the original runtime smoke code blockers. `061B` rebased the target to `061Z`. `061C` wired explicit build-proof-lane validation. `061D` verified runtime-smoke pass in repo-visible proof. `061E` wired build-proof presence enforcement. `061F` locked the CI verification boundary and confirmed build-validation persistence was still unconfirmed. `061G` wired first-missing-artifact detection. `061H` now locks the directory itself as the controlling first missing artifact because current-session repo inspection still has not directly observed `docs/runtime-proof/build-validation/` on `main`.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `061G` now exists in sequence.
-- `scripts/validate-build-proof-first-missing-artifact.mjs` now exists in repo truth.
-- `scripts/generate-build-proof-first-missing-artifact-report.mjs` now exists in repo truth.
-- `package.json` now registers `validate:build-proof-first-missing-artifact` and `generate:build-proof-first-missing-artifact-report`.
-- `.github/workflows/build-validation.yml` now validates and reports the first missing build-proof artifact.
-- current-session inspection still has not directly observed `docs/runtime-proof/build-validation/` on `main`.
-- runtime-smoke CI persistence remains repo-visible and confirmed from prior current-session inspection.
+- `061H` now exists in sequence.
+- `scripts/validate-build-proof-directory-absence.mjs` now exists in repo truth.
+- `scripts/generate-build-proof-directory-absence-report.mjs` now exists in repo truth.
+- `package.json` now registers `validate:build-proof-directory-absence` and `generate:build-proof-directory-absence-report`.
+- `.github/workflows/build-validation.yml` now validates and reports build-proof directory absence.
+- current-session repo inspection still has not directly observed `docs/runtime-proof/build-validation/` on `main`.
+- runtime-smoke proof remains repo-visible and passing from prior current-session inspection.
 
 ### Not yet repo-proven
 - repo-visible refreshed build-validation proof directory committed by CI on `main`
 - repo-visible build-validation persistence commit
-- first-missing-build-proof-artifact validator success from a refreshed workflow run
+- directory-absence validator success from a refreshed workflow run showing the directory exists
+- first file-level build-proof artifact inspection on `main`
 - actual current-head live deployment verifier success
 - deployed managed auth runtime proof
 - deployed Academy runtime parity proof
@@ -51,11 +52,11 @@ The `060` range remains truthfully closed as a failed hard deployment target. `0
 
 ## Current Blocker
 
-### Blocker 1 — first build-proof artifact remains unconfirmed because the repo-visible build-validation surface is still unobserved
-The workflow can now name the first missing build-proof artifact, but current-session inspection still has not directly observed the build-validation proof directory on `main`.
+### Blocker 1 — build-validation proof directory itself remains the controlling missing artifact
+Because the directory has not been directly observed in-session, the directory itself is now the locked first missing artifact.
 
 ### Required behavior
-Begin `061H` by inspecting `docs/runtime-proof/build-validation/` again and, if absent, lock the directory itself as the first missing artifact. If present, lock the first missing file in ordered sequence.
+Begin `061I` with another direct repo inspection of `docs/runtime-proof/build-validation/` and the expected persistence-commit signal. Only move to file-level blocker isolation after the directory is directly observed.
 
 ---
 
@@ -75,20 +76,20 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `061G`
-- Next packet: `061H`
+- Current packet: `061H`
+- Next packet: `061I`
 - Target packet: `061Z` hard deployment target
-- Current blocker: first build-proof artifact remains unconfirmed because the repo-visible build-validation surface is still unobserved
-- Last verified repo truth: first-missing-build-proof-artifact validation/reporting are now wired into repo truth; runtime-smoke CI persistence remains confirmed; build-validation surface remains unobserved in-session
+- Current blocker: build-validation proof directory itself remains the controlling missing artifact
+- Last verified repo truth: directory-absence validation/reporting are now wired into repo truth; build-validation proof directory remains unobserved in-session; runtime-smoke proof remains repo-visible and passing
 - Last verified deployment truth: deployed auth/runtime/commercial proof remains unproven in-session
-- Next concrete action: begin `061H` by re-inspecting the build-validation proof path and locking either the directory itself or the first missing ordered file as the controlling blocker object
+- Next concrete action: begin `061I` by re-inspecting the build-validation proof directory and persistence-commit signal; if still absent, keep the directory locked as the controlling blocker
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must not interpret new first-missing-artifact tooling as proof that the build-validation directory exists on `main`.
+Auricrux must not reinterpret directory-absence tooling as proof that the build-validation surface exists on `main`.
 
-Auricrux must not advance downstream proof claims until the build-validation surface is directly observed and locked.
+Auricrux must not move to file-level build-proof claims until the directory itself is directly observed.
 
 Auricrux must save after every meaningful prompt.
