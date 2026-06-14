@@ -145,12 +145,12 @@ export default function useProjectWorkspace() {
             setProjects(saved);
             setActiveProjectId(nextId);
             setMeta({ backingSource: refreshed.backingSource || payload.backingSource || "api-workflow-store", persistenceState: "API project context active", lastSyncedAt: new Date().toISOString() });
-            const selected = saved.find((project) => project.id === nextId);
-            if (selected) {
-              appendAutomationLog({ type: "project-context", title: `${selected.id} set as active project`, detail, route: "/portal/projects" });
-              appendCommercialLog({ type: "project-context", title: `${selected.id} selected as project root", detail, route: "/portal/projects" });
+            const fallbackSelected = saved.find((project) => project.id === nextId);
+            if (fallbackSelected) {
+              appendAutomationLog({ type: "project-context", title: `${fallbackSelected.id} set as active project`, detail, route: "/portal/projects" });
+              appendCommercialLog({ type: "project-context", title: `${fallbackSelected.id} selected as project root`, detail, route: "/portal/projects" });
             }
-            return selected || null;
+            return fallbackSelected || null;
           } catch {
             const nextId = writeActiveProjectId(projectId, projects);
             setActiveProjectId(nextId);
