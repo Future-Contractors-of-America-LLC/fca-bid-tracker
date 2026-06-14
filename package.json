@@ -40,6 +40,8 @@
     "capture:build-proof-transition-target": "node scripts/capture-build-proof-transition-target.mjs",
     "validate:build-proof-ci-rewrite-transition": "node scripts/validate-build-proof-ci-rewrite-transition.mjs",
     "generate:build-proof-ci-rewrite-transition-report": "node scripts/generate-build-proof-ci-rewrite-transition-report.mjs",
+    "validate:build-proof-provenance-workflow": "node scripts/validate-build-proof-provenance-workflow.mjs",
+    "generate:build-proof-provenance-workflow-report": "node scripts/generate-build-proof-provenance-workflow-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",

@@ -1,0 +1,62 @@
+name: FCA Build Proof Provenance Stamp
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fca-build-proof-provenance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  stamp-build-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - name: Stamp CI provenance into build proof artifacts
+        run: npm run stamp:build-proof-ci-provenance
+
+      - name: Capture build proof transition target
+        run: npm run capture:build-proof-transition-target
+
+      - name: Validate CI provenance on build proof artifacts
+        run: npm run validate:build-proof-ci-provenance
+
+      - name: Validate CI rewrite transition
+        run: npm run validate:build-proof-ci-rewrite-transition
+
+      - name: Generate CI rewrite transition report
+        if: ${{ always() }}
+        run: npm run generate:build-proof-ci-rewrite-transition-report
+
+      - name: Commit CI-backed build proof rewrite
+        if: ${{ always() }}
+        run: |
+          git config user.name "auricrux-ci"
+          git config user.email "auricrux-ci@futurecontractorsofamerica.com"
+          git add docs/runtime-proof/build-validation generated/build-proof-ci-provenance-stamp.json generated/build-proof-ci-provenance-stamp.md generated/build-proof-transition-target.json generated/build-proof-transition-target.md generated/build-proof-ci-rewrite-transition-validation.json generated/build-proof-ci-rewrite-transition-validation.md generated/build-proof-ci-rewrite-transition-report.json generated/build-proof-ci-rewrite-transition-report.md
+          if git diff --cached --quiet; then
+            echo "No CI-backed build proof rewrite changes to commit."
+          else
+            git commit -m "Persist CI-backed build proof provenance for run ${GITHUB_RUN_ID}"
+            git push
+          fi
