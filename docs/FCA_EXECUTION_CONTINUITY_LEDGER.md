@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `059U`
-- Next packet: `059V`
+- Active packet: `059Z`
+- Next packet: `060A`
 - Deployment target: `060A` complete deployment gate
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -19,7 +19,7 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The controlling build state remains inside the `059` release-gate family with enforced A-Z continuity. Real code remediation has now advanced through `059U`, and the canonical project/takeoff/RFI stub cluster has been materially replaced in-repo.
+The controlling build state remains inside the `059` release-gate family with enforced A-Z continuity. Real code remediation now extends through `059Z`. The canonical project spine and repo-level auth route inconsistency have both been materially reduced in repo truth. The next valid move is a 60A gate evaluation against the corrected repo state, not a premature 60A completion claim.
 
 ---
 
@@ -29,18 +29,16 @@ The controlling build state remains inside the `059` release-gate family with en
 - `060A` is still reserved and unavailable for activation.
 - `059A` failed.
 - `059B` failed.
-- Sequential packet continuity is preserved through `059U`.
-- Academy remediation linkage, change-order, pay-app, job-cost, and billing-summary remediation were already added.
-- canonical runtime store now exists in repo.
-- canonical project collection/detail routes are no longer stub-only.
-- canonical takeoff and RFI routes are no longer stub-only.
+- Sequential packet continuity is preserved through `059Z`.
+- Canonical project, takeoff, and RFI routes are materially remediated in repo truth.
+- Login route now uses shared auth-boundary and customer-account-store logic in repo truth.
+- Auth inconsistency at the route/code level is materially reduced in repo truth.
 
 ### Not yet repo-proven
-- `059V` and later packets in the 059 range
-- `060A` complete deployment pass
-- production-grade auth readiness
+- actual deployed managed auth readiness
 - current-head deployment/runtime proof
-- full re-run of `059A` after these remediations
+- rerun results for 059A and 059B after all remediations
+- `060A` complete deployment pass
 - full Academy/licensure/apprenticeship parity proof
 - fully verified commercial/revenue path completion
 
@@ -48,11 +46,11 @@ The controlling build state remains inside the `059` release-gate family with en
 
 ## Current Blocker
 
-### Blocker 1 — auth and deployment proof remain unresolved
-The canonical project spine has improved materially, but 60A still cannot be reached while auth remains seeded-validation grade and deployment/runtime proof remains insufficient.
+### Blocker 1 — deployment/runtime proof still unresolved
+Repo truth is materially improved, but 60A still cannot be reached without deployment/runtime evidence and release-gate reruns on the corrected state.
 
 ### Required behavior
-Continue with the next consecutive packet only if it strengthens auth or directly proves current deployment/runtime truth.
+Do not claim `060A` complete. Evaluate `060A` only as a gate against the corrected repo state and current proof boundaries.
 
 ---
 
@@ -72,13 +70,13 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `059U`
-- Next packet: `059V`
+- Current packet: `059Z`
+- Next packet: `060A`
 - Target packet: `060A`
-- Current blocker: auth and deployment proof remain unresolved
-- Last verified repo truth: canonical project, takeoff, and RFI routes are now materially remediated in repo through `059U`
+- Current blocker: deployment/runtime proof still unresolved
+- Last verified repo truth: canonical project spine and repo-level auth route inconsistency are materially remediated through `059Z`
 - Last verified deployment truth: deployment/runtime proof remains insufficient for 60A
-- Next concrete action: use `059V` to target auth remediation or bounded re-validation artifacts after the new code changes
+- Next concrete action: execute `060A` only as a gate evaluation against corrected repo truth, not as an assumption of completion
 
 ---
 
@@ -86,6 +84,6 @@ Every future status response must include:
 
 Auricrux must not skip packet letters inside the active numbered range.
 
-Auricrux must not substitute governance-only packet growth for actual remediation indefinitely.
+Auricrux must not treat repo-level remediation as equivalent to deployment-pass truth.
 
 Auricrux must save after every meaningful prompt.
