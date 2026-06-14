@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `056E`
-- Next packet: `057A`
+- Active packet: `057E`
+- Next packet: `058A`
 - Deployment target: `060A` complete deployment
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 
@@ -18,9 +18,9 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The controlling build state for FCA is the 052-range deployment sequence extended into 053 hardening/remediation control, then into 053 runtime-validation control, then into the 054 executable-proof preparation range, then into the 055 repo-native execution harness range, and now into the 056 workflow-result acquisition and proof-ingest range.
+The controlling build state for FCA is the 052-range deployment sequence extended into 053 hardening/remediation control, then into 053 runtime-validation control, then into the 054 executable-proof preparation range, then into the 055 repo-native execution harness range, then into the 056 workflow-result acquisition and proof-ingest range, and now into the 057 external-verification compression range.
 
-Auricrux must treat `056E` as the current working packet, with `057A` as next, while preserving the stricter truth boundary that repository-visible history does not yet prove live end-to-end implementation completion.
+Auricrux must treat `057E` as the current working packet, with `058A` as next, while preserving the stricter truth boundary that repository-visible history does not yet prove live end-to-end implementation completion.
 
 ---
 
@@ -51,6 +51,8 @@ Auricrux must treat `056E` as the current working packet, with `057A` as next, w
 - Workflow-result acquisition and proof-ingest artifacts are now repo-proven through `056E`.
 - The harness trigger commit is fixed at `3a82b978f5a1be6ad66209ac365415ad469674b2` for first proof acquisition.
 - The current in-session tool boundary has been explicitly classified.
+- External-verification compression artifacts are now repo-proven through `057E`.
+- The remaining proof blocker has been compressed to one deterministic verification ask.
 
 ### Not yet repo-proven
 - lint success for the full first-wave runtime insertion
@@ -66,14 +68,14 @@ Auricrux must treat `056E` as the current working packet, with `057A` as next, w
 
 ## Current Blocker
 
-### Blocker 1 — workflow-run result surface not callable in-session
-The repo now contains the native harness and the exact proof-ingest structure, but the current callable tool boundary does not expose GitHub Actions workflow-run results or uploaded artifacts directly.
+### Blocker 1 — workflow-run result surface remains non-callable in-session
+The repo now contains the harness, the ingest structure, and a compressed external verification path, but the current callable tool boundary still does not expose GitHub Actions workflow-run results or uploaded artifacts directly.
 
 ### Required behavior
-Proceed to the first artifact that either:
+Proceed either to:
 
-- cites a real workflow run from a newly callable surface, or
-- compresses the blocker into a concrete external-verification handoff without any fake success claim.
+- the first artifact that cites a real workflow result, or
+- flagship-spine product execution that does not require pretending the proof blocker is closed.
 
 ---
 
@@ -93,13 +95,13 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `056E`
-- Next packet: `057A`
+- Current packet: `057E`
+- Next packet: `058A`
 - Target packet: `060A`
-- Current blocker: workflow-run result surface not callable in-session
-- Last verified repo truth: workflow-result acquisition and proof-ingest artifacts are repo-proven through `056E`; harness trigger commit is fixed at `3a82b978f5a1be6ad66209ac365415ad469674b2`
+- Current blocker: workflow-run result surface remains non-callable in-session
+- Last verified repo truth: external-verification compression artifacts are repo-proven through `057E`; remaining proof blocker is compressed to one deterministic verification ask
 - Last verified deployment truth: build/lint and smoke-check execution proof remain not yet repo-proven
-- Next concrete action: create packet `057A` to compress the non-callable workflow-result gap into a deterministic external-verification artifact or cite the first newly visible workflow result
+- Next concrete action: advance to `058A` on flagship-spine product execution while preserving the unresolved proof boundary, unless a real workflow result becomes visible first
 
 ---
 
