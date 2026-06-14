@@ -1,6 +1,6 @@
 {
-  "packet": "060W",
-  "generatedAt": "2026-06-14T12:35:24.748Z",
+  "packet": "060X",
+  "generatedAt": "2026-06-14T12:44:19.214Z",
   "packageScripts": {
     "buildSystem": "npm run build",
     "build": "bash ./build.sh",

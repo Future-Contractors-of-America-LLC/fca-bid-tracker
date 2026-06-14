@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-06-14T12:44:20.163Z",
+  "activePacket": "060X",
+  "packageScripts": {
+    "captureCiProofIndexPresent": true,
+    "validateLanePresent": true,
+    "generateLaneReportPresent": true
+  },
+  "runtimeSmokeScript": {
+    "derivesPacketFromLedger": true,
+    "hasContinuityReader": true,
+    "stale055AHardcodeRemoved": true
+  },
+  "ciProofScript": {
+    "derivesPacketFromLedger": true,
+    "hasContinuityReader": true,
+    "stale060FHardcodeRemoved": true
+  },
+  "workflow": {
+    "capturesCiProofIndex": true,
+    "validatesLane": true,
+    "generatesLaneReport": true,
+    "persistsLaneReport": true
+  },
+  "status": "pass"
+}
