@@ -23,6 +23,8 @@
     "generate:packet-letter-lock-report": "node scripts/generate-packet-letter-lock-report.mjs",
     "validate:build-proof-presence": "node scripts/validate-build-proof-presence.mjs",
     "generate:build-proof-presence-report": "node scripts/generate-build-proof-presence-report.mjs",
+    "validate:ci-verification-surface": "node scripts/validate-ci-verification-surface.mjs",
+    "generate:ci-verification-surface-report": "node scripts/generate-ci-verification-surface-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",
