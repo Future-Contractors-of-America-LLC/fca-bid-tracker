@@ -25,6 +25,8 @@
     "generate:build-proof-presence-report": "node scripts/generate-build-proof-presence-report.mjs",
     "validate:ci-verification-surface": "node scripts/validate-ci-verification-surface.mjs",
     "generate:ci-verification-surface-report": "node scripts/generate-ci-verification-surface-report.mjs",
+    "validate:build-proof-first-missing-artifact": "node scripts/validate-build-proof-first-missing-artifact.mjs",
+    "generate:build-proof-first-missing-artifact-report": "node scripts/generate-build-proof-first-missing-artifact-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",

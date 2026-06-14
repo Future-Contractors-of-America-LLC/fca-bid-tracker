@@ -168,6 +168,14 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:ci-verification-surface-report
 
+      - name: Validate first missing build proof artifact
+        if: ${{ always() }}
+        run: npm run validate:build-proof-first-missing-artifact
+
+      - name: Generate first missing build proof artifact report
+        if: ${{ always() }}
+        run: npm run generate:build-proof-first-missing-artifact-report
+
       - name: Publish product readiness summary
         if: ${{ always() }}
         run: |
@@ -217,6 +225,12 @@ jobs:
             cat generated/ci-verification-surface-report.md >> "$GITHUB_STEP_SUMMARY"
           else
             echo "CI verification surface report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f generated/build-proof-first-missing-artifact-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/build-proof-first-missing-artifact-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Build proof first missing artifact report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f generated/operations-pipeline-report.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -290,6 +304,10 @@ jobs:
             generated/ci-verification-surface-validation.md
             generated/ci-verification-surface-report.json
             generated/ci-verification-surface-report.md
+            generated/build-proof-first-missing-artifact.json
+            generated/build-proof-first-missing-artifact.md
+            generated/build-proof-first-missing-artifact-report.json
+            generated/build-proof-first-missing-artifact-report.md
             generated/operations-pipeline-report.json
             generated/operations-pipeline-report.md
             generated/website-market-readiness-report.json
@@ -321,4 +339,4 @@ jobs:
             git push
           fi
 
-# retrigger: 2026-06-14T16:47:00Z
+# retrigger: 2026-06-14T16:53:00Z
