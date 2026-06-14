@@ -11,6 +11,7 @@ Target Packet: `061Z`
 
 ## Fixed at this layer
 - Missing CI provenance mechanism for build-validation proof artifacts
+- Missing explicit CI-backed rewrite transition capture for those artifacts
 
 ## Not yet verified
 - First CI run that rewrites the repo-visible build-validation proof files with `provenance: github_actions_ci` and `ciPersisted: true`

@@ -10,4 +10,4 @@ Target Packet: `061Z`
 ---
 
 ## Next concrete action
-Detect the next CI build-validation rewrite and confirm that the repo-visible proof files now carry CI-backed provenance fields.
+Detect the next CI build-validation rewrite and confirm that the repo-visible proof files now carry CI-backed provenance fields and pass the rewrite-transition validator.

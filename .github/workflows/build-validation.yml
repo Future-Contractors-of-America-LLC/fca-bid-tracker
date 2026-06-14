@@ -156,6 +156,10 @@ jobs:
         if: ${{ always() }}
         run: npm run stamp:build-proof-ci-provenance
 
+      - name: Capture build proof transition target
+        if: ${{ always() }}
+        run: npm run capture:build-proof-transition-target
+
       - name: Validate build proof presence after persistence
         if: ${{ always() }}
         run: npm run validate:build-proof-presence
@@ -212,90 +216,27 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:build-proof-provenance-report
 
+      - name: Validate build proof CI rewrite transition
+        if: ${{ always() }}
+        run: npm run validate:build-proof-ci-rewrite-transition
+
+      - name: Generate build proof CI rewrite transition report
+        if: ${{ always() }}
+        run: npm run generate:build-proof-ci-rewrite-transition-report
+
       - name: Publish product readiness summary
         if: ${{ always() }}
         run: |
-          if [ -f generated/product-readiness-report.md ]; then
-            cat generated/product-readiness-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Product readiness report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/academy-catalog-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/academy-catalog-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Academy catalog report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/managed-auth-commercial-runtime-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/managed-auth-commercial-runtime-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Managed auth and commercial runtime report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/runtime-proof-integrity-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/runtime-proof-integrity-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Runtime proof integrity report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/build-proof-lane-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/build-proof-lane-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Build proof lane report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/packet-letter-lock-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/packet-letter-lock-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Packet letter lock report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/build-proof-presence-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/build-proof-presence-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Build proof presence report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/ci-verification-surface-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/ci-verification-surface-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "CI verification surface report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/build-proof-first-missing-artifact-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/build-proof-first-missing-artifact-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Build proof first missing artifact report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/build-proof-directory-absence-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/build-proof-directory-absence-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Build proof directory absence report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/build-proof-persistence-commit-signal-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/build-proof-persistence-commit-signal-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Build proof persistence commit signal report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/build-proof-double-absence-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/build-proof-double-absence-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Build proof double absence report missing" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f generated/build-proof-ci-provenance-stamp.md ]; then
+            cat generated/build-proof-ci-provenance-stamp.md >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f generated/build-proof-provenance-report.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
             cat generated/build-proof-provenance-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Build proof provenance report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
-          if [ -f workspace/live_deployment_smoke_failures.txt ]; then
+          if [ -f generated/build-proof-ci-rewrite-transition-report.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "## Live deployment smoke failures" >> "$GITHUB_STEP_SUMMARY"
-            cat workspace/live_deployment_smoke_failures.txt >> "$GITHUB_STEP_SUMMARY"
+            cat generated/build-proof-ci-rewrite-transition-report.md >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload product readiness artifacts
@@ -306,10 +247,16 @@ jobs:
           path: |
             generated/build-proof-ci-provenance-stamp.json
             generated/build-proof-ci-provenance-stamp.md
+            generated/build-proof-transition-target.json
+            generated/build-proof-transition-target.md
             generated/build-proof-provenance-validation.json
             generated/build-proof-provenance-validation.md
             generated/build-proof-provenance-report.json
             generated/build-proof-provenance-report.md
+            generated/build-proof-ci-rewrite-transition-validation.json
+            generated/build-proof-ci-rewrite-transition-validation.md
+            generated/build-proof-ci-rewrite-transition-report.json
+            generated/build-proof-ci-rewrite-transition-report.md
             generated/product-readiness-report.json
             generated/product-readiness-report.md
             generated/academy-catalog-report.json
@@ -368,5 +315,3 @@ jobs:
             git commit -m "Persist build validation and live deployment proof artifacts for run ${GITHUB_RUN_ID}"
             git push
           fi
-
-# retrigger: 2026-06-14T17:38:00Z

@@ -22,7 +22,7 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The `060` range remains truthfully closed as a failed hard deployment target. `061A` removed the original runtime smoke code blockers. `061B` rebased the target to `061Z`. `061C` wired explicit build-proof-lane validation. `061D` verified runtime-smoke pass in repo-visible proof. `061E` wired build-proof presence enforcement. `061F` locked the CI verification boundary and confirmed build-validation persistence was still unconfirmed. `061G` wired first-missing-artifact detection. `061H` locked the directory itself as the controlling first missing artifact. `061I` locked persistence-commit absence alongside directory absence. `061J` confirmed double-absence through fresh repo-visible searches. `061K` fixed the current blocker at that layer by creating a truthful repo-visible build-validation proof surface. `061L` now corrects the current blocker at its next layer by implementing CI provenance stamping and validation for the build-validation proof artifacts, shifting the blocker to first CI-backed rewrite verification.
+The `060` range remains truthfully closed as a failed hard deployment target. `061A` removed the original runtime smoke code blockers. `061B` rebased the target to `061Z`. `061C` wired explicit build-proof-lane validation. `061D` verified runtime-smoke pass in repo-visible proof. `061E` wired build-proof presence enforcement. `061F` locked the CI verification boundary and confirmed build-validation persistence was still unconfirmed. `061G` wired first-missing-artifact detection. `061H` locked the directory itself as the controlling first missing artifact. `061I` locked persistence-commit absence alongside directory absence. `061J` confirmed the lane remained in double-absence through fresh repo-visible searches. `061K` created a truthful repo-visible build-validation proof surface. `061L` now corrects the current blocker by implementing CI provenance stamping plus first-rewrite transition capture/validation so the next CI-backed rewrite can be directly verified when it lands.
 
 ---
 
@@ -32,17 +32,19 @@ The `060` range remains truthfully closed as a failed hard deployment target. `0
 - `061L` now exists in sequence.
 - `scripts/stamp-build-proof-ci-provenance.mjs` now exists in repo truth.
 - `scripts/validate-build-proof-ci-provenance.mjs` now exists in repo truth.
-- `package.json` now registers `stamp:build-proof-ci-provenance` and `validate:build-proof-ci-provenance`.
-- `.github/workflows/build-validation.yml` now stamps CI provenance into build proof artifacts after persistence.
-- `.github/workflows/build-validation.yml` now validates CI provenance for build proof artifacts.
-- repo-visible build-validation proof artifacts still exist from the `061K` surface backfill.
+- `scripts/capture-build-proof-transition-target.mjs` now exists in repo truth.
+- `scripts/validate-build-proof-ci-rewrite-transition.mjs` now exists in repo truth.
+- `scripts/generate-build-proof-ci-rewrite-transition-report.mjs` now exists in repo truth.
+- `package.json` now registers the stamping, provenance validation, transition capture, transition validation, and transition report scripts.
+- `.github/workflows/build-validation.yml` now stamps CI provenance after persistence, captures the transition target, validates the CI rewrite transition, and reports the result.
+- repo-visible build-validation proof artifacts still exist from `061K` baseline surface creation.
 - runtime-smoke proof remains repo-visible and passing from prior direct inspection.
 
 ### Not yet repo-proven
 - first repo-visible CI-backed rewrite of build-validation proof artifacts
 - any build-validation proof artifacts with `provenance: github_actions_ci`
 - any build-validation proof artifacts with `ciPersisted: true`
-- a successful CI-backed provenance validator pass from a workflow run
+- a successful CI-backed rewrite-transition validator pass from a workflow run
 - actual current-head live deployment verifier success
 - deployed managed auth runtime proof
 - deployed Academy runtime parity proof
@@ -54,10 +56,10 @@ The `060` range remains truthfully closed as a failed hard deployment target. `0
 ## Current Blocker
 
 ### Blocker 1 — first CI-backed build-validation rewrite remains unverified
-The mechanism now exists, but the first repo-visible CI rewrite proving build-validation provenance has not yet been observed.
+The mechanism now exists and the transition target is defined, but a repo-visible CI-backed rewrite has not yet been observed.
 
 ### Required behavior
-Begin `061M` by detecting the first CI-persisted rewrite of the build-validation proof artifacts and locking the provenance transition when it appears.
+Begin `061M` by detecting the first build-validation proof rewrite that changes artifact provenance from manual backfill to GitHub Actions CI and then lock the transition as verified.
 
 ---
 
@@ -81,15 +83,15 @@ Every future status response must include:
 - Next packet: `061M`
 - Target packet: `061Z` hard deployment target
 - Current blocker: first CI-backed build-validation rewrite remains unverified
-- Last verified repo truth: CI provenance stamping and validation are now wired into repo truth; build-validation proof surface exists; runtime-smoke proof remains repo-visible and passing
+- Last verified repo truth: CI provenance stamping, transition capture, and transition validation are now wired into repo truth; build-validation proof surface exists; runtime-smoke proof remains repo-visible and passing
 - Last verified deployment truth: deployed auth/runtime/commercial proof remains unproven in-session
-- Next concrete action: begin `061M` by detecting the first CI rewrite that changes build-validation proof artifacts from manual backfill provenance to CI-backed provenance
+- Next concrete action: begin `061M` by detecting the first CI rewrite that changes build-validation proof artifacts from manual backfill provenance to CI-backed provenance and then confirm the transition validator passes
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must not reinterpret CI provenance tooling as proof that a CI-backed rewrite has already occurred.
+Auricrux must not reinterpret CI provenance tooling or transition tooling as proof that a CI-backed rewrite has already occurred.
 
 Auricrux must not treat manual backfill files as CI-backed evidence until the repo-visible provenance fields actually change.
 

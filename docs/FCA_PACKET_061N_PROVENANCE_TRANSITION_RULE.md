@@ -17,3 +17,5 @@ The build-validation lane transitions from unconfirmed to CI-confirmed only when
 to:
 - `provenance: github_actions_ci`
 - `ciPersisted: true`
+
+across the required proof artifact set.
