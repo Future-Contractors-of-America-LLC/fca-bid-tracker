@@ -1,0 +1,23 @@
+{
+  "packet": "055A",
+  "generatedAt": "2026-06-14T02:55:36.249Z",
+  "packageScripts": {
+    "buildSystem": "npm run build",
+    "build": "bash ./build.sh",
+    "validateRuntimeSmoke": "node scripts/runtime_smoke_check.js",
+    "captureBuildEvidence": "node scripts/build_evidence_capture.js"
+  },
+  "workflowChecks": {
+    "hasBuildValidationWorkflow": true,
+    "invokesBuildSystem": true,
+    "invokesNpmCi": true,
+    "uploadsArtifacts": true
+  },
+  "buildScriptChecks": {
+    "createsDist": true,
+    "generatesStyles": true,
+    "generatesWorkspacePack": true,
+    "generatesPlatformProof": true,
+    "emitsCompletionLine": true
+  }
+}
