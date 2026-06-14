@@ -1,13 +1,11 @@
 const { CreateProjectPayloadSchema } = require('../_lib/validation/fcaSchemas')
 const { assertValid } = require('../_lib/validation/assertValid')
 const { makeApiSuccess, makeApiError } = require('../_lib/contracts/fcaContracts')
+const { listProjects, createProject } = require('../_lib/runtime/fcaRuntimeStore')
 
 module.exports = async function handler(req, res) {
-  const workflowStore = await import('../workflow-store.js')
-
   if (req.method === 'GET') {
-    const items = workflowStore.listProjects('TEN-FCA-001')
-    const summary = workflowStore.getWorkflowSummary('TEN-FCA-001')
+    const items = listProjects()
 
     return res.status(200).json(
       makeApiSuccess(
@@ -15,12 +13,11 @@ module.exports = async function handler(req, res) {
           route: '/api/projects',
           items,
           count: items.length,
-          backingSource: 'workflow-store',
         },
         {
           packet: '059Q',
           timestamp: new Date().toISOString(),
-          summary,
+          backingSource: 'fca-runtime-store',
         },
       ),
     )
@@ -29,19 +26,18 @@ module.exports = async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const payload = assertValid(CreateProjectPayloadSchema, req.body || {})
-      const result = workflowStore.createProject('TEN-FCA-001', payload)
+      const item = createProject(payload)
 
       return res.status(201).json(
         makeApiSuccess(
           {
             route: '/api/projects',
-            item: result.project,
-            backingSource: 'workflow-store',
+            item,
           },
           {
             packet: '059Q',
             timestamp: new Date().toISOString(),
-            summary: result.summary,
+            backingSource: 'fca-runtime-store',
           },
         ),
       )

@@ -1,18 +1,22 @@
 const { CreateRFIPayloadSchema } = require('../../../../_lib/validation/fcaSchemas')
 const { assertValid } = require('../../../../_lib/validation/assertValid')
 const { makeApiSuccess, makeApiError } = require('../../../../_lib/contracts/fcaContracts')
+const { getProject, listRFIs, createRFI } = require('../../../../_lib/runtime/fcaRuntimeStore')
 
 module.exports = async function handler(req, res) {
-  const workflowStore = await import('../../../../workflow-store.js')
   const { projectId } = req.query || {}
 
   if (!projectId) {
     return res.status(400).json(makeApiError('MISSING_PROJECT_ID', 'projectId is required'))
   }
 
+  const project = getProject(projectId)
+  if (!project) {
+    return res.status(404).json(makeApiError('PROJECT_NOT_FOUND', `Project not found: ${projectId}`))
+  }
+
   if (req.method === 'GET') {
-    const items = workflowStore.listRfis('TEN-FCA-001', projectId)
-    const summary = workflowStore.getWorkflowSummary('TEN-FCA-001')
+    const items = listRFIs(projectId)
     return res.status(200).json(
       makeApiSuccess(
         {
@@ -20,12 +24,11 @@ module.exports = async function handler(req, res) {
           projectId,
           items,
           count: items.length,
-          backingSource: 'workflow-store',
         },
         {
-          packet: '059Q',
+          packet: '059S',
           timestamp: new Date().toISOString(),
-          summary,
+          backingSource: 'fca-runtime-store',
         },
       ),
     )
@@ -34,19 +37,19 @@ module.exports = async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const payload = assertValid(CreateRFIPayloadSchema, req.body || {})
-      const result = workflowStore.createRfi('TEN-FCA-001', { ...payload, projectId })
+      const item = createRFI(projectId, payload)
+
       return res.status(201).json(
         makeApiSuccess(
           {
             route: `/api/projects/${projectId}/rfis`,
             projectId,
-            item: result.rfi,
-            backingSource: 'workflow-store',
+            item,
           },
           {
-            packet: '059Q',
+            packet: '059S',
             timestamp: new Date().toISOString(),
-            summary: result.summary,
+            backingSource: 'fca-runtime-store',
           },
         ),
       )
@@ -54,29 +57,6 @@ module.exports = async function handler(req, res) {
       return res.status(error.statusCode || 500).json(
         makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
       )
-    }
-  }
-
-  if (req.method === 'PATCH') {
-    try {
-      const result = workflowStore.updateRfi('TEN-FCA-001', { ...req.body, projectId })
-      return res.status(200).json(
-        makeApiSuccess(
-          {
-            route: `/api/projects/${projectId}/rfis`,
-            projectId,
-            item: result.rfi,
-            backingSource: 'workflow-store',
-          },
-          {
-            packet: '059Q',
-            timestamp: new Date().toISOString(),
-            summary: result.summary,
-          },
-        ),
-      )
-    } catch (error) {
-      return res.status(400).json(makeApiError('RFI_MUTATION_FAILED', error.message, error.details))
     }
   }
 

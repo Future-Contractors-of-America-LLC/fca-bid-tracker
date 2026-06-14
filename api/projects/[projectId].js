@@ -1,7 +1,7 @@
 const { makeApiSuccess, makeApiError } = require('../_lib/contracts/fcaContracts')
+const { getProject, updateProject } = require('../_lib/runtime/fcaRuntimeStore')
 
 module.exports = async function handler(req, res) {
-  const workflowStore = await import('../workflow-store.js')
   const { projectId } = req.query || {}
 
   if (!projectId) {
@@ -9,52 +9,49 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
-    try {
-      const item = workflowStore.getProjectById('TEN-FCA-001', projectId)
-      const summary = workflowStore.getWorkflowSummary('TEN-FCA-001')
-      return res.status(200).json(
-        makeApiSuccess(
-          {
-            route: `/api/projects/${projectId}`,
-            projectId,
-            item,
-            backingSource: 'workflow-store',
-          },
-          {
-            packet: '059Q',
-            timestamp: new Date().toISOString(),
-            summary,
-          },
-        ),
-      )
-    } catch (error) {
-      return res.status(404).json(makeApiError('PROJECT_NOT_FOUND', error.message))
+    const item = getProject(projectId)
+
+    if (!item) {
+      return res.status(404).json(makeApiError('PROJECT_NOT_FOUND', `Project not found: ${projectId}`))
     }
+
+    return res.status(200).json(
+      makeApiSuccess(
+        {
+          route: `/api/projects/${projectId}`,
+          projectId,
+          item,
+        },
+        {
+          packet: '059Q',
+          timestamp: new Date().toISOString(),
+          backingSource: 'fca-runtime-store',
+        },
+      ),
+    )
   }
 
   if (req.method === 'PATCH') {
-    try {
-      const action = req.body?.action || 'advance-stage'
-      const result = workflowStore.mutateProject('TEN-FCA-001', action, { ...req.body, projectId })
-      return res.status(200).json(
-        makeApiSuccess(
-          {
-            route: `/api/projects/${projectId}`,
-            projectId,
-            item: result.project,
-            activeProjectId: result.activeProjectId,
-            backingSource: 'workflow-store',
-          },
-          {
-            packet: '059Q',
-            timestamp: new Date().toISOString(),
-            summary: result.summary,
-          },
-        ),
-      )
-    } catch (error) {
-      return res.status(400).json(makeApiError('PROJECT_MUTATION_FAILED', error.message, error.details))
+    const item = updateProject(projectId, req.body || {})
+
+    if (!item) {
+      return res.status(404).json(makeApiError('PROJECT_NOT_FOUND', `Project not found: ${projectId}`))
     }
+
+    return res.status(200).json(
+      makeApiSuccess(
+        {
+          route: `/api/projects/${projectId}`,
+          projectId,
+          item,
+        },
+        {
+          packet: '059Q',
+          timestamp: new Date().toISOString(),
+          backingSource: 'fca-runtime-store',
+        },
+      ),
+    )
   }
 
   return res.status(405).json(makeApiError('METHOD_NOT_ALLOWED', 'Method not allowed'))
