@@ -9,18 +9,16 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `057E`
-- Next packet: `058A`
-- Deployment target: `060A` complete deployment
+- Active packet: `058B`
+- Next packet: `059A`
+- Deployment target: `060A` complete deployment gate
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 
 ---
 
 ## Current Executive State
 
-The controlling build state for FCA is the 052-range deployment sequence extended into 053 hardening/remediation control, then into 053 runtime-validation control, then into the 054 executable-proof preparation range, then into the 055 repo-native execution harness range, then into the 056 workflow-result acquisition and proof-ingest range, and now into the 057 external-verification compression range.
-
-Auricrux must treat `057E` as the current working packet, with `058A` as next, while preserving the stricter truth boundary that repository-visible history does not yet prove live end-to-end implementation completion.
+The controlling build state for FCA has been corrected to prevent packet drift. Packet `060A` is treated as a reserved complete-deployment gate, not an assumed reality. The current controlling range is now the 058 reset-and-definition range leading into explicit 059 release gates and then `060A` only if evidence passes.
 
 ---
 
@@ -29,53 +27,30 @@ Auricrux must treat `057E` as the current working packet, with `058A` as next, w
 ### Verified
 - Current repository: `Future-Contractors-of-America-LLC/fca-bid-tracker`
 - The repository contains continuity, coverage, route, storage, auth, and Contractor Command artifacts from earlier phases.
-- The repository contains executed implementation packet artifacts through `implementation-packet-045-executed.md`.
-- The repository contains deployment and route hardening artifacts.
-- The repository contains restored 052C / 052D / 052E continuity anchors.
-- The repository contains packet continuity artifacts through `053Q`.
-- The repository now contains all 13 first-wave runtime target files at approved paths.
-- The docs chain itself is repo-proven through `053Q`.
-- Batch A, Batch B, and Batch C runtime files are repo-proven present.
-- The first-wave runtime file proof gate is satisfied for file presence.
-- Runtime-validation control artifacts are now repo-proven through `053V`.
-- Repo-visible build-command truth is now recorded.
-- Repo-visible smoke-check target truth is now recorded.
-- Runtime validation blocker truth is now recorded.
-- The governed build-validation workflow is repo-proven present.
-- The build script chain from `build:system` to `build.sh` is repo-proven.
-- The build script is repo-proven to generate customer-facing shell and proof-route assets.
-- Executable-proof preparation artifacts are now repo-proven through `054E`.
-- Repo-native execution harness artifacts are now repo-proven through `055E`.
-- Package entry points now exist for runtime smoke validation and build evidence capture.
-- A dedicated runtime smoke validation workflow now exists in the repository.
-- Workflow-result acquisition and proof-ingest artifacts are now repo-proven through `056E`.
-- The harness trigger commit is fixed at `3a82b978f5a1be6ad66209ac365415ad469674b2` for first proof acquisition.
-- The current in-session tool boundary has been explicitly classified.
-- External-verification compression artifacts are now repo-proven through `057E`.
-- The remaining proof blocker has been compressed to one deterministic verification ask.
+- The repository contains first-wave runtime files and repo-native harness artifacts.
+- The repository now contains explicit `060A` completion-gate artifacts.
+- The repository now contains a sequence-correction packet that resets `060A` to a gate rather than an assumption.
+- The repository now contains explicit SaaS/deployment and Academy/commercial release gates.
 
 ### Not yet repo-proven
-- lint success for the full first-wave runtime insertion
-- build success for the full first-wave runtime insertion
-- a successful governed workflow run for current head
-- successful runtime-smoke workflow output for current head
-- stub route smoke-check execution results captured from CI or equivalent callable surface
-- persistence wiring behind new route stubs
-- shared shell UI consuming all canonical contract files beyond current proven shell surfaces
-- deployed end-to-end SaaS ↔ Academy remediation flow
+- `059A` gate pass
+- `059B` gate pass
+- `060A` complete deployment pass
+- build success on current head
+- runtime smoke success on current head
+- complete non-stub project/job, file, audit, takeoff, RFI/change-order, billing/job-cost, and warranty continuity
+- Academy/LMS parity proof on live product surfaces
+- truthful end-to-end public commercial/revenue path proof
 
 ---
 
 ## Current Blocker
 
-### Blocker 1 — workflow-run result surface remains non-callable in-session
-The repo now contains the harness, the ingest structure, and a compressed external verification path, but the current callable tool boundary still does not expose GitHub Actions workflow-run results or uploaded artifacts directly.
+### Blocker 1 — 60A is not yet proven complete
+The repository now defines what complete means, but the evidence bundle needed to activate `060A` does not yet exist.
 
 ### Required behavior
-Proceed either to:
-
-- the first artifact that cites a real workflow result, or
-- flagship-spine product execution that does not require pretending the proof blocker is closed.
+Do not claim `060A` complete. Use `059A` and `059B` as the required release gates.
 
 ---
 
@@ -95,18 +70,18 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `057E`
-- Next packet: `058A`
+- Current packet: `058B`
+- Next packet: `059A`
 - Target packet: `060A`
-- Current blocker: workflow-run result surface remains non-callable in-session
-- Last verified repo truth: external-verification compression artifacts are repo-proven through `057E`; remaining proof blocker is compressed to one deterministic verification ask
-- Last verified deployment truth: build/lint and smoke-check execution proof remain not yet repo-proven
-- Next concrete action: advance to `058A` on flagship-spine product execution while preserving the unresolved proof boundary, unless a real workflow result becomes visible first
+- Current blocker: 60A is not yet proven complete
+- Last verified repo truth: 60A completion definition and release-gate artifacts are now saved in-repo
+- Last verified deployment truth: build/runtime/deployment pass evidence still not yet repo-proven for 60A
+- Next concrete action: execute `059A` against actual repo and runtime surfaces and classify PASS / FAIL / INSUFFICIENT
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must never again answer FCA packet-state questions by falling back to older packet families when a newer controlling sequence has already been established.
+Auricrux must not jump packets by treating governance packet creation as equivalent to product completion.
 
 Auricrux must save after every meaningful prompt.
