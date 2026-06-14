@@ -44,6 +44,10 @@ jobs:
         if: ${{ always() }}
         run: npm run validate:runtime-proof-integrity
 
+      - name: Validate runtime smoke proof lane
+        if: ${{ always() }}
+        run: npm run validate:runtime-smoke-proof-lane
+
       - name: Execute bounded runtime smoke checks
         run: npm run validate:runtime-smoke
 
@@ -54,6 +58,10 @@ jobs:
       - name: Generate runtime proof integrity evidence
         if: ${{ always() }}
         run: npm run generate:runtime-proof-integrity-report
+
+      - name: Generate runtime smoke proof lane evidence
+        if: ${{ always() }}
+        run: npm run generate:runtime-smoke-proof-lane-report
 
       - name: Persist runtime proof artifacts into repo
         if: ${{ always() }}
@@ -67,6 +75,8 @@ jobs:
           cp generated/ci-proof-index.md docs/runtime-proof/runtime-smoke/ci-proof-index.md || true
           cp generated/runtime-proof-integrity-report.json docs/runtime-proof/runtime-smoke/runtime-proof-integrity-report.json || true
           cp generated/runtime-proof-integrity-report.md docs/runtime-proof/runtime-smoke/runtime-proof-integrity-report.md || true
+          cp generated/runtime-smoke-proof-lane-report.json docs/runtime-proof/runtime-smoke/runtime-smoke-proof-lane-report.json || true
+          cp generated/runtime-smoke-proof-lane-report.md docs/runtime-proof/runtime-smoke/runtime-smoke-proof-lane-report.md || true
 
       - name: Publish smoke-check summary
         if: ${{ always() }}
@@ -94,6 +104,12 @@ jobs:
           else
             echo "Runtime proof integrity report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f generated/runtime-smoke-proof-lane-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/runtime-smoke-proof-lane-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Runtime smoke proof lane report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload smoke-check artifacts
         if: ${{ always() }}
@@ -109,6 +125,8 @@ jobs:
             generated/ci-proof-index.md
             generated/runtime-proof-integrity-report.json
             generated/runtime-proof-integrity-report.md
+            generated/runtime-smoke-proof-lane-report.json
+            generated/runtime-smoke-proof-lane-report.md
           if-no-files-found: warn
 
       - name: Commit runtime proof artifacts

@@ -14,15 +14,30 @@ function readJson(file) {
   }
 }
 
+function readContinuityPacket(repoRoot) {
+  const ledgerPath = path.join(repoRoot, 'docs', 'FCA_EXECUTION_CONTINUITY_LEDGER.md')
+  const fallbackPacket = 'UNLOCKED'
+
+  if (!fs.existsSync(ledgerPath)) {
+    return fallbackPacket
+  }
+
+  const ledger = fs.readFileSync(ledgerPath, 'utf8')
+  const match = ledger.match(/- Active packet: `([^`]+)`/)
+  return match ? match[1] : fallbackPacket
+}
+
 function main() {
-  const generatedDir = path.join(__dirname, '..', 'generated')
+  const repoRoot = path.join(__dirname, '..')
+  const generatedDir = path.join(repoRoot, 'generated')
   ensureDir(generatedDir)
 
   const buildEvidence = readJson(path.join(generatedDir, 'build-evidence-report.json'))
   const runtimeSmoke = readJson(path.join(generatedDir, 'runtime-smoke-check-report.json'))
+  const activePacket = readContinuityPacket(repoRoot)
 
   const proof = {
-    packet: '060F',
+    packet: activePacket,
     generatedAt: new Date().toISOString(),
     github: {
       repository: process.env.GITHUB_REPOSITORY || 'Future-Contractors-of-America-LLC/fca-bid-tracker',
@@ -37,6 +52,7 @@ function main() {
     },
     buildEvidenceSummary: buildEvidence
       ? {
+          packet: buildEvidence.packet || null,
           buildSystem: buildEvidence.packageScripts?.buildSystem || null,
           build: buildEvidence.packageScripts?.build || null,
           hasBuildValidationWorkflow: buildEvidence.workflowChecks?.hasBuildValidationWorkflow || false,
@@ -45,6 +61,7 @@ function main() {
       : null,
     runtimeSmokeSummary: runtimeSmoke
       ? {
+          packet: runtimeSmoke.packet || null,
           total: runtimeSmoke.total,
           passed: runtimeSmoke.passed,
           failed: runtimeSmoke.failed,
@@ -83,7 +100,7 @@ function main() {
     ].join('\n'),
   )
 
-  console.log('CI proof index captured.')
+  console.log(`CI proof index captured for packet ${activePacket}.`)
 }
 
 main()

@@ -80,7 +80,7 @@ const routes = [
         mode: 'execute',
         targetObjectType: 'project',
         targetObjectId: 'PRJ-001',
-        rationale: 'Packet 055A runtime smoke validation',
+        rationale: 'Runtime smoke validation continuity proof',
       },
     },
     expectStatus: 202,
@@ -94,6 +94,19 @@ const routes = [
     expectType: 'error',
   },
 ]
+
+function readContinuityPacket(repoRoot) {
+  const ledgerPath = path.join(repoRoot, 'docs', 'FCA_EXECUTION_CONTINUITY_LEDGER.md')
+  const fallbackPacket = 'UNLOCKED'
+
+  if (!fs.existsSync(ledgerPath)) {
+    return fallbackPacket
+  }
+
+  const ledger = fs.readFileSync(ledgerPath, 'utf8')
+  const match = ledger.match(/- Active packet: `([^`]+)`/)
+  return match ? match[1] : fallbackPacket
+}
 
 function createRes(name) {
   return {
@@ -145,6 +158,8 @@ async function invoke(def) {
 }
 
 async function main() {
+  const repoRoot = path.join(__dirname, '..')
+  const activePacket = readContinuityPacket(repoRoot)
   const results = []
   for (const route of routes) {
     results.push(await invoke(route))
@@ -152,7 +167,7 @@ async function main() {
 
   const failed = results.filter((item) => !item.passed)
   const summary = {
-    packet: '055A',
+    packet: activePacket,
     generatedAt: new Date().toISOString(),
     total: results.length,
     passed: results.length - failed.length,
@@ -167,7 +182,7 @@ async function main() {
     })),
   }
 
-  const generatedDir = path.join(__dirname, '..', 'generated')
+  const generatedDir = path.join(repoRoot, 'generated')
   fs.mkdirSync(generatedDir, { recursive: true })
   fs.writeFileSync(path.join(generatedDir, 'runtime-smoke-check-report.json'), JSON.stringify(summary, null, 2))
   fs.writeFileSync(
@@ -193,7 +208,7 @@ async function main() {
     process.exit(1)
   }
 
-  console.log('Runtime smoke check passed for all bounded routes.')
+  console.log(`Runtime smoke check passed for all bounded routes in packet ${activePacket}.`)
 }
 
 main().catch((error) => {
