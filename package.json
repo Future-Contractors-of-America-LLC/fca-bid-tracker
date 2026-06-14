@@ -35,6 +35,8 @@
     "generate:build-proof-double-absence-report": "node scripts/generate-build-proof-double-absence-report.mjs",
     "validate:build-proof-provenance": "node scripts/validate-build-proof-provenance.mjs",
     "generate:build-proof-provenance-report": "node scripts/generate-build-proof-provenance-report.mjs",
+    "stamp:build-proof-ci-provenance": "node scripts/stamp-build-proof-ci-provenance.mjs",
+    "validate:build-proof-ci-provenance": "node scripts/validate-build-proof-ci-provenance.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",

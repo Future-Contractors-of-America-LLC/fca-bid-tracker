@@ -152,6 +152,10 @@ jobs:
           cp workspace/live_deployment_smoke_summary.json docs/runtime-proof/live-deployment/live_deployment_smoke_summary.json || true
           cp workspace/live_deployment_smoke_failures.txt docs/runtime-proof/live-deployment/live_deployment_smoke_failures.txt || true
 
+      - name: Stamp CI provenance into build proof artifacts
+        if: ${{ always() }}
+        run: npm run stamp:build-proof-ci-provenance
+
       - name: Validate build proof presence after persistence
         if: ${{ always() }}
         run: npm run validate:build-proof-presence
@@ -199,6 +203,14 @@ jobs:
       - name: Generate build proof double absence report
         if: ${{ always() }}
         run: npm run generate:build-proof-double-absence-report
+
+      - name: Validate build proof CI provenance
+        if: ${{ always() }}
+        run: npm run validate:build-proof-ci-provenance
+
+      - name: Generate build proof provenance report
+        if: ${{ always() }}
+        run: npm run generate:build-proof-provenance-report
 
       - name: Publish product readiness summary
         if: ${{ always() }}
@@ -274,41 +286,11 @@ jobs:
           else
             echo "Build proof double absence report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
-          if [ -f generated/operations-pipeline-report.md ]; then
+          if [ -f generated/build-proof-provenance-report.md ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/operations-pipeline-report.md >> "$GITHUB_STEP_SUMMARY"
+            cat generated/build-proof-provenance-report.md >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "Operations pipeline report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/website-market-readiness-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/website-market-readiness-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Website market-readiness report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/file-governance-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/file-governance-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "File governance report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/billing-governance-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/billing-governance-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Billing governance report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/support-governance-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/support-governance-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Support governance report missing" >> "$GITHUB_STEP_SUMMARY"
-          fi
-          if [ -f generated/admin-governance-report.md ]; then
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            cat generated/admin-governance-report.md >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Admin governance report missing" >> "$GITHUB_STEP_SUMMARY"
+            echo "Build proof provenance report missing" >> "$GITHUB_STEP_SUMMARY"
           fi
           if [ -f workspace/live_deployment_smoke_failures.txt ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -322,6 +304,12 @@ jobs:
         with:
           name: fca-product-readiness-${{ github.run_id }}
           path: |
+            generated/build-proof-ci-provenance-stamp.json
+            generated/build-proof-ci-provenance-stamp.md
+            generated/build-proof-provenance-validation.json
+            generated/build-proof-provenance-validation.md
+            generated/build-proof-provenance-report.json
+            generated/build-proof-provenance-report.md
             generated/product-readiness-report.json
             generated/product-readiness-report.md
             generated/academy-catalog-report.json
@@ -362,18 +350,6 @@ jobs:
             generated/build-proof-double-absence-validation.md
             generated/build-proof-double-absence-report.json
             generated/build-proof-double-absence-report.md
-            generated/operations-pipeline-report.json
-            generated/operations-pipeline-report.md
-            generated/website-market-readiness-report.json
-            generated/website-market-readiness-report.md
-            generated/file-governance-report.json
-            generated/file-governance-report.md
-            generated/billing-governance-report.json
-            generated/billing-governance-report.md
-            generated/support-governance-report.json
-            generated/support-governance-report.md
-            generated/admin-governance-report.json
-            generated/admin-governance-report.md
             generated/build-evidence-report.json
             generated/build-evidence-report.md
             workspace/live_deployment_smoke_summary.json
@@ -393,4 +369,4 @@ jobs:
             git push
           fi
 
-# retrigger: 2026-06-14T17:15:00Z
+# retrigger: 2026-06-14T17:38:00Z
