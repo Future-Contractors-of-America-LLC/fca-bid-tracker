@@ -1,0 +1,69 @@
+name: FCA Runtime Smoke Validation
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fca-runtime-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Capture build evidence
+        run: npm run capture:build-evidence
+
+      - name: Execute bounded runtime smoke checks
+        run: npm run validate:runtime-smoke
+
+      - name: Publish smoke-check summary
+        if: ${{ always() }}
+        run: |
+          if [ -f generated/runtime-smoke-check-report.md ]; then
+            cat generated/runtime-smoke-check-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Runtime smoke-check report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ -f generated/build-evidence-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/build-evidence-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Build evidence report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload smoke-check artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: fca-runtime-smoke-${{ github.run_id }}
+          path: |
+            generated/runtime-smoke-check-report.json
+            generated/runtime-smoke-check-report.md
+            generated/build-evidence-report.json
+            generated/build-evidence-report.md
+          if-no-files-found: warn

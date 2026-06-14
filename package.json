@@ -6,6 +6,8 @@
     "build:system": "npm run build",
     "build": "bash ./build.sh",
     "verify:live-deployment": "node no-op.js",
+    "validate:runtime-smoke": "node scripts/runtime_smoke_check.js",
+    "capture:build-evidence": "node scripts/build_evidence_capture.js",
 
     "generate:admin-governance-report": "node no-op.js",
     "generate:billing-governance-report": "node no-op.js",
