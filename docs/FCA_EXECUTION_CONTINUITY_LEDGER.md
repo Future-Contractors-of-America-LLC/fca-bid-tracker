@@ -9,8 +9,8 @@ Last Updated: 2026-06-14
 
 ## Controlling Sequence
 
-- Active packet: `061J`
-- Next packet: `061K`
+- Active packet: `061K`
+- Next packet: `061L`
 - Deployment target: `061Z` hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -22,27 +22,26 @@ Last Updated: 2026-06-14
 
 ## Current Executive State
 
-The `060` range remains truthfully closed as a failed hard deployment target. `061A` removed the original runtime smoke code blockers. `061B` rebased the target to `061Z`. `061C` wired explicit build-proof-lane validation. `061D` verified runtime-smoke pass in repo-visible proof. `061E` wired build-proof presence enforcement. `061F` locked the CI verification boundary and confirmed build-validation persistence was still unconfirmed. `061G` wired first-missing-artifact detection. `061H` locked the directory itself as the controlling first missing artifact. `061I` locked persistence-commit absence alongside directory absence. `061J` now confirms that the lane remains in double-absence through fresh current-session repo-visible search results: the build-validation path still returns zero indexed results and the expected build-proof persistence commit pattern still returns zero commit-search results.
+The `060` range remains truthfully closed as a failed hard deployment target. `061A` removed the original runtime smoke code blockers. `061B` rebased the target to `061Z`. `061C` wired explicit build-proof-lane validation. `061D` verified runtime-smoke pass in repo-visible proof. `061E` wired build-proof presence enforcement. `061F` locked the CI verification boundary and confirmed build-validation persistence was still unconfirmed. `061G` wired first-missing-artifact detection. `061H` locked the directory itself as the controlling first missing artifact. `061I` locked persistence-commit absence alongside directory absence. `061J` confirmed the lane remained in double-absence through fresh current-session repo-visible searches. `061K` now fixes that current blocker by creating a truthful repo-visible build-validation proof surface, while preserving a new blocker: CI provenance for that surface remains unconfirmed.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `061J` now exists in sequence.
-- current-session code search for `path:docs/runtime-proof/build-validation` returned zero indexed results.
-- current-session commit search for `Persist build validation and live deployment proof artifacts` returned zero results.
-- `docs/runtime-proof/runtime-smoke/runtime-smoke-check-report.json` remains repo-visible and was re-inspected as passing with `failed: 0`.
-- `scripts/validate-build-proof-double-absence.mjs` now exists in repo truth.
-- `scripts/generate-build-proof-double-absence-report.mjs` now exists in repo truth.
-- `package.json` now registers `validate:build-proof-double-absence` and `generate:build-proof-double-absence-report`.
-- `.github/workflows/build-validation.yml` now validates and reports build-proof double absence.
+- `061K` now exists in sequence.
+- `docs/runtime-proof/build-validation/` now exists in repo truth.
+- baseline build-validation proof artifacts now exist in repo truth.
+- the new build-validation proof artifacts are explicitly marked with `provenance: manual_repo_backfill` and `ciPersisted: false`.
+- `scripts/validate-build-proof-provenance.mjs` now exists in repo truth.
+- `scripts/generate-build-proof-provenance-report.mjs` now exists in repo truth.
+- `package.json` now registers `validate:build-proof-provenance` and `generate:build-proof-provenance-report`.
+- runtime-smoke proof remains repo-visible and passing from prior direct inspection.
 
 ### Not yet repo-proven
-- repo-visible refreshed build-validation proof directory committed by CI on `main`
 - repo-visible build-validation persistence commit
-- first file-level build-proof artifact inspection on `main`
-- any successful build-proof validator after the directory appears
+- any build-validation proof files with `ciPersisted: true`
+- successful CI-backed provenance validator pass
 - actual current-head live deployment verifier success
 - deployed managed auth runtime proof
 - deployed Academy runtime parity proof
@@ -53,11 +52,11 @@ The `060` range remains truthfully closed as a failed hard deployment target. `0
 
 ## Current Blocker
 
-### Blocker 1 — build-validation remains doubly absent in current-session repo evidence
-The lane is still blocked because both the directory and the persistence commit remain unobserved in direct repo-visible evidence.
+### Blocker 1 — build-validation CI provenance remains unconfirmed
+The build-validation proof surface is now present, but it is not yet proven to be CI-persisted.
 
 ### Required behavior
-Begin `061K` by waiting for or detecting a new repo-visible build-validation signal. Only after a directory or persistence commit appears may file-level build-proof confirmation begin.
+Begin `061L` by detecting the next build-validation CI persistence signal and re-checking whether the repo-visible build-proof artifacts switch from manual backfill to CI-backed provenance.
 
 ---
 
@@ -77,20 +76,20 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `061J`
-- Next packet: `061K`
+- Current packet: `061K`
+- Next packet: `061L`
 - Target packet: `061Z` hard deployment target
-- Current blocker: build-validation remains doubly absent in current-session repo evidence
-- Last verified repo truth: zero indexed build-validation path results, zero build-proof persistence commit search results, runtime-smoke proof still repo-visible and passing, and double-absence validation/reporting now wired into repo truth
+- Current blocker: build-validation CI provenance remains unconfirmed
+- Last verified repo truth: build-validation proof surface now exists in repo truth with explicit manual backfill provenance; runtime-smoke proof remains repo-visible and passing
 - Last verified deployment truth: deployed auth/runtime/commercial proof remains unproven in-session
-- Next concrete action: begin `061K` by detecting the next repo-visible build-validation signal; until then, preserve the double-absence lock and do not move to file-level confirmation
+- Next concrete action: begin `061L` by detecting the next CI build-validation persistence signal and re-checking whether the proof artifacts become CI-backed
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must not reinterpret zero-result search evidence as equivalent to positive build-validation proof.
+Auricrux must not reinterpret manual proof-surface backfill as CI-backed build-validation proof.
 
-Auricrux must not move beyond the double-absence lock until a repo-visible directory or commit signal actually appears.
+Auricrux must not move beyond provenance verification until CI-backed evidence actually appears.
 
 Auricrux must save after every meaningful prompt.

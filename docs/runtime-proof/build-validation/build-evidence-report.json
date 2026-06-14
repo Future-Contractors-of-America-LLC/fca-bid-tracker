@@ -1,0 +1,14 @@
+{
+  "packet": "061K",
+  "generatedAt": "2026-06-14T17:30:00Z",
+  "provenance": "manual_repo_backfill",
+  "ciPersisted": false,
+  "verifiedByCurrentSession": true,
+  "status": "unverified_build_lane_baseline",
+  "summary": {
+    "reason": "Build-validation proof directory was absent in repo truth, so a truthful baseline surface was backfilled from current repo inspection.",
+    "runtimeSmokeRepoVisible": true,
+    "buildValidationRepoVisible": true,
+    "buildValidationCiProven": false
+  }
+}

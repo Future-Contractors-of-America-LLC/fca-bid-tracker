@@ -33,6 +33,8 @@
     "generate:build-proof-persistence-commit-signal-report": "node scripts/generate-build-proof-persistence-commit-signal-report.mjs",
     "validate:build-proof-double-absence": "node scripts/validate-build-proof-double-absence.mjs",
     "generate:build-proof-double-absence-report": "node scripts/generate-build-proof-double-absence-report.mjs",
+    "validate:build-proof-provenance": "node scripts/validate-build-proof-provenance.mjs",
+    "generate:build-proof-provenance-report": "node scripts/generate-build-proof-provenance-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",
