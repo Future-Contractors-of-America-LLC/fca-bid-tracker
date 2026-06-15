@@ -156,7 +156,12 @@ jobs:
           if git diff --cached --quiet; then
             echo "No runtime proof artifact changes to commit."
           else
-            git commit -m "Persist runtime smoke proof artifacts for run ${GITHUB_RUN_ID}"
+            tmp_patch="$(mktemp)"
+            git diff --cached --binary > "$tmp_patch"
+            git reset --hard
+            git clean -fd
             git pull --rebase origin main
+            git apply --index "$tmp_patch"
+            git commit -m "Persist runtime smoke proof artifacts for run ${GITHUB_RUN_ID}"
             git push origin HEAD:main
           fi

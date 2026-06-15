@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
@@ -24,14 +25,66 @@ const buttonStyle = (primary = false) => ({
   cursor: "pointer",
 });
 
+const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
+const ESTIMATE_EDITOR_STORAGE_KEY = "fca_customer_estimate_editor_v1";
+
+function readBrandSkin() {
+  if (typeof window === "undefined") return { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" };
+  try {
+    return JSON.parse(window.localStorage.getItem(BRAND_STORAGE_KEY) || "{}");
+  } catch {
+    return { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" };
+  }
+}
+
+function readEstimateDrafts() {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(ESTIMATE_EDITOR_STORAGE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function writeEstimateDrafts(drafts) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(ESTIMATE_EDITOR_STORAGE_KEY, JSON.stringify(drafts));
+  } catch {
+    // best effort
+  }
+}
+
 export default function PortalEstimates() {
   const { state } = useWorkspaceState();
   const { estimates, meta, advanceEstimate, generateProposal } = useEstimateWorkspace();
+  const brandSkin = readBrandSkin();
+  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
+  const [drafts, setDrafts] = useState(() => readEstimateDrafts());
+
+  const brandedNarrative = useMemo(() => `${companyName} estimate studio turns qualified opportunities into customer-ready pricing packages with editable line items, scope notes, and Auricrux-guided next actions.`, [companyName]);
+
+  function updateDraft(estimateId, key, value) {
+    const next = {
+      ...drafts,
+      [estimateId]: {
+        ...drafts[estimateId],
+        [key]: value,
+      },
+    };
+    setDrafts(next);
+    writeEstimateDrafts(next);
+  }
+
+  function addDraftLine(estimateId) {
+    const current = drafts[estimateId]?.newLines || [];
+    updateDraft(estimateId, "newLines", current.concat({ id: `line-${Date.now()}`, label: "New scope line", amount: "$0", note: "Customer-customized line item" }));
+  }
 
   return (
     <PortalShell
-      title="Estimate Workspace and Pricing Readiness"
-      subtitle="Pricing-facing workspace for line-item confidence, assumptions, exclusions, and clean conversion into customer proposal packaging."
+      title={`${companyName} Estimate Studio`}
+      subtitle="A branded pricing workspace for real estimate entry, scope packaging, exclusions, assumptions, and proposal launch."
       activeHref="/portal/estimates"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}
@@ -42,12 +95,15 @@ export default function PortalEstimates() {
         <SystemStateSummary tenant={state.tenant} project={state.project} workspace={state.workspace} auricrux={state.auricrux} title="Estimate route extends the Contractor Command bid spine" detail="Estimate state now lives as its own pricing workspace so FCA can move from qualification into structured pricing and customer-ready packaging." />
       </div>
 
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Estimate persistence source</div>
+      <div style={{ ...cardStyle, marginBottom: 16, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
+        <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded estimate experience</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
+        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{brandedNarrative}</p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Source:</strong> {meta.backingSource}</div>
           <div><strong>Status:</strong> {meta.persistenceState}</div>
           <div><strong>Last sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
+          <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
         </div>
       </div>
 
@@ -55,48 +111,72 @@ export default function PortalEstimates() {
       <AutomationRecoveryFeed title="Estimate automation feed" detail="Recent estimate and proposal-generation actions remain visible across routes so pricing actions are durable rather than local-only UI gestures." />
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
-        {estimates.map((estimate) => (
-          <div key={estimate.estimateId} style={cardStyle}>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>{estimate.status}</div>
-            <h3 style={{ marginTop: 0, marginBottom: 8 }}>{estimate.package}</h3>
-            <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 10 }}>{estimate.total}</div>
-            <div style={{ color: "#475569", lineHeight: 1.7 }}>
-              <div><strong>Estimate ID:</strong> {estimate.estimateId}</div>
-              <div><strong>Bid:</strong> {estimate.bidId}</div>
-              <div><strong>Estimator:</strong> {estimate.estimator}</div>
-            </div>
-            <div style={{ marginTop: 12 }}>
-              <div style={{ fontWeight: 700, marginBottom: 6 }}>Assumptions</div>
-              <ul style={{ marginTop: 0, paddingLeft: 18, color: "#475569", lineHeight: 1.7 }}>
-                {estimate.assumptions.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
-            <div style={{ marginTop: 12 }}>
-              <div style={{ fontWeight: 700, marginBottom: 6 }}>Exclusions</div>
-              <ul style={{ marginTop: 0, paddingLeft: 18, color: "#475569", lineHeight: 1.7 }}>
-                {estimate.exclusions.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
-            <div style={{ marginTop: 12 }}>
-              <div style={{ fontWeight: 700, marginBottom: 6 }}>Line items</div>
-              <div style={{ display: "grid", gap: 8 }}>
-                {estimate.lineItems.map((item) => (
-                  <div key={item.code} style={{ border: "1px solid #e5e7eb", borderRadius: 10, padding: 10, background: "#f8fafc", display: "flex", justifyContent: "space-between", gap: 12 }}>
-                    <div>
-                      <div style={{ fontWeight: 700 }}>{item.label}</div>
-                      <div style={{ color: "#64748b", fontSize: 12 }}>{item.code}</div>
+        {estimates.map((estimate) => {
+          const draft = drafts[estimate.estimateId] || { scopeNote: "", newLines: [] };
+          return (
+            <div key={estimate.estimateId} style={cardStyle}>
+              <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>{estimate.status}</div>
+              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{estimate.package}</h3>
+              <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 10 }}>{estimate.total}</div>
+              <div style={{ color: "#475569", lineHeight: 1.7 }}>
+                <div><strong>Estimate ID:</strong> {estimate.estimateId}</div>
+                <div><strong>Bid:</strong> {estimate.bidId}</div>
+                <div><strong>Estimator:</strong> {estimate.estimator}</div>
+              </div>
+
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Assumptions</div>
+                <ul style={{ marginTop: 0, paddingLeft: 18, color: "#475569", lineHeight: 1.7 }}>
+                  {estimate.assumptions.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Editable scope note</div>
+                <textarea value={draft.scopeNote} onChange={(event) => updateDraft(estimate.estimateId, "scopeNote", event.target.value)} placeholder="Add a branded scope note for this customer estimate" style={{ width: "100%", minHeight: 88, padding: 12, borderRadius: 12, border: "1px solid #cbd5e1", boxSizing: "border-box" }} />
+              </div>
+
+              <div style={{ marginTop: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 6 }}>
+                  <div style={{ fontWeight: 700 }}>Line items</div>
+                  <button type="button" style={buttonStyle()} onClick={() => addDraftLine(estimate.estimateId)}>Add Line</button>
+                </div>
+                <div style={{ display: "grid", gap: 8 }}>
+                  {estimate.lineItems.map((item) => (
+                    <div key={item.code} style={{ border: "1px solid #e5e7eb", borderRadius: 10, padding: 10, background: "#f8fafc", display: "flex", justifyContent: "space-between", gap: 12 }}>
+                      <div>
+                        <div style={{ fontWeight: 700 }}>{item.label}</div>
+                        <div style={{ color: "#64748b", fontSize: 12 }}>{item.code}</div>
+                      </div>
+                      <div style={{ fontWeight: 700 }}>{item.amount}</div>
                     </div>
-                    <div style={{ fontWeight: 700 }}>{item.amount}</div>
-                  </div>
-                ))}
+                  ))}
+                  {draft.newLines.map((item) => (
+                    <div key={item.id} style={{ border: `1px solid ${brandSkin.accent || "#1d4ed8"}`, borderRadius: 10, padding: 10, background: brandSkin.surface || "#eff6ff" }}>
+                      <div style={{ fontWeight: 700 }}>{item.label}</div>
+                      <div style={{ color: "#475569", fontSize: 13 }}>{item.note}</div>
+                      <div style={{ marginTop: 6, fontWeight: 700 }}>{item.amount}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+                <button type="button" style={buttonStyle()} onClick={() => advanceEstimate(estimate.estimateId, "Internal review complete", `Auricrux closed internal pricing review for ${estimate.package}.`)}>Close Review</button>
+                <button type="button" style={buttonStyle(true)} onClick={() => generateProposal(estimate.estimateId, `Auricrux generated a customer proposal package from ${estimate.estimateId}. Scope note: ${draft.scopeNote || "Not provided"}`)}>Generate Proposal</button>
               </div>
             </div>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
-              <button type="button" style={buttonStyle()} onClick={() => advanceEstimate(estimate.estimateId, "Internal review complete", `Auricrux closed internal pricing review for ${estimate.package}.`)}>Close Review</button>
-              <button type="button" style={buttonStyle(true)} onClick={() => generateProposal(estimate.estimateId, `Auricrux generated a customer proposal package from ${estimate.estimateId}.`)}>Generate Proposal</button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
+      </div>
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Estimate Studio</h2>
+        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
+          <li>Explains estimate status, assumptions, and exclusions</li>
+          <li>Recommends next pricing and proposal actions</li>
+          <li>Executes estimate advancement and proposal generation</li>
+        </ul>
       </div>
     </PortalShell>
   );

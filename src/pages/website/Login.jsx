@@ -5,6 +5,8 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
+import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -123,6 +125,9 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
     password: "",
     company: session?.company || "",
     role: session?.role || "Owner / Admin",
+    selectedPlan: session?.selectedPlan || "enterprise",
+    enabledProducts: session?.enabledProducts || { saas: true, lms: true, auricrux: true },
+    enabledComms: session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true },
   });
   const [error, setError] = useState("");
   const [authStatus, setAuthStatus] = useState("idle");
@@ -137,6 +142,9 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
       password: PRIMARY_TEST_ACCOUNT.password,
       company: PRIMARY_TEST_ACCOUNT.company,
       role: PRIMARY_TEST_ACCOUNT.role,
+      selectedPlan: PRIMARY_TEST_ACCOUNT.selectedPlan,
+      enabledProducts: PRIMARY_TEST_ACCOUNT.enabledProducts,
+      enabledComms: PRIMARY_TEST_ACCOUNT.enabledComms,
     });
     setAuthStatus(queryState.autologin ? "authenticating" : "seeded");
   }, [queryState.autologin, queryState.seeded]);
@@ -169,7 +177,6 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
           accountMode: authenticatedAccount.accountMode,
           authBoundary: authenticatedAccount.authBoundary,
         });
-
         if (!result.ok) throw new Error(result.error);
         setAuthStatus("authenticated");
         navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
@@ -205,9 +212,9 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
         company: authenticatedAccount.company || form.company || "Customer Workspace",
         role: authenticatedAccount.role || form.role,
         nextHref,
-        selectedPlan: authenticatedAccount.selectedPlan,
-        enabledProducts: authenticatedAccount.enabledProducts,
-        enabledComms: authenticatedAccount.enabledComms,
+        selectedPlan: authenticatedAccount.selectedPlan || form.selectedPlan,
+        enabledProducts: authenticatedAccount.enabledProducts || form.enabledProducts,
+        enabledComms: authenticatedAccount.enabledComms || form.enabledComms,
         customerId: authenticatedAccount.customerId,
         workspaceLabel: authenticatedAccount.workspaceLabel,
         accountSource: authenticatedAccount.accountSource,
@@ -249,7 +256,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 14 }}>
             <div>
               <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>FCA Contractor Command</div>
-              <h2 style={{ margin: 0 }}>Win work, move customers forward, and keep every handoff inside one branded portal</h2>
+              <h2 style={{ margin: 0 }}>Sign in to win work, move customers forward, and keep every handoff inside one branded portal</h2>
             </div>
             <div style={{ display: "grid", gap: 10 }}>
               <FcaBrandMark compact />
@@ -260,6 +267,11 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             FCA gives contractors a customer-ready login experience, a branded workspace, opportunity control, estimate coordination, customer task delivery, and Academy training—without breaking continuity between sales, operations, and execution.
           </p>
           <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} style={{ display: "flex", gap: 12, flexWrap: "wrap" }} />
+        </div>
+
+        <CustomerProductLaunchpad session={session} title="What opens after sign-in" />
+        <div style={{ marginBottom: 18 }}>
+          <CustomerCommsLaunchpad session={session} title="Communications channels included in your launch workspace" />
         </div>
 
         <div style={twoColumnGridStyle}>
