@@ -1,8 +1,8 @@
 {
   "packet": "061Z",
-  "generatedAt": "2026-06-15T17:44:18.157Z",
-  "witnessCommitSha": "de9c7b7da3c7dad52f11d2d31af212f386921c6e",
-  "proofCommitSha": "6354799c5962755b2e6f62093667f2a98ea35baa",
+  "generatedAt": "2026-06-15T17:51:34.765Z",
+  "witnessCommitSha": "70dfc8256bbf1260c99533fd3f1b053c61298ec6",
+  "proofCommitSha": "9164562fce33770528a3f0f04172e7e9e04adcf4",
   "metadataState": {
     "provenance": "github_actions_ci",
     "ciPersisted": true,
