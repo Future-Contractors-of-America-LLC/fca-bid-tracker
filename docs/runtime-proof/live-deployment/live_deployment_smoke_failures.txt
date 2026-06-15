@@ -1,2 +1,1 @@
-live deployment verifier success has not yet been directly repo-proven
-ci-backed live deployment proof provenance has not yet been directly observed
+

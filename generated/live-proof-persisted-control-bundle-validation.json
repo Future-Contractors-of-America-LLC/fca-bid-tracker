@@ -1,0 +1,19 @@
+{
+  "packet": "061Z",
+  "generatedAt": "2026-06-15T14:16:18.631Z",
+  "checks": {
+    "currentHeadPresent": false,
+    "metadataPresent": false,
+    "bundlePresent": false,
+    "buildCoveragePresent": false,
+    "stampCoveragePresent": false
+  },
+  "success": false,
+  "failures": [
+    "currentHeadPresent",
+    "metadataPresent",
+    "bundlePresent",
+    "buildCoveragePresent",
+    "stampCoveragePresent"
+  ]
+}

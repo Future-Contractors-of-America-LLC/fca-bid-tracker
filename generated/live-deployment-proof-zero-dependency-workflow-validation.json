@@ -1,0 +1,13 @@
+{
+  "packet": "061Z",
+  "generatedAt": "2026-06-15T14:16:16.921Z",
+  "checks": {
+    "noNpmCiStep": true,
+    "usesNodeDirectVerify": true,
+    "usesNodeDirectStamp": true,
+    "usesNodeDirectSurfaceValidation": true,
+    "usesNodeDirectWorkflowValidation": true
+  },
+  "success": true,
+  "failures": []
+}

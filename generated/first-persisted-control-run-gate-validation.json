@@ -1,0 +1,13 @@
+{
+  "packet": "061Z",
+  "generatedAt": "2026-06-15T14:16:18.953Z",
+  "proofCommitSha": null,
+  "surfacePresent": false,
+  "bundlePresent": false,
+  "success": false,
+  "failures": [
+    "first repo-visible CI-backed live deployment proof commit remains unobserved",
+    "persisted artifact surface validation has not yet landed in repo truth",
+    "persisted control bundle validation has not yet landed in repo truth"
+  ]
+}

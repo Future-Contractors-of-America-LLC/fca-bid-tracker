@@ -1,0 +1,13 @@
+{
+  "packet": "061Z",
+  "generatedAt": "2026-06-15T14:16:17.067Z",
+  "checks": {
+    "workflowExists": true,
+    "hasWorkflowName": true,
+    "emitsWitness": true,
+    "validatesWitness": true,
+    "commitMessagePresent": true
+  },
+  "success": true,
+  "failures": []
+}

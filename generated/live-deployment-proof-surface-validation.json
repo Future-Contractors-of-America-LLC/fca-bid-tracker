@@ -1,0 +1,13 @@
+{
+  "packet": "061Z",
+  "generatedAt": "2026-06-15T14:16:16.778Z",
+  "present": [
+    "live_deployment_smoke_summary.json",
+    "live_deployment_smoke_failures.txt",
+    "live_deployment_proof_metadata.json",
+    "live_deployment_proof_metadata.md"
+  ],
+  "failureCount": 0,
+  "success": true,
+  "failures": []
+}

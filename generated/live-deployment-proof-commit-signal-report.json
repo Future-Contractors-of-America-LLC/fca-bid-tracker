@@ -1,0 +1,7 @@
+{
+  "packet": "061Z",
+  "generatedAt": "2026-06-15T14:16:17.223Z",
+  "success": false,
+  "observed": false,
+  "expectedCommitPattern": "Persist CI-backed live deployment proof for run ..."
+}

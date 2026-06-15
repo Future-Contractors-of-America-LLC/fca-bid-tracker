@@ -1,0 +1,9 @@
+{
+  "packet": "061Z",
+  "generatedAt": "2026-06-15T14:16:17.684Z",
+  "success": true,
+  "summaryPresent": true,
+  "failureFileEmpty": true,
+  "hostCount": 3,
+  "failures": []
+}

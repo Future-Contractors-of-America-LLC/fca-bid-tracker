@@ -1,0 +1,19 @@
+{
+  "packet": "061Z",
+  "generatedAt": "2026-06-15T14:16:17.821Z",
+  "checks": {
+    "witnessCommitObserved": true,
+    "ciProofCommitObserved": false,
+    "runWitnessSurfaceValid": true,
+    "proofMetadataCiBacked": true
+  },
+  "success": false,
+  "failures": [
+    "ciProofCommitObserved"
+  ],
+  "observed": {
+    "witnessCommitSha": "69050da425c7e35c1c0859c269318d2521194a08",
+    "ciProofCommitSha": null,
+    "proofMetadataStatus": "ci_surface_present_success"
+  }
+}

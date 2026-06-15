@@ -1,13 +1,191 @@
-{
-  "packet": "061O",
-  "generatedAt": "2026-06-14T19:00:00Z",
-  "provenance": "manual_repo_backfill",
-  "ciPersisted": false,
-  "verifiedByCurrentSession": true,
-  "status": "live_deployment_surface_baseline_unverified",
-  "summary": {
-    "reason": "Repo-visible live deployment proof surface was absent; this baseline surface was backfilled from current repo inspection to allow truthful CI provenance transition tracking.",
-    "liveDeploymentRepoVisible": true,
-    "liveDeploymentCiProven": false
+[
+  {
+    "attempt": 4,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+    "targetGitSha": "b9aacccd95d955217f6004c198cf5b20ba422c41",
+    "host": "futurecontractorsofamerica.com",
+    "deploymentGitSha": "b9aacccd95d955217f6004c198cf5b20ba422c41",
+    "runtimeGitSha": "b9aacccd95d955217f6004c198cf5b20ba422c41",
+    "commitWitnessRoute": "/commit-witness-b9aacccd95d955217f6004c198cf5b20ba422c41.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-b9aacccd95d955217f6004c198cf5b20ba422c41.txt",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "failures": []
+  },
+  {
+    "attempt": 4,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+    "targetGitSha": "b9aacccd95d955217f6004c198cf5b20ba422c41",
+    "host": "www.futurecontractorsofamerica.com",
+    "deploymentGitSha": "b9aacccd95d955217f6004c198cf5b20ba422c41",
+    "runtimeGitSha": "b9aacccd95d955217f6004c198cf5b20ba422c41",
+    "commitWitnessRoute": "/commit-witness-b9aacccd95d955217f6004c198cf5b20ba422c41.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-b9aacccd95d955217f6004c198cf5b20ba422c41.txt",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "failures": []
+  },
+  {
+    "attempt": 4,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+    "targetGitSha": "b9aacccd95d955217f6004c198cf5b20ba422c41",
+    "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+    "deploymentGitSha": "b9aacccd95d955217f6004c198cf5b20ba422c41",
+    "runtimeGitSha": "b9aacccd95d955217f6004c198cf5b20ba422c41",
+    "commitWitnessRoute": "/commit-witness-b9aacccd95d955217f6004c198cf5b20ba422c41.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-b9aacccd95d955217f6004c198cf5b20ba422c41.txt",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "failures": []
   }
-}
+]
