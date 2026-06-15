@@ -37,14 +37,23 @@ const submitButtonStyle = {
 };
 
 const marketingPoints = [
-  { title: "Close work from one login", detail: "Capture intake, qualify opportunities, build estimates, register files, move projects, manage customer messages, and keep every handoff visible inside one command center." },
-  { title: "Deliver a portal under your brand", detail: "Customers and teams see a workspace that feels like your company’s operating system instead of a generic vendor dashboard." },
-  { title: "Keep Auricrux present in every step", detail: "Auricrux explains what matters, recommends the next move, and executes guided actions across sales, delivery, communications, and training." },
+  {
+    title: "Close work from one login",
+    detail: "Capture intake, qualify opportunities, build estimates, deliver files, manage projects, handle customer messages, and keep every handoff visible inside one command center.",
+  },
+  {
+    title: "Offer a workspace under your brand",
+    detail: "Customers and teams see a portal that feels like your company’s operating system instead of a generic software vendor dashboard.",
+  },
+  {
+    title: "Keep Auricrux active in every step",
+    detail: "Auricrux explains what matters, recommends the next action, and executes guided moves across sales, delivery, communications, support, and training.",
+  },
 ];
 
 const signupBenefits = [
   "Branded login and workspace entry",
-  "Opportunity, estimate, file, project, and customer message continuity",
+  "Opportunity, estimate, file, project, communication, and support continuity",
   "Academy classrooms for onboarding and execution readiness",
   "Auricrux guidance embedded across every customer-facing lane",
 ];
@@ -59,7 +68,9 @@ const LOCAL_FALLBACK_AUTH_BOUNDARY = {
 };
 
 function readLoginQueryState() {
-  if (typeof window === "undefined") return { seeded: false, autologin: false, internal: false, nextHref: null };
+  if (typeof window === "undefined") {
+    return { seeded: false, autologin: false, internal: false, nextHref: null };
+  }
   const params = new URLSearchParams(window.location.search);
   const seeded = params.get("seeded") === "1" || params.get("account") === "test";
   const autologin = seeded && params.get("autologin") === "1";
@@ -88,7 +99,11 @@ async function authenticateWorkspaceAccount(email, password) {
     });
     const payload = await response.json();
     if (response.ok && payload?.ok && payload?.account) {
-      return { ...payload.account, authBoundary: payload.authBoundary, accountSource: payload.authenticationMode || "api" };
+      return {
+        ...payload.account,
+        authBoundary: payload.authBoundary,
+        accountSource: payload.authenticationMode || "api",
+      };
     }
     const localFallback = resolveLocalFallbackAccount(email, password);
     if (localFallback) return localFallback;
@@ -131,8 +146,12 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
     setAuthStatus(queryState.autologin ? "authenticating" : "seeded");
   }, [queryState.autologin, queryState.seeded]);
 
-  const requestedWorkspaceHref = accessMode === "protected" ? requestedPath : queryState.nextHref || session?.nextHref || "/portal";
-  const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy" ? requestedWorkspaceHref : "/portal";
+  const requestedWorkspaceHref = accessMode === "protected"
+    ? requestedPath
+    : queryState.nextHref || session?.nextHref || "/portal";
+  const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy"
+    ? requestedWorkspaceHref
+    : "/portal";
 
   useEffect(() => {
     if (!queryState.seeded || !queryState.autologin || autologinAttemptedRef.current) return;
@@ -215,7 +234,9 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
         <ShellHeader
           eyebrow={internalMode ? "Internal Validation" : "Customer Login"}
           title={internalMode ? "Internal Access" : "Sign In or Request Access"}
-          subtitle={internalMode ? "Internal validation remains available by explicit route only." : "Launch a branded contractor operating system that handles intake, opportunities, estimates, files, projects, customer communications, training, and Auricrux-guided execution."}
+          subtitle={internalMode
+            ? "Internal validation remains available by explicit route only."
+            : "Launch a branded contractor operating system that handles customer intake, qualification, estimates, files, projects, communications, support, training, and Auricrux-guided execution."}
           primaryHref={shellHeaderCtaSets.workspace.primaryHref}
           primaryLabel={shellHeaderCtaSets.workspace.primaryLabel}
           secondaryHref={shellHeaderCtaSets.workspace.secondaryHref}
@@ -228,7 +249,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 14 }}>
             <div>
               <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>FCA Contractor Command</div>
-              <h2 style={{ margin: 0 }}>Sign in to win work, deliver branded customer service, and keep every handoff inside one portal</h2>
+              <h2 style={{ margin: 0 }}>Sign in to close work, deliver branded customer service, and keep every handoff inside one portal</h2>
             </div>
             <div style={{ display: "grid", gap: 10 }}>
               <FcaBrandMark compact />
@@ -236,7 +257,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             </div>
           </div>
           <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 14 }}>
-            FCA gives contractors a customer-ready login experience, a branded workspace, opportunity control, estimates, file intake, project command, customer communications, and Academy training—without breaking continuity between sales, operations, and execution.
+            FCA gives contractors a customer-ready login experience, a branded workspace, opportunity control, estimates, file intake, project command, customer communications, support continuity, and Academy training—without breaking continuity between sales, operations, and execution.
           </p>
           <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} style={{ display: "flex", gap: 12, flexWrap: "wrap" }} />
         </div>
@@ -251,7 +272,9 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             <div style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#eff6ff", marginBottom: 18 }}>
               <div style={{ fontWeight: 700, marginBottom: 6 }}>{internalMode ? "Internal launch access" : "Customer workspace access"}</div>
               <div style={{ color: "#475569", lineHeight: 1.7 }}>
-                {internalMode ? "Use seeded launch credentials for internal validation only." : "Sign in to manage branded customer tasks, qualification flow, estimate readiness, file intake, project milestones, communications, training rollout, and Auricrux-guided next actions."}
+                {internalMode
+                  ? "Use seeded launch credentials for internal validation only."
+                  : "Sign in to manage branded customer tasks, qualification flow, estimates, file intake, project milestones, communications, support follow-through, training rollout, and Auricrux-guided next actions."}
               </div>
             </div>
 
@@ -302,7 +325,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
         </div>
 
         <div style={{ marginTop: 24 }}>
-          <PublicActionRail title="Request a branded rollout" detail="Move from first conversation into a login-ready customer workspace with Auricrux already present across sales, tasks, files, projects, communications, and training." />
+          <PublicActionRail title="Request a branded rollout" detail="Move from first conversation into a login-ready customer workspace with Auricrux already present across sales, files, projects, communications, support, and training." />
         </div>
 
         <ShellFooter />

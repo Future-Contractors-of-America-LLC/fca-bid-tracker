@@ -38,7 +38,8 @@ export default function PortalSupport() {
   const { session } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
-  const [supportState, setSupportState] = useState(() => readLocalJson(SUPPORT_COMMAND_KEY, { ticketTitle: "", ticketDetail: "", urgency: "standard", tickets: [] }));
+  const [supportState, setSupportState] = useState(() => readLocalJson(SUPPORT_COMMAND_KEY, { subject: "", priority: "normal", detail: "", tickets: [] }));
+  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
 
   useEffect(() => {
     refreshSyncStamp("Persisted support continuity state active");
@@ -48,49 +49,55 @@ export default function PortalSupport() {
     writeLocalJson(SUPPORT_COMMAND_KEY, supportState);
   }, [supportState]);
 
-  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
-
-  function updateState(key, value) {
+  function updateField(key, value) {
     setSupportState((current) => ({ ...current, [key]: value }));
   }
 
   function createTicket() {
-    if (!supportState.ticketTitle.trim() || !supportState.ticketDetail.trim()) return;
+    if (!supportState.subject.trim() || !supportState.detail.trim()) return;
     setSupportState((current) => ({
       ...current,
       tickets: [{
         id: `ticket-${Date.now()}`,
-        title: current.ticketTitle,
-        detail: current.ticketDetail,
-        urgency: current.urgency,
+        subject: current.subject,
+        priority: current.priority,
+        detail: current.detail,
         status: "Open",
       }, ...(current.tickets || [])],
-      ticketTitle: "",
-      ticketDetail: "",
+      subject: "",
+      detail: "",
+      priority: "normal",
     }));
-    refreshSyncStamp(`Customer support request created with ${supportState.urgency} urgency.`);
+    refreshSyncStamp("Customer support request created");
+  }
+
+  function resolveTicket(ticketId) {
+    setSupportState((current) => ({
+      ...current,
+      tickets: current.tickets.map((ticket) => ticket.id === ticketId ? { ...ticket, status: "Resolved" } : ticket),
+    }));
+    refreshSyncStamp("Support ticket resolved");
   }
 
   return (
     <PortalShell
       title={`${companyName} Support and Service Request Command`}
-      subtitle="A branded service workspace where customers can submit support requests, preserve escalation continuity, and let Auricrux guide recovery actions."
+      subtitle="A branded support workspace where customers can open real service requests, keep recovery tied to active work, and let Auricrux guide the next support move."
       activeHref="/portal/support"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.support}
       primaryHref="/portal/messages"
-      primaryLabel="Open Communications"
+      primaryLabel="Open Messages"
     >
       <div style={{ ...cardStyle, marginBottom: 24, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
         <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded support experience</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
-          {companyName} can now create branded support and service requests, preserve escalation continuity, and let Auricrux explain, recommend, and execute the right recovery path.
+          {companyName} can now open support requests, track service continuity, and preserve escalation context without leaving the branded customer workspace.
         </p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Source:</strong> {state.meta.backingSource}</div>
-          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
-          <div><strong>Current plan:</strong> {session?.selectedPlan || "enterprise"}</div>
+          <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
           <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
         </div>
       </div>
@@ -99,21 +106,21 @@ export default function PortalSupport() {
         <h2 style={{ marginTop: 0 }}>Functional product: Support and service request command</h2>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
           <label>
-            <div style={{ fontWeight: 700, marginBottom: 6 }}>Request title</div>
-            <input value={supportState.ticketTitle} onChange={(event) => updateState("ticketTitle", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Permit package missing sheet" />
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Subject</div>
+            <input value={supportState.subject} onChange={(event) => updateField("subject", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Permit review blocked" />
           </label>
           <label>
-            <div style={{ fontWeight: 700, marginBottom: 6 }}>Urgency</div>
-            <select value={supportState.urgency} onChange={(event) => updateState("urgency", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }}>
-              <option value="standard">Standard</option>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Priority</div>
+            <select value={supportState.priority} onChange={(event) => updateField("priority", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }}>
+              <option value="normal">Normal</option>
               <option value="high">High</option>
               <option value="urgent">Urgent</option>
             </select>
           </label>
         </div>
         <label>
-          <div style={{ fontWeight: 700, marginBottom: 6 }}>Issue detail</div>
-          <textarea value={supportState.ticketDetail} onChange={(event) => updateState("ticketDetail", event.target.value)} style={{ width: "100%", minHeight: 96, padding: "12px 14px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Describe the customer issue, blocker, or service request" />
+          <div style={{ fontWeight: 700, marginBottom: 6 }}>Support request detail</div>
+          <textarea value={supportState.detail} onChange={(event) => updateField("detail", event.target.value)} style={{ width: "100%", minHeight: 96, padding: "12px 14px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Describe the customer issue, blocker, or service request" />
         </label>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
           <button type="button" onClick={createTicket} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>Create Support Request</button>
@@ -121,16 +128,17 @@ export default function PortalSupport() {
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Open support requests</h2>
+        <h2 style={{ marginTop: 0 }}>Support request board</h2>
         <div style={{ display: "grid", gap: 12 }}>
           {(supportState.tickets || []).map((ticket) => (
-            <div key={ticket.id} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14 }}>
+            <div key={ticket.id} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14, background: ticket.status === "Resolved" ? "#f0fdf4" : "#fff" }}>
               <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                <strong>{ticket.title}</strong>
-                <span style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700 }}>{ticket.urgency.toUpperCase()}</span>
+                <strong>{ticket.subject}</strong>
+                <span style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700 }}>{ticket.priority.toUpperCase()}</span>
               </div>
               <div style={{ color: "#475569", lineHeight: 1.7, marginTop: 8 }}>{ticket.detail}</div>
-              <div style={{ color: "#64748b", marginTop: 8 }}>Status: {ticket.status}</div>
+              <div style={{ color: "#0f172a", marginTop: 8 }}><strong>Status:</strong> {ticket.status}</div>
+              {ticket.status !== "Resolved" ? <button type="button" onClick={() => resolveTicket(ticket.id)} style={{ marginTop: 10, border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>Resolve Ticket</button> : null}
             </div>
           ))}
         </div>
@@ -139,9 +147,9 @@ export default function PortalSupport() {
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Support Command</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains issue posture, urgency, and customer impact</li>
-          <li>Recommends the next recovery or escalation action</li>
-          <li>Executes support request creation and continuity signaling</li>
+          <li>Explains the customer issue, blocker, and recovery posture</li>
+          <li>Recommends the next support, file, project, or communications action</li>
+          <li>Executes support request creation and resolution signaling</li>
         </ul>
       </div>
     </PortalShell>
