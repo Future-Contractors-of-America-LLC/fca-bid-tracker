@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: fca-runtime-smoke-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   smoke-check:
