@@ -53,29 +53,61 @@ jobs:
         run: |
           git config user.name "auricrux-ci"
           git config user.email "auricrux-ci@futurecontractorsofamerica.com"
-          git add docs/runtime-proof/build-validation generated/build-proof-ci-provenance-stamp.json generated/build-proof-ci-provenance-stamp.md generated/build-proof-transition-target.json generated/build-proof-transition-target.md generated/build-proof-ci-rewrite-transition-validation.json generated/build-proof-ci-rewrite-transition-validation.md generated/build-proof-ci-rewrite-transition-report.json generated/build-proof-ci-rewrite-transition-report.md
-          if git diff --cached --quiet; then
-            echo "No CI-backed build proof rewrite changes to commit."
-          else
-            tmp_patch="$(mktemp)"
-            git diff --cached --binary > "$tmp_patch"
+
+          proof_files=(
+            docs/runtime-proof/build-validation
+            generated/build-proof-ci-provenance-stamp.json
+            generated/build-proof-ci-provenance-stamp.md
+            generated/build-proof-transition-target.json
+            generated/build-proof-transition-target.md
+            generated/build-proof-ci-rewrite-transition-validation.json
+            generated/build-proof-ci-rewrite-transition-validation.md
+            generated/build-proof-ci-rewrite-transition-report.json
+            generated/build-proof-ci-rewrite-transition-report.md
+          )
+
+          persist_dir="$(mktemp -d)"
+          for f in "${proof_files[@]}"; do
+            if [ -d "$f" ]; then
+              mkdir -p "$persist_dir/$f"
+              cp -R "$f/." "$persist_dir/$f/" || true
+            elif [ -f "$f" ]; then
+              mkdir -p "$persist_dir/$(dirname "$f")"
+              cp "$f" "$persist_dir/$f" || true
+            fi
+          done
+
+          retries="1 2 3"
+          for retry_id in $retries; do
+            echo "Build proof persistence retry ${retry_id}"
+            git fetch origin main
+            git checkout -B main origin/main
+
+            for f in "${proof_files[@]}"; do
+              if [ -d "$persist_dir/$f" ]; then
+                mkdir -p "$f"
+                cp -R "$persist_dir/$f/." "$f/" || true
+              elif [ -f "$persist_dir/$f" ]; then
+                mkdir -p "$(dirname "$f")"
+                cp "$persist_dir/$f" "$f" || true
+              fi
+            done
+
+            git add "${proof_files[@]}"
+            if git diff --cached --quiet; then
+              echo "No CI-backed build proof rewrite changes to commit."
+              exit 0
+            fi
+
+            git commit -m "Persist CI-backed build proof provenance for run ${GITHUB_RUN_ID}"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
             git reset --hard
             git clean -fd
-            retries="1 2 3"
-            for retry_id in $retries; do
-              echo "Build proof persistence retry ${retry_id}"
-              git fetch origin main
-              git checkout -B main origin/main
-              if git apply --index "$tmp_patch"; then
-                git commit -m "Persist CI-backed build proof provenance for run ${GITHUB_RUN_ID}"
-                if git push origin HEAD:main; then
-                  exit 0
-                fi
-              fi
-              git reset --hard
-              git clean -fd
-              sleep 5
-            done
-            echo "Failed to persist CI-backed build proof provenance after retry budget."
-            exit 1
-          fi
+            sleep 5
+          done
+
+          echo "Failed to persist CI-backed build proof provenance after retry budget."
+          exit 1
