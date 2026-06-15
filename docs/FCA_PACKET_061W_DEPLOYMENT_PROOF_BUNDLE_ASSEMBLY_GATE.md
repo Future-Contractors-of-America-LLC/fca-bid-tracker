@@ -13,4 +13,4 @@ Target Packet: `061Z`
 No deployment-complete claim is allowed until witness-commit observation, CI-proof-commit observation, CI-backed metadata, current-head verifier output, and remaining live commercial/runtime proofs are assembled into one repo-visible proof bundle.
 
 ## 2026-06-15 improvement
-`061V` now adds an explicit bundle-readiness validator/report so this gate can fail or pass from repo truth instead of narrative status only.
+`061W` now ensures both CI lanes are wired to emit, validate, and persist the new proof-control artifacts required for bundle assembly.
