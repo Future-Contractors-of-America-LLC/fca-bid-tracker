@@ -15,10 +15,11 @@ Predefine the conditions that make `061Z` a truthful closeout instead of a cosme
 ## 061Z must answer
 1. Did current-head runtime smoke pass?
 2. Did current-head build-validation proof persist on `main`?
-3. Did live deployment verification pass?
-4. Is managed auth deployed and truthfully verified?
-5. Is the flagship FCA Contractor Command spine deployable and usable within bounded truth?
-6. Are Academy and commercial/runtime claims kept within verified scope?
+3. Did current-head live deployment proof persist on `main`?
+4. Did live deployment verification pass?
+5. Is managed auth deployed and truthfully verified within bounded evidence?
+6. Is the flagship FCA Contractor Command spine deployable and usable within bounded truth?
+7. Are Academy and commercial/runtime claims kept within verified scope?
 
 ## Permitted outcomes
 ### PASS
