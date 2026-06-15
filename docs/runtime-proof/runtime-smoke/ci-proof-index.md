@@ -1,18 +1,18 @@
 # CI Proof Index
 
 - Packet: 061Z
-- Generated: 2026-06-15T18:42:05.844Z
+- Generated: 2026-06-15T18:48:49.608Z
 - Repository: Future-Contractors-of-America-LLC/fca-bid-tracker
 - Ref: refs/heads/main
-- SHA: 1c63d977ad7b22092867b6ceaa5bfaa7b483db73
-- Run ID: 27568290081
+- SHA: b8904f9061f8c6f2e110e98f4fcfa237f34a73cc
+- Run ID: 27568680257
 - Workflow: FCA Runtime Smoke Validation
 
 ## Artifact presence
-- build-evidence-report.json: true
-- runtime-smoke-check-report.json: true
+- build-evidence-report.json: false
+- runtime-smoke-check-report.json: false
 
 ## Gate assessment
-- buildEvidenceReady: true
-- runtimeSmokeReady: true
-- runtimeSmokePass: true
+- buildEvidenceReady: false
+- runtimeSmokeReady: false
+- runtimeSmokePass: false
