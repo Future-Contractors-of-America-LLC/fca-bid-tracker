@@ -13,7 +13,7 @@ const cardStyle = {
 };
 
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
-const SUPPORT_COMMAND_KEY = "fca_customer_support_command_v2";
+const SUPPORT_COMMAND_KEY = "fca_customer_support_command_v3";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;

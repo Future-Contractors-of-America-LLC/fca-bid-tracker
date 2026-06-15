@@ -19,7 +19,7 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v9";
+const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v10";
 
 const classrooms = [
   {
@@ -134,6 +134,20 @@ const classrooms = [
       { id: "billing-command-auricrux", title: "Lesson 5 · Auricrux revenue continuity operations", objective: "Use Auricrux to explain billing posture, recommend the next commercial step, and execute invoice continuity actions.", activity: "Record one explain action, one recommend action, and one execute action Auricrux should provide in Billing Command." },
     ],
   },
+  {
+    id: "warranty-command",
+    title: "Warranty and Recurring Service Command",
+    credential: "FCA Academy · Launch Classroom 09",
+    audience: "Owners, service coordinators, project managers, warranty operators, and customer-success staff",
+    outcome: "Train teams to preserve post-delivery customer continuity through warranty response, recurring service opportunities, and Auricrux-guided retention actions.",
+    lessons: [
+      { id: "warranty-command-case", title: "Lesson 1 · Define the warranty or service issue", objective: "Capture the post-delivery customer need without losing job or customer context.", activity: "Write one warranty or recurring-service case description tied to a real project outcome." },
+      { id: "warranty-command-priority", title: "Lesson 2 · Set the service priority", objective: "Distinguish between routine follow-up, urgent field response, and recurring service expansion.", activity: "Choose the right service priority and explain the customer impact." },
+      { id: "warranty-command-create", title: "Lesson 3 · Open the service request", objective: "Keep post-delivery support visible in the branded workspace instead of losing it to disconnected email or phone threads.", activity: "Create a warranty or recurring-service request and confirm it appears in the service board." },
+      { id: "warranty-command-resolve", title: "Lesson 4 · Resolve and confirm retention continuity", objective: "Close the case only when the customer-facing service issue has actually been addressed and the next relationship step is visible.", activity: "Resolve one service request and confirm the resulting retention or recurring-work path." },
+      { id: "warranty-command-auricrux", title: "Lesson 5 · Auricrux retention and service operations", objective: "Use Auricrux to explain service posture, recommend the next retention move, and execute recurring-service continuity actions.", activity: "Record one explain action, one recommend action, and one execute action Auricrux should provide in Warranty and Recurring Service Command." },
+    ],
+  },
 ];
 
 function readCourseProgress() {
@@ -185,7 +199,7 @@ export default function AcademyHome() {
       <ShellHeader
         eyebrow="FCA Academy"
         title="Customer classroom delivery"
-        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, projects, communications, support, billing, tasks, and execution continuity."
+        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, projects, communications, support, billing, warranty, tasks, and execution continuity."
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
@@ -236,7 +250,7 @@ export default function AcademyHome() {
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Academy</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
           <li>Explains the lesson objective and why it matters in the customer workflow</li>
-          <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, projects, communications, support, billing, and tasks</li>
+          <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, projects, communications, support, billing, warranty, and tasks</li>
           <li>Executes guided completion signals and keeps learning-to-workflow continuity visible</li>
         </ul>
       </div>
