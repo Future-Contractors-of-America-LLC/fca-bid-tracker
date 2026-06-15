@@ -25,7 +25,7 @@ function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
-function createFunctionWrapper(functionName, sourceFileName) {
+function createFunctionWrapper(sourceFileName) {
   return `module.exports = async function (context, req) {\n  const handler = require('../${sourceFileName}');\n  const result = await handler(context, req);\n\n  if (!context.res && result && typeof result === 'object' && ('status' in result || 'body' in result || 'headers' in result)) {\n    context.res = result;\n    return;\n  }\n\n  if (!context.res && typeof result !== 'undefined') {\n    context.res = {\n      status: 200,\n      headers: { 'Content-Type': 'application/json; charset=utf-8' },\n      body: result\n    };\n    return;\n  }\n\n  if (!context.res) {\n    context.res = {\n      status: 204\n    };\n  }\n};\n`;
 }
 
@@ -37,7 +37,6 @@ function main() {
   rmrf(outRoot);
   ensureDir(outRoot);
 
-  // Base files expected by Azure Functions runtime.
   const hasHost = copyIfExists(path.join(apiRoot, 'host.json'), path.join(outRoot, 'host.json'));
   if (!hasHost) {
     writeJson(path.join(outRoot, 'host.json'), { version: '2.0' });
@@ -54,16 +53,19 @@ function main() {
   }
 
   const apiEntries = fs.readdirSync(apiRoot, { withFileTypes: true });
-  const existingFunctionDirs = new Set(
+
+  // Only directories that are already real function apps should suppress wrapper generation.
+  const canonicalFunctionDirs = new Set(
     apiEntries
       .filter((entry) => entry.isDirectory())
+      .filter((entry) => fs.existsSync(path.join(apiRoot, entry.name, 'function.json')))
       .map((entry) => entry.name)
   );
 
-  // Copy canonical function directories as-is.
   for (const entry of apiEntries) {
     if (!entry.isDirectory()) continue;
     if (entry.name === '_lib') continue;
+
     const sourceDir = path.join(apiRoot, entry.name);
     const functionJsonPath = path.join(sourceDir, 'function.json');
     if (fs.existsSync(functionJsonPath)) {
@@ -71,22 +73,23 @@ function main() {
     }
   }
 
-  // Convert flat *.js handlers into function folders so backend changes are actually deployable.
   for (const entry of apiEntries) {
     if (!entry.isFile()) continue;
     if (!entry.name.endsWith('.js')) continue;
 
     const base = entry.name.slice(0, -3);
-    if (existingFunctionDirs.has(base)) {
-      // Directory function takes precedence; keep flat file for shared imports.
-      copyIfExists(path.join(apiRoot, entry.name), path.join(outRoot, entry.name));
+
+    // Keep flat file available for wrappers and shared imports.
+    copyIfExists(path.join(apiRoot, entry.name), path.join(outRoot, entry.name));
+
+    if (canonicalFunctionDirs.has(base)) {
       continue;
     }
 
     const fnDir = path.join(outRoot, base);
     ensureDir(fnDir);
 
-    fs.writeFileSync(path.join(fnDir, 'index.js'), createFunctionWrapper(base, entry.name), 'utf8');
+    fs.writeFileSync(path.join(fnDir, 'index.js'), createFunctionWrapper(entry.name), 'utf8');
     writeJson(path.join(fnDir, 'function.json'), {
       bindings: [
         {
@@ -103,9 +106,6 @@ function main() {
         }
       ]
     });
-
-    // Keep original handler available for wrapper require('../handler.js').
-    copyIfExists(path.join(apiRoot, entry.name), path.join(outRoot, entry.name));
   }
 
   console.log('Prepared Azure Functions backend at api_generated');
