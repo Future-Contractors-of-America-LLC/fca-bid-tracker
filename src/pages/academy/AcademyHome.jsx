@@ -1,70 +1,108 @@
+import { useEffect, useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
-import ProjectSpineBar from "../../components/ProjectSpineBar";
-import WorkspaceContextBar from "../../components/WorkspaceContextBar";
-import AuricruxStatusRail from "../../components/AuricruxStatusRail";
-import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
-import RouteStateOverlay from "../../components/RouteStateOverlay";
-import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
-import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
-import PublicCtaRow from "../../components/PublicCtaRow";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
-import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
-import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
-import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
-import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
-import { academyContinuityMessaging } from "../../systemContinuity";
-import { auricruxCommsChannels, auricruxRail, currentProject, portalFiles, portalTenant, projectAuditEvents, routeStateOverlays, workspaceContext } from "../../systemState";
-import { academyClassrooms, saasOperationalPathways } from "../../productBlueprint";
-import { academyCatalog } from "../../academyCatalog";
+import PublicCtaRow from "../../components/PublicCtaRow";
+import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
-  borderRadius: 14,
+  borderRadius: 16,
   padding: 18,
   background: "#fff",
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-const actionCardStyle = {
-  ...cardStyle,
-  background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
-  border: "1px solid #dbe3ef",
+const COURSE_PROGRESS_KEY = "fca_academy_foundations_course_v1";
+
+const classroom = {
+  title: "Contractor Command Foundations",
+  credential: "FCA Academy · Launch Classroom 01",
+  audience: "Owners, estimators, coordinators, project managers, and customer-success staff",
+  outcome: "Complete one full classroom that teaches how to move from intake through qualification, estimate setup, file continuity, customer tasks, and Auricrux-guided next actions.",
+  lessons: [
+    {
+      id: "lesson-intake",
+      title: "Lesson 1 · Intake and opportunity capture",
+      objective: "Create a clear intake record and define what information is required before qualification begins.",
+      activity: "Review required customer facts, scope cues, and next-step language used in Contractor Command.",
+    },
+    {
+      id: "lesson-qualification",
+      title: "Lesson 2 · Qualification and estimate readiness",
+      objective: "Understand qualification posture, estimate entry timing, and the minimum evidence needed to continue.",
+      activity: "Use the SaaS qualification lane to identify blockers, owners, and the first estimate action.",
+    },
+    {
+      id: "lesson-files",
+      title: "Lesson 3 · File and evidence continuity",
+      objective: "Keep plan sets, photos, and customer documents attached to the correct opportunity or project context.",
+      activity: "Review how Auricrux uses files to explain what is missing and what should happen next.",
+    },
+    {
+      id: "lesson-customer",
+      title: "Lesson 4 · Customer task and portal execution",
+      objective: "Move from commentary into real customer-visible work by assigning and completing tasks inside the branded workspace.",
+      activity: "Create or complete a task in the customer workspace and confirm the next follow-up action.",
+    },
+    {
+      id: "lesson-auricrux",
+      title: "Lesson 5 · Auricrux explain, recommend, execute",
+      objective: "Confirm the three core Auricrux capabilities across SaaS and Academy.",
+      activity: "Document one explain action, one recommend action, and one execute action tied to a real customer workflow.",
+    },
+  ],
 };
 
-const continuityCardStyle = {
-  ...cardStyle,
-  background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)",
-  border: "1px solid #e5d3a1",
-};
+function readCourseProgress() {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(COURSE_PROGRESS_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function writeCourseProgress(progress) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(COURSE_PROGRESS_KEY, JSON.stringify(progress));
+  } catch {
+    // best effort only
+  }
+}
 
 export default function AcademyHome() {
-  const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
-  const { state, refreshSyncStamp } = useWorkspaceState();
-  const liveTenant = state?.tenant || portalTenant;
-  const liveProject = state?.project || currentProject;
-  const liveWorkspace = state?.workspace || workspaceContext;
-  const liveAuricrux = state?.auricrux || auricruxRail;
-  const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
-  const commItems = auricruxCommsChannels.map((item) => ({
-    ...item,
-    value: `${item.value}${enabledComms[item.label.toLowerCase()] === false ? " · Pending for this customer" : " · Enabled for this customer"}`,
-    href: `/portal/messages#${item.label.toLowerCase()}`,
-    ctaLabel: `Open ${item.label}`,
-  }));
+  const { session } = useCustomerSession();
+  const { refreshSyncStamp } = useWorkspaceState();
+  const [progress, setProgress] = useState(() => readCourseProgress());
+  const completedCount = useMemo(() => classroom.lessons.filter((lesson) => progress[lesson.id]).length, [progress]);
+  const completionPercent = Math.round((completedCount / classroom.lessons.length) * 100);
+
+  useEffect(() => {
+    refreshSyncStamp("Academy classroom continuity active");
+  }, [refreshSyncStamp]);
+
+  useEffect(() => {
+    writeCourseProgress(progress);
+  }, [progress]);
+
+  function toggleLesson(lessonId) {
+    setProgress((current) => ({ ...current, [lessonId]: !current[lessonId] }));
+  }
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
-        eyebrow={academyContinuityMessaging.header.eyebrow}
-        title={academyContinuityMessaging.header.title}
-        subtitle={academyContinuityMessaging.header.subtitle}
+        eyebrow="FCA Academy"
+        title="Customer classroom delivery"
+        subtitle="Every customer workspace now includes a real classroom that trains teams to use Contractor Command with Auricrux embedded across intake, qualification, files, tasks, and execution continuity."
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
@@ -78,249 +116,58 @@ export default function AcademyHome() {
         <AuricruxBrandMark compact />
       </div>
 
-      <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
-      <CustomerCommsLaunchpad session={session} title="Launch enabled training and customer communications lanes" />
+      <ProductAccessStatusPanel session={session} />
+      <CustomerCommsLaunchpad session={session} title="Launch training and communications from one branded customer experience" />
 
-      <ProjectSpineBar tenant={liveTenant} project={liveProject} />
-      <WorkspaceContextBar tenant={liveTenant} project={liveProject} workspace={liveWorkspace} />
-      <AuricruxStatusRail project={liveProject} rail={liveAuricrux} />
-      <RouteStateOverlay overlay={routeStateOverlays.academy} />
-      <ExecutiveSignalBar mode="academy" nextHref={executiveSignalCtaSets.academy.href} nextLabel={executiveSignalCtaSets.academy.label} />
-
-      <AcademyReadinessOverlay
-        session={session}
-        setProductAccess={setProductAccess}
-        setCommsAccess={setCommsAccess}
-        applyPlanPreset={applyPlanPreset}
-        refreshSyncStamp={refreshSyncStamp}
-      />
-
-      <AcademyLmsControlPanel />
-
-      <div style={{ marginBottom: 24 }}>
-        <AuricruxCommsPanel
-          title="Academy is now connected to the full Auricrux communications stack"
-          detail="Training, onboarding, safety refreshers, lecture delivery, conference reviews, and cross-team coaching now sit inside the same communications control plane as project, support, and customer follow-through."
-          statusLabel="Training comms posture"
-          statusValue="Rollout channels connected"
-          items={commItems}
-        />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <BuildExpansionCommandDeck
-          title={academyContinuityMessaging.expansion.title}
-          detail={academyContinuityMessaging.expansion.detail}
-          primaryHref="/portal/academy"
-          primaryLabel="Open Academy"
-          secondaryHref="/portal/messages"
-          secondaryLabel="Carry continuity into comms"
-        />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.academyEntry} />
-      </div>
-
-      <div style={{ ...actionCardStyle, marginBottom: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
-          <div>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy continuity</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>{academyContinuityMessaging.continuity.title}</h2>
-          </div>
-          <div style={{ display: "grid", gap: 10 }}>
-            <FcaBrandMark compact />
-            <AuricruxBrandMark compact />
-          </div>
-        </div>
-        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
-          {academyContinuityMessaging.continuity.detail}
-        </p>
-        <div style={{ marginTop: 14 }}>
-          <PublicCtaRow actions={academyCtaSets.continuityActions} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
-        </div>
-      </div>
-
-      <div style={{ ...continuityCardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Operational continuity focus</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, color: "#1f2937", lineHeight: 1.7 }}>
-          <div>
-            <strong>Assignment need</strong>
-            <div>Two learners are ready for onboarding assignment before mobilization for {liveProject.id}.</div>
-          </div>
-          <div>
-            <strong>Dependency</strong>
-            <div>{routeStateOverlays.academy.dependencyDetail}</div>
-          </div>
-          <div>
-            <strong>Commercial blocker</strong>
-            <div>{liveAuricrux.blockerImpact}</div>
-          </div>
-          <div>
-            <strong>Coordinated next move</strong>
-            <div>Assign learners here, then preserve follow-through in messages, billing, and field kickoff planning for {liveTenant.name}.</div>
-          </div>
-        </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 10 }}>
-          <div>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>Real LMS classrooms</div>
-            <h2 style={{ marginTop: 0, marginBottom: 8 }}>FCA Academy now carries named classroom tracks tied to real workspace outcomes</h2>
-          </div>
-          <div style={{ color: "#475569", maxWidth: 320, lineHeight: 1.6 }}>
-            Curriculum is attached directly to estimating, project controls, field readiness, and customer-delivery continuity.
-          </div>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
-          {academyClassrooms.map((classroom) => (
-            <div key={classroom.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
-              <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>{classroom.credential}</div>
-              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{classroom.title}</h3>
-              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 10 }}>
-                <div><strong>Cadence:</strong> {classroom.cadence}</div>
-                <div><strong>Delivery:</strong> {classroom.delivery}</div>
-              </div>
-              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-                {classroom.modules.map((module) => (
-                  <li key={module}>{module}</li>
-                ))}
-              </ul>
-              <a href={classroom.linkedSurface} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{classroom.linkedLabel}</a>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Program catalog</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Academy now presents a real catalog of programs, credentials, and rollout pathways</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16, marginBottom: 18 }}>
-          {academyCatalog.programs.map((program) => (
-            <div key={program.key} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
-              <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>{program.credential}</div>
-              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
-              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 8 }}>
-                <div><strong>Audience:</strong> {program.audience}</div>
-                <div><strong>Duration:</strong> {program.duration}</div>
-                <div><strong>Format:</strong> {program.format}</div>
-              </div>
-              <p style={{ color: "#334155", lineHeight: 1.7 }}>{program.outcome}</p>
-              <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 6 }}>Linked stack</div>
-              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-                {program.stack.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Credential governance</div>
-            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-              {academyCatalog.credentials.map((credential) => (
-                <li key={credential.title}>
-                  <strong>{credential.title}</strong> — {credential.renewal}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Curriculum-to-product pathways</div>
-            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-              {academyCatalog.pathways.map((pathway) => (
-                <li key={pathway.title}>
-                  <a href={pathway.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{pathway.label}</a> — {pathway.description}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Academy tied to real SaaS pathways</div>
-        <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
-          The classroom layer is no longer treated as a disconnected learning shell. Each training track reinforces a production pathway already present in FCA.
-        </p>
+      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>{classroom.credential}</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{classroom.title}</h2>
+        <p style={{ color: "#334155", lineHeight: 1.7 }}>{classroom.outcome}</p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
-          {saasOperationalPathways.map((pathway) => (
-            <div key={pathway.title} style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{pathway.title}</h3>
-              <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 8 }}>
-                <div><strong>Outcome:</strong> {pathway.outcome}</div>
-              </div>
-              <a href={pathway.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{pathway.ctaLabel}</a>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 28 }}>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Learners enrolled</div>
-          <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>24</div>
-          <div>Across onboarding, safety, estimating, and field-readiness tracks</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Certifications in progress</div>
-          <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>9</div>
-          <div>OSHA, field readiness, equipment awareness, and platform onboarding</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Completion rate</div>
-          <div style={{ fontSize: 28, fontWeight: 700, margin: "6px 0" }}>87%</div>
-          <div>Workspace KPI for rollout confidence and job-start readiness</div>
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 16, marginTop: 24 }}>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Recommended learning path</h2>
-          <ol style={{ paddingLeft: 20, lineHeight: 1.9 }}>
-            <li>Welcome to FCA Workspace</li>
-            <li>Customer Portal Navigation</li>
-            <li>Bid Workflow Fundamentals</li>
-            <li>Field Onboarding and Safety Readiness</li>
-            <li>RFI, submittal, and document-control discipline</li>
-            <li>Auricrux Guided Execution Overview</li>
-          </ol>
-        </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Auricrux coaching notes</h2>
-          <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div>• Two new learners are ready for onboarding assignment under {liveTenant.name}.</div>
-            <div>• One certification expires in 14 days.</div>
-            <div>• Field kickoff posture for {liveProject.id} suggests scheduling a safety and document-control refresher before mobilization.</div>
+          <div>
+            <strong>Audience</strong>
+            <div style={{ color: "#475569", lineHeight: 1.7 }}>{classroom.audience}</div>
+          </div>
+          <div>
+            <strong>Completion</strong>
+            <div style={{ color: "#475569", lineHeight: 1.7 }}>{completedCount} / {classroom.lessons.length} lessons · {completionPercent}% complete</div>
+          </div>
+          <div>
+            <strong>Auricrux presence</strong>
+            <div style={{ color: "#475569", lineHeight: 1.7 }}>Explain, recommend, and execute actions are reinforced in every lesson.</div>
           </div>
         </div>
       </div>
 
-      <ProjectFileAuditPanel project={liveProject} files={portalFiles} auditEvents={projectAuditEvents} />
-
-      <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, marginTop: 24 }}>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Connected portal routes</h2>
-          <PublicCtaRow actions={academyCtaSets.connectedPortalRoutes} style={{ display: "grid", gap: 12 }} />
-        </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Production close</h2>
-          <p style={{ lineHeight: 1.7, color: "#4b5563" }}>
-            Use this screen to prove FCA is not just a bid tool. The same customer can move from sales and portal visibility into workforce enablement, safety readiness, compliance discipline, and long-term support without breaking the shared system state.
-          </p>
-          <PublicCtaRow actions={academyCtaSets.productionClose} />
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Complete classroom course</h2>
+        <div style={{ display: "grid", gap: 14 }}>
+          {classroom.lessons.map((lesson, index) => (
+            <label key={lesson.id} style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16, background: progress[lesson.id] ? "#f0fdf4" : "#fff", cursor: "pointer" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
+                <div>
+                  <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 4 }}>Module {index + 1}</div>
+                  <strong>{lesson.title}</strong>
+                </div>
+                <input type="checkbox" checked={Boolean(progress[lesson.id])} onChange={() => toggleLesson(lesson.id)} />
+              </div>
+              <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 8 }}><strong>Objective:</strong> {lesson.objective}</div>
+              <div style={{ color: "#475569", lineHeight: 1.7 }}><strong>Activity:</strong> {lesson.activity}</div>
+            </label>
+          ))}
         </div>
       </div>
 
-      <div style={{ marginTop: 24, ...cardStyle }}>
-        <h2 style={{ marginTop: 0 }}>{academyContinuityMessaging.rollout.title}</h2>
-        <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-          {academyContinuityMessaging.rollout.detail}
-        </p>
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Academy</h2>
+        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
+          <li>Explains the lesson objective and why it matters in the customer workflow</li>
+          <li>Recommends the next SaaS action tied to intake, qualification, files, and tasks</li>
+          <li>Executes guided completion signals and keeps the learning-to-workflow continuity visible</li>
+        </ul>
       </div>
 
+      <PublicCtaRow actions={academyCtaSets.productionClose} />
       <ShellFooter />
     </div>
   );
