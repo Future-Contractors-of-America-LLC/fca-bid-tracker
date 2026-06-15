@@ -19,7 +19,7 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v8";
+const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v9";
 
 const classrooms = [
   {

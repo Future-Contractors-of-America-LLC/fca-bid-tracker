@@ -13,7 +13,7 @@ const cardStyle = {
 };
 
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
-const SUPPORT_COMMAND_KEY = "fca_customer_support_command_v1";
+const SUPPORT_COMMAND_KEY = "fca_customer_support_command_v2";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -93,11 +93,12 @@ export default function PortalSupport() {
         <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded support experience</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
-          {companyName} can now open support requests, track service continuity, and preserve escalation context without leaving the branded customer workspace.
+          {companyName} can now open service requests, preserve support continuity, and keep customer-facing recovery visible inside the branded workspace.
         </p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+          <div><strong>Selected plan:</strong> {session?.selectedPlan || "enterprise"}</div>
           <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
         </div>
       </div>
@@ -148,7 +149,7 @@ export default function PortalSupport() {
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Support Command</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
           <li>Explains the customer issue, blocker, and recovery posture</li>
-          <li>Recommends the next support, file, project, or communications action</li>
+          <li>Recommends the next support, file, project, or communication action</li>
           <li>Executes support request creation and resolution signaling</li>
         </ul>
       </div>
