@@ -10,4 +10,4 @@ Target Packet: `061Z`
 ---
 
 ## Required next proof
-Observe the first repo-visible persisted run containing current-head verifier, metadata-transition, proof-bundle, build-validation coverage, and live-proof stamp coverage artifacts, then lock which ones passed and which ones failed.
+Observe the first repo-visible CI-backed live deployment proof commit and the first repo-visible persisted control run containing current-head verifier, metadata-transition, proof-bundle, and coverage artifacts, then lock exact pass/fail truth for 061Z.
