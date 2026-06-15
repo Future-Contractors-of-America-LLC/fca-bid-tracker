@@ -1,6 +1,1 @@
-force rebuild 2026-06-11T20:30Z requested after user-confirmed live shell mismatch
-expected live target commits include:
-- efeb0d8fcecebb69e82149da0f21aa97488185c8
-- 79ba76fac7b1eb251952dbeeefeef7b5e30f6af4
-- 860ddbba6e2b13007b4e4361fbe5d6b34a42d9a2
-trigger commit for next Azure Static Web Apps CI/CD run
+Force rebuild triggered on 2026-06-15T18:49:00Z for cross-host login continuity patch deployment.
