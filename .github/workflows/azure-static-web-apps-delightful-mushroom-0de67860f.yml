@@ -18,7 +18,7 @@ env:
 
 concurrency:
   group: swa-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build_and_deploy_job:
@@ -54,14 +54,17 @@ jobs:
       - name: Run governed build validation
         run: npm run build:system
 
+      - name: Generate deployable Azure Functions layout
+        run: node scripts/prepare-api-functions.mjs
+
       - name: Verify build artifact exists
         run: |
           pwd
           find dist -maxdepth 2 -type f -print | sort
-          find api -maxdepth 2 -type f -print | sort
+          find api_generated -maxdepth 3 -type f -print | sort
           ls -la
           ls -la dist || true
-          ls -la api || true
+          ls -la api_generated || true
 
           test -f dist/index.html
           test -f dist/staticwebapp.config.json
@@ -72,16 +75,17 @@ jobs:
           test -f dist/host-binding-audit.html
           test -f dist/api-continuity-audit.html
           find dist -maxdepth 1 -name 'commit-witness-*.txt' | grep -q .
-          test -f api/package.json
-          test -f api/host.json
-          test -f api/customer-login.js
-          test -f api/auricrux.js
-          test -f api/run-task.js
+
+          test -f api_generated/package.json
+          test -f api_generated/host.json
+          test -f api_generated/customer-login/index.js
+          test -f api_generated/auricrux/index.js
+          test -f api_generated/run-task/index.js
 
       - name: Archive governed deployment payload
         run: |
           mkdir -p workspace
-          tar -czf workspace/governed_swa_payload.tgz dist api staticwebapp.config.json package.json package-lock.json
+          tar -czf workspace/governed_swa_payload.tgz dist api_generated staticwebapp.config.json package.json package-lock.json
 
       - name: Skip PR preview deployment to preserve staging capacity
         if: github.event_name == 'pull_request'
@@ -99,7 +103,7 @@ jobs:
           action: upload
           skip_app_build: true
           app_location: dist
-          api_location: api
+          api_location: api_generated
           output_location: ''
 
       - name: Post-deploy live domain smoke verification
