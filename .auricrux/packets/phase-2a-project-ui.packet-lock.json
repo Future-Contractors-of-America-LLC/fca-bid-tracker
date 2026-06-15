@@ -1,0 +1,16 @@
+{
+  "packet": "PHASE-2A-PROJECT-UI",
+  "repo": "fca-bid-tracker",
+  "branch": "auricrux/phase-2a-project-spine-packet",
+  "status": "locked",
+  "completedArtifacts": [
+    "docs/phase-2a-project-ui-screen-map.md"
+  ],
+  "nextPacket": "PHASE-2B-PROJECT-FILES-UI",
+  "claims": {
+    "screenMapSaved": true,
+    "implementedInUi": false,
+    "validatedInDeployment": false
+  },
+  "timestamp": "2026-06-15"
+}
