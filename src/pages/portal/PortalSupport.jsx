@@ -1,18 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import FcaBrandMark from "../../components/FcaBrandMark";
-import AuricruxBrandMark from "../../components/AuricruxBrandMark";
-import PublicCtaRow from "../../components/PublicCtaRow";
-import SystemStateSummary from "../../components/SystemStateSummary";
-import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
-import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
-import SupportActionCenter from "../../components/SupportActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { publicBodyCtaSets, portalNarrativeCtaSets } from "../../websiteShell";
-import { supportGovernance } from "../../supportGovernance";
-import { auricruxCommsChannels, routeStateOverlays } from "../../systemState";
-import { resolvePlanPreset } from "../../pricingPlans";
+import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -22,190 +12,137 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
+const SUPPORT_COMMAND_KEY = "fca_customer_support_command_v1";
+
+function readLocalJson(key, fallback) {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeLocalJson(key, value) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // best effort only
+  }
+}
+
 export default function PortalSupport() {
-  const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
+  const { session } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
+  const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
+  const [supportState, setSupportState] = useState(() => readLocalJson(SUPPORT_COMMAND_KEY, { ticketTitle: "", ticketDetail: "", urgency: "standard", tickets: [] }));
 
   useEffect(() => {
     refreshSyncStamp("Persisted support continuity state active");
   }, [refreshSyncStamp]);
 
-  const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
-  const commItems = auricruxCommsChannels.map((item) => ({
-    ...item,
-    value: `${item.value}${session?.enabledComms?.[item.label.toLowerCase()] === false ? " · Pending for this customer" : " · Enabled for this customer"}`,
-    href: `/portal/messages#${item.label.toLowerCase()}`,
-    ctaLabel: `Open ${item.label}`,
-  }));
+  useEffect(() => {
+    writeLocalJson(SUPPORT_COMMAND_KEY, supportState);
+  }, [supportState]);
+
+  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
+
+  function updateState(key, value) {
+    setSupportState((current) => ({ ...current, [key]: value }));
+  }
+
+  function createTicket() {
+    if (!supportState.ticketTitle.trim() || !supportState.ticketDetail.trim()) return;
+    setSupportState((current) => ({
+      ...current,
+      tickets: [{
+        id: `ticket-${Date.now()}`,
+        title: current.ticketTitle,
+        detail: current.ticketDetail,
+        urgency: current.urgency,
+        status: "Open",
+      }, ...(current.tickets || [])],
+      ticketTitle: "",
+      ticketDetail: "",
+    }));
+    refreshSyncStamp(`Customer support request created with ${supportState.urgency} urgency.`);
+  }
 
   return (
     <PortalShell
-      title="Support, Escalation, and Continuity"
-      subtitle="Support surface for owner communication, permit/document issues, field-readiness blockers, plan-aware recovery, and Auricrux-guided execution inside the same workspace shell, with one-click support actions."
+      title={`${companyName} Support and Service Request Command`}
+      subtitle="A branded service workspace where customers can submit support requests, preserve escalation continuity, and let Auricrux guide recovery actions."
       activeHref="/portal/support"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.support}
-      primaryHref="/contact"
-      primaryLabel="Open Contact & Rollout"
+      primaryHref="/portal/messages"
+      primaryLabel="Open Communications"
     >
-      <div style={{ marginBottom: 24 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={state.project}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="Support route is attached to the canonical operating state"
-          detail="Escalation and recovery context now read from the same system module as portal execution, billing, academy continuity, commercial plan activation, warranty continuity, and referral follow-through."
-        />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <CustomerPlanSummaryPanel session={session} title="Support-aligned customer plan summary" />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <SupportActionCenter
-          session={session}
-          state={state}
-          applyPlanPreset={applyPlanPreset}
-          setProductAccess={setProductAccess}
-          setCommsAccess={setCommsAccess}
-          refreshSyncStamp={refreshSyncStamp}
-        />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <AuricruxCommsPanel
-          title="Support is now framed inside the full Auricrux communications stack"
-          detail="Recovery no longer stops at a support inbox. FCA support now routes across phone, SMS, chat, Teams, conference, and training continuity so every escalation can move back into execution, warranty follow-through, and referral-safe customer recovery."
-          statusLabel="Recovery posture"
-          statusValue={`Escalation lanes connected · ${selectedPlan.name}`}
-          items={commItems}
-        />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
-          <div>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Support continuity</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA support now presents as part of the same operating shell</h2>
-          </div>
-          <div style={{ display: "grid", gap: 10 }}>
-            <FcaBrandMark compact />
-            <AuricruxBrandMark compact />
-          </div>
-        </div>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Customer help, escalation handling, and recovery guidance remain attached to the same tenant, project, permit/document, billing, selected-plan, warranty, referral, and Auricrux state as the rest of FCA rather than appearing as a disconnected support tool.
+      <div style={{ ...cardStyle, marginBottom: 24, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
+        <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded support experience</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
+        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
+          {companyName} can now create branded support and service requests, preserve escalation continuity, and let Auricrux explain, recommend, and execute the right recovery path.
         </p>
+        <div style={{ color: "#475569", lineHeight: 1.8 }}>
+          <div><strong>Source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
+          <div><strong>Current plan:</strong> {session?.selectedPlan || "enterprise"}</div>
+          <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
+        </div>
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Support governance layer</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA now models escalation and recovery as a governed product layer</h2>
-        <div style={{ display: "grid", gap: 16 }}>
-          {supportGovernance.lanes.map((lane) => (
-            <div key={lane.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
-              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{lane.title}</h3>
-              <p style={{ color: "#334155", lineHeight: 1.7 }}>{lane.purpose}</p>
-              <a href={lane.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{lane.label}</a>
-              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 10, marginBottom: 0 }}>
-                {lane.artifacts.map((artifact) => (
-                  <li key={artifact}>{artifact}</li>
-                ))}
-              </ul>
+        <h2 style={{ marginTop: 0 }}>Functional product: Support and service request command</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Request title</div>
+            <input value={supportState.ticketTitle} onChange={(event) => updateState("ticketTitle", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Permit package missing sheet" />
+          </label>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Urgency</div>
+            <select value={supportState.urgency} onChange={(event) => updateState("urgency", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }}>
+              <option value="standard">Standard</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          <div style={{ fontWeight: 700, marginBottom: 6 }}>Issue detail</div>
+          <textarea value={supportState.ticketDetail} onChange={(event) => updateState("ticketDetail", event.target.value)} style={{ width: "100%", minHeight: 96, padding: "12px 14px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Describe the customer issue, blocker, or service request" />
+        </label>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+          <button type="button" onClick={createTicket} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>Create Support Request</button>
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Open support requests</h2>
+        <div style={{ display: "grid", gap: 12 }}>
+          {(supportState.tickets || []).map((ticket) => (
+            <div key={ticket.id} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <strong>{ticket.title}</strong>
+                <span style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700 }}>{ticket.urgency.toUpperCase()}</span>
+              </div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginTop: 8 }}>{ticket.detail}</div>
+              <div style={{ color: "#64748b", marginTop: 8 }}>Status: {ticket.status}</div>
             </div>
           ))}
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Response signals</div>
-            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-              {supportGovernance.responseSignals.map((signal) => (
-                <li key={signal}>{signal}</li>
-              ))}
-            </ul>
-          </div>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Recovery actions</div>
-            <PublicCtaRow actions={supportGovernance.commsRecoveryActions} />
-          </div>
-        </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Active support context</h2>
-          <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-            <div><strong>Tenant:</strong> {state.tenant.name}</div>
-            <div><strong>Project:</strong> {state.project.name}</div>
-            <div><strong>Project ID:</strong> {state.project.id}</div>
-            <div><strong>Current plan:</strong> {selectedPlan.name} · {selectedPlan.price}</div>
-            <div><strong>Current issue pattern:</strong> scope approval delay, permit submission dependency, mobilization onboarding, invoice timing risk, and post-handover continuity readiness</div>
-          </div>
-          <div style={{ marginTop: 14 }}>
-            <PublicCtaRow actions={portalNarrativeCtaSets.supportContext} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch" }} />
-          </div>
-        </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Escalation lanes</h2>
-          <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
-            <li>Owner approval and revised scope dispute</li>
-            <li>Permit or plan-set submission blocker</li>
-            <li>RFI / submittal coordination delay</li>
-            <li>Field onboarding or safety packet issue</li>
-            <li>Billing / retainage follow-through escalation</li>
-            <li>Warranty response or closeout-document retrieval</li>
-          </ul>
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginTop: 24 }}>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Primary blocker</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.auricrux.currentBlocker}</div>
-          <div>{state.auricrux.blockerImpact}</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Support owner</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.workspace.nextActionOwner}</div>
-          <div>Escalations stay tied to the same next-action chain as bids, files, billing, warranty, referrals, and plan enforcement.</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Recovery priority</div>
-          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>Clear approval path</div>
-          <div>Support is currently focused on removing the dependency that is holding permit release, startup packet issuance, invoice readiness, warranty confidence, and referral-safe expansion progress.</div>
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16, marginTop: 24 }}>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Warranty continuity lane</h2>
-          <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Post-handover service now belongs to the same governed recovery surface so support can turn issues into retention and recurring-service continuity instead of unmanaged churn.
-          </p>
-          <a href="/warranty" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Warranty Continuity</a>
-        </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Referral-safe recovery lane</h2>
-          <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
-            Service recovery is now framed as part of referral protection so customer trust, reviews, and future introductions remain tied to real follow-through.
-          </p>
-          <a href="/referrals" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Referral Continuity</a>
-        </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Why this route matters</h2>
-        <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-          Support should not sit outside the operating shell. This route keeps customer help, continuity recovery,
-          warranty retention, referral protection, and escalation handling attached to the same tenant, project, file, audit, permit/document,
-          selected-plan, and Auricrux state as the rest of FCA.
-        </p>
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Support Command</h2>
+        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
+          <li>Explains issue posture, urgency, and customer impact</li>
+          <li>Recommends the next recovery or escalation action</li>
+          <li>Executes support request creation and continuity signaling</li>
+        </ul>
       </div>
     </PortalShell>
   );

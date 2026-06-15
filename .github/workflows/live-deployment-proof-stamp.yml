@@ -215,6 +215,7 @@ jobs:
           git config user.name "auricrux-ci"
           git config user.email "auricrux-ci@futurecontractorsofamerica.com"
           git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md generated/live-deployment-proof-workflow-validation.json generated/live-deployment-proof-workflow-validation.md generated/live-deployment-proof-workflow-report.json generated/live-deployment-proof-workflow-report.md generated/live-deployment-proof-zero-dependency-workflow-validation.json generated/live-deployment-proof-zero-dependency-workflow-validation.md generated/live-deployment-proof-zero-dependency-workflow-report.json generated/live-deployment-proof-zero-dependency-workflow-report.md generated/live-deployment-run-witness-workflow-validation.json generated/live-deployment-run-witness-workflow-validation.md generated/live-deployment-run-witness-workflow-report.json generated/live-deployment-run-witness-workflow-report.md generated/live-deployment-proof-commit-signal-validation.json generated/live-deployment-proof-commit-signal-validation.md generated/live-deployment-proof-commit-signal-report.json generated/live-deployment-proof-commit-signal-report.md generated/live-deployment-witness-commit-observation-validation.json generated/live-deployment-witness-commit-observation-validation.md generated/live-deployment-witness-commit-observation-report.json generated/live-deployment-witness-commit-observation-report.md generated/live-deployment-ci-proof-commit-observation-validation.json generated/live-deployment-ci-proof-commit-observation-validation.md generated/live-deployment-ci-proof-commit-observation-report.json generated/live-deployment-ci-proof-commit-observation-report.md generated/live-deployment-proof-provenance-validation.json generated/live-deployment-proof-provenance-validation.md generated/live-deployment-proof-provenance-report.json generated/live-deployment-proof-provenance-report.md generated/live-deployment-transition-target.json generated/live-deployment-transition-target.md generated/live-deployment-current-head-verifier-validation.json generated/live-deployment-current-head-verifier-validation.md generated/live-deployment-current-head-verifier-report.json generated/live-deployment-current-head-verifier-report.md generated/live-deployment-metadata-transition-state-validation.json generated/live-deployment-metadata-transition-state-validation.md generated/live-deployment-metadata-transition-state-report.json generated/live-deployment-metadata-transition-state-report.md generated/live-deployment-proof-suite-validation.json generated/live-deployment-proof-suite-validation.md generated/live-deployment-proof-suite-report.json generated/live-deployment-proof-suite-report.md generated/live-deployment-proof-bundle-readiness-validation.json generated/live-deployment-proof-bundle-readiness-validation.md generated/live-deployment-proof-bundle-readiness-report.json generated/live-deployment-proof-bundle-readiness-report.md generated/live-proof-stamp-coverage-validation.json generated/live-proof-stamp-coverage-validation.md generated/live-proof-stamp-coverage-report.json generated/live-proof-stamp-coverage-report.md generated/live-proof-stamp-persistence-wiring-validation.json generated/live-proof-stamp-persistence-wiring-validation.md generated/live-proof-stamp-persistence-wiring-report.json generated/live-proof-stamp-persistence-wiring-report.md generated/live-proof-persisted-artifact-surface-validation.json generated/live-proof-persisted-artifact-surface-validation.md generated/live-proof-persisted-artifact-surface-report.json generated/live-proof-persisted-artifact-surface-report.md generated/live-proof-persisted-control-bundle-validation.json generated/live-proof-persisted-control-bundle-validation.md generated/live-proof-persisted-control-bundle-report.json generated/live-proof-persisted-control-bundle-report.md generated/live-proof-witness-observed-state-validation.json generated/live-proof-witness-observed-state-validation.md generated/live-proof-witness-observed-state-report.json generated/live-proof-witness-observed-state-report.md generated/live-proof-split-state-validation.json generated/live-proof-split-state-validation.md generated/live-proof-split-state-report.json generated/live-proof-split-state-report.md generated/first-persisted-control-run-gate-validation.json generated/first-persisted-control-run-gate-validation.md generated/first-persisted-control-run-gate-report.json generated/first-persisted-control-run-gate-report.md generated/build-validation-live-proof-coverage-validation.json generated/build-validation-live-proof-coverage-validation.md generated/build-validation-live-proof-coverage-report.json generated/build-validation-live-proof-coverage-report.md
+          git reset docs/runtime-proof/live-deployment/live_deployment_ci_run_witness.json docs/runtime-proof/live-deployment/live_deployment_ci_run_witness.md generated/live-deployment-run-witness-validation.json generated/live-deployment-run-witness-validation.md
           if git diff --cached --quiet; then
             echo "No CI-backed live deployment proof changes to commit."
           else
@@ -222,8 +223,20 @@ jobs:
             git diff --cached --binary > "$tmp_patch"
             git reset --hard
             git clean -fd
-            git pull --rebase origin main
-            git apply --index "$tmp_patch"
-            git commit -m "Persist CI-backed live deployment proof for run ${GITHUB_RUN_ID}"
-            git push origin HEAD:main
+            for retry in 1 2 3; do
+              echo "Live deployment proof persistence retry ${retry}"
+              git fetch origin main
+              git checkout -B main origin/main
+              if git apply --index "$tmp_patch"; then
+                git commit -m "Persist CI-backed live deployment proof for run ${GITHUB_RUN_ID}"
+                if git push origin HEAD:main; then
+                  exit 0
+                fi
+              fi
+              git reset --hard
+              git clean -fd
+              sleep 5
+            done
+            echo "Failed to persist CI-backed live deployment proof after retry budget."
+            exit 1
           fi

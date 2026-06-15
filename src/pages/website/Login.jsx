@@ -37,18 +37,9 @@ const submitButtonStyle = {
 };
 
 const marketingPoints = [
-  {
-    title: "Close work from one login",
-    detail: "Capture intake, qualify opportunities, build estimates, deliver files, manage customer messages, and keep every handoff visible inside one command center.",
-  },
-  {
-    title: "Deliver a portal under your brand",
-    detail: "Customers and teams see a workspace that feels like your company’s operating system instead of a generic vendor dashboard.",
-  },
-  {
-    title: "Keep Auricrux present in every step",
-    detail: "Auricrux explains what matters, recommends the next move, and executes guided actions across sales, delivery, communications, and training.",
-  },
+  { title: "Close work from one login", detail: "Capture intake, qualify opportunities, build estimates, register files, move projects, manage customer messages, and keep every handoff visible inside one command center." },
+  { title: "Deliver a portal under your brand", detail: "Customers and teams see a workspace that feels like your company’s operating system instead of a generic vendor dashboard." },
+  { title: "Keep Auricrux present in every step", detail: "Auricrux explains what matters, recommends the next move, and executes guided actions across sales, delivery, communications, and training." },
 ];
 
 const signupBenefits = [
@@ -68,9 +59,7 @@ const LOCAL_FALLBACK_AUTH_BOUNDARY = {
 };
 
 function readLoginQueryState() {
-  if (typeof window === "undefined") {
-    return { seeded: false, autologin: false, internal: false, nextHref: null };
-  }
+  if (typeof window === "undefined") return { seeded: false, autologin: false, internal: false, nextHref: null };
   const params = new URLSearchParams(window.location.search);
   const seeded = params.get("seeded") === "1" || params.get("account") === "test";
   const autologin = seeded && params.get("autologin") === "1";
@@ -99,11 +88,7 @@ async function authenticateWorkspaceAccount(email, password) {
     });
     const payload = await response.json();
     if (response.ok && payload?.ok && payload?.account) {
-      return {
-        ...payload.account,
-        authBoundary: payload.authBoundary,
-        accountSource: payload.authenticationMode || "api",
-      };
+      return { ...payload.account, authBoundary: payload.authBoundary, accountSource: payload.authenticationMode || "api" };
     }
     const localFallback = resolveLocalFallbackAccount(email, password);
     if (localFallback) return localFallback;
@@ -146,12 +131,8 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
     setAuthStatus(queryState.autologin ? "authenticating" : "seeded");
   }, [queryState.autologin, queryState.seeded]);
 
-  const requestedWorkspaceHref = accessMode === "protected"
-    ? requestedPath
-    : queryState.nextHref || session?.nextHref || "/portal";
-  const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy"
-    ? requestedWorkspaceHref
-    : "/portal";
+  const requestedWorkspaceHref = accessMode === "protected" ? requestedPath : queryState.nextHref || session?.nextHref || "/portal";
+  const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy" ? requestedWorkspaceHref : "/portal";
 
   useEffect(() => {
     if (!queryState.seeded || !queryState.autologin || autologinAttemptedRef.current) return;
@@ -234,9 +215,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
         <ShellHeader
           eyebrow={internalMode ? "Internal Validation" : "Customer Login"}
           title={internalMode ? "Internal Access" : "Sign In or Request Access"}
-          subtitle={internalMode
-            ? "Internal validation remains available by explicit route only."
-            : "Launch a branded contractor operating system that handles customer intake, qualification, estimates, files, projects, communications, training, and Auricrux-guided execution."}
+          subtitle={internalMode ? "Internal validation remains available by explicit route only." : "Launch a branded contractor operating system that handles intake, opportunities, estimates, files, projects, customer communications, training, and Auricrux-guided execution."}
           primaryHref={shellHeaderCtaSets.workspace.primaryHref}
           primaryLabel={shellHeaderCtaSets.workspace.primaryLabel}
           secondaryHref={shellHeaderCtaSets.workspace.secondaryHref}
@@ -272,9 +251,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             <div style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#eff6ff", marginBottom: 18 }}>
               <div style={{ fontWeight: 700, marginBottom: 6 }}>{internalMode ? "Internal launch access" : "Customer workspace access"}</div>
               <div style={{ color: "#475569", lineHeight: 1.7 }}>
-                {internalMode
-                  ? "Use seeded launch credentials for internal validation only."
-                  : "Sign in to manage branded customer tasks, qualification flow, estimate readiness, file intake, project milestones, communications, training rollout, and Auricrux-guided next actions."}
+                {internalMode ? "Use seeded launch credentials for internal validation only." : "Sign in to manage branded customer tasks, qualification flow, estimate readiness, file intake, project milestones, communications, training rollout, and Auricrux-guided next actions."}
               </div>
             </div>
 

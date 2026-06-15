@@ -57,7 +57,24 @@ jobs:
           if git diff --cached --quiet; then
             echo "No CI-backed build proof rewrite changes to commit."
           else
-            git commit -m "Persist CI-backed build proof provenance for run ${GITHUB_RUN_ID}"
-            git pull --rebase origin main
-            git push origin HEAD:main
+            tmp_patch="$(mktemp)"
+            git diff --cached --binary > "$tmp_patch"
+            git reset --hard
+            git clean -fd
+            for retry in 1 2 3; do
+              echo "Build proof persistence retry ${retry}"
+              git fetch origin main
+              git checkout -B main origin/main
+              if git apply --index "$tmp_patch"; then
+                git commit -m "Persist CI-backed build proof provenance for run ${GITHUB_RUN_ID}"
+                if git push origin HEAD:main; then
+                  exit 0
+                fi
+              fi
+              git reset --hard
+              git clean -fd
+              sleep 5
+            done
+            echo "Failed to persist CI-backed build proof provenance after retry budget."
+            exit 1
           fi
