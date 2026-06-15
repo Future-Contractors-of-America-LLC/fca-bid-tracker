@@ -223,8 +223,9 @@ jobs:
             git diff --cached --binary > "$tmp_patch"
             git reset --hard
             git clean -fd
-            for retry in 1 2 3; do
-              echo "Live deployment proof persistence retry ${retry}"
+            retries="1 2 3"
+            for retry_id in $retries; do
+              echo "Live deployment proof persistence retry ${retry_id}"
               git fetch origin main
               git checkout -B main origin/main
               if git apply --index "$tmp_patch"; then

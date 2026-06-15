@@ -19,7 +19,7 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v7";
+const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v8";
 
 const classrooms = [
   {
@@ -120,6 +120,20 @@ const classrooms = [
       { id: "support-auricrux", title: "Lesson 5 · Auricrux recovery operations", objective: "Use Auricrux to explain the issue, recommend the right recovery action, and execute support continuity steps.", activity: "Record one explain action, one recommend action, and one execute action Auricrux should provide in Support Command." },
     ],
   },
+  {
+    id: "billing-command",
+    title: "Billing and Revenue Command",
+    credential: "FCA Academy · Launch Classroom 08",
+    audience: "Owners, billing coordinators, project managers, accountants, and customer-success operators",
+    outcome: "Train teams to stage invoices, preserve customer-facing billing continuity, and use Auricrux to guide revenue follow-through without leaving the branded workspace.",
+    lessons: [
+      { id: "billing-command-invoice", title: "Lesson 1 · Define the invoice", objective: "Create a billing record with a clear commercial purpose and customer-visible meaning.", activity: "Write one invoice name that reflects a real customer milestone or delivery step." },
+      { id: "billing-command-amount", title: "Lesson 2 · Set the amount and note", objective: "Frame the invoice amount and note so the customer understands what the invoice covers.", activity: "Enter an amount and a billing note that explains the milestone, scope, or service being billed." },
+      { id: "billing-command-create", title: "Lesson 3 · Stage the invoice", objective: "Keep billing work inside the branded workspace so revenue actions remain connected to the customer journey.", activity: "Create an invoice and confirm it appears in the invoice board." },
+      { id: "billing-command-issue", title: "Lesson 4 · Issue the invoice", objective: "Move the invoice from draft to issued only when it is ready for customer follow-through.", activity: "Issue a staged invoice and verify that the billing state visibly changed." },
+      { id: "billing-command-auricrux", title: "Lesson 5 · Auricrux revenue continuity operations", objective: "Use Auricrux to explain billing posture, recommend the next commercial step, and execute invoice continuity actions.", activity: "Record one explain action, one recommend action, and one execute action Auricrux should provide in Billing Command." },
+    ],
+  },
 ];
 
 function readCourseProgress() {
@@ -171,7 +185,7 @@ export default function AcademyHome() {
       <ShellHeader
         eyebrow="FCA Academy"
         title="Customer classroom delivery"
-        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, projects, communications, support, tasks, and execution continuity."
+        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, projects, communications, support, billing, tasks, and execution continuity."
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
@@ -222,7 +236,7 @@ export default function AcademyHome() {
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Academy</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
           <li>Explains the lesson objective and why it matters in the customer workflow</li>
-          <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, projects, communications, support, and tasks</li>
+          <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, projects, communications, support, billing, and tasks</li>
           <li>Executes guided completion signals and keeps learning-to-workflow continuity visible</li>
         </ul>
       </div>
