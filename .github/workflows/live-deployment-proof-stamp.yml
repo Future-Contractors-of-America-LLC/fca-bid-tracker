@@ -313,6 +313,8 @@ jobs:
           retries="1 2 3"
           for retry_id in $retries; do
             echo "Live deployment proof persistence retry ${retry_id}"
+            git reset --hard
+            git clean -fd
             git fetch origin main
             git checkout -B main origin/main
 
