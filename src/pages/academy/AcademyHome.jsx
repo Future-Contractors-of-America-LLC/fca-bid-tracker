@@ -19,7 +19,7 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v5";
+const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v6";
 
 const classrooms = [
   {
@@ -92,6 +92,20 @@ const classrooms = [
       { id: "project-command-auricrux", title: "Lesson 5 · Auricrux project execution guidance", objective: "Use Auricrux to explain readiness, recommend the next move, and execute project command actions.", activity: "Record one explain action, one recommendation, and one execution action Auricrux should provide in the project workspace." },
     ],
   },
+  {
+    id: "communications-command",
+    title: "Customer Communications Command",
+    credential: "FCA Academy · Launch Classroom 06",
+    audience: "Customer-success teams, owners, project coordinators, estimators, and account managers",
+    outcome: "Train teams to send branded customer communications, preserve cross-channel continuity, and let Auricrux guide the next message or escalation path.",
+    lessons: [
+      { id: "communications-channel", title: "Lesson 1 · Choose the right customer channel", objective: "Understand when to use email, chat, SMS, phone, Teams, conference, or lecture lanes.", activity: "Review one live communication need and choose the channel that best protects customer continuity." },
+      { id: "communications-subject", title: "Lesson 2 · Frame the update", objective: "Write a customer-ready subject and message that clearly explains what changed and what happens next.", activity: "Draft one branded customer message inside Communications Command." },
+      { id: "communications-send", title: "Lesson 3 · Send and preserve the record", objective: "Keep sent communications visible inside the workspace instead of losing them in external threads.", activity: "Send a customer update and confirm it remains visible in the communication record." },
+      { id: "communications-stream", title: "Lesson 4 · Read live communication continuity", objective: "Use the communications stream to understand priority, blockers, and the next action across channels.", activity: "Open the live stream and identify the highest-priority next customer action." },
+      { id: "communications-auricrux", title: "Lesson 5 · Auricrux communication operations", objective: "Use Auricrux to explain communication posture, recommend the next contact step, and execute branded updates.", activity: "Record one explain action, one recommend action, and one execute action Auricrux should provide in Communications Command." },
+    ],
+  },
 ];
 
 function readCourseProgress() {
@@ -143,7 +157,7 @@ export default function AcademyHome() {
       <ShellHeader
         eyebrow="FCA Academy"
         title="Customer classroom delivery"
-        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, projects, tasks, and execution continuity."
+        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, projects, communications, tasks, and execution continuity."
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
@@ -194,7 +208,7 @@ export default function AcademyHome() {
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Academy</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
           <li>Explains the lesson objective and why it matters in the customer workflow</li>
-          <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, projects, and tasks</li>
+          <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, projects, communications, and tasks</li>
           <li>Executes guided completion signals and keeps learning-to-workflow continuity visible</li>
         </ul>
       </div>
