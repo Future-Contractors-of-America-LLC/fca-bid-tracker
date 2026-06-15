@@ -83,20 +83,27 @@ jobs:
           mkdir -p workspace
           tar -czf workspace/governed_swa_payload.tgz dist api staticwebapp.config.json package.json package-lock.json
 
+      - name: Skip PR preview deployment to preserve staging capacity
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Pull request validation completed."
+          echo "Azure Static Web Apps preview deployment intentionally skipped to avoid staging-environment exhaustion."
+
       - name: Build And Deploy
         id: builddeploy
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: upload
           skip_app_build: true
-          skip_api_build: false
           app_location: dist
           api_location: api
           output_location: ''
 
       - name: Post-deploy live domain smoke verification
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: npm run verify:live-deployment
         env:
           AURICRUX_LIVE_VERIFY_ATTEMPTS: '4'

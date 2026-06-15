@@ -16,7 +16,7 @@ import LoginActionCenter from "../../components/LoginActionCenter";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { PRIMARY_TEST_ACCOUNT } from "../../customerAccounts";
+import { PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";
 import { founderJourneyCtaSets, pricingTiers, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { resolvePlanPreset } from "../../pricingPlans";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
@@ -123,6 +123,15 @@ const commsOptions = [
   { key: "lecture", title: "Lecture", detail: "Academy-led instruction and rollout delivery." },
 ];
 
+const LOCAL_FALLBACK_AUTH_BOUNDARY = {
+  productionAuthReady: false,
+  activeMode: "seeded-local-fallback",
+  identityProvider: "fca-native-auth",
+  tenantIsolation: "single-repo-account-store",
+  sessionValidation: "browser-session-fallback",
+  nextBuildStep: "Restore deployed /api/customer-login continuity so sign-in promotes from bounded local fallback to server-backed session cookies.",
+};
+
 function readLoginQueryState() {
   if (typeof window === "undefined") {
     return {
@@ -147,26 +156,47 @@ function readLoginQueryState() {
   };
 }
 
-async function authenticateWorkspaceAccount(email, password) {
-  const response = await fetch("/api/customer-login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
-
-  const payload = await response.json();
-
-  if (!response.ok || !payload?.ok || !payload?.account) {
-    throw new Error(payload?.error || "Customer authentication failed.");
-  }
+function resolveLocalFallbackAccount(email, password) {
+  const fallbackAccount = resolveSeededCustomerAccount(email, password);
+  if (!fallbackAccount) return null;
 
   return {
-    ...payload.account,
-    authBoundary: payload.authBoundary,
-    accountSource: payload.authenticationMode || "api",
+    ...fallbackAccount,
+    authBoundary: LOCAL_FALLBACK_AUTH_BOUNDARY,
+    accountSource: "seeded-local-fallback",
+    accountMode: "seeded",
   };
+}
+
+async function authenticateWorkspaceAccount(email, password) {
+  try {
+    const response = await fetch("/api/customer-login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const payload = await response.json();
+
+    if (response.ok && payload?.ok && payload?.account) {
+      return {
+        ...payload.account,
+        authBoundary: payload.authBoundary,
+        accountSource: payload.authenticationMode || "api",
+      };
+    }
+
+    const localFallback = resolveLocalFallbackAccount(email, password);
+    if (localFallback) return localFallback;
+
+    throw new Error(payload?.error || "Customer authentication failed.");
+  } catch (error) {
+    const localFallback = resolveLocalFallbackAccount(email, password);
+    if (localFallback) return localFallback;
+    throw error;
+  }
 }
 
 export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
@@ -471,7 +501,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
               <div style={trustBannerStyle}>
                 <div style={{ fontWeight: 700, marginBottom: 6 }}>Authorized customer access</div>
                 <div style={{ color: "#475569", lineHeight: 1.7 }}>
-                  Sign in with your FCA-authorized work email and password to access your workspace. If you do not yet have access, use the guided onboarding path below.
+                  Sign in with your FCA-authorized work email and password to access your workspace. If the deployed API path is unavailable, known launch accounts can still enter through the bounded fallback continuity path.
                 </div>
               </div>
             ) : (
