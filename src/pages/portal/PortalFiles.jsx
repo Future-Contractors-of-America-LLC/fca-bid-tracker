@@ -54,6 +54,9 @@ const statCardStyle = {
   background: "#f8fbff",
 };
 
+const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
+const FILE_INTAKE_DRAFTS_KEY = "fca_customer_file_intake_v1";
+
 const defaultDraft = {
   name: "",
   category: "Document",
@@ -61,6 +64,25 @@ const defaultDraft = {
   owner: "Project Coordinator",
   linkedEvidenceTarget: "",
 };
+
+function readLocalJson(key, fallback) {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeLocalJson(key, value) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // best effort only
+  }
+}
 
 function isBriefingReady(file = {}) {
   const haystack = `${file.status || ""} ${file.evidenceStatus || ""} ${file.action || ""} ${file.note || ""}`.toLowerCase();
@@ -102,10 +124,12 @@ export default function PortalFiles() {
   const { activeProject, meta: projectMeta } = useProjectWorkspace();
   const [busyFileId, setBusyFileId] = useState(null);
   const [creating, setCreating] = useState(false);
-  const [draft, setDraft] = useState(defaultDraft);
+  const [draft, setDraft] = useState(() => readLocalJson(FILE_INTAKE_DRAFTS_KEY, defaultDraft));
   const [deepLink] = useState(() => readDeepLinkParams());
+  const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
 
   const visibleProject = activeProject || state.project;
+  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
   const { files, auditEvents, meta: evidenceMeta, mutateFile, filters, setFilters, summary } = useWorkflowEvidence(visibleProject?.id);
   const evidencePackets = qualificationEvidenceByProject?.[visibleProject?.id] || qualificationEvidencePackets;
   const briefingFiles = useMemo(() => files.filter((file) => isBriefingReady(file)), [files]);
@@ -121,6 +145,10 @@ export default function PortalFiles() {
     }
     refreshSyncStamp(`File spine synchronized to ${visibleProject.id}`);
   }, [activeProject, refreshSyncStamp, syncActiveProject, visibleProject.id]);
+
+  useEffect(() => {
+    writeLocalJson(FILE_INTAKE_DRAFTS_KEY, draft);
+  }, [draft]);
 
   useEffect(() => {
     if (!deepLink.fileId || !targetedFile) return;
@@ -144,7 +172,6 @@ export default function PortalFiles() {
   async function handleCreateFileRecord(event) {
     event.preventDefault();
     if (!draft.name.trim()) return;
-
     setCreating(true);
     try {
       const detail = `${draft.name.trim()} registered under governed file spine for ${visibleProject.id}.`;
@@ -169,8 +196,8 @@ export default function PortalFiles() {
 
   return (
     <PortalShell
-      title="Files, Plans, and Customer Documents"
-      subtitle="Document shell proving that qualification evidence, bid packages, permit sets, RFIs, submittals, safety packets, and project artifacts live in one connected workspace."
+      title={`${companyName} File Intake and Evidence Workspace`}
+      subtitle="A branded document-control product for registering project files, linking evidence, generating Auricrux briefings, and keeping customer deliverables connected to execution."
       activeHref="/portal/files"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.files}
@@ -210,105 +237,31 @@ export default function PortalFiles() {
         />
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 16, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
+        <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded file experience</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
+        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{companyName} can now register files, attach evidence, generate Auricrux briefings, and preserve customer-facing document continuity without leaving the branded workspace.</p>
+        <div style={{ color: "#334155", lineHeight: 1.8 }}>
+          <div><strong>Project root:</strong> {visibleProject.id}</div>
+          <div><strong>Project workflow source:</strong> {projectMeta.backingSource}</div>
+          <div><strong>Evidence workflow source:</strong> {evidenceMeta.backingSource}</div>
+          <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
+        </div>
+      </div>
+
       <div style={{ marginBottom: 16 }}>
         <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
       </div>
 
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Active file workspace</div>
-        <div style={{ color: "#334155", lineHeight: 1.8 }}>
-          <div><strong>Project root:</strong> {visibleProject.id}</div>
-          <div><strong>Project name:</strong> {visibleProject.name}</div>
-          <div><strong>Project workflow source:</strong> {projectMeta.backingSource}</div>
-          <div><strong>Evidence workflow source:</strong> {evidenceMeta.backingSource}</div>
-          <div><strong>Evidence workflow status:</strong> {evidenceMeta.persistenceState}</div>
-          <div><strong>Last evidence sync:</strong> {evidenceMeta.lastSyncedAt || "Pending initial sync"}</div>
-          {!apiBacked ? <div><strong>Execution note:</strong> File actions on this route currently preserve shell continuity but may not represent fully governed backend persistence for every visible action.</div> : null}
-        </div>
-      </div>
-
       {targetedFile ? (
-        <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #2563eb" }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Targeted file briefing focus</div>
+        <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: `1px solid ${brandSkin.accent || "#2563eb"}` }}>
+          <div style={{ color: brandSkin.accent || "#2563eb", fontWeight: 700, marginBottom: 8 }}>Targeted file briefing focus</div>
           <AuricruxBriefingCard file={targetedFile} project={visibleProject} />
         </div>
       ) : null}
 
       <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <h2 style={{ marginTop: 0 }}>File Spine Context</h2>
-        <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-          <div><strong>Project:</strong> {visibleProject.name}</div>
-          <div><strong>Project ID:</strong> {visibleProject.id}</div>
-          <div><strong>File set:</strong> {visibleProject.fileSetLabel}</div>
-          <div>{visibleProject.fileSpineStatus}</div>
-          <div><strong>Visible file records:</strong> {summary.total}</div>
-          <div><strong>Workflow-backed audit records:</strong> {auditEvents.length}</div>
-          <div><strong>Briefing-ready artifacts:</strong> {briefingFiles.length}</div>
-        </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>File register summary</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
-          <div style={statCardStyle}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Visible files</div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{summary.total}</div>
-          </div>
-          <div style={statCardStyle}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Briefings ready</div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{briefingFiles.length}</div>
-          </div>
-          {Object.entries(summary.byStatus).slice(0, 2).map(([label, count]) => (
-            <div key={label} style={statCardStyle}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>{label}</div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{count}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
-          <label>
-            <div style={{ fontWeight: 700, marginBottom: 6 }}>Search</div>
-            <input style={inputStyle} value={filters.q} onChange={(event) => setFilters((current) => ({ ...current, q: event.target.value }))} placeholder="Search file name, owner, evidence target, note" />
-          </label>
-          <label>
-            <div style={{ fontWeight: 700, marginBottom: 6 }}>Category</div>
-            <select style={inputStyle} value={filters.category} onChange={(event) => setFilters((current) => ({ ...current, category: event.target.value }))}>
-              {categoryOptions.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <div style={{ fontWeight: 700, marginBottom: 6 }}>Status</div>
-            <select style={inputStyle} value={filters.status} onChange={(event) => setFilters((current) => ({ ...current, status: event.target.value }))}>
-              {statusOptions.map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
-          </label>
-        </div>
-      </div>
-
-      {briefingFiles.length ? (
-        <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Auricrux briefing surface</div>
-          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Governed briefing artifacts ready for action</h2>
-          <div style={{ display: "grid", gap: 12 }}>
-            {briefingFiles.map((file) => (
-              <AuricruxBriefingCard key={`briefing-${file.fileId}`} file={file} project={visibleProject} />
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Governed file registration</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Create a project-linked file record</h2>
-        {!apiBacked ? (
-          <div style={{ marginBottom: 12, color: "#92400e", lineHeight: 1.7 }}>
-            This form currently stages shell continuity state and may not represent fully canonical governed upload/register behavior while fallback workflow state is active.
-          </div>
-        ) : null}
+        <h2 style={{ marginTop: 0 }}>Functional product: File intake and evidence registration</h2>
         <form onSubmit={handleCreateFileRecord} style={{ display: "grid", gap: 12 }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
             <label>
@@ -340,86 +293,55 @@ export default function PortalFiles() {
             <input style={inputStyle} value={draft.linkedEvidenceTarget} onChange={(event) => setDraft((current) => ({ ...current, linkedEvidenceTarget: event.target.value }))} placeholder={`${visibleProject.id} governed evidence chain`} />
           </label>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button type="submit" style={buttonStyle} disabled={creating || !draft.name.trim()}>
-              {creating ? "Creating…" : apiBacked ? "Create file record" : "Stage file shell record"}
-            </button>
-            <button type="button" style={secondaryButtonStyle} disabled={creating} onClick={() => setDraft(defaultDraft)}>
-              Reset draft
-            </button>
+            <button type="submit" style={buttonStyle} disabled={creating || !draft.name.trim()}>{creating ? "Creating…" : apiBacked ? "Create File Record" : "Stage File Record"}</button>
+            <button type="button" style={secondaryButtonStyle} disabled={creating} onClick={() => setDraft(defaultDraft)}>Reset Draft</button>
           </div>
         </form>
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Qualification evidence handoff</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>The file spine now proves why a bid was allowed to advance</h2>
-        <div style={{ display: "grid", gap: 16 }}>
-          {evidencePackets.map((packet) => (
-            <div key={packet.bidId} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
-              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{packet.packageName}</h3>
-              <div style={{ color: "#334155", lineHeight: 1.7 }}>
-                <div><strong>Readiness:</strong> {packet.readiness}</div>
-                <div><strong>Summary:</strong> {packet.summary}</div>
-                <div><strong>Next action:</strong> {packet.nextAction}</div>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 12 }}>
-                <div>
-                  <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Linked evidence files</div>
-                  <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", margin: 0 }}>
-                    {packet.files.map((file) => (
-                      <li key={file}>{file}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Gate checks</div>
-                  <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", margin: 0 }}>
-                    {packet.checks.map((check) => (
-                      <li key={check}>{check}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>File register summary</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginBottom: 14 }}>
+          <div style={statCardStyle}><div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Visible files</div><div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{summary.total}</div></div>
+          <div style={statCardStyle}><div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Briefings ready</div><div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{briefingFiles.length}</div></div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Search</div>
+            <input style={inputStyle} value={filters.q} onChange={(event) => setFilters((current) => ({ ...current, q: event.target.value }))} placeholder="Search file name, owner, evidence target, note" />
+          </label>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Category</div>
+            <select style={inputStyle} value={filters.category} onChange={(event) => setFilters((current) => ({ ...current, category: event.target.value }))}>
+              {categoryOptions.map((option) => <option key={option}>{option}</option>)}
+            </select>
+          </label>
+          <label>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Status</div>
+            <select style={inputStyle} value={filters.status} onChange={(event) => setFilters((current) => ({ ...current, status: event.target.value }))}>
+              {statusOptions.map((option) => <option key={option}>{option}</option>)}
+            </select>
+          </label>
         </div>
       </div>
 
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Document-control governance</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA now models drawing, RFI, submittal, and closeout continuity as a governed product layer</h2>
-        <div style={{ display: "grid", gap: 16 }}>
-          {fileGovernance.registers.map((register) => (
-            <div key={register.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
-              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{register.title}</h3>
-              <p style={{ color: "#334155", lineHeight: 1.7 }}>{register.purpose}</p>
-              <a href={register.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{register.label}</a>
-              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 10, marginBottom: 0 }}>
-                {register.artifacts.map((artifact) => (
-                  <li key={artifact}>{artifact}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Closeout package checklist</div>
-            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-              {fileGovernance.closeoutPackages.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Audit signals</div>
-            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-              {fileGovernance.auditSignals.map((signal) => (
-                <li key={signal}>{signal}</li>
-              ))}
-            </ul>
+      {briefingFiles.length ? (
+        <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Auricrux briefing surface</div>
+          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Governed briefing artifacts ready for action</h2>
+          <div style={{ display: "grid", gap: 12 }}>
+            {briefingFiles.map((file) => <AuricruxBriefingCard key={`briefing-${file.fileId}`} file={file} project={visibleProject} />)}
           </div>
         </div>
+      ) : null}
+
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in File Workspace</h2>
+        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
+          <li>Explains file readiness, evidence posture, and downstream project impact</li>
+          <li>Recommends next file, estimate, and customer actions</li>
+          <li>Executes review registration, evidence linkage, and briefing generation</li>
+        </ul>
       </div>
 
       <ProjectFileAuditPanel
@@ -428,28 +350,10 @@ export default function PortalFiles() {
         auditEvents={auditEvents}
         busyFileId={busyFileId}
         targetedFileId={deepLink.fileId}
-        onRegisterReview={(file) =>
-          handleFileAction(file, "register-review", `${file.name} queued for governed review under ${visibleProject.id}.`)
-        }
-        onClassifyFile={(file) =>
-          handleFileAction(file, "classify-file", `Auricrux classified ${file.name} for ${visibleProject.id}.`, {
-            category: file.category,
-            evidenceStatus: "Classification complete",
-            status: "Classified",
-            actionLabel: "Classification saved",
-          })
-        }
-        onLinkEvidence={(file) =>
-          handleFileAction(file, "link-evidence", `${file.name} linked to governed evidence target for ${visibleProject.id}.`, {
-            linkedEvidenceTarget: `${visibleProject.id} governed evidence chain`,
-            evidenceStatus: "Evidence linked",
-            status: "Linked to governed object",
-            actionLabel: "Evidence linked",
-          })
-        }
-        onCreateBriefing={(file) =>
-          handleFileAction(file, "create-briefing", `Auricrux generated a briefing placeholder for ${file.name} under ${visibleProject.id}.`, buildBriefingMutation(file, visibleProject))
-        }
+        onRegisterReview={(file) => handleFileAction(file, "register-review", `${file.name} queued for governed review under ${visibleProject.id}.`)}
+        onClassifyFile={(file) => handleFileAction(file, "classify-file", `Auricrux classified ${file.name} for ${visibleProject.id}.`, { category: file.category, evidenceStatus: "Classification complete", status: "Classified", actionLabel: "Classification saved" })}
+        onLinkEvidence={(file) => handleFileAction(file, "link-evidence", `${file.name} linked to governed evidence target for ${visibleProject.id}.`, { linkedEvidenceTarget: `${visibleProject.id} governed evidence chain`, evidenceStatus: "Evidence linked", status: "Linked to governed object", actionLabel: "Evidence linked" })}
+        onCreateBriefing={(file) => handleFileAction(file, "create-briefing", `Auricrux generated a briefing placeholder for ${file.name} under ${visibleProject.id}.`, buildBriefingMutation(file, visibleProject))}
       />
     </PortalShell>
   );

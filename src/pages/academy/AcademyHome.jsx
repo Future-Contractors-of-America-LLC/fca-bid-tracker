@@ -19,7 +19,7 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v3";
+const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v4";
 
 const classrooms = [
   {
@@ -62,6 +62,20 @@ const classrooms = [
       { id: "estimate-studio-lines", title: "Lesson 3 · Build estimate line continuity", objective: "Use line items to keep cost, scope, and customer explanation aligned.", activity: "Add or review estimate line entries and confirm the reason each exists." },
       { id: "estimate-studio-proposal", title: "Lesson 4 · Package the proposal", objective: "Move from pricing review into a customer-ready proposal handoff.", activity: "Generate a proposal and verify the next customer action after delivery." },
       { id: "estimate-studio-auricrux", title: "Lesson 5 · Auricrux pricing guidance", objective: "Use Auricrux to explain pricing, recommend next steps, and execute proposal generation.", activity: "Document one pricing explanation, one recommendation, and one execution action Auricrux should provide." },
+    ],
+  },
+  {
+    id: "file-intake",
+    title: "File Intake and Evidence Continuity",
+    credential: "FCA Academy · Launch Classroom 04",
+    audience: "Project coordinators, document controllers, estimators, and customer-success operators",
+    outcome: "Train teams to register files, classify evidence, generate Auricrux briefings, and keep document continuity attached to real customer work.",
+    lessons: [
+      { id: "file-intake-register", title: "Lesson 1 · Register the file", objective: "Create a governed file record under the correct project root.", activity: "Use the File Intake workspace to register one customer file with owner, category, discipline, and evidence target." },
+      { id: "file-intake-classify", title: "Lesson 2 · Classify and link evidence", objective: "Tie the file to the right governed evidence chain before downstream actions advance.", activity: "Confirm category, owner, evidence target, and reason the file matters commercially or operationally." },
+      { id: "file-intake-briefing", title: "Lesson 3 · Generate the Auricrux briefing", objective: "Turn a document into a usable briefing artifact.", activity: "Create a briefing and review key facts, detected gaps, and recommended next actions." },
+      { id: "file-intake-customer", title: "Lesson 4 · Preserve customer continuity", objective: "Keep file actions tied to customer promises, estimate progression, and project execution.", activity: "Identify which customer-visible step depends on the registered file and what happens if it is missing." },
+      { id: "file-intake-auricrux", title: "Lesson 5 · Auricrux document control operations", objective: "Use Auricrux to explain, recommend, and execute file-control actions.", activity: "Record one explain action, one recommend action, and one execute action Auricrux should provide inside the file workspace." },
     ],
   },
 ];
@@ -115,7 +129,7 @@ export default function AcademyHome() {
       <ShellHeader
         eyebrow="FCA Academy"
         title="Customer classroom delivery"
-        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimate packaging, files, tasks, and execution continuity."
+        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, tasks, and execution continuity."
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
@@ -139,18 +153,9 @@ export default function AcademyHome() {
             <h2 style={{ marginTop: 0, marginBottom: 10 }}>{classroom.title}</h2>
             <p style={{ color: "#334155", lineHeight: 1.7 }}>{classroom.outcome}</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 16 }}>
-              <div>
-                <strong>Audience</strong>
-                <div style={{ color: "#475569", lineHeight: 1.7 }}>{classroom.audience}</div>
-              </div>
-              <div>
-                <strong>Completion</strong>
-                <div style={{ color: "#475569", lineHeight: 1.7 }}>{classroom.completedCount} / {classroom.lessons.length} lessons · {classroom.completionPercent}% complete</div>
-              </div>
-              <div>
-                <strong>Auricrux presence</strong>
-                <div style={{ color: "#475569", lineHeight: 1.7 }}>Explain, recommend, and execute actions are reinforced in every lesson.</div>
-              </div>
+              <div><strong>Audience</strong><div style={{ color: "#475569", lineHeight: 1.7 }}>{classroom.audience}</div></div>
+              <div><strong>Completion</strong><div style={{ color: "#475569", lineHeight: 1.7 }}>{classroom.completedCount} / {classroom.lessons.length} lessons · {classroom.completionPercent}% complete</div></div>
+              <div><strong>Auricrux presence</strong><div style={{ color: "#475569", lineHeight: 1.7 }}>Explain, recommend, and execute actions are reinforced in every lesson.</div></div>
             </div>
             <div style={{ display: "grid", gap: 14 }}>
               {classroom.lessons.map((lesson, index) => (

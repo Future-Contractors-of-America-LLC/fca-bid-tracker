@@ -38,24 +38,24 @@ const submitButtonStyle = {
 
 const marketingPoints = [
   {
-    title: "Convert leads into work faster",
-    detail: "Capture intake, qualify opportunities, stage estimates, and keep every customer handoff visible in one command center.",
+    title: "Close more work from one login",
+    detail: "Capture intake, qualify opportunities, build estimates, deliver files, and keep every customer handoff in one command center.",
   },
   {
-    title: "Deliver a branded customer portal",
-    detail: "Give customers and teams a workspace that looks and feels like your company, not a generic vendor dashboard.",
+    title: "Offer a workspace under your brand",
+    detail: "Customers and teams see a portal that feels like your company’s operating system—not someone else’s software.",
   },
   {
-    title: "Keep Auricrux on the job",
-    detail: "Auricrux explains what matters, recommends the next move, and executes guided actions across SaaS and Academy surfaces.",
+    title: "Keep Auricrux active in every move",
+    detail: "Auricrux explains what matters, recommends the next step, and executes guided actions across SaaS and Academy surfaces.",
   },
 ];
 
 const signupBenefits = [
   "Branded customer login and workspace entry",
-  "Opportunity qualification and estimate coordination",
-  "Customer task portal and follow-up continuity",
+  "Opportunity, estimate, file, and customer task continuity",
   "Academy classroom delivery for onboarding and execution readiness",
+  "Auricrux guidance embedded across every customer-facing lane",
 ];
 
 const LOCAL_FALLBACK_AUTH_BOUNDARY = {
@@ -71,7 +71,6 @@ function readLoginQueryState() {
   if (typeof window === "undefined") {
     return { seeded: false, autologin: false, internal: false, nextHref: null };
   }
-
   const params = new URLSearchParams(window.location.search);
   const seeded = params.get("seeded") === "1" || params.get("account") === "test";
   const autologin = seeded && params.get("autologin") === "1";
@@ -98,7 +97,6 @@ async function authenticateWorkspaceAccount(email, password) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-
     const payload = await response.json();
     if (response.ok && payload?.ok && payload?.account) {
       return {
@@ -107,7 +105,6 @@ async function authenticateWorkspaceAccount(email, password) {
         accountSource: payload.authenticationMode || "api",
       };
     }
-
     const localFallback = resolveLocalFallbackAccount(email, password);
     if (localFallback) return localFallback;
     throw new Error(payload?.error || "Customer authentication failed.");
@@ -159,7 +156,6 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
   useEffect(() => {
     if (!queryState.seeded || !queryState.autologin || autologinAttemptedRef.current) return;
     autologinAttemptedRef.current = true;
-
     async function runAutologin() {
       try {
         const authenticatedAccount = await authenticateWorkspaceAccount(PRIMARY_TEST_ACCOUNT.email, PRIMARY_TEST_ACCOUNT.password);
@@ -185,14 +181,12 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
         setError(autologinError?.message || "Customer authentication failed.");
       }
     }
-
     runAutologin();
   }, [login, nextHref, queryState.autologin, queryState.seeded]);
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
-
     if (!form.email.trim()) {
       setAuthStatus("failed");
       setError("Enter your work email to continue.");
@@ -203,7 +197,6 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
       setError("Enter your password to continue.");
       return;
     }
-
     setAuthStatus("authenticating");
     try {
       const authenticatedAccount = await authenticateWorkspaceAccount(form.email, form.password);
@@ -243,7 +236,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
           title={internalMode ? "Internal Access" : "Sign In or Request Access"}
           subtitle={internalMode
             ? "Internal validation remains available by explicit route only."
-            : "Launch a branded contractor operating system that handles customer intake, qualification, estimating, tasks, training, and Auricrux-guided execution."}
+            : "Launch a branded contractor operating system that handles customer intake, qualification, estimates, files, tasks, training, and Auricrux-guided execution."}
           primaryHref={shellHeaderCtaSets.workspace.primaryHref}
           primaryLabel={shellHeaderCtaSets.workspace.primaryLabel}
           secondaryHref={shellHeaderCtaSets.workspace.secondaryHref}
@@ -256,7 +249,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
           <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 14 }}>
             <div>
               <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>FCA Contractor Command</div>
-              <h2 style={{ margin: 0 }}>Sign in to win work, move customers forward, and keep every handoff inside one branded portal</h2>
+              <h2 style={{ margin: 0 }}>Sign in to close work, deliver branded customer service, and keep every handoff inside one portal</h2>
             </div>
             <div style={{ display: "grid", gap: 10 }}>
               <FcaBrandMark compact />
@@ -264,7 +257,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             </div>
           </div>
           <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 14 }}>
-            FCA gives contractors a customer-ready login experience, a branded workspace, opportunity control, estimate coordination, customer task delivery, and Academy training—without breaking continuity between sales, operations, and execution.
+            FCA gives contractors a customer-ready login experience, a branded workspace, opportunity control, estimate coordination, file intake, customer task delivery, and Academy training—without breaking continuity between sales, operations, and execution.
           </p>
           <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} style={{ display: "flex", gap: 12, flexWrap: "wrap" }} />
         </div>
@@ -281,7 +274,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
               <div style={{ color: "#475569", lineHeight: 1.7 }}>
                 {internalMode
                   ? "Use seeded launch credentials for internal validation only."
-                  : "Sign in to manage branded customer tasks, qualification flow, estimate readiness, training rollout, and Auricrux-guided next actions."}
+                  : "Sign in to manage branded customer tasks, qualification flow, estimate readiness, file intake, training rollout, and Auricrux-guided next actions."}
               </div>
             </div>
 
@@ -332,7 +325,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
         </div>
 
         <div style={{ marginTop: 24 }}>
-          <PublicActionRail title="Request a branded rollout" detail="Move from first conversation into a login-ready customer workspace with Auricrux already present across sales, tasks, and training." />
+          <PublicActionRail title="Request a branded rollout" detail="Move from first conversation into a login-ready customer workspace with Auricrux already present across sales, tasks, files, and training." />
         </div>
 
         <ShellFooter />
