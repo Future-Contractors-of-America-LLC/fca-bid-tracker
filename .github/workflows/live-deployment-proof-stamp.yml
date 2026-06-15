@@ -218,10 +218,12 @@ jobs:
           if git diff --cached --quiet; then
             echo "No CI-backed live deployment proof changes to commit."
           else
-            if ! git diff --quiet || [ -n "$(git ls-files --others --exclude-standard)" ]; then
-              git stash push --include-untracked --keep-index -m "live-proof-nonowned-${GITHUB_RUN_ID}" || true
-            fi
+            tmp_patch="$(mktemp)"
+            git diff --cached --binary > "$tmp_patch"
+            git reset --hard
+            git clean -fd
             git pull --rebase origin main
+            git apply --index "$tmp_patch"
             git commit -m "Persist CI-backed live deployment proof for run ${GITHUB_RUN_ID}"
             git push origin HEAD:main
           fi
