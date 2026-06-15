@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectActionCenter from "../../components/ProjectActionCenter";
@@ -27,21 +27,66 @@ const actionButtonStyle = {
   cursor: "pointer",
 };
 
+const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
+const PROJECT_COMMAND_KEY = "fca_customer_project_command_v1";
+
+function readLocalJson(key, fallback) {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function writeLocalJson(key, value) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // best effort only
+  }
+}
+
+const defaultCommandDraft = {
+  ownerNote: "",
+  customerMilestone: "Kickoff scheduled",
+};
+
 export default function PortalProjects() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
   const { projects, activeProject, meta, selectActiveProject, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
+  const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
+  const [drafts, setDrafts] = useState(() => readLocalJson(PROJECT_COMMAND_KEY, {}));
 
   useEffect(() => {
     refreshSyncStamp("Persisted project flow state active");
   }, [refreshSyncStamp]);
 
+  useEffect(() => {
+    writeLocalJson(PROJECT_COMMAND_KEY, drafts);
+  }, [drafts]);
+
   const visibleProject = activeProject || state.project;
   const apiBacked = meta.backingSource === "api-workflow-store";
+  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
+  const brandedNarrative = useMemo(() => `${companyName} Project Command keeps awarded work moving from kickoff through mobilization, customer milestones, permit recovery, and closeout readiness without losing branded continuity.`, [companyName]);
+
+  function updateDraft(projectId, key, value) {
+    setDrafts((current) => ({
+      ...current,
+      [projectId]: {
+        ...(current[projectId] || defaultCommandDraft),
+        [key]: value,
+      },
+    }));
+  }
 
   return (
     <PortalShell
-      title="Project Flow and Customer Visibility"
-      subtitle="Execution-stage shell showing how FCA carries a customer from awarded work into job setup, delivery coordination, and closeout accountability."
+      title={`${companyName} Project Command Board`}
+      subtitle="A branded execution workspace where customers can really move projects forward, update delivery posture, and keep Auricrux-guided continuity attached to the active job."
       activeHref="/portal/projects"
       currentJourney="job"
       routeOverlay={routeStateOverlays.projects}
@@ -81,88 +126,36 @@ export default function PortalProjects() {
         />
       </div>
 
-      <CommercialContinuityFeed title="Project commercial continuity feed" detail="Recent project-stage changes, permit-path repairs, and execution-to-closeout mutations remain visible here so delivery actions stay tied to revenue and rollout continuity." />
-      <AutomationRecoveryFeed title="Project automation feed" detail="Recent Auricrux project repairs and stage transitions remain visible across routes so execution-state changes are durable." />
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted project state</div>
+      <div style={{ ...cardStyle, marginBottom: 16, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
+        <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded project command</div>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
+        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{brandedNarrative}</p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>
           <div><strong>Project workflow source:</strong> {meta.backingSource}</div>
           <div><strong>Project workflow status:</strong> {meta.persistenceState}</div>
-          <div><strong>Last workflow sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
-          <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
-          <div><strong>Active project root:</strong> {visibleProject?.id || state.project.id}</div>
-          {!apiBacked ? <div><strong>Execution note:</strong> This route is currently acting as the project selector and continuity launcher while the governed project detail home is still being built.</div> : null}
+          <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
         </div>
       </div>
 
+      <CommercialContinuityFeed title="Project commercial continuity feed" detail="Recent project-stage changes, permit-path repairs, and execution-to-closeout mutations remain visible here so delivery actions stay tied to revenue and rollout continuity." />
+      <AutomationRecoveryFeed title="Project automation feed" detail="Recent Auricrux project repairs and stage transitions remain visible across routes so execution-state changes are durable." />
+
       <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <h2 style={{ marginTop: 0 }}>Current Project Root</h2>
+        <h2 style={{ marginTop: 0 }}>Functional product: Project stage and milestone control</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-          <div><strong>{state.project.name}</strong></div>
-          <div>Project ID: {state.project.id}</div>
-          <div>Current stage: {state.project.stage}</div>
-          <div>{state.project.auditStatus}</div>
-        </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Active project detail depth</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{visibleProject?.name || state.project.name}</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
-          <div>
-            <div><strong>Customer:</strong> {visibleProject?.customer}</div>
-            <div><strong>Owner:</strong> {visibleProject?.owner}</div>
-            <div><strong>Due:</strong> {visibleProject?.due}</div>
-            <div><strong>Stage:</strong> {visibleProject?.stage}</div>
-          </div>
-          <div>
-            <div><strong>Permit:</strong> {visibleProject?.permitStatus}</div>
-            <div><strong>Site status:</strong> {visibleProject?.siteStatus}</div>
-            <div><strong>Commercial focus:</strong> {visibleProject?.commercialFocus}</div>
-            {visibleProject?.sourceBidId ? <div><strong>Source bid:</strong> {visibleProject.sourceBidId}</div> : null}
-          </div>
-        </div>
-        {visibleProject?.actionHistory?.length ? (
-          <div style={{ marginTop: 16 }}>
-            <div style={{ fontWeight: 700, marginBottom: 8 }}>Recent project actions</div>
-            <div style={{ display: "grid", gap: 10 }}>
-              {visibleProject.actionHistory.slice(0, 3).map((entry) => (
-                <div key={`${entry.at}-${entry.label}`} style={{ borderLeft: "3px solid #2563eb", paddingLeft: 12 }}>
-                  <div style={{ fontSize: 12, color: "#64748b", fontWeight: 700 }}>{new Date(entry.at).toLocaleString()}</div>
-                  <div style={{ fontWeight: 700, marginTop: 4 }}>{entry.label}</div>
-                  <div style={{ color: "#475569", lineHeight: 1.6, marginTop: 4 }}>{entry.detail}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <h2 style={{ marginTop: 0 }}>Project Lifecycle</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
-          {[
-            "Lead captured",
-            "Bid built",
-            "Customer approved",
-            "Project mobilized",
-            "Billing and closeout",
-          ].map((step) => (
-            <div key={step} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
-              <div style={{ fontWeight: 700 }}>{step}</div>
-            </div>
-          ))}
+          <div><strong>Active project root:</strong> {visibleProject?.id || state.project.id}</div>
+          <div><strong>Current stage:</strong> {visibleProject?.stage || state.project.stage}</div>
+          <div><strong>Commercial focus:</strong> {visibleProject?.commercialFocus}</div>
         </div>
       </div>
 
       <div style={{ display: "grid", gap: 16 }}>
         {projects.map((project) => {
           const isActive = visibleProject?.id === project.id;
-
+          const draft = drafts[project.id] || defaultCommandDraft;
           return (
-            <div key={project.id} style={{ ...cardStyle, border: isActive ? "1px solid #2563eb" : cardStyle.border, background: isActive ? "#f8fbff" : cardStyle.background }}>
+            <div key={project.id} style={{ ...cardStyle, border: isActive ? `1px solid ${brandSkin.accent || "#2563eb"}` : cardStyle.border, background: isActive ? brandSkin.surface || "#f8fbff" : cardStyle.background }}>
               <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
                 <div>
                   <h3 style={{ margin: "0 0 6px 0" }}>{project.id} · {project.customer}</h3>
@@ -177,14 +170,22 @@ export default function PortalProjects() {
                   <div><strong>Due:</strong> {project.due}</div>
                   <div><strong>Superintendent:</strong> {project.superintendent}</div>
                   <div><strong>Permit status:</strong> {project.permitStatus}</div>
-                  {project.sourceBidId ? <div><strong>Source bid:</strong> {project.sourceBidId}</div> : null}
                 </div>
               </div>
-              <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.6 }}>
-                <strong>Commercial focus:</strong> {project.commercialFocus}
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 14 }}>
+                <label>
+                  <div style={{ fontWeight: 700, marginBottom: 6 }}>Owner note</div>
+                  <input value={draft.ownerNote} onChange={(event) => updateDraft(project.id, "ownerNote", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Add the next branded owner note" />
+                </label>
+                <label>
+                  <div style={{ fontWeight: 700, marginBottom: 6 }}>Customer milestone</div>
+                  <input value={draft.customerMilestone} onChange={(event) => updateDraft(project.id, "customerMilestone", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Kickoff scheduled" />
+                </label>
               </div>
+
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginTop: 14 }}>
-                <div style={{ color: isActive ? "#1d4ed8" : "#64748b", fontWeight: 700 }}>
+                <div style={{ color: isActive ? brandSkin.accent || "#1d4ed8" : "#64748b", fontWeight: 700 }}>
                   {isActive ? "Active workspace project" : "Available project root"}
                 </div>
                 <button
@@ -199,10 +200,26 @@ export default function PortalProjects() {
                   {isActive ? "Active project selected" : "Set as active project"}
                 </button>
               </div>
+
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+                <button type="button" style={actionButtonStyle} onClick={() => advanceProjectStage(project.id, "Mobilization", `${draft.customerMilestone || "Mobilization milestone"} confirmed for ${project.id}. ${draft.ownerNote || "Auricrux advanced the project stage."}`)}>Advance to Mobilization</button>
+                <button type="button" style={actionButtonStyle} onClick={() => advanceProjectStage(project.id, "Closeout", `Closeout readiness confirmed for ${project.id}. ${draft.ownerNote || "Auricrux advanced the project to closeout planning."}`)}>Advance to Closeout</button>
+                <button type="button" style={actionButtonStyle} onClick={() => clearPermitBlocker(project.id, `${draft.customerMilestone || "Customer milestone"} active and permit blocker cleared for ${project.id}.`)}>Clear Permit Blocker</button>
+              </div>
+
               <ProjectActionCenter project={project} advanceProjectStage={advanceProjectStage} clearPermitBlocker={clearPermitBlocker} />
             </div>
           );
         })}
+      </div>
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Project Command</h2>
+        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
+          <li>Explains active stage, blocker posture, and milestone readiness</li>
+          <li>Recommends next delivery and customer-communication actions</li>
+          <li>Executes project selection, stage advancement, and permit-path recovery</li>
+        </ul>
       </div>
     </PortalShell>
   );

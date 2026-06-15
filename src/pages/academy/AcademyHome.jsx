@@ -19,7 +19,7 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
-const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v4";
+const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v5";
 
 const classrooms = [
   {
@@ -78,6 +78,20 @@ const classrooms = [
       { id: "file-intake-auricrux", title: "Lesson 5 · Auricrux document control operations", objective: "Use Auricrux to explain, recommend, and execute file-control actions.", activity: "Record one explain action, one recommend action, and one execute action Auricrux should provide inside the file workspace." },
     ],
   },
+  {
+    id: "project-command",
+    title: "Project Command and Customer Milestone Control",
+    credential: "FCA Academy · Launch Classroom 05",
+    audience: "Owners, project managers, coordinators, superintendents, and customer-success staff",
+    outcome: "Train teams to move projects through branded milestones, stage progression, permit recovery, and customer communication with Auricrux embedded in the command flow.",
+    lessons: [
+      { id: "project-command-stage", title: "Lesson 1 · Read stage and delivery posture", objective: "Understand what the current stage says about mobilization, closeout, and customer expectations.", activity: "Open Project Command Board and explain the active stage, next action, and site status for one project." },
+      { id: "project-command-root", title: "Lesson 2 · Set the active project root", objective: "Move the workspace onto the right project context before executing downstream actions.", activity: "Select the correct active project and confirm why the workspace root matters." },
+      { id: "project-command-milestone", title: "Lesson 3 · Set branded owner notes and customer milestones", objective: "Create customer-facing milestone continuity inside the branded portal.", activity: "Draft one owner note and one customer milestone for a live project." },
+      { id: "project-command-stage-advance", title: "Lesson 4 · Advance stage and recover blockers", objective: "Use Project Command to move a project into mobilization, closeout, or permit recovery.", activity: "Advance one stage or clear a permit blocker and confirm the resulting next action." },
+      { id: "project-command-auricrux", title: "Lesson 5 · Auricrux project execution guidance", objective: "Use Auricrux to explain readiness, recommend the next move, and execute project command actions.", activity: "Record one explain action, one recommendation, and one execution action Auricrux should provide in the project workspace." },
+    ],
+  },
 ];
 
 function readCourseProgress() {
@@ -129,7 +143,7 @@ export default function AcademyHome() {
       <ShellHeader
         eyebrow="FCA Academy"
         title="Customer classroom delivery"
-        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, tasks, and execution continuity."
+        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, projects, tasks, and execution continuity."
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
@@ -180,7 +194,7 @@ export default function AcademyHome() {
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Academy</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
           <li>Explains the lesson objective and why it matters in the customer workflow</li>
-          <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, and tasks</li>
+          <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, projects, and tasks</li>
           <li>Executes guided completion signals and keeps learning-to-workflow continuity visible</li>
         </ul>
       </div>
