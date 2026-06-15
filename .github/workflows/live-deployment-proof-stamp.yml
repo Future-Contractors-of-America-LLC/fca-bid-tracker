@@ -57,12 +57,52 @@ jobs:
         if: ${{ always() }}
         run: node scripts/validate-live-deployment-run-witness.mjs
 
+      - name: Validate live deployment proof commit signal
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-proof-commit-signal.mjs
+
+      - name: Generate live deployment proof commit signal report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-proof-commit-signal-report.mjs
+
+      - name: Validate live deployment witness commit observation
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-witness-commit-observation.mjs
+
+      - name: Generate live deployment witness commit observation report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-witness-commit-observation-report.mjs
+
+      - name: Validate live deployment CI proof commit observation
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-ci-proof-commit-observation.mjs
+
+      - name: Generate live deployment CI proof commit observation report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-ci-proof-commit-observation-report.mjs
+
+      - name: Validate live deployment proof provenance
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-proof-provenance.mjs
+
+      - name: Generate live deployment proof provenance report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-proof-provenance-report.mjs
+
+      - name: Validate live deployment proof suite
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-proof-suite.mjs
+
+      - name: Generate live deployment proof suite report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-proof-suite-report.mjs
+
       - name: Commit CI-backed live deployment proof
         if: ${{ always() }}
         run: |
           git config user.name "auricrux-ci"
           git config user.email "auricrux-ci@futurecontractorsofamerica.com"
-          git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md generated/live-deployment-proof-workflow-validation.json generated/live-deployment-proof-workflow-validation.md generated/live-deployment-run-witness-validation.json generated/live-deployment-run-witness-validation.md
+          git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md generated/live-deployment-proof-workflow-validation.json generated/live-deployment-proof-workflow-validation.md generated/live-deployment-run-witness-validation.json generated/live-deployment-run-witness-validation.md generated/live-deployment-proof-commit-signal-validation.json generated/live-deployment-proof-commit-signal-validation.md generated/live-deployment-proof-commit-signal-report.json generated/live-deployment-proof-commit-signal-report.md generated/live-deployment-witness-commit-observation-validation.json generated/live-deployment-witness-commit-observation-validation.md generated/live-deployment-witness-commit-observation-report.json generated/live-deployment-witness-commit-observation-report.md generated/live-deployment-ci-proof-commit-observation-validation.json generated/live-deployment-ci-proof-commit-observation-validation.md generated/live-deployment-ci-proof-commit-observation-report.json generated/live-deployment-ci-proof-commit-observation-report.md generated/live-deployment-proof-provenance-validation.json generated/live-deployment-proof-provenance-validation.md generated/live-deployment-proof-provenance-report.json generated/live-deployment-proof-provenance-report.md generated/live-deployment-proof-suite-validation.json generated/live-deployment-proof-suite-validation.md generated/live-deployment-proof-suite-report.json generated/live-deployment-proof-suite-report.md
           if git diff --cached --quiet; then
             echo "No CI-backed live deployment proof changes to commit."
           else

@@ -9,10 +9,11 @@ Target Packet: `061Z`
 
 ---
 
-## Unverified items removed this packet
-1. missing dedicated lightweight live run witness workflow
-2. missing explicit validator/report surface for the live run witness workflow
+## Unverified items reduced this packet
+1. workflow-contract alignment for the dedicated live proof lane is no longer unverified
+2. commit-signal detection path for CI-backed live proof is no longer unverified
+3. witness-commit observation path is no longer unverified
 
 ## Minimum reduction requirement
-Required reduction: at least 2
-Actual reduction: 2
+Required reduction: at least 3
+Actual reduction: 3

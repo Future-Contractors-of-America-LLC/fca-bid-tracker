@@ -114,6 +114,38 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:admin-governance-report
 
+      - name: Validate live deployment proof commit signal
+        if: ${{ always() }}
+        run: npm run validate:live-deployment-proof-commit-signal
+
+      - name: Generate live deployment proof commit signal report
+        if: ${{ always() }}
+        run: npm run generate:live-deployment-proof-commit-signal-report
+
+      - name: Validate live deployment witness commit observation
+        if: ${{ always() }}
+        run: npm run validate:live-deployment-witness-commit-observation
+
+      - name: Generate live deployment witness commit observation report
+        if: ${{ always() }}
+        run: npm run generate:live-deployment-witness-commit-observation-report
+
+      - name: Validate live deployment CI proof commit observation
+        if: ${{ always() }}
+        run: npm run validate:live-deployment-ci-proof-commit-observation
+
+      - name: Generate live deployment CI proof commit observation report
+        if: ${{ always() }}
+        run: npm run generate:live-deployment-ci-proof-commit-observation-report
+
+      - name: Validate live deployment proof suite
+        if: ${{ always() }}
+        run: npm run validate:live-deployment-proof-suite
+
+      - name: Generate live deployment proof suite report
+        if: ${{ always() }}
+        run: npm run generate:live-deployment-proof-suite-report
+
       - name: Persist build proof artifacts into repo
         if: ${{ always() }}
         run: |
@@ -149,6 +181,22 @@ jobs:
           cp generated/support-governance-report.md docs/runtime-proof/build-validation/support-governance-report.md || true
           cp generated/admin-governance-report.json docs/runtime-proof/build-validation/admin-governance-report.json || true
           cp generated/admin-governance-report.md docs/runtime-proof/build-validation/admin-governance-report.md || true
+          cp generated/live-deployment-proof-commit-signal-validation.json docs/runtime-proof/live-deployment/live-deployment-proof-commit-signal-validation.json || true
+          cp generated/live-deployment-proof-commit-signal-validation.md docs/runtime-proof/live-deployment/live-deployment-proof-commit-signal-validation.md || true
+          cp generated/live-deployment-proof-commit-signal-report.json docs/runtime-proof/live-deployment/live-deployment-proof-commit-signal-report.json || true
+          cp generated/live-deployment-proof-commit-signal-report.md docs/runtime-proof/live-deployment/live-deployment-proof-commit-signal-report.md || true
+          cp generated/live-deployment-witness-commit-observation-validation.json docs/runtime-proof/live-deployment/live-deployment-witness-commit-observation-validation.json || true
+          cp generated/live-deployment-witness-commit-observation-validation.md docs/runtime-proof/live-deployment/live-deployment-witness-commit-observation-validation.md || true
+          cp generated/live-deployment-witness-commit-observation-report.json docs/runtime-proof/live-deployment/live-deployment-witness-commit-observation-report.json || true
+          cp generated/live-deployment-witness-commit-observation-report.md docs/runtime-proof/live-deployment/live-deployment-witness-commit-observation-report.md || true
+          cp generated/live-deployment-ci-proof-commit-observation-validation.json docs/runtime-proof/live-deployment/live-deployment-ci-proof-commit-observation-validation.json || true
+          cp generated/live-deployment-ci-proof-commit-observation-validation.md docs/runtime-proof/live-deployment/live-deployment-ci-proof-commit-observation-validation.md || true
+          cp generated/live-deployment-ci-proof-commit-observation-report.json docs/runtime-proof/live-deployment/live-deployment-ci-proof-commit-observation-report.json || true
+          cp generated/live-deployment-ci-proof-commit-observation-report.md docs/runtime-proof/live-deployment/live-deployment-ci-proof-commit-observation-report.md || true
+          cp generated/live-deployment-proof-suite-validation.json docs/runtime-proof/live-deployment/live-deployment-proof-suite-validation.json || true
+          cp generated/live-deployment-proof-suite-validation.md docs/runtime-proof/live-deployment/live-deployment-proof-suite-validation.md || true
+          cp generated/live-deployment-proof-suite-report.json docs/runtime-proof/live-deployment/live-deployment-proof-suite-report.json || true
+          cp generated/live-deployment-proof-suite-report.md docs/runtime-proof/live-deployment/live-deployment-proof-suite-report.md || true
           cp workspace/live_deployment_smoke_summary.json docs/runtime-proof/live-deployment/live_deployment_smoke_summary.json || true
           cp workspace/live_deployment_smoke_failures.txt docs/runtime-proof/live-deployment/live_deployment_smoke_failures.txt || true
 
@@ -238,6 +286,10 @@ jobs:
             echo "" >> "$GITHUB_STEP_SUMMARY"
             cat generated/build-proof-ci-rewrite-transition-report.md >> "$GITHUB_STEP_SUMMARY"
           fi
+          if [ -f generated/live-deployment-proof-suite-report.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/live-deployment-proof-suite-report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Upload product readiness artifacts
         if: ${{ always() }}
@@ -299,6 +351,22 @@ jobs:
             generated/build-proof-double-absence-report.md
             generated/build-evidence-report.json
             generated/build-evidence-report.md
+            generated/live-deployment-proof-commit-signal-validation.json
+            generated/live-deployment-proof-commit-signal-validation.md
+            generated/live-deployment-proof-commit-signal-report.json
+            generated/live-deployment-proof-commit-signal-report.md
+            generated/live-deployment-witness-commit-observation-validation.json
+            generated/live-deployment-witness-commit-observation-validation.md
+            generated/live-deployment-witness-commit-observation-report.json
+            generated/live-deployment-witness-commit-observation-report.md
+            generated/live-deployment-ci-proof-commit-observation-validation.json
+            generated/live-deployment-ci-proof-commit-observation-validation.md
+            generated/live-deployment-ci-proof-commit-observation-report.json
+            generated/live-deployment-ci-proof-commit-observation-report.md
+            generated/live-deployment-proof-suite-validation.json
+            generated/live-deployment-proof-suite-validation.md
+            generated/live-deployment-proof-suite-report.json
+            generated/live-deployment-proof-suite-report.md
             workspace/live_deployment_smoke_summary.json
             workspace/live_deployment_smoke_failures.txt
           if-no-files-found: warn

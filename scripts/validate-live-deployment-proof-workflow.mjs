@@ -21,8 +21,15 @@ function main() {
   const checks = {
     workflowExists: fs.existsSync(workflowPath),
     hasName: source.includes('name: FCA Live Deployment Proof Stamp'),
-    invokesVerifyLiveDeployment: source.includes('npm run verify:live-deployment'),
-    invokesStamp: source.includes('npm run stamp:live-deployment-proof'),
+    usesNodeDirectVerify: source.includes('node scripts/verify-live-deployment.mjs'),
+    usesNodeDirectStamp: source.includes('node scripts/stamp-live-deployment-proof.mjs'),
+    validatesSurface: source.includes('node scripts/validate-live-deployment-proof-surface.mjs'),
+    validatesWorkflow: source.includes('node scripts/validate-live-deployment-proof-workflow.mjs'),
+    validatesRunWitness: source.includes('node scripts/validate-live-deployment-run-witness.mjs'),
+    validatesCommitSignal: source.includes('node scripts/validate-live-deployment-proof-commit-signal.mjs'),
+    validatesWitnessCommitObservation: source.includes('node scripts/validate-live-deployment-witness-commit-observation.mjs'),
+    validatesCiProofCommitObservation: source.includes('node scripts/validate-live-deployment-ci-proof-commit-observation.mjs'),
+    validatesProofSuite: source.includes('node scripts/validate-live-deployment-proof-suite.mjs'),
     commitsCiProof: source.includes('Persist CI-backed live deployment proof for run ${GITHUB_RUN_ID}'),
   }
   const failures = Object.entries(checks).filter(([, value]) => !value).map(([key]) => key)
