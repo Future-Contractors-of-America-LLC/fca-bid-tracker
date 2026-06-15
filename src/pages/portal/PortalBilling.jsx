@@ -13,7 +13,7 @@ const cardStyle = {
 };
 
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
-const BILLING_COMMAND_KEY = "fca_customer_billing_command_v1";
+const BILLING_COMMAND_KEY = "fca_customer_billing_command_v2";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -93,7 +93,7 @@ export default function PortalBilling() {
         <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded billing experience</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
-          {companyName} can now stage invoices, preserve billing continuity, and keep customer-ready revenue actions visible inside the branded workspace.
+          {companyName} can now stage invoices, issue revenue actions, and keep customer-ready billing continuity visible inside the branded workspace.
         </p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>

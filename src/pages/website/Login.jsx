@@ -38,22 +38,22 @@ const submitButtonStyle = {
 
 const marketingPoints = [
   {
-    title: "Close work from one login",
-    detail: "Capture intake, qualify opportunities, build estimates, deliver files, manage projects, handle customer messages, and keep every handoff visible inside one command center.",
+    title: "Run customer delivery from one login",
+    detail: "Capture intake, qualify opportunities, build estimates, deliver files, manage projects, coordinate support, and keep every customer handoff visible inside one command center.",
   },
   {
-    title: "Offer a workspace under your brand",
-    detail: "Customers and teams see a portal that feels like your company’s operating system instead of a generic software vendor dashboard.",
+    title: "Give every customer a branded experience",
+    detail: "Customers and teams enter a workspace that looks and feels like your company’s operating system instead of generic software.",
   },
   {
-    title: "Keep Auricrux active in every step",
-    detail: "Auricrux explains what matters, recommends the next action, and executes guided moves across sales, delivery, communications, support, and training.",
+    title: "Keep Auricrux active in every lane",
+    detail: "Auricrux explains what matters, recommends the next action, and executes guided moves across sales, delivery, communications, support, billing, and training.",
   },
 ];
 
 const signupBenefits = [
   "Branded login and workspace entry",
-  "Opportunity, estimate, file, project, communication, and support continuity",
+  "Opportunity, estimate, file, project, communication, support, and billing continuity",
   "Academy classrooms for onboarding and execution readiness",
   "Auricrux guidance embedded across every customer-facing lane",
 ];
@@ -236,7 +236,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
           title={internalMode ? "Internal Access" : "Sign In or Request Access"}
           subtitle={internalMode
             ? "Internal validation remains available by explicit route only."
-            : "Launch a branded contractor operating system that handles customer intake, qualification, estimates, files, projects, communications, support, training, and Auricrux-guided execution."}
+            : "Launch a branded contractor operating system that handles intake, qualification, estimates, files, projects, communications, support, billing, training, and Auricrux-guided execution."}
           primaryHref={shellHeaderCtaSets.workspace.primaryHref}
           primaryLabel={shellHeaderCtaSets.workspace.primaryLabel}
           secondaryHref={shellHeaderCtaSets.workspace.secondaryHref}
@@ -257,7 +257,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             </div>
           </div>
           <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 14 }}>
-            FCA gives contractors a customer-ready login experience, a branded workspace, opportunity control, estimates, file intake, project command, customer communications, support continuity, and Academy training—without breaking continuity between sales, operations, and execution.
+            FCA gives contractors a customer-ready login experience, a branded workspace, opportunity control, estimates, files, projects, communications, support, billing, and Academy training—without breaking continuity between sales, operations, and execution.
           </p>
           <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} style={{ display: "flex", gap: 12, flexWrap: "wrap" }} />
         </div>
@@ -274,7 +274,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
               <div style={{ color: "#475569", lineHeight: 1.7 }}>
                 {internalMode
                   ? "Use seeded launch credentials for internal validation only."
-                  : "Sign in to manage branded customer tasks, qualification flow, estimates, file intake, project milestones, communications, support follow-through, training rollout, and Auricrux-guided next actions."}
+                  : "Sign in to manage branded customer tasks, qualification flow, estimates, files, projects, communications, support follow-through, billing, training rollout, and Auricrux-guided next actions."}
               </div>
             </div>
 
@@ -325,7 +325,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
         </div>
 
         <div style={{ marginTop: 24 }}>
-          <PublicActionRail title="Request a branded rollout" detail="Move from first conversation into a login-ready customer workspace with Auricrux already present across sales, files, projects, communications, support, and training." />
+          <PublicActionRail title="Request a branded rollout" detail="Move from first conversation into a login-ready customer workspace with Auricrux already present across sales, files, projects, communications, support, billing, and training." />
         </div>
 
         <ShellFooter />
