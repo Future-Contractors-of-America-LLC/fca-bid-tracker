@@ -54,6 +54,9 @@ jobs:
       - name: Run governed build validation
         run: npm run build:system
 
+      - name: Patch live login continuity and visibility marker
+        run: node scripts/patch-live-login-continuity.mjs
+
       - name: Generate deployable Azure Functions layout
         run: node scripts/prepare-api-functions.mjs
 
@@ -74,6 +77,9 @@ jobs:
           test -f dist/live-shell-verification.html
           test -f dist/host-binding-audit.html
           test -f dist/api-continuity-audit.html
+          grep -q "Cross-host login continuity patch active" dist/index.html
+          grep -q "fcaCrossHostLoginPatch" dist/login/index.html
+          grep -q "fcaCrossHostLoginPatch" dist/intake/index.html
           find dist -maxdepth 1 -name 'commit-witness-*.txt' | grep -q .
 
           test -f api_generated/package.json
