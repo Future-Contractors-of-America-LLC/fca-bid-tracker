@@ -15,4 +15,5 @@ Target Packet: `061Z`
 - metadata transition success
 - current-head verifier success
 - proof bundle readiness success
-- remaining managed auth, academy, and commercial runtime proof classes locked with direct evidence
+- persisted control-run gate success
+- remaining managed auth, Academy, and commercial runtime proof classes locked with direct evidence and bounded truth

@@ -12,4 +12,15 @@ Target Packet: `061Z`
 `061Z` may close only after the first persisted control run is repo-visible and all remaining proof classes are either directly passed or truthfully locked as still failing with exact evidence.
 
 ## 2026-06-15 improvement
-The first witness observation is now resolved; the remaining closure gate is the CI-backed live deployment proof commit plus the persisted control-run evidence bundle.
+The first witness observation is resolved.
+
+The remaining closure gates are now fully wired into both CI lanes:
+- CI-backed live deployment proof commit
+- persisted control-run evidence bundle
+- current-head verifier evidence
+- metadata transition evidence
+- proof-bundle readiness evidence
+- bounded managed auth, Academy, and commercial/runtime evidence surfaces
+
+## Anti-fake rule
+Wiring the proof lanes is not the same thing as passing them.

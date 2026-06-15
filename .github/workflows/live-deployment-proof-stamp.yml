@@ -53,9 +53,29 @@ jobs:
         if: ${{ always() }}
         run: node scripts/validate-live-deployment-proof-workflow.mjs
 
+      - name: Generate live deployment proof workflow report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-proof-workflow-report.mjs
+
+      - name: Validate live deployment proof zero dependency workflow
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-proof-zero-dependency-workflow.mjs
+
+      - name: Generate live deployment proof zero dependency workflow report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-proof-zero-dependency-workflow-report.mjs
+
       - name: Validate live deployment run witness
         if: ${{ always() }}
         run: node scripts/validate-live-deployment-run-witness.mjs
+
+      - name: Validate live deployment run witness workflow
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-run-witness-workflow.mjs
+
+      - name: Generate live deployment run witness workflow report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-run-witness-workflow-report.mjs
 
       - name: Validate live deployment proof commit signal
         if: ${{ always() }}
@@ -89,6 +109,26 @@ jobs:
         if: ${{ always() }}
         run: node scripts/generate-live-deployment-proof-provenance-report.mjs
 
+      - name: Capture live deployment transition target
+        if: ${{ always() }}
+        run: node scripts/capture-live-deployment-transition-target.mjs
+
+      - name: Validate live deployment current head verifier
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-current-head-verifier.mjs
+
+      - name: Generate live deployment current head verifier report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-current-head-verifier-report.mjs
+
+      - name: Validate live deployment metadata transition state
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-metadata-transition-state.mjs
+
+      - name: Generate live deployment metadata transition state report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-metadata-transition-state-report.mjs
+
       - name: Validate live deployment proof suite
         if: ${{ always() }}
         run: node scripts/validate-live-deployment-proof-suite.mjs
@@ -97,12 +137,76 @@ jobs:
         if: ${{ always() }}
         run: node scripts/generate-live-deployment-proof-suite-report.mjs
 
+      - name: Validate live deployment proof bundle readiness
+        if: ${{ always() }}
+        run: node scripts/validate-live-deployment-proof-bundle-readiness.mjs
+
+      - name: Generate live deployment proof bundle readiness report
+        if: ${{ always() }}
+        run: node scripts/generate-live-deployment-proof-bundle-readiness-report.mjs
+
+      - name: Validate live proof stamp coverage
+        if: ${{ always() }}
+        run: node scripts/validate-live-proof-stamp-coverage.mjs
+
+      - name: Generate live proof stamp coverage report
+        if: ${{ always() }}
+        run: node scripts/generate-live-proof-stamp-coverage-report.mjs
+
+      - name: Validate live proof stamp persistence wiring
+        if: ${{ always() }}
+        run: node scripts/validate-live-proof-stamp-persistence-wiring.mjs
+
+      - name: Generate live proof stamp persistence wiring report
+        if: ${{ always() }}
+        run: node scripts/generate-live-proof-stamp-persistence-wiring-report.mjs
+
+      - name: Validate live proof persisted artifact surface
+        if: ${{ always() }}
+        run: node scripts/validate-live-proof-persisted-artifact-surface.mjs
+
+      - name: Generate live proof persisted artifact surface report
+        if: ${{ always() }}
+        run: node scripts/generate-live-proof-persisted-artifact-surface-report.mjs
+
+      - name: Validate live proof persisted control bundle
+        if: ${{ always() }}
+        run: node scripts/validate-live-proof-persisted-control-bundle.mjs
+
+      - name: Generate live proof persisted control bundle report
+        if: ${{ always() }}
+        run: node scripts/generate-live-proof-persisted-control-bundle-report.mjs
+
+      - name: Validate live proof witness observed state
+        if: ${{ always() }}
+        run: node scripts/validate-live-proof-witness-observed-state.mjs
+
+      - name: Generate live proof witness observed state report
+        if: ${{ always() }}
+        run: node scripts/generate-live-proof-witness-observed-state-report.mjs
+
+      - name: Validate live proof split state
+        if: ${{ always() }}
+        run: node scripts/validate-live-proof-split-state.mjs
+
+      - name: Generate live proof split state report
+        if: ${{ always() }}
+        run: node scripts/generate-live-proof-split-state-report.mjs
+
+      - name: Validate first persisted control run gate
+        if: ${{ always() }}
+        run: node scripts/validate-first-persisted-control-run-gate.mjs
+
+      - name: Generate first persisted control run gate report
+        if: ${{ always() }}
+        run: node scripts/generate-first-persisted-control-run-gate-report.mjs
+
       - name: Commit CI-backed live deployment proof
         if: ${{ always() }}
         run: |
           git config user.name "auricrux-ci"
           git config user.email "auricrux-ci@futurecontractorsofamerica.com"
-          git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md generated/live-deployment-proof-workflow-validation.json generated/live-deployment-proof-workflow-validation.md generated/live-deployment-run-witness-validation.json generated/live-deployment-run-witness-validation.md generated/live-deployment-proof-commit-signal-validation.json generated/live-deployment-proof-commit-signal-validation.md generated/live-deployment-proof-commit-signal-report.json generated/live-deployment-proof-commit-signal-report.md generated/live-deployment-witness-commit-observation-validation.json generated/live-deployment-witness-commit-observation-validation.md generated/live-deployment-witness-commit-observation-report.json generated/live-deployment-witness-commit-observation-report.md generated/live-deployment-ci-proof-commit-observation-validation.json generated/live-deployment-ci-proof-commit-observation-validation.md generated/live-deployment-ci-proof-commit-observation-report.json generated/live-deployment-ci-proof-commit-observation-report.md generated/live-deployment-proof-provenance-validation.json generated/live-deployment-proof-provenance-validation.md generated/live-deployment-proof-provenance-report.json generated/live-deployment-proof-provenance-report.md generated/live-deployment-proof-suite-validation.json generated/live-deployment-proof-suite-validation.md generated/live-deployment-proof-suite-report.json generated/live-deployment-proof-suite-report.md
+          git add docs/runtime-proof/live-deployment generated/live-deployment-proof-surface-validation.json generated/live-deployment-proof-surface-validation.md generated/live-deployment-proof-workflow-validation.json generated/live-deployment-proof-workflow-validation.md generated/live-deployment-proof-workflow-report.json generated/live-deployment-proof-workflow-report.md generated/live-deployment-proof-zero-dependency-workflow-validation.json generated/live-deployment-proof-zero-dependency-workflow-validation.md generated/live-deployment-proof-zero-dependency-workflow-report.json generated/live-deployment-proof-zero-dependency-workflow-report.md generated/live-deployment-run-witness-validation.json generated/live-deployment-run-witness-validation.md generated/live-deployment-run-witness-workflow-validation.json generated/live-deployment-run-witness-workflow-validation.md generated/live-deployment-run-witness-workflow-report.json generated/live-deployment-run-witness-workflow-report.md generated/live-deployment-proof-commit-signal-validation.json generated/live-deployment-proof-commit-signal-validation.md generated/live-deployment-proof-commit-signal-report.json generated/live-deployment-proof-commit-signal-report.md generated/live-deployment-witness-commit-observation-validation.json generated/live-deployment-witness-commit-observation-validation.md generated/live-deployment-witness-commit-observation-report.json generated/live-deployment-witness-commit-observation-report.md generated/live-deployment-ci-proof-commit-observation-validation.json generated/live-deployment-ci-proof-commit-observation-validation.md generated/live-deployment-ci-proof-commit-observation-report.json generated/live-deployment-ci-proof-commit-observation-report.md generated/live-deployment-proof-provenance-validation.json generated/live-deployment-proof-provenance-validation.md generated/live-deployment-proof-provenance-report.json generated/live-deployment-proof-provenance-report.md generated/live-deployment-transition-target.json generated/live-deployment-transition-target.md generated/live-deployment-current-head-verifier-validation.json generated/live-deployment-current-head-verifier-validation.md generated/live-deployment-current-head-verifier-report.json generated/live-deployment-current-head-verifier-report.md generated/live-deployment-metadata-transition-state-validation.json generated/live-deployment-metadata-transition-state-validation.md generated/live-deployment-metadata-transition-state-report.json generated/live-deployment-metadata-transition-state-report.md generated/live-deployment-proof-suite-validation.json generated/live-deployment-proof-suite-validation.md generated/live-deployment-proof-suite-report.json generated/live-deployment-proof-suite-report.md generated/live-deployment-proof-bundle-readiness-validation.json generated/live-deployment-proof-bundle-readiness-validation.md generated/live-deployment-proof-bundle-readiness-report.json generated/live-deployment-proof-bundle-readiness-report.md generated/live-proof-stamp-coverage-validation.json generated/live-proof-stamp-coverage-validation.md generated/live-proof-stamp-coverage-report.json generated/live-proof-stamp-coverage-report.md generated/live-proof-stamp-persistence-wiring-validation.json generated/live-proof-stamp-persistence-wiring-validation.md generated/live-proof-stamp-persistence-wiring-report.json generated/live-proof-stamp-persistence-wiring-report.md generated/live-proof-persisted-artifact-surface-validation.json generated/live-proof-persisted-artifact-surface-validation.md generated/live-proof-persisted-artifact-surface-report.json generated/live-proof-persisted-artifact-surface-report.md generated/live-proof-persisted-control-bundle-validation.json generated/live-proof-persisted-control-bundle-validation.md generated/live-proof-persisted-control-bundle-report.json generated/live-proof-persisted-control-bundle-report.md generated/live-proof-witness-observed-state-validation.json generated/live-proof-witness-observed-state-validation.md generated/live-proof-witness-observed-state-report.json generated/live-proof-witness-observed-state-report.md generated/live-proof-split-state-validation.json generated/live-proof-split-state-validation.md generated/live-proof-split-state-report.json generated/live-proof-split-state-report.md generated/first-persisted-control-run-gate-validation.json generated/first-persisted-control-run-gate-validation.md generated/first-persisted-control-run-gate-report.json generated/first-persisted-control-run-gate-report.md
           if git diff --cached --quiet; then
             echo "No CI-backed live deployment proof changes to commit."
           else
