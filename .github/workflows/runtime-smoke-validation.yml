@@ -152,29 +152,35 @@ jobs:
         run: |
           git config user.name "auricrux-ci"
           git config user.email "auricrux-ci@futurecontractorsofamerica.com"
-          git add docs/runtime-proof/runtime-smoke
-          if git diff --cached --quiet; then
-            echo "No runtime proof artifact changes to commit."
-          else
-            tmp_patch="$(mktemp)"
-            git diff --cached --binary > "$tmp_patch"
+
+          persist_dir="$(mktemp -d)"
+          mkdir -p "$persist_dir/docs/runtime-proof/runtime-smoke"
+          cp -R docs/runtime-proof/runtime-smoke/. "$persist_dir/docs/runtime-proof/runtime-smoke/" || true
+
+          retries="1 2 3"
+          for retry_id in $retries; do
+            echo "Runtime smoke persistence retry ${retry_id}"
+            git fetch origin main
+            git checkout -B main origin/main
+
+            mkdir -p docs/runtime-proof/runtime-smoke
+            cp -R "$persist_dir/docs/runtime-proof/runtime-smoke/." docs/runtime-proof/runtime-smoke/ || true
+
+            git add docs/runtime-proof/runtime-smoke
+            if git diff --cached --quiet; then
+              echo "No runtime proof artifact changes to commit."
+              exit 0
+            fi
+
+            git commit -m "Persist runtime smoke proof artifacts for run ${GITHUB_RUN_ID}"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
             git reset --hard
             git clean -fd
-            retries="1 2 3"
-            for retry_id in $retries; do
-              echo "Runtime smoke persistence retry ${retry_id}"
-              git fetch origin main
-              git checkout -B main origin/main
-              if git apply --index "$tmp_patch"; then
-                git commit -m "Persist runtime smoke proof artifacts for run ${GITHUB_RUN_ID}"
-                if git push origin HEAD:main; then
-                  exit 0
-                fi
-              fi
-              git reset --hard
-              git clean -fd
-              sleep 5
-            done
-            echo "Failed to persist runtime smoke proof artifacts after retry budget."
-            exit 1
-          fi
+            sleep 5
+          done
+
+          echo "Failed to persist runtime smoke proof artifacts after retry budget."
+          exit 1
