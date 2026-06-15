@@ -10,7 +10,7 @@ Packets 060F through 061Y demonstrated a repeated failure pattern on the `Azure 
 This created operational drift between:
 
 - repo truth
-n- workflow truth
+- workflow truth
 - Azure deployment-capacity truth
 - live public truth
 
