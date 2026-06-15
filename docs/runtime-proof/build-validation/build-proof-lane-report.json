@@ -6,6 +6,6 @@
   "directoryPresent": true,
   "laneConfirmed": false,
   "reason": "Proof surface exists, but CI-origin proof has not yet been confirmed.",
-  "ciRunId": "27567193653",
-  "ciCommitSha": "b0c7d81fc3d90ce24627d1e7566b12e81c6997fa"
+  "ciRunId": "27567562847",
+  "ciCommitSha": "e691de29e491fd3a94720d970bb541127412a6ca"
 }
