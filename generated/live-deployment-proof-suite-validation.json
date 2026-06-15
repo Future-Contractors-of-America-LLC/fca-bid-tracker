@@ -1,19 +1,17 @@
 {
   "packet": "061Z",
-  "generatedAt": "2026-06-15T14:16:17.821Z",
+  "generatedAt": "2026-06-15T15:20:47.917Z",
   "checks": {
     "witnessCommitObserved": true,
-    "ciProofCommitObserved": false,
+    "ciProofCommitObserved": true,
     "runWitnessSurfaceValid": true,
     "proofMetadataCiBacked": true
   },
-  "success": false,
-  "failures": [
-    "ciProofCommitObserved"
-  ],
+  "success": true,
+  "failures": [],
   "observed": {
-    "witnessCommitSha": "69050da425c7e35c1c0859c269318d2521194a08",
-    "ciProofCommitSha": null,
-    "proofMetadataStatus": "ci_surface_present_success"
+    "witnessCommitSha": "b61d33ad695809d101c1aafffcbf17608709ed06",
+    "ciProofCommitSha": "c0fd73cbcfbe833be460cf10e41784f97e37962e",
+    "proofMetadataStatus": "ci_surface_present_with_failures"
   }
 }
