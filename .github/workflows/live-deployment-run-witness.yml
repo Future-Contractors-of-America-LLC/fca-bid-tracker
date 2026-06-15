@@ -43,29 +43,50 @@ jobs:
         run: |
           git config user.name "auricrux-ci"
           git config user.email "auricrux-ci@futurecontractorsofamerica.com"
-          git add docs/runtime-proof/live-deployment/live_deployment_ci_run_witness.json docs/runtime-proof/live-deployment/live_deployment_ci_run_witness.md generated/live-deployment-run-witness-validation.json generated/live-deployment-run-witness-validation.md
-          if git diff --cached --quiet; then
-            echo "No live deployment witness changes to commit."
-          else
-            tmp_patch="$(mktemp)"
-            git diff --cached --binary > "$tmp_patch"
+
+          witness_files=(
+            docs/runtime-proof/live-deployment/live_deployment_ci_run_witness.json
+            docs/runtime-proof/live-deployment/live_deployment_ci_run_witness.md
+            generated/live-deployment-run-witness-validation.json
+            generated/live-deployment-run-witness-validation.md
+          )
+
+          persist_dir="$(mktemp -d)"
+          for f in "${witness_files[@]}"; do
+            if [ -f "$f" ]; then
+              mkdir -p "$persist_dir/$(dirname "$f")"
+              cp "$f" "$persist_dir/$f"
+            fi
+          done
+
+          retries="1 2 3"
+          for retry_id in $retries; do
+            echo "Live deployment witness persistence retry ${retry_id}"
+            git fetch origin main
+            git checkout -B main origin/main
+
+            for f in "${witness_files[@]}"; do
+              if [ -f "$persist_dir/$f" ]; then
+                mkdir -p "$(dirname "$f")"
+                cp "$persist_dir/$f" "$f"
+              fi
+            done
+
+            git add "${witness_files[@]}"
+            if git diff --cached --quiet; then
+              echo "No live deployment witness changes to commit."
+              exit 0
+            fi
+
+            git commit -m "Persist live deployment run witness for run ${GITHUB_RUN_ID}"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
             git reset --hard
             git clean -fd
-            retries="1 2 3"
-            for retry_id in $retries; do
-              echo "Live deployment witness persistence retry ${retry_id}"
-              git fetch origin main
-              git checkout -B main origin/main
-              if git apply --index "$tmp_patch"; then
-                git commit -m "Persist live deployment run witness for run ${GITHUB_RUN_ID}"
-                if git push origin HEAD:main; then
-                  exit 0
-                fi
-              fi
-              git reset --hard
-              git clean -fd
-              sleep 5
-            done
-            echo "Failed to persist live deployment run witness after retry budget."
-            exit 1
-          fi
+            sleep 5
+          done
+
+          echo "Failed to persist live deployment run witness after retry budget."
+          exit 1
