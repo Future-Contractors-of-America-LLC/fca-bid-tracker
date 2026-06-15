@@ -58,5 +58,6 @@ jobs:
             echo "No CI-backed build proof rewrite changes to commit."
           else
             git commit -m "Persist CI-backed build proof provenance for run ${GITHUB_RUN_ID}"
-            git push
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi
