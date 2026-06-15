@@ -145,6 +145,14 @@ jobs:
         if: ${{ always() }}
         run: node scripts/generate-live-deployment-proof-bundle-readiness-report.mjs
 
+      - name: Validate build validation live proof coverage
+        if: ${{ always() }}
+        run: npm run validate:build-validation-live-proof-coverage || true
+
+      - name: Generate build validation live proof coverage report
+        if: ${{ always() }}
+        run: npm run generate:build-validation-live-proof-coverage-report
+
       - name: Validate live proof stamp coverage
         if: ${{ always() }}
         run: node scripts/validate-live-proof-stamp-coverage.mjs || true

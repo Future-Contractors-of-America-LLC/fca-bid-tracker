@@ -157,5 +157,6 @@ jobs:
             echo "No runtime proof artifact changes to commit."
           else
             git commit -m "Persist runtime smoke proof artifacts for run ${GITHUB_RUN_ID}"
-            git push
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi
