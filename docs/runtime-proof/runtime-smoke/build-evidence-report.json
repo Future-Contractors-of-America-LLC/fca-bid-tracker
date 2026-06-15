@@ -1,6 +1,6 @@
 {
-  "packet": "061S",
-  "generatedAt": "2026-06-14T20:43:12.035Z",
+  "packet": "061Z",
+  "generatedAt": "2026-06-15T14:15:13.139Z",
   "packageScripts": {
     "buildSystem": "npm run build",
     "build": "bash ./build.sh",
@@ -18,6 +18,6 @@
     "generatesStyles": true,
     "generatesWorkspacePack": true,
     "generatesPlatformProof": true,
-    "emitsCompletionLine": true
+    "emitsCompletionLine": false
   }
 }
