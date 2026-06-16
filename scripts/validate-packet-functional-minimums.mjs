@@ -10,8 +10,8 @@ const requiredTracks = [
 ];
 
 const requiredToolExports = [
-  "stagePermitResubmissionTool",
-  "queueDocumentTransmittalTool",
+  "stageComplianceAuditReviewTool",
+  "queueCloseoutCustomerNoticeTool",
 ];
 
 const results = [];
@@ -44,7 +44,8 @@ for (const trackKey of requiredTracks) {
     Array.isArray(course.remediationPaths) && course.remediationPaths.length >= 2 &&
     Array.isArray(course.masteryChecks) && course.masteryChecks.length >= 1 &&
     Array.isArray(course.credentialAwardCriteria) && course.credentialAwardCriteria.length >= 1 &&
-    Array.isArray(course.renewalCriteria) && course.renewalCriteria.length >= 1
+    Array.isArray(course.renewalCriteria) && course.renewalCriteria.length >= 1 &&
+    Array.isArray(course.auditEvidenceStandards) && course.auditEvidenceStandards.length >= 1
   );
   if (!ok) failed = true;
   results.push({ type: "course", name: trackKey, ok });

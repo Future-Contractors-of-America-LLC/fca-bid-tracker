@@ -25,6 +25,8 @@ const STARTUP_CHECKLIST_QUEUE_KEY = "fca_customer_startup_checklist_queue_v1";
 const TURNOVER_CONFIRMATION_QUEUE_KEY = "fca_customer_turnover_confirmation_queue_v1";
 const PERMIT_RESUBMISSION_QUEUE_KEY = "fca_customer_permit_resubmission_queue_v1";
 const DOCUMENT_TRANSMITTAL_QUEUE_KEY = "fca_customer_document_transmittal_queue_v1";
+const COMPLIANCE_AUDIT_QUEUE_KEY = "fca_customer_compliance_audit_queue_v1";
+const CLOSEOUT_NOTICE_QUEUE_KEY = "fca_customer_closeout_notice_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -224,6 +226,20 @@ export function queueDocumentTransmittalTool({ companyName = "Customer Workspace
   const current = readLocalJson(DOCUMENT_TRANSMITTAL_QUEUE_KEY, { items: [] });
   const item = { id: `transmittal-${Date.now()}`, companyName, packageName, detail, status: "Queued", nextAction: "Send document transmittal" };
   writeLocalJson(DOCUMENT_TRANSMITTAL_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/messages");
+  return item;
+}
+export function stageComplianceAuditReviewTool({ projectId = "PRJ-A117", detail = "Prepare compliance audit review and preserve evidence continuity." } = {}) {
+  const current = readLocalJson(COMPLIANCE_AUDIT_QUEUE_KEY, { items: [] });
+  const item = { id: `compliance-${Date.now()}`, projectId, detail, status: "Queued", nextAction: "Complete compliance audit review" };
+  writeLocalJson(COMPLIANCE_AUDIT_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/files");
+  return item;
+}
+export function queueCloseoutCustomerNoticeTool({ companyName = "Customer Workspace", detail = "Prepare customer closeout notice and preserve turnover communication continuity." } = {}) {
+  const current = readLocalJson(CLOSEOUT_NOTICE_QUEUE_KEY, { items: [] });
+  const item = { id: `closeoutnotice-${Date.now()}`, companyName, detail, status: "Queued", nextAction: "Send closeout notice" };
+  writeLocalJson(CLOSEOUT_NOTICE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
   navigateTo("/portal/messages");
   return item;
 }
