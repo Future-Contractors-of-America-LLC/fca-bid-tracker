@@ -46,7 +46,7 @@ export default function AcademyCatalog() {
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy catalog</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Five complete track-specific courses are now live in one place</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          This catalog includes a specific apprenticeship course, certification course, degree course, licensure course, and FCA user-guide how-to course, each with lessons, assignments, quizzes, tests, labs, performance profiles, completion requirements, evaluation rubrics, capstone projects, and portfolio artifacts.
+          This catalog includes a specific apprenticeship course, certification course, degree course, licensure course, and FCA user-guide how-to course, each with lessons, assignments, quizzes, tests, labs, performance profiles, completion requirements, evaluation rubrics, capstone projects, portfolio artifacts, and mentor review checkpoints.
         </p>
       </div>
 
@@ -98,6 +98,7 @@ export default function AcademyCatalog() {
                         <div style={detailCardStyle}><div style={{ fontWeight: 700, marginBottom: 6 }}>Evaluation rubric</div><div style={{ color: "#334155", lineHeight: 1.8 }}>{course.evaluationRubric.map((item) => <div key={item}>• {item}</div>)}</div></div>
                         <div style={detailCardStyle}><div style={{ fontWeight: 700, marginBottom: 6 }}>Capstone project</div><div style={{ color: "#334155", lineHeight: 1.8 }}>{course.capstoneProject.map((item) => <div key={item}>• {item}</div>)}</div></div>
                         <div style={detailCardStyle}><div style={{ fontWeight: 700, marginBottom: 6 }}>Portfolio artifacts</div><div style={{ color: "#334155", lineHeight: 1.8 }}>{course.portfolioArtifacts.map((item) => <div key={item}>• {item}</div>)}</div></div>
+                        <div style={detailCardStyle}><div style={{ fontWeight: 700, marginBottom: 6 }}>Mentor review checkpoints</div><div style={{ color: "#334155", lineHeight: 1.8 }}>{course.mentorReviewCheckpoints.map((item) => <div key={item}>• {item}</div>)}</div></div>
                       </div>
                     </div>
                   ))}

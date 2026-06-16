@@ -17,6 +17,8 @@ const PUNCHLIST_RECOVERY_QUEUE_KEY = "fca_customer_punchlist_recovery_queue_v1";
 const COORDINATION_NOTICE_QUEUE_KEY = "fca_customer_coordination_notice_queue_v1";
 const FIELD_LOG_QUEUE_KEY = "fca_customer_field_log_queue_v1";
 const SCHEDULE_RISK_QUEUE_KEY = "fca_customer_schedule_risk_queue_v1";
+const RFI_RESPONSE_QUEUE_KEY = "fca_customer_rfi_response_queue_v1";
+const PROCUREMENT_RELEASE_QUEUE_KEY = "fca_customer_procurement_release_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -160,6 +162,20 @@ export function queueScheduleRiskMitigationTool({ projectId = "PRJ-A117", risk =
   const current = readLocalJson(SCHEDULE_RISK_QUEUE_KEY, { items: [] });
   const item = { id: `risk-${Date.now()}`, projectId, risk, mitigation, status: "Queued", nextAction: "Issue mitigation notice" };
   writeLocalJson(SCHEDULE_RISK_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/projects");
+  return item;
+}
+export function queueRfiResponseTool({ projectId = "PRJ-A117", subject = "RFI-014 framing clarification", detail = "Prepare customer-facing RFI response and preserve document continuity." } = {}) {
+  const current = readLocalJson(RFI_RESPONSE_QUEUE_KEY, { items: [] });
+  const item = { id: `rfi-${Date.now()}`, projectId, subject, detail, status: "Queued", nextAction: "Issue RFI response" };
+  writeLocalJson(RFI_RESPONSE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/files");
+  return item;
+}
+export function stageProcurementReleaseTool({ projectId = "PRJ-A117", packageName = "Long-lead material release", detail = "Prepare procurement release to preserve schedule and field continuity." } = {}) {
+  const current = readLocalJson(PROCUREMENT_RELEASE_QUEUE_KEY, { items: [] });
+  const item = { id: `procurement-${Date.now()}`, projectId, packageName, detail, status: "Queued", nextAction: "Release procurement package" };
+  writeLocalJson(PROCUREMENT_RELEASE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
   navigateTo("/portal/projects");
   return item;
 }

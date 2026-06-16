@@ -23,7 +23,8 @@ export const academyCatalog = {
         completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved evidence", "Meet field-readiness performance profile minimums"],
         evaluationRubric: ["Safety discipline scored at competent or above", "Drawing literacy scored at competent or above", "Evidence attachment quality scored at competent or above"],
         capstoneProject: ["Capstone · Assemble a first-year electrical readiness packet with safety log, plan-symbol interpretation, and support-command escalation response"],
-        portfolioArtifacts: ["Safety observation log", "Plan-symbol reading worksheet", "Field escalation response packet"]
+        portfolioArtifacts: ["Safety observation log", "Plan-symbol reading worksheet", "Field escalation response packet"],
+        mentorReviewCheckpoints: ["Mentor review 1 · Safety and PPE readiness", "Mentor review 2 · Drawing literacy and escalation quality"]
       }],
       linkedSurface: "/portal/support",
       linkedLabel: "Open Field Support Continuity"
@@ -51,7 +52,8 @@ export const academyCatalog = {
         completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved safety documentation", "Meet safety-coordination performance profile minimums"],
         evaluationRubric: ["Hazard recognition scored at competent or above", "Documentation quality scored at competent or above", "Corrective-action planning scored at competent or above"],
         capstoneProject: ["Capstone · Deliver a full incident-to-corrective-action safety package with audit trail, support escalation, and recovery recommendation"],
-        portfolioArtifacts: ["Hazard category worksheet", "Incident documentation package", "Corrective-action memo"]
+        portfolioArtifacts: ["Hazard category worksheet", "Incident documentation package", "Corrective-action memo"],
+        mentorReviewCheckpoints: ["Mentor review 1 · Hazard recognition quality", "Mentor review 2 · Incident recovery recommendation quality"]
       }],
       linkedSurface: "/portal/audit",
       linkedLabel: "Open Audit and Safety Continuity"
@@ -79,7 +81,8 @@ export const academyCatalog = {
         completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved operational artifacts", "Meet operations performance profile minimums"],
         evaluationRubric: ["Lifecycle fluency scored at competent or above", "Handoff quality scored at competent or above", "Commercial awareness scored at competent or above"],
         capstoneProject: ["Capstone · Build an end-to-end lifecycle operating packet from bid intake through billing and closeout recommendation"],
-        portfolioArtifacts: ["Lifecycle mapping worksheet", "Bid-to-project handoff analysis", "Billing and closeout recommendation packet"]
+        portfolioArtifacts: ["Lifecycle mapping worksheet", "Bid-to-project handoff analysis", "Billing and closeout recommendation packet"],
+        mentorReviewCheckpoints: ["Mentor review 1 · Lifecycle map quality", "Mentor review 2 · Commercial packet quality"]
       }],
       linkedSurface: "/portal/platform",
       linkedLabel: "Open Platform Dashboard"
@@ -107,7 +110,8 @@ export const academyCatalog = {
         completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved compliance artifacts", "Meet licensure-readiness performance profile minimums"],
         evaluationRubric: ["Classification accuracy scored at competent or above", "Documentation completeness scored at competent or above", "Permit discipline scored at competent or above"],
         capstoneProject: ["Capstone · Assemble a residential contractor compliance packet with permit workflow, customer notice, and evidence governance documentation"],
-        portfolioArtifacts: ["License classification worksheet", "Permit checklist package", "Customer notice draft"]
+        portfolioArtifacts: ["License classification worksheet", "Permit checklist package", "Customer notice draft"],
+        mentorReviewCheckpoints: ["Mentor review 1 · Classification and permit rigor", "Mentor review 2 · Compliance packet readiness"]
       }],
       linkedSurface: "/portal/files",
       linkedLabel: "Open File Governance"
@@ -135,7 +139,8 @@ export const academyCatalog = {
         completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved operator artifacts", "Meet operator performance profile minimums"],
         evaluationRubric: ["Route fluency scored at competent or above", "Tool execution scored at competent or above", "Auricrux utilization scored at competent or above"],
         capstoneProject: ["Capstone · Run a full customer workflow from login through qualification, files, billing, support, and Academy continuity using Contractor Command"],
-        portfolioArtifacts: ["Navigation checklist", "Qualification-to-estimate run packet", "Files-support-billing walkthrough proof"]
+        portfolioArtifacts: ["Navigation checklist", "Qualification-to-estimate run packet", "Files-support-billing walkthrough proof"],
+        mentorReviewCheckpoints: ["Mentor review 1 · Route fluency and control", "Mentor review 2 · Full workflow continuity readiness"]
       }],
       linkedSurface: "/portal",
       linkedLabel: "Open Command Center"
