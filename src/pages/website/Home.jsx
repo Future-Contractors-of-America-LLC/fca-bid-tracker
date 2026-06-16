@@ -9,6 +9,7 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import { filterVisibleActions } from "../../ctaBehavior";
 import { homeCtaSets, publicSurfaceLinks, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
@@ -126,6 +127,14 @@ export default function Home() {
         detail="Visitors can validate the dashboard, workspace, bid routes, and academy continuity directly from the public shell instead of relying on abstract claims."
         highlights={homeProductProof}
       />
+
+      <div style={{ marginTop: 24 }}>
+        <PublicPackageRouteGroupsPanel
+          eyebrow="Home package route truth"
+          title="Home now shows the real route groups behind the FCA offer"
+          detail="Public entry now exposes exact route groups for SaaS, portal, Academy, Auricrux/comms, and revenue continuity so visitors can move from offer language into reachable product slices."
+        />
+      </div>
 
       <div style={{ marginTop: 24, ...cardStyle }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real customer-ready pathways</div>

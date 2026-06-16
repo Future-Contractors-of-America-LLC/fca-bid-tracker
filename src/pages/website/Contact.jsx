@@ -13,6 +13,7 @@ import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import ContactActionCenter from "../../components/ContactActionCenter";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
@@ -90,6 +91,14 @@ export default function Contact() {
           primaryLabel="Open Platform Dashboard"
           secondaryHref="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
           secondaryLabel="Schedule a Walkthrough"
+        />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicPackageRouteGroupsPanel
+          eyebrow="Contact package route truth"
+          title="Contact now shows the exact product route groups used in a walkthrough"
+          detail="Walkthrough packaging now points to exact reachable SaaS, portal, Academy, Auricrux/comms, and revenue continuity routes so the sales conversation stays attached to real product state."
         />
       </div>
 
