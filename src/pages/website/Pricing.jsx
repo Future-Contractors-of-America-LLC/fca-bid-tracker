@@ -19,7 +19,7 @@ import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGrid
 
 const rolloutSteps = [
   "Confirm contractor fit, pilot scope, and current operating friction.",
-  "Walk the live FCA experience from public entry through workspace, platform dashboard, portal, academy, bid continuity, warranty continuity, and referral follow-through.",
+  "Walk the live FCA experience from public entry through workspace, bids, estimates, projects, files, billing, Academy, support, and Auricrux guidance.",
   "Select the rollout tier that matches readiness, team size, product depth, communications needs, and post-handover continuity posture.",
   "Close on the next deployment action, pricing path, and rollout planning sequence.",
 ];
@@ -32,8 +32,8 @@ const pricingContinuityItems = [
   },
   {
     label: "Commercial state",
-    value: "Lower, mid, and enterprise tiers are visible",
-    detail: "The route now shows $99/mo startup, $2,500 one-time pilot, $499/mo and $899/mo mid-range offerings, plus larger recurring rollout paths with concrete included products.",
+    value: "Plans map to real slices",
+    detail: "Pricing now explicitly points buyers into reachable SaaS, LMS, and Auricrux surfaces.",
   },
   {
     label: "Shared narrative",
@@ -43,17 +43,17 @@ const pricingContinuityItems = [
 ];
 
 const pricingProductProof = [
-  { title: "Validate live operating state", detail: "Open the platform dashboard during pricing review so commercial discussion stays attached to product proof.", href: "/portal/platform", label: "Open Platform Dashboard" },
+  { title: "Validate live platform state", detail: "Open the platform dashboard during pricing review so commercial discussion stays attached to product proof.", href: "/portal/platform", label: "Open Platform Dashboard" },
+  { title: "Show qualification and estimate depth", detail: "Use bids and estimates to prove there is real SaaS depth behind the plan being sold.", href: "/portal/bids", label: "Open Qualification Board" },
   { title: "Show customer workspace depth", detail: "Use the portal shell to demonstrate the product that the rollout tiers are funding and sequencing.", href: "/portal", label: "Open Portal Workspace" },
-  { title: "Prove bid continuity", detail: "Bring the canonical bid route into the conversation so startup, pilot, and rollout scope are tied to a real production flow.", href: "/bid-entry", label: "Open Bid Entry" },
-  { title: "Keep academy and comms in scope", detail: "Training, lecture continuity, and communications routing stay inside the same product story, which makes rollout planning more credible.", href: "/academy", label: "Open Academy" },
+  { title: "Keep academy in scope", detail: "Training, degree, licensure, certification, apprenticeship, and how-to tracks remain inside the same product story.", href: "/academy/catalog", label: "Open Academy Catalog" },
   { title: "Show recurring service and advocacy lanes", detail: "Use warranty and referral continuity to prove the revenue story continues after handoff instead of ending at project delivery.", href: "/warranty", label: "Open Warranty Continuity" },
 ];
 
 const productPackages = [
-  { title: "FCA SaaS Workspace", detail: "Projects, bids, files, billing, support, admin, and dashboard continuity for daily contractor operations." },
+  { title: "FCA SaaS Workspace", detail: "Projects, bids, estimates, files, billing, support, admin, and dashboard continuity for daily contractor operations." },
   { title: "Customer Portal", detail: "Customer-facing visibility into projects, files, statuses, messages, and next actions inside the same workspace." },
-  { title: "Academy / LMS", detail: "Onboarding, safety reinforcement, workforce readiness, and lecture continuity tied directly to delivery rollout." },
+  { title: "Academy / LMS", detail: "Apprenticeship, certification, degree, licensure, and how-to coursework tied directly to delivery rollout." },
   { title: "Auricrux + Comms", detail: "Guided next actions plus routed chat, SMS, phone, email, Teams, conference, and lecture channels according to plan depth." },
   { title: "Lifecycle Revenue Continuity", detail: "Warranty retention, recurring service posture, reviews, and referral-safe expansion now remain attached to the same operating and rollout story." },
 ];
@@ -123,7 +123,7 @@ export default function Pricing() {
       <ProductProofSection
         eyebrow="Pricing product proof"
         title="Pricing now closes against visible product, not promise-only packaging"
-        detail="The route now keeps dashboard, workspace, bid, academy, communications, warranty, and referral proof in view so rollout conversations stay anchored to the actual FCA product and its revenue lifecycle."
+        detail="The route now keeps dashboard, bids, estimates, academy, communications, warranty, and referral proof in view so rollout conversations stay anchored to the actual FCA product and its revenue lifecycle."
         highlights={pricingProductProof}
       />
 
