@@ -27,6 +27,7 @@ const buttonStyle = (primary = false) => ({
 
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
 const ESTIMATE_EDITOR_STORAGE_KEY = "fca_customer_estimate_editor_v1";
+const ESTIMATE_REVISION_QUEUE_KEY = "fca_customer_estimate_revision_queue_v1";
 
 function readBrandSkin() {
   if (typeof window === "undefined") return { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" };
@@ -55,12 +56,31 @@ function writeEstimateDrafts(drafts) {
   }
 }
 
+function readRevisionQueue() {
+  if (typeof window === "undefined") return { revisions: [] };
+  try {
+    return JSON.parse(window.localStorage.getItem(ESTIMATE_REVISION_QUEUE_KEY) || "{\"revisions\":[]}");
+  } catch {
+    return { revisions: [] };
+  }
+}
+
+function writeRevisionQueue(queue) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(ESTIMATE_REVISION_QUEUE_KEY, JSON.stringify(queue));
+  } catch {
+    // best effort
+  }
+}
+
 export default function PortalEstimates() {
   const { state } = useWorkspaceState();
   const { estimates, meta, advanceEstimate, generateProposal } = useEstimateWorkspace();
   const brandSkin = readBrandSkin();
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
   const [drafts, setDrafts] = useState(() => readEstimateDrafts());
+  const [revisionQueue, setRevisionQueue] = useState(() => readRevisionQueue());
 
   const brandedNarrative = useMemo(() => `${companyName} estimate studio turns qualified opportunities into customer-ready pricing packages with editable line items, scope notes, and Auricrux-guided next actions.`, [companyName]);
 
@@ -79,6 +99,15 @@ export default function PortalEstimates() {
   function addDraftLine(estimateId) {
     const current = drafts[estimateId]?.newLines || [];
     updateDraft(estimateId, "newLines", current.concat({ id: `line-${Date.now()}`, label: "New scope line", amount: "$0", note: "Customer-customized line item" }));
+  }
+
+  function closeRevisionRequest(revisionId) {
+    const next = {
+      ...revisionQueue,
+      revisions: (revisionQueue.revisions || []).map((revision) => revision.id === revisionId ? { ...revision, status: "Closed", nextAction: "Customer notified" } : revision),
+    };
+    setRevisionQueue(next);
+    writeRevisionQueue(next);
   }
 
   return (
@@ -109,6 +138,25 @@ export default function PortalEstimates() {
 
       <CommercialContinuityFeed title="Estimate commercial continuity feed" detail="Estimate advancement, pricing review, and proposal generation events remain visible here so pricing does not disappear between bid qualification and customer packaging." />
       <AutomationRecoveryFeed title="Estimate automation feed" detail="Recent estimate and proposal-generation actions remain visible across routes so pricing actions are durable rather than local-only UI gestures." />
+
+      <div style={{ ...cardStyle, marginTop: 24, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0 }}>Functional product: Estimate revision queue</h2>
+        <p style={{ color: "#475569", lineHeight: 1.7 }}>Customers can immediately use this queue to stage estimate revisions, preserve pricing change context, and close review loops with their estimator inside the same workspace.</p>
+        <div style={{ display: "grid", gap: 12 }}>
+          {(revisionQueue.revisions || []).map((revision) => (
+            <div key={revision.id} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: revision.status === "Closed" ? "#f0fdf4" : "#eff6ff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <strong>{revision.estimateId}</strong>
+                <span style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700 }}>{revision.status}</span>
+              </div>
+              <div style={{ color: "#334155", lineHeight: 1.7, marginTop: 8 }}>{revision.scope}</div>
+              <div style={{ color: "#475569", marginTop: 6 }}><strong>Next action:</strong> {revision.nextAction}</div>
+              {revision.status !== "Closed" ? <button type="button" style={{ ...buttonStyle(), marginTop: 10 }} onClick={() => closeRevisionRequest(revision.id)}>Close Revision</button> : null}
+            </div>
+          ))}
+          {!revisionQueue.revisions?.length ? <div style={{ color: "#64748b" }}>No staged estimate revisions yet.</div> : null}
+        </div>
+      </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
         {estimates.map((estimate) => {
@@ -173,9 +221,9 @@ export default function PortalEstimates() {
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Estimate Studio</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains estimate status, assumptions, and exclusions</li>
+          <li>Explains estimate status, assumptions, exclusions, and revision queue posture</li>
           <li>Recommends next pricing and proposal actions</li>
-          <li>Executes estimate advancement and proposal generation</li>
+          <li>Executes estimate advancement, proposal generation, and revision closeout signaling</li>
         </ul>
       </div>
     </PortalShell>

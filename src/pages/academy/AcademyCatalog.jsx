@@ -15,6 +15,13 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const detailCardStyle = {
+  border: "1px solid #e5e7eb",
+  borderRadius: 12,
+  padding: 14,
+  background: "#f8fafc",
+};
+
 export default function AcademyCatalog() {
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -39,7 +46,7 @@ export default function AcademyCatalog() {
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy catalog</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>Five complete track-specific courses are now live in one place</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          This catalog now includes a specific apprenticeship course, certification course, degree course, licensure course, and FCA user-guide how-to course, each linked back to real portal surfaces.
+          This catalog includes a specific apprenticeship course, certification course, degree course, licensure course, and FCA user-guide how-to course, each with lessons, assignments, quizzes, tests, labs, and performance profiles where applicable.
         </p>
       </div>
 
@@ -82,10 +89,54 @@ export default function AcademyCatalog() {
                         <div><strong>Lessons:</strong> {course.lessons}</div>
                         <div><strong>Lab:</strong> {course.lab}</div>
                       </div>
-                      <div style={{ color: "#334155", lineHeight: 1.8 }}>
-                        {course.lessonTitles.map((lesson) => (
-                          <div key={lesson}>• {lesson}</div>
-                        ))}
+                      <div style={{ display: "grid", gap: 12 }}>
+                        <div style={detailCardStyle}>
+                          <div style={{ fontWeight: 700, marginBottom: 6 }}>Lessons</div>
+                          <div style={{ color: "#334155", lineHeight: 1.8 }}>
+                            {course.lessonTitles.map((lesson) => (
+                              <div key={lesson}>• {lesson}</div>
+                            ))}
+                          </div>
+                        </div>
+                        <div style={detailCardStyle}>
+                          <div style={{ fontWeight: 700, marginBottom: 6 }}>Assignments</div>
+                          <div style={{ color: "#334155", lineHeight: 1.8 }}>
+                            {course.assignments.map((assignment) => (
+                              <div key={assignment}>• {assignment}</div>
+                            ))}
+                          </div>
+                        </div>
+                        <div style={detailCardStyle}>
+                          <div style={{ fontWeight: 700, marginBottom: 6 }}>Quizzes</div>
+                          <div style={{ color: "#334155", lineHeight: 1.8 }}>
+                            {course.quizzes.map((quiz) => (
+                              <div key={quiz}>• {quiz}</div>
+                            ))}
+                          </div>
+                        </div>
+                        <div style={detailCardStyle}>
+                          <div style={{ fontWeight: 700, marginBottom: 6 }}>Tests</div>
+                          <div style={{ color: "#334155", lineHeight: 1.8 }}>
+                            {course.tests.map((test) => (
+                              <div key={test}>• {test}</div>
+                            ))}
+                          </div>
+                        </div>
+                        <div style={detailCardStyle}>
+                          <div style={{ fontWeight: 700, marginBottom: 6 }}>Labs</div>
+                          <div style={{ color: "#334155", lineHeight: 1.8 }}>
+                            {course.labs.map((lab) => (
+                              <div key={lab}>• {lab}</div>
+                            ))}
+                          </div>
+                        </div>
+                        <div style={detailCardStyle}>
+                          <div style={{ fontWeight: 700, marginBottom: 6 }}>Performance profile</div>
+                          <div style={{ color: "#334155", lineHeight: 1.8 }}>
+                            <div><strong>Role:</strong> {course.performanceProfile.role}</div>
+                            <div><strong>Measures:</strong> {course.performanceProfile.measures.join(", ")}</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}

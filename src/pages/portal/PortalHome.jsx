@@ -5,7 +5,7 @@ import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel"
 import { routeStateOverlays } from "../../systemState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { createPermitEscalationTool, stageMobilizationInvoiceTool } from "../../customerCommandTools";
+import { createPermitEscalationTool, stageEstimateRevisionTool, stageMobilizationInvoiceTool, queueProposalFollowupTool } from "../../customerCommandTools";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -138,6 +138,16 @@ export default function PortalHome() {
     refreshSyncStamp("Mobilization invoice tool executed from command center");
   }
 
+  function runEstimateRevisionTool() {
+    stageEstimateRevisionTool({ companyName, projectId: state?.project?.id || "PRJ-A117", estimateId: "EST-1001" });
+    refreshSyncStamp("Estimate revision tool executed from command center");
+  }
+
+  function runProposalFollowupTool() {
+    queueProposalFollowupTool({ companyName, proposalId: "PRO-1001", contact: session?.email || "owner@customer.com" });
+    refreshSyncStamp("Proposal follow-up tool executed from command center");
+  }
+
   return (
     <PortalShell
       title={`${companyName} Command Center`}
@@ -214,7 +224,7 @@ export default function PortalHome() {
 
         <div style={{ display: "grid", gap: 16 }}>
           <div style={cardStyle}>
-            <h2 style={{ marginTop: 0 }}>New real SaaS tools in 062B</h2>
+            <h2 style={{ marginTop: 0 }}>Functional SaaS tools in live command center</h2>
             <div style={{ display: "grid", gap: 12 }}>
               <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
                 <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 1 · Create permit escalation support request</div>
@@ -226,6 +236,16 @@ export default function PortalHome() {
                 <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real draft invoice in Billing Command and routes you into the billing board.</div>
                 <button type="button" onClick={runMobilizationInvoiceTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Billing Tool</button>
               </div>
+              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 3 · Queue estimate revision package</div>
+                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real estimate-revision work item and routes the customer into the estimate studio.</div>
+                <button type="button" onClick={runEstimateRevisionTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Estimate Tool</button>
+              </div>
+              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 4 · Queue proposal follow-up</div>
+                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real proposal follow-up work item and routes the customer into proposal packaging.</div>
+                <button type="button" onClick={runProposalFollowupTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Proposal Tool</button>
+              </div>
             </div>
           </div>
 
@@ -233,13 +253,13 @@ export default function PortalHome() {
             <h2 style={{ marginTop: 0 }}>Auricrux confirmed</h2>
             <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
               <li>Explains the current opportunity and delivery posture</li>
-              <li>Recommends the next qualification, estimate, and customer actions</li>
-              <li>Executes task creation, support escalation, billing staging, and workspace branding continuity</li>
+              <li>Recommends the next qualification, estimate, proposal, and customer actions</li>
+              <li>Executes task creation, support escalation, billing staging, estimate revision staging, proposal follow-up staging, and workspace branding continuity</li>
               <li>Stays present across SaaS and Academy surfaces</li>
             </ul>
             <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
               <div style={{ color: brandSkin.accent, fontWeight: 700, marginBottom: 6 }}>Auricrux next action</div>
-              <div style={{ color: "#334155", lineHeight: 1.7 }}>Complete intake review, open the qualification workflow, and create the first estimate package before sending the branded customer follow-up.</div>
+              <div style={{ color: "#334155", lineHeight: 1.7 }}>Complete intake review, open the qualification workflow, create the first estimate revision package, and queue the proposal follow-up before sending the branded customer update.</div>
             </div>
           </div>
         </div>

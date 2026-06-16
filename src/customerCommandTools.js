@@ -2,6 +2,8 @@ import { navigateTo } from "./navigation";
 
 const SUPPORT_COMMAND_KEY = "fca_customer_support_command_v3";
 const BILLING_COMMAND_KEY = "fca_customer_billing_command_v2";
+const ESTIMATE_REVISION_QUEUE_KEY = "fca_customer_estimate_revision_queue_v1";
+const PROPOSAL_FOLLOWUP_QUEUE_KEY = "fca_customer_proposal_followup_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -58,4 +60,46 @@ export function stageMobilizationInvoiceTool({ companyName = "Customer Workspace
 
   navigateTo("/portal/billing");
   return invoice;
+}
+
+export function stageEstimateRevisionTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", estimateId = "EST-1001", scope = "Add owner alternate pricing and revised allowance line." } = {}) {
+  const current = readLocalJson(ESTIMATE_REVISION_QUEUE_KEY, { revisions: [] });
+  const revision = {
+    id: `revision-${Date.now()}`,
+    companyName,
+    projectId,
+    estimateId,
+    scope,
+    status: "Queued",
+    nextAction: "Estimator review required",
+  };
+
+  writeLocalJson(ESTIMATE_REVISION_QUEUE_KEY, {
+    ...current,
+    revisions: [revision, ...(current.revisions || [])],
+  });
+
+  navigateTo("/portal/estimates");
+  return revision;
+}
+
+export function queueProposalFollowupTool({ companyName = "Customer Workspace", proposalId = "PRO-1001", contact = "owner@customer.com", objective = "Confirm approval timing and preserve project handoff momentum." } = {}) {
+  const current = readLocalJson(PROPOSAL_FOLLOWUP_QUEUE_KEY, { followups: [] });
+  const followup = {
+    id: `followup-${Date.now()}`,
+    companyName,
+    proposalId,
+    contact,
+    objective,
+    status: "Queued",
+    nextAction: "Send branded follow-up",
+  };
+
+  writeLocalJson(PROPOSAL_FOLLOWUP_QUEUE_KEY, {
+    ...current,
+    followups: [followup, ...(current.followups || [])],
+  });
+
+  navigateTo("/portal/proposals");
+  return followup;
 }

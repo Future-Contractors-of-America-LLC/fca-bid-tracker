@@ -60,6 +60,18 @@ jobs:
         if: ${{ always() }}
         run: npm run validate:packet-letter-lock
 
+      - name: Validate public package route groups
+        if: ${{ always() }}
+        run: npm run validate:public-package-route-groups
+
+      - name: Validate public conversion surface route truth
+        if: ${{ always() }}
+        run: npm run validate:public-conversion-surface-route-truth
+
+      - name: Validate packet functional minimums
+        if: ${{ always() }}
+        run: npm run validate:packet-functional-minimums
+
       - name: Verify live deployment
         if: ${{ always() && github.ref == 'refs/heads/main' }}
         env:
@@ -74,6 +86,18 @@ jobs:
       - name: Generate academy catalog evidence
         if: ${{ always() }}
         run: npm run generate:academy-catalog-report
+
+      - name: Generate public package route groups evidence
+        if: ${{ always() }}
+        run: npm run generate:public-package-route-groups-report
+
+      - name: Generate public conversion surface route truth evidence
+        if: ${{ always() }}
+        run: npm run generate:public-conversion-surface-route-truth-report
+
+      - name: Generate packet functional minimums evidence
+        if: ${{ always() }}
+        run: npm run generate:packet-functional-minimums-report
 
       - name: Generate managed auth and commercial runtime evidence
         if: ${{ always() }}
@@ -253,6 +277,12 @@ jobs:
             generated/runtime-proof-integrity-report.md
             generated/build-proof-lane-report.json
             generated/build-proof-lane-report.md
+            generated/public-package-route-groups-report.json
+            generated/public-package-route-groups-report.md
+            generated/public-conversion-surface-route-truth-report.json
+            generated/public-conversion-surface-route-truth-report.md
+            generated/packet-functional-minimums-report.json
+            generated/packet-functional-minimums-report.md
             generated/build-validation-live-proof-coverage-validation.json
             generated/build-validation-live-proof-coverage-validation.md
             generated/build-validation-live-proof-coverage-report.json

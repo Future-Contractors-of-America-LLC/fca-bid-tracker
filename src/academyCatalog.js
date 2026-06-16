@@ -27,7 +27,27 @@ export const academyCatalog = {
             "Lesson 4 · Conduit, boxes, and rough-in sequence awareness",
             "Lesson 5 · Using FCA files and support command for field escalation",
             "Lesson 6 · Auricrux-guided daily readiness and close-of-day reporting"
-          ]
+          ],
+          assignments: [
+            "Assignment 1 · PPE inspection and documented hazard log",
+            "Assignment 2 · Tool identification worksheet tied to field photos",
+            "Assignment 3 · Plan-symbol reading exercise using uploaded sheets"
+          ],
+          quizzes: [
+            "Quiz 1 · Electrical safety rules and PPE minimums",
+            "Quiz 2 · Tool identification and material handling checkpoints"
+          ],
+          tests: [
+            "Test 1 · Year-1 jobsite-readiness written test"
+          ],
+          labs: [
+            "Lab 1 · Support-command field escalation simulation",
+            "Lab 2 · File-spine evidence attachment drill"
+          ],
+          performanceProfile: {
+            role: "Electrical Apprentice I",
+            measures: ["safety discipline", "tool handling", "drawing literacy", "evidence quality"]
+          }
         }
       ],
       linkedSurface: "/portal/support",
@@ -60,7 +80,27 @@ export const academyCatalog = {
             "Lesson 4 · Excavation, struck-by, and caught-in hazards",
             "Lesson 5 · Incident documentation inside FCA Contractor Command",
             "Lesson 6 · Auricrux-guided corrective action and follow-through"
-          ]
+          ],
+          assignments: [
+            "Assignment 1 · Hazard-category field worksheet",
+            "Assignment 2 · Safety incident documentation package",
+            "Assignment 3 · Corrective-action recommendation memo"
+          ],
+          quizzes: [
+            "Quiz 1 · Fall protection and ladder safety review",
+            "Quiz 2 · Excavation and struck-by hazard review"
+          ],
+          tests: [
+            "Test 1 · OSHA 30 cumulative certification-prep test"
+          ],
+          labs: [
+            "Lab 1 · Support-command safety escalation",
+            "Lab 2 · Audit-log incident reconstruction"
+          ],
+          performanceProfile: {
+            role: "Safety Coordinator / Supervisor",
+            measures: ["hazard recognition", "documentation quality", "escalation timing", "corrective-action planning"]
+          }
         }
       ],
       linkedSurface: "/portal/audit",
@@ -93,7 +133,27 @@ export const academyCatalog = {
             "Lesson 4 · File governance and auditability",
             "Lesson 5 · Billing readiness and revenue continuity",
             "Lesson 6 · Auricrux explain, recommend, execute across operations"
-          ]
+          ],
+          assignments: [
+            "Assignment 1 · Lifecycle-stage mapping worksheet",
+            "Assignment 2 · Bid-to-project handoff analysis",
+            "Assignment 3 · Billing-risk and closeout memo"
+          ],
+          quizzes: [
+            "Quiz 1 · FCA system-spine fundamentals",
+            "Quiz 2 · Project-state and billing-readiness review"
+          ],
+          tests: [
+            "Test 1 · Semester-1 construction-operations midterm"
+          ],
+          labs: [
+            "Lab 1 · Platform-dashboard operations drill",
+            "Lab 2 · Estimate-to-billing cross-surface walkthrough"
+          ],
+          performanceProfile: {
+            role: "Construction Operations Student / Coordinator",
+            measures: ["lifecycle fluency", "handoff quality", "documentation rigor", "commercial awareness"]
+          }
         }
       ],
       linkedSurface: "/portal/platform",
@@ -126,7 +186,27 @@ export const academyCatalog = {
             "Lesson 4 · Communication records and customer notice continuity",
             "Lesson 5 · File-control and project evidence for compliant delivery",
             "Lesson 6 · Auricrux-guided compliance readiness review"
-          ]
+          ],
+          assignments: [
+            "Assignment 1 · License classification decision worksheet",
+            "Assignment 2 · Permit and documentation checklist package",
+            "Assignment 3 · Customer-notice communication draft"
+          ],
+          quizzes: [
+            "Quiz 1 · DPOR classification and responsibility review",
+            "Quiz 2 · Permit and communication compliance review"
+          ],
+          tests: [
+            "Test 1 · Residential contractor licensure cumulative prep test"
+          ],
+          labs: [
+            "Lab 1 · File-governance compliance walk",
+            "Lab 2 · Customer-notice and project-evidence simulation"
+          ],
+          performanceProfile: {
+            role: "Residential Contractor License Candidate",
+            measures: ["classification accuracy", "documentation completeness", "permit discipline", "customer-notice quality"]
+          }
         }
       ],
       linkedSurface: "/portal/files",
@@ -159,7 +239,27 @@ export const academyCatalog = {
             "Lesson 4 · Managing project, file, and audit continuity",
             "Lesson 5 · Creating support requests and staging invoices",
             "Lesson 6 · Using Academy and Auricrux to stay execution-ready"
-          ]
+          ],
+          assignments: [
+            "Assignment 1 · Command-center navigation checklist",
+            "Assignment 2 · Qualification-to-estimate guided run",
+            "Assignment 3 · Files/support/billing continuity walkthrough"
+          ],
+          quizzes: [
+            "Quiz 1 · Contractor Command navigation fundamentals",
+            "Quiz 2 · Auricrux and Academy continuity review"
+          ],
+          tests: [
+            "Test 1 · FCA user-readiness certification test"
+          ],
+          labs: [
+            "Lab 1 · Branded workspace launch drill",
+            "Lab 2 · End-to-end login-to-closeout route run"
+          ],
+          performanceProfile: {
+            role: "FCA Contractor Command Operator",
+            measures: ["route fluency", "tool execution", "handoff continuity", "Auricrux utilization"]
+          }
         }
       ],
       linkedSurface: "/portal",
