@@ -25,6 +25,8 @@ const STARTUP_CHECKLIST_QUEUE_KEY = "fca_customer_startup_checklist_queue_v1";
 const TURNOVER_CONFIRMATION_QUEUE_KEY = "fca_customer_turnover_confirmation_queue_v1";
 const PERMIT_RESUBMISSION_QUEUE_KEY = "fca_customer_permit_resubmission_queue_v1";
 const DOCUMENT_TRANSMITTAL_QUEUE_KEY = "fca_customer_document_transmittal_queue_v1";
+const PRETASK_PLAN_QUEUE_KEY = "fca_customer_pretask_plan_queue_v1";
+const OWNER_DECISION_QUEUE_KEY = "fca_customer_owner_decision_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
