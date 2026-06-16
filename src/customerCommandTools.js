@@ -21,6 +21,8 @@ const RFI_RESPONSE_QUEUE_KEY = "fca_customer_rfi_response_queue_v1";
 const PROCUREMENT_RELEASE_QUEUE_KEY = "fca_customer_procurement_release_queue_v1";
 const INSPECTION_RESPONSE_QUEUE_KEY = "fca_customer_inspection_response_queue_v1";
 const DELIVERY_CONFIRMATION_QUEUE_KEY = "fca_customer_delivery_confirmation_queue_v1";
+const STARTUP_CHECKLIST_QUEUE_KEY = "fca_customer_startup_checklist_queue_v1";
+const TURNOVER_CONFIRMATION_QUEUE_KEY = "fca_customer_turnover_confirmation_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;

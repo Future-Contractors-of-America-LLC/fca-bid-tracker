@@ -10,8 +10,8 @@ const requiredTracks = [
 ];
 
 const requiredToolExports = [
-  "stageInspectionResponseTool",
-  "queueDeliveryConfirmationTool",
+  "queueRfiResponseTool",
+  "stageProcurementReleaseTool",
 ];
 
 const results = [];
@@ -41,7 +41,8 @@ for (const trackKey of requiredTracks) {
     Array.isArray(course.capstoneProject) && course.capstoneProject.length >= 1 &&
     Array.isArray(course.portfolioArtifacts) && course.portfolioArtifacts.length >= 3 &&
     Array.isArray(course.mentorReviewCheckpoints) && course.mentorReviewCheckpoints.length >= 2 &&
-    Array.isArray(course.remediationPaths) && course.remediationPaths.length >= 2
+    Array.isArray(course.remediationPaths) && course.remediationPaths.length >= 2 &&
+    Array.isArray(course.masteryChecks) && course.masteryChecks.length >= 1
   );
   if (!ok) failed = true;
   results.push({ type: "course", name: trackKey, ok });
