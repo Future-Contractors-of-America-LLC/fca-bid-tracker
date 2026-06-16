@@ -5,7 +5,16 @@ import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel"
 import { routeStateOverlays } from "../../systemState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { createPermitEscalationTool, stageEstimateRevisionTool, stageMobilizationInvoiceTool, queueProposalFollowupTool, registerOwnerApprovalFileTool, sendCustomerScheduleUpdateTool } from "../../customerCommandTools";
+import {
+  createPermitEscalationTool,
+  stageEstimateRevisionTool,
+  stageMobilizationInvoiceTool,
+  queueProposalFollowupTool,
+  registerOwnerApprovalFileTool,
+  sendCustomerScheduleUpdateTool,
+  stageCloseoutPrepTool,
+  queueCustomerApprovalReminderTool,
+} from "../../customerCommandTools";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -103,7 +112,7 @@ export default function PortalHome() {
   const routeCards = [
     { title: "Qualification", detail: "Advance opportunities and route work into estimate launch.", href: "/portal/bids", label: "Open Qualification" },
     { title: "Estimates", detail: "Move pricing, scope notes, and proposal packaging forward.", href: "/portal/estimates", label: "Open Estimates" },
-    { title: "Projects", detail: "Control stage movement, milestones, and delivery posture.", href: "/portal/projects", label: "Open Projects" },
+    { title: "Projects", detail: "Control stage movement, milestones, approvals, and delivery posture.", href: "/portal/projects", label: "Open Projects" },
     { title: "Files", detail: "Keep evidence, permit packets, and customer documents attached to the right context.", href: "/portal/files", label: "Open Files" },
     { title: "Billing", detail: "Stage invoices and preserve revenue continuity.", href: "/portal/billing", label: "Open Billing" },
     { title: "Academy", detail: "Train teams through apprenticeship, certification, degree, licensure, and how-to tracks.", href: "/academy/catalog", label: "Open Academy Catalog" },
@@ -156,6 +165,16 @@ export default function PortalHome() {
   function runScheduleUpdateTool() {
     sendCustomerScheduleUpdateTool({ companyName });
     refreshSyncStamp("Customer schedule update tool executed from command center");
+  }
+
+  function runCloseoutPrepTool() {
+    stageCloseoutPrepTool({ companyName, projectId: state?.project?.id || "PRJ-A117" });
+    refreshSyncStamp("Closeout prep tool executed from command center");
+  }
+
+  function runApprovalReminderTool() {
+    queueCustomerApprovalReminderTool({ companyName, projectId: state?.project?.id || "PRJ-A117", contact: session?.email || "owner@customer.com" });
+    refreshSyncStamp("Approval reminder tool executed from command center");
   }
 
   return (
@@ -236,36 +255,53 @@ export default function PortalHome() {
           <div style={cardStyle}>
             <h2 style={{ marginTop: 0 }}>Functional SaaS tools in live command center</h2>
             <div style={{ display: "grid", gap: 12 }}>
-              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 1 · Create permit escalation support request</div>
-                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real support ticket in Support Command and routes you into the support board.</div>
-                <button type="button" onClick={runPermitEscalationTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Support Tool</button>
-              </div>
-              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 2 · Stage mobilization invoice</div>
-                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real draft invoice in Billing Command and routes you into the billing board.</div>
-                <button type="button" onClick={runMobilizationInvoiceTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Billing Tool</button>
-              </div>
-              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 3 · Queue estimate revision package</div>
-                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real estimate-revision work item and routes the customer into the estimate studio.</div>
-                <button type="button" onClick={runEstimateRevisionTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Estimate Tool</button>
-              </div>
-              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 4 · Queue proposal follow-up</div>
-                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real proposal follow-up work item and routes the customer into proposal packaging.</div>
-                <button type="button" onClick={runProposalFollowupTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Proposal Tool</button>
-              </div>
-              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 5 · Register owner approval file</div>
-                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Stages a customer-usable owner approval file record and routes directly into the file workspace.</div>
-                <button type="button" onClick={runOwnerApprovalFileTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run File Tool</button>
-              </div>
-              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
-                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 6 · Send customer schedule update</div>
-                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Stages a branded customer schedule update and routes directly into the communications command.</div>
-                <button type="button" onClick={runScheduleUpdateTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Comms Tool</button>
-              </div>
+              {[{
+                title: "Tool 1 · Create permit escalation support request",
+                detail: "Creates a real support ticket in Support Command and routes you into the support board.",
+                onClick: runPermitEscalationTool,
+                label: "Run Support Tool",
+              }, {
+                title: "Tool 2 · Stage mobilization invoice",
+                detail: "Creates a real draft invoice in Billing Command and routes you into the billing board.",
+                onClick: runMobilizationInvoiceTool,
+                label: "Run Billing Tool",
+              }, {
+                title: "Tool 3 · Queue estimate revision package",
+                detail: "Creates a real estimate-revision work item and routes the customer into the estimate studio.",
+                onClick: runEstimateRevisionTool,
+                label: "Run Estimate Tool",
+              }, {
+                title: "Tool 4 · Queue proposal follow-up",
+                detail: "Creates a real proposal follow-up work item and routes the customer into proposal packaging.",
+                onClick: runProposalFollowupTool,
+                label: "Run Proposal Tool",
+              }, {
+                title: "Tool 5 · Register owner approval file",
+                detail: "Stages a customer-usable owner approval file record and routes directly into the file workspace.",
+                onClick: runOwnerApprovalFileTool,
+                label: "Run File Tool",
+              }, {
+                title: "Tool 6 · Send customer schedule update",
+                detail: "Stages a branded customer schedule update and routes directly into the communications command.",
+                onClick: runScheduleUpdateTool,
+                label: "Run Comms Tool",
+              }, {
+                title: "Tool 7 · Stage closeout prep package",
+                detail: "Creates a real closeout-prep work item and routes directly into the project command surface.",
+                onClick: runCloseoutPrepTool,
+                label: "Run Closeout Tool",
+              }, {
+                title: "Tool 8 · Queue customer approval reminder",
+                detail: "Creates a real approval-reminder work item and routes directly into the project command surface.",
+                onClick: runApprovalReminderTool,
+                label: "Run Approval Tool",
+              }].map((tool) => (
+                <div key={tool.title} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
+                  <div style={{ fontWeight: 700, marginBottom: 6 }}>{tool.title}</div>
+                  <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>{tool.detail}</div>
+                  <button type="button" onClick={tool.onClick} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>{tool.label}</button>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -273,13 +309,13 @@ export default function PortalHome() {
             <h2 style={{ marginTop: 0 }}>Auricrux confirmed</h2>
             <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
               <li>Explains the current opportunity and delivery posture</li>
-              <li>Recommends the next qualification, estimate, proposal, file, communications, and customer actions</li>
-              <li>Executes task creation, support escalation, billing staging, estimate revision staging, proposal follow-up staging, file registration staging, customer communications staging, and workspace branding continuity</li>
+              <li>Recommends the next qualification, estimate, proposal, file, communications, closeout, approval, and customer actions</li>
+              <li>Executes task creation, support escalation, billing staging, estimate revision staging, proposal follow-up staging, file registration staging, customer communications staging, closeout prep staging, approval reminder staging, and workspace branding continuity</li>
               <li>Stays present across SaaS and Academy surfaces</li>
             </ul>
             <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
               <div style={{ color: brandSkin.accent, fontWeight: 700, marginBottom: 6 }}>Auricrux next action</div>
-              <div style={{ color: "#334155", lineHeight: 1.7 }}>Complete intake review, open the qualification workflow, create the first estimate revision package, register the owner approval file, queue the proposal follow-up, and send the branded customer schedule update before closing the day.</div>
+              <div style={{ color: "#334155", lineHeight: 1.7 }}>Complete intake review, open the qualification workflow, create the first estimate revision package, register the owner approval file, queue the proposal follow-up, send the branded customer schedule update, stage closeout prep, and queue the approval reminder before closing the day.</div>
             </div>
           </div>
         </div>

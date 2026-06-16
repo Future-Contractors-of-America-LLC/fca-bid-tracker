@@ -6,6 +6,7 @@ const ESTIMATE_REVISION_QUEUE_KEY = "fca_customer_estimate_revision_queue_v1";
 const PROPOSAL_FOLLOWUP_QUEUE_KEY = "fca_customer_proposal_followup_queue_v1";
 const FILE_INTAKE_DRAFTS_KEY = "fca_customer_file_intake_v1";
 const MESSAGE_COMMAND_KEY = "fca_customer_message_command_v1";
+const PROJECT_COMMAND_CENTER_QUEUE_KEY = "fca_customer_project_command_center_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -160,4 +161,45 @@ export function sendCustomerScheduleUpdateTool({ companyName = "Customer Workspa
 
   navigateTo("/portal/messages");
   return outbound;
+}
+
+export function stageCloseoutPrepTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", checklist = "Collect owner approvals, O&M documents, punch resolution, and turnover packet." } = {}) {
+  const current = readLocalJson(PROJECT_COMMAND_CENTER_QUEUE_KEY, { closeouts: [], approvals: [] });
+  const closeout = {
+    id: `closeout-${Date.now()}`,
+    companyName,
+    projectId,
+    checklist,
+    status: "Queued",
+    nextAction: "Prepare closeout packet",
+  };
+
+  writeLocalJson(PROJECT_COMMAND_CENTER_QUEUE_KEY, {
+    ...current,
+    closeouts: [closeout, ...(current.closeouts || [])],
+  });
+
+  navigateTo("/portal/projects");
+  return closeout;
+}
+
+export function queueCustomerApprovalReminderTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", contact = "owner@customer.com", objective = "Customer approval reminder for active decision gate." } = {}) {
+  const current = readLocalJson(PROJECT_COMMAND_CENTER_QUEUE_KEY, { closeouts: [], approvals: [] });
+  const reminder = {
+    id: `approval-${Date.now()}`,
+    companyName,
+    projectId,
+    contact,
+    objective,
+    status: "Queued",
+    nextAction: "Send branded approval reminder",
+  };
+
+  writeLocalJson(PROJECT_COMMAND_CENTER_QUEUE_KEY, {
+    ...current,
+    approvals: [reminder, ...(current.approvals || [])],
+  });
+
+  navigateTo("/portal/projects");
+  return reminder;
 }
