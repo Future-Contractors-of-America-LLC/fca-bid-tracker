@@ -41,10 +41,7 @@ export const academyCatalog = {
           "Lab 1 · Support-command field escalation simulation",
           "Lab 2 · File-spine evidence attachment drill"
         ],
-        performanceProfile: {
-          role: "Electrical Apprentice I",
-          measures: ["safety discipline", "tool handling", "drawing literacy", "evidence quality"]
-        },
+        performanceProfile: { role: "Electrical Apprentice I", measures: ["safety discipline", "tool handling", "drawing literacy", "evidence quality"] },
         completionRequirements: [
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
@@ -56,6 +53,9 @@ export const academyCatalog = {
           "Safety discipline scored at competent or above",
           "Drawing literacy scored at competent or above",
           "Evidence attachment quality scored at competent or above"
+        ],
+        capstoneProject: [
+          "Capstone · Assemble a first-year electrical readiness packet with safety log, plan-symbol interpretation, and support-command escalation response"
         ]
       }],
       linkedSurface: "/portal/support",
@@ -102,10 +102,7 @@ export const academyCatalog = {
           "Lab 1 · Support-command safety escalation",
           "Lab 2 · Audit-log incident reconstruction"
         ],
-        performanceProfile: {
-          role: "Safety Coordinator / Supervisor",
-          measures: ["hazard recognition", "documentation quality", "escalation timing", "corrective-action planning"]
-        },
+        performanceProfile: { role: "Safety Coordinator / Supervisor", measures: ["hazard recognition", "documentation quality", "escalation timing", "corrective-action planning"] },
         completionRequirements: [
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
@@ -117,6 +114,9 @@ export const academyCatalog = {
           "Hazard recognition scored at competent or above",
           "Documentation quality scored at competent or above",
           "Corrective-action planning scored at competent or above"
+        ],
+        capstoneProject: [
+          "Capstone · Deliver a full incident-to-corrective-action safety package with audit trail, support escalation, and recovery recommendation"
         ]
       }],
       linkedSurface: "/portal/audit",
@@ -163,10 +163,7 @@ export const academyCatalog = {
           "Lab 1 · Platform-dashboard operations drill",
           "Lab 2 · Estimate-to-billing cross-surface walkthrough"
         ],
-        performanceProfile: {
-          role: "Construction Operations Student / Coordinator",
-          measures: ["lifecycle fluency", "handoff quality", "documentation rigor", "commercial awareness"]
-        },
+        performanceProfile: { role: "Construction Operations Student / Coordinator", measures: ["lifecycle fluency", "handoff quality", "documentation rigor", "commercial awareness"] },
         completionRequirements: [
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
@@ -178,6 +175,9 @@ export const academyCatalog = {
           "Lifecycle fluency scored at competent or above",
           "Handoff quality scored at competent or above",
           "Commercial awareness scored at competent or above"
+        ],
+        capstoneProject: [
+          "Capstone · Build an end-to-end lifecycle operating packet from bid intake through billing and closeout recommendation"
         ]
       }],
       linkedSurface: "/portal/platform",
@@ -224,10 +224,7 @@ export const academyCatalog = {
           "Lab 1 · File-governance compliance walk",
           "Lab 2 · Customer-notice and project-evidence simulation"
         ],
-        performanceProfile: {
-          role: "Residential Contractor License Candidate",
-          measures: ["classification accuracy", "documentation completeness", "permit discipline", "customer-notice quality"]
-        },
+        performanceProfile: { role: "Residential Contractor License Candidate", measures: ["classification accuracy", "documentation completeness", "permit discipline", "customer-notice quality"] },
         completionRequirements: [
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
@@ -239,6 +236,9 @@ export const academyCatalog = {
           "Classification accuracy scored at competent or above",
           "Documentation completeness scored at competent or above",
           "Permit discipline scored at competent or above"
+        ],
+        capstoneProject: [
+          "Capstone · Assemble a residential contractor compliance packet with permit workflow, customer notice, and evidence governance documentation"
         ]
       }],
       linkedSurface: "/portal/files",
@@ -285,10 +285,7 @@ export const academyCatalog = {
           "Lab 1 · Branded workspace launch drill",
           "Lab 2 · End-to-end login-to-closeout route run"
         ],
-        performanceProfile: {
-          role: "FCA Contractor Command Operator",
-          measures: ["route fluency", "tool execution", "handoff continuity", "Auricrux utilization"]
-        },
+        performanceProfile: { role: "FCA Contractor Command Operator", measures: ["route fluency", "tool execution", "handoff continuity", "Auricrux utilization"] },
         completionRequirements: [
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
@@ -300,6 +297,9 @@ export const academyCatalog = {
           "Route fluency scored at competent or above",
           "Tool execution scored at competent or above",
           "Auricrux utilization scored at competent or above"
+        ],
+        capstoneProject: [
+          "Capstone · Run a full customer workflow from login through qualification, files, billing, support, and Academy continuity using Contractor Command"
         ]
       }],
       linkedSurface: "/portal",
@@ -307,23 +307,8 @@ export const academyCatalog = {
     }
   ],
   pathways: [
-    {
-      title: "Apprenticeship pathway",
-      description: "Field-readiness training tied to support, safety, files, and project continuity.",
-      route: "/portal/support",
-      label: "Open Field Support Continuity",
-    },
-    {
-      title: "Operations degree pathway",
-      description: "Platform, bid, project, and billing coordination taught through one operating spine.",
-      route: "/portal/platform",
-      label: "Open Platform Dashboard",
-    },
-    {
-      title: "User-guide pathway",
-      description: "A route-by-route FCA operator guide for real users moving from login to closeout.",
-      route: "/academy/catalog",
-      label: "Open Academy Catalog",
-    }
+    { title: "Apprenticeship pathway", description: "Field-readiness training tied to support, safety, files, and project continuity.", route: "/portal/support", label: "Open Field Support Continuity" },
+    { title: "Operations degree pathway", description: "Platform, bid, project, and billing coordination taught through one operating spine.", route: "/portal/platform", label: "Open Platform Dashboard" },
+    { title: "User-guide pathway", description: "A route-by-route FCA operator guide for real users moving from login to closeout.", route: "/academy/catalog", label: "Open Academy Catalog" }
   ]
 };
