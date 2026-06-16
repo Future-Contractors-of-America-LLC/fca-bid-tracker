@@ -3,45 +3,41 @@
 Status: Active
 Owner: Auricrux Exec
 Repository: `Future-Contractors-of-America-LLC/fca-bid-tracker`
-Last Updated: 2026-06-15
+Last Updated: 2026-06-16
 
 ---
 
 ## Controlling Sequence
 
-- Active packet: `061Z`
-- Next packet: `062A`
-- Deployment target: `061Z` hard deployment target
+- Active packet: `062C`
+- Next packet: `062D`
+- Deployment target: `061Z` remains the unresolved hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
-- Execution floor rule: every `061` letter must deliver at least 10 artifacts and at least 7 real actions for the current wave
-- Lock rule: every `061` letter must lock newly verified truth and explicitly state what remains unverified
-- CI verification rule: every `061` letter must verify, lock, and confirm the exact CI lane claims it makes
+- 061Z truth rule: no 062* packet may be interpreted as proof that 061Z deployment-closeout evidence has landed
+- Site-alignment rule: 062* packets may harden public/site/package truth only if they point to already reachable repo slices and do not overclaim deployment closure
 
 ---
 
 ## Current Executive State
 
-The `060` range remains truthfully closed as a failed hard deployment target. `061A` removed the original runtime smoke code blockers. `061B` rebased the target to `061Z`. `061C` wired explicit build-proof-lane validation. `061D` verified runtime-smoke pass in repo-visible proof. `061E` wired build-proof presence enforcement. `061F` locked the CI verification boundary and confirmed build-validation persistence was still unconfirmed. `061G` wired first-missing-artifact detection. `061H` locked the directory itself as the controlling first missing artifact. `061I` locked persistence-commit absence alongside directory absence. `061J` confirmed double-absence through fresh repo-visible searches. `061K` created a truthful repo-visible build-validation proof surface. `061L` implemented CI provenance stamping and first-rewrite transition tooling. `061M` added a dedicated provenance workflow. `061N` verified the first CI-backed build-validation rewrite and cleared the build-validation provenance blocker. `061O` created a truthful repo-visible live deployment proof surface and a dedicated CI workflow for live deployment proof stamping. `061P` added live deployment provenance verification and rewrite-transition tooling. `061Q` removed dependency-install friction from the dedicated live workflow. `061R` added an explicit live proof commit-signal verification surface. `061S` guaranteed a repo-visible run witness and hardened the commit path inside the live proof workflow. `061T` corrected the immediate execution-layer blocker by adding a second lightweight workflow dedicated to producing a repo-visible live run witness commit. `061U` corrected three control-layer blockers by replacing stale live-proof workflow validation logic, replacing doc-based commit-signal detection with actual git-history observation, and wiring a repo-visible live-proof observation suite. `061V` corrected three control-layer blockers by wiring explicit current-head live verifier validation, explicit metadata transition-state validation, and explicit deployment proof bundle readiness validation. `061W` corrected three control-layer blockers by wiring the 061V proof controls into both CI lanes, wiring persistence/upload surfaces for those controls, and adding explicit workflow-coverage validators. `061X` corrected three control-layer blockers by adding explicit persistence-wiring validators for both CI lanes and explicit validators for the first persisted artifact surface and first persisted control bundle. `061Y` corrected the next three control-layer blockers by locking the first repo-visible witness observation, locking the current split-state truth, and wiring the final first-persisted-control-run gate required before `061Z` can truthfully close. `061Z` is now the active closeout packet and this wave wires the remaining closeout proof surfaces directly into both CI lanes so the unresolved deployment, managed-auth, Academy, and commercial proof classes can either pass with evidence or remain explicitly failed with exact evidence.
+The `060` range remains truthfully closed as a failed hard deployment target. `061A` through `061Y` built the deployment-proof and CI-observation control surfaces required for a truthful `061Z` closeout attempt. `061Z` remains unresolved because deployed managed-auth, Academy runtime parity, commercial runtime proof, and first fully repo-visible CI-backed live proof closure remain unproven in-session. After that unresolved closeout state, `062A` corrected site-level repo truth by locking that multiple real SaaS and LMS slices already exist in the repository and that the dominant remaining gap is public/site-level alignment rather than missing vertical slices. `062B` extended that correction by aligning public entry and Academy depth, adding two real portal command tools and five complete Academy tracks. `062C` now hardens the public package layer by wiring public pricing/package claims to exact reachable route groups, correcting the Academy catalog report generator to current repo schema truth, and adding a validator that checks package route groups, Academy track presence, and command-tool exports against repo truth.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `061Z` is now the active target-closeout packet.
-- repo-visible witness commit `f28bddcb08e9f4d6a7d638b4e698c86adc4e81a5` is now observed on `main`.
-- repo-visible witness artifact now exists at `docs/runtime-proof/live-deployment/live_deployment_ci_run_witness.json`.
-- witness artifact reports `provenance: github_actions_ci`.
-- witness artifact reports `ciPersisted: true`.
-- no repo-visible `Persist CI-backed live deployment proof for run ...` commit is currently observable on `main`.
-- `docs/runtime-proof/live-deployment/live_deployment_proof_metadata.json` remains repo-visible with `provenance: manual_repo_backfill` and `ciPersisted: false`.
-- witness-observed-state validators/reports now exist in repo truth.
-- split-state validators/reports now exist in repo truth.
-- final first-persisted-control-run gate validators/reports now exist in repo truth.
-- both CI lanes are now wired to emit current-head verifier, metadata-transition, proof-bundle, persistence-wiring, persisted-artifact-surface, persisted-control-bundle, Academy catalog, and managed-auth/commercial runtime evidence surfaces.
+- `062A`, `062B`, and `062C` are now repo-visible site-alignment packets.
+- real SaaS and LMS vertical slices already exist in repo truth, including portal bids, estimates, projects, files, billing, operations, audit, messages, support, admin, Auricrux, Academy, and Academy catalog routes.
+- `stageMobilizationInvoiceTool` and `createPermitEscalationTool` exist in repo truth.
+- five complete Academy tracks exist in repo truth: apprenticeship, certification, degree, licensure, and FCA user-guide how-to.
+- public package claims now have a single route-group source at `src/publicPackageRouteGroups.js`.
+- pricing now renders exact route-group links from that shared source instead of package-only descriptive text.
+- repo validation/report surfaces now exist for public package route groups.
+- Academy catalog report generation is now aligned to current repo schema rather than assuming missing structures are present.
 
-### Not yet repo-proven
+### Not yet deployment-proven
 - first repo-visible CI-backed live deployment proof commit on `main`
 - first repo-visible CI-backed live deployment proof metadata on `main`
 - first successful repo-visible current-head live verifier pass on `main`
@@ -56,17 +52,14 @@ The `060` range remains truthfully closed as a failed hard deployment target. `0
 
 ## Current Blocker
 
-### Blocker 1 — first repo-visible CI-backed live deployment proof commit remains unobserved on `main`
-The remaining hard repo-truth gate is direct observation of the first CI-backed live deployment proof commit after the newly wired closeout surfaces execute.
+### Blocker 1 — 061Z deployment-closeout proof remains unresolved
+The repo contains stronger site/package truth and validation surfaces, but the actual deployment-closeout evidence class for `061Z` still has not been observed as fully satisfied on `main`.
 
-### Blocker 2 — first repo-visible CI-backed live deployment metadata transition remains unobserved on `main`
-The proof metadata has not yet been observed in a CI-backed persisted state on `main`.
+### Blocker 2 — public entry truth still needs cross-surface alignment beyond pricing
+Pricing now points to exact route groups, but home, login, and contact still need the same package-route-group truth source to eliminate future public-entry drift.
 
-### Blocker 3 — first successful repo-visible persisted control run remains unobserved on `main`
-The persisted control-run gate exists and is now wired into both CI lanes, but its first repo-visible satisfied run has not yet landed on `main`.
-
-### Blocker 4 — current-head verifier, managed auth, Academy, and commercial proof classes remain execution-dependent
-The repo wiring now exists, but truthful clearance still depends on actual CI execution and persisted evidence on `main`.
+### Blocker 3 — validator existence is repo truth, not run truth
+The new route-group validator and report generator now exist in repo truth, but no in-session execution result has been captured here.
 
 ---
 
@@ -86,20 +79,20 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `061Z`
-- Next packet: `062A` only if `061Z` closes truthfully
-- Target packet: `061Z` hard deployment target
-- Current blocker: first CI-backed live proof commit, first CI-backed metadata transition, first satisfied persisted control run, and deployed auth/Academy/commercial proof remain unproven pending actual CI execution on `main`
-- Last verified repo truth: witness commit and witness artifact are repo-visible and CI-backed; both workflows are now wired to emit and persist the remaining 061Z closeout proof classes; the first CI-backed live deployment proof commit is still absent from `main`; proof metadata is still manual-backfill in current main-state observation
-- Last verified deployment truth: deployed auth/runtime/commercial proof remains unproven in-session
-- Next concrete action: merge the 061Z blocker-clearance workflow patch, allow both CI lanes to run on `main`, then re-inspect commit history and persisted proof artifacts for truthful 061Z closeout
+- Current packet: `062C`
+- Next packet: `062D`
+- Target packet: `061Z` deployment closeout plus `062*` site-alignment hardening without overclaiming closure
+- Current blocker: 061Z deployment-closeout proof remains unresolved; home/login/contact still need shared package-route-group alignment; new validation surfaces exist but have not been run in-session here
+- Last verified repo truth: shared public package route groups now exist; pricing renders exact linked route groups; Academy report generator is aligned to current repo schema; package-route-group validator/report surfaces are repo-visible; 062A and 062B site-alignment corrections remain repo-visible
+- Last verified deployment truth: deployed auth/runtime/Academy/commercial proof remains unproven in-session
+- Next concrete action: merge `062C`, then extend the shared package-route-group truth source into home, login, and contact while preserving the unresolved 061Z deployment truth boundary
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must not reinterpret workflow wiring as proof that the CI-backed live deployment proof commit, metadata transition, persisted control run, managed auth deployed proof, Academy runtime parity proof, or commercial runtime proof already landed.
+Auricrux must not interpret 062A/062B/062C site-alignment work as proof that 061Z deployment closeout has landed.
 
-Auricrux must not claim live deployment verifier success until repo-visible proof artifacts and verifier outputs directly support it.
+Auricrux must not claim live managed-auth, live Academy runtime parity, or live commercial runtime proof until repo-visible or deployment-visible evidence directly supports it.
 
 Auricrux must save after every meaningful prompt.
