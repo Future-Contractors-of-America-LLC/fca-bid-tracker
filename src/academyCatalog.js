@@ -28,7 +28,8 @@ export const academyCatalog = {
         remediationPaths: ["Remediation · Repeat drawing literacy drill if symbol-read accuracy is below threshold", "Remediation · Re-submit evidence packet if escalation or documentation quality is below threshold"],
         masteryChecks: ["Mastery check · Apprentice can independently route support escalation and attach governed evidence"],
         credentialAwardCriteria: ["Credential award requires successful mentor sign-off on safety, drawing literacy, and evidence governance readiness"],
-        renewalCriteria: ["Renewal path · Maintain safety compliance and refreshed field-readiness documentation annually"]
+        renewalCriteria: ["Renewal path · Maintain safety compliance and refreshed field-readiness documentation annually"],
+        auditEvidenceStandards: ["Evidence standard · Safety log and escalation packet must be timestamped and project-linked"]
       }],
       linkedSurface: "/portal/support",
       linkedLabel: "Open Field Support Continuity"
@@ -61,7 +62,8 @@ export const academyCatalog = {
         remediationPaths: ["Remediation · Repeat hazard recognition scenarios if quiz performance is below threshold", "Remediation · Rebuild corrective-action packet if mentor review is below threshold"],
         masteryChecks: ["Mastery check · Learner can issue a full safety escalation and corrective-action recommendation without guidance"],
         credentialAwardCriteria: ["Credential award requires passing the cumulative certification-prep test and mentor sign-off on incident-response readiness"],
-        renewalCriteria: ["Renewal path · Refresh safety escalation portfolio and pass updated hazard-response review"]
+        renewalCriteria: ["Renewal path · Refresh safety escalation portfolio and pass updated hazard-response review"],
+        auditEvidenceStandards: ["Evidence standard · Incident and corrective-action package must be audit-ready and linked to the affected workflow"]
       }],
       linkedSurface: "/portal/audit",
       linkedLabel: "Open Audit and Safety Continuity"
@@ -94,7 +96,8 @@ export const academyCatalog = {
         remediationPaths: ["Remediation · Rework lifecycle map if continuity logic is incomplete", "Remediation · Rebuild commercial packet if handoff or revenue logic is below threshold"],
         masteryChecks: ["Mastery check · Learner can defend the full operating packet from intake through billing and closeout"],
         credentialAwardCriteria: ["Credential award requires passing the midterm and mentor acceptance of the end-to-end operating packet"],
-        renewalCriteria: ["Renewal path · Update operating packet with current workflow and commercial continuity standards"]
+        renewalCriteria: ["Renewal path · Update operating packet with current workflow and commercial continuity standards"],
+        auditEvidenceStandards: ["Evidence standard · Operating packet must be traceable, dated, and aligned to current workflow state"]
       }],
       linkedSurface: "/portal/platform",
       linkedLabel: "Open Platform Dashboard"
@@ -127,7 +130,8 @@ export const academyCatalog = {
         remediationPaths: ["Remediation · Repeat classification analysis if permit path is misaligned", "Remediation · Rebuild compliance packet if evidence governance is incomplete"],
         masteryChecks: ["Mastery check · Learner can assemble a permit-safe compliance packet without supervision"],
         credentialAwardCriteria: ["Credential award requires passing the cumulative licensure prep test and mentor sign-off on compliance packet readiness"],
-        renewalCriteria: ["Renewal path · Refresh compliance packet and complete updated permit-discipline review"]
+        renewalCriteria: ["Renewal path · Refresh compliance packet and complete updated permit-discipline review"],
+        auditEvidenceStandards: ["Evidence standard · Permit, notice, and compliance packet must be versioned and audit-ready"]
       }],
       linkedSurface: "/portal/files",
       linkedLabel: "Open File Governance"
@@ -160,7 +164,8 @@ export const academyCatalog = {
         remediationPaths: ["Remediation · Repeat route walkthrough if command transitions break continuity", "Remediation · Rebuild end-to-end proof packet if Auricrux utilization is below threshold"],
         masteryChecks: ["Mastery check · Operator can execute a full branded customer workflow end-to-end without prompts"],
         credentialAwardCriteria: ["Credential award requires passing the user-readiness test and mentor acceptance of the end-to-end workflow demonstration"],
-        renewalCriteria: ["Renewal path · Re-run full workflow demonstration against the current FCA operating environment"]
+        renewalCriteria: ["Renewal path · Re-run full workflow demonstration against the current FCA operating environment"],
+        auditEvidenceStandards: ["Evidence standard · End-to-end workflow proof packet must show route continuity, outputs, and customer-facing traceability"]
       }],
       linkedSurface: "/portal",
       linkedLabel: "Open Command Center"
