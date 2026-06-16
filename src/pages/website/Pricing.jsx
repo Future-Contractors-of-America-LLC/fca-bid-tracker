@@ -13,6 +13,7 @@ import ProductProofSection from "../../components/ProductProofSection";
 import PricingActionCenter from "../../components/PricingActionCenter";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import { publicPackageRouteGroups } from "../../publicPackageRouteGroups";
 import { executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
@@ -48,14 +49,6 @@ const pricingProductProof = [
   { title: "Show customer workspace depth", detail: "Use the portal shell to demonstrate the product that the rollout tiers are funding and sequencing.", href: "/portal", label: "Open Portal Workspace" },
   { title: "Keep academy in scope", detail: "Training, degree, licensure, certification, apprenticeship, and how-to tracks remain inside the same product story.", href: "/academy/catalog", label: "Open Academy Catalog" },
   { title: "Show recurring service and advocacy lanes", detail: "Use warranty and referral continuity to prove the revenue story continues after handoff instead of ending at project delivery.", href: "/warranty", label: "Open Warranty Continuity" },
-];
-
-const productPackages = [
-  { title: "FCA SaaS Workspace", detail: "Projects, bids, estimates, files, billing, support, admin, and dashboard continuity for daily contractor operations." },
-  { title: "Customer Portal", detail: "Customer-facing visibility into projects, files, statuses, messages, and next actions inside the same workspace." },
-  { title: "Academy / LMS", detail: "Apprenticeship, certification, degree, licensure, and how-to coursework tied directly to delivery rollout." },
-  { title: "Auricrux + Comms", detail: "Guided next actions plus routed chat, SMS, phone, email, Teams, conference, and lecture channels according to plan depth." },
-  { title: "Lifecycle Revenue Continuity", detail: "Warranty retention, recurring service posture, reviews, and referral-safe expansion now remain attached to the same operating and rollout story." },
 ];
 
 export default function Pricing() {
@@ -168,10 +161,17 @@ export default function Pricing() {
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Actual customer products included in FCA rollout</h2>
         <div style={responsiveGrid(220)}>
-          {productPackages.map((item) => (
+          {publicPackageRouteGroups.map((item) => (
             <div key={item.title} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff" }}>
               <div style={{ fontWeight: 700, marginBottom: 8 }}>{item.title}</div>
-              <div style={{ color: "#475569", lineHeight: 1.7 }}>{item.detail}</div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>{item.detail}</div>
+              <div style={{ display: "grid", gap: 8 }}>
+                {item.routes.map((route) => (
+                  <a key={`${item.key}-${route.href}`} href={route.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
+                    {route.label}
+                  </a>
+                ))}
+              </div>
             </div>
           ))}
         </div>
