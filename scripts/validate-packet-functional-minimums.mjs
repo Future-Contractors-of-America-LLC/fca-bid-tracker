@@ -10,8 +10,8 @@ const requiredTracks = [
 ];
 
 const requiredToolExports = [
-  "stagePayApplicationTool",
-  "queueRetentionReleaseReviewTool",
+  "queueSubmittalResponseTool",
+  "stageCustomerCollectionNoticeTool",
 ];
 
 const results = [];
