@@ -23,6 +23,8 @@ const INSPECTION_RESPONSE_QUEUE_KEY = "fca_customer_inspection_response_queue_v1
 const DELIVERY_CONFIRMATION_QUEUE_KEY = "fca_customer_delivery_confirmation_queue_v1";
 const STARTUP_CHECKLIST_QUEUE_KEY = "fca_customer_startup_checklist_queue_v1";
 const TURNOVER_CONFIRMATION_QUEUE_KEY = "fca_customer_turnover_confirmation_queue_v1";
+const PERMIT_RESUBMISSION_QUEUE_KEY = "fca_customer_permit_resubmission_queue_v1";
+const DOCUMENT_TRANSMITTAL_QUEUE_KEY = "fca_customer_document_transmittal_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -194,6 +196,20 @@ export function queueDeliveryConfirmationTool({ projectId = "PRJ-A117", packageN
   const current = readLocalJson(DELIVERY_CONFIRMATION_QUEUE_KEY, { items: [] });
   const item = { id: `delivery-${Date.now()}`, projectId, packageName, detail, status: "Queued", nextAction: "Confirm delivery and notify customer" };
   writeLocalJson(DELIVERY_CONFIRMATION_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/messages");
+  return item;
+}
+export function stageStartupChecklistTool({ projectId = "PRJ-A117", checklist = "Confirm mobilization startup checklist, permits, files, contacts, and launch readiness." } = {}) {
+  const current = readLocalJson(STARTUP_CHECKLIST_QUEUE_KEY, { items: [] });
+  const item = { id: `startup-${Date.now()}`, projectId, checklist, status: "Queued", nextAction: "Complete startup checklist" };
+  writeLocalJson(STARTUP_CHECKLIST_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/projects");
+  return item;
+}
+export function queueTurnoverConfirmationTool({ projectId = "PRJ-A117", detail = "Prepare customer turnover confirmation and final delivery acknowledgment." } = {}) {
+  const current = readLocalJson(TURNOVER_CONFIRMATION_QUEUE_KEY, { items: [] });
+  const item = { id: `turnover-${Date.now()}`, projectId, detail, status: "Queued", nextAction: "Confirm turnover with customer" };
+  writeLocalJson(TURNOVER_CONFIRMATION_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
   navigateTo("/portal/messages");
   return item;
 }
