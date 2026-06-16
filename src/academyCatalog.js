@@ -29,7 +29,8 @@ export const academyCatalog = {
         masteryChecks: ["Mastery check · Apprentice can independently route support escalation and attach governed evidence"],
         credentialAwardCriteria: ["Credential award requires successful mentor sign-off on safety, drawing literacy, and evidence governance readiness"],
         renewalCriteria: ["Renewal path · Maintain safety compliance and refreshed field-readiness documentation annually"],
-        auditEvidenceStandards: ["Evidence standard · Safety log and escalation packet must be timestamped and project-linked"]
+        auditEvidenceStandards: ["Evidence standard · Safety log and escalation packet must be timestamped and project-linked"],
+        qualityAcceptanceCriteria: ["Quality acceptance · Submitted artifacts must be complete, traceable, and internally reviewable before lane closeout"]
       }],
       linkedSurface: "/portal/support",
       linkedLabel: "Open Field Support Continuity"
@@ -63,7 +64,8 @@ export const academyCatalog = {
         masteryChecks: ["Mastery check · Learner can issue a full safety escalation and corrective-action recommendation without guidance"],
         credentialAwardCriteria: ["Credential award requires passing the cumulative certification-prep test and mentor sign-off on incident-response readiness"],
         renewalCriteria: ["Renewal path · Refresh safety escalation portfolio and pass updated hazard-response review"],
-        auditEvidenceStandards: ["Evidence standard · Incident and corrective-action package must be audit-ready and linked to the affected workflow"]
+        auditEvidenceStandards: ["Evidence standard · Incident and corrective-action package must be audit-ready and linked to the affected workflow"],
+        qualityAcceptanceCriteria: ["Quality acceptance · Safety portfolio must be internally reviewable and defensible before credential closeout"]
       }],
       linkedSurface: "/portal/audit",
       linkedLabel: "Open Audit and Safety Continuity"
@@ -97,7 +99,8 @@ export const academyCatalog = {
         masteryChecks: ["Mastery check · Learner can defend the full operating packet from intake through billing and closeout"],
         credentialAwardCriteria: ["Credential award requires passing the midterm and mentor acceptance of the end-to-end operating packet"],
         renewalCriteria: ["Renewal path · Update operating packet with current workflow and commercial continuity standards"],
-        auditEvidenceStandards: ["Evidence standard · Operating packet must be traceable, dated, and aligned to current workflow state"]
+        auditEvidenceStandards: ["Evidence standard · Operating packet must be traceable, dated, and aligned to current workflow state"],
+        qualityAcceptanceCriteria: ["Quality acceptance · Operating packet must survive mentor scrutiny and product-state reconciliation before award"]
       }],
       linkedSurface: "/portal/platform",
       linkedLabel: "Open Platform Dashboard"
@@ -131,7 +134,8 @@ export const academyCatalog = {
         masteryChecks: ["Mastery check · Learner can assemble a permit-safe compliance packet without supervision"],
         credentialAwardCriteria: ["Credential award requires passing the cumulative licensure prep test and mentor sign-off on compliance packet readiness"],
         renewalCriteria: ["Renewal path · Refresh compliance packet and complete updated permit-discipline review"],
-        auditEvidenceStandards: ["Evidence standard · Permit, notice, and compliance packet must be versioned and audit-ready"]
+        auditEvidenceStandards: ["Evidence standard · Permit, notice, and compliance packet must be versioned and audit-ready"],
+        qualityAcceptanceCriteria: ["Quality acceptance · Compliance packet must be reviewable and jurisdiction-ready before lane completion"]
       }],
       linkedSurface: "/portal/files",
       linkedLabel: "Open File Governance"
@@ -165,7 +169,8 @@ export const academyCatalog = {
         masteryChecks: ["Mastery check · Operator can execute a full branded customer workflow end-to-end without prompts"],
         credentialAwardCriteria: ["Credential award requires passing the user-readiness test and mentor acceptance of the end-to-end workflow demonstration"],
         renewalCriteria: ["Renewal path · Re-run full workflow demonstration against the current FCA operating environment"],
-        auditEvidenceStandards: ["Evidence standard · End-to-end workflow proof packet must show route continuity, outputs, and customer-facing traceability"]
+        auditEvidenceStandards: ["Evidence standard · End-to-end workflow proof packet must show route continuity, outputs, and customer-facing traceability"],
+        qualityAcceptanceCriteria: ["Quality acceptance · Workflow proof must remain coherent, auditable, and customer-usable before final sign-off"]
       }],
       linkedSurface: "/portal",
       linkedLabel: "Open Command Center"
