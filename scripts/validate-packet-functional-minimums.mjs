@@ -10,8 +10,8 @@ const requiredTracks = [
 ];
 
 const requiredToolExports = [
-  "stageInspectionResponseTool",
-  "queueDeliveryConfirmationTool",
+  "stagePermitResubmissionTool",
+  "queueDocumentTransmittalTool",
 ];
 
 const results = [];
