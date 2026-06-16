@@ -10,6 +10,7 @@ import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import {
   executiveSignalCtaSets,
   founderJourneyCtaSets,
@@ -130,6 +131,14 @@ export default function Platform() {
         detail="The product path now speaks directly to qualification, estimate progression, project control, file governance, billing continuity, and Academy depth."
         highlights={platformConstructionProof}
       />
+
+      <div style={{ marginTop: 24 }}>
+        <PublicPackageRouteGroupsPanel
+          eyebrow="Platform package route truth"
+          title="Platform now exposes the exact route groups behind the operating system claim"
+          detail="The platform surface now uses the same package-to-route truth as pricing, home, login, and contact so product depth stays route-backed instead of descriptive-only."
+        />
+      </div>
 
       <div style={{ marginTop: 24, ...cardStyle }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real SaaS pathways</div>
