@@ -25,8 +25,6 @@ const STARTUP_CHECKLIST_QUEUE_KEY = "fca_customer_startup_checklist_queue_v1";
 const TURNOVER_CONFIRMATION_QUEUE_KEY = "fca_customer_turnover_confirmation_queue_v1";
 const PERMIT_RESUBMISSION_QUEUE_KEY = "fca_customer_permit_resubmission_queue_v1";
 const DOCUMENT_TRANSMITTAL_QUEUE_KEY = "fca_customer_document_transmittal_queue_v1";
-const PRETASK_PLAN_QUEUE_KEY = "fca_customer_pretask_plan_queue_v1";
-const OWNER_DECISION_QUEUE_KEY = "fca_customer_owner_decision_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -212,6 +210,20 @@ export function queueTurnoverConfirmationTool({ projectId = "PRJ-A117", detail =
   const current = readLocalJson(TURNOVER_CONFIRMATION_QUEUE_KEY, { items: [] });
   const item = { id: `turnover-${Date.now()}`, projectId, detail, status: "Queued", nextAction: "Confirm turnover with customer" };
   writeLocalJson(TURNOVER_CONFIRMATION_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/messages");
+  return item;
+}
+export function stagePermitResubmissionTool({ projectId = "PRJ-A117", packageName = "Permit resubmission package", detail = "Prepare corrected permit resubmission preserving approval continuity." } = {}) {
+  const current = readLocalJson(PERMIT_RESUBMISSION_QUEUE_KEY, { items: [] });
+  const item = { id: `permit-${Date.now()}`, projectId, packageName, detail, status: "Queued", nextAction: "Resubmit permit package" };
+  writeLocalJson(PERMIT_RESUBMISSION_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/files");
+  return item;
+}
+export function queueDocumentTransmittalTool({ companyName = "Customer Workspace", packageName = "Customer document transmittal", detail = "Prepare governed transmittal preserving file and customer communication continuity." } = {}) {
+  const current = readLocalJson(DOCUMENT_TRANSMITTAL_QUEUE_KEY, { items: [] });
+  const item = { id: `transmittal-${Date.now()}`, companyName, packageName, detail, status: "Queued", nextAction: "Send document transmittal" };
+  writeLocalJson(DOCUMENT_TRANSMITTAL_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
   navigateTo("/portal/messages");
   return item;
 }
