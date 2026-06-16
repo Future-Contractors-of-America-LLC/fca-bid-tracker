@@ -5,6 +5,7 @@ import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel"
 import { routeStateOverlays } from "../../systemState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import { createPermitEscalationTool, stageMobilizationInvoiceTool } from "../../customerCommandTools";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -99,6 +100,15 @@ export default function PortalHome() {
     { key: "customer", title: "Customer follow-up" },
   ]), []);
 
+  const routeCards = [
+    { title: "Qualification", detail: "Advance opportunities and route work into estimate launch.", href: "/portal/bids", label: "Open Qualification" },
+    { title: "Estimates", detail: "Move pricing, scope notes, and proposal packaging forward.", href: "/portal/estimates", label: "Open Estimates" },
+    { title: "Projects", detail: "Control stage movement, milestones, and delivery posture.", href: "/portal/projects", label: "Open Projects" },
+    { title: "Files", detail: "Keep evidence, permit packets, and customer documents attached to the right context.", href: "/portal/files", label: "Open Files" },
+    { title: "Billing", detail: "Stage invoices and preserve revenue continuity.", href: "/portal/billing", label: "Open Billing" },
+    { title: "Academy", detail: "Train teams through apprenticeship, certification, degree, licensure, and how-to tracks.", href: "/academy/catalog", label: "Open Academy Catalog" },
+  ];
+
   function toggleTask(taskId) {
     setTasks((current) => current.map((task) => task.id === taskId ? { ...task, done: !task.done } : task));
   }
@@ -116,6 +126,16 @@ export default function PortalHome() {
       done: false,
     }));
     setNewTaskTitle("");
+  }
+
+  function runPermitEscalationTool() {
+    createPermitEscalationTool({ companyName, projectId: state?.project?.id || "PRJ-A117" });
+    refreshSyncStamp("Permit escalation support tool executed from command center");
+  }
+
+  function runMobilizationInvoiceTool() {
+    stageMobilizationInvoiceTool({ companyName, projectId: state?.project?.id || "PRJ-A117" });
+    refreshSyncStamp("Mobilization invoice tool executed from command center");
   }
 
   return (
@@ -145,6 +165,19 @@ export default function PortalHome() {
             <input value={brandSkin.welcomeMessage} onChange={(event) => setBrandSkin((current) => ({ ...current, welcomeMessage: event.target.value }))} style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #cbd5e1" }} placeholder="Welcome message" />
             <input value={brandSkin.accent} onChange={(event) => setBrandSkin((current) => ({ ...current, accent: event.target.value }))} style={{ padding: "10px 12px", borderRadius: 12, border: "1px solid #cbd5e1" }} placeholder="#1d4ed8" />
           </div>
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Route dispatcher for real product slices</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+          {routeCards.map((card) => (
+            <div key={card.title} style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 14, background: "#f8fafc" }}>
+              <div style={{ fontWeight: 700, marginBottom: 8 }}>{card.title}</div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>{card.detail}</div>
+              <a href={card.href} style={{ color: brandSkin.accent, fontWeight: 700, textDecoration: "none" }}>{card.label}</a>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -179,17 +212,35 @@ export default function PortalHome() {
           </div>
         </div>
 
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Auricrux confirmed</h2>
-          <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
-            <li>Explains the current opportunity and delivery posture</li>
-            <li>Recommends the next qualification, estimate, and customer actions</li>
-            <li>Executes task creation, workspace branding continuity, and route guidance</li>
-            <li>Stays present across SaaS and Academy surfaces</li>
-          </ul>
-          <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
-            <div style={{ color: brandSkin.accent, fontWeight: 700, marginBottom: 6 }}>Auricrux next action</div>
-            <div style={{ color: "#334155", lineHeight: 1.7 }}>Complete intake review, open the qualification workflow, and create the first estimate package before sending the branded customer follow-up.</div>
+        <div style={{ display: "grid", gap: 16 }}>
+          <div style={cardStyle}>
+            <h2 style={{ marginTop: 0 }}>New real SaaS tools in 062B</h2>
+            <div style={{ display: "grid", gap: 12 }}>
+              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 1 · Create permit escalation support request</div>
+                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real support ticket in Support Command and routes you into the support board.</div>
+                <button type="button" onClick={runPermitEscalationTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Support Tool</button>
+              </div>
+              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 2 · Stage mobilization invoice</div>
+                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real draft invoice in Billing Command and routes you into the billing board.</div>
+                <button type="button" onClick={runMobilizationInvoiceTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Billing Tool</button>
+              </div>
+            </div>
+          </div>
+
+          <div style={cardStyle}>
+            <h2 style={{ marginTop: 0 }}>Auricrux confirmed</h2>
+            <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
+              <li>Explains the current opportunity and delivery posture</li>
+              <li>Recommends the next qualification, estimate, and customer actions</li>
+              <li>Executes task creation, support escalation, billing staging, and workspace branding continuity</li>
+              <li>Stays present across SaaS and Academy surfaces</li>
+            </ul>
+            <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
+              <div style={{ color: brandSkin.accent, fontWeight: 700, marginBottom: 6 }}>Auricrux next action</div>
+              <div style={{ color: "#334155", lineHeight: 1.7 }}>Complete intake review, open the qualification workflow, and create the first estimate package before sending the branded customer follow-up.</div>
+            </div>
           </div>
         </div>
       </div>

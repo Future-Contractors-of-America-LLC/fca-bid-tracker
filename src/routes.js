@@ -30,6 +30,7 @@ import PortalOpportunityDetail from "./pages/portal/PortalOpportunityDetail";
 import PortalProjectDetail from "./pages/portal/PortalProjectDetail";
 
 import AcademyHome from "./pages/academy/AcademyHome";
+import AcademyCatalog from "./pages/academy/AcademyCatalog";
 
 export const routes = {
   "/": Home,
@@ -63,6 +64,7 @@ export const routes = {
   "/portal/academy": AcademyHome,
 
   "/academy": AcademyHome,
+  "/academy/catalog": AcademyCatalog,
 };
 
 export const routePatterns = [

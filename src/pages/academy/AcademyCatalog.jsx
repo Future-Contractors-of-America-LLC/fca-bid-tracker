@@ -37,9 +37,9 @@ export default function AcademyCatalog() {
 
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy catalog</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Programs, credentials, outcomes, and linked production surfaces are now visible in one place</h2>
+        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Five complete track-specific courses are now live in one place</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          This catalog turns the Academy into a real classroom layer with named programs, course sequences, labs, and operational outcomes that map directly into FCA workspace routes.
+          This catalog now includes a specific apprenticeship course, certification course, degree course, licensure course, and FCA user-guide how-to course, each linked back to real portal surfaces.
         </p>
       </div>
 
@@ -56,7 +56,7 @@ export default function AcademyCatalog() {
                   <div><strong>Format:</strong> {program.format}</div>
                 </div>
               </div>
-              <div style={{ maxWidth: 380, color: "#334155", lineHeight: 1.7 }}>
+              <div style={{ maxWidth: 420, color: "#334155", lineHeight: 1.7 }}>
                 <strong>Program goal</strong>
                 <div>{program.goal}</div>
               </div>
@@ -78,9 +78,14 @@ export default function AcademyCatalog() {
                     <div key={course.code} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
                       <div style={{ color: "#2563eb", fontWeight: 700 }}>{course.code}</div>
                       <div style={{ fontWeight: 700, margin: "6px 0" }}>{course.title}</div>
-                      <div style={{ color: "#475569", lineHeight: 1.7 }}>
+                      <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 10 }}>
                         <div><strong>Lessons:</strong> {course.lessons}</div>
                         <div><strong>Lab:</strong> {course.lab}</div>
+                      </div>
+                      <div style={{ color: "#334155", lineHeight: 1.8 }}>
+                        {course.lessonTitles.map((lesson) => (
+                          <div key={lesson}>• {lesson}</div>
+                        ))}
                       </div>
                     </div>
                   ))}

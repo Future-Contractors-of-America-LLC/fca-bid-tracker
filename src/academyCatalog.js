@@ -1,90 +1,189 @@
 export const academyCatalog = {
   programs: [
     {
-      key: "ops-core",
-      title: "Construction Operations Foundations",
-      credential: "FCA Core Operations Certificate",
-      audience: "Owners, coordinators, assistant PMs, and new operations staff",
-      duration: "4 weeks",
-      format: "Guided cohort + on-demand replay + workspace lab",
-      outcome: "Build reliable operational discipline from intake through handoff, kickoff, and customer visibility.",
-      classrooms: ["Construction Operations Foundations"],
-      stack: ["Portal workspace", "Bid continuity", "Customer coordination", "Auricrux guidance"],
+      key: "electrical-apprenticeship-year1",
+      title: "Electrical Apprenticeship Year 1: Jobsite Foundations",
+      credential: "FCA Apprenticeship Track · Electrical Apprentice I",
+      audience: "New electrical apprentices, helper-level field hires, and first-year trade learners",
+      duration: "12 weeks",
+      format: "Cohort + field lab + guided workspace reinforcement",
+      goal: "Build first-year electrical trade discipline tied directly to FCA project, file, safety, and support workflows.",
+      outcomes: [
+        "Read basic drawings, layouts, and electrical scope notes inside FCA workflows",
+        "Document field safety observations and escalation needs through live support continuity",
+        "Attach jobsite evidence to project and file-control surfaces",
+        "Coordinate toolbox-talk execution with Auricrux guidance"
+      ],
+      courses: [
+        {
+          code: "APP-ELEC-101",
+          title: "Electrical Apprenticeship Year 1: Jobsite Foundations",
+          lessons: 6,
+          lab: "Project-linked field readiness lab in /portal/support and /portal/files",
+          lessonTitles: [
+            "Lesson 1 · Electrical safety orientation and PPE discipline",
+            "Lesson 2 · Tool identification and material handling",
+            "Lesson 3 · Reading basic electrical plan symbols and notes",
+            "Lesson 4 · Conduit, boxes, and rough-in sequence awareness",
+            "Lesson 5 · Using FCA files and support command for field escalation",
+            "Lesson 6 · Auricrux-guided daily readiness and close-of-day reporting"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/support",
+      linkedLabel: "Open Field Support Continuity"
     },
     {
-      key: "precon-estimating",
-      title: "Estimating and Preconstruction Readiness",
-      credential: "Preconstruction Readiness Certificate",
-      audience: "Estimators, project executives, and preconstruction leads",
+      key: "osha30-certification-prep",
+      title: "OSHA 30 Construction Certification Prep Bootcamp",
+      credential: "FCA Certification Track · OSHA 30 Prep",
+      audience: "Field leaders, supervisors, coordinators, and compliance-focused team members",
       duration: "6 modules",
-      format: "Estimator lab + vendor scenario drills + pricing workshops",
-      outcome: "Strengthen scope control, vendor bid handling, pricing accuracy, and award recommendations.",
-      classrooms: ["Estimating, Bidding, and Margin Control"],
-      stack: ["Bid workspace", "Project flow", "Commercial packaging", "Approval routing"],
+      format: "Certification prep cohort + safety scenario drills + portal lab",
+      goal: "Prepare learners for OSHA 30 certification while keeping safety action routing tied to real FCA support and project surfaces.",
+      outcomes: [
+        "Explain OSHA hazard categories in jobsite language",
+        "Escalate safety issues through Support Command without losing customer or project context",
+        "Connect safety documentation to project files and audit continuity",
+        "Use Auricrux to recommend next corrective action after a hazard event"
+      ],
+      courses: [
+        {
+          code: "CERT-OSHA30-201",
+          title: "OSHA 30 Construction Certification Prep Bootcamp",
+          lessons: 6,
+          lab: "Safety escalation lab using /portal/support, /portal/files, and /portal/audit",
+          lessonTitles: [
+            "Lesson 1 · OSHA framework and worker rights",
+            "Lesson 2 · Fall protection and ladder safety",
+            "Lesson 3 · Electrical hazard awareness and lockout basics",
+            "Lesson 4 · Excavation, struck-by, and caught-in hazards",
+            "Lesson 5 · Incident documentation inside FCA Contractor Command",
+            "Lesson 6 · Auricrux-guided corrective action and follow-through"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/audit",
+      linkedLabel: "Open Audit and Safety Continuity"
     },
     {
-      key: "project-controls",
-      title: "Project Controls and Document Governance",
-      credential: "Project Controls Certificate",
-      audience: "Project managers, coordinators, and document-control roles",
-      duration: "5-part technical lab",
-      format: "Interactive drawing review + RFI/submittal simulation",
-      outcome: "Make RFIs, submittals, revisions, and closeout packages dependable and audit-ready.",
-      classrooms: ["Document Control, RFIs, and Submittals"],
-      stack: ["Files workspace", "Messages", "Closeout continuity", "Audit-ready records"],
+      key: "aas-construction-operations-sem1",
+      title: "A.A.S. Construction Operations: Semester 1 Studio",
+      credential: "FCA Degree Track · A.A.S. Construction Operations",
+      audience: "Degree-seeking learners, coordinators, assistant PMs, and operations staff",
+      duration: "16 weeks",
+      format: "Semester studio + SaaS lab + cohort review",
+      goal: "Introduce degree-track learners to integrated construction operations using real FCA command surfaces rather than detached theory.",
+      outcomes: [
+        "Map lifecycle stages from intake to billing and closeout",
+        "Use project, bid, estimate, and billing surfaces as one operating spine",
+        "Document operational decisions with audit and file continuity",
+        "Interpret customer-facing workflow posture through Auricrux guidance"
+      ],
+      courses: [
+        {
+          code: "DEG-AAS-110",
+          title: "A.A.S. Construction Operations: Semester 1 Studio",
+          lessons: 6,
+          lab: "Cross-surface lab using /portal/platform, /portal/bids, /portal/projects, and /portal/billing",
+          lessonTitles: [
+            "Lesson 1 · Construction lifecycle and FCA system spine",
+            "Lesson 2 · Opportunity qualification and bid posture",
+            "Lesson 3 · Project setup, stage control, and execution handoff",
+            "Lesson 4 · File governance and auditability",
+            "Lesson 5 · Billing readiness and revenue continuity",
+            "Lesson 6 · Auricrux explain, recommend, execute across operations"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/platform",
+      linkedLabel: "Open Platform Dashboard"
     },
     {
-      key: "field-readiness",
-      title: "Field Safety and Mobilization Readiness",
-      credential: "Field Readiness Badge",
-      audience: "Superintendents, foremen, crew leads, and field onboarding cohorts",
-      duration: "3 weeks",
-      format: "Safety drills + kickoff planning + supervisor coaching",
-      outcome: "Prepare crews for mobilization, job hazard analysis, toolbox talks, and escalation discipline.",
-      classrooms: ["Field Safety, Mobilization, and Readiness"],
-      stack: ["Support continuity", "Safety refreshers", "Kickoff readiness", "Crew communications"],
-    }
-  ],
-  credentials: [
-    {
-      title: "FCA Core Operations Certificate",
-      renewal: "Annual operational refresh",
-      evidence: "Workspace lab completion, customer-lifecycle walkthrough, and project handoff review",
+      key: "virginia-dpor-residential-license-prep",
+      title: "Virginia DPOR Residential Contractor License Prep",
+      credential: "FCA Licensure Track · Virginia DPOR Residential Contractor Prep",
+      audience: "Virginia residential builders, owners, qualifying individuals, and license candidates",
+      duration: "8 weeks",
+      format: "Licensure prep + law/compliance review + applied workflow lab",
+      goal: "Prepare candidates for Virginia DPOR residential contractor licensure while teaching how compliance and documentation live inside FCA workflows.",
+      outcomes: [
+        "Understand Virginia licensing structure, classification, and responsibility",
+        "Identify documentation required for compliant residential operations",
+        "Tie permit, file, and communication behavior to licensure-safe execution",
+        "Use Auricrux to detect missing compliance actions before customer delivery suffers"
+      ],
+      courses: [
+        {
+          code: "LIC-DPOR-301",
+          title: "Virginia DPOR Residential Contractor License Prep",
+          lessons: 6,
+          lab: "Compliance lab using /portal/files, /portal/messages, and /portal/projects",
+          lessonTitles: [
+            "Lesson 1 · Virginia DPOR classifications and roles",
+            "Lesson 2 · Contracting, documentation, and consumer protection basics",
+            "Lesson 3 · Permit and jurisdiction workflow discipline",
+            "Lesson 4 · Communication records and customer notice continuity",
+            "Lesson 5 · File-control and project evidence for compliant delivery",
+            "Lesson 6 · Auricrux-guided compliance readiness review"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/files",
+      linkedLabel: "Open File Governance"
     },
     {
-      title: "Preconstruction Readiness Certificate",
-      renewal: "Semi-annual estimating calibration",
-      evidence: "Scope package review, vendor leveling drill, and margin-control workshop",
-    },
-    {
-      title: "Project Controls Certificate",
-      renewal: "Quarterly document-control checkup",
-      evidence: "RFI/submittal simulation, drawing-log review, and closeout archive audit",
-    },
-    {
-      title: "Field Readiness Badge",
-      renewal: "Mobilization-ready safety verification every 6 months",
-      evidence: "Toolbox talk leadership, JHA review, and kickoff readiness verification",
+      key: "fca-contractor-command-user-guide",
+      title: "FCA Contractor Command User Guide: From Login to Closeout",
+      credential: "FCA How-To Track · Contractor Command Operator",
+      audience: "New FCA users, owners, coordinators, estimators, PMs, and customer-success staff",
+      duration: "5 modules",
+      format: "How-to course + route walkthrough + live portal practice",
+      goal: "Teach users exactly how to move through FCA Contractor Command from login to real work execution.",
+      outcomes: [
+        "Sign in and understand what opens after login",
+        "Navigate the command center, bids, projects, files, support, and billing",
+        "Use real portal tools rather than reading static descriptions",
+        "Understand how Academy and Auricrux remain attached to live work"
+      ],
+      courses: [
+        {
+          code: "GUIDE-FCA-001",
+          title: "FCA Contractor Command User Guide: From Login to Closeout",
+          lessons: 6,
+          lab: "Live route walkthrough using /login, /portal, /portal/bids, /portal/projects, /portal/files, /portal/billing, and /academy/catalog",
+          lessonTitles: [
+            "Lesson 1 · Login, session posture, and workspace entry",
+            "Lesson 2 · Using the command center and task continuity",
+            "Lesson 3 · Moving through qualification and estimate launch",
+            "Lesson 4 · Managing project, file, and audit continuity",
+            "Lesson 5 · Creating support requests and staging invoices",
+            "Lesson 6 · Using Academy and Auricrux to stay execution-ready"
+          ]
+        }
+      ],
+      linkedSurface: "/portal",
+      linkedLabel: "Open Command Center"
     }
   ],
   pathways: [
     {
-      title: "Sales-to-operations onboarding pathway",
-      description: "Moves new team members from intake visibility into estimating discipline, customer coordination, and delivery-readiness habits.",
+      title: "Apprenticeship pathway",
+      description: "Field-readiness training tied to support, safety, files, and project continuity.",
+      route: "/portal/support",
+      label: "Open Field Support Continuity",
+    },
+    {
+      title: "Operations degree pathway",
+      description: "Platform, bid, project, and billing coordination taught through one operating spine.",
       route: "/portal/platform",
       label: "Open Platform Dashboard",
     },
     {
-      title: "Preconstruction-to-project pathway",
-      description: "Links bid packaging, award posture, document control, and project kickoff discipline into a single curriculum progression.",
-      route: "/portal/projects",
-      label: "Open Project Flow",
-    },
-    {
-      title: "Field-readiness pathway",
-      description: "Ties mobilization, safety reinforcement, and field communication standards to live support and continuity surfaces.",
-      route: "/portal/support",
-      label: "Open Support Continuity",
+      title: "User-guide pathway",
+      description: "A route-by-route FCA operator guide for real users moving from login to closeout.",
+      route: "/academy/catalog",
+      label: "Open Academy Catalog",
     }
   ]
 };

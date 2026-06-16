@@ -34,36 +34,36 @@ const platformContinuityItems = [
     detail: "Operational visibility, communication, and training readiness remain part of one platform story.",
   },
   {
-    label: "Founder review",
-    value: "Conversion path stays visible",
-    detail: "A platform reader can move straight into rollout review, workspace entry, commercial packaging, or product validation without route drift.",
+    label: "Slice truth",
+    value: "Real SaaS and LMS routes are reachable",
+    detail: "Bids, estimates, proposals, projects, files, billing, support, Auricrux, and academy all exist as reachable route groups.",
   },
 ];
 
 const platformConstructionProof = [
   {
-    title: "Estimating to operations handoff",
-    detail: "Use the bid and project flow to demonstrate how opportunities, scope, approvals, and awarded work stay connected.",
-    href: "/bid-entry",
-    label: "Open Bid Entry",
+    title: "Opportunity qualification",
+    detail: "Use the bid route to show a real qualification board, estimate routing, and award-to-project handoff.",
+    href: "/portal/bids",
+    label: "Open Qualification Board",
   },
   {
-    title: "Project document control",
-    detail: "Show files, submittals, RFIs, and customer-visible coordination inside the same operating shell.",
-    href: "/portal/files",
-    label: "Open Files",
+    title: "Estimate and proposal progression",
+    detail: "Use estimate and proposal routes to show pricing progression instead of abstract product claims.",
+    href: "/portal/estimates",
+    label: "Open Estimate Workflow",
   },
   {
-    title: "Customer communication continuity",
-    detail: "Open the portal workspace and messages to prove the product supports real owner and customer follow-through.",
-    href: "/portal/messages",
-    label: "Open Messages",
+    title: "Project and document control",
+    detail: "Show projects, files, audit, and support as one operating spine.",
+    href: "/portal/projects",
+    label: "Open Project Command",
   },
   {
-    title: "Field readiness and training",
-    detail: "Keep workforce onboarding and academy continuity attached to the same delivery story.",
-    href: "/academy",
-    label: "Open Academy",
+    title: "Academy depth",
+    detail: "Open the Academy catalog to show track-complete classroom offerings tied to live portal routes.",
+    href: "/academy/catalog",
+    label: "Open Academy Catalog",
   },
 ];
 
@@ -73,7 +73,7 @@ export default function Platform() {
       <ShellHeader
         eyebrow="FCA Platform"
         title="One contractor lifecycle operating system"
-        subtitle="FCA is designed as a unified operating surface for bids, portal visibility, project follow-through, workforce enablement, communications routing, and guided execution."
+        subtitle="FCA now exposes real route-level product slices for qualification, estimates, proposals, projects, files, billing, support, Academy, and Auricrux instead of stopping at shell language."
         primaryHref={publicRouteCtas.platform.primaryHref}
         primaryLabel={publicRouteCtas.platform.primaryLabel}
         secondaryHref={publicRouteCtas.platform.secondaryHref}
@@ -87,22 +87,22 @@ export default function Platform() {
           <div style={{ color: "#2563eb", fontWeight: 700 }}>Platform overview</div>
           <FcaBrandMark compact />
         </div>
-        <h2 style={{ marginTop: 0 }}>Built to feel like one connected system</h2>
+        <h2 style={{ marginTop: 0 }}>Built to feel like one connected system because the slices are actually reachable</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 12 }}>
-          FCA helps contractor teams move from opportunity to delivery with better visibility into bids, approvals, project files, customer updates, billing steps, workforce readiness, and communications routing.
+          FCA helps contractor teams move from opportunity to delivery with real reachable workflows for bids, estimates, proposals, projects, files, billing, support, Academy, and Auricrux guidance.
         </p>
         <PublicCtaRow
           actions={[
             { href: "/login?seeded=1", label: "Open Live Test Login", variant: "primary" },
-            { href: "/login?seeded=1&autologin=1&next=/portal/platform", label: "Instant Test Workspace", variant: "secondary" },
+            { href: "/academy/catalog", label: "Open Academy Catalog", variant: "secondary" },
           ]}
         />
       </div>
 
       <FounderJourneyStrip
         currentJourney="platform"
-        title="Platform framing should lead customers into the product experience"
-        detail="This route shows the same connected customer journey used across the public site so platform framing leads naturally into workspace, portal, academy, communications, and rollout planning."
+        title="Platform framing should lead customers into the real product experience"
+        detail="This route now points into the already-existing product slices so site language matches repo truth."
         ctaHref={founderJourneyCtaSets.publicPlatform.href}
         ctaLabel={founderJourneyCtaSets.publicPlatform.label}
       />
@@ -119,21 +119,21 @@ export default function Platform() {
           items={platformContinuityItems}
           primaryHref="/login?seeded=1"
           primaryLabel="Open Live Test Login"
-          secondaryHref="/login?seeded=1&autologin=1&next=/portal/platform"
-          secondaryLabel="Instant Test Workspace"
+          secondaryHref="/portal/platform"
+          secondaryLabel="Open Platform Dashboard"
         />
       </div>
 
       <ProductProofSection
         eyebrow="Construction product proof"
         title="Platform language now reflects actual construction operations"
-        detail="The product path now speaks more directly to bid handoff, document control, customer coordination, communications routing, and field readiness instead of generic SaaS movement alone."
+        detail="The product path now speaks directly to qualification, estimate progression, project control, file governance, billing continuity, and Academy depth."
         highlights={platformConstructionProof}
       />
 
       <div style={{ marginTop: 24, ...cardStyle }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real SaaS pathways</div>
-        <h2 style={{ marginTop: 0 }}>FCA now presents product pathways around real contractor work instead of abstract feature buckets</h2>
+        <h2 style={{ marginTop: 0 }}>FCA now presents route groups around real contractor work</h2>
         <div style={{ ...responsiveGrid(240), marginTop: 16 }}>
           {saasOperationalPathways.map((pathway) => (
             <div key={pathway.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
@@ -170,7 +170,7 @@ export default function Platform() {
           items={[
             {
               title: "Track work in one place",
-              detail: "Keep opportunities, projects, files, RFIs, submittals, customer communication, and revenue follow-through connected instead of scattered across separate tools.",
+              detail: "Keep opportunities, estimates, proposals, projects, files, communications, support, and billing connected instead of scattered across separate tools.",
             },
             {
               title: "Stay ahead of blockers",
@@ -202,7 +202,7 @@ export default function Platform() {
                 {item.prefix} <a href={item.href}>{item.label}</a>{item.suffix ? ` ${item.suffix}` : null}
               </li>
             ))}
-            <li>Follow Auricrux guidance to keep next actions visible across the system.</li>
+            <li>Continue into the Academy catalog or Auricrux guidance without losing tenant and workflow context.</li>
           </ol>
         </div>
         <WorkspaceSnapshotCard
@@ -233,6 +233,7 @@ export default function Platform() {
               {item.label}
             </a>
           ))}
+          <a href="/academy/catalog" style={{ textDecoration: "none", color: "#111827", fontWeight: 700 }}>Academy Catalog</a>
         </div>
       </div>
 
