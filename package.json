@@ -93,6 +93,7 @@
     "generate:public-conversion-surface-route-truth-report": "node scripts/generate-public-conversion-surface-route-truth-report.mjs",
     "validate:packet-functional-minimums": "node scripts/validate-packet-functional-minimums.mjs",
     "generate:packet-functional-minimums-report": "node scripts/generate-packet-functional-minimums-report.mjs",
+    "generate:alignment-observation-manifest": "node scripts/generate-alignment-observation-manifest.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",

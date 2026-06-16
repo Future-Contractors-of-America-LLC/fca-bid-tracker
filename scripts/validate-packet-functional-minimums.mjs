@@ -10,8 +10,8 @@ const requiredTracks = [
 ];
 
 const requiredToolExports = [
-  "stageCloseoutPrepTool",
-  "queueCustomerApprovalReminderTool",
+  "queueChangeOrderPricingReviewTool",
+  "stageWarrantyServiceCaseTool",
 ];
 
 const results = [];
@@ -36,7 +36,7 @@ for (const trackKey of requiredTracks) {
     Array.isArray(course.labs) && course.labs.length >= 1 &&
     course.performanceProfile?.role &&
     Array.isArray(course.performanceProfile?.measures) && course.performanceProfile.measures.length >= 1 &&
-    Array.isArray(course.completionRequirements) && course.completionRequirements.length >= 3
+    Array.isArray(course.completionRequirements) && course.completionRequirements.length >= 4
   );
   if (!ok) failed = true;
   results.push({ type: "course", name: trackKey, ok });

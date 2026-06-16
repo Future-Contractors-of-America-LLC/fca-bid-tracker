@@ -52,6 +52,10 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:packet-functional-minimums-report
 
+      - name: Generate alignment observation manifest
+        if: ${{ always() }}
+        run: npm run generate:alignment-observation-manifest
+
       - name: Upload alignment governance bundle
         if: ${{ always() }}
         uses: actions/upload-artifact@v6
@@ -64,4 +68,6 @@ jobs:
             generated/public-conversion-surface-route-truth-report.md
             generated/packet-functional-minimums-report.json
             generated/packet-functional-minimums-report.md
+            generated/alignment-observation-manifest.json
+            generated/alignment-observation-manifest.md
           if-no-files-found: warn
