@@ -14,6 +14,7 @@ const cardStyle = {
 
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
 const SUPPORT_COMMAND_KEY = "fca_customer_support_command_v3";
+const WARRANTY_CASE_QUEUE_KEY = "fca_customer_warranty_case_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -39,6 +40,7 @@ export default function PortalSupport() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
   const [supportState, setSupportState] = useState(() => readLocalJson(SUPPORT_COMMAND_KEY, { subject: "", priority: "normal", detail: "", tickets: [] }));
+  const [warrantyState, setWarrantyState] = useState(() => readLocalJson(WARRANTY_CASE_QUEUE_KEY, { cases: [] }));
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
 
   useEffect(() => {
@@ -48,6 +50,10 @@ export default function PortalSupport() {
   useEffect(() => {
     writeLocalJson(SUPPORT_COMMAND_KEY, supportState);
   }, [supportState]);
+
+  useEffect(() => {
+    writeLocalJson(WARRANTY_CASE_QUEUE_KEY, warrantyState);
+  }, [warrantyState]);
 
   function updateField(key, value) {
     setSupportState((current) => ({ ...current, [key]: value }));
@@ -79,10 +85,18 @@ export default function PortalSupport() {
     refreshSyncStamp("Support ticket resolved");
   }
 
+  function resolveWarrantyCase(caseId) {
+    setWarrantyState((current) => ({
+      ...current,
+      cases: current.cases.map((item) => item.id === caseId ? { ...item, status: "Resolved", nextAction: "Customer closeout follow-up" } : item),
+    }));
+    refreshSyncStamp("Warranty case resolved");
+  }
+
   return (
     <PortalShell
       title={`${companyName} Support and Service Request Command`}
-      subtitle="A branded support workspace where customers can open real service requests, keep recovery tied to active work, and let Auricrux guide the next support move."
+      subtitle="A branded support workspace where customers can open real service requests, keep recovery tied to active work, manage warranty cases, and let Auricrux guide the next support move."
       activeHref="/portal/support"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.support}
@@ -93,7 +107,7 @@ export default function PortalSupport() {
         <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded support experience</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
-          {companyName} can now open service requests, preserve support continuity, and keep customer-facing recovery visible inside the branded workspace.
+          {companyName} can now open service requests, manage warranty response continuity, and keep customer-facing recovery visible inside the branded workspace.
         </p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>
@@ -146,11 +160,30 @@ export default function PortalSupport() {
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Functional product: Warranty service case queue</h2>
+        <p style={{ color: "#475569", lineHeight: 1.7 }}>Customers can immediately use this queue to preserve warranty and post-closeout service continuity inside the same support command.</p>
+        <div style={{ display: "grid", gap: 12 }}>
+          {(warrantyState.cases || []).map((item) => (
+            <div key={item.id} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14, background: item.status === "Resolved" ? "#f0fdf4" : "#eff6ff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <strong>{item.projectId}</strong>
+                <span style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700 }}>{item.status}</span>
+              </div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginTop: 8 }}>{item.issue}</div>
+              <div style={{ color: "#0f172a", marginTop: 8 }}><strong>Next action:</strong> {item.nextAction}</div>
+              {item.status !== "Resolved" ? <button type="button" onClick={() => resolveWarrantyCase(item.id)} style={{ marginTop: 10, border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>Resolve Warranty Case</button> : null}
+            </div>
+          ))}
+          {!warrantyState.cases?.length ? <div style={{ color: "#64748b" }}>No warranty service cases staged yet.</div> : null}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Support Command</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains the customer issue, blocker, and recovery posture</li>
-          <li>Recommends the next support, file, project, or communication action</li>
-          <li>Executes support request creation and resolution signaling</li>
+          <li>Explains customer issue, blocker, warranty posture, and recovery state</li>
+          <li>Recommends the next support, file, project, warranty, or communication action</li>
+          <li>Executes support request creation, warranty case staging, and resolution signaling</li>
         </ul>
       </div>
     </PortalShell>

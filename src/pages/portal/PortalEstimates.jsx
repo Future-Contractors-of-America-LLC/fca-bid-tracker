@@ -28,6 +28,7 @@ const buttonStyle = (primary = false) => ({
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
 const ESTIMATE_EDITOR_STORAGE_KEY = "fca_customer_estimate_editor_v1";
 const ESTIMATE_REVISION_QUEUE_KEY = "fca_customer_estimate_revision_queue_v1";
+const CHANGE_ORDER_REVIEW_QUEUE_KEY = "fca_customer_change_order_review_queue_v1";
 
 function readBrandSkin() {
   if (typeof window === "undefined") return { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" };
@@ -74,6 +75,24 @@ function writeRevisionQueue(queue) {
   }
 }
 
+function readChangeOrderQueue() {
+  if (typeof window === "undefined") return { items: [] };
+  try {
+    return JSON.parse(window.localStorage.getItem(CHANGE_ORDER_REVIEW_QUEUE_KEY) || "{\"items\":[]}");
+  } catch {
+    return { items: [] };
+  }
+}
+
+function writeChangeOrderQueue(queue) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(CHANGE_ORDER_REVIEW_QUEUE_KEY, JSON.stringify(queue));
+  } catch {
+    // best effort
+  }
+}
+
 export default function PortalEstimates() {
   const { state } = useWorkspaceState();
   const { estimates, meta, advanceEstimate, generateProposal } = useEstimateWorkspace();
@@ -81,8 +100,9 @@ export default function PortalEstimates() {
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
   const [drafts, setDrafts] = useState(() => readEstimateDrafts());
   const [revisionQueue, setRevisionQueue] = useState(() => readRevisionQueue());
+  const [changeOrderQueue, setChangeOrderQueue] = useState(() => readChangeOrderQueue());
 
-  const brandedNarrative = useMemo(() => `${companyName} estimate studio turns qualified opportunities into customer-ready pricing packages with editable line items, scope notes, and Auricrux-guided next actions.`, [companyName]);
+  const brandedNarrative = useMemo(() => `${companyName} estimate studio turns qualified opportunities into customer-ready pricing packages with editable line items, scope notes, change-order pricing review, and Auricrux-guided next actions.`, [companyName]);
 
   function updateDraft(estimateId, key, value) {
     const next = {
@@ -110,10 +130,19 @@ export default function PortalEstimates() {
     writeRevisionQueue(next);
   }
 
+  function completeChangeOrderReview(itemId) {
+    const next = {
+      ...changeOrderQueue,
+      items: (changeOrderQueue.items || []).map((item) => item.id === itemId ? { ...item, status: "Completed", nextAction: "Send priced change order" } : item),
+    };
+    setChangeOrderQueue(next);
+    writeChangeOrderQueue(next);
+  }
+
   return (
     <PortalShell
       title={`${companyName} Estimate Studio`}
-      subtitle="A branded pricing workspace for real estimate entry, scope packaging, exclusions, assumptions, and proposal launch."
+      subtitle="A branded pricing workspace for real estimate entry, scope packaging, exclusions, assumptions, change-order pricing, and proposal launch."
       activeHref="/portal/estimates"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}
@@ -121,7 +150,7 @@ export default function PortalEstimates() {
       primaryLabel="Open Proposals"
     >
       <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary tenant={state.tenant} project={state.project} workspace={state.workspace} auricrux={state.auricrux} title="Estimate route extends the Contractor Command bid spine" detail="Estimate state now lives as its own pricing workspace so FCA can move from qualification into structured pricing and customer-ready packaging." />
+        <SystemStateSummary tenant={state.tenant} project={state.project} workspace={state.workspace} auricrux={state.auricrux} title="Estimate route extends the Contractor Command bid spine" detail="Estimate state now lives as its own pricing workspace so FCA can move from qualification into structured pricing, change-order review, and customer-ready packaging." />
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 16, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
@@ -136,8 +165,8 @@ export default function PortalEstimates() {
         </div>
       </div>
 
-      <CommercialContinuityFeed title="Estimate commercial continuity feed" detail="Estimate advancement, pricing review, and proposal generation events remain visible here so pricing does not disappear between bid qualification and customer packaging." />
-      <AutomationRecoveryFeed title="Estimate automation feed" detail="Recent estimate and proposal-generation actions remain visible across routes so pricing actions are durable rather than local-only UI gestures." />
+      <CommercialContinuityFeed title="Estimate commercial continuity feed" detail="Estimate advancement, pricing review, change-order review, and proposal generation events remain visible here so pricing does not disappear between bid qualification and customer packaging." />
+      <AutomationRecoveryFeed title="Estimate automation feed" detail="Recent estimate, change-order, and proposal-generation actions remain visible across routes so pricing actions are durable rather than local-only UI gestures." />
 
       <div style={{ ...cardStyle, marginTop: 24, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>Functional product: Estimate revision queue</h2>
@@ -155,6 +184,25 @@ export default function PortalEstimates() {
             </div>
           ))}
           {!revisionQueue.revisions?.length ? <div style={{ color: "#64748b" }}>No staged estimate revisions yet.</div> : null}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0 }}>Functional product: Change order pricing review queue</h2>
+        <p style={{ color: "#475569", lineHeight: 1.7 }}>Customers can immediately use this queue to hold change-order pricing work, preserve scope-change context, and track the next commercial move before sending the package.</p>
+        <div style={{ display: "grid", gap: 12 }}>
+          {(changeOrderQueue.items || []).map((item) => (
+            <div key={item.id} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: item.status === "Completed" ? "#f0fdf4" : "#eff6ff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <strong>{item.changeOrderTitle}</strong>
+                <span style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700 }}>{item.status}</span>
+              </div>
+              <div style={{ color: "#334155", lineHeight: 1.7, marginTop: 8 }}>{item.detail}</div>
+              <div style={{ color: "#475569", marginTop: 6 }}><strong>Next action:</strong> {item.nextAction}</div>
+              {item.status !== "Completed" ? <button type="button" style={{ ...buttonStyle(), marginTop: 10 }} onClick={() => completeChangeOrderReview(item.id)}>Complete Review</button> : null}
+            </div>
+          ))}
+          {!changeOrderQueue.items?.length ? <div style={{ color: "#64748b" }}>No queued change-order pricing reviews yet.</div> : null}
         </div>
       </div>
 
@@ -221,9 +269,9 @@ export default function PortalEstimates() {
       <div style={{ ...cardStyle, marginTop: 24 }}>
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Estimate Studio</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains estimate status, assumptions, exclusions, and revision queue posture</li>
+          <li>Explains estimate status, assumptions, exclusions, revision queue posture, and change-order pricing review state</li>
           <li>Recommends next pricing and proposal actions</li>
-          <li>Executes estimate advancement, proposal generation, and revision closeout signaling</li>
+          <li>Executes estimate advancement, proposal generation, revision closeout, and change-order review completion signaling</li>
         </ul>
       </div>
     </PortalShell>

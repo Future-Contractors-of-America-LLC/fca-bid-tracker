@@ -9,8 +9,8 @@ Last Updated: 2026-06-16
 
 ## Controlling Sequence
 
-- Active packet: `062I`
-- Next packet: `062J`
+- Active packet: `062J`
+- Next packet: `062K`
 - Deployment target: `061Z` remains the unresolved hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
@@ -22,25 +22,26 @@ Last Updated: 2026-06-16
 
 ## Current Executive State
 
-The `060` range remains truthfully closed as a failed hard deployment target. `061A` through `061Y` built the deployment-proof and CI-observation control surfaces required for a truthful `061Z` closeout attempt. `061Z` remains unresolved because deployed managed-auth, Academy runtime parity, commercial runtime proof, and first fully repo-visible CI-backed live proof closure remain unproven in-session. After that unresolved closeout state, `062A` corrected site-level repo truth by locking that multiple real SaaS and LMS slices already exist in the repository and that the dominant remaining gap is public/site-level alignment rather than missing vertical slices. `062B` extended that correction by aligning public entry and Academy depth, adding real portal command tools and five complete Academy tracks. `062C` hardened the public package layer by wiring public pricing/package claims to exact reachable route groups, correcting the Academy catalog report generator to current repo schema truth, and adding a validator that checks package route groups, Academy track presence, and command-tool exports against repo truth. `062D` extended that same shared package-route-group truth source into home, login, and contact. `062E` completed the final public conversion sweep by extending the same route-backed package truth into platform and Auricrux and by adding a validator/report pair that checks all six primary public conversion surfaces for shared route-truth coverage. `062F` advanced alignment proof and functional depth together by wiring public-conversion validation into build validation, adding packet functional minimum validation, shipping additional customer-usable SaaS tools and queue surfaces, and upgrading all five required LMS lane courses to explicit complete-course structures. `062G` added a dedicated alignment-proof governance workflow, shipped more customer-usable command-center tools, and extended Auricrux-embedded command-center execution breadth. `062H` served as an observation-gate packet by adding more customer-usable project-command tools, strengthening LMS course completion structures, and preserving the unresolved 061Z proof boundary while the stack continued ahead of main. `062I` now strengthens observed-proof preparation by adding an alignment observation manifest, adding two more customer-usable SaaS tools for change-order pricing review and warranty case staging, surfacing completion requirements directly in the Academy catalog, and continuing to preserve the unresolved 061Z deployment truth boundary.
+The `060` range remains truthfully closed as a failed hard deployment target. `061A` through `061Y` built the deployment-proof and CI-observation control surfaces required for a truthful `061Z` closeout attempt. `061Z` remains unresolved because deployed managed-auth, Academy runtime parity, commercial runtime proof, and first fully repo-visible CI-backed live proof closure remain unproven in-session. After that unresolved closeout state, `062A` corrected site-level repo truth by locking that multiple real SaaS and LMS slices already exist in the repository and that the dominant remaining gap is public/site-level alignment rather than missing vertical slices. `062B` extended that correction by aligning public entry and Academy depth, adding real portal command tools and five complete Academy tracks. `062C` hardened the public package layer by wiring public pricing/package claims to exact reachable route groups, correcting the Academy catalog report generator to current repo schema truth, and adding a validator that checks package route groups, Academy track presence, and command-tool exports against repo truth. `062D` extended that same shared package-route-group truth source into home, login, and contact. `062E` completed the final public conversion sweep by extending the same route-backed package truth into platform and Auricrux and by adding a validator/report pair that checks all six primary public conversion surfaces for shared route-truth coverage. `062F` advanced alignment proof and functional depth together by wiring public-conversion validation into build validation, adding packet functional minimum validation, shipping additional customer-usable SaaS tools and queue surfaces, and upgrading all five required LMS lane courses to explicit complete-course structures. `062G` added a dedicated alignment-proof governance workflow, shipped more customer-usable command-center tools, and extended Auricrux-embedded command-center execution breadth. `062H` served as an observation-gate packet by adding more customer-usable project-command tools, strengthening LMS course completion structures, and preserving the unresolved 061Z proof boundary while the stack continued ahead of main. `062I` strengthened observed-proof preparation by adding an alignment observation manifest, adding more customer-usable SaaS tools for change-order pricing review and warranty case staging, surfacing completion requirements directly in the Academy catalog, and continuing to preserve the unresolved 061Z deployment truth boundary. `062J` now deepens service-tail usability by making change-order pricing and warranty queues visibly actionable in their native vertical slices, while preserving strict truth boundaries around deployment observation and 061Z closure.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `062A` through `062I` are repo-visible site-alignment and functional-depth packets.
+- `062A` through `062J` are repo-visible site-alignment and functional-depth packets.
 - real SaaS and LMS vertical slices already exist in repo truth, including portal bids, estimates, projects, files, billing, operations, audit, messages, support, admin, Auricrux, Academy, and Academy catalog routes.
 - command-center tools now include permit escalation, mobilization invoice staging, estimate revision staging, proposal follow-up staging, owner approval file registration staging, customer schedule update staging, closeout prep staging, customer approval-reminder staging, change-order pricing review staging, and warranty service case staging.
-- Estimate Studio has a repo-visible customer-usable estimate revision queue.
+- Estimate Studio has repo-visible customer-usable estimate revision and change-order pricing queues.
 - Proposal Workspace has a repo-visible customer-usable proposal follow-up queue.
+- Support Command has a repo-visible customer-usable warranty service queue.
 - five complete Academy lanes exist in repo truth: apprenticeship, certification, degree, licensure, and FCA user-guide how-to.
 - each required lane has explicit lessons, assignments, quizzes, tests, labs, performance-profile structures, and completion requirements.
 - public package claims have a single route-group source at `src/publicPackageRouteGroups.js`.
 - pricing, home, login, contact, platform, and Auricrux consume route-group truth directly.
 - repo validation/report surfaces exist for package-route groups, public conversion-surface route-truth coverage, packet functional minimums, and alignment observation manifest generation.
 - build validation includes public package truth, public conversion truth, and packet functional minimum checks.
-- dedicated workflow `.github/workflows/alignment-proof-governance.yml` exists to run those same governance checks in a focused lane and now also emits an alignment observation manifest.
+- dedicated workflow `.github/workflows/alignment-proof-governance.yml` exists to run those same governance checks in a focused lane and emits an alignment observation manifest.
 
 ### Not yet deployment-proven
 - first repo-visible CI-backed live deployment proof commit on `main`
@@ -84,19 +85,19 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `062I`
-- Next packet: `062J`
+- Current packet: `062J`
+- Next packet: `062K`
 - Target packet: `061Z` deployment closeout plus `062*` site-alignment hardening without overclaiming closure
 - Current blocker: 061Z deployment-closeout proof remains unresolved; proof and governance gates are stronger in repo truth but observed successful run truth is still not locked here; deployment proof still outranks further slice expansion
-- Last verified repo truth: shared package-route truth drives all six primary public conversion surfaces; build validation and dedicated governance workflow include route-truth and packet-minimum checks; alignment observation manifest generation now exists; ten customer-usable command-center tools now exist; all five LMS lane courses remain structurally complete and expose completion requirements in repo truth
+- Last verified repo truth: shared package-route truth drives all six primary public conversion surfaces; build validation and dedicated governance workflow include route-truth and packet-minimum checks; alignment observation manifest generation exists; ten customer-usable command-center tools now exist; estimate, proposal, and warranty service queues are visibly actionable in native vertical slices; all five LMS lane courses remain structurally complete and expose completion requirements in repo truth
 - Last verified deployment truth: deployed auth/runtime/Academy/commercial proof remains unproven in-session
-- Next concrete action: inspect real workflow outcomes after merge progression advances, then lock exact observed run truth and determine whether the strengthened observation prep reduces the unresolved 061Z blocker set
+- Next concrete action: inspect real workflow outcomes after merge progression advances, then lock exact observed run truth and determine whether the strengthened proof-lock preparation reduces the unresolved 061Z blocker set
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must not interpret 062A through 062I site-alignment or functional-depth work as proof that 061Z deployment closeout has landed.
+Auricrux must not interpret 062A through 062J site-alignment or functional-depth work as proof that 061Z deployment closeout has landed.
 
 Auricrux must not claim live managed-auth, live Academy runtime parity, or live commercial runtime proof until repo-visible or deployment-visible evidence directly supports it.
 
