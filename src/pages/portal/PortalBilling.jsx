@@ -14,6 +14,8 @@ const cardStyle = {
 
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
 const BILLING_COMMAND_KEY = "fca_customer_billing_command_v2";
+const PAY_APP_QUEUE_KEY = "fca_customer_pay_app_queue_v1";
+const RETENTION_RELEASE_QUEUE_KEY = "fca_customer_retention_release_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -39,6 +41,8 @@ export default function PortalBilling() {
   const { session } = useCustomerSession();
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
   const [billingState, setBillingState] = useState(() => readLocalJson(BILLING_COMMAND_KEY, { invoiceName: "", amount: "", note: "", invoices: [] }));
+  const [payAppState, setPayAppState] = useState(() => readLocalJson(PAY_APP_QUEUE_KEY, { items: [] }));
+  const [retentionState, setRetentionState] = useState(() => readLocalJson(RETENTION_RELEASE_QUEUE_KEY, { items: [] }));
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
 
   useEffect(() => {
@@ -48,6 +52,14 @@ export default function PortalBilling() {
   useEffect(() => {
     writeLocalJson(BILLING_COMMAND_KEY, billingState);
   }, [billingState]);
+
+  useEffect(() => {
+    writeLocalJson(PAY_APP_QUEUE_KEY, payAppState);
+  }, [payAppState]);
+
+  useEffect(() => {
+    writeLocalJson(RETENTION_RELEASE_QUEUE_KEY, retentionState);
+  }, [retentionState]);
 
   function updateField(key, value) {
     setBillingState((current) => ({ ...current, [key]: value }));
@@ -79,10 +91,26 @@ export default function PortalBilling() {
     refreshSyncStamp("Customer billing command invoice issued");
   }
 
+  function submitPayApp(itemId) {
+    setPayAppState((current) => ({
+      ...current,
+      items: current.items.map((item) => item.id === itemId ? { ...item, status: "Submitted", nextAction: "Await owner approval" } : item),
+    }));
+    refreshSyncStamp("Customer pay application submitted");
+  }
+
+  function releaseRetention(itemId) {
+    setRetentionState((current) => ({
+      ...current,
+      items: current.items.map((item) => item.id === itemId ? { ...item, status: "Released", nextAction: "Confirm final billing closeout" } : item),
+    }));
+    refreshSyncStamp("Retention release review completed");
+  }
+
   return (
     <PortalShell
       title={`${companyName} Billing and Revenue Command`}
-      subtitle="A branded billing workspace where customers can stage invoices, preserve revenue continuity, and keep Auricrux attached to commercial follow-through."
+      subtitle="A branded billing workspace where customers can stage invoices, manage pay applications, release retention, and keep Auricrux attached to commercial follow-through."
       activeHref="/portal/billing"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.billing}
@@ -93,7 +121,7 @@ export default function PortalBilling() {
         <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded billing experience</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
-          {companyName} can now stage invoices, issue revenue actions, and keep customer-ready billing continuity visible inside the branded workspace.
+          {companyName} can now stage invoices, manage pay applications, release retention, and keep customer-ready billing continuity visible inside the branded workspace.
         </p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>
@@ -142,11 +170,50 @@ export default function PortalBilling() {
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Functional product: Pay application queue</h2>
+        <p style={{ color: "#475569", lineHeight: 1.7 }}>Customers can immediately use this queue to manage pay application readiness and submission sequencing in the same billing command.</p>
+        <div style={{ display: "grid", gap: 12 }}>
+          {(payAppState.items || []).map((item) => (
+            <div key={item.id} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14, background: item.status === "Submitted" ? "#f0fdf4" : "#eff6ff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <strong>{item.period}</strong>
+                <span style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700 }}>{item.amount}</span>
+              </div>
+              <div style={{ color: "#0f172a", marginTop: 8 }}><strong>Status:</strong> {item.status}</div>
+              <div style={{ color: "#475569", marginTop: 6 }}><strong>Next action:</strong> {item.nextAction}</div>
+              {item.status !== "Submitted" ? <button type="button" onClick={() => submitPayApp(item.id)} style={{ marginTop: 10, border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>Submit Pay App</button> : null}
+            </div>
+          ))}
+          {!payAppState.items?.length ? <div style={{ color: "#64748b" }}>No staged pay applications yet.</div> : null}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Functional product: Retention release queue</h2>
+        <p style={{ color: "#475569", lineHeight: 1.7 }}>Customers can immediately use this queue to preserve retention-release review and final commercial closeout in the same billing command.</p>
+        <div style={{ display: "grid", gap: 12 }}>
+          {(retentionState.items || []).map((item) => (
+            <div key={item.id} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14, background: item.status === "Released" ? "#f0fdf4" : "#eff6ff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <strong>{item.projectId}</strong>
+                <span style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700 }}>{item.amount}</span>
+              </div>
+              <div style={{ color: "#475569", lineHeight: 1.7, marginTop: 8 }}>{item.condition}</div>
+              <div style={{ color: "#0f172a", marginTop: 8 }}><strong>Status:</strong> {item.status}</div>
+              <div style={{ color: "#475569", marginTop: 6 }}><strong>Next action:</strong> {item.nextAction}</div>
+              {item.status !== "Released" ? <button type="button" onClick={() => releaseRetention(item.id)} style={{ marginTop: 10, border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>Release Retention</button> : null}
+            </div>
+          ))}
+          {!retentionState.items?.length ? <div style={{ color: "#64748b" }}>No staged retention release reviews yet.</div> : null}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Billing Command</h2>
         <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains invoice posture, billing readiness, and revenue continuity</li>
+          <li>Explains invoice posture, pay-app readiness, retention-release state, and revenue continuity</li>
           <li>Recommends the next customer billing and follow-through action</li>
-          <li>Executes invoice staging and issuance signaling</li>
+          <li>Executes invoice staging, issuance, pay-app submission, and retention-release signaling</li>
         </ul>
       </div>
     </PortalShell>

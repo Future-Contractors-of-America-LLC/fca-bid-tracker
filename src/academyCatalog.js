@@ -49,7 +49,13 @@ export const academyCatalog = {
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
           "Submit all assignments",
-          "Complete both labs with approved evidence"
+          "Complete both labs with approved evidence",
+          "Meet field-readiness performance profile minimums"
+        ],
+        evaluationRubric: [
+          "Safety discipline scored at competent or above",
+          "Drawing literacy scored at competent or above",
+          "Evidence attachment quality scored at competent or above"
         ]
       }],
       linkedSurface: "/portal/support",
@@ -104,7 +110,13 @@ export const academyCatalog = {
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
           "Submit all assignments",
-          "Complete both labs with approved safety documentation"
+          "Complete both labs with approved safety documentation",
+          "Meet safety-coordination performance profile minimums"
+        ],
+        evaluationRubric: [
+          "Hazard recognition scored at competent or above",
+          "Documentation quality scored at competent or above",
+          "Corrective-action planning scored at competent or above"
         ]
       }],
       linkedSurface: "/portal/audit",
@@ -159,7 +171,13 @@ export const academyCatalog = {
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
           "Submit all assignments",
-          "Complete both labs with approved operational artifacts"
+          "Complete both labs with approved operational artifacts",
+          "Meet operations performance profile minimums"
+        ],
+        evaluationRubric: [
+          "Lifecycle fluency scored at competent or above",
+          "Handoff quality scored at competent or above",
+          "Commercial awareness scored at competent or above"
         ]
       }],
       linkedSurface: "/portal/platform",
@@ -214,7 +232,13 @@ export const academyCatalog = {
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
           "Submit all assignments",
-          "Complete both labs with approved compliance artifacts"
+          "Complete both labs with approved compliance artifacts",
+          "Meet licensure-readiness performance profile minimums"
+        ],
+        evaluationRubric: [
+          "Classification accuracy scored at competent or above",
+          "Documentation completeness scored at competent or above",
+          "Permit discipline scored at competent or above"
         ]
       }],
       linkedSurface: "/portal/files",
@@ -269,7 +293,13 @@ export const academyCatalog = {
           "Complete all 6 lessons",
           "Pass quizzes and test at 80% or higher",
           "Submit all assignments",
-          "Complete both labs with approved operator artifacts"
+          "Complete both labs with approved operator artifacts",
+          "Meet operator performance profile minimums"
+        ],
+        evaluationRubric: [
+          "Route fluency scored at competent or above",
+          "Tool execution scored at competent or above",
+          "Auricrux utilization scored at competent or above"
         ]
       }],
       linkedSurface: "/portal",

@@ -9,6 +9,8 @@ const MESSAGE_COMMAND_KEY = "fca_customer_message_command_v1";
 const PROJECT_COMMAND_CENTER_QUEUE_KEY = "fca_customer_project_command_center_queue_v1";
 const CHANGE_ORDER_REVIEW_QUEUE_KEY = "fca_customer_change_order_review_queue_v1";
 const WARRANTY_CASE_QUEUE_KEY = "fca_customer_warranty_case_queue_v1";
+const PAY_APP_QUEUE_KEY = "fca_customer_pay_app_queue_v1";
+const RETENTION_RELEASE_QUEUE_KEY = "fca_customer_retention_release_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -245,4 +247,46 @@ export function stageWarrantyServiceCaseTool({ companyName = "Customer Workspace
 
   navigateTo("/portal/support");
   return warrantyCase;
+}
+
+export function stagePayApplicationTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", amount = "$24,500", period = "Pay App 01" } = {}) {
+  const current = readLocalJson(PAY_APP_QUEUE_KEY, { items: [] });
+  const payApp = {
+    id: `payapp-${Date.now()}`,
+    companyName,
+    projectId,
+    amount,
+    period,
+    status: "Draft",
+    nextAction: "Submit pay application",
+  };
+
+  writeLocalJson(PAY_APP_QUEUE_KEY, {
+    ...current,
+    items: [payApp, ...(current.items || [])],
+  });
+
+  navigateTo("/portal/billing");
+  return payApp;
+}
+
+export function queueRetentionReleaseReviewTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", amount = "$7,500", condition = "Closeout and punch completion review required." } = {}) {
+  const current = readLocalJson(RETENTION_RELEASE_QUEUE_KEY, { items: [] });
+  const review = {
+    id: `retention-${Date.now()}`,
+    companyName,
+    projectId,
+    amount,
+    condition,
+    status: "Queued",
+    nextAction: "Release retention review",
+  };
+
+  writeLocalJson(RETENTION_RELEASE_QUEUE_KEY, {
+    ...current,
+    items: [review, ...(current.items || [])],
+  });
+
+  navigateTo("/portal/billing");
+  return review;
 }
