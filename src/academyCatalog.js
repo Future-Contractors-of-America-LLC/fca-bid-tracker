@@ -8,55 +8,22 @@ export const academyCatalog = {
       duration: "12 weeks",
       format: "Cohort + field lab + guided workspace reinforcement",
       goal: "Build first-year electrical trade discipline tied directly to FCA project, file, safety, and support workflows.",
-      outcomes: [
-        "Read basic drawings, layouts, and electrical scope notes inside FCA workflows",
-        "Document field safety observations and escalation needs through live support continuity",
-        "Attach jobsite evidence to project and file-control surfaces",
-        "Coordinate toolbox-talk execution with Auricrux guidance"
-      ],
+      outcomes: ["Read basic drawings, layouts, and electrical scope notes inside FCA workflows", "Document field safety observations and escalation needs through live support continuity", "Attach jobsite evidence to project and file-control surfaces", "Coordinate toolbox-talk execution with Auricrux guidance"],
       courses: [{
         code: "APP-ELEC-101",
         title: "Electrical Apprenticeship Year 1: Jobsite Foundations",
         lessons: 6,
         lab: "Project-linked field readiness lab in /portal/support and /portal/files",
-        lessonTitles: [
-          "Lesson 1 · Electrical safety orientation and PPE discipline",
-          "Lesson 2 · Tool identification and material handling",
-          "Lesson 3 · Reading basic electrical plan symbols and notes",
-          "Lesson 4 · Conduit, boxes, and rough-in sequence awareness",
-          "Lesson 5 · Using FCA files and support command for field escalation",
-          "Lesson 6 · Auricrux-guided daily readiness and close-of-day reporting"
-        ],
-        assignments: [
-          "Assignment 1 · PPE inspection and documented hazard log",
-          "Assignment 2 · Tool identification worksheet tied to field photos",
-          "Assignment 3 · Plan-symbol reading exercise using uploaded sheets"
-        ],
-        quizzes: [
-          "Quiz 1 · Electrical safety rules and PPE minimums",
-          "Quiz 2 · Tool identification and material handling checkpoints"
-        ],
+        lessonTitles: ["Lesson 1 · Electrical safety orientation and PPE discipline", "Lesson 2 · Tool identification and material handling", "Lesson 3 · Reading basic electrical plan symbols and notes", "Lesson 4 · Conduit, boxes, and rough-in sequence awareness", "Lesson 5 · Using FCA files and support command for field escalation", "Lesson 6 · Auricrux-guided daily readiness and close-of-day reporting"],
+        assignments: ["Assignment 1 · PPE inspection and documented hazard log", "Assignment 2 · Tool identification worksheet tied to field photos", "Assignment 3 · Plan-symbol reading exercise using uploaded sheets"],
+        quizzes: ["Quiz 1 · Electrical safety rules and PPE minimums", "Quiz 2 · Tool identification and material handling checkpoints"],
         tests: ["Test 1 · Year-1 jobsite-readiness written test"],
-        labs: [
-          "Lab 1 · Support-command field escalation simulation",
-          "Lab 2 · File-spine evidence attachment drill"
-        ],
+        labs: ["Lab 1 · Support-command field escalation simulation", "Lab 2 · File-spine evidence attachment drill"],
         performanceProfile: { role: "Electrical Apprentice I", measures: ["safety discipline", "tool handling", "drawing literacy", "evidence quality"] },
-        completionRequirements: [
-          "Complete all 6 lessons",
-          "Pass quizzes and test at 80% or higher",
-          "Submit all assignments",
-          "Complete both labs with approved evidence",
-          "Meet field-readiness performance profile minimums"
-        ],
-        evaluationRubric: [
-          "Safety discipline scored at competent or above",
-          "Drawing literacy scored at competent or above",
-          "Evidence attachment quality scored at competent or above"
-        ],
-        capstoneProject: [
-          "Capstone · Assemble a first-year electrical readiness packet with safety log, plan-symbol interpretation, and support-command escalation response"
-        ]
+        completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved evidence", "Meet field-readiness performance profile minimums"],
+        evaluationRubric: ["Safety discipline scored at competent or above", "Drawing literacy scored at competent or above", "Evidence attachment quality scored at competent or above"],
+        capstoneProject: ["Capstone · Assemble a first-year electrical readiness packet with safety log, plan-symbol interpretation, and support-command escalation response"],
+        portfolioArtifacts: ["Safety observation log", "Plan-symbol reading worksheet", "Field escalation response packet"]
       }],
       linkedSurface: "/portal/support",
       linkedLabel: "Open Field Support Continuity"
@@ -69,55 +36,22 @@ export const academyCatalog = {
       duration: "6 modules",
       format: "Certification prep cohort + safety scenario drills + portal lab",
       goal: "Prepare learners for OSHA 30 certification while keeping safety action routing tied to real FCA support and project surfaces.",
-      outcomes: [
-        "Explain OSHA hazard categories in jobsite language",
-        "Escalate safety issues through Support Command without losing customer or project context",
-        "Connect safety documentation to project files and audit continuity",
-        "Use Auricrux to recommend next corrective action after a hazard event"
-      ],
+      outcomes: ["Explain OSHA hazard categories in jobsite language", "Escalate safety issues through Support Command without losing customer or project context", "Connect safety documentation to project files and audit continuity", "Use Auricrux to recommend next corrective action after a hazard event"],
       courses: [{
         code: "CERT-OSHA30-201",
         title: "OSHA 30 Construction Certification Prep Bootcamp",
         lessons: 6,
         lab: "Safety escalation lab using /portal/support, /portal/files, and /portal/audit",
-        lessonTitles: [
-          "Lesson 1 · OSHA framework and worker rights",
-          "Lesson 2 · Fall protection and ladder safety",
-          "Lesson 3 · Electrical hazard awareness and lockout basics",
-          "Lesson 4 · Excavation, struck-by, and caught-in hazards",
-          "Lesson 5 · Incident documentation inside FCA Contractor Command",
-          "Lesson 6 · Auricrux-guided corrective action and follow-through"
-        ],
-        assignments: [
-          "Assignment 1 · Hazard-category field worksheet",
-          "Assignment 2 · Safety incident documentation package",
-          "Assignment 3 · Corrective-action recommendation memo"
-        ],
-        quizzes: [
-          "Quiz 1 · Fall protection and ladder safety review",
-          "Quiz 2 · Excavation and struck-by hazard review"
-        ],
+        lessonTitles: ["Lesson 1 · OSHA framework and worker rights", "Lesson 2 · Fall protection and ladder safety", "Lesson 3 · Electrical hazard awareness and lockout basics", "Lesson 4 · Excavation, struck-by, and caught-in hazards", "Lesson 5 · Incident documentation inside FCA Contractor Command", "Lesson 6 · Auricrux-guided corrective action and follow-through"],
+        assignments: ["Assignment 1 · Hazard-category field worksheet", "Assignment 2 · Safety incident documentation package", "Assignment 3 · Corrective-action recommendation memo"],
+        quizzes: ["Quiz 1 · Fall protection and ladder safety review", "Quiz 2 · Excavation and struck-by hazard review"],
         tests: ["Test 1 · OSHA 30 cumulative certification-prep test"],
-        labs: [
-          "Lab 1 · Support-command safety escalation",
-          "Lab 2 · Audit-log incident reconstruction"
-        ],
+        labs: ["Lab 1 · Support-command safety escalation", "Lab 2 · Audit-log incident reconstruction"],
         performanceProfile: { role: "Safety Coordinator / Supervisor", measures: ["hazard recognition", "documentation quality", "escalation timing", "corrective-action planning"] },
-        completionRequirements: [
-          "Complete all 6 lessons",
-          "Pass quizzes and test at 80% or higher",
-          "Submit all assignments",
-          "Complete both labs with approved safety documentation",
-          "Meet safety-coordination performance profile minimums"
-        ],
-        evaluationRubric: [
-          "Hazard recognition scored at competent or above",
-          "Documentation quality scored at competent or above",
-          "Corrective-action planning scored at competent or above"
-        ],
-        capstoneProject: [
-          "Capstone · Deliver a full incident-to-corrective-action safety package with audit trail, support escalation, and recovery recommendation"
-        ]
+        completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved safety documentation", "Meet safety-coordination performance profile minimums"],
+        evaluationRubric: ["Hazard recognition scored at competent or above", "Documentation quality scored at competent or above", "Corrective-action planning scored at competent or above"],
+        capstoneProject: ["Capstone · Deliver a full incident-to-corrective-action safety package with audit trail, support escalation, and recovery recommendation"],
+        portfolioArtifacts: ["Hazard category worksheet", "Incident documentation package", "Corrective-action memo"]
       }],
       linkedSurface: "/portal/audit",
       linkedLabel: "Open Audit and Safety Continuity"
@@ -130,55 +64,22 @@ export const academyCatalog = {
       duration: "16 weeks",
       format: "Semester studio + SaaS lab + cohort review",
       goal: "Introduce degree-track learners to integrated construction operations using real FCA command surfaces rather than detached theory.",
-      outcomes: [
-        "Map lifecycle stages from intake to billing and closeout",
-        "Use project, bid, estimate, and billing surfaces as one operating spine",
-        "Document operational decisions with audit and file continuity",
-        "Interpret customer-facing workflow posture through Auricrux guidance"
-      ],
+      outcomes: ["Map lifecycle stages from intake to billing and closeout", "Use project, bid, estimate, and billing surfaces as one operating spine", "Document operational decisions with audit and file continuity", "Interpret customer-facing workflow posture through Auricrux guidance"],
       courses: [{
         code: "DEG-AAS-110",
         title: "A.A.S. Construction Operations: Semester 1 Studio",
         lessons: 6,
         lab: "Cross-surface lab using /portal/platform, /portal/bids, /portal/projects, and /portal/billing",
-        lessonTitles: [
-          "Lesson 1 · Construction lifecycle and FCA system spine",
-          "Lesson 2 · Opportunity qualification and bid posture",
-          "Lesson 3 · Project setup, stage control, and execution handoff",
-          "Lesson 4 · File governance and auditability",
-          "Lesson 5 · Billing readiness and revenue continuity",
-          "Lesson 6 · Auricrux explain, recommend, execute across operations"
-        ],
-        assignments: [
-          "Assignment 1 · Lifecycle-stage mapping worksheet",
-          "Assignment 2 · Bid-to-project handoff analysis",
-          "Assignment 3 · Billing-risk and closeout memo"
-        ],
-        quizzes: [
-          "Quiz 1 · FCA system-spine fundamentals",
-          "Quiz 2 · Project-state and billing-readiness review"
-        ],
+        lessonTitles: ["Lesson 1 · Construction lifecycle and FCA system spine", "Lesson 2 · Opportunity qualification and bid posture", "Lesson 3 · Project setup, stage control, and execution handoff", "Lesson 4 · File governance and auditability", "Lesson 5 · Billing readiness and revenue continuity", "Lesson 6 · Auricrux explain, recommend, execute across operations"],
+        assignments: ["Assignment 1 · Lifecycle-stage mapping worksheet", "Assignment 2 · Bid-to-project handoff analysis", "Assignment 3 · Billing-risk and closeout memo"],
+        quizzes: ["Quiz 1 · FCA system-spine fundamentals", "Quiz 2 · Project-state and billing-readiness review"],
         tests: ["Test 1 · Semester-1 construction-operations midterm"],
-        labs: [
-          "Lab 1 · Platform-dashboard operations drill",
-          "Lab 2 · Estimate-to-billing cross-surface walkthrough"
-        ],
+        labs: ["Lab 1 · Platform-dashboard operations drill", "Lab 2 · Estimate-to-billing cross-surface walkthrough"],
         performanceProfile: { role: "Construction Operations Student / Coordinator", measures: ["lifecycle fluency", "handoff quality", "documentation rigor", "commercial awareness"] },
-        completionRequirements: [
-          "Complete all 6 lessons",
-          "Pass quizzes and test at 80% or higher",
-          "Submit all assignments",
-          "Complete both labs with approved operational artifacts",
-          "Meet operations performance profile minimums"
-        ],
-        evaluationRubric: [
-          "Lifecycle fluency scored at competent or above",
-          "Handoff quality scored at competent or above",
-          "Commercial awareness scored at competent or above"
-        ],
-        capstoneProject: [
-          "Capstone · Build an end-to-end lifecycle operating packet from bid intake through billing and closeout recommendation"
-        ]
+        completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved operational artifacts", "Meet operations performance profile minimums"],
+        evaluationRubric: ["Lifecycle fluency scored at competent or above", "Handoff quality scored at competent or above", "Commercial awareness scored at competent or above"],
+        capstoneProject: ["Capstone · Build an end-to-end lifecycle operating packet from bid intake through billing and closeout recommendation"],
+        portfolioArtifacts: ["Lifecycle mapping worksheet", "Bid-to-project handoff analysis", "Billing and closeout recommendation packet"]
       }],
       linkedSurface: "/portal/platform",
       linkedLabel: "Open Platform Dashboard"
@@ -191,55 +92,22 @@ export const academyCatalog = {
       duration: "8 weeks",
       format: "Licensure prep + law/compliance review + applied workflow lab",
       goal: "Prepare candidates for Virginia DPOR residential contractor licensure while teaching how compliance and documentation live inside FCA workflows.",
-      outcomes: [
-        "Understand Virginia licensing structure, classification, and responsibility",
-        "Identify documentation required for compliant residential operations",
-        "Tie permit, file, and communication behavior to licensure-safe execution",
-        "Use Auricrux to detect missing compliance actions before customer delivery suffers"
-      ],
+      outcomes: ["Understand Virginia licensing structure, classification, and responsibility", "Identify documentation required for compliant residential operations", "Tie permit, file, and communication behavior to licensure-safe execution", "Use Auricrux to detect missing compliance actions before customer delivery suffers"],
       courses: [{
         code: "LIC-DPOR-301",
         title: "Virginia DPOR Residential Contractor License Prep",
         lessons: 6,
         lab: "Compliance lab using /portal/files, /portal/messages, and /portal/projects",
-        lessonTitles: [
-          "Lesson 1 · Virginia DPOR classifications and roles",
-          "Lesson 2 · Contracting, documentation, and consumer protection basics",
-          "Lesson 3 · Permit and jurisdiction workflow discipline",
-          "Lesson 4 · Communication records and customer notice continuity",
-          "Lesson 5 · File-control and project evidence for compliant delivery",
-          "Lesson 6 · Auricrux-guided compliance readiness review"
-        ],
-        assignments: [
-          "Assignment 1 · License classification decision worksheet",
-          "Assignment 2 · Permit and documentation checklist package",
-          "Assignment 3 · Customer-notice communication draft"
-        ],
-        quizzes: [
-          "Quiz 1 · DPOR classification and responsibility review",
-          "Quiz 2 · Permit and communication compliance review"
-        ],
+        lessonTitles: ["Lesson 1 · Virginia DPOR classifications and roles", "Lesson 2 · Contracting, documentation, and consumer protection basics", "Lesson 3 · Permit and jurisdiction workflow discipline", "Lesson 4 · Communication records and customer notice continuity", "Lesson 5 · File-control and project evidence for compliant delivery", "Lesson 6 · Auricrux-guided compliance readiness review"],
+        assignments: ["Assignment 1 · License classification decision worksheet", "Assignment 2 · Permit and documentation checklist package", "Assignment 3 · Customer-notice communication draft"],
+        quizzes: ["Quiz 1 · DPOR classification and responsibility review", "Quiz 2 · Permit and communication compliance review"],
         tests: ["Test 1 · Residential contractor licensure cumulative prep test"],
-        labs: [
-          "Lab 1 · File-governance compliance walk",
-          "Lab 2 · Customer-notice and project-evidence simulation"
-        ],
+        labs: ["Lab 1 · File-governance compliance walk", "Lab 2 · Customer-notice and project-evidence simulation"],
         performanceProfile: { role: "Residential Contractor License Candidate", measures: ["classification accuracy", "documentation completeness", "permit discipline", "customer-notice quality"] },
-        completionRequirements: [
-          "Complete all 6 lessons",
-          "Pass quizzes and test at 80% or higher",
-          "Submit all assignments",
-          "Complete both labs with approved compliance artifacts",
-          "Meet licensure-readiness performance profile minimums"
-        ],
-        evaluationRubric: [
-          "Classification accuracy scored at competent or above",
-          "Documentation completeness scored at competent or above",
-          "Permit discipline scored at competent or above"
-        ],
-        capstoneProject: [
-          "Capstone · Assemble a residential contractor compliance packet with permit workflow, customer notice, and evidence governance documentation"
-        ]
+        completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved compliance artifacts", "Meet licensure-readiness performance profile minimums"],
+        evaluationRubric: ["Classification accuracy scored at competent or above", "Documentation completeness scored at competent or above", "Permit discipline scored at competent or above"],
+        capstoneProject: ["Capstone · Assemble a residential contractor compliance packet with permit workflow, customer notice, and evidence governance documentation"],
+        portfolioArtifacts: ["License classification worksheet", "Permit checklist package", "Customer notice draft"]
       }],
       linkedSurface: "/portal/files",
       linkedLabel: "Open File Governance"
@@ -252,55 +120,22 @@ export const academyCatalog = {
       duration: "5 modules",
       format: "How-to course + route walkthrough + live portal practice",
       goal: "Teach users exactly how to move through FCA Contractor Command from login to real work execution.",
-      outcomes: [
-        "Sign in and understand what opens after login",
-        "Navigate the command center, bids, projects, files, support, and billing",
-        "Use real portal tools rather than reading static descriptions",
-        "Understand how Academy and Auricrux remain attached to live work"
-      ],
+      outcomes: ["Sign in and understand what opens after login", "Navigate the command center, bids, projects, files, support, and billing", "Use real portal tools rather than reading static descriptions", "Understand how Academy and Auricrux remain attached to live work"],
       courses: [{
         code: "GUIDE-FCA-001",
         title: "FCA Contractor Command User Guide: From Login to Closeout",
         lessons: 6,
         lab: "Live route walkthrough using /login, /portal, /portal/bids, /portal/projects, /portal/files, /portal/billing, and /academy/catalog",
-        lessonTitles: [
-          "Lesson 1 · Login, session posture, and workspace entry",
-          "Lesson 2 · Using the command center and task continuity",
-          "Lesson 3 · Moving through qualification and estimate launch",
-          "Lesson 4 · Managing project, file, and audit continuity",
-          "Lesson 5 · Creating support requests and staging invoices",
-          "Lesson 6 · Using Academy and Auricrux to stay execution-ready"
-        ],
-        assignments: [
-          "Assignment 1 · Command-center navigation checklist",
-          "Assignment 2 · Qualification-to-estimate guided run",
-          "Assignment 3 · Files/support/billing continuity walkthrough"
-        ],
-        quizzes: [
-          "Quiz 1 · Contractor Command navigation fundamentals",
-          "Quiz 2 · Auricrux and Academy continuity review"
-        ],
+        lessonTitles: ["Lesson 1 · Login, session posture, and workspace entry", "Lesson 2 · Using the command center and task continuity", "Lesson 3 · Moving through qualification and estimate launch", "Lesson 4 · Managing project, file, and audit continuity", "Lesson 5 · Creating support requests and staging invoices", "Lesson 6 · Using Academy and Auricrux to stay execution-ready"],
+        assignments: ["Assignment 1 · Command-center navigation checklist", "Assignment 2 · Qualification-to-estimate guided run", "Assignment 3 · Files/support/billing continuity walkthrough"],
+        quizzes: ["Quiz 1 · Contractor Command navigation fundamentals", "Quiz 2 · Auricrux and Academy continuity review"],
         tests: ["Test 1 · FCA user-readiness certification test"],
-        labs: [
-          "Lab 1 · Branded workspace launch drill",
-          "Lab 2 · End-to-end login-to-closeout route run"
-        ],
+        labs: ["Lab 1 · Branded workspace launch drill", "Lab 2 · End-to-end login-to-closeout route run"],
         performanceProfile: { role: "FCA Contractor Command Operator", measures: ["route fluency", "tool execution", "handoff continuity", "Auricrux utilization"] },
-        completionRequirements: [
-          "Complete all 6 lessons",
-          "Pass quizzes and test at 80% or higher",
-          "Submit all assignments",
-          "Complete both labs with approved operator artifacts",
-          "Meet operator performance profile minimums"
-        ],
-        evaluationRubric: [
-          "Route fluency scored at competent or above",
-          "Tool execution scored at competent or above",
-          "Auricrux utilization scored at competent or above"
-        ],
-        capstoneProject: [
-          "Capstone · Run a full customer workflow from login through qualification, files, billing, support, and Academy continuity using Contractor Command"
-        ]
+        completionRequirements: ["Complete all 6 lessons", "Pass quizzes and test at 80% or higher", "Submit all assignments", "Complete both labs with approved operator artifacts", "Meet operator performance profile minimums"],
+        evaluationRubric: ["Route fluency scored at competent or above", "Tool execution scored at competent or above", "Auricrux utilization scored at competent or above"],
+        capstoneProject: ["Capstone · Run a full customer workflow from login through qualification, files, billing, support, and Academy continuity using Contractor Command"],
+        portfolioArtifacts: ["Navigation checklist", "Qualification-to-estimate run packet", "Files-support-billing walkthrough proof"]
       }],
       linkedSurface: "/portal",
       linkedLabel: "Open Command Center"
