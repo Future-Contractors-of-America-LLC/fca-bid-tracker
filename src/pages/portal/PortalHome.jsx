@@ -5,7 +5,7 @@ import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel"
 import { routeStateOverlays } from "../../systemState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { createPermitEscalationTool, stageEstimateRevisionTool, stageMobilizationInvoiceTool, queueProposalFollowupTool } from "../../customerCommandTools";
+import { createPermitEscalationTool, stageEstimateRevisionTool, stageMobilizationInvoiceTool, queueProposalFollowupTool, registerOwnerApprovalFileTool, sendCustomerScheduleUpdateTool } from "../../customerCommandTools";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -148,6 +148,16 @@ export default function PortalHome() {
     refreshSyncStamp("Proposal follow-up tool executed from command center");
   }
 
+  function runOwnerApprovalFileTool() {
+    registerOwnerApprovalFileTool({ projectId: state?.project?.id || "PRJ-A117" });
+    refreshSyncStamp("Owner approval file tool executed from command center");
+  }
+
+  function runScheduleUpdateTool() {
+    sendCustomerScheduleUpdateTool({ companyName });
+    refreshSyncStamp("Customer schedule update tool executed from command center");
+  }
+
   return (
     <PortalShell
       title={`${companyName} Command Center`}
@@ -246,6 +256,16 @@ export default function PortalHome() {
                 <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Creates a real proposal follow-up work item and routes the customer into proposal packaging.</div>
                 <button type="button" onClick={runProposalFollowupTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Proposal Tool</button>
               </div>
+              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 5 · Register owner approval file</div>
+                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Stages a customer-usable owner approval file record and routes directly into the file workspace.</div>
+                <button type="button" onClick={runOwnerApprovalFileTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run File Tool</button>
+              </div>
+              <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
+                <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 6 · Send customer schedule update</div>
+                <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 10 }}>Stages a branded customer schedule update and routes directly into the communications command.</div>
+                <button type="button" onClick={runScheduleUpdateTool} style={{ padding: "10px 14px", borderRadius: 10, border: "none", background: brandSkin.accent, color: "#fff", fontWeight: 700, cursor: "pointer" }}>Run Comms Tool</button>
+              </div>
             </div>
           </div>
 
@@ -253,13 +273,13 @@ export default function PortalHome() {
             <h2 style={{ marginTop: 0 }}>Auricrux confirmed</h2>
             <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
               <li>Explains the current opportunity and delivery posture</li>
-              <li>Recommends the next qualification, estimate, proposal, and customer actions</li>
-              <li>Executes task creation, support escalation, billing staging, estimate revision staging, proposal follow-up staging, and workspace branding continuity</li>
+              <li>Recommends the next qualification, estimate, proposal, file, communications, and customer actions</li>
+              <li>Executes task creation, support escalation, billing staging, estimate revision staging, proposal follow-up staging, file registration staging, customer communications staging, and workspace branding continuity</li>
               <li>Stays present across SaaS and Academy surfaces</li>
             </ul>
             <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
               <div style={{ color: brandSkin.accent, fontWeight: 700, marginBottom: 6 }}>Auricrux next action</div>
-              <div style={{ color: "#334155", lineHeight: 1.7 }}>Complete intake review, open the qualification workflow, create the first estimate revision package, and queue the proposal follow-up before sending the branded customer update.</div>
+              <div style={{ color: "#334155", lineHeight: 1.7 }}>Complete intake review, open the qualification workflow, create the first estimate revision package, register the owner approval file, queue the proposal follow-up, and send the branded customer schedule update before closing the day.</div>
             </div>
           </div>
         </div>

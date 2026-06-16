@@ -4,6 +4,8 @@ const SUPPORT_COMMAND_KEY = "fca_customer_support_command_v3";
 const BILLING_COMMAND_KEY = "fca_customer_billing_command_v2";
 const ESTIMATE_REVISION_QUEUE_KEY = "fca_customer_estimate_revision_queue_v1";
 const PROPOSAL_FOLLOWUP_QUEUE_KEY = "fca_customer_proposal_followup_queue_v1";
+const FILE_INTAKE_DRAFTS_KEY = "fca_customer_file_intake_v1";
+const MESSAGE_COMMAND_KEY = "fca_customer_message_command_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -102,4 +104,60 @@ export function queueProposalFollowupTool({ companyName = "Customer Workspace", 
 
   navigateTo("/portal/proposals");
   return followup;
+}
+
+export function registerOwnerApprovalFileTool({ projectId = "PRJ-A117", fileName = "Owner_Approval_Log.pdf", discipline = "Document Control" } = {}) {
+  const current = readLocalJson(FILE_INTAKE_DRAFTS_KEY, {
+    name: "",
+    category: "Document",
+    discipline: "Document Control",
+    owner: "Project Coordinator",
+    linkedEvidenceTarget: "",
+    stagedRecords: [],
+  });
+
+  const stagedRecord = {
+    id: `file-${Date.now()}`,
+    name: fileName,
+    category: "Document",
+    discipline,
+    owner: "Project Coordinator",
+    linkedEvidenceTarget: `${projectId} governed evidence chain`,
+    status: "Registered",
+    evidenceStatus: "Pending review",
+  };
+
+  writeLocalJson(FILE_INTAKE_DRAFTS_KEY, {
+    ...current,
+    stagedRecords: [stagedRecord, ...(current.stagedRecords || [])],
+    name: fileName,
+    category: "Document",
+    discipline,
+    owner: "Project Coordinator",
+    linkedEvidenceTarget: `${projectId} governed evidence chain`,
+  });
+
+  navigateTo("/portal/files");
+  return stagedRecord;
+}
+
+export function sendCustomerScheduleUpdateTool({ companyName = "Customer Workspace", channel = "email", subject = "Updated project schedule", message = "Auricrux prepared an updated schedule notice with next milestones and customer commitments." } = {}) {
+  const current = readLocalJson(MESSAGE_COMMAND_KEY, { subject: "", message: "", channel: "email", sent: [] });
+  const outbound = {
+    id: `msg-${Date.now()}`,
+    subject: `${companyName} · ${subject}`,
+    message,
+    channel,
+  };
+
+  writeLocalJson(MESSAGE_COMMAND_KEY, {
+    ...current,
+    sent: [outbound, ...(current.sent || [])],
+    subject: outbound.subject,
+    message,
+    channel,
+  });
+
+  navigateTo("/portal/messages");
+  return outbound;
 }

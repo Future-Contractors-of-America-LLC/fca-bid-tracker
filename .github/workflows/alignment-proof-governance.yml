@@ -1,0 +1,67 @@
+name: FCA Alignment Proof Governance
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  govern:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate public package route groups
+        run: npm run validate:public-package-route-groups
+
+      - name: Validate public conversion surface route truth
+        run: npm run validate:public-conversion-surface-route-truth
+
+      - name: Validate packet functional minimums
+        run: npm run validate:packet-functional-minimums
+
+      - name: Generate public package route groups report
+        if: ${{ always() }}
+        run: npm run generate:public-package-route-groups-report
+
+      - name: Generate public conversion surface route truth report
+        if: ${{ always() }}
+        run: npm run generate:public-conversion-surface-route-truth-report
+
+      - name: Generate packet functional minimums report
+        if: ${{ always() }}
+        run: npm run generate:packet-functional-minimums-report
+
+      - name: Upload alignment governance bundle
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: alignment-governance-bundle
+          path: |
+            generated/public-package-route-groups-report.json
+            generated/public-package-route-groups-report.md
+            generated/public-conversion-surface-route-truth-report.json
+            generated/public-conversion-surface-route-truth-report.md
+            generated/packet-functional-minimums-report.json
+            generated/packet-functional-minimums-report.md
+          if-no-files-found: warn
