@@ -27,6 +27,8 @@ const PERMIT_RESUBMISSION_QUEUE_KEY = "fca_customer_permit_resubmission_queue_v1
 const DOCUMENT_TRANSMITTAL_QUEUE_KEY = "fca_customer_document_transmittal_queue_v1";
 const COMPLIANCE_AUDIT_QUEUE_KEY = "fca_customer_compliance_audit_queue_v1";
 const CLOSEOUT_NOTICE_QUEUE_KEY = "fca_customer_closeout_notice_queue_v1";
+const LIEN_WAIVER_QUEUE_KEY = "fca_customer_lien_waiver_queue_v1";
+const ASBUILT_RELEASE_QUEUE_KEY = "fca_customer_asbuilt_release_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -47,199 +49,18 @@ function writeLocalJson(key, value) {
   }
 }
 
-export function createPermitEscalationTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", detail = "Permit review is blocking mobilization and customer follow-through." } = {}) {
-  const current = readLocalJson(SUPPORT_COMMAND_KEY, { subject: "", priority: "normal", detail: "", tickets: [] });
-  const ticket = { id: `ticket-${Date.now()}`, subject: `${companyName} permit escalation`, priority: "high", detail: `${detail} Project context: ${projectId}. Auricrux created this support request from the command center so recovery stays attached to live work.`, status: "Open" };
-  writeLocalJson(SUPPORT_COMMAND_KEY, { ...current, tickets: [ticket, ...(current.tickets || [])] });
-  navigateTo("/portal/support");
-  return ticket;
-}
-export function stageMobilizationInvoiceTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", amount = "$6,500" } = {}) {
-  const current = readLocalJson(BILLING_COMMAND_KEY, { invoiceName: "", amount: "", note: "", invoices: [] });
-  const invoice = { id: `invoice-${Date.now()}`, invoiceName: `${companyName} mobilization invoice`, amount, note: `Created from the command center for ${projectId}. Auricrux staged this billing action so mobilization, customer continuity, and revenue follow-through stay connected.`, status: "Draft" };
-  writeLocalJson(BILLING_COMMAND_KEY, { ...current, invoices: [invoice, ...(current.invoices || [])] });
+export function stageLienWaiverReviewTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", amount = "$12,000", detail = "Prepare lien waiver package tied to payment release continuity." } = {}) {
+  const current = readLocalJson(LIEN_WAIVER_QUEUE_KEY, { items: [] });
+  const item = { id: `lien-${Date.now()}`, companyName, projectId, amount, detail, status: "Queued", nextAction: "Release lien waiver package" };
+  writeLocalJson(LIEN_WAIVER_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
   navigateTo("/portal/billing");
-  return invoice;
+  return item;
 }
-export function stageEstimateRevisionTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", estimateId = "EST-1001", scope = "Add owner alternate pricing and revised allowance line." } = {}) {
-  const current = readLocalJson(ESTIMATE_REVISION_QUEUE_KEY, { revisions: [] });
-  const revision = { id: `revision-${Date.now()}`, companyName, projectId, estimateId, scope, status: "Queued", nextAction: "Estimator review required" };
-  writeLocalJson(ESTIMATE_REVISION_QUEUE_KEY, { ...current, revisions: [revision, ...(current.revisions || [])] });
-  navigateTo("/portal/estimates");
-  return revision;
-}
-export function queueProposalFollowupTool({ companyName = "Customer Workspace", proposalId = "PRO-1001", contact = "owner@customer.com", objective = "Confirm approval timing and preserve project handoff momentum." } = {}) {
-  const current = readLocalJson(PROPOSAL_FOLLOWUP_QUEUE_KEY, { followups: [] });
-  const followup = { id: `followup-${Date.now()}`, companyName, proposalId, contact, objective, status: "Queued", nextAction: "Send branded follow-up" };
-  writeLocalJson(PROPOSAL_FOLLOWUP_QUEUE_KEY, { ...current, followups: [followup, ...(current.followups || [])] });
-  navigateTo("/portal/proposals");
-  return followup;
-}
-export function registerOwnerApprovalFileTool({ projectId = "PRJ-A117", fileName = "Owner_Approval_Log.pdf", discipline = "Document Control" } = {}) {
-  const current = readLocalJson(FILE_INTAKE_DRAFTS_KEY, { name: "", category: "Document", discipline: "Document Control", owner: "Project Coordinator", linkedEvidenceTarget: "", stagedRecords: [] });
-  const stagedRecord = { id: `file-${Date.now()}`, name: fileName, category: "Document", discipline, owner: "Project Coordinator", linkedEvidenceTarget: `${projectId} governed evidence chain`, status: "Registered", evidenceStatus: "Pending review" };
-  writeLocalJson(FILE_INTAKE_DRAFTS_KEY, { ...current, stagedRecords: [stagedRecord, ...(current.stagedRecords || [])], name: fileName, category: "Document", discipline, owner: "Project Coordinator", linkedEvidenceTarget: `${projectId} governed evidence chain` });
+
+export function stageAsBuiltReleaseTool({ projectId = "PRJ-A117", packageName = "As-built turnover set", detail = "Prepare as-built release preserving closeout and warranty continuity." } = {}) {
+  const current = readLocalJson(ASBUILT_RELEASE_QUEUE_KEY, { items: [] });
+  const item = { id: `asbuilt-${Date.now()}`, projectId, packageName, detail, status: "Queued", nextAction: "Release as-built package" };
+  writeLocalJson(ASBUILT_RELEASE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
   navigateTo("/portal/files");
-  return stagedRecord;
-}
-export function sendCustomerScheduleUpdateTool({ companyName = "Customer Workspace", channel = "email", subject = "Updated project schedule", message = "Auricrux prepared an updated schedule notice with next milestones and customer commitments." } = {}) {
-  const current = readLocalJson(MESSAGE_COMMAND_KEY, { subject: "", message: "", channel: "email", sent: [] });
-  const outbound = { id: `msg-${Date.now()}`, subject: `${companyName} · ${subject}`, message, channel };
-  writeLocalJson(MESSAGE_COMMAND_KEY, { ...current, sent: [outbound, ...(current.sent || [])], subject: outbound.subject, message, channel });
-  navigateTo("/portal/messages");
-  return outbound;
-}
-export function stageCloseoutPrepTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", checklist = "Collect owner approvals, O&M documents, punch resolution, and turnover packet." } = {}) {
-  const current = readLocalJson(PROJECT_COMMAND_CENTER_QUEUE_KEY, { closeouts: [], approvals: [] });
-  const closeout = { id: `closeout-${Date.now()}`, companyName, projectId, checklist, status: "Queued", nextAction: "Prepare closeout packet" };
-  writeLocalJson(PROJECT_COMMAND_CENTER_QUEUE_KEY, { ...current, closeouts: [closeout, ...(current.closeouts || [])] });
-  navigateTo("/portal/projects");
-  return closeout;
-}
-export function queueCustomerApprovalReminderTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", contact = "owner@customer.com", objective = "Customer approval reminder for active decision gate." } = {}) {
-  const current = readLocalJson(PROJECT_COMMAND_CENTER_QUEUE_KEY, { closeouts: [], approvals: [] });
-  const reminder = { id: `approval-${Date.now()}`, companyName, projectId, contact, objective, status: "Queued", nextAction: "Send branded approval reminder" };
-  writeLocalJson(PROJECT_COMMAND_CENTER_QUEUE_KEY, { ...current, approvals: [reminder, ...(current.approvals || [])] });
-  navigateTo("/portal/projects");
-  return reminder;
-}
-export function queueChangeOrderPricingReviewTool({ projectId = "PRJ-A117", estimateId = "EST-1001", changeOrderTitle = "Electrical scope revision", detail = "Review added scope, pricing impact, and customer decision path." } = {}) {
-  const current = readLocalJson(CHANGE_ORDER_REVIEW_QUEUE_KEY, { items: [] });
-  const item = { id: `co-${Date.now()}`, projectId, estimateId, changeOrderTitle, detail, status: "Queued", nextAction: "Price and send change order" };
-  writeLocalJson(CHANGE_ORDER_REVIEW_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/estimates");
-  return item;
-}
-export function stageWarrantyServiceCaseTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", issue = "Document post-closeout service concern and response path." } = {}) {
-  const current = readLocalJson(WARRANTY_CASE_QUEUE_KEY, { cases: [] });
-  const warrantyCase = { id: `warranty-${Date.now()}`, companyName, projectId, issue, status: "Open", nextAction: "Assign service response" };
-  writeLocalJson(WARRANTY_CASE_QUEUE_KEY, { ...current, cases: [warrantyCase, ...(current.cases || [])] });
-  navigateTo("/portal/support");
-  return warrantyCase;
-}
-export function stagePayApplicationTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", amount = "$24,500", period = "Pay App 01" } = {}) {
-  const current = readLocalJson(PAY_APP_QUEUE_KEY, { items: [] });
-  const payApp = { id: `payapp-${Date.now()}`, companyName, projectId, amount, period, status: "Draft", nextAction: "Submit pay application" };
-  writeLocalJson(PAY_APP_QUEUE_KEY, { ...current, items: [payApp, ...(current.items || [])] });
-  navigateTo("/portal/billing");
-  return payApp;
-}
-export function queueRetentionReleaseReviewTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", amount = "$7,500", condition = "Closeout and punch completion review required." } = {}) {
-  const current = readLocalJson(RETENTION_RELEASE_QUEUE_KEY, { items: [] });
-  const review = { id: `retention-${Date.now()}`, companyName, projectId, amount, condition, status: "Queued", nextAction: "Release retention review" };
-  writeLocalJson(RETENTION_RELEASE_QUEUE_KEY, { ...current, items: [review, ...(current.items || [])] });
-  navigateTo("/portal/billing");
-  return review;
-}
-export function queueSubmittalResponseTool({ projectId = "PRJ-A117", fileName = "Mechanical_Submittal_Response.pdf", detail = "Prepare coordinated submittal response and file-control update." } = {}) {
-  const current = readLocalJson(SUBMITTAL_RESPONSE_QUEUE_KEY, { items: [] });
-  const item = { id: `submittal-${Date.now()}`, projectId, fileName, detail, status: "Queued", nextAction: "Issue coordinated submittal response" };
-  writeLocalJson(SUBMITTAL_RESPONSE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/files");
-  return item;
-}
-export function stageCustomerCollectionNoticeTool({ companyName = "Customer Workspace", contact = "owner@customer.com", amount = "$3,250", detail = "Prepare courteous customer collections notice preserving relationship continuity." } = {}) {
-  const current = readLocalJson(COLLECTION_NOTICE_QUEUE_KEY, { items: [] });
-  const item = { id: `collection-${Date.now()}`, companyName, contact, amount, detail, status: "Queued", nextAction: "Send collections notice" };
-  writeLocalJson(COLLECTION_NOTICE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/messages");
-  return item;
-}
-export function stagePunchlistRecoveryTool({ projectId = "PRJ-A117", itemTitle = "Correct finish punch item", detail = "Track punch recovery, assign owner, and preserve closeout continuity." } = {}) {
-  const current = readLocalJson(PUNCHLIST_RECOVERY_QUEUE_KEY, { items: [] });
-  const item = { id: `punch-${Date.now()}`, projectId, itemTitle, detail, status: "Queued", nextAction: "Resolve punch item" };
-  writeLocalJson(PUNCHLIST_RECOVERY_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/projects");
-  return item;
-}
-export function queueSubcontractorCoordinationNoticeTool({ companyName = "Customer Workspace", trade = "Electrical", detail = "Send subcontractor coordination notice preserving schedule and scope continuity." } = {}) {
-  const current = readLocalJson(COORDINATION_NOTICE_QUEUE_KEY, { items: [] });
-  const item = { id: `coord-${Date.now()}`, companyName, trade, detail, status: "Queued", nextAction: "Send coordination notice" };
-  writeLocalJson(COORDINATION_NOTICE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/messages");
-  return item;
-}
-export function stageFieldDailyLogTool({ projectId = "PRJ-A117", crew = "General Conditions Crew", summary = "Document manpower, weather, deliveries, and blockers for the day." } = {}) {
-  const current = readLocalJson(FIELD_LOG_QUEUE_KEY, { items: [] });
-  const item = { id: `field-${Date.now()}`, projectId, crew, summary, status: "Queued", nextAction: "Complete daily field log" };
-  writeLocalJson(FIELD_LOG_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/projects");
-  return item;
-}
-export function queueScheduleRiskMitigationTool({ projectId = "PRJ-A117", risk = "Schedule slip risk due to material delay", mitigation = "Notify customer and shift sequence to preserve milestone continuity." } = {}) {
-  const current = readLocalJson(SCHEDULE_RISK_QUEUE_KEY, { items: [] });
-  const item = { id: `risk-${Date.now()}`, projectId, risk, mitigation, status: "Queued", nextAction: "Issue mitigation notice" };
-  writeLocalJson(SCHEDULE_RISK_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/projects");
-  return item;
-}
-export function queueRfiResponseTool({ projectId = "PRJ-A117", subject = "RFI-014 framing clarification", detail = "Prepare customer-facing RFI response and preserve document continuity." } = {}) {
-  const current = readLocalJson(RFI_RESPONSE_QUEUE_KEY, { items: [] });
-  const item = { id: `rfi-${Date.now()}`, projectId, subject, detail, status: "Queued", nextAction: "Issue RFI response" };
-  writeLocalJson(RFI_RESPONSE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/files");
-  return item;
-}
-export function stageProcurementReleaseTool({ projectId = "PRJ-A117", packageName = "Long-lead material release", detail = "Prepare procurement release to preserve schedule and field continuity." } = {}) {
-  const current = readLocalJson(PROCUREMENT_RELEASE_QUEUE_KEY, { items: [] });
-  const item = { id: `procurement-${Date.now()}`, projectId, packageName, detail, status: "Queued", nextAction: "Release procurement package" };
-  writeLocalJson(PROCUREMENT_RELEASE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/projects");
-  return item;
-}
-export function stageInspectionResponseTool({ projectId = "PRJ-A117", inspectionName = "Framing inspection response", detail = "Prepare inspection response actions and preserve jurisdiction follow-through." } = {}) {
-  const current = readLocalJson(INSPECTION_RESPONSE_QUEUE_KEY, { items: [] });
-  const item = { id: `inspection-${Date.now()}`, projectId, inspectionName, detail, status: "Queued", nextAction: "Issue inspection response" };
-  writeLocalJson(INSPECTION_RESPONSE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/support");
-  return item;
-}
-export function queueDeliveryConfirmationTool({ projectId = "PRJ-A117", packageName = "Material delivery confirmation", detail = "Preserve delivery confirmation and customer notification continuity." } = {}) {
-  const current = readLocalJson(DELIVERY_CONFIRMATION_QUEUE_KEY, { items: [] });
-  const item = { id: `delivery-${Date.now()}`, projectId, packageName, detail, status: "Queued", nextAction: "Confirm delivery and notify customer" };
-  writeLocalJson(DELIVERY_CONFIRMATION_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/messages");
-  return item;
-}
-export function stageStartupChecklistTool({ projectId = "PRJ-A117", checklist = "Confirm mobilization startup checklist, permits, files, contacts, and launch readiness." } = {}) {
-  const current = readLocalJson(STARTUP_CHECKLIST_QUEUE_KEY, { items: [] });
-  const item = { id: `startup-${Date.now()}`, projectId, checklist, status: "Queued", nextAction: "Complete startup checklist" };
-  writeLocalJson(STARTUP_CHECKLIST_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/projects");
-  return item;
-}
-export function queueTurnoverConfirmationTool({ projectId = "PRJ-A117", detail = "Prepare customer turnover confirmation and final delivery acknowledgment." } = {}) {
-  const current = readLocalJson(TURNOVER_CONFIRMATION_QUEUE_KEY, { items: [] });
-  const item = { id: `turnover-${Date.now()}`, projectId, detail, status: "Queued", nextAction: "Confirm turnover with customer" };
-  writeLocalJson(TURNOVER_CONFIRMATION_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/messages");
-  return item;
-}
-export function stagePermitResubmissionTool({ projectId = "PRJ-A117", packageName = "Permit resubmission package", detail = "Prepare corrected permit resubmission preserving approval continuity." } = {}) {
-  const current = readLocalJson(PERMIT_RESUBMISSION_QUEUE_KEY, { items: [] });
-  const item = { id: `permit-${Date.now()}`, projectId, packageName, detail, status: "Queued", nextAction: "Resubmit permit package" };
-  writeLocalJson(PERMIT_RESUBMISSION_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/files");
-  return item;
-}
-export function queueDocumentTransmittalTool({ companyName = "Customer Workspace", packageName = "Customer document transmittal", detail = "Prepare governed transmittal preserving file and customer communication continuity." } = {}) {
-  const current = readLocalJson(DOCUMENT_TRANSMITTAL_QUEUE_KEY, { items: [] });
-  const item = { id: `transmittal-${Date.now()}`, companyName, packageName, detail, status: "Queued", nextAction: "Send document transmittal" };
-  writeLocalJson(DOCUMENT_TRANSMITTAL_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/messages");
-  return item;
-}
-export function stageComplianceAuditReviewTool({ projectId = "PRJ-A117", detail = "Prepare compliance audit review and preserve evidence continuity." } = {}) {
-  const current = readLocalJson(COMPLIANCE_AUDIT_QUEUE_KEY, { items: [] });
-  const item = { id: `compliance-${Date.now()}`, projectId, detail, status: "Queued", nextAction: "Complete compliance audit review" };
-  writeLocalJson(COMPLIANCE_AUDIT_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/files");
-  return item;
-}
-export function queueCloseoutCustomerNoticeTool({ companyName = "Customer Workspace", detail = "Prepare customer closeout notice and preserve turnover communication continuity." } = {}) {
-  const current = readLocalJson(CLOSEOUT_NOTICE_QUEUE_KEY, { items: [] });
-  const item = { id: `closeoutnotice-${Date.now()}`, companyName, detail, status: "Queued", nextAction: "Send closeout notice" };
-  writeLocalJson(CLOSEOUT_NOTICE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
-  navigateTo("/portal/messages");
   return item;
 }
