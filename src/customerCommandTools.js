@@ -13,6 +13,8 @@ const PAY_APP_QUEUE_KEY = "fca_customer_pay_app_queue_v1";
 const RETENTION_RELEASE_QUEUE_KEY = "fca_customer_retention_release_queue_v1";
 const SUBMITTAL_RESPONSE_QUEUE_KEY = "fca_customer_submittal_response_queue_v1";
 const COLLECTION_NOTICE_QUEUE_KEY = "fca_customer_collection_notice_queue_v1";
+const PUNCHLIST_RECOVERY_QUEUE_KEY = "fca_customer_punchlist_recovery_queue_v1";
+const COORDINATION_NOTICE_QUEUE_KEY = "fca_customer_coordination_notice_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -35,13 +37,7 @@ function writeLocalJson(key, value) {
 
 export function createPermitEscalationTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", detail = "Permit review is blocking mobilization and customer follow-through." } = {}) {
   const current = readLocalJson(SUPPORT_COMMAND_KEY, { subject: "", priority: "normal", detail: "", tickets: [] });
-  const ticket = {
-    id: `ticket-${Date.now()}`,
-    subject: `${companyName} permit escalation`,
-    priority: "high",
-    detail: `${detail} Project context: ${projectId}. Auricrux created this support request from the command center so recovery stays attached to live work.`,
-    status: "Open",
-  };
+  const ticket = { id: `ticket-${Date.now()}`, subject: `${companyName} permit escalation`, priority: "high", detail: `${detail} Project context: ${projectId}. Auricrux created this support request from the command center so recovery stays attached to live work.`, status: "Open" };
   writeLocalJson(SUPPORT_COMMAND_KEY, { ...current, tickets: [ticket, ...(current.tickets || [])] });
   navigateTo("/portal/support");
   return ticket;
@@ -49,13 +45,7 @@ export function createPermitEscalationTool({ companyName = "Customer Workspace",
 
 export function stageMobilizationInvoiceTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", amount = "$6,500" } = {}) {
   const current = readLocalJson(BILLING_COMMAND_KEY, { invoiceName: "", amount: "", note: "", invoices: [] });
-  const invoice = {
-    id: `invoice-${Date.now()}`,
-    invoiceName: `${companyName} mobilization invoice`,
-    amount,
-    note: `Created from the command center for ${projectId}. Auricrux staged this billing action so mobilization, customer continuity, and revenue follow-through stay connected.`,
-    status: "Draft",
-  };
+  const invoice = { id: `invoice-${Date.now()}`, invoiceName: `${companyName} mobilization invoice`, amount, note: `Created from the command center for ${projectId}. Auricrux staged this billing action so mobilization, customer continuity, and revenue follow-through stay connected.`, status: "Draft" };
   writeLocalJson(BILLING_COMMAND_KEY, { ...current, invoices: [invoice, ...(current.invoices || [])] });
   navigateTo("/portal/billing");
   return invoice;
@@ -153,6 +143,22 @@ export function stageCustomerCollectionNoticeTool({ companyName = "Customer Work
   const current = readLocalJson(COLLECTION_NOTICE_QUEUE_KEY, { items: [] });
   const item = { id: `collection-${Date.now()}`, companyName, contact, amount, detail, status: "Queued", nextAction: "Send collections notice" };
   writeLocalJson(COLLECTION_NOTICE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/messages");
+  return item;
+}
+
+export function stagePunchlistRecoveryTool({ projectId = "PRJ-A117", itemTitle = "Correct finish punch item", detail = "Track punch recovery, assign owner, and preserve closeout continuity." } = {}) {
+  const current = readLocalJson(PUNCHLIST_RECOVERY_QUEUE_KEY, { items: [] });
+  const item = { id: `punch-${Date.now()}`, projectId, itemTitle, detail, status: "Queued", nextAction: "Resolve punch item" };
+  writeLocalJson(PUNCHLIST_RECOVERY_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/projects");
+  return item;
+}
+
+export function queueSubcontractorCoordinationNoticeTool({ companyName = "Customer Workspace", trade = "Electrical", detail = "Send subcontractor coordination notice preserving schedule and scope continuity." } = {}) {
+  const current = readLocalJson(COORDINATION_NOTICE_QUEUE_KEY, { items: [] });
+  const item = { id: `coord-${Date.now()}`, companyName, trade, detail, status: "Queued", nextAction: "Send coordination notice" };
+  writeLocalJson(COORDINATION_NOTICE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
   navigateTo("/portal/messages");
   return item;
 }
