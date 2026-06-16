@@ -1,0 +1,45 @@
+{
+  "publicRoutes": [
+    "/",
+    "/platform",
+    "/login",
+    "/pricing",
+    "/contact",
+    "/auricrux",
+    "/warranty",
+    "/referrals"
+  ],
+  "portalRoutes": [
+    "/portal",
+    "/portal/platform",
+    "/portal/operations",
+    "/portal/projects",
+    "/portal/files",
+    "/portal/audit",
+    "/portal/messages",
+    "/portal/notifications",
+    "/portal/bids",
+    "/portal/estimates",
+    "/portal/proposals",
+    "/portal/billing",
+    "/portal/support",
+    "/portal/admin",
+    "/portal/profile",
+    "/portal/auricrux",
+    "/portal/academy"
+  ],
+  "dynamicRoutes": [
+    "/portal/opportunities/:opportunityId",
+    "/portal/projects/:projectId"
+  ],
+  "academyRoutes": [
+    "/academy",
+    "/portal/academy"
+  ],
+  "authApis": [
+    "/api/customer-login",
+    "/api/customer-session",
+    "/api/customer-logout"
+  ],
+  "finding": "Real SaaS and LMS slices are present in repo truth; site-level alignment is the remaining packaging and journey defect."
+}
