@@ -29,11 +29,12 @@ const report = {
       tests: course?.tests?.length || 0,
       labs: course?.labs?.length || 0,
       performanceMeasures: course?.performanceProfile?.measures?.length || 0,
+      completionRequirements: course?.completionRequirements?.length || 0,
     };
   }),
 };
 
-const markdown = `# Packet Functional Minimums Report\n\n- Generated at: ${report.generatedAt}\n- Tracks checked: ${report.trackCount}\n\n${report.tracks.map((track) => `## ${track.title}\n- Lessons: ${track.lessons}\n- Assignments: ${track.assignments}\n- Quizzes: ${track.quizzes}\n- Tests: ${track.tests}\n- Labs: ${track.labs}\n- Performance measures: ${track.performanceMeasures}`).join("\n\n")}`;
+const markdown = `# Packet Functional Minimums Report\n\n- Generated at: ${report.generatedAt}\n- Tracks checked: ${report.trackCount}\n\n${report.tracks.map((track) => `## ${track.title}\n- Lessons: ${track.lessons}\n- Assignments: ${track.assignments}\n- Quizzes: ${track.quizzes}\n- Tests: ${track.tests}\n- Labs: ${track.labs}\n- Performance measures: ${track.performanceMeasures}\n- Completion requirements: ${track.completionRequirements}`).join("\n\n")}`;
 
 await fs.writeFile(path.join(outputDir, "packet-functional-minimums-report.json"), JSON.stringify(report, null, 2));
 await fs.writeFile(path.join(outputDir, "packet-functional-minimums-report.md"), markdown);
