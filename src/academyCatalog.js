@@ -24,7 +24,8 @@ export const academyCatalog = {
         evaluationRubric: ["Safety discipline scored at competent or above", "Drawing literacy scored at competent or above", "Evidence attachment quality scored at competent or above"],
         capstoneProject: ["Capstone · Assemble a first-year electrical readiness packet with safety log, plan-symbol interpretation, and support-command escalation response"],
         portfolioArtifacts: ["Safety observation log", "Plan-symbol reading worksheet", "Field escalation response packet"],
-        mentorReviewCheckpoints: ["Mentor review 1 · Safety and PPE readiness", "Mentor review 2 · Drawing literacy and escalation quality"]
+        mentorReviewCheckpoints: ["Mentor review 1 · Safety and PPE readiness", "Mentor review 2 · Drawing literacy and escalation quality"],
+        remediationPaths: ["Remediation · Repeat drawing literacy drill if symbol-read accuracy is below threshold", "Remediation · Re-submit evidence packet if escalation or documentation quality is below threshold"]
       }],
       linkedSurface: "/portal/support",
       linkedLabel: "Open Field Support Continuity"
@@ -53,7 +54,8 @@ export const academyCatalog = {
         evaluationRubric: ["Hazard recognition scored at competent or above", "Documentation quality scored at competent or above", "Corrective-action planning scored at competent or above"],
         capstoneProject: ["Capstone · Deliver a full incident-to-corrective-action safety package with audit trail, support escalation, and recovery recommendation"],
         portfolioArtifacts: ["Hazard category worksheet", "Incident documentation package", "Corrective-action memo"],
-        mentorReviewCheckpoints: ["Mentor review 1 · Hazard recognition quality", "Mentor review 2 · Incident recovery recommendation quality"]
+        mentorReviewCheckpoints: ["Mentor review 1 · Hazard recognition quality", "Mentor review 2 · Incident recovery recommendation quality"],
+        remediationPaths: ["Remediation · Repeat hazard recognition scenarios if quiz performance is below threshold", "Remediation · Rebuild corrective-action packet if mentor review is below threshold"]
       }],
       linkedSurface: "/portal/audit",
       linkedLabel: "Open Audit and Safety Continuity"
@@ -82,7 +84,8 @@ export const academyCatalog = {
         evaluationRubric: ["Lifecycle fluency scored at competent or above", "Handoff quality scored at competent or above", "Commercial awareness scored at competent or above"],
         capstoneProject: ["Capstone · Build an end-to-end lifecycle operating packet from bid intake through billing and closeout recommendation"],
         portfolioArtifacts: ["Lifecycle mapping worksheet", "Bid-to-project handoff analysis", "Billing and closeout recommendation packet"],
-        mentorReviewCheckpoints: ["Mentor review 1 · Lifecycle map quality", "Mentor review 2 · Commercial packet quality"]
+        mentorReviewCheckpoints: ["Mentor review 1 · Lifecycle map quality", "Mentor review 2 · Commercial packet quality"],
+        remediationPaths: ["Remediation · Rework lifecycle map if continuity logic is incomplete", "Remediation · Rebuild commercial packet if handoff or revenue logic is below threshold"]
       }],
       linkedSurface: "/portal/platform",
       linkedLabel: "Open Platform Dashboard"
@@ -111,7 +114,8 @@ export const academyCatalog = {
         evaluationRubric: ["Classification accuracy scored at competent or above", "Documentation completeness scored at competent or above", "Permit discipline scored at competent or above"],
         capstoneProject: ["Capstone · Assemble a residential contractor compliance packet with permit workflow, customer notice, and evidence governance documentation"],
         portfolioArtifacts: ["License classification worksheet", "Permit checklist package", "Customer notice draft"],
-        mentorReviewCheckpoints: ["Mentor review 1 · Classification and permit rigor", "Mentor review 2 · Compliance packet readiness"]
+        mentorReviewCheckpoints: ["Mentor review 1 · Classification and permit rigor", "Mentor review 2 · Compliance packet readiness"],
+        remediationPaths: ["Remediation · Repeat classification analysis if permit path is misaligned", "Remediation · Rebuild compliance packet if evidence governance is incomplete"]
       }],
       linkedSurface: "/portal/files",
       linkedLabel: "Open File Governance"
@@ -140,7 +144,8 @@ export const academyCatalog = {
         evaluationRubric: ["Route fluency scored at competent or above", "Tool execution scored at competent or above", "Auricrux utilization scored at competent or above"],
         capstoneProject: ["Capstone · Run a full customer workflow from login through qualification, files, billing, support, and Academy continuity using Contractor Command"],
         portfolioArtifacts: ["Navigation checklist", "Qualification-to-estimate run packet", "Files-support-billing walkthrough proof"],
-        mentorReviewCheckpoints: ["Mentor review 1 · Route fluency and control", "Mentor review 2 · Full workflow continuity readiness"]
+        mentorReviewCheckpoints: ["Mentor review 1 · Route fluency and control", "Mentor review 2 · Full workflow continuity readiness"],
+        remediationPaths: ["Remediation · Repeat route walkthrough if command transitions break continuity", "Remediation · Rebuild end-to-end proof packet if Auricrux utilization is below threshold"]
       }],
       linkedSurface: "/portal",
       linkedLabel: "Open Command Center"

@@ -19,6 +19,8 @@ const FIELD_LOG_QUEUE_KEY = "fca_customer_field_log_queue_v1";
 const SCHEDULE_RISK_QUEUE_KEY = "fca_customer_schedule_risk_queue_v1";
 const RFI_RESPONSE_QUEUE_KEY = "fca_customer_rfi_response_queue_v1";
 const PROCUREMENT_RELEASE_QUEUE_KEY = "fca_customer_procurement_release_queue_v1";
+const INSPECTION_RESPONSE_QUEUE_KEY = "fca_customer_inspection_response_queue_v1";
+const DELIVERY_CONFIRMATION_QUEUE_KEY = "fca_customer_delivery_confirmation_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -177,5 +179,19 @@ export function stageProcurementReleaseTool({ projectId = "PRJ-A117", packageNam
   const item = { id: `procurement-${Date.now()}`, projectId, packageName, detail, status: "Queued", nextAction: "Release procurement package" };
   writeLocalJson(PROCUREMENT_RELEASE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
   navigateTo("/portal/projects");
+  return item;
+}
+export function stageInspectionResponseTool({ projectId = "PRJ-A117", inspectionName = "Framing inspection response", detail = "Prepare inspection response actions and preserve jurisdiction follow-through." } = {}) {
+  const current = readLocalJson(INSPECTION_RESPONSE_QUEUE_KEY, { items: [] });
+  const item = { id: `inspection-${Date.now()}`, projectId, inspectionName, detail, status: "Queued", nextAction: "Issue inspection response" };
+  writeLocalJson(INSPECTION_RESPONSE_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/support");
+  return item;
+}
+export function queueDeliveryConfirmationTool({ projectId = "PRJ-A117", packageName = "Material delivery confirmation", detail = "Preserve delivery confirmation and customer notification continuity." } = {}) {
+  const current = readLocalJson(DELIVERY_CONFIRMATION_QUEUE_KEY, { items: [] });
+  const item = { id: `delivery-${Date.now()}`, projectId, packageName, detail, status: "Queued", nextAction: "Confirm delivery and notify customer" };
+  writeLocalJson(DELIVERY_CONFIRMATION_QUEUE_KEY, { ...current, items: [item, ...(current.items || [])] });
+  navigateTo("/portal/messages");
   return item;
 }
