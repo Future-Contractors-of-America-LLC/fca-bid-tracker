@@ -7,6 +7,8 @@ const PROPOSAL_FOLLOWUP_QUEUE_KEY = "fca_customer_proposal_followup_queue_v1";
 const FILE_INTAKE_DRAFTS_KEY = "fca_customer_file_intake_v1";
 const MESSAGE_COMMAND_KEY = "fca_customer_message_command_v1";
 const PROJECT_COMMAND_CENTER_QUEUE_KEY = "fca_customer_project_command_center_queue_v1";
+const CHANGE_ORDER_REVIEW_QUEUE_KEY = "fca_customer_change_order_review_queue_v1";
+const WARRANTY_CASE_QUEUE_KEY = "fca_customer_warranty_case_queue_v1";
 
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
@@ -202,4 +204,45 @@ export function queueCustomerApprovalReminderTool({ companyName = "Customer Work
 
   navigateTo("/portal/projects");
   return reminder;
+}
+
+export function queueChangeOrderPricingReviewTool({ projectId = "PRJ-A117", estimateId = "EST-1001", changeOrderTitle = "Electrical scope revision", detail = "Review added scope, pricing impact, and customer decision path." } = {}) {
+  const current = readLocalJson(CHANGE_ORDER_REVIEW_QUEUE_KEY, { items: [] });
+  const item = {
+    id: `co-${Date.now()}`,
+    projectId,
+    estimateId,
+    changeOrderTitle,
+    detail,
+    status: "Queued",
+    nextAction: "Price and send change order",
+  };
+
+  writeLocalJson(CHANGE_ORDER_REVIEW_QUEUE_KEY, {
+    ...current,
+    items: [item, ...(current.items || [])],
+  });
+
+  navigateTo("/portal/estimates");
+  return item;
+}
+
+export function stageWarrantyServiceCaseTool({ companyName = "Customer Workspace", projectId = "PRJ-A117", issue = "Document post-closeout service concern and response path." } = {}) {
+  const current = readLocalJson(WARRANTY_CASE_QUEUE_KEY, { cases: [] });
+  const warrantyCase = {
+    id: `warranty-${Date.now()}`,
+    companyName,
+    projectId,
+    issue,
+    status: "Open",
+    nextAction: "Assign service response",
+  };
+
+  writeLocalJson(WARRANTY_CASE_QUEUE_KEY, {
+    ...current,
+    cases: [warrantyCase, ...(current.cases || [])],
+  });
+
+  navigateTo("/portal/support");
+  return warrantyCase;
 }
