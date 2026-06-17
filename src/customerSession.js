@@ -42,6 +42,17 @@ function broadcastCustomerSessionUpdate() {
   window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_EVENT));
 }
 
+async function readJsonSafe(response) {
+  const contentType = response.headers.get("content-type") || "";
+  if (!contentType.toLowerCase().includes("application/json")) return null;
+
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
 export function readCustomerSession() {
   if (typeof window === "undefined") return null;
 
@@ -109,9 +120,10 @@ export async function syncCustomerSessionFromServer() {
       },
     });
 
-    const payload = await response.json();
+    const payload = await readJsonSafe(response);
+
     if (!response.ok || !payload?.ok || !payload?.authenticated || !payload?.account) {
-      clearCustomerSession();
+      await clearCustomerSession();
       return null;
     }
 
