@@ -1,3 +1,14 @@
+async function readJsonSafe(response) {
+  const contentType = response.headers.get("content-type") || "";
+  if (!contentType.toLowerCase().includes("application/json")) return null;
+
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchCustomerAuthState() {
   const response = await fetch("/api/customer-auth-state", {
     method: "GET",
@@ -7,9 +18,10 @@ export async function fetchCustomerAuthState() {
     },
   });
 
-  const payload = await response.json().catch(() => ({}));
+  const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
-    throw new Error(payload?.error || "Unable to load customer auth state.");
+    const statusSuffix = response.status ? ` (status ${response.status})` : "";
+    throw new Error(payload?.error || `Unable to load customer auth state${statusSuffix}.`);
   }
 
   return payload;
