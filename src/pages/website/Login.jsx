@@ -7,6 +7,7 @@ import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -260,6 +261,14 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
             FCA gives contractors a customer-ready login experience and a branded workspace with real qualification, estimate, project, file, support, billing, and Academy routes—without breaking continuity between sales, operations, and execution.
           </p>
           <PublicCtaRow actions={publicBodyCtaSets.loginWorkspace} style={{ display: "flex", gap: 12, flexWrap: "wrap" }} />
+        </div>
+
+        <div style={{ marginBottom: 24 }}>
+          <PublicPackageRouteGroupsPanel
+            eyebrow="Login route-group truth"
+            title="Login now shows exactly what opens after authentication"
+            detail="The login surface now exposes the exact route groups behind SaaS, customer portal, Academy, Auricrux/comms, and revenue continuity so customer trust is anchored to reachable product lanes before sign-in."
+          />
         </div>
 
         <CustomerProductLaunchpad session={session} title="What opens after sign-in" />
