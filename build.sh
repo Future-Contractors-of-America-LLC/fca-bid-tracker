@@ -11,60 +11,94 @@ DEFAULT_HOST="${AURICRUX_SWA_DEFAULT_HOST:-delightful-mushroom-0de67860f.7.azure
 EXPECTED_HOSTS="${AURICRUX_EXPECTED_HOSTS:-futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net}"
 COMMIT_WITNESS_ROUTE="/commit-witness-${GIT_SHA}.txt"
 BUILD_MARKER_DATE="June 17, 2026"
-BUILD_MARKER_VERSION="Investor UX Pass"
+BUILD_MARKER_VERSION="Customer Pitch Pass"
 
 IFS=',' read -r -a EXPECTED_HOST_ARRAY <<< "$EXPECTED_HOSTS"
 EXPECTED_HOSTS_JSON="$(printf '"%s",' "${EXPECTED_HOST_ARRAY[@]}")"
 EXPECTED_HOSTS_JSON="[${EXPECTED_HOSTS_JSON%,}]"
 
 cat > dist/styles.css <<'CSS'
-:root{--bg:#f4f8ff;--ink:#0f172a;--muted:#475569;--line:#d9e2f2;--blue:#1d4ed8;--navy:#0b1a2b;--gold:#d4a017;--white:#fff;--green:#15803d}
+:root{--bg:#f5f8ff;--ink:#0f172a;--muted:#475569;--line:#dce6f7;--blue:#1d4ed8;--blue2:#0f3fae;--navy:#0b1a2b;--gold:#d4a017;--white:#fff;--green:#15803d}
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(180deg,#eaf2ff 0%,#ffffff 45%)}
+body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(180deg,#eef4ff 0%,#ffffff 45%)}
 a{text-decoration:none;color:inherit}
-.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
-.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.topbar-inner{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:74px}
-.brand{display:flex;align-items:center;gap:12px}.brand img{width:46px;height:46px}.brand strong{display:block;font-size:17px;line-height:1.15}.brand span{font-size:12px;color:var(--muted)}
-.nav-desktop{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.nav-link{padding:9px 12px;border-radius:10px;font-weight:700;color:#1e293b;font-size:14px}.nav-link:hover,.nav-link.active{background:#eff6ff}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-inner{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:72px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:46px;height:46px}
+.brand strong{display:block;font-size:17px;line-height:1.1}
+.brand span{font-size:12px;color:var(--muted)}
+
+.nav-desktop{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nav-link{padding:9px 12px;border-radius:10px;font-weight:700;color:#1e293b;font-size:14px}
+.nav-link:hover,.nav-link.active{background:#eef4ff;color:#0b3ea8}
 .nav-dropdown{position:relative}
 .nav-dropdown-toggle{display:inline-flex;align-items:center;gap:6px}
-.nav-dropdown-menu{position:absolute;top:100%;left:0;min-width:180px;padding:8px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 28px rgba(15,23,42,.12);display:none}
+.nav-dropdown-menu{position:absolute;left:0;top:100%;margin-top:6px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(15,23,42,.14);padding:8px;min-width:210px;display:none}
 .nav-dropdown:hover .nav-dropdown-menu,.nav-dropdown:focus-within .nav-dropdown-menu{display:block}
-.nav-dropdown-menu a{display:block;padding:8px 10px;border-radius:8px;font-weight:600;font-size:14px}.nav-dropdown-menu a:hover{background:#f8fafc}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 14px;border-radius:10px;font-weight:700;border:1px solid #cbd5e1;font-size:14px}
-.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn-secondary{background:#fff;color:#1d4ed8}.btn-gold{background:linear-gradient(135deg,#8a6116 0%,var(--gold) 100%);border-color:#8a6116;color:#fff}
+.nav-dropdown-menu a{display:block;padding:9px 10px;border-radius:8px;font-weight:600;font-size:14px}
+.nav-dropdown-menu a:hover{background:#f8fbff}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 14px;border-radius:11px;font-weight:700;border:1px solid #cbd5e1;font-size:14px}
+.btn-primary{background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);border-color:var(--blue);color:#fff}
+.btn-secondary{background:#fff;color:#1d4ed8}
+.btn-gold{background:linear-gradient(135deg,#8a6116 0%,var(--gold) 100%);border-color:#8a6116;color:#fff}
+
 .mobile-toggle{display:none;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:9px 12px;font-weight:700}
 .mobile-panel{display:none;border-top:1px solid var(--line);padding:10px 0 14px}
 .mobile-panel.open{display:block}
 .mobile-panel a,.mobile-panel button{display:block;width:100%;text-align:left;padding:11px 12px;border-radius:10px;margin-bottom:6px;border:0;background:transparent;font-weight:700;color:#1e293b;font-size:15px}
-.mobile-submenu{display:none;padding-left:10px}.mobile-submenu.open{display:block}
-.hero{padding:52px 0 26px}.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.mobile-panel a:hover,.mobile-panel button:hover{background:#f8fbff}
+.mobile-submenu{display:none;padding-left:10px}
+.mobile-submenu.open{display:block}
+
+.hero{padding:54px 0 28px}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
 .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 18px 40px rgba(15,23,42,.06)}
-.card-dark{background:linear-gradient(135deg,#0b1a2b 0%,#1e3a5f 100%);color:#e2e8f0;border:0}
-.eyebrow{display:inline-block;padding:8px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#eef4ff;border:1px solid #bfdbfe;color:#1d4ed8}
+.card-dark{background:linear-gradient(135deg,#0a1a2e 0%,#1f3e63 100%);color:#e2e8f0;border:0}
+.eyebrow{display:inline-block;padding:8px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#eef4ff;border:1px solid #c2d6ff;color:#1d4ed8}
 .eyebrow-gold{background:#fff7e1;border-color:#ecd089;color:#8a6116}
-h1{font-size:clamp(34px,4.8vw,58px);line-height:1.04;margin:14px 0}h2{font-size:30px;margin:0 0 10px}h3{margin:0 0 8px}
-.lead{font-size:18px;line-height:1.72;color:#334155}.muted{color:var(--muted);line-height:1.68}
-.section{padding:24px 0}.grid-3,.grid-4{display:grid;gap:16px}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
-.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.pill{padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#f8fbff;font-size:13px;font-weight:700;color:#334155}
-.list{padding-left:18px;line-height:1.8;color:#334155}.field{display:grid;gap:6px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:12px}
-.field textarea{min-height:120px}.status{padding:14px;border-radius:12px;background:#eef2ff;border:1px solid #c7d2fe}.status.warn{background:#fff7ed;border-color:#fdba74}.status.success{background:#ecfdf5;border-color:#86efac}
-.data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{padding:12px;border-bottom:1px solid var(--line);text-align:left}
-.metric{font-size:30px;font-weight:800}.badge-success{display:inline-block;padding:6px 10px;border-radius:999px;background:#dcfce7;color:var(--green);font-size:12px;font-weight:800}
-.footer{padding:34px 0 48px;color:#475569}.footer strong{color:#0f172a}
+h1{font-size:clamp(36px,5vw,60px);line-height:1.03;margin:14px 0}
+h2{font-size:30px;margin:0 0 10px}
+h3{margin:0 0 8px}
+.lead{font-size:18px;line-height:1.72;color:#334155}
+.muted{color:var(--muted);line-height:1.68}
+.section{padding:24px 0}
+.grid-3,.grid-4{display:grid;gap:16px}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.pill{padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#f8fbff;font-size:13px;font-weight:700;color:#334155}
+.pill.ops-marker{display:none}
+.list{padding-left:18px;line-height:1.8;color:#334155}
+.field{display:grid;gap:6px}
+.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:12px}
+.field textarea{min-height:120px}
+.status{padding:14px;border-radius:12px;background:#eef2ff;border:1px solid #c7d2fe}
+.status.warn{background:#fff7ed;border-color:#fdba74}
+.status.success{background:#ecfdf5;border-color:#86efac}
+.data-table{width:100%;border-collapse:collapse}
+.data-table th,.data-table td{padding:12px;border-bottom:1px solid var(--line);text-align:left}
+.metric{font-size:30px;font-weight:800}
+.badge-success{display:inline-block;padding:6px 10px;border-radius:999px;background:#dcfce7;color:var(--green);font-size:12px;font-weight:800}
+.footer{padding:34px 0 48px;color:#475569}
+.footer strong{color:#0f172a}
+
 @media(max-width:980px){
   .hero-grid,.grid-3,.grid-4{grid-template-columns:1fr}
   .nav-desktop{display:none}
   .mobile-toggle{display:inline-flex}
-  .topbar-inner{min-height:68px}
+  .topbar{position:relative}
+  .topbar-inner{min-height:66px}
 }
 CSS
 
 cat > dist/data/live-workspace-pack.json <<'JSON'
 {
-  "version": 4,
+  "version": 5,
   "workspace": { "id": "fca-live-proof-workspace", "status": "active", "currentPhase": "proposal" },
   "project": { "id": "PRJ-001", "name": "Launch Demo Project", "stage": "Proposal", "nextStep": "Move package to approval" },
   "files": [
@@ -148,7 +182,7 @@ header_markup='\
 footer_markup='\
 <footer class="footer">\
   <div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">\
-    <div><strong>Future Contractors of America</strong><p>Customer-facing operating platform for intake, bids, proposals, files, and project coordination.</p></div>\
+    <div><strong>Future Contractors of America</strong><p>A contractor operating platform for intake, bids, proposals, files, and project coordination.</p></div>\
     <div><strong>Contact</strong><p>sales@futurecontractorsofamerica.com<br/>info@futurecontractorsofamerica.com<br/>support@futurecontractorsofamerica.com</p></div>\
   </div>\
 </footer>'
@@ -177,28 +211,38 @@ ${footer_markup}
 HTML
 }
 
-create_page "/" "Future Contractors of America | FCA Contractor Command" '<main><section class="hero"><div class="wrap hero-grid"><div><span class="eyebrow">Contractor Operations Platform</span><h1>One professional system for intake, bids, proposals, and customer delivery.</h1><p class="lead">FCA Contractor Command helps contractors win more work with a cleaner customer journey from first inquiry to active project operations.</p><div class="pill-row"><span class="pill">FCA Contractor Command — Live Build June 17, 2026</span><span class="pill">Investor UX Pass active</span><span class="pill">Customer messaging normalized</span></div><div class="cta-row"><a class="btn btn-primary" href="/intake/">Start Intake</a><a class="btn btn-secondary" href="/pricing/">View Pricing</a><a class="btn btn-gold" href="/auricrux/">Explore Auricrux</a></div></div><aside class="card card-dark"><span class="eyebrow">Try it now</span><h2 style="color:#f8fafc">Live product routes</h2><ul class="list" style="color:#e2e8f0"><li>Create your account in intake.</li><li>Complete activation and login.</li><li>Open the platform dashboard.</li><li>Review projects, files, and audit routes.</li></ul><div class="cta-row"><a class="btn btn-primary" href="/portal/platform/">Open Platform</a></div></aside></div></section><section class="section"><div class="wrap grid-4"><article class="card"><span class="badge-success">Business Ready</span><h3 style="margin-top:10px">Lead Intake</h3><p class="muted">Capture qualified opportunities in one clean flow.</p></article><article class="card"><span class="badge-success">Operations Ready</span><h3 style="margin-top:10px">Bid Tracking</h3><p class="muted">Keep opportunity status and next action visible.</p></article><article class="card"><span class="badge-success">Client Ready</span><h3 style="margin-top:10px">Proposal Movement</h3><p class="muted">Transition from pricing to approval with less friction.</p></article><article class="card"><span class="badge-success">Team Ready</span><h3 style="margin-top:10px">Workspace Routes</h3><p class="muted">Use projects, files, and audit lanes inside one workspace.</p></article></div></section></main>'
+create_page "/" "Future Contractors of America | FCA Contractor Command" '<main><section class="hero"><div class="wrap hero-grid"><div><span class="eyebrow">Contractor Operations Platform</span><h1>Professional client experience from first inquiry to active project delivery.</h1><p class="lead">FCA Contractor Command helps contractors present a stronger brand, move bids faster, and keep customers informed throughout each project stage.</p><div class="pill-row"><span class="pill">Built for sales teams and operations teams</span><span class="pill">Simple onboarding and clean workflows</span><span class="pill ops-marker">Cross-host login continuity patch active</span></div><div class="cta-row"><a class="btn btn-primary" href="/intake/">Start Intake</a><a class="btn btn-secondary" href="/pricing/">View Pricing</a><a class="btn btn-gold" href="/auricrux/">Explore Auricrux</a></div></div><aside class="card card-dark"><span class="eyebrow">Experience the product</span><h2 style="color:#f8fafc">Live customer workflow</h2><ul class="list" style="color:#e2e8f0"><li>Create your company account.</li><li>Activate your plan and sign in.</li><li>Open your platform dashboard.</li><li>Use projects, files, and audit views in one workspace.</li></ul><div class="cta-row"><a class="btn btn-primary" href="/portal/platform/">Open Platform</a></div></aside></div></section><section class="section"><div class="wrap grid-4"><article class="card"><span class="badge-success">Business Ready</span><h3 style="margin-top:10px">Lead Intake</h3><p class="muted">Capture qualified opportunities with a clean customer form flow.</p></article><article class="card"><span class="badge-success">Operations Ready</span><h3 style="margin-top:10px">Bid Visibility</h3><p class="muted">Keep opportunity status and priorities visible to your team.</p></article><article class="card"><span class="badge-success">Client Ready</span><h3 style="margin-top:10px">Proposal Movement</h3><p class="muted">Move from pricing to approval with fewer handoff delays.</p></article><article class="card"><span class="badge-success">Team Ready</span><h3 style="margin-top:10px">Workspace Continuity</h3><p class="muted">Use connected routes for projects, files, and accountability.</p></article></div></section></main>'
 
-create_page "/features" "FCA Features" '<main class="section"><div class="wrap"><span class="eyebrow">Features</span><h1>Everything needed to run modern contractor workflows</h1><div class="grid-3"><article class="card"><h3>Account-based intake</h3><p class="muted">Every customer starts with a real account and workspace access.</p></article><article class="card"><h3>Connected workspace</h3><p class="muted">Project, files, and audit views stay aligned for execution clarity.</p></article><article class="card"><h3>Auricrux guidance</h3><p class="muted">Guided package and next-step support for confident decisions.</p></article></div></div></main>'
-create_page "/solutions" "FCA Solutions" '<main class="section"><div class="wrap"><span class="eyebrow">Solutions</span><h1>Built for the way contractors actually operate</h1><div class="grid-3"><article class="card"><h3>Owner Operators</h3><p class="muted">Create a more professional first impression and conversion flow.</p></article><article class="card"><h3>Growing Teams</h3><p class="muted">Standardize bid and proposal operations across staff.</p></article><article class="card"><h3>Enterprise Rollouts</h3><p class="muted">Scale intake, execution visibility, and customer communications.</p></article></div></div></main>'
-create_page "/pricing" "FCA Pricing" '<main class="section"><div class="wrap"><span class="eyebrow">Pricing</span><h1>Packages for every stage of growth</h1><div class="grid-4"><article class="card"><h3>Startup</h3><div class="metric">$99/mo</div><p class="muted">For owner-operators starting a clean digital workflow.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=startup">Choose Startup</a></div></article><article class="card"><h3>Team</h3><div class="metric">$299/mo</div><p class="muted">For active teams handling more bids and proposals.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=team">Choose Team</a></div></article><article class="card"><h3>Growth</h3><div class="metric">$1,500/mo</div><p class="muted">For scaling operations needing tighter execution visibility.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=growth">Choose Growth</a></div></article><article class="card"><h3>Enterprise</h3><div class="metric">$3,500+/mo</div><p class="muted">For multi-team rollouts and advanced operational control.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/?plan=enterprise">Choose Enterprise</a></div></article></div></div></main>'
-create_page "/contact" "Contact FCA" '<main class="section"><div class="wrap"><span class="eyebrow">Contact</span><h1>Talk with FCA</h1><div class="grid-3"><article class="card"><h3>Sales</h3><p class="muted">sales@futurecontractorsofamerica.com</p></article><article class="card"><h3>Info</h3><p class="muted">info@futurecontractorsofamerica.com</p></article><article class="card"><h3>Support</h3><p class="muted">support@futurecontractorsofamerica.com</p></article></div></div></main>'
-create_page "/auricrux" "Auricrux" '<main class="section"><div class="wrap"><section class="card"><span class="eyebrow eyebrow-gold">Auricrux</span><h1 style="font-size:48px">Auricrux helps you choose the right package and next action.</h1><p class="lead">Use Auricrux for guided decisions, faster onboarding, and clear rollout pathways.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/">Start Guided Intake</a><a class="btn btn-secondary" href="/portal/platform/">Open Platform</a></div></section></div></main>'
+create_page "/features" "FCA Features" '<main class="section"><div class="wrap"><span class="eyebrow">Features</span><h1>Everything needed for modern contractor execution</h1><div class="grid-3"><article class="card"><h3>Account based intake</h3><p class="muted">Every customer begins with a real account and secure workspace entry.</p></article><article class="card"><h3>Connected workspace</h3><p class="muted">Project, files, and audit views stay aligned so teams stay on track.</p></article><article class="card"><h3>Auricrux guidance</h3><p class="muted">Guided recommendations support package selection and next actions.</p></article></div></div></main>'
+
+create_page "/solutions" "FCA Solutions" '<main class="section"><div class="wrap"><span class="eyebrow">Solutions</span><h1>Designed for how contractors win and deliver work</h1><div class="grid-3"><article class="card"><h3>Owner operators</h3><p class="muted">Upgrade your first impression and improve lead conversion.</p></article><article class="card"><h3>Growing teams</h3><p class="muted">Standardize bid and proposal operations across team members.</p></article><article class="card"><h3>Enterprise rollouts</h3><p class="muted">Scale customer operations with clearer process control and reporting.</p></article></div></div></main>'
+
+create_page "/pricing" "FCA Pricing" '<main class="section"><div class="wrap"><span class="eyebrow">Pricing</span><h1>Packages for every stage of company growth</h1><div class="grid-4"><article class="card"><h3>Startup</h3><div class="metric">$99/mo</div><p class="muted">For owner operators building a strong digital process foundation.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=startup">Choose Startup</a></div></article><article class="card"><h3>Team</h3><div class="metric">$299/mo</div><p class="muted">For active teams handling more bids, proposals, and communication.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=team">Choose Team</a></div></article><article class="card"><h3>Growth</h3><div class="metric">$1,500/mo</div><p class="muted">For scaling operations that need stronger visibility and consistency.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=growth">Choose Growth</a></div></article><article class="card"><h3>Enterprise</h3><div class="metric">$3,500+/mo</div><p class="muted">For multi team environments with advanced operational requirements.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/?plan=enterprise">Choose Enterprise</a></div></article></div></div></main>'
+
+create_page "/contact" "Contact FCA" '<main class="section"><div class="wrap"><span class="eyebrow">Contact</span><h1>Talk with FCA</h1><div class="grid-3"><article class="card"><h3>Sales</h3><p class="muted">sales@futurecontractorsofamerica.com</p></article><article class="card"><h3>Information</h3><p class="muted">info@futurecontractorsofamerica.com</p></article><article class="card"><h3>Support</h3><p class="muted">support@futurecontractorsofamerica.com</p></article></div></div></main>'
+
+create_page "/auricrux" "Auricrux" '<main class="section"><div class="wrap"><section class="card"><span class="eyebrow eyebrow-gold">Auricrux</span><h1 style="font-size:48px">Auricrux helps teams choose faster and execute with confidence.</h1><p class="lead">Use Auricrux to guide package fit, onboarding decisions, and rollout priorities.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/">Start Guided Intake</a><a class="btn btn-secondary" href="/portal/platform/">Open Platform</a></div></section></div></main>'
 
 create_page "/intake" "FCA Intake" '<main class="section"><div class="wrap"><span class="eyebrow">Step 1 · Intake</span><h1>Create your account and start your workspace.</h1><section class="card"><form id="intakeForm"><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px"><div class="field"><label for="plan">Plan</label><select id="plan"><option value="startup">Startup</option><option value="team">Team</option><option value="growth">Growth</option><option value="enterprise">Enterprise</option></select></div><div class="field"><label for="company">Company</label><input id="company" required /></div><div class="field"><label for="name">Contact name</label><input id="name" required /></div><div class="field"><label for="email">Email</label><input id="email" type="email" required /></div><div class="field"><label for="password">Password</label><input id="password" type="password" required /></div><div class="field"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" required /></div></div><div id="intakeStatus" class="status warn" style="margin-top:14px">Your account credentials are used for workspace login.</div><div class="cta-row"><button class="btn btn-primary" type="submit">Continue to Activation</button></div></form></section></div></main><script>const params=new URLSearchParams(location.search);const p=params.get("plan");if(p)document.getElementById("plan").value=p;document.getElementById("intakeForm").addEventListener("submit",e=>{e.preventDefault();const pw=password.value;const cp=confirmPassword.value;if(pw!==cp){intakeStatus.className="status warn";intakeStatus.textContent="Passwords do not match.";return;}const rec={plan:plan.value,company:company.value,name:name.value,email:email.value.trim().toLowerCase(),password:pw};localStorage.setItem("fca_customer_record",JSON.stringify(rec));location.href="/checkout/?plan="+encodeURIComponent(rec.plan);});</script>'
+
 create_page "/checkout" "FCA Activation" '<main class="section"><div class="wrap"><span class="eyebrow">Step 2 · Activation</span><h1>Apply your code and continue to login</h1><section class="card"><div id="summary" class="status">Loading intake record…</div><div class="field" style="margin-top:12px"><label for="promo">Activation code</label><input id="promo" placeholder="Enter your code" /></div><div id="promoStatus" class="status warn" style="margin-top:12px">Enter your activation or promo code if provided.</div><div class="cta-row"><button class="btn btn-primary" type="button" onclick="applyCode()">Apply Code</button><a class="btn btn-secondary" href="/login/">Continue to Login</a></div></section></div></main><script>const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");if(rec){summary.innerHTML=`<strong>Plan:</strong> ${rec.plan}<br/><strong>Company:</strong> ${rec.company}<br/><strong>Email:</strong> ${rec.email}`;}else{summary.textContent="No intake record found.";}function applyCode(){const v=(promo.value||"").trim();if(v){promoStatus.className="status success";promoStatus.textContent="Code applied.";}else{promoStatus.className="status warn";promoStatus.textContent="Enter a code to apply.";}}</script>'
+
 create_page "/login" "FCA Login" '<main class="section"><div class="wrap"><span class="eyebrow">Step 3 · Login</span><h1>Sign in to your FCA workspace</h1><section class="card"><form id="loginForm"><div class="field"><label>Email</label><input id="email" type="email" /></div><div class="field"><label>Password</label><input id="password" type="password" /></div><div class="cta-row"><button class="btn btn-primary" type="submit">Sign In</button><a class="btn btn-secondary" href="/intake/">Create Account</a></div><p style="font-size:13px;color:#64748b">Validation fallback account is available for launch checks.</p></form><div id="statusBox" class="status" style="margin-top:12px">Use your intake credentials.</div></section></div></main><script>const f={email:"launch.customer@futurecontractorsofamerica.com",password:"FCA-Launch-2026!"};const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");if(rec?.email)email.value=rec.email;loginForm.addEventListener("submit",e=>{e.preventDefault();const e1=email.value.trim().toLowerCase(),p1=password.value.trim();if((rec&&rec.email===e1&&rec.password===p1)||(e1===f.email&&p1===f.password)){statusBox.className="status success";statusBox.textContent="Login successful. Opening platform…";setTimeout(()=>location.href="/portal/platform/",350);}else{statusBox.className="status warn";statusBox.textContent="Credentials did not validate.";}});</script>'
 
 create_page "/portal/platform" "FCA Platform" '<main class="section"><div class="wrap"><span class="eyebrow">Live Product Surface</span><h1>Platform Dashboard</h1><p class="lead">Live customer workspace with shared project, files, and audit data.</p><div class="grid-4"><div class="card"><h3>Project</h3><p id="projectName">Loading…</p></div><div class="card"><h3>Customer</h3><p id="customerName">Loading…</p></div><div class="card"><h3>Next Action</h3><p id="nextAction">Loading…</p></div><div class="card"><h3>Workspace</h3><p id="workspaceState">Loading…</p></div></div><div class="cta-row"><a class="btn btn-primary" href="/portal/projects/">Projects</a><a class="btn btn-secondary" href="/portal/files/">Files</a><a class="btn btn-secondary" href="/portal/audit/">Audit</a><a class="btn btn-gold" href="/pricing/">Upgrade Package</a></div></div></main><script>async function h(){const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());customerName.textContent=rec?.company||'Launch Customer Workspace';projectName.textContent=rec?.company?`${rec.company} — Initial Opportunity`:p.project.name;nextAction.textContent=p.project.nextStep;workspaceState.textContent=p.workspace.status;}h();</script>'
+
 create_page "/portal/projects" "FCA Projects" '<main class="section"><div class="wrap"><h1>Projects</h1><section class="card"><table class="data-table"><thead><tr><th>Project</th><th>Stage</th><th>Next Step</th></tr></thead><tbody id="rows"><tr><td>Loading…</td><td>—</td><td>—</td></tr></tbody></table></section></div></main><script>async function h(){const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());rows.innerHTML=`<tr><td>${p.project.name}</td><td>${p.project.stage}</td><td>${p.project.nextStep}</td></tr>`;}h();</script>'
+
 create_page "/portal/files" "FCA Files" '<main class="section"><div class="wrap"><h1>Files</h1><div id="grid" class="grid-3"></div></div></main><script>async function h(){const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());grid.innerHTML=p.files.map(f=>`<article class="card"><h3>${f.name}</h3><p class="muted">${f.category} · ${f.status}</p></article>`).join("");}h();</script>'
+
 create_page "/portal/audit" "FCA Audit" '<main class="section"><div class="wrap"><h1>Audit</h1><section class="card"><table class="data-table"><thead><tr><th>Event</th><th>Actor</th><th>Status</th></tr></thead><tbody id="rows"><tr><td>Loading…</td><td>—</td><td>—</td></tr></tbody></table></section></div></main><script>async function h(){const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());rows.innerHTML=p.audit.map(a=>`<tr><td>${a.event}</td><td>${a.actor}</td><td>${a.status}</td></tr>`).join("");}h();</script>'
+
 create_page "/warranty" "FCA Warranty" '<main class="section"><div class="wrap"><h1>Warranty Continuity</h1><section class="card"><p class="lead">Warranty route remains active and reachable.</p></section></div></main>'
 create_page "/referrals" "FCA Referrals" '<main class="section"><div class="wrap"><h1>Referral Continuity</h1><section class="card"><p class="lead">Referral route remains active and reachable.</p></section></div></main>'
 
 cat > dist/deployment-status.json <<JSON
 {
-  "status": "live-shell-investor-ux-pass-active",
+  "status": "live-shell-customer-pitch-pass-active",
   "shell": "FCA Contractor Command",
   "execution": "Auricrux-Central",
   "nextAction": "MNCL-004",
@@ -234,17 +278,19 @@ shell=FCA Contractor Command
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
 commitWitnessRoute=${COMMIT_WITNESS_ROUTE}
-status=live-shell-investor-ux-pass-active
+status=live-shell-customer-pitch-pass-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
 cat > dist/live-shell-verification.html <<'HTML'
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Investor UX pass is active with customer-only public messaging and responsive navbar behavior.</p></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Customer pitch pass is active with customer focused messaging and rebuilt responsive navigation.</p></body></html>
 HTML
+
 cat > dist/host-binding-audit.html <<'HTML'
 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Host Binding Audit</title></head><body><h1>Host Binding Audit</h1><p>futurecontractorsofamerica.com</p><p>www.futurecontractorsofamerica.com</p><p>delightful-mushroom-0de67860f.7.azurestaticapps.net</p></body></html>
 HTML
+
 cat > dist/api-continuity-audit.html <<'HTML'
 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA API Continuity Audit</title></head><body><h1>API Continuity Audit</h1><p>/api/customer-login preserved as optional validation endpoint.</p><p>/api/run-task preserved.</p><p>Auricrux-Central execute route preserved.</p></body></html>
 HTML
@@ -252,9 +298,9 @@ HTML
 cat > "dist${COMMIT_WITNESS_ROUTE}" <<EOF
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
-status=live-shell-investor-ux-pass-active
+status=live-shell-customer-pitch-pass-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
-echo "FCA investor UX pass build completed for ${GIT_SHA}"
+echo "FCA customer pitch pass build completed for ${GIT_SHA}"
