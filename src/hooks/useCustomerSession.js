@@ -11,6 +11,9 @@ import { appendAutomationLog, clearAutomationLog } from "../sessionAutomationLog
 import { appendCommercialLog, clearCommercialLog } from "../sessionCommercialLog";
 import { resolvePlanPreset } from "../pricingPlans";
 
+const PRODUCT_KEYS = ["saas", "lms", "auricrux"];
+const COMMUNICATION_KEYS = ["chat", "sms", "phone", "email", "teams", "conference", "lecture"];
+
 function normalizeProductSelection(enabledProducts = {}) {
   return {
     saas: enabledProducts.saas !== false,
@@ -83,12 +86,19 @@ export default function useCustomerSession() {
   const [session, setSession] = useState(() => readCustomerSession());
 
   useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
     let active = true;
 
     async function hydrate() {
-      const synced = await syncCustomerSessionFromServer();
-      if (!active) return;
-      setSession(synced || readCustomerSession());
+      try {
+        const synced = await syncCustomerSessionFromServer();
+        if (!active) return;
+        setSession(synced || readCustomerSession());
+      } catch {
+        if (!active) return;
+        setSession(readCustomerSession());
+      }
     }
 
     function handleSessionUpdate() {
@@ -174,7 +184,7 @@ export default function useCustomerSession() {
         return { ok: true, session: saved };
       },
       setProductAccess(product, enabled) {
-        if (!["saas", "lms", "auricrux"].includes(product)) {
+        if (!PRODUCT_KEYS.includes(product)) {
           return { ok: false, error: "Unknown product access target." };
         }
 
@@ -194,7 +204,7 @@ export default function useCustomerSession() {
         return { ok: true, session: saved };
       },
       setCommsAccess(channel, enabled) {
-        if (!["chat", "sms", "phone", "email", "teams", "conference", "lecture"].includes(channel)) {
+        if (!COMMUNICATION_KEYS.includes(channel)) {
           return { ok: false, error: "Unknown communications access target." };
         }
 
@@ -237,6 +247,6 @@ export default function useCustomerSession() {
         setSession(null);
       },
     }),
-    [session]
+    [session],
   );
 }
