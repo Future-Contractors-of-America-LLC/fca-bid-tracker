@@ -1,6 +1,6 @@
 {
-  "packet": "062W",
-  "generatedAt": "2026-06-17T09:36:12.710Z",
+  "packet": "062X",
+  "generatedAt": "2026-06-17T09:40:14.800Z",
   "requiredFiles": [
     "live-deployment-current-head-verifier-validation.json",
     "live-deployment-current-head-verifier-report.json",
