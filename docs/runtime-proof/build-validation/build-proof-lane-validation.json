@@ -1,10 +1,10 @@
 {
-  "packet": "062S",
+  "packet": "062U",
   "generatedAt": "2026-06-14T17:30:00Z",
   "provenance": "github_actions_ci",
   "ciPersisted": true,
   "success": false,
   "failure": "CI-persisted build-validation proof has not yet been directly observed.",
-  "ciRunId": "27679324191",
-  "ciCommitSha": "d77550147301a1e3897fa0898424524922cff9ac"
+  "ciRunId": "27679444535",
+  "ciCommitSha": "72f988adb7f188a143659195ca23d3f40de1eaf4"
 }
