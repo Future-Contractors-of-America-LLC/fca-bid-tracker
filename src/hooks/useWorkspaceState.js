@@ -51,23 +51,17 @@ function applyActiveProject(baseState, projectOverride = null) {
       ...baseState.workspace,
       currentNextAction: activeProject.nextAction || baseState.workspace.currentNextAction,
       nextActionOwner: activeProject.owner || baseState.workspace.nextActionOwner,
-      auditSummary:
-        activeProject.auditStatus || baseState.workspace.auditSummary,
+      auditSummary: activeProject.auditStatus || baseState.workspace.auditSummary,
     },
     auricrux: {
       ...baseState.auricrux,
-      nextRecommendedAction:
-        activeProject.nextAction || baseState.auricrux.nextRecommendedAction,
-      recommendationReason:
-        activeProject.commercialFocus || baseState.auricrux.recommendationReason,
-      currentBlocker:
-        activeProject.permitStatus || baseState.auricrux.currentBlocker,
-      blockerImpact:
-        activeProject.siteStatus || baseState.auricrux.blockerImpact,
-      lastActionResult:
-        activeProject.lastActionAt
-          ? `Most recent project action recorded at ${activeProject.lastActionAt}.`
-          : baseState.auricrux.lastActionResult,
+      nextRecommendedAction: activeProject.nextAction || baseState.auricrux.nextRecommendedAction,
+      recommendationReason: activeProject.commercialFocus || baseState.auricrux.recommendationReason,
+      currentBlocker: activeProject.permitStatus || baseState.auricrux.currentBlocker,
+      blockerImpact: activeProject.siteStatus || baseState.auricrux.blockerImpact,
+      lastActionResult: activeProject.lastActionAt
+        ? `Most recent project action recorded at ${activeProject.lastActionAt}.`
+        : baseState.auricrux.lastActionResult,
     },
     meta: {
       ...baseState.meta,
@@ -107,33 +101,55 @@ function hydrateWorkspaceState(baseState, projectOverride = null) {
   return bindCustomerSession(applyActiveProject(baseState, projectOverride));
 }
 
+function readStoredWorkspaceState() {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 export default function useWorkspaceState() {
   const [state, setState] = useState(() => hydrateWorkspaceState(defaultWorkspaceState));
 
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        const seeded = hydrateWorkspaceState({
-          ...defaultWorkspaceState,
-          meta: {
-            ...defaultWorkspaceState.meta,
-            lastSyncedAt: new Date().toISOString(),
-          },
-        });
+    if (typeof window === "undefined") return;
+
+    const stored = readStoredWorkspaceState();
+
+    if (!stored) {
+      const seeded = hydrateWorkspaceState({
+        ...defaultWorkspaceState,
+        meta: {
+          ...defaultWorkspaceState.meta,
+          lastSyncedAt: new Date().toISOString(),
+        },
+      });
+
+      try {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
-        setState(seeded);
-        return;
+      } catch {
+        // persistence best-effort only for shell hardening phase
       }
 
-      const parsed = JSON.parse(raw);
-      setState(hydrateWorkspaceState(parsed));
-    } catch {
-      setState(hydrateWorkspaceState(defaultWorkspaceState));
+      setState(seeded);
+      return;
     }
+
+    setState(hydrateWorkspaceState(stored));
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(hydrateWorkspaceState(state)));
     } catch {
@@ -153,7 +169,7 @@ export default function useWorkspaceState() {
               persistenceState: source,
               lastSyncedAt: new Date().toISOString(),
             },
-          })
+          }),
         );
       },
       syncActiveProject(project, source = "Active project context synchronized") {
@@ -169,12 +185,12 @@ export default function useWorkspaceState() {
                 lastSyncedAt: new Date().toISOString(),
               },
             },
-            project
-          )
+            project,
+          ),
         );
       },
     }),
-    [state]
+    [state],
   );
 
   return api;
