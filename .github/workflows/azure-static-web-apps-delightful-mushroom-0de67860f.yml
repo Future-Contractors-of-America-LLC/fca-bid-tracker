@@ -84,9 +84,9 @@ jobs:
 
           test -f api_generated/package.json
           test -f api_generated/host.json
-          test -f api_generated/customer-login/index.js
           test -f api_generated/auricrux/index.js
-          test -f api_generated/run-task/index.js
+          test -f api_generated/bids/index.js
+          test -f api_generated/projects/index.js
 
       - name: Archive governed deployment payload
         run: |
