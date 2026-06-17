@@ -89,6 +89,8 @@
     "generate:first-persisted-control-run-gate-report": "node scripts/generate-first-persisted-control-run-gate-report.mjs",
     "validate:public-package-route-groups": "node scripts/validate-public-package-route-groups.mjs",
     "generate:public-package-route-groups-report": "node scripts/generate-public-package-route-groups-report.mjs",
+    "validate:public-conversion-surface-route-truth": "node scripts/validate-public-conversion-surface-route-truth.mjs",
+    "generate:public-conversion-surface-route-truth-report": "node scripts/generate-public-conversion-surface-route-truth-report.mjs",
     "generate:admin-governance-report": "node scripts/generate-admin-governance-report.mjs",
     "generate:billing-governance-report": "node scripts/generate-billing-governance-report.mjs",
     "generate:support-governance-report": "node scripts/generate-support-governance-report.mjs",
