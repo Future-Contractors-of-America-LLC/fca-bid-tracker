@@ -1,6 +1,6 @@
 {
-  "packet": "062Q",
-  "generatedAt": "2026-06-17T09:26:06.189Z",
+  "packet": "062S",
+  "generatedAt": "2026-06-17T09:30:03.639Z",
   "present": [
     "live_deployment_smoke_summary.json",
     "live_deployment_smoke_failures.txt",

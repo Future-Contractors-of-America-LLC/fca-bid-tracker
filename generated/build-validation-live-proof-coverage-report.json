@@ -1,6 +1,6 @@
 {
-  "packet": "062Q",
-  "generatedAt": "2026-06-17T09:26:07.615Z",
+  "packet": "062S",
+  "generatedAt": "2026-06-17T09:30:05.314Z",
   "success": true,
   "checks": {
     "validatesCurrentHeadVerifier": true,

@@ -1,6 +1,6 @@
 {
-  "packet": "062Q",
-  "generatedAt": "2026-06-17T09:26:06.469Z",
+  "packet": "062S",
+  "generatedAt": "2026-06-17T09:30:03.919Z",
   "checks": {
     "workflowExists": true,
     "hasWorkflowName": true,
