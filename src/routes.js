@@ -79,8 +79,17 @@ export const routePatterns = [
 ];
 
 export function normalizePath(pathname) {
-  if (!pathname || pathname === "/") return "/";
-  return pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  if (typeof pathname !== "string" || !pathname.trim()) return "/";
+
+  const trimmed = pathname.trim();
+  const withoutQuery = trimmed.split(/[?#]/, 1)[0] || "/";
+  const withLeadingSlash = withoutQuery.startsWith("/") ? withoutQuery : `/${withoutQuery}`;
+
+  if (withLeadingSlash.length > 1 && withLeadingSlash.endsWith("/")) {
+    return withLeadingSlash.slice(0, -1);
+  }
+
+  return withLeadingSlash || "/";
 }
 
 export function matchRoutePattern(pattern, pathname) {
