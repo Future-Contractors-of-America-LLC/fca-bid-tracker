@@ -9,28 +9,28 @@ Last Updated: 2026-06-17
 
 ## Controlling Sequence
 
-- Active packet: `062K`
-- Next packet: `062L`
+- Active packet: `062L`
+- Next packet: `062M`
 - Deployment target: `061Z` remains the unresolved hard deployment target
 - Sequence rule: no regression to earlier packet families unless an explicit Decision Record supersedes sequence continuity
 - Letter-sequence rule: do not skip packet letters within a numbered gate range unless an explicit sequence-correction artifact authorizes it
 - 061Z truth rule: no 062* packet may be interpreted as proof that 061Z deployment-closeout evidence has landed
 - Site-alignment rule: 062* packets may harden public/site/package truth only if they point to already reachable repo slices and do not overclaim deployment closure
 - Functional-minimum rule: every packet must also satisfy the standing minimum of at least 2 customer-usable SaaS tools and 5 complete LMS lane courses without overstating live deployment status
-- Observation-gate rule: once stacked depth outruns observed run truth, the next packets must lock exact run-truth classes, bind exact observed results, and then persist those results to a durable observation surface before further slice expansion
+- Observation-gate rule: once stacked depth outruns observed run truth, the next packets must lock exact run-truth classes, bind exact observed results, persist those results to a durable observation surface, and then isolate exact unresolved lane dependencies before further slice expansion
 
 ---
 
 ## Current Executive State
 
-The `060` range remains truthfully closed as a failed hard deployment target. `061A` through `061Y` built the deployment-proof and CI-observation control surfaces required for a truthful `061Z` closeout attempt. `061Z` remains unresolved because deployed managed-auth, Academy runtime parity, commercial runtime proof, and first fully repo-visible CI-backed live proof closure remain unproven in-session. After that unresolved closeout state, `062A` through `062H` strengthened site truth, route truth, functional SaaS depth, LMS depth, packet minimum enforcement, and dedicated governance wiring. `062I` locked the required run-truth classes so the stack could stop mistaking repo-wired truth for observed truth. `062J` bound the first exact stacked observation matrix from in-session observable PR truth. `062K` now persists that observation matrix into a durable report surface so future packets must consume one canonical observation record instead of re-parsing scattered PR state.
+The `060` range remains truthfully closed as a failed hard deployment target. `061A` through `061Y` built the deployment-proof and CI-observation control surfaces required for a truthful `061Z` closeout attempt. `061Z` remains unresolved because deployed managed-auth, Academy runtime parity, commercial runtime proof, and first fully repo-visible CI-backed live proof closure remain unproven in-session. After that unresolved closeout state, `062A` through `062H` strengthened site truth, route truth, functional SaaS depth, LMS depth, packet minimum enforcement, and dedicated governance wiring. `062I` locked the required run-truth classes so the stack could stop mistaking repo-wired truth for observed truth. `062J` bound the first exact stacked observation matrix from in-session observable PR truth. `062K` persisted that observation matrix into a durable report surface. `062L` now isolates the exact unresolved workflow lanes and states the minimum observation dependency required for any truthful reduction of the unresolved `061Z` blocker set.
 
 ---
 
 ## Truth Boundary
 
 ### Verified
-- `062A` through `062K` are repo-visible site-alignment, functional-depth, observation-gate, first-observation-binding, and durable-observation-surface packets.
+- `062A` through `062L` are repo-visible site-alignment, functional-depth, observation-gate, observation-binding, durable-observation-surface, and unresolved-lane-isolation packets.
 - real SaaS and LMS vertical slices already exist in repo truth, including portal bids, estimates, projects, files, billing, operations, audit, messages, support, admin, Auricrux, Academy, and Academy catalog routes.
 - command-center tools now include permit escalation, mobilization invoice staging, estimate revision staging, proposal follow-up staging, owner approval file registration staging, customer schedule update staging, closeout prep staging, and customer approval-reminder staging.
 - Estimate Studio has a repo-visible customer-usable estimate revision queue.
@@ -44,7 +44,8 @@ The `060` range remains truthfully closed as a failed hard deployment target. `0
 - dedicated workflow `.github/workflows/alignment-proof-governance.yml` exists to run those same governance checks in a focused lane.
 - exact stacked run truth classes are locked as `repo-wired`, `stack-head observed`, `main observed`, and `live deployment observed`.
 - first exact stacked observation binding exists for PRs #111, #112, #113, #114, #132, and #133.
-- durable stacked observation report surfaces now exist in markdown and JSON forms.
+- durable stacked observation report surfaces exist in markdown and JSON forms.
+- exact unresolved lane dependency sheet now exists for build validation, governance, deploy, runtime smoke, proof-stamp, and witness lanes.
 - observed PR-head truth currently locked in-session:
   - PR #111 `copilot-pull-request-reviewer` — success
   - PR #112 `copilot-pull-request-reviewer` — success
@@ -62,17 +63,17 @@ The `060` range remains truthfully closed as a failed hard deployment target. `0
 - true deployment-complete proof bundle for `061Z`
 - exact observed build-validation run for the current stacked head
 - exact observed alignment-proof-governance run for the current stacked head
-- exact observed deploy/runtime/witness lanes for the current stacked head
+- exact observed deploy/runtime/proof-stamp/witness lanes for the current stacked head
 
 ---
 
 ## Current Blocker
 
 ### Blocker 1 — 061Z deployment-closeout proof remains unresolved
-The repo contains stronger site/package truth, CI proof wiring, governance-lane wiring, functional depth, observation-gate rules, first exact PR-head observation binding, and a durable report surface, but the actual deployment-closeout evidence class for `061Z` still has not been observed as fully satisfied on `main`.
+The repo contains stronger site/package truth, CI proof wiring, governance-lane wiring, functional depth, observation-gate rules, exact PR-head observation binding, a durable report surface, and now an explicit unresolved-lane dependency sheet, but the actual deployment-closeout evidence class for `061Z` still has not been observed as fully satisfied on `main`.
 
 ### Blocker 2 — critical workflow lanes remain only repo-wired in-session
-The relevant build, governance, deployment, runtime, proof-stamp, and witness lanes are now durably tracked, but exact current-stack observed results for those lanes are still not locked here.
+The relevant build, governance, deployment, runtime, proof-stamp, and witness lanes are now durably tracked and dependency-scoped, but exact current-stack observed results for those lanes are still not locked here.
 
 ### Blocker 3 — deployment proof still outranks further slice expansion
 Further slice work must remain subordinate to alignment proof and deployment truth until the unresolved `061Z` proof classes are observed.
@@ -95,19 +96,19 @@ Every future status response must include:
 
 ## Current Working Answer
 
-- Current packet: `062K`
-- Next packet: `062L`
+- Current packet: `062L`
+- Next packet: `062M`
 - Target packet: `061Z` deployment closeout plus `062*` site-alignment hardening without overclaiming closure
-- Current blocker: 061Z deployment-closeout proof remains unresolved; critical workflow lanes are durably tracked but still not observed in-session; deployment proof still outranks further slice expansion
-- Last verified repo truth: shared package-route truth drives all six primary public conversion surfaces; build validation and dedicated governance workflow both include route-truth and packet-minimum checks; eight customer-usable command-center tools now exist; all five LMS lane courses remain structurally complete with explicit completion requirements; durable stacked observation report surfaces now exist
+- Current blocker: 061Z deployment-closeout proof remains unresolved; critical workflow lanes are dependency-scoped but still not observed in-session; deployment proof still outranks further slice expansion
+- Last verified repo truth: shared package-route truth drives all six primary public conversion surfaces; build validation and dedicated governance workflow both include route-truth and packet-minimum checks; eight customer-usable command-center tools now exist; all five LMS lane courses remain structurally complete with explicit completion requirements; durable stacked observation report surfaces and exact unresolved lane dependency sheet now exist
 - Last verified deployment truth: deployed auth/runtime/Academy/commercial proof remains unproven in-session
-- Next concrete action: use 062L to isolate the exact unresolved lanes and state what observed result would be required to reduce the unresolved 061Z blocker set
+- Next concrete action: use 062M to bind an explicit blocker-reduction gate so only observed lane promotion can count as meaningful progress toward 061Z
 
 ---
 
 ## Anti-Drift Rule
 
-Auricrux must not interpret 062A through 062K site-alignment, functional-depth, observation-gate, observation-binding, or durable-observation-surface work as proof that 061Z deployment closeout has landed.
+Auricrux must not interpret 062A through 062L site-alignment, functional-depth, observation-gate, observation-binding, durable-observation-surface, or unresolved-lane-isolation work as proof that 061Z deployment closeout has landed.
 
 Auricrux must not claim live managed-auth, live Academy runtime parity, or live commercial runtime proof until repo-visible or deployment-visible evidence directly supports it.
 
