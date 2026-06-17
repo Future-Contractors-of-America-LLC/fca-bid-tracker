@@ -1,12 +1,12 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-17T20:22:49.527Z",
-  "witnessCommitSha": "87465594508dc9bc35d687ed4179d9c6b446ce03",
-  "proofCommitSha": "d0f499f2dc76713781b36c530c914e9ce5e853ef",
+  "generatedAt": "2026-06-17T20:24:29.553Z",
+  "witnessCommitSha": "0b2ba3d68189cb7c35b95bfc4bb78735a187b19a",
+  "proofCommitSha": "120e1b2bd9ba7de581d609727790ffab8dc43ae9",
   "metadataState": {
     "provenance": "github_actions_ci",
     "ciPersisted": true,
-    "status": "ci_surface_present_with_failures"
+    "status": "ci_surface_present_success"
   },
   "success": false,
   "failures": [
