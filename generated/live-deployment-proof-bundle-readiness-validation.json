@@ -1,6 +1,6 @@
 {
-  "packet": "061Z",
-  "generatedAt": "2026-06-15T18:59:13.688Z",
+  "packet": "062D",
+  "generatedAt": "2026-06-17T09:14:21.490Z",
   "checks": {
     "proofSuitePass": true,
     "currentHeadVerifierPass": true,
