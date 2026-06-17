@@ -13,13 +13,22 @@ const fallbackState = {
   message: "Production customer authentication is not live yet. Sandbox validation remains the only active auth mode.",
 };
 
+const fallbackMeta = {
+  backingSource: "fallback",
+  lastSyncedAt: null,
+  available: false,
+};
+
+function buildFallbackMeta() {
+  return {
+    ...fallbackMeta,
+    lastSyncedAt: new Date().toISOString(),
+  };
+}
+
 export default function useCustomerAuthState() {
   const [state, setState] = useState(fallbackState);
-  const [meta, setMeta] = useState({
-    backingSource: "fallback",
-    lastSyncedAt: null,
-    available: false,
-  });
+  const [meta, setMeta] = useState(fallbackMeta);
 
   useEffect(() => {
     let active = true;
@@ -28,10 +37,12 @@ export default function useCustomerAuthState() {
       try {
         const payload = await fetchCustomerAuthState();
         if (!active) return;
+
         setState({
           authBoundary: payload.authBoundary || fallbackState.authBoundary,
           message: payload.message || fallbackState.message,
         });
+
         setMeta({
           backingSource: "api-customer-auth-state",
           lastSyncedAt: new Date().toISOString(),
@@ -40,11 +51,7 @@ export default function useCustomerAuthState() {
       } catch {
         if (!active) return;
         setState(fallbackState);
-        setMeta({
-          backingSource: "fallback",
-          lastSyncedAt: null,
-          available: false,
-        });
+        setMeta(buildFallbackMeta());
       }
     }
 
