@@ -9,6 +9,7 @@ import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDec
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import {
   auricruxCapabilities,
   auricruxWalkthroughPath,
@@ -96,6 +97,14 @@ export default function AuricruxPage() {
           primaryLabel="Open Platform Dashboard"
           secondaryHref="/pricing"
           secondaryLabel="Plans & Rollout"
+        />
+      </div>
+
+      <div style={{ marginBottom: 24 }}>
+        <PublicPackageRouteGroupsPanel
+          eyebrow="Auricrux package route truth"
+          title="Auricrux now shows the exact route groups behind the guided system story"
+          detail="The guidance-layer explanation now resolves to the same shared SaaS, portal, Academy, Auricrux/comms, and revenue continuity route groups used across the rest of the public conversion shell."
         />
       </div>
 
