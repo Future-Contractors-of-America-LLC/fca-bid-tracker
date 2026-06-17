@@ -1,6 +1,6 @@
 {
-  "packet": "062U",
-  "generatedAt": "2026-06-17T09:32:09.142Z",
+  "packet": "062W",
+  "generatedAt": "2026-06-17T09:34:42.309Z",
   "checks": {
     "validatesCurrentHeadVerifier": true,
     "reportsCurrentHeadVerifier": true,
