@@ -19,9 +19,32 @@ function formatError(error) {
   return parts.join(": ") || "Unknown startup error";
 }
 
+function normalizeRuntimeError(candidate) {
+  if (!candidate) return null;
+  if (typeof candidate === "string") return candidate;
+  if (candidate instanceof Error) return candidate;
+
+  if (typeof candidate === "object") {
+    if (typeof candidate.reason === "string" || candidate.reason instanceof Error) {
+      return candidate.reason;
+    }
+    if (typeof candidate.message === "string") {
+      return candidate.message;
+    }
+  }
+
+  return null;
+}
+
+let recoveryRendered = false;
+
 function renderStartupRecovery(error) {
+  if (recoveryRendered) return;
+
   const root = document.getElementById("root");
   if (!root) return;
+
+  recoveryRendered = true;
 
   const message = formatError(error);
   const stack = error?.stack ? escapeHtml(error.stack) : "";
@@ -46,12 +69,15 @@ function renderStartupRecovery(error) {
 }
 
 window.addEventListener("error", (event) => {
-  if (!event?.error) return;
-  renderStartupRecovery(event.error);
+  const error = normalizeRuntimeError(event?.error || event);
+  if (!error) return;
+  renderStartupRecovery(error);
 });
 
 window.addEventListener("unhandledrejection", (event) => {
-  renderStartupRecovery(event?.reason);
+  const error = normalizeRuntimeError(event?.reason || event);
+  if (!error) return;
+  renderStartupRecovery(error);
 });
 
 import("./main.jsx").catch((error) => {
