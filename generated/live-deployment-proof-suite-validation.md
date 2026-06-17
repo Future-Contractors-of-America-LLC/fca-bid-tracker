@@ -1,7 +1,7 @@
 # Live Deployment Proof Suite Validation
 
 - Packet: 062Y
-- Generated: 2026-06-17T23:10:49.513Z
+- Generated: 2026-06-17T23:13:00.205Z
 - success: true
 
 ## Checks
@@ -11,9 +11,9 @@
 - proofMetadataCiBacked: true
 
 ## Observed
-- witnessCommitSha: b084150bebf362c6f87113cb52b2c107d67b6fa1
-- ciProofCommitSha: 2e527fcbffa392c592f16656ade63442f52f6970
-- proofMetadataStatus: ci_surface_present_success
+- witnessCommitSha: 0a35793595e087f22ec81bf0885551abc00ff1d7
+- ciProofCommitSha: d86bf00dc168c9e9ba8978f12f64636003e0e1c7
+- proofMetadataStatus: ci_surface_present_with_failures
 
 ## Failures
 - none
