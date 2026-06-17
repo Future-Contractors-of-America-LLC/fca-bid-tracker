@@ -11,35 +11,31 @@ DEFAULT_HOST="${AURICRUX_SWA_DEFAULT_HOST:-delightful-mushroom-0de67860f.7.azure
 EXPECTED_HOSTS="${AURICRUX_EXPECTED_HOSTS:-futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net}"
 COMMIT_WITNESS_ROUTE="/commit-witness-${GIT_SHA}.txt"
 BUILD_MARKER_DATE="June 17, 2026"
-BUILD_MARKER_VERSION="Investor Landing Brand Pass 2"
+BUILD_MARKER_VERSION="Permanent Investor Landing v1"
 
 IFS=',' read -r -a EXPECTED_HOST_ARRAY <<< "$EXPECTED_HOSTS"
 EXPECTED_HOSTS_JSON="$(printf '"%s",' "${EXPECTED_HOST_ARRAY[@]}")"
 EXPECTED_HOSTS_JSON="[${EXPECTED_HOSTS_JSON%,}]"
 
 cat > dist/styles.css <<'CSS'
-:root{--ink:#0f172a;--muted:#475569;--line:#dbe4f3;--blue:#1d4ed8;--blue2:#0f3ea8;--gold:#d4a017;--gold2:#8a6116;--white:#fff;--bg:#eef4ff}
+:root{--ink:#0f172a;--muted:#475569;--line:#dbe4f3;--blue:#1d4ed8;--blue2:#0f3ea8;--gold:#d4a017;--gold2:#8a6116;--white:#fff;--bg:#eef4ff;--navy:#0a1729}
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--bg) 0%,#fff 45%)}
 a{text-decoration:none;color:inherit}
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
 
 .topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.topbar-inner{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:70px}
+.topbar-inner{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:72px}
 .brand{display:flex;align-items:center;gap:12px}
 .brand img{width:46px;height:46px}
 .brand-copy strong{display:block;font-size:17px;line-height:1.05}
 .brand-copy span{font-size:12px;color:var(--muted)}
 
-.brand-rail{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px}
-.brand-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff}
-.auricrux-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--gold2) 0%,var(--gold) 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900}
-
 .nav-desktop{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .nav-link{padding:8px 11px;border-radius:10px;font-size:14px;font-weight:700;color:#1e293b}
 .nav-link:hover,.nav-link.active{background:#edf4ff;color:#0b3ea8}
 .nav-dropdown{position:relative}
-.nav-dropdown-menu{position:absolute;left:0;top:calc(100% + 6px);min-width:210px;padding:8px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 30px rgba(15,23,42,.14);display:none}
+.nav-dropdown-menu{position:absolute;left:0;top:calc(100% + 6px);min-width:220px;padding:8px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 30px rgba(15,23,42,.14);display:none}
 .nav-dropdown:hover .nav-dropdown-menu,.nav-dropdown:focus-within .nav-dropdown-menu{display:block}
 .nav-dropdown-menu a{display:block;padding:8px 10px;border-radius:8px;font-weight:600;font-size:14px}
 .nav-dropdown-menu a:hover{background:#f8fbff}
@@ -57,10 +53,10 @@ a{text-decoration:none;color:inherit}
 .mobile-submenu{display:none;padding-left:10px}
 .mobile-submenu.open{display:block}
 
-.page{padding:46px 0 24px}
+.page{padding:50px 0 24px}
 .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
 .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 16px 34px rgba(15,23,42,.06)}
-.card-dark{background:linear-gradient(135deg,#0a1729 0%,#1b3659 100%);color:#e2e8f0;border:0}
+.card-dark{background:linear-gradient(135deg,var(--navy) 0%,#1b3659 100%);color:#e2e8f0;border:0}
 .eyebrow{display:inline-block;padding:7px 11px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#eef4ff;border:1px solid #c5d8ff;color:#1d4ed8}
 .eyebrow-gold{background:#fff7e1;border-color:#ecd089;color:#8a6116}
 h1{font-size:clamp(34px,5vw,58px);line-height:1.03;margin:14px 0}
@@ -79,6 +75,10 @@ h3{margin:0 0 8px}
 .pill.ops-marker{display:none}
 .list{padding-left:18px;line-height:1.8;color:#334155}
 .metric{font-size:29px;font-weight:800}
+.brand-rail{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.brand-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-weight:700}
+.auricrux-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--gold2) 0%,var(--gold) 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900}
+
 .field{display:grid;gap:6px}
 .field input,.field select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:12px}
 .status{padding:13px;border-radius:12px;background:#eef2ff;border:1px solid #c7d2fe}
@@ -101,7 +101,7 @@ CSS
 
 cat > dist/data/live-workspace-pack.json <<'JSON'
 {
-  "version": 8,
+  "version": 9,
   "workspace": { "id": "fca-live-proof-workspace", "status": "active", "currentPhase": "proposal" },
   "project": { "id": "PRJ-001", "name": "Launch Demo Project", "stage": "Proposal", "nextStep": "Move package to approval" },
   "files": [
@@ -161,7 +161,7 @@ header_markup='\
 footer_markup='\
 <footer class="footer">\
   <div class="wrap grid-2">\
-    <div><strong>Future Contractors of America</strong><p>Landing experience for early adopters, legacy contractors, and investor demonstrations.</p></div>\
+    <div><strong>Future Contractors of America</strong><p>Permanent investor and early-customer landing surface for FCA Contractor Command.</p></div>\
     <div><strong>Contact</strong><p>sales@futurecontractorsofamerica.com<br/>info@futurecontractorsofamerica.com<br/>support@futurecontractorsofamerica.com</p></div>\
   </div>\
 </footer>'
@@ -209,17 +209,17 @@ ${page_script}
 HTML
 }
 
-create_page "/" "Future Contractors of America | Legacy Contractor Launch" '<main><section class="page"><div class="wrap hero-grid"><div><span class="eyebrow">Investor and Early Customer Landing</span><h1>A modern contractor platform built to help legacy companies scale with confidence.</h1><p class="lead">FCA delivers one operating experience for intake, bid movement, project communication, and client trust from first contact through active delivery.</p><div class="brand-rail"><div class="brand-chip"><img src="/favicon.svg" alt="FCA" style="width:28px;height:28px"/><strong>FCA Core Platform</strong></div><div class="brand-chip"><div class="auricrux-mark">A</div><strong style="color:#8a6116">Auricrux Intelligence Layer</strong></div></div><div class="pill-row"><span class="pill">Legacy contractor onboarding</span><span class="pill">Investor presentation ready</span><span class="pill">Pilot conversion focused</span><span class="pill ops-marker">Cross-host login continuity patch active</span></div><div class="cta-row"><a class="btn btn-primary" href="/contact/">Book Demo</a><a class="btn btn-secondary" href="/pricing/">View Plans</a><a class="btn btn-gold" href="/intake/">Apply for Pilot</a></div></div><aside class="card card-dark"><span class="eyebrow">Pilot Journey</span><h2 style="color:#f8fafc">What new customers do first</h2><ul class="list" style="color:#e2e8f0"><li>Apply and create an account.</li><li>Select a launch plan and activate.</li><li>Enter the workspace dashboard.</li><li>Manage projects, files, and activity in one place.</li></ul><div class="cta-row"><a class="btn btn-primary" href="/contact/">Schedule Walkthrough</a></div></aside></div></section><section class="section"><div class="wrap grid-3"><article class="card"><h3>Faster commercial momentum</h3><p class="muted">Move opportunities into qualified pipeline with less administrative drag.</p></article><article class="card"><h3>Stronger operational discipline</h3><p class="muted">Create clear visibility around active work and handoffs.</p></article><article class="card"><h3>Better customer confidence</h3><p class="muted">Present a professional system that supports trust and repeat business.</p></article></div></section></main>'
+create_page "/" "Future Contractors of America | Permanent Investor Landing" '<main><section class="page"><div class="wrap hero-grid"><div><span class="eyebrow">Permanent Investor and Legacy Customer Landing</span><h1>The contractor operating system built to modernize legacy construction businesses.</h1><p class="lead">FCA Contractor Command combines client intake, bid progression, project visibility, and execution accountability in one platform that helps contractors sell better and deliver better.</p><div class="brand-rail"><div class="brand-chip"><img src="/favicon.svg" alt="FCA" style="width:28px;height:28px"/><span>FCA Operating Platform</span></div><div class="brand-chip"><div class="auricrux-mark">A</div><span style="color:#8a6116">Auricrux Intelligence Layer</span></div></div><div class="pill-row"><span class="pill">Investor ready narrative</span><span class="pill">Legacy contractor onboarding</span><span class="pill">Clear customer conversion flow</span><span class="pill ops-marker">Cross-host login continuity patch active</span></div><div class="cta-row"><a class="btn btn-primary" href="/contact/">Book Investor Demo</a><a class="btn btn-secondary" href="/pricing/">View Launch Plans</a><a class="btn btn-gold" href="/intake/">Apply for Pilot</a></div></div><aside class="card card-dark"><span class="eyebrow">Why it sells</span><h2 style="color:#f8fafc">Commercial impact that buyers understand</h2><ul class="list" style="color:#e2e8f0"><li>Faster path from lead intake to qualified proposal.</li><li>Stronger customer trust through structured delivery visibility.</li><li>Cleaner handoffs between sales, operations, and field teams.</li><li>Built in guidance through Auricrux for rollout momentum.</li></ul><div class="cta-row"><a class="btn btn-primary" href="/auricrux/">See Auricrux</a></div></aside></div></section><section class="section"><div class="wrap grid-3"><article class="card"><h3>Revenue lift</h3><p class="muted">Increase close confidence with a professional customer journey and better bid transparency.</p></article><article class="card"><h3>Operational control</h3><p class="muted">Run projects, files, and activity lanes from one unified workspace model.</p></article><article class="card"><h3>Market credibility</h3><p class="muted">Present a serious modern platform that legacy contractors can adopt without chaos.</p></article></div></section></main>'
 
-create_page "/features" "Why FCA" '<main class="page"><div class="wrap"><span class="eyebrow">Why FCA</span><h1>Designed for legacy contractors moving into modern operations</h1><div class="grid-3"><article class="card"><h3>Structured onboarding</h3><p class="muted">Account-based intake that starts every relationship cleanly.</p></article><article class="card"><h3>Unified execution visibility</h3><p class="muted">Projects, files, and activity remain connected across teams.</p></article><article class="card"><h3>Auricrux guidance</h3><p class="muted">Gold-layer guidance supports plan fit and rollout momentum.</p></article></div></div></main>'
+create_page "/features" "Why FCA" '<main class="page"><div class="wrap"><span class="eyebrow">Why FCA</span><h1>Built for contractors who need a system that can actually scale</h1><div class="grid-3"><article class="card"><h3>Structured onboarding</h3><p class="muted">Account based intake creates a reliable start point for every customer relationship.</p></article><article class="card"><h3>Unified visibility</h3><p class="muted">Project status, files, and activity history stay connected in one operating surface.</p></article><article class="card"><h3>Auricrux guidance</h3><p class="muted">A clear intelligence layer supports package choice and rollout decisions.</p></article></div></div></main>'
 
-create_page "/solutions" "Programs" '<main class="page"><div class="wrap"><span class="eyebrow">Programs</span><h1>Launch paths built for growth stage and team complexity</h1><div class="grid-3"><article class="card"><h3>Legacy Contractor Pilot</h3><p class="muted">For firms modernizing customer and operations workflows.</p></article><article class="card"><h3>Growth Team Program</h3><p class="muted">For teams requiring consistent bid and project coordination.</p></article><article class="card"><h3>Scaled Rollout Program</h3><p class="muted">For multi-team organizations standardizing execution quality.</p></article></div></div></main>'
+create_page "/solutions" "Programs" '<main class="page"><div class="wrap"><span class="eyebrow">Programs</span><h1>Programs matched to your team stage and growth goals</h1><div class="grid-3"><article class="card"><h3>Legacy Contractor Pilot</h3><p class="muted">For firms moving from informal systems to modern digital operations.</p></article><article class="card"><h3>Growth Team Program</h3><p class="muted">For teams requiring tighter bid, proposal, and project coordination.</p></article><article class="card"><h3>Scaled Rollout Program</h3><p class="muted">For organizations standardizing execution across multiple teams.</p></article></div></div></main>'
 
-create_page "/pricing" "Plans and Pricing" '<main class="page"><div class="wrap"><span class="eyebrow">Plans and Pricing</span><h1>Select the launch path that matches your business stage</h1><div class="grid-4"><article class="card"><h3>Startup</h3><div class="metric">$99/mo</div><p class="muted">For owner-led contractors validating a new operating process.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=startup">Select Startup</a></div></article><article class="card"><h3>Team</h3><div class="metric">$299/mo</div><p class="muted">For active teams needing stronger bid and project coordination.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=team">Select Team</a></div></article><article class="card"><h3>Growth</h3><div class="metric">$1,500/mo</div><p class="muted">For scaling firms improving communication and consistency.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=growth">Select Growth</a></div></article><article class="card"><h3>Enterprise</h3><div class="metric">$3,500+/mo</div><p class="muted">For multi-team deployment with advanced requirements.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/?plan=enterprise">Select Enterprise</a></div></article></div></div></main>'
+create_page "/pricing" "Plans and Pricing" '<main class="page"><div class="wrap"><span class="eyebrow">Plans and Pricing</span><h1>Launch plans designed for real contractor adoption</h1><div class="grid-4"><article class="card"><h3>Startup</h3><div class="metric">$99/mo</div><p class="muted">For owner-led companies validating a modern operating process.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=startup">Select Startup</a></div></article><article class="card"><h3>Team</h3><div class="metric">$299/mo</div><p class="muted">For active teams needing stronger bid and project coordination.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=team">Select Team</a></div></article><article class="card"><h3>Growth</h3><div class="metric">$1,500/mo</div><p class="muted">For scaling contractors improving communication and consistency.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=growth">Select Growth</a></div></article><article class="card"><h3>Enterprise</h3><div class="metric">$3,500+/mo</div><p class="muted">For multi-team deployment with advanced operational requirements.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/?plan=enterprise">Select Enterprise</a></div></article></div></div></main>'
 
-create_page "/contact" "Book Demo" '<main class="page"><div class="wrap"><span class="eyebrow">Book Demo</span><h1>Schedule a walkthrough for your team and stakeholders</h1><div class="grid-3"><article class="card"><h3>Sales</h3><p class="muted">sales@futurecontractorsofamerica.com</p></article><article class="card"><h3>Information</h3><p class="muted">info@futurecontractorsofamerica.com</p></article><article class="card"><h3>Support</h3><p class="muted">support@futurecontractorsofamerica.com</p></article></div></div></main>'
+create_page "/contact" "Book Demo" '<main class="page"><div class="wrap"><span class="eyebrow">Book Demo</span><h1>Schedule a live walkthrough for your team or investor group</h1><div class="grid-3"><article class="card"><h3>Sales</h3><p class="muted">sales@futurecontractorsofamerica.com</p></article><article class="card"><h3>Information</h3><p class="muted">info@futurecontractorsofamerica.com</p></article><article class="card"><h3>Support</h3><p class="muted">support@futurecontractorsofamerica.com</p></article></div></div></main>'
 
-create_page "/auricrux" "Auricrux Guidance" '<main class="page"><div class="wrap"><section class="card"><span class="eyebrow eyebrow-gold">Auricrux Guidance</span><div class="brand-chip" style="margin-top:12px;max-width:340px"><div class="auricrux-mark">A</div><strong style="color:#8a6116">Auricrux Intelligence Layer</strong></div><h1 style="font-size:48px">Guided decisions for faster onboarding and cleaner execution.</h1><p class="lead">Auricrux helps teams choose plans, prioritize rollout steps, and maintain momentum during adoption.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/">Start Guided Intake</a><a class="btn btn-secondary" href="/contact/">Book Walkthrough</a></div></section></div></main>'
+create_page "/auricrux" "Auricrux Guidance" '<main class="page"><div class="wrap"><section class="card"><span class="eyebrow eyebrow-gold">Auricrux Guidance</span><div class="brand-rail"><div class="brand-chip"><div class="auricrux-mark">A</div><span style="color:#8a6116">Auricrux Intelligence Layer</span></div></div><h1 style="font-size:48px">Intelligence that helps contractors choose faster and execute cleaner.</h1><p class="lead">Auricrux supports plan selection, rollout readiness, and decision clarity during adoption.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/">Start Guided Intake</a><a class="btn btn-secondary" href="/contact/">Book Walkthrough</a></div></section></div></main>'
 
 create_page "/intake" "Pilot Intake" '<main class="page"><div class="wrap"><span class="eyebrow">Step 1</span><h1>Submit your company profile and start pilot onboarding</h1><section class="card"><form id="intakeForm"><div class="grid-2"><div class="field"><label for="plan">Plan</label><select id="plan"><option value="startup">Startup</option><option value="team">Team</option><option value="growth">Growth</option><option value="enterprise">Enterprise</option></select></div><div class="field"><label for="company">Company</label><input id="company" required /></div><div class="field"><label for="name">Contact name</label><input id="name" required /></div><div class="field"><label for="email">Email</label><input id="email" type="email" required /></div><div class="field"><label for="password">Password</label><input id="password" type="password" required /></div><div class="field"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" required /></div></div><div id="intakeStatus" class="status warn" style="margin-top:14px">These credentials will be used for workspace login.</div><div class="cta-row"><button class="btn btn-primary" type="submit">Continue to Activation</button></div></form></section></div></main><script>const params=new URLSearchParams(location.search);const p=params.get("plan");if(p)document.getElementById("plan").value=p;document.getElementById("intakeForm").addEventListener("submit",e=>{e.preventDefault();const pw=password.value;const cp=confirmPassword.value;if(pw!==cp){intakeStatus.className="status warn";intakeStatus.textContent="Passwords do not match.";return;}const rec={plan:plan.value,company:company.value,name:name.value,email:email.value.trim().toLowerCase(),password:pw};localStorage.setItem("fca_customer_record",JSON.stringify(rec));location.href="/checkout/?plan="+encodeURIComponent(rec.plan);});</script>'
 
@@ -240,7 +240,7 @@ create_page "/referrals" "Referrals" '<main class="page"><div class="wrap"><h1>R
 
 cat > dist/deployment-status.json <<JSON
 {
-  "status": "live-shell-investor-landing-brand-pass-2-active",
+  "status": "live-shell-permanent-investor-landing-v1-active",
   "shell": "FCA Contractor Command",
   "execution": "Auricrux-Central",
   "nextAction": "MNCL-004",
@@ -276,13 +276,13 @@ shell=FCA Contractor Command
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
 commitWitnessRoute=${COMMIT_WITNESS_ROUTE}
-status=live-shell-investor-landing-brand-pass-2-active
+status=live-shell-permanent-investor-landing-v1-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
 cat > dist/live-shell-verification.html <<'HTML'
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Investor landing brand pass 2 is active with repaired mobile menu behavior and stronger FCA and Auricrux identity markers.</p></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Permanent investor landing v1 is active with repaired mobile menu and elevated FCA/Auricrux brand identity.</p></body></html>
 HTML
 
 cat > dist/host-binding-audit.html <<'HTML'
@@ -296,9 +296,9 @@ HTML
 cat > "dist${COMMIT_WITNESS_ROUTE}" <<EOF
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
-status=live-shell-investor-landing-brand-pass-2-active
+status=live-shell-permanent-investor-landing-v1-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
-echo "FCA investor landing brand pass 2 build completed for ${GIT_SHA}"
+echo "FCA permanent investor landing v1 build completed for ${GIT_SHA}"
