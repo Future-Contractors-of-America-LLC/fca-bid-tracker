@@ -1,12 +1,1 @@
-https://futurecontractorsofamerica.com/commit-witness-0dfb61db1a2b7e892bb47191b7f92fda18641c57.txt returned 404
-futurecontractorsofamerica.com is serving stale deployment-status SHA 44dfd43f9dd875549282dfc1c859d34cd93e3685; expected 0dfb61db1a2b7e892bb47191b7f92fda18641c57
-futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA 44dfd43f9dd875549282dfc1c859d34cd93e3685; expected 0dfb61db1a2b7e892bb47191b7f92fda18641c57
-futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-44dfd43f9dd875549282dfc1c859d34cd93e3685.txt; expected /commit-witness-0dfb61db1a2b7e892bb47191b7f92fda18641c57.txt
-https://futurecontractorsofamerica.com/commit-witness-0dfb61db1a2b7e892bb47191b7f92fda18641c57.txt returned 404
-https://www.futurecontractorsofamerica.com/commit-witness-0dfb61db1a2b7e892bb47191b7f92fda18641c57.txt returned 404
-www.futurecontractorsofamerica.com is serving stale deployment-status SHA 44dfd43f9dd875549282dfc1c859d34cd93e3685; expected 0dfb61db1a2b7e892bb47191b7f92fda18641c57
-www.futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA 44dfd43f9dd875549282dfc1c859d34cd93e3685; expected 0dfb61db1a2b7e892bb47191b7f92fda18641c57
-www.futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-44dfd43f9dd875549282dfc1c859d34cd93e3685.txt; expected /commit-witness-0dfb61db1a2b7e892bb47191b7f92fda18641c57.txt
-delightful-mushroom-0de67860f.7.azurestaticapps.net has mixed witness SHA drift: deployment-status=44dfd43f9dd875549282dfc1c859d34cd93e3685 runtime-fingerprint=0dfb61db1a2b7e892bb47191b7f92fda18641c57
-delightful-mushroom-0de67860f.7.azurestaticapps.net is serving stale deployment-status SHA 44dfd43f9dd875549282dfc1c859d34cd93e3685; expected 0dfb61db1a2b7e892bb47191b7f92fda18641c57
-delightful-mushroom-0de67860f.7.azurestaticapps.net deployment manifest reports commit witness /commit-witness-44dfd43f9dd875549282dfc1c859d34cd93e3685.txt; expected /commit-witness-0dfb61db1a2b7e892bb47191b7f92fda18641c57.txt
+
