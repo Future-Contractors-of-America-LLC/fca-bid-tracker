@@ -50,10 +50,18 @@ export default function Router() {
     let active = true;
 
     async function hydrateSession() {
-      const synced = await syncCustomerSessionFromServer();
-      if (!active) return;
-      setSession(synced || readCustomerSession());
-      setSessionReady(true);
+      try {
+        const synced = await syncCustomerSessionFromServer();
+        if (!active) return;
+        setSession(synced || readCustomerSession());
+      } catch {
+        if (!active) return;
+        setSession(readCustomerSession());
+      } finally {
+        if (active) {
+          setSessionReady(true);
+        }
+      }
     }
 
     function syncRouteFromLocation() {
@@ -68,6 +76,7 @@ export default function Router() {
     function handleDocumentClick(event) {
       if (event.defaultPrevented || event.button !== 0) return;
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (!(event.target instanceof Element)) return;
 
       const anchor = event.target.closest("a[href]");
       if (!anchor) return;
