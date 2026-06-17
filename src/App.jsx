@@ -1,25 +1,34 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+const STORAGE_KEY = "fca_bids";
+const DEFAULT_FORM = {
+  company: "",
+  value: "",
+  status: "New",
+};
+
+function readStoredBids() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return [];
+
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 
 export default function App() {
   const [bids, setBids] = useState([]);
+  const [form, setForm] = useState(DEFAULT_FORM);
 
-  const [form, setForm] = useState({
-    company: "",
-    value: "",
-    status: "New",
-  });
-
-  // Load from browser storage
   useEffect(() => {
-    const saved = localStorage.getItem("fca_bids");
-    if (saved) {
-      setBids(JSON.parse(saved));
-    }
+    setBids(readStoredBids());
   }, []);
 
-  // Save to browser storage
   useEffect(() => {
-    localStorage.setItem("fca_bids", JSON.stringify(bids));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(bids));
   }, [bids]);
 
   const addBid = () => {
@@ -32,57 +41,35 @@ export default function App() {
       status: form.status,
     };
 
-    setBids([...bids, newBid]);
-
-    setForm({
-      company: "",
-      value: "",
-      status: "New",
-    });
+    setBids((previous) => [...previous, newBid]);
+    setForm(DEFAULT_FORM);
   };
-
-  const totalPipeline = bids.reduce((sum, b) => sum + b.value, 0);
-  const wonRevenue = bids
-    .filter((b) => b.status === "Won")
-    .reduce((sum, b) => sum + b.value, 0);
 
   const updateStatus = (id, status) => {
-    setBids(
-      bids.map((b) =>
-        b.id === id ? { ...b, status: status } : b
-      )
-    );
+    setBids((previous) => previous.map((bid) => (bid.id === id ? { ...bid, status } : bid)));
   };
+
+  const totalPipeline = useMemo(() => bids.reduce((sum, bid) => sum + bid.value, 0), [bids]);
+  const wonRevenue = useMemo(
+    () => bids.filter((bid) => bid.status === "Won").reduce((sum, bid) => sum + bid.value, 0),
+    [bids],
+  );
 
   return (
     <div style={{ padding: 20, fontFamily: "Arial" }}>
       <h1>FCA Bid Tracker</h1>
 
-      {/* INPUT FORM */}
       <div style={{ marginBottom: 20 }}>
-        <input
-          placeholder="Company"
-          value={form.company}
-          onChange={(e) =>
-            setForm({ ...form, company: e.target.value })
-          }
-        />
+        <input placeholder="Company" value={form.company} onChange={(event) => setForm({ ...form, company: event.target.value })} />
 
         <input
           placeholder="Value ($)"
           type="number"
           value={form.value}
-          onChange={(e) =>
-            setForm({ ...form, value: e.target.value })
-          }
+          onChange={(event) => setForm({ ...form, value: event.target.value })}
         />
 
-        <select
-          value={form.status}
-          onChange={(e) =>
-            setForm({ ...form, status: e.target.value })
-          }
-        >
+        <select value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value })}>
           <option>New</option>
           <option>Quoted</option>
           <option>Won</option>
@@ -92,14 +79,12 @@ export default function App() {
         <button onClick={addBid}>Add Bid</button>
       </div>
 
-      {/* METRICS */}
       <div style={{ marginBottom: 20 }}>
         <strong>Total Pipeline:</strong> ${totalPipeline.toLocaleString()}
         <br />
         <strong>Won Revenue:</strong> ${wonRevenue.toLocaleString()}
       </div>
 
-      {/* TABLE */}
       <table border="1" cellPadding="10" width="100%">
         <thead>
           <tr>
@@ -116,12 +101,7 @@ export default function App() {
               <td>${bid.value.toLocaleString()}</td>
               <td>{bid.status}</td>
               <td>
-                <select
-                  value={bid.status}
-                  onChange={(e) =>
-                    updateStatus(bid.id, e.target.value)
-                  }
-                >
+                <select value={bid.status} onChange={(event) => updateStatus(bid.id, event.target.value)}>
                   <option>New</option>
                   <option>Quoted</option>
                   <option>Won</option>
