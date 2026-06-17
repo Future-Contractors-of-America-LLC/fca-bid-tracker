@@ -1,6 +1,6 @@
 {
-  "packet": "062S",
-  "generatedAt": "2026-06-17T09:30:04.777Z",
+  "packet": "062U",
+  "generatedAt": "2026-06-17T09:32:08.701Z",
   "success": true,
   "checks": {
     "proofSuitePass": true,
