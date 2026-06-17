@@ -11,37 +11,41 @@ DEFAULT_HOST="${AURICRUX_SWA_DEFAULT_HOST:-delightful-mushroom-0de67860f.7.azure
 EXPECTED_HOSTS="${AURICRUX_EXPECTED_HOSTS:-futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net}"
 COMMIT_WITNESS_ROUTE="/commit-witness-${GIT_SHA}.txt"
 BUILD_MARKER_DATE="June 17, 2026"
+BUILD_MARKER_VERSION="Live Pass 2"
 
 IFS=',' read -r -a EXPECTED_HOST_ARRAY <<< "$EXPECTED_HOSTS"
 EXPECTED_HOSTS_JSON="$(printf '"%s",' "${EXPECTED_HOST_ARRAY[@]}")"
 EXPECTED_HOSTS_JSON="[${EXPECTED_HOSTS_JSON%,}]"
 
 cat > dist/styles.css <<'CSS'
-:root{--bg:#f4f8ff;--ink:#0f172a;--muted:#475569;--line:#d9e2f2;--blue:#1d4ed8;--navy:#0b1a2b;--gold:#d4a017;--white:#fff}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(180deg,#edf3ff 0%,#ffffff 40%)}
+:root{--bg:#f4f8ff;--ink:#0f172a;--muted:#475569;--line:#d9e2f2;--blue:#1d4ed8;--navy:#0b1a2b;--gold:#d4a017;--white:#fff;--green:#15803d}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--ink);background:linear-gradient(180deg,#eaf2ff 0%,#ffffff 45%)}
 a{text-decoration:none;color:inherit}.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
 .topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .topbar-inner{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:78px}.brand{display:flex;align-items:center;gap:12px}.brand img{width:52px;height:52px}.brand strong{display:block;font-size:18px}.brand span{font-size:12px;color:var(--muted)}
 .nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.nav a{padding:10px 12px;border-radius:12px;font-weight:700;color:#1e293b}.nav a:hover{background:#eff6ff}
 .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:12px;font-weight:700;border:1px solid #cbd5e1}
 .btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn-secondary{background:#fff;color:#1d4ed8}.btn-gold{background:linear-gradient(135deg,#8a6116 0%,var(--gold) 100%);border-color:#8a6116;color:#fff}
-.hero{padding:48px 0 24px}.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.hero{padding:52px 0 26px}.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
 .card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 18px 40px rgba(15,23,42,.06)}
+.card-dark{background:linear-gradient(135deg,#0b1a2b 0%,#1e3a5f 100%);color:#e2e8f0;border:0}
 .eyebrow{display:inline-block;padding:8px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#eef4ff;border:1px solid #bfdbfe;color:#1d4ed8}
 .eyebrow-gold{background:#fff7e1;border-color:#ecd089;color:#8a6116}
-h1{font-size:clamp(36px,5vw,60px);line-height:1.03;margin:14px 0}h2{font-size:30px;margin:0 0 10px}.lead{font-size:18px;line-height:1.72;color:#334155}.muted{color:var(--muted);line-height:1.68}
+h1{font-size:clamp(36px,5vw,60px);line-height:1.03;margin:14px 0}h2{font-size:30px;margin:0 0 10px}h3{margin:0 0 8px}
+.lead{font-size:18px;line-height:1.72;color:#334155}.muted{color:var(--muted);line-height:1.68}
 .section{padding:24px 0}.grid-3,.grid-4{display:grid;gap:16px}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
 .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.pill{padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#f8fbff;font-size:13px;font-weight:700;color:#334155}
 .list{padding-left:18px;line-height:1.8;color:#334155}.field{display:grid;gap:6px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:12px}
 .field textarea{min-height:120px}.status{padding:14px;border-radius:12px;background:#eef2ff;border:1px solid #c7d2fe}.status.warn{background:#fff7ed;border-color:#fdba74}.status.success{background:#ecfdf5;border-color:#86efac}
 .data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{padding:12px;border-bottom:1px solid var(--line);text-align:left}
-.metric{font-size:30px;font-weight:800}.footer{padding:34px 0 48px;color:#475569}.footer strong{color:#0f172a}
+.metric{font-size:30px;font-weight:800}.metric-sm{font-size:14px;color:#64748b}.badge-success{display:inline-block;padding:6px 10px;border-radius:999px;background:#dcfce7;color:var(--green);font-size:12px;font-weight:800}
+.footer{padding:34px 0 48px;color:#475569}.footer strong{color:#0f172a}
 @media(max-width:980px){.hero-grid,.grid-3,.grid-4{grid-template-columns:1fr}.topbar-inner{flex-direction:column;align-items:flex-start;padding:12px 0}}
 CSS
 
 cat > dist/data/live-workspace-pack.json <<'JSON'
 {
-  "version": 2,
+  "version": 3,
   "workspace": { "id": "fca-live-proof-workspace", "status": "active", "currentPhase": "proposal" },
   "project": { "id": "PRJ-001", "name": "Launch Demo Project", "stage": "Proposal", "nextStep": "Move package to approval" },
   "files": [
@@ -102,7 +106,7 @@ ${footer_markup}
 HTML
 }
 
-create_page "/" "Future Contractors of America | FCA Contractor Command" '<main><section class="hero"><div class="wrap hero-grid"><div><span class="eyebrow">Customer-ready platform</span><h1>Run your contracting business from one clean customer-facing system.</h1><p class="lead">FCA Contractor Command gives you a practical operating spine for intake, bid visibility, proposal movement, and active customer communication.</p><div class="pill-row"><span class="pill">FCA Contractor Command — Live Build June 17, 2026</span><span class="pill">Cross-host login continuity patch active</span><span class="pill">Unified intake + login</span></div><div class="cta-row"><a class="btn btn-primary" href="/intake/">Start Intake</a><a class="btn btn-secondary" href="/pricing/">View Pricing</a><a class="btn btn-gold" href="/auricrux/">Meet Auricrux</a></div></div><aside class="card"><span class="eyebrow">What you can test now</span><h2>Live product proof</h2><ul class="list"><li>Create your own login in intake.</li><li>Apply founder code in checkout.</li><li>Use login to access the live platform dashboard.</li><li>Open projects, files, and audit views from one workspace pack.</li></ul><div class="cta-row"><a class="btn btn-primary" href="/portal/platform/">Open Platform</a></div></aside></div></section><section class="section"><div class="wrap grid-3"><article class="card"><h3>Faster intake</h3><p class="muted">Stop losing leads in disconnected forms and email chains.</p></article><article class="card"><h3>Bid control</h3><p class="muted">Track opportunity state and move to proposal with clear next actions.</p></article><article class="card"><h3>Customer clarity</h3><p class="muted">Present one polished experience from first click through activation.</p></article></div></section></main>'
+create_page "/" "Future Contractors of America | FCA Contractor Command" '<main><section class="hero"><div class="wrap hero-grid"><div><span class="eyebrow">Customer-ready platform</span><h1>Run your contracting business from one clean customer-facing system.</h1><p class="lead">FCA Contractor Command gives you a practical operating spine for intake, bid visibility, proposal movement, and active customer communication.</p><div class="pill-row"><span class="pill">FCA Contractor Command — Live Build June 17, 2026</span><span class="pill">Live Pass 2 visual polish active</span><span class="pill">Cross-host login continuity patch active</span></div><div class="cta-row"><a class="btn btn-primary" href="/intake/">Start Intake</a><a class="btn btn-secondary" href="/pricing/">View Pricing</a><a class="btn btn-gold" href="/auricrux/">Meet Auricrux</a></div></div><aside class="card card-dark"><span class="eyebrow">What you can test now</span><h2 style="color:#f8fafc">Live product proof</h2><ul class="list" style="color:#e2e8f0"><li>Create your own login in intake.</li><li>Apply founder code in checkout.</li><li>Use login to access the live platform dashboard.</li><li>Open projects, files, and audit views from one workspace pack.</li></ul><div class="cta-row"><a class="btn btn-primary" href="/portal/platform/">Open Platform</a></div></aside></div></section><section class="section"><div class="wrap grid-4"><article class="card"><span class="badge-success">Production Ready</span><h3 style="margin-top:10px">Unified intake</h3><p class="muted">Capture contact + account creation in one clean flow.</p></article><article class="card"><span class="badge-success">Customer Visible</span><h3 style="margin-top:10px">Bid continuity</h3><p class="muted">Track opportunity posture and next step from a single workspace.</p></article><article class="card"><span class="badge-success">Sales Utility</span><h3 style="margin-top:10px">Pricing clarity</h3><p class="muted">Move customers directly from package choice to activation.</p></article><article class="card"><span class="badge-success">Live Route Proof</span><h3 style="margin-top:10px">Workspace routes</h3><p class="muted">Projects, files, and audit are accessible as live proof surfaces.</p></article></div></section></main>'
 
 create_page "/features" "FCA Features" '<main class="section"><div class="wrap"><span class="eyebrow">Features</span><h1>Built for real contractor operations</h1><div class="grid-3"><article class="card"><h3>Unified intake</h3><p class="muted">One flow that creates an account and starts your workspace.</p></article><article class="card"><h3>Workspace continuity</h3><p class="muted">Project, files, audit, and dashboard stay in sync.</p></article><article class="card"><h3>Auricrux guidance</h3><p class="muted">Clear guided next-steps for fit, package, and activation.</p></article></div></div></main>'
 create_page "/solutions" "FCA Solutions" '<main class="section"><div class="wrap"><span class="eyebrow">Solutions</span><h1>From owner-operator to scaling team</h1><div class="grid-3"><article class="card"><h3>Owner Operators</h3><p class="muted">Start with a dependable intake + bid pipeline.</p></article><article class="card"><h3>Growing Teams</h3><p class="muted">Keep proposals, files, and status visible across staff.</p></article><article class="card"><h3>Enterprise Rollout</h3><p class="muted">Standardize commercial movement across multiple teams.</p></article></div></div></main>'
@@ -114,7 +118,7 @@ create_page "/intake" "FCA Intake" '<main class="section"><div class="wrap"><spa
 create_page "/checkout" "FCA Activation" '<main class="section"><div class="wrap"><span class="eyebrow">Step 2 · Activation</span><h1>Apply code and continue to login</h1><section class="card"><div id="summary" class="status">Loading intake record…</div><div class="field" style="margin-top:12px"><label for="promo">Activation code</label><input id="promo" placeholder="Enter code" /></div><div id="promoStatus" class="status warn" style="margin-top:12px">Founder code: FCA-FOUNDER-FREE-2026</div><div class="cta-row"><button class="btn btn-primary" type="button" onclick="applyCode()">Apply</button><a class="btn btn-secondary" href="/login/">Continue to Login</a></div></section></div></main><script>const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");if(rec){summary.innerHTML=`<strong>Plan:</strong> ${rec.plan}<br/><strong>Company:</strong> ${rec.company}<br/><strong>Email:</strong> ${rec.email}`;}else{summary.textContent="No intake record found.";}function applyCode(){if((promo.value||"").trim()==="FCA-FOUNDER-FREE-2026"){promoStatus.className="status success";promoStatus.textContent="Founder code applied.";}else{promoStatus.className="status warn";promoStatus.textContent="Code not recognized.";}}</script>'
 create_page "/login" "FCA Login" '<main class="section"><div class="wrap"><span class="eyebrow">Step 3 · Login</span><h1>Sign in to your FCA workspace</h1><section class="card"><form id="loginForm"><div class="field"><label>Email</label><input id="email" type="email" /></div><div class="field"><label>Password</label><input id="password" type="password" /></div><div class="cta-row"><button class="btn btn-primary" type="submit">Sign In</button><a class="btn btn-secondary" href="/intake/">Create New Login</a></div><p style="font-size:13px;color:#64748b">Fallback: launch.customer@futurecontractorsofamerica.com / FCA-Launch-2026!</p></form><div id="statusBox" class="status" style="margin-top:12px">Use your intake credentials.</div></section></div></main><script>const f={email:"launch.customer@futurecontractorsofamerica.com",password:"FCA-Launch-2026!"};const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");if(rec?.email)email.value=rec.email;loginForm.addEventListener("submit",e=>{e.preventDefault();const e1=email.value.trim().toLowerCase(),p1=password.value.trim();if((rec&&rec.email===e1&&rec.password===p1)||(e1===f.email&&p1===f.password)){statusBox.className="status success";statusBox.textContent="Login successful. Opening platform…";setTimeout(()=>location.href="/portal/platform/",350);}else{statusBox.className="status warn";statusBox.textContent="Credentials did not validate.";}});</script>'
 
-create_page "/portal/platform" "FCA Platform" '<main class="section"><div class="wrap"><span class="eyebrow">Live Product Surface</span><h1>Platform Dashboard</h1><p class="lead">Live customer workspace with shared project, files, and audit data.</p><div class="grid-3"><div class="card"><h3>Project</h3><p id="projectName">Loading…</p></div><div class="card"><h3>Customer</h3><p id="customerName">Loading…</p></div><div class="card"><h3>Next Action</h3><p id="nextAction">Loading…</p></div></div><div class="cta-row"><a class="btn btn-primary" href="/portal/projects/">Projects</a><a class="btn btn-secondary" href="/portal/files/">Files</a><a class="btn btn-secondary" href="/portal/audit/">Audit</a></div></div></main><script>async function h(){const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());customerName.textContent=rec?.company||'Launch Customer Workspace';projectName.textContent=rec?.company?`${rec.company} — Initial Opportunity`:p.project.name;nextAction.textContent=p.project.nextStep;}h();</script>'
+create_page "/portal/platform" "FCA Platform" '<main class="section"><div class="wrap"><span class="eyebrow">Live Product Surface</span><h1>Platform Dashboard</h1><p class="lead">Live customer workspace with shared project, files, and audit data.</p><div class="grid-4"><div class="card"><h3>Project</h3><p id="projectName">Loading…</p></div><div class="card"><h3>Customer</h3><p id="customerName">Loading…</p></div><div class="card"><h3>Next Action</h3><p id="nextAction">Loading…</p></div><div class="card"><h3>Workspace</h3><p id="workspaceState">Loading…</p></div></div><div class="cta-row"><a class="btn btn-primary" href="/portal/projects/">Projects</a><a class="btn btn-secondary" href="/portal/files/">Files</a><a class="btn btn-secondary" href="/portal/audit/">Audit</a><a class="btn btn-gold" href="/pricing/">Upgrade Package</a></div></div></main><script>async function h(){const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());customerName.textContent=rec?.company||'Launch Customer Workspace';projectName.textContent=rec?.company?`${rec.company} — Initial Opportunity`:p.project.name;nextAction.textContent=p.project.nextStep;workspaceState.textContent=p.workspace.status;}h();</script>'
 create_page "/portal/projects" "FCA Projects" '<main class="section"><div class="wrap"><h1>Projects</h1><section class="card"><table class="data-table"><thead><tr><th>Project</th><th>Stage</th><th>Next Step</th></tr></thead><tbody id="rows"><tr><td>Loading…</td><td>—</td><td>—</td></tr></tbody></table></section></div></main><script>async function h(){const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());rows.innerHTML=`<tr><td>${p.project.name}</td><td>${p.project.stage}</td><td>${p.project.nextStep}</td></tr>`;}h();</script>'
 create_page "/portal/files" "FCA Files" '<main class="section"><div class="wrap"><h1>Files</h1><div id="grid" class="grid-3"></div></div></main><script>async function h(){const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());grid.innerHTML=p.files.map(f=>`<article class="card"><h3>${f.name}</h3><p class="muted">${f.category} · ${f.status}</p></article>`).join("");}h();</script>'
 create_page "/portal/audit" "FCA Audit" '<main class="section"><div class="wrap"><h1>Audit</h1><section class="card"><table class="data-table"><thead><tr><th>Event</th><th>Actor</th><th>Status</th></tr></thead><tbody id="rows"><tr><td>Loading…</td><td>—</td><td>—</td></tr></tbody></table></section></div></main><script>async function h(){const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());rows.innerHTML=p.audit.map(a=>`<tr><td>${a.event}</td><td>${a.actor}</td><td>${a.status}</td></tr>`).join("");}h();</script>'
@@ -123,7 +127,7 @@ create_page "/referrals" "FCA Referrals" '<main class="section"><div class="wrap
 
 cat > dist/deployment-status.json <<JSON
 {
-  "status": "live-shell-premium-customer-pass-active",
+  "status": "live-shell-premium-customer-pass-2-active",
   "shell": "FCA Contractor Command",
   "execution": "Auricrux-Central",
   "nextAction": "MNCL-004",
@@ -139,7 +143,8 @@ cat > dist/deployment-status.json <<JSON
   "gitSha": "${GIT_SHA}",
   "defaultHost": "${DEFAULT_HOST}",
   "commitWitnessRoute": "${COMMIT_WITNESS_ROUTE}",
-  "buildMarkerDate": "${BUILD_MARKER_DATE}"
+  "buildMarkerDate": "${BUILD_MARKER_DATE}",
+  "buildMarkerVersion": "${BUILD_MARKER_VERSION}"
 }
 JSON
 
@@ -158,12 +163,13 @@ shell=FCA Contractor Command
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
 commitWitnessRoute=${COMMIT_WITNESS_ROUTE}
-status=live-shell-premium-customer-pass-active
+status=live-shell-premium-customer-pass-2-active
 buildMarkerDate=${BUILD_MARKER_DATE}
+buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
 cat > dist/live-shell-verification.html <<'HTML'
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Premium customer-facing shell is active with visible live marker: FCA Contractor Command — Live Build June 17, 2026.</p></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Premium customer-facing shell is active with visible live marker: FCA Contractor Command — Live Build June 17, 2026 (Live Pass 2).</p></body></html>
 HTML
 cat > dist/host-binding-audit.html <<'HTML'
 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Host Binding Audit</title></head><body><h1>Host Binding Audit</h1><p>futurecontractorsofamerica.com</p><p>www.futurecontractorsofamerica.com</p><p>delightful-mushroom-0de67860f.7.azurestaticapps.net</p></body></html>
@@ -175,8 +181,9 @@ HTML
 cat > "dist${COMMIT_WITNESS_ROUTE}" <<EOF
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
-status=live-shell-premium-customer-pass-active
+status=live-shell-premium-customer-pass-2-active
 buildMarkerDate=${BUILD_MARKER_DATE}
+buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
-echo "FCA premium customer shell build completed for ${GIT_SHA}"
+echo "FCA premium customer shell pass 2 build completed for ${GIT_SHA}"
