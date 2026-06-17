@@ -1,7 +1,7 @@
 # Stacked Observation Report
 
 Status date: 2026-06-17
-Packet: 062K
+Packet: 062M
 Decision: observation truth first, further slice expansion second
 
 ## Active stacked sequence observed
@@ -11,6 +11,8 @@ Decision: observation truth first, further slice expansion second
 - PR #114 — `062G: add alignment governance lane and two more customer-usable tools`
 - PR #132 — `062I: lock stacked run observation gate before more slice expansion`
 - PR #133 — `062J: bind first stacked observation matrix from observed PR truth`
+- PR #134 — `062K: add durable stacked observation report surface`
+- PR #135 — `062L: isolate unresolved lane dependencies for 061Z reduction`
 
 ## Truth summary
 | lane | repo-wired | stack-head observed | main observed | live deployment observed | note |
@@ -27,6 +29,20 @@ Decision: observation truth first, further slice expansion second
 | PR review automation (`062G`) | n/a | no | no | n/a | no check run observed in-session for PR #114 |
 | PR review automation (`062I`) | n/a | no | no | n/a | no check run observed in-session for PR #132 |
 | PR review automation (`062J`) | n/a | no | no | n/a | no check run observed in-session for PR #133 |
+| PR review automation (`062K`) | n/a | no | no | n/a | no check run observed in-session for PR #134 |
+| PR review automation (`062L`) | n/a | no | no | n/a | no check run observed in-session for PR #135 |
+
+## Critical unresolved lanes
+- build validation
+- alignment proof governance
+- static web app deploy
+- runtime smoke validation
+- live deployment proof stamp
+- live deployment run witness
+
+## Blocker reduction status
+Meaningful blocker reduction has **not** occurred yet.
+Reason: all six critical unresolved lanes remain only `repo-wired` in-session and none has been promoted to `stack-head observed`, `main observed`, or `live deployment observed`.
 
 ## Observation dependency
 The following critical lanes still remain observation-dependent for any truthful reduction of the unresolved `061Z` blocker set:
@@ -38,5 +54,5 @@ The following critical lanes still remain observation-dependent for any truthful
 - live deployment run witness
 
 ## Claim boundary
-Allowed claim: repo wiring exists and limited PR-head review automation observations exist.
-Forbidden claim: current-stack `main` is observed, live deployment is observed, or `061Z` is closed.
+Allowed claim: repo wiring exists, limited PR-head review automation observations exist, and blocker reduction has not yet occurred.
+Forbidden claim: current-stack `main` is observed, live deployment is observed, blocker reduction has occurred, or `061Z` is closed.

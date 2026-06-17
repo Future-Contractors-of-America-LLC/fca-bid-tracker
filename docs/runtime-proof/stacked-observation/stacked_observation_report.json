@@ -1,6 +1,6 @@
 {
   "statusDate": "2026-06-17",
-  "packet": "062K",
+  "packet": "062M",
   "decision": "observation truth first, further slice expansion second",
   "activeSequence": [
     {"pr": 111, "packet": "062D", "title": "extend package route truth into home login and contact"},
@@ -8,7 +8,9 @@
     {"pr": 113, "packet": "062F", "title": "wire alignment proof into CI and deepen functional SaaS and LMS delivery"},
     {"pr": 114, "packet": "062G", "title": "add alignment governance lane and two more customer-usable tools"},
     {"pr": 132, "packet": "062I", "title": "lock stacked run observation gate before more slice expansion"},
-    {"pr": 133, "packet": "062J", "title": "bind first stacked observation matrix from observed PR truth"}
+    {"pr": 133, "packet": "062J", "title": "bind first stacked observation matrix from observed PR truth"},
+    {"pr": 134, "packet": "062K", "title": "add durable stacked observation report surface"},
+    {"pr": 135, "packet": "062L", "title": "isolate unresolved lane dependencies for 061Z reduction"}
   ],
   "lanes": {
     "buildValidation": {
@@ -58,8 +60,20 @@
     "pr113Review": {"repoWired": null, "stackHeadObserved": true, "mainObserved": false, "liveDeploymentObserved": null, "note": "copilot-pull-request-reviewer observed completed / success"},
     "pr114Review": {"repoWired": null, "stackHeadObserved": false, "mainObserved": false, "liveDeploymentObserved": null, "note": "no check run observed in-session"},
     "pr132Review": {"repoWired": null, "stackHeadObserved": false, "mainObserved": false, "liveDeploymentObserved": null, "note": "no check run observed in-session"},
-    "pr133Review": {"repoWired": null, "stackHeadObserved": false, "mainObserved": false, "liveDeploymentObserved": null, "note": "no check run observed in-session"}
+    "pr133Review": {"repoWired": null, "stackHeadObserved": false, "mainObserved": false, "liveDeploymentObserved": null, "note": "no check run observed in-session"},
+    "pr134Review": {"repoWired": null, "stackHeadObserved": false, "mainObserved": false, "liveDeploymentObserved": null, "note": "no check run observed in-session"},
+    "pr135Review": {"repoWired": null, "stackHeadObserved": false, "mainObserved": false, "liveDeploymentObserved": null, "note": "no check run observed in-session"}
   },
+  "criticalUnresolvedLanes": [
+    "build validation",
+    "alignment proof governance",
+    "static web app deploy",
+    "runtime smoke validation",
+    "live deployment proof stamp",
+    "live deployment run witness"
+  ],
+  "blockerReductionOccurred": false,
+  "blockerReductionReason": "All six critical unresolved lanes remain only repo-wired in-session and none has been promoted to stack-head observed, main observed, or live deployment observed.",
   "observationDependency": [
     "build validation",
     "alignment proof governance",
@@ -71,11 +85,13 @@
   "claimBoundary": {
     "allowed": [
       "repo wiring exists",
-      "limited PR-head review automation observations exist"
+      "limited PR-head review automation observations exist",
+      "blocker reduction has not yet occurred"
     ],
     "forbidden": [
       "current-stack main is observed",
       "live deployment is observed",
+      "blocker reduction has occurred",
       "061Z is closed"
     ]
   }
