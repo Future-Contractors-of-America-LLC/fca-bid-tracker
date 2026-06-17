@@ -1,11 +1,11 @@
 {
-  "packet": "062W",
+  "packet": "062X",
   "generatedAt": "2026-06-14T17:30:00Z",
   "provenance": "github_actions_ci",
   "ciPersisted": true,
   "directoryPresent": true,
   "laneConfirmed": false,
   "reason": "Proof surface exists, but CI-origin proof has not yet been confirmed.",
-  "ciRunId": "27679663160",
-  "ciCommitSha": "ccebe90222cf7afefcdb607f38a545d3f629c006"
+  "ciRunId": "27679874787",
+  "ciCommitSha": "1065c0cb2a2293f2b2e77af96955cc5d42524a93"
 }
