@@ -1,13 +1,13 @@
 [
   {
-    "attempt": 3,
+    "attempt": 1,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "daf9acc6094136b7457436cfeada4271cf24fd8a",
+    "targetGitSha": "2461fc00d74e381c243752ab22d8b7e8255c19e2",
     "host": "futurecontractorsofamerica.com",
-    "deploymentGitSha": "1f934a933905cc9f777444cbab4e08e45d1e164c",
-    "runtimeGitSha": "1f934a933905cc9f777444cbab4e08e45d1e164c",
-    "commitWitnessRoute": "/commit-witness-1f934a933905cc9f777444cbab4e08e45d1e164c.txt",
+    "deploymentGitSha": "daf9acc6094136b7457436cfeada4271cf24fd8a",
+    "runtimeGitSha": "daf9acc6094136b7457436cfeada4271cf24fd8a",
+    "commitWitnessRoute": "/commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -55,91 +55,93 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt",
-        "status": 200,
-        "ok": true
-      }
-    ],
-    "failures": [
-      "https://futurecontractorsofamerica.com/commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt returned 404",
-      "futurecontractorsofamerica.com is serving stale deployment-status SHA 1f934a933905cc9f777444cbab4e08e45d1e164c; expected daf9acc6094136b7457436cfeada4271cf24fd8a",
-      "futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA 1f934a933905cc9f777444cbab4e08e45d1e164c; expected daf9acc6094136b7457436cfeada4271cf24fd8a",
-      "futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-1f934a933905cc9f777444cbab4e08e45d1e164c.txt; expected /commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt"
-    ]
-  },
-  {
-    "attempt": 3,
-    "targetSwaName": "fca-frontend",
-    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "daf9acc6094136b7457436cfeada4271cf24fd8a",
-    "host": "www.futurecontractorsofamerica.com",
-    "deploymentGitSha": "1f934a933905cc9f777444cbab4e08e45d1e164c",
-    "runtimeGitSha": "1f934a933905cc9f777444cbab4e08e45d1e164c",
-    "commitWitnessRoute": "/commit-witness-1f934a933905cc9f777444cbab4e08e45d1e164c.txt",
-    "expectedHosts": [
-      "futurecontractorsofamerica.com",
-      "www.futurecontractorsofamerica.com",
-      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
-    ],
-    "routeChecks": [
-      {
-        "route": "/deployment-status.json",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/domain-continuity.json",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/runtime-fingerprint.txt",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/live-shell-verification.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/host-binding-audit.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/api-continuity-audit.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/warranty",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/referrals",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt",
+        "route": "/commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt",
         "status": 404,
         "ok": false
       }
     ],
     "failures": [
-      "www.futurecontractorsofamerica.com is serving stale deployment-status SHA 1f934a933905cc9f777444cbab4e08e45d1e164c; expected daf9acc6094136b7457436cfeada4271cf24fd8a",
-      "www.futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA 1f934a933905cc9f777444cbab4e08e45d1e164c; expected daf9acc6094136b7457436cfeada4271cf24fd8a",
-      "www.futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-1f934a933905cc9f777444cbab4e08e45d1e164c.txt; expected /commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt",
-      "https://www.futurecontractorsofamerica.com/commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt returned 404"
+      "https://futurecontractorsofamerica.com/commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt returned 404",
+      "futurecontractorsofamerica.com is serving stale deployment-status SHA daf9acc6094136b7457436cfeada4271cf24fd8a; expected 2461fc00d74e381c243752ab22d8b7e8255c19e2",
+      "futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA daf9acc6094136b7457436cfeada4271cf24fd8a; expected 2461fc00d74e381c243752ab22d8b7e8255c19e2",
+      "futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt; expected /commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt",
+      "https://futurecontractorsofamerica.com/commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt returned 404"
     ]
   },
   {
-    "attempt": 3,
+    "attempt": 1,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "daf9acc6094136b7457436cfeada4271cf24fd8a",
+    "targetGitSha": "2461fc00d74e381c243752ab22d8b7e8255c19e2",
+    "host": "www.futurecontractorsofamerica.com",
+    "deploymentGitSha": "daf9acc6094136b7457436cfeada4271cf24fd8a",
+    "runtimeGitSha": "daf9acc6094136b7457436cfeada4271cf24fd8a",
+    "commitWitnessRoute": "/commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt",
+        "status": 404,
+        "ok": false
+      }
+    ],
+    "failures": [
+      "https://www.futurecontractorsofamerica.com/commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt returned 404",
+      "www.futurecontractorsofamerica.com is serving stale deployment-status SHA daf9acc6094136b7457436cfeada4271cf24fd8a; expected 2461fc00d74e381c243752ab22d8b7e8255c19e2",
+      "www.futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA daf9acc6094136b7457436cfeada4271cf24fd8a; expected 2461fc00d74e381c243752ab22d8b7e8255c19e2",
+      "www.futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt; expected /commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt",
+      "https://www.futurecontractorsofamerica.com/commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt returned 404"
+    ]
+  },
+  {
+    "attempt": 1,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+    "targetGitSha": "2461fc00d74e381c243752ab22d8b7e8255c19e2",
     "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
     "deploymentGitSha": "daf9acc6094136b7457436cfeada4271cf24fd8a",
     "runtimeGitSha": "daf9acc6094136b7457436cfeada4271cf24fd8a",
@@ -191,13 +193,17 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt",
-        "status": 200,
-        "ok": true
+        "route": "/commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt",
+        "status": 404,
+        "ok": false
       }
     ],
     "failures": [
-      "https://delightful-mushroom-0de67860f.7.azurestaticapps.net/commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt returned 404"
+      "https://delightful-mushroom-0de67860f.7.azurestaticapps.net/commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt returned 404",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net is serving stale deployment-status SHA daf9acc6094136b7457436cfeada4271cf24fd8a; expected 2461fc00d74e381c243752ab22d8b7e8255c19e2",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net is serving stale runtime-fingerprint SHA daf9acc6094136b7457436cfeada4271cf24fd8a; expected 2461fc00d74e381c243752ab22d8b7e8255c19e2",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net deployment manifest reports commit witness /commit-witness-daf9acc6094136b7457436cfeada4271cf24fd8a.txt; expected /commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt",
+      "https://delightful-mushroom-0de67860f.7.azurestaticapps.net/commit-witness-2461fc00d74e381c243752ab22d8b7e8255c19e2.txt returned 404"
     ]
   }
 ]
