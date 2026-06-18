@@ -24,7 +24,7 @@ jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     name: Build, Deploy, and Smoke Verify Job
     steps:
       - name: Checkout
@@ -120,8 +120,8 @@ jobs:
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: npm run verify:live-deployment
         env:
-          AURICRUX_LIVE_VERIFY_ATTEMPTS: '4'
-          AURICRUX_LIVE_VERIFY_DELAY_MS: '15000'
+          AURICRUX_LIVE_VERIFY_ATTEMPTS: '20'
+          AURICRUX_LIVE_VERIFY_DELAY_MS: '30000'
           AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}
           AURICRUX_SWA_DEFAULT_HOST: ${{ env.AURICRUX_SWA_DEFAULT_HOST }}
           AURICRUX_SWA_NAME: ${{ env.AURICRUX_SWA_NAME }}

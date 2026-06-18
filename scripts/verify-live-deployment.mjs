@@ -24,8 +24,8 @@ const routes = [
   "/referrals",
 ];
 
-const attempts = Number(process.env.AURICRUX_LIVE_VERIFY_ATTEMPTS || 4);
-const delayMs = Number(process.env.AURICRUX_LIVE_VERIFY_DELAY_MS || 15000);
+const attempts = Number(process.env.AURICRUX_LIVE_VERIFY_ATTEMPTS || 20);
+const delayMs = Number(process.env.AURICRUX_LIVE_VERIFY_DELAY_MS || 30000);
 const workspaceDir = path.join(process.cwd(), "workspace");
 const summaryPath = path.join(workspaceDir, "live_deployment_smoke_summary.json");
 const failuresPath = path.join(workspaceDir, "live_deployment_smoke_failures.txt");
@@ -47,8 +47,19 @@ async function sleep(ms) {
   await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function fetchText(url) {
-  const response = await fetch(url, { headers: { "cache-control": "no-cache" } });
+function withCacheBust(url, attemptNumber) {
+  const marker = `${Date.now()}-${Math.random().toString(36).slice(2)}-${attemptNumber}`;
+  return `${url}${url.includes("?") ? "&" : "?"}auricrux_verify=${marker}`;
+}
+
+async function fetchText(url, attemptNumber) {
+  const response = await fetch(withCacheBust(url, attemptNumber), {
+    headers: {
+      "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+      pragma: "no-cache",
+      expires: "0",
+    },
+  });
   const text = await response.text();
   return { ok: response.ok, status: response.status, text };
 }
@@ -160,15 +171,15 @@ async function runAttempt(attemptNumber) {
     const fingerprintUrl = `https://${host}/runtime-fingerprint.txt`;
     const commitWitnessUrl = `https://${host}${targetCommitWitnessRoute}`;
 
-    const deploymentResponse = await fetchText(deploymentUrl);
-    const continuityResponse = await fetchText(continuityUrl);
-    const fingerprintResponse = await fetchText(fingerprintUrl);
-    const commitWitnessResponse = await fetchText(commitWitnessUrl);
+    const deploymentResponse = await fetchText(deploymentUrl, attemptNumber);
+    const continuityResponse = await fetchText(continuityUrl, attemptNumber);
+    const fingerprintResponse = await fetchText(fingerprintUrl, attemptNumber);
+    const commitWitnessResponse = await fetchText(commitWitnessUrl, attemptNumber);
 
     const routeChecks = [];
     for (const route of [...routes, targetCommitWitnessRoute]) {
       const url = `https://${host}${route}`;
-      const response = await fetchText(url);
+      const response = await fetchText(url, attemptNumber);
       routeChecks.push({ route, status: response.status, ok: response.ok });
     }
 
@@ -210,6 +221,14 @@ for (let attempt = 1; attempt <= attempts; attempt += 1) {
     console.warn(`Live deployment smoke verification attempt ${attempt} failed. Retrying in ${delayMs}ms...`);
     await sleep(delayMs);
   }
+}
+
+const staleHosts = finalSummary.filter((item) => item.deploymentGitSha !== targetGitSha && item.deploymentGitSha !== "unavailable");
+if (staleHosts.length === hosts.length) {
+  finalFailures.push(
+    `All hosts remained stale after ${attempts} attempts. This strongly indicates SWA deployment token/resource mismatch or deployment targeting drift. Expected gitSha=${targetGitSha}.`
+  );
+  await fs.writeFile(failuresPath, `${finalFailures.join("\n")}\n`, "utf8");
 }
 
 console.error("Live deployment smoke verification failed after retry budget:");

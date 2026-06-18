@@ -8,7 +8,9 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  AURICRUX_SWA_NAME: fca-frontend
   AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
+  AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
 
 concurrency:
   group: swa-emergency-direct-${{ github.ref }}
@@ -17,7 +19,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -66,3 +68,22 @@ jobs:
           app_location: dist
           api_location: api_generated
           output_location: ''
+
+      - name: Mandatory post-deploy host verification gate
+        run: npm run verify:live-deployment
+        env:
+          AURICRUX_LIVE_VERIFY_ATTEMPTS: '20'
+          AURICRUX_LIVE_VERIFY_DELAY_MS: '30000'
+          AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}
+          AURICRUX_SWA_DEFAULT_HOST: ${{ env.AURICRUX_SWA_DEFAULT_HOST }}
+          AURICRUX_SWA_NAME: ${{ env.AURICRUX_SWA_NAME }}
+
+      - name: Upload emergency deployment smoke artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: emergency-live-deployment-smoke
+          path: |
+            workspace/live_deployment_smoke_summary.json
+            workspace/live_deployment_smoke_failures.txt
+          if-no-files-found: warn
