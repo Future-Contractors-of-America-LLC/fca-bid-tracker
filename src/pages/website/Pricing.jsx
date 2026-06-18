@@ -250,7 +250,7 @@ export default function Pricing() {
               {tier.includes.map((item) => <li key={item}>{item}</li>)}
             </ul>
 
-            <a href={tier.ctaHref} style={ctaPrimaryStyle}>{tier.ctaLabel}</a>
+            <a href={tier.ctaHref} style={ctaPrimaryStyle} target={tier.checkoutUrl ? "_blank" : undefined} rel={tier.checkoutUrl ? "noopener noreferrer" : undefined}>{tier.ctaLabel}</a>
           </div>
         ))}
       </div>

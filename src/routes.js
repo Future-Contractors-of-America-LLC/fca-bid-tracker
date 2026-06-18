@@ -6,6 +6,9 @@ import Contact from "./pages/website/Contact";
 import Auricrux from "./pages/website/Auricrux";
 import Warranty from "./pages/website/Warranty";
 import Referrals from "./pages/website/Referrals";
+import Terms from "./pages/website/Terms";
+import Privacy from "./pages/website/Privacy";
+import Refunds from "./pages/website/Refunds";
 import NotFound from "./pages/website/NotFound";
 import LegacyBidEntry from "./pages/website/LegacyBidEntry";
 import LegacyBidStatus from "./pages/website/LegacyBidStatus";
@@ -41,6 +44,9 @@ export const routes = {
   "/auricrux": Auricrux,
   "/warranty": Warranty,
   "/referrals": Referrals,
+  "/terms": Terms,
+  "/privacy": Privacy,
+  "/refunds": Refunds,
   "/not-found": NotFound,
   "/bid-entry": LegacyBidEntry,
   "/bid-status": LegacyBidStatus,

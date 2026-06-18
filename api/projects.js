@@ -1,6 +1,6 @@
 import { app } from "@azure/functions";
 import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
-import { listProjects, mutateProject, getWorkflowSummary } from "./workflow-store.js";
+import { listProjects, mutateProject, getWorkflowSummary, ensureWorkflowReady, workflowBackingSource } from "./workflow-store.js";
 
 function resolveTenantId(request) {
   const cookieHeader = request.headers.get("cookie") || "";
@@ -15,6 +15,7 @@ app.http("projects", {
   route: "projects",
   handler: async (request) => {
     const tenantId = resolveTenantId(request);
+    await ensureWorkflowReady(tenantId);
 
     if (request.method === "GET") {
       const items = listProjects(tenantId);
@@ -25,7 +26,7 @@ app.http("projects", {
           items,
           count: items.length,
           summary: getWorkflowSummary(tenantId),
-          backingSource: "api-workflow-store",
+          backingSource: workflowBackingSource(),
         },
       };
     }
@@ -39,7 +40,7 @@ app.http("projects", {
         jsonBody: {
           ok: true,
           ...result,
-          backingSource: "api-workflow-store",
+          backingSource: workflowBackingSource(),
         },
       };
     } catch (error) {

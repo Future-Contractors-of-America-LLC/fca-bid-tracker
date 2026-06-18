@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "updatedUtc": "2026-06-18T00:00:00Z",
+  "products": [
+    {
+      "id": "contractor-business-system",
+      "name": "Contractor Business System Starter Kit",
+      "priceUsd": 79,
+      "summary": "Lead tracking, estimating, execution, and closeout in one workbook system.",
+      "status": "active"
+    },
+    {
+      "id": "ai-contractors-toolkit",
+      "name": "AI for Contractors Toolkit",
+      "priceUsd": 49,
+      "summary": "AI prompts and workflows for estimates, scope, client communication, and job planning.",
+      "status": "active"
+    },
+    {
+      "id": "contractor-templates-pack",
+      "name": "Contractor Templates Pack",
+      "priceUsd": 39,
+      "summary": "Estimate template, lead tracker, job tracker, daily checklist, and Start Here guide.",
+      "status": "active"
+    },
+    {
+      "id": "minimal-contractor-system",
+      "name": "Minimal Contractor System",
+      "priceUsd": 29,
+      "summary": "Stripped-down quick-start for contractors who want the basics only.",
+      "status": "active"
+    },
+    {
+      "id": "follow-up-message-pack",
+      "name": "Follow-Up and Client Message Pack",
+      "priceUsd": 29,
+      "summary": "Copy-and-send client messages for follow-ups, updates, reminders, and closeout.",
+      "status": "active"
+    }
+  ]
+}

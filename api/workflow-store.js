@@ -1,4 +1,9 @@
 import { portalBids, portalProjects, portalFiles, projectAuditEvents } from "../src/systemState.js";
+import {
+  ensureWorkflowHydrated,
+  scheduleTenantPersist,
+  persistenceEnabled,
+} from "./_lib/persistence/azureTablePersistence.js";
 
 const STORE_KEY = "__FCA_CONTRACTOR_COMMAND_WORKFLOW_STORE__";
 const DEFAULT_TENANT_ID = "TEN-FCA-001";
@@ -277,6 +282,25 @@ function getTenantWorkflow(tenantId = DEFAULT_TENANT_ID) {
   return store.tenants[resolvedTenantId];
 }
 
+export async function ensureWorkflowReady(tenantId = DEFAULT_TENANT_ID) {
+  const resolvedTenantId = resolveTenantId(tenantId);
+  await ensureWorkflowHydrated(resolvedTenantId, (id, workflow) => {
+    getStore().tenants[id] = workflow;
+  });
+  if (!getStore().tenants[resolvedTenantId]) {
+    getStore().tenants[resolvedTenantId] = seedTenantWorkflow();
+  }
+}
+
+function persistTenant(tenantId = DEFAULT_TENANT_ID) {
+  const resolvedTenantId = resolveTenantId(tenantId);
+  scheduleTenantPersist(resolvedTenantId, () => getTenantWorkflow(resolvedTenantId));
+}
+
+export function workflowBackingSource() {
+  return persistenceEnabled() ? "api-workflow-store-table" : "api-workflow-store";
+}
+
 function stampHistoryEntry(label, detail) {
   return {
     at: nowIso(),
@@ -423,6 +447,7 @@ export function createProject(tenantId, payload = {}) {
     discipline: "Project Setup",
   });
 
+  persistTenant(tenantId);
   return clone({ project: createdProject, summary: getWorkflowSummary(tenantId) });
 }
 
@@ -536,6 +561,7 @@ export function createTakeoff(tenantId, payload = {}) {
     reason: "Takeoff continuity must be project-linked and non-stub for 60A readiness.",
     discipline: "Estimating",
   });
+  persistTenant(tenantId);
   return clone({ takeoff: created, summary: getWorkflowSummary(tenantId) });
 }
 
@@ -570,6 +596,7 @@ export function updateTakeoff(tenantId, payload = {}) {
     reason: "Takeoff lifecycle changes must remain durable and auditable.",
     discipline: "Estimating",
   });
+  persistTenant(tenantId);
   return clone({ takeoff: updated, summary: getWorkflowSummary(tenantId) });
 }
 
@@ -612,6 +639,7 @@ export function createRfi(tenantId, payload = {}) {
     reason: "RFI continuity must be project-linked and non-stub for 60A readiness.",
     discipline: "Project Controls",
   });
+  persistTenant(tenantId);
   return clone({ rfi: created, summary: getWorkflowSummary(tenantId) });
 }
 
@@ -646,6 +674,7 @@ export function updateRfi(tenantId, payload = {}) {
     reason: "RFI lifecycle changes must remain durable and auditable.",
     discipline: "Project Controls",
   });
+  persistTenant(tenantId);
   return clone({ rfi: updated, summary: getWorkflowSummary(tenantId) });
 }
 
@@ -860,6 +889,7 @@ export function mutateBid(tenantId, action, payload = {}) {
   workflow.bids[bidIndex] = updatedBid;
   workflow.updatedAt = nowIso();
 
+  persistTenant(tenantId);
   return clone({
     bid: updatedBid,
     createdProject,
@@ -948,6 +978,7 @@ export function mutateProject(tenantId, action, payload = {}) {
   workflow.projects[projectIndex] = updatedProject;
   workflow.updatedAt = nowIso();
 
+  persistTenant(tenantId);
   return clone({
     project: updatedProject,
     activeProjectId: workflow.activeProjectId,
@@ -999,6 +1030,7 @@ export function mutateFile(tenantId, action, payload = {}) {
 
     workflow.updatedAt = nowIso();
 
+    persistTenant(tenantId);
     return clone({
       file: createdFile,
       summary: getWorkflowSummary(tenantId),
@@ -1111,6 +1143,7 @@ export function mutateFile(tenantId, action, payload = {}) {
   touchProjectForFileMutation(workflow, currentFile.ownerObjectId, `File continuity updated for ${currentFile.ownerObjectId}.`);
   workflow.updatedAt = nowIso();
 
+  persistTenant(tenantId);
   return clone({
     file: updatedFile,
     summary: getWorkflowSummary(tenantId),

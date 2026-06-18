@@ -121,6 +121,15 @@ export default function ShellFooter() {
         </div>
 
         <div>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Legal</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <a href="/terms" style={linkStyle}>Terms of Service</a>
+            <a href="/privacy" style={linkStyle}>Privacy Policy</a>
+            <a href="/refunds" style={linkStyle}>Refunds & Billing</a>
+          </div>
+        </div>
+
+        <div>
           <div style={{ fontWeight: 700, marginBottom: 8 }}>Verification and Access</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
             Use these routes to validate runtime truth, request onboarding, or enter the canonical portal path.

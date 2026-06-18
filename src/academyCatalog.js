@@ -1,6 +1,37 @@
 export const academyCatalog = {
   programs: [
     {
+      key: "fca-workspace-quick-start",
+      title: "FCA Workspace Quick Start",
+      credential: "FCA Onboarding · Workspace Operator",
+      audience: "New FCA customers, pilot teams, and owner-operators activating their first workspace",
+      duration: "4 lessons · ~45 minutes",
+      format: "Self-paced onboarding tied to live portal routes",
+      goal: "Move from first login through project creation, bid tracking, file upload, and proposal readiness inside the real FCA shell.",
+      outcomes: [
+        "Create and select an active project in /portal/projects",
+        "Add or qualify a bid and link it to the project spine",
+        "Register files under the governed file spine in /portal/files",
+        "Generate proposal continuity from estimates and portal workflows"
+      ],
+      courses: [
+        {
+          code: "ONB-001",
+          title: "FCA Workspace Quick Start",
+          lessons: 4,
+          lab: "Live portal lab across /portal/projects, /portal/bids, /portal/files, /portal/proposals",
+          lessonTitles: [
+            "Lesson 1 · Create your first project and set the active job root",
+            "Lesson 2 · Add a bid, qualify the opportunity, and link it to the project",
+            "Lesson 3 · Upload files and track evidence on the project spine",
+            "Lesson 4 · Advance estimates and package a customer-ready proposal"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/projects",
+      linkedLabel: "Open Projects Workspace"
+    },
+    {
       key: "electrical-apprenticeship-year1",
       title: "Electrical Apprenticeship Year 1: Jobsite Foundations",
       credential: "FCA Apprenticeship Track · Electrical Apprentice I",

@@ -1,6 +1,6 @@
 import { app } from "@azure/functions";
 import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
-import { listFiles, mutateFile, getWorkflowSummary, listAuditEvents } from "./workflow-store.js";
+import { listFiles, mutateFile, getWorkflowSummary, listAuditEvents, ensureWorkflowReady, workflowBackingSource } from "./workflow-store.js";
 
 function resolveTenantId(request) {
   const cookieHeader = request.headers.get("cookie") || "";
@@ -20,6 +20,7 @@ app.http("files", {
   route: "files",
   handler: async (request) => {
     const tenantId = resolveTenantId(request);
+    await ensureWorkflowReady(tenantId);
     const projectId = request.query.get("projectId") || null;
     const category = request.query.get("category") || null;
     const status = request.query.get("status") || null;
@@ -37,7 +38,7 @@ app.http("files", {
           projectId,
           filters: { category, status, q },
           summary: getWorkflowSummary(tenantId),
-          backingSource: "api-workflow-store",
+          backingSource: workflowBackingSource(),
         },
       };
     }
@@ -91,7 +92,7 @@ app.http("files", {
             ok: true,
             items: created,
             auditEventId: resolveLatestAuditEventId(tenantId, ownerObjectId, "file-created"),
-            backingSource: "api-workflow-store",
+            backingSource: workflowBackingSource(),
           },
         };
       } catch (error) {
@@ -112,7 +113,7 @@ app.http("files", {
         jsonBody: {
           ok: true,
           ...result,
-          backingSource: "api-workflow-store",
+          backingSource: workflowBackingSource(),
         },
       };
     } catch (error) {

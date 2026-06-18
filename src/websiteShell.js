@@ -1,3 +1,5 @@
+import { PILOT_CHECKOUT_URL, STARTUP_CHECKOUT_URL } from "./commercialOffers.js";
+
 export const publicActionCatalog = {
   workspace: {
     label: "Open FCA Workspace",
@@ -283,8 +285,9 @@ export const pricingTiers = [
     detail: "Low-friction entry for contractors who need real workflow control from lead intake through bid clarity without heavy overhead.",
     products: ["SaaS workspace", "Portal lite", "Auricrux guidance", "Academy foundations"],
     comms: ["Chat", "Email"],
-    ctaHref: "/contact",
-    ctaLabel: "Start Startup Workspace",
+    ctaHref: STARTUP_CHECKOUT_URL || "/login",
+    ctaLabel: STARTUP_CHECKOUT_URL ? "Buy Startup — $99/mo" : "Start Startup Workspace",
+    checkoutUrl: STARTUP_CHECKOUT_URL || null,
     includes: [
       "1 active workspace",
       "Lead and bid intake continuity",
@@ -323,8 +326,9 @@ export const pricingTiers = [
     detail: "One-time guided activation package to implement FCA with real team setup, workflow wiring, and launch support.",
     products: ["Guided SaaS launch", "Portal activation", "Academy launch path", "Auricrux rollout guidance"],
     comms: ["Chat", "Email", "SMS", "Phone"],
-    ctaHref: "/contact",
-    ctaLabel: "Launch Paid Pilot",
+    ctaHref: PILOT_CHECKOUT_URL,
+    ctaLabel: "Buy Pilot — $2,500",
+    checkoutUrl: PILOT_CHECKOUT_URL,
     includes: [
       "Structured implementation kickoff",
       "Workflow and role setup support",

@@ -15,6 +15,7 @@ import { homeCtaSets, publicSurfaceLinks, publicRouteCtas, shellJourney } from "
 import { publicHomeMessaging } from "../../systemContinuity";
 import { saasOperationalPathways } from "../../productBlueprint";
 import { websiteMarketReadiness } from "../../websiteMarketReadiness";
+import { PILOT_CHECKOUT_URL, STARTUP_CHECKOUT_URL } from "../../commercialOffers";
 import { cardStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 
 const homeContinuityItems = [
@@ -105,6 +106,23 @@ export default function Home() {
         ctaHref={publicHomeMessaging.journey.ctaHref}
         ctaLabel={publicHomeMessaging.journey.ctaLabel}
       />
+
+      <div style={{ marginTop: 24, ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Self-serve checkout</div>
+        <h2 style={{ marginTop: 0 }}>Start using FCA today — pay securely with Stripe</h2>
+        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 720 }}>
+          Buy the Pilot rollout package or start the monthly Startup workspace. After payment you will receive onboarding instructions by email.
+        </p>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }}>
+          <a href={PILOT_CHECKOUT_URL} target="_blank" rel="noopener noreferrer" style={ctaPrimaryStyle}>Buy Pilot — $2,500</a>
+          {STARTUP_CHECKOUT_URL ? (
+            <a href={STARTUP_CHECKOUT_URL} target="_blank" rel="noopener noreferrer" style={{ ...ctaPrimaryStyle, background: "#fff", color: "#1d4ed8", border: "1px solid #2563eb" }}>Buy Startup — $99/mo</a>
+          ) : (
+            <a href="/pricing" style={{ ...ctaPrimaryStyle, background: "#fff", color: "#1d4ed8", border: "1px solid #2563eb" }}>View Startup Plan</a>
+          )}
+          <a href="/login?seeded=1&autologin=1&next=/portal/platform" style={{ ...ctaPrimaryStyle, background: "#f8fafc", color: "#0f172a", border: "1px solid #cbd5e1" }}>Try Demo First</a>
+        </div>
+      </div>
 
       <div style={{ marginTop: 24 }}>
         <PublicOperationsStrip

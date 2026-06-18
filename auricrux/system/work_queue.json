@@ -1,26 +1,54 @@
 {
   "version": 1,
-  "queueName": "auricrux-machine-native-queue",
-  "updatedAtUtc": "2026-06-18T13:40:29.897Z",
+  "queueName": "fca-revenue-sprint-queue",
+  "updatedAtUtc": "2026-06-18T00:00:00Z",
   "items": [
     {
-      "id": "MNCL-001",
-      "title": "Project spine execution baseline",
+      "id": "REV-001",
+      "title": "Wire Stripe checkout CTAs on home and pricing",
+      "lane": "revenue",
+      "priority": "critical",
+      "status": "in_progress"
+    },
+    {
+      "id": "REV-002",
+      "title": "Azure Table persistence for projects/bids/files",
       "lane": "product",
       "priority": "critical",
+      "status": "in_progress"
+    },
+    {
+      "id": "REV-003",
+      "title": "Academy Workspace Quick Start course",
+      "lane": "academy",
+      "priority": "high",
       "status": "ready"
     },
     {
-      "id": "MNCL-002",
-      "title": "File spine execution baseline",
-      "lane": "product",
+      "id": "REV-004",
+      "title": "Digital product catalog and Stripe payment links",
+      "lane": "revenue",
+      "priority": "high",
+      "status": "queued"
+    },
+    {
+      "id": "REV-005",
+      "title": "Controlled SWA production deploy and smoke verify",
+      "lane": "deploy",
       "priority": "critical",
       "status": "queued"
     },
     {
-      "id": "MNCL-003",
-      "title": "Audit event persistence baseline",
-      "lane": "governance",
+      "id": "REV-006",
+      "title": "Stripe webhook + customer provisioning automation",
+      "lane": "revenue",
+      "priority": "high",
+      "status": "queued"
+    },
+    {
+      "id": "REV-007",
+      "title": "Startup $99/mo subscription payment link",
+      "lane": "revenue",
       "priority": "high",
       "status": "queued"
     }

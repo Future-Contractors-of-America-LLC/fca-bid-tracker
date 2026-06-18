@@ -1,16 +1,16 @@
 {
   "version": 1,
-  "id": "MNCL-001",
-  "title": "Implement Project/File/Audit control-loop wiring as the canonical next product build action",
+  "id": "REV-001",
+  "title": "Revenue sprint: wire Stripe checkout CTAs and deploy production shell",
   "mode": "build",
   "priority": "critical",
-  "status": "ready",
-  "owner": "auricrux-control-plane",
+  "status": "in_progress",
+  "owner": "cursor-agent",
   "blockedBy": [],
   "produces": [
-    "project entity wiring",
-    "file spine routing",
-    "audit event persistence contract"
+    "live Pilot checkout on pricing and home",
+    "legal pages",
+    "table-backed workflow persistence"
   ],
-  "updatedAtUtc": "2026-06-18T13:40:29.897Z"
+  "updatedAtUtc": "2026-06-18T00:00:00Z"
 }

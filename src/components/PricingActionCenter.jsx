@@ -1,5 +1,6 @@
 import { resolvePlanPreset } from "../pricingPlans";
 import { navigateTo } from "../navigation";
+import { PILOT_CHECKOUT_URL, STARTUP_CHECKOUT_URL } from "../commercialOffers";
 
 const shellStyle = {
   border: "1px solid #dbe3ef",
@@ -28,10 +29,10 @@ const actionButtonStyle = (tone = "primary") => ({
 });
 
 const launchPlans = [
-  { key: "startup", title: "Activate Startup Workspace", role: "Owner / Admin", nextHref: "/portal/platform" },
-  { key: "pilot", title: "Activate Pilot Workspace", role: "Project Coordinator", nextHref: "/portal" },
-  { key: "operations", title: "Activate Operations Workspace", role: "Owner / Admin", nextHref: "/portal/platform" },
-  { key: "enterprise", title: "Activate Enterprise Rollout", role: "Owner / Admin", nextHref: "/portal/admin" },
+  { key: "startup", title: "Activate Startup Workspace", role: "Owner / Admin", nextHref: "/portal/platform", checkoutUrl: STARTUP_CHECKOUT_URL },
+  { key: "pilot", title: "Buy Pilot Workspace", role: "Project Coordinator", nextHref: "/portal", checkoutUrl: PILOT_CHECKOUT_URL },
+  { key: "operations", title: "Activate Operations Workspace", role: "Owner / Admin", nextHref: "/portal/platform", checkoutUrl: null },
+  { key: "enterprise", title: "Activate Enterprise Rollout", role: "Owner / Admin", nextHref: "/portal/admin", checkoutUrl: null },
 ];
 
 export default function PricingActionCenter({ session, login }) {
@@ -84,6 +85,11 @@ export default function PricingActionCenter({ session, login }) {
               <button type="button" onClick={() => activatePlan(plan.key, plan.role, plan.nextHref)} style={actionButtonStyle(plan.key === "enterprise" ? "secondary" : "primary")}>
                 {plan.title}
               </button>
+              {plan.checkoutUrl ? (
+                <a href={plan.checkoutUrl} target="_blank" rel="noopener noreferrer" style={{ ...actionButtonStyle("secondary"), display: "inline-block", marginTop: 10, textDecoration: "none", textAlign: "center" }}>
+                  Pay with Stripe — {preset.price}
+                </a>
+              ) : null}
             </div>
           );
         })}

@@ -1,4 +1,7 @@
 {
   "name": "fca-bid-tracker-api",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "dependencies": {
+    "@azure/data-tables": "^13.3.1"
+  }
 }

@@ -1,6 +1,6 @@
 import { app } from "@azure/functions";
 import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
-import { listBids, mutateBid, getWorkflowSummary } from "./workflow-store.js";
+import { listBids, mutateBid, getWorkflowSummary, ensureWorkflowReady, workflowBackingSource } from "./workflow-store.js";
 
 function resolveTenantId(request) {
   const cookieHeader = request.headers.get("cookie") || "";
@@ -15,6 +15,7 @@ app.http("bids", {
   route: "bids",
   handler: async (request) => {
     const tenantId = resolveTenantId(request);
+    await ensureWorkflowReady(tenantId);
 
     if (request.method === "GET") {
       const items = listBids(tenantId);
@@ -25,7 +26,7 @@ app.http("bids", {
           items,
           count: items.length,
           summary: getWorkflowSummary(tenantId),
-          backingSource: "api-workflow-store",
+          backingSource: workflowBackingSource(),
         },
       };
     }
@@ -40,7 +41,7 @@ app.http("bids", {
           jsonBody: {
             ok: true,
             ...result,
-            backingSource: "api-workflow-store",
+            backingSource: workflowBackingSource(),
           },
         };
       } catch (error) {
@@ -62,7 +63,7 @@ app.http("bids", {
         accepted: true,
         submissionId,
         message: "Bid submission accepted",
-        backingSource: "api-workflow-store",
+        backingSource: workflowBackingSource(),
       },
     };
   },
