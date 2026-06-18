@@ -57,6 +57,9 @@ jobs:
       - name: Patch live login continuity and visibility marker
         run: node scripts/patch-live-login-continuity.mjs
 
+      - name: Patch live branding visibility (color/logo prominence)
+        run: node scripts/patch-live-branding-visibility.mjs
+
       - name: Generate deployable Azure Functions layout
         run: node scripts/prepare-api-functions.mjs
 
@@ -80,6 +83,7 @@ jobs:
           grep -q "Cross-host login continuity patch active" dist/index.html
           grep -q "fcaCrossHostLoginPatch" dist/login/index.html
           grep -q "fcaCrossHostLoginPatch" dist/intake/index.html
+          grep -q "FCA_LIVE_BRANDING_VISIBILITY_PATCH_V1" dist/styles.css
           find dist -maxdepth 1 -name 'commit-witness-*.txt' | grep -q .
 
           test -f api_generated/package.json
