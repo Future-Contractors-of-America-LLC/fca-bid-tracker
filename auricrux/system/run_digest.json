@@ -1,7 +1,7 @@
 {
   "version": 1,
   "controller": "auricrux-control-plane",
-  "generatedAtUtc": "2026-06-18T13:40:29.897Z",
+  "generatedAtUtc": "2026-06-18T16:46:39.729Z",
   "event": "schedule",
   "mode": "status",
   "outcome": "success",
@@ -13,10 +13,10 @@
     "auricrux/system/run_digest.json"
   ],
   "nextAction": {
-    "id": "MNCL-001",
-    "title": "Implement Project/File/Audit control-loop wiring as the canonical next product build action",
-    "status": "ready"
+    "id": "REV-001",
+    "title": "Revenue sprint: wire Stripe checkout CTAs and deploy production shell",
+    "status": "in_progress"
   },
-  "queueDepth": 3,
+  "queueDepth": 7,
   "status": "success"
 }
