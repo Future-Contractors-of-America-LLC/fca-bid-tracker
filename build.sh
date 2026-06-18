@@ -10,14 +10,14 @@ DEFAULT_HOST="${AURICRUX_SWA_DEFAULT_HOST:-delightful-mushroom-0de67860f.7.azure
 EXPECTED_HOSTS="${AURICRUX_EXPECTED_HOSTS:-futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net}"
 COMMIT_WITNESS_ROUTE="/commit-witness-${GIT_SHA}.txt"
 BUILD_MARKER_DATE="June 18, 2026"
-BUILD_MARKER_VERSION="Customer Landing v4"
+BUILD_MARKER_VERSION="Customer Landing v5 Auricrux + Pricing + Academy"
 
 IFS=',' read -r -a EXPECTED_HOST_ARRAY <<< "$EXPECTED_HOSTS"
 EXPECTED_HOSTS_JSON="$(printf '"%s",' "${EXPECTED_HOST_ARRAY[@]}")"
 EXPECTED_HOSTS_JSON="[${EXPECTED_HOSTS_JSON%,}]"
 
 cat > dist/styles.css <<'CSS'
-:root{--ink:#0f172a;--muted:#475569;--line:#dbe4f3;--blue:#1d4ed8;--blue2:#0f3ea8;--gold:#d4a017;--gold2:#8a6116;--white:#fff;--bg:#ecf2ff;--navy:#0a1729}
+:root{--ink:#0f172a;--muted:#475569;--line:#dbe4f3;--blue:#1d4ed8;--blue2:#0f3ea8;--gold:#d4a017;--gold2:#8a6116;--gold3:#5a3909;--white:#fff;--bg:#ecf2ff;--navy:#0a1729}
 *{box-sizing:border-box}
 body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--ink);background:radial-gradient(1200px 520px at 80% -120px,#dce9ff 0%,#ecf2ff 45%,#ffffff 100%)}
 a{text-decoration:none;color:inherit}.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
@@ -34,9 +34,15 @@ h1{font-size:clamp(36px,5vw,62px);line-height:1.02;margin:14px 0}h2{font-size:30
 .section{padding:24px 0}.grid-2,.grid-3,.grid-4{display:grid;gap:16px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
 .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.pill{padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:#f8fbff;font-size:13px;font-weight:800;color:#334155}.pill.ops-marker{display:none}
 .list{padding-left:18px;line-height:1.8;color:#334155}.metric{font-size:32px;font-weight:900}.metric-label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#93c5fd;font-weight:800}
-.brand-rail{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px}.brand-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-weight:800}.auricrux-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold2) 0%,var(--gold) 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900}
+.brand-rail{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px}.brand-chip{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-weight:800}.auricrux-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold3) 0%,var(--gold) 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900}
 .field{display:grid;gap:6px}.field input,.field select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:12px}.status{padding:13px;border-radius:12px;background:#eef2ff;border:1px solid #c7d2fe}.status.warn{background:#fff7ed;border-color:#fdba74}.status.success{background:#ecfdf5;border-color:#86efac}
 .data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{padding:12px;border-bottom:1px solid var(--line);text-align:left}.footer{padding:34px 0 48px;color:#475569}.footer strong{color:#0f172a}
+.tier-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#7c5313;margin-bottom:8px}
+.auricrux-dock-btn{position:fixed;right:16px;bottom:16px;z-index:9999;border-radius:999px;padding:10px 14px;border:1px solid #d4a017;background:linear-gradient(135deg,#fff2c8 0%,#d4a017 60%,#8a6116 100%);color:#2c1803;font-weight:900;cursor:pointer;box-shadow:0 14px 24px rgba(124,83,19,.32)}
+.auricrux-dock-panel{position:fixed;right:16px;bottom:68px;z-index:9999;width:min(92vw,360px);border:1px solid #ecd089;border-radius:14px;background:linear-gradient(135deg,#fff8e6 0%,#fff 68%);box-shadow:0 20px 32px rgba(124,83,19,.2);padding:12px;display:none}
+.auricrux-dock-panel.open{display:block}
+.auricrux-dock-panel input{width:100%;padding:10px;border:1px solid #e7c77f;border-radius:10px;margin:8px 0}
+.auricrux-dock-panel .reply{border:1px solid #ecd089;border-radius:10px;background:#fffdf5;padding:10px;color:#4b3208;line-height:1.6}
 @media(max-width:980px){.nav-desktop{display:none}.mobile-toggle{display:inline-flex}.topbar{position:relative}.topbar-inner{min-height:66px}.hero-grid,.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}.page{padding-top:30px}}
 CSS
 
@@ -50,9 +56,23 @@ cat > dist/nav.js <<'JS'
     var t=evt.target;
     if(!(t instanceof Element)) return;
     var btn=t.closest('[data-toggle-nav]');
-    if(!btn) return;
-    var id=btn.getAttribute('data-toggle-nav');
-    if(id) toggleById(id);
+    if(btn){
+      var id=btn.getAttribute('data-toggle-nav');
+      if(id) toggleById(id);
+      return;
+    }
+    var ask=t.closest('[data-auricrux-ask]');
+    if(ask){
+      var input=document.getElementById('auricruxPrompt');
+      var reply=document.getElementById('auricruxReply');
+      var v=(input&&input.value||'').toLowerCase();
+      if(!reply) return;
+      if(v.indexOf('next')>=0||v.indexOf('priority')>=0) reply.textContent='Auricrux: Open Platform Dashboard, review active blockers, then execute the next action in operations.';
+      else if(v.indexOf('academy')>=0||v.indexOf('training')>=0) reply.textContent='Auricrux: Open Academy Catalog and map role tracks to your current project stage.';
+      else if(v.indexOf('pricing')>=0||v.indexOf('plan')>=0) reply.textContent='Auricrux: Compare Starter Team, Team, and Operations tiers to match adoption pace and comms needs.';
+      else reply.textContent='Auricrux: Request received. Use quick actions to continue into live FCA routes.';
+      if(input) input.value='';
+    }
   });
   var path=(location.pathname||'/').replace(/\/$/,'')||'/';
   document.querySelectorAll('.nav-link').forEach(function(link){
@@ -64,7 +84,7 @@ JS
 
 cat > dist/data/live-workspace-pack.json <<'JSON'
 {
-  "version": 11,
+  "version": 12,
   "workspace": { "id": "fca-live-proof-workspace", "status": "active", "currentPhase": "proposal" },
   "project": { "id": "PRJ-001", "name": "Launch Demo Project", "stage": "Proposal", "nextStep": "Move package to approval" },
   "files": [
@@ -85,7 +105,7 @@ header_markup=$(cat <<'HTML'
   <div class="wrap topbar-inner">
     <div class="brand">
       <img src="/favicon.svg" alt="FCA logo" />
-      <div class="brand-copy"><strong>Future Contractors of America</strong><span>FCA Contractor Command</span></div>
+      <div class="brand-copy"><strong>Future Contractors of America</strong><span>FCA Contractor Command · Auricrux-driven</span></div>
     </div>
     <nav class="nav-desktop" aria-label="Primary">
       <a class="nav-link" href="/">Home</a>
@@ -126,10 +146,28 @@ HTML
 footer_markup=$(cat <<'HTML'
 <footer class="footer">
   <div class="wrap grid-2">
-    <div><strong>Future Contractors of America</strong><p>FCA is the complete construction operating system from lead to repeat business, with one unified flow across delivery, operations, and growth.</p></div>
+    <div><strong>Future Contractors of America</strong><p>FCA is the complete construction operating system from lead to repeat business. Auricrux runs guidance, continuity, and execution across the full lifecycle.</p></div>
     <div><strong>Contact</strong><p><a href="mailto:sales@futurecontractorsofamerica.com">sales@futurecontractorsofamerica.com</a><br/><a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a><br/><a href="mailto:support@futurecontractorsofamerica.com">support@futurecontractorsofamerica.com</a></p></div>
   </div>
 </footer>
+HTML
+)
+
+auricrux_dock_markup=$(cat <<'HTML'
+<button class="auricrux-dock-btn" type="button" data-toggle-nav="auricruxDock">Auricrux Live</button>
+<div class="auricrux-dock-panel" id="auricruxDock">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px">
+    <strong style="color:#7c5313">Auricrux Frontend Interaction</strong>
+    <a href="/auricrux/" style="font-size:12px;color:#8a6116;font-weight:700">Open Full Surface</a>
+  </div>
+  <div id="auricruxReply" class="reply">Auricrux online. Ask for pricing guidance, academy next steps, or your highest priority action.</div>
+  <input id="auricruxPrompt" placeholder="Ask Auricrux for next action" />
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn btn-gold" type="button" data-auricrux-ask="1">Ask Auricrux</button>
+    <a class="btn btn-secondary" href="/portal/platform/">Platform</a>
+    <a class="btn btn-secondary" href="/academy/">Academy</a>
+  </div>
+</div>
 HTML
 )
 
@@ -152,25 +190,26 @@ create_page(){
 ${header_markup}
 ${body}
 ${footer_markup}
+${auricrux_dock_markup}
 <script src="/nav.js"></script>
 </body>
 </html>
 HTML
 }
 
-create_page "/" "Future Contractors of America | Construction Operating System" '<main><section class="page"><div class="wrap hero-grid"><div><span class="eyebrow">FCA Contractor Command</span><h1>One connected construction system from first lead to repeat business.</h1><p class="lead">FCA unifies sales, preconstruction, field execution, closeout, and customer follow-through in one seamless operating flow. Auricrux is embedded across every stage, and FCA Academy keeps teams learning while they execute.</p><div class="brand-rail"><div class="brand-chip"><img src="/favicon.svg" alt="FCA" style="width:28px;height:28px" /><span>FCA SaaS Operating Platform</span></div><div class="brand-chip"><div class="auricrux-mark">A</div><span style="color:#8a6116">Auricrux Embedded Intelligence</span></div></div><div class="pill-row"><span class="pill">Lead to repeat workflow continuity</span><span class="pill">Unified SaaS + Academy experience</span><span class="pill">Auricrux integrated in every layer</span><span class="pill ops-marker">Cross-host login continuity patch active</span></div><div class="cta-row"><a class="btn btn-primary" href="/contact/">Book FCA Demo</a><a class="btn btn-secondary" href="/pricing/">View Launch Plans</a><a class="btn btn-gold" href="/intake/">Start Guided Intake</a></div></div><aside class="card card-pop"><div class="metric-label">System advantage</div><div class="metric">One operating flow</div><div class="metric-label" style="margin-top:12px">Team advantage</div><div class="metric">Fewer handoff gaps</div><div class="metric-label" style="margin-top:12px">Growth advantage</div><div class="metric">Stronger customer retention</div><p style="margin-top:14px;line-height:1.6;color:#dbeafe">FCA is built as a full platform: software, execution intelligence, and Academy-driven workforce readiness in one continuous system.</p></aside></div></section><section class="section"><div class="wrap grid-3"><article class="card"><h3>Revenue acceleration</h3><p class="muted">Move from inquiry to proposal with clearer process and stronger buyer confidence.</p></article><article class="card"><h3>Execution discipline</h3><p class="muted">Keep every active project lane visible across leadership, operations, and delivery teams.</p></article><article class="card"><h3>Market differentiation</h3><p class="muted">Lead with a modern platform story while competitors still use fragmented tools.</p></article></div></section></main>'
+create_page "/" "Future Contractors of America | Construction Operating System" '<main><section class="page"><div class="wrap hero-grid"><div><span class="eyebrow">FCA Contractor Command · Auricrux-driven</span><h1>One connected construction system from first lead to repeat business.</h1><p class="lead">FCA unifies sales, preconstruction, field execution, closeout, and customer follow-through in one seamless operating flow. Auricrux runs and drives the system across every stage, and FCA Academy keeps teams learning while they execute.</p><div class="brand-rail"><div class="brand-chip"><img src="/favicon.svg" alt="FCA" style="width:28px;height:28px" /><span>FCA SaaS Operating Platform</span></div><div class="brand-chip"><div class="auricrux-mark">A</div><span style="color:#8a6116">Auricrux Embedded Intelligence</span></div></div><div class="pill-row"><span class="pill">Lead to repeat workflow continuity</span><span class="pill">Unified SaaS + Academy experience</span><span class="pill">Auricrux integrated in every layer</span><span class="pill">Frontend Auricrux interaction live</span></div><div class="cta-row"><a class="btn btn-primary" href="/contact/">Book FCA Demo</a><a class="btn btn-secondary" href="/pricing/">View Launch Plans</a><a class="btn btn-gold" href="/intake/">Start Guided Intake</a></div></div><aside class="card card-pop"><div class="metric-label">System advantage</div><div class="metric">One operating flow</div><div class="metric-label" style="margin-top:12px">Control advantage</div><div class="metric">Auricrux-driven continuity</div><div class="metric-label" style="margin-top:12px">Growth advantage</div><div class="metric">Retention + repeat business</div><p style="margin-top:14px;line-height:1.6;color:#dbeafe">FCA is built as full software + Academy + embedded Auricrux operating intelligence.</p></aside></div></section><section class="section"><div class="wrap grid-3"><article class="card"><h3>Revenue acceleration</h3><p class="muted">Move from inquiry to proposal with clearer process and stronger buyer confidence.</p></article><article class="card"><h3>Execution discipline</h3><p class="muted">Keep every active project lane visible across leadership, operations, and delivery teams.</p></article><article class="card"><h3>Academy innovation</h3><p class="muted">Train teams inside the same system where work happens, with Auricrux-guided next actions.</p></article></div></section></main>'
 
-create_page "/features" "Why FCA" '<main class="page"><div class="wrap"><span class="eyebrow">Why FCA</span><h1>Designed for contractors who need growth without operational chaos</h1><div class="grid-3"><article class="card"><h3>Structured onboarding</h3><p class="muted">Account-based intake creates a reliable start for every client engagement.</p></article><article class="card"><h3>Unified operating view</h3><p class="muted">Project status, files, and activity history stay connected in one surface.</p></article><article class="card"><h3>Auricrux intelligence</h3><p class="muted">Guided decision support keeps rollout momentum high and risk low.</p></article></div></div></main>'
-create_page "/solutions" "Programs" '<main class="page"><div class="wrap"><span class="eyebrow">Programs</span><h1>Program options that match team maturity and growth goals</h1><div class="grid-3"><article class="card"><h3>Contractor Command Pilot</h3><p class="muted">Modernize client intake and opportunity flow without disrupting core operations.</p></article><article class="card"><h3>Growth Team Program</h3><p class="muted">Increase bid conversion and improve handoff quality.</p></article><article class="card"><h3>Scaled Rollout Program</h3><p class="muted">Standardize delivery across business units with clear control and visibility.</p></article></div></div></main>'
-create_page "/pricing" "Plans and Pricing" '<main class="page"><div class="wrap"><span class="eyebrow">Plans and Pricing</span><h1>Launch plans built for serious contractor adoption</h1><div class="grid-4"><article class="card"><h3>Startup</h3><div class="metric">$99/mo</div><p class="muted">For owner-led companies validating a modern operating process.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=startup">Select Startup</a></div></article><article class="card"><h3>Team</h3><div class="metric">$299/mo</div><p class="muted">For active teams requiring stronger bid and project coordination.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=team">Select Team</a></div></article><article class="card"><h3>Growth</h3><div class="metric">$1,500/mo</div><p class="muted">For scaling contractors improving communication and consistency.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=growth">Select Growth</a></div></article><article class="card"><h3>Enterprise</h3><div class="metric">$3,500+/mo</div><p class="muted">For multi-team deployments with advanced requirements.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/?plan=enterprise">Select Enterprise</a></div></article></div></div></main>'
+create_page "/features" "Why FCA" '<main class="page"><div class="wrap"><span class="eyebrow">Why FCA</span><h1>Designed for contractors who need growth without operational chaos</h1><div class="grid-3"><article class="card"><h3>Structured onboarding</h3><p class="muted">Account-based intake creates a reliable start for every client engagement.</p></article><article class="card"><h3>Unified operating view</h3><p class="muted">Project status, files, and activity history stay connected in one surface.</p></article><article class="card"><h3>Auricrux system control</h3><p class="muted">Auricrux preserves next actions, continuity, and execution quality across the full lifecycle.</p></article></div></div></main>'
+create_page "/solutions" "Programs" '<main class="page"><div class="wrap"><span class="eyebrow">Programs</span><h1>Program options that match team maturity and growth goals</h1><div class="grid-3"><article class="card"><h3>Contractor Command Pilot</h3><p class="muted">Guided launch for teams moving from fragmented tools into one system.</p></article><article class="card"><h3>Growth Team Program</h3><p class="muted">Increase bid conversion and improve handoff quality.</p></article><article class="card"><h3>Scaled Rollout Program</h3><p class="muted">Standardize delivery across business units with clear control and visibility.</p></article></div></div></main>'
+create_page "/pricing" "Plans and Pricing" '<main class="page"><div class="wrap"><span class="eyebrow">Plans and Pricing</span><h1>Narrowed pricing ladder for smoother upsell and rollout growth</h1><p class="lead">Every tier now includes explicit Auricrux role, Academy depth, and operational scope.</p><div class="grid-4"><article class="card"><div class="tier-kicker">Startup Workspace</div><h3>$99/mo</h3><p class="muted">Best for owner-operators entering a governed workflow.</p><p><strong>Academy:</strong> Foundations onboarding</p><p><strong>Auricrux:</strong> Next-action continuity</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=startup">Select Startup</a></div></article><article class="card"><div class="tier-kicker">Starter Team Workspace</div><h3>$249/mo</h3><p class="muted">Best for small teams needing stronger bid + comms continuity.</p><p><strong>Academy:</strong> Foundations + qualification + estimate tracks</p><p><strong>Auricrux:</strong> Bid/file/comms blocker guidance</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=starter-team">Select Starter Team</a></div></article><article class="card"><div class="tier-kicker">Team Workspace</div><h3>$499/mo</h3><p class="muted">Best for active delivery teams with recurring project load.</p><p><strong>Academy:</strong> Role-based tracks + progression checks</p><p><strong>Auricrux:</strong> Cross-route continuity control</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=team">Select Team</a></div></article><article class="card"><div class="tier-kicker">Operations Workspace</div><h3>$899/mo</h3><p class="muted">Best for mid-size operations managing heavier coordination.</p><p><strong>Academy:</strong> Command-track + credentials</p><p><strong>Auricrux:</strong> Escalation + execution governance</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=operations">Select Operations</a></div></article><article class="card"><div class="tier-kicker">Growth Platform</div><h3>$1,500/mo</h3><p class="muted">Best for growing organizations scaling project volume and teams.</p><p><strong>Academy:</strong> Full operator + leadership paths</p><p><strong>Auricrux:</strong> Growth-stage sequencing control</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=growth">Select Growth</a></div></article><article class="card"><div class="tier-kicker">Scale Operations Platform</div><h3>$2,400/mo</h3><p class="muted">Best for multi-crew orgs preparing enterprise standardization.</p><p><strong>Academy:</strong> Governance + readiness dashboards</p><p><strong>Auricrux:</strong> Multi-workflow decision control</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=scale-operations">Select Scale Operations</a></div></article><article class="card"><div class="tier-kicker">Enterprise Rollout</div><h3>$3,500+/mo</h3><p class="muted">Best for large organizations deploying FCA as operating standard.</p><p><strong>Academy:</strong> Organization-wide enablement</p><p><strong>Auricrux:</strong> Executive operating intelligence</p><div class="cta-row"><a class="btn btn-gold" href="/intake/?plan=enterprise">Select Enterprise</a></div></article><article class="card"><div class="tier-kicker">Pilot Workspace</div><h3>$2,500 one-time</h3><p class="muted">Guided implementation package for teams launching FCA.</p><p><strong>Academy:</strong> Launch classrooms</p><p><strong>Auricrux:</strong> Rollout sequencing + activation</p><div class="cta-row"><a class="btn btn-secondary" href="/contact/">Book Pilot Planning</a></div></article></div><section class="section"><div class="card" style="border-color:#ecd089;background:linear-gradient(135deg,#fff7e1 0%,#fff 60%)"><span class="eyebrow eyebrow-gold">Academy Spotlight</span><h2>FCA Academy is a massive innovation layer</h2><p class="muted">Academy is not just onboarding content. It is integrated workforce development tied directly to live execution: training, licensure prep, certifications, apprenticeship pathways, and role advancement—inside the same operational system Auricrux is driving.</p><div class="cta-row"><a class="btn btn-gold" href="/academy/">Open Academy</a><a class="btn btn-secondary" href="/academy/catalog/">View Academy Catalog</a></div></div></section></div></main>'
 create_page "/contact" "Book Demo" '<main class="page"><div class="wrap"><span class="eyebrow">Book Demo</span><h1>Schedule a live walkthrough for your team</h1><div class="grid-3"><article class="card"><h3>Sales</h3><p class="muted"><a href="mailto:sales@futurecontractorsofamerica.com">sales@futurecontractorsofamerica.com</a></p></article><article class="card"><h3>Information</h3><p class="muted"><a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a></p></article><article class="card"><h3>Support</h3><p class="muted"><a href="mailto:support@futurecontractorsofamerica.com">support@futurecontractorsofamerica.com</a></p></article></div></div></main>'
-create_page "/auricrux" "Auricrux Guidance" '<main class="page"><div class="wrap"><section class="card"><span class="eyebrow eyebrow-gold">Auricrux Guidance</span><div class="brand-rail"><div class="brand-chip"><div class="auricrux-mark">A</div><span style="color:#8a6116">Auricrux Intelligence Layer</span></div></div><h1 style="font-size:48px">Intelligence that helps contractors decide faster and execute stronger.</h1><p class="lead">Auricrux supports plan selection, rollout readiness, and decisive next steps from onboarding through delivery.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/">Start Guided Intake</a><a class="btn btn-secondary" href="/contact/">Book Walkthrough</a></div></section></div></main>'
+create_page "/auricrux" "Auricrux Guidance" '<main class="page"><div class="wrap"><section class="card"><span class="eyebrow eyebrow-gold">Auricrux Guidance</span><div class="brand-rail"><div class="brand-chip"><div class="auricrux-mark">A</div><span style="color:#8a6116">Auricrux Intelligence Layer</span></div></div><h1 style="font-size:48px">Auricrux runs and drives the FCA system all the way around.</h1><p class="lead">Auricrux is not a side assistant. He is the operating intelligence layer embedded across sales, delivery, file continuity, billing flow, Academy progression, support, and recurring customer growth.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/">Start Guided Intake</a><a class="btn btn-secondary" href="/contact/">Book Walkthrough</a><a class="btn btn-secondary" href="/portal/platform/">Open Platform Dashboard</a></div></section></div></main>'
 
-create_page "/intake" "Pilot Intake" '<main class="page"><div class="wrap"><span class="eyebrow">Step 1</span><h1>Submit your company profile and start pilot onboarding</h1><section class="card"><form id="intakeForm"><div class="grid-2"><div class="field"><label for="plan">Plan</label><select id="plan"><option value="startup">Startup</option><option value="team">Team</option><option value="growth">Growth</option><option value="enterprise">Enterprise</option></select></div><div class="field"><label for="company">Company</label><input id="company" required /></div><div class="field"><label for="name">Contact name</label><input id="name" required /></div><div class="field"><label for="email">Email</label><input id="email" type="email" required /></div><div class="field"><label for="password">Password</label><input id="password" type="password" required /></div><div class="field"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" required /></div></div><div id="intakeStatus" class="status warn" style="margin-top:14px">These credentials will be used for workspace login.</div><div class="cta-row"><button class="btn btn-primary" type="submit">Continue to Activation</button></div></form></section></div></main><script>const params=new URLSearchParams(location.search);const p=params.get("plan");if(p)document.getElementById("plan").value=p;document.getElementById("intakeForm").addEventListener("submit",e=>{e.preventDefault();const pw=password.value;const cp=confirmPassword.value;if(pw!==cp){intakeStatus.className="status warn";intakeStatus.textContent="Passwords do not match.";return;}const rec={plan:plan.value,company:company.value,name:name.value,email:email.value.trim().toLowerCase(),password:pw};localStorage.setItem("fca_customer_record",JSON.stringify(rec));location.href="/checkout/?plan="+encodeURIComponent(rec.plan);});</script>'
+create_page "/intake" "Pilot Intake" '<main class="page"><div class="wrap"><span class="eyebrow">Step 1</span><h1>Submit your company profile and start pilot onboarding</h1><section class="card"><form id="intakeForm"><div class="grid-2"><div class="field"><label for="plan">Plan</label><select id="plan"><option value="startup">Startup</option><option value="starter-team">Starter Team</option><option value="team">Team</option><option value="operations">Operations</option><option value="growth">Growth</option><option value="scale-operations">Scale Operations</option><option value="enterprise">Enterprise</option><option value="pilot">Pilot</option></select></div><div class="field"><label for="company">Company</label><input id="company" required /></div><div class="field"><label for="name">Contact name</label><input id="name" required /></div><div class="field"><label for="email">Email</label><input id="email" type="email" required /></div><div class="field"><label for="password">Password</label><input id="password" type="password" required /></div><div class="field"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" required /></div></div><div id="intakeStatus" class="status warn" style="margin-top:14px">These credentials will be used for workspace login.</div><div class="cta-row"><button class="btn btn-primary" type="submit">Continue to Activation</button></div></form></section></div></main><script>const params=new URLSearchParams(location.search);const p=params.get("plan");if(p)document.getElementById("plan").value=p;document.getElementById("intakeForm").addEventListener("submit",e=>{e.preventDefault();const pw=password.value;const cp=confirmPassword.value;if(pw!==cp){intakeStatus.className="status warn";intakeStatus.textContent="Passwords do not match.";return;}const rec={plan:plan.value,company:company.value,name:name.value,email:email.value.trim().toLowerCase(),password:pw};localStorage.setItem("fca_customer_record",JSON.stringify(rec));location.href="/checkout/?plan="+encodeURIComponent(rec.plan);});</script>'
 create_page "/checkout" "Activation" '<main class="page"><div class="wrap"><span class="eyebrow">Step 2</span><h1>Apply your code and continue to workspace login</h1><section class="card"><div id="summary" class="status">Loading intake record…</div><div class="field" style="margin-top:12px"><label for="promo">Activation code</label><input id="promo" placeholder="Enter your code" /></div><div id="promoStatus" class="status warn" style="margin-top:12px">Enter your activation or promo code if provided.</div><div class="cta-row"><button class="btn btn-primary" type="button" onclick="applyCode()">Apply Code</button><a class="btn btn-secondary" href="/login/">Continue to Login</a></div></section></div></main><script>const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");if(rec){summary.innerHTML=`<strong>Plan:</strong> ${rec.plan}<br/><strong>Company:</strong> ${rec.company}<br/><strong>Email:</strong> ${rec.email}`;}else{summary.textContent="No intake record found.";}function applyCode(){const v=(promo.value||"").trim();if(v){promoStatus.className="status success";promoStatus.textContent="Code applied.";}else{promoStatus.className="status warn";promoStatus.textContent="Enter a code to apply.";}}</script>'
 create_page "/login" "Client Login" '<main class="page"><div class="wrap"><span class="eyebrow">Step 3</span><h1>Sign in to your FCA workspace</h1><section class="card"><form id="loginForm"><div class="field"><label>Email</label><input id="email" type="email" /></div><div class="field"><label>Password</label><input id="password" type="password" /></div><div class="cta-row"><button class="btn btn-primary" type="submit">Sign In</button><a class="btn btn-secondary" href="/intake/">Create Account</a></div><p style="font-size:13px;color:#64748b">Validation fallback account is available for launch checks.</p></form><div id="statusBox" class="status" style="margin-top:12px">Use your intake credentials.</div></section></div></main><script>const f={email:"launch.customer@futurecontractorsofamerica.com",password:"FCA-Launch-2026!"};const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");if(rec?.email)email.value=rec.email;loginForm.addEventListener("submit",e=>{e.preventDefault();const e1=email.value.trim().toLowerCase(),p1=password.value.trim();if((rec&&rec.email===e1&&rec.password===p1)||(e1===f.email&&p1===f.password)){statusBox.className="status success";statusBox.textContent="Login successful. Opening platform…";setTimeout(()=>location.href="/portal/platform/",350);}else{statusBox.className="status warn";statusBox.textContent="Credentials did not validate.";}});</script>'
 
-create_page "/portal/platform" "Platform" '<main class="page"><div class="wrap"><span class="eyebrow">Live Product Surface</span><h1>Platform Dashboard</h1><p class="lead">Your workspace for project visibility, file continuity, and activity tracking.</p><div class="grid-4"><div class="card"><h3>Project</h3><p id="projectName">Loading…</p></div><div class="card"><h3>Customer</h3><p id="customerName">Loading…</p></div><div class="card"><h3>Next Action</h3><p id="nextAction">Loading…</p></div><div class="card"><h3>Workspace</h3><p id="workspaceState">Loading…</p></div></div><div class="cta-row"><a class="btn btn-primary" href="/portal/projects/">Projects</a><a class="btn btn-secondary" href="/portal/files/">Files</a><a class="btn btn-secondary" href="/portal/audit/">Audit</a><a class="btn btn-gold" href="/pricing/">Upgrade Plan</a></div></div></main><script>async function h(){const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());customerName.textContent=rec?.company||'Launch Customer Workspace';projectName.textContent=rec?.company?`${rec.company} — Initial Opportunity`:p.project.name;nextAction.textContent=p.project.nextStep;workspaceState.textContent=p.workspace.status;}h();</script>'
+create_page "/portal/platform" "Platform" '<main class="page"><div class="wrap"><span class="eyebrow">Live Product Surface</span><h1>Platform Dashboard</h1><p class="lead">Your workspace for project visibility, file continuity, and activity tracking with Auricrux active.</p><div class="grid-4"><div class="card"><h3>Project</h3><p id="projectName">Loading…</p></div><div class="card"><h3>Customer</h3><p id="customerName">Loading…</p></div><div class="card"><h3>Next Action</h3><p id="nextAction">Loading…</p></div><div class="card"><h3>Workspace</h3><p id="workspaceState">Loading…</p></div></div><div class="cta-row"><a class="btn btn-primary" href="/portal/projects/">Projects</a><a class="btn btn-secondary" href="/portal/files/">Files</a><a class="btn btn-secondary" href="/portal/audit/">Audit</a><a class="btn btn-gold" href="/pricing/">Upgrade Plan</a></div></div></main><script>async function h(){const rec=JSON.parse(localStorage.getItem("fca_customer_record")||"null");const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());customerName.textContent=rec?.company||'Launch Customer Workspace';projectName.textContent=rec?.company?`${rec.company} — Initial Opportunity`:p.project.name;nextAction.textContent=p.project.nextStep;workspaceState.textContent=p.workspace.status;}h();</script>'
 create_page "/portal/projects" "Projects" '<main class="page"><div class="wrap"><h1>Projects</h1><section class="card"><table class="data-table"><thead><tr><th>Project</th><th>Stage</th><th>Next Step</th></tr></thead><tbody id="rows"><tr><td>Loading…</td><td>—</td><td>—</td></tr></tbody></table></section></div></main><script>async function h(){const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());rows.innerHTML=`<tr><td>${p.project.name}</td><td>${p.project.stage}</td><td>${p.project.nextStep}</td></tr>`;}h();</script>'
 create_page "/portal/files" "Files" '<main class="page"><div class="wrap"><h1>Files</h1><div id="grid" class="grid-3"></div></div></main><script>async function h(){const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());grid.innerHTML=p.files.map(f=>`<article class="card"><h3>${f.name}</h3><p class="muted">${f.category} · ${f.status}</p></article>`).join("");}h();</script>'
 create_page "/portal/audit" "Audit" '<main class="page"><div class="wrap"><h1>Audit</h1><section class="card"><table class="data-table"><thead><tr><th>Event</th><th>Actor</th><th>Status</th></tr></thead><tbody id="rows"><tr><td>Loading…</td><td>—</td><td>—</td></tr></tbody></table></section></div></main><script>async function h(){const p=await fetch('/data/live-workspace-pack.json').then(r=>r.json());rows.innerHTML=p.audit.map(a=>`<tr><td>${a.event}</td><td>${a.actor}</td><td>${a.status}</td></tr>`).join("");}h();</script>'
@@ -180,16 +219,14 @@ create_page "/referrals" "Referrals" '<main class="page"><div class="wrap"><h1>R
 
 cat > dist/deployment-status.json <<JSON
 {
-  "status": "live-shell-customer-landing-v4-active",
+  "status": "live-shell-customer-landing-v5-auricrux-pricing-academy-active",
   "shell": "FCA Contractor Command",
   "execution": "Auricrux-Central",
-  "nextAction": "MNCL-004",
+  "nextAction": "MNCL-005",
   "proofRoutes": [
+    "/pricing/",
+    "/auricrux/",
     "/portal/platform/",
-    "/portal/projects/",
-    "/portal/files/",
-    "/portal/audit/",
-    "/auricrux/run-digest/index.json",
     "/deployment-status.json"
   ],
   "dataPack": "/data/live-workspace-pack.json",
@@ -216,13 +253,13 @@ shell=FCA Contractor Command
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
 commitWitnessRoute=${COMMIT_WITNESS_ROUTE}
-status=live-shell-customer-landing-v4-active
+status=live-shell-customer-landing-v5-auricrux-pricing-academy-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
 cat > dist/live-shell-verification.html <<'HTML'
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Customer landing v4 is active. Literal slash-style artifacts have been removed from generated HTML markup.</p></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Customer landing v5 is active with Auricrux interaction dock, expanded pricing tiers, and Academy spotlight.</p></body></html>
 HTML
 
 cat > dist/host-binding-audit.html <<'HTML'
@@ -236,9 +273,9 @@ HTML
 cat > "dist${COMMIT_WITNESS_ROUTE}" <<EOF
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
-status=live-shell-customer-landing-v4-active
+status=live-shell-customer-landing-v5-auricrux-pricing-academy-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
-echo "FCA customer landing v4 build completed for ${GIT_SHA}"
+echo "FCA customer landing v5 build completed for ${GIT_SHA}"
