@@ -10,7 +10,7 @@ DEFAULT_HOST="${AURICRUX_SWA_DEFAULT_HOST:-delightful-mushroom-0de67860f.7.azure
 EXPECTED_HOSTS="${AURICRUX_EXPECTED_HOSTS:-futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net}"
 COMMIT_WITNESS_ROUTE="/commit-witness-${GIT_SHA}.txt"
 BUILD_MARKER_DATE="June 18, 2026"
-BUILD_MARKER_VERSION="Customer Landing v6 Brand-Corrected"
+BUILD_MARKER_VERSION="Customer Landing v7 Brand-Audit-Enforced"
 
 IFS=',' read -r -a EXPECTED_HOST_ARRAY <<< "$EXPECTED_HOSTS"
 EXPECTED_HOSTS_JSON="$(printf '"%s",' "${EXPECTED_HOST_ARRAY[@]}")"
@@ -274,13 +274,58 @@ create_page "/portal/audit" "Audit" '<main class="page"><div class="wrap"><h1>Au
 create_page "/warranty" "Warranty" '<main class="page"><div class="wrap"><h1>Warranty Continuity</h1><section class="card"><p class="lead">Warranty route remains active and reachable.</p></section></div></main>'
 create_page "/referrals" "Referrals" '<main class="page"><div class="wrap"><h1>Referral Continuity</h1><section class="card"><p class="lead">Referral route remains active and reachable.</p></section></div></main>'
 
+# === Brand validator (strict) ===
+# Rule 1: Gold variables can appear only in :root + Auricrux-specific selectors.
+OFFENDING_GOLD_LINES=$(grep -n "var(--auricrux-gold" dist/styles.css | grep -Ev '(:root|\.btn-auricrux|\.eyebrow-auricrux|\.auricrux-)' || true)
+OFFENDING_GOLD_COUNT=$(printf "%s" "$OFFENDING_GOLD_LINES" | sed '/^$/d' | wc -l | tr -d ' ')
+
+# Rule 2: Disallowed public alias must not appear.
+DISALLOWED_ALIAS_COUNT=$(grep -R "hello@futurecontractorsofamerica.com" dist -n | wc -l | tr -d ' ')
+
+# Rule 3: Approved aliases must be present at least once.
+APPROVED_ALIAS_COUNT=$(grep -R "sales@futurecontractorsofamerica.com\|info@futurecontractorsofamerica.com\|support@futurecontractorsofamerica.com" dist -n | wc -l | tr -d ' ')
+
+cat > dist/brand-audit.json <<JSON
+{
+  "status": "$( [ "$OFFENDING_GOLD_COUNT" = "0" ] && [ "$DISALLOWED_ALIAS_COUNT" = "0" ] && [ "$APPROVED_ALIAS_COUNT" -gt "0" ] && echo pass || echo fail )",
+  "buildMarkerVersion": "${BUILD_MARKER_VERSION}",
+  "checks": {
+    "gold_reserved_for_auricrux": {
+      "offending_count": ${OFFENDING_GOLD_COUNT}
+    },
+    "disallowed_public_alias_absent": {
+      "offending_count": ${DISALLOWED_ALIAS_COUNT}
+    },
+    "approved_public_aliases_present": {
+      "match_count": ${APPROVED_ALIAS_COUNT}
+    }
+  }
+}
+JSON
+
+if [ "$OFFENDING_GOLD_COUNT" != "0" ]; then
+  echo "Brand audit failed: non-Auricrux selectors use Auricrux gold tokens."
+  echo "$OFFENDING_GOLD_LINES"
+  exit 1
+fi
+
+if [ "$DISALLOWED_ALIAS_COUNT" != "0" ]; then
+  echo "Brand audit failed: disallowed public alias hello@futurecontractorsofamerica.com detected in dist output."
+  exit 1
+fi
+
+if [ "$APPROVED_ALIAS_COUNT" = "0" ]; then
+  echo "Brand audit failed: approved public aliases were not detected in dist output."
+  exit 1
+fi
+
 cat > dist/deployment-status.json <<JSON
 {
-  "status": "live-shell-customer-landing-v6-brand-corrected-active",
+  "status": "live-shell-customer-landing-v7-brand-audit-enforced-active",
   "shell": "FCA Contractor Command",
   "execution": "Auricrux-Central",
-  "nextAction": "MNCL-006",
-  "proofRoutes": ["/pricing/", "/auricrux/", "/deployment-status.json"],
+  "nextAction": "MNCL-007",
+  "proofRoutes": ["/pricing/", "/auricrux/", "/brand-audit.json", "/deployment-status.json"],
   "dataPack": "/data/live-workspace-pack.json",
   "gitSha": "${GIT_SHA}",
   "defaultHost": "${DEFAULT_HOST}",
@@ -305,7 +350,7 @@ shell=FCA Contractor Command
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
 commitWitnessRoute=${COMMIT_WITNESS_ROUTE}
-status=live-shell-customer-landing-v6-brand-corrected-active
+status=live-shell-customer-landing-v7-brand-audit-enforced-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
@@ -313,9 +358,9 @@ EOF
 cat > "dist${COMMIT_WITNESS_ROUTE}" <<EOF
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
-status=live-shell-customer-landing-v6-brand-corrected-active
+status=live-shell-customer-landing-v7-brand-audit-enforced-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
-echo "FCA customer landing v6 build completed for ${GIT_SHA}"
+echo "FCA customer landing v7 build completed for ${GIT_SHA}"
