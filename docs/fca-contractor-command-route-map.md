@@ -46,14 +46,14 @@ This document maps the flagship Contractor Command spine into concrete FCA shell
 | `/portal/admin` | tenant admin controls | Tenant, User, Role | governed admin surface |
 | `/portal/notifications` | continuity and next-action feed | AuditEvent, AuricruxAction | required next steps and system notices |
 
-### 3. Bid workflow legacy/canonical routes
+### 3. Bid workflow compatibility/canonical routes
 
 | Route | Purpose | Primary Objects | Notes |
 |---|---|---|---|
 | `/bid-entry` | bid entry surface | Lead, Opportunity, Estimate | preserve working functionality |
 | `/bid-status` | bid status surface | Opportunity, AuditEvent | preserve continuity |
-| `/tyler-entry` | legacy customer entry | Opportunity | retain until safely consolidated |
-| `/tyler-status` | legacy customer status | Opportunity, AuditEvent | retain until safely consolidated |
+| `/tyler-entry` | compatibility bid entry route | Opportunity | retain until safely consolidated |
+| `/tyler-status` | compatibility bid status route | Opportunity, AuditEvent | retain until safely consolidated |
 
 ### 4. Academy-linked routes
 
