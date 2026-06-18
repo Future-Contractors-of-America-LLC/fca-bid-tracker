@@ -1,3 +1,5 @@
+import { centralApi, centralFetch } from "./backendBase";
+
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
   if (!contentType.toLowerCase().includes("application/json")) return null;
@@ -15,19 +17,11 @@ function formatApiError(response, payload, fallbackMessage) {
 }
 
 export async function fetchAcademyLms() {
-  const response = await fetch("/api/academy-lms", {
-    method: "GET",
-    credentials: "same-origin",
-    headers: {
-      Accept: "application/json",
-    },
-  });
-
+  const response = await centralFetch("/api/academy-lms", { method: "GET" });
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
     throw new Error(formatApiError(response, payload, "Unable to load academy state"));
   }
-
   return payload;
 }
 
@@ -36,13 +30,9 @@ export async function mutateAcademyLms(action, body = {}) {
     throw new Error("Unable to mutate academy state: action is required.");
   }
 
-  const response = await fetch("/api/academy-lms", {
+  const response = await centralFetch("/api/academy-lms", {
     method: "PATCH",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action, ...body }),
   });
 
@@ -50,6 +40,7 @@ export async function mutateAcademyLms(action, body = {}) {
   if (!response.ok || !payload?.ok) {
     throw new Error(formatApiError(response, payload, "Unable to mutate academy state"));
   }
-
   return payload;
 }
+
+export { centralApi, centralFetch };
