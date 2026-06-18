@@ -1,0 +1,68 @@
+name: SWA Emergency Direct Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
+
+concurrency:
+  group: swa-emergency-direct-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Assert deploy token exists
+        env:
+          AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F }}
+        run: |
+          set -euo pipefail
+          test -n "$AZURE_STATIC_WEB_APPS_API_TOKEN"
+          echo "Emergency direct deploy targeting host $AURICRUX_SWA_DEFAULT_HOST"
+          echo "Deploying commit $GITHUB_SHA"
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production package
+        run: npm run build:system
+
+      - name: Apply continuity patches
+        run: |
+          node scripts/patch-live-login-continuity.mjs
+          node scripts/patch-live-branding-visibility.mjs
+          node scripts/prepare-api-functions.mjs
+
+      - name: Validate branding marker in dist artifact
+        run: |
+          set -euo pipefail
+          test -f dist/deployment-status.json
+          test -f dist/styles.css
+          grep -q "FCA_LIVE_BRANDING_VISIBILITY_PATCH_V1" dist/styles.css
+
+      - name: Deploy static app and api directly
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: upload
+          skip_app_build: true
+          app_location: dist
+          api_location: api_generated
+          output_location: ''
