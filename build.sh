@@ -289,10 +289,10 @@ OFFENDING_GOLD_LINES=$(grep -n "var(--auricrux-gold" dist/styles.css | grep -Ev 
 OFFENDING_GOLD_COUNT=$(printf "%s" "$OFFENDING_GOLD_LINES" | sed '/^$/d' | wc -l | tr -d ' ')
 
 # Rule 2: Disallowed public alias must not appear.
-DISALLOWED_ALIAS_COUNT=$(grep -R "hello@futurecontractorsofamerica.com" dist -n | wc -l | tr -d ' ')
+DISALLOWED_ALIAS_COUNT=$( (grep -R "hello@futurecontractorsofamerica.com" dist -n || true) | wc -l | tr -d ' ')
 
 # Rule 3: Approved aliases must be present at least once.
-APPROVED_ALIAS_COUNT=$(grep -R "sales@futurecontractorsofamerica.com\|info@futurecontractorsofamerica.com\|support@futurecontractorsofamerica.com" dist -n | wc -l | tr -d ' ')
+APPROVED_ALIAS_COUNT=$( (grep -R -E "sales@futurecontractorsofamerica.com|info@futurecontractorsofamerica.com|support@futurecontractorsofamerica.com" dist -n || true) | wc -l | tr -d ' ')
 
 cat > dist/brand-audit.json <<JSON
 {
