@@ -35,12 +35,12 @@ export const publicPricingMessaging = {
     eyebrow: "FCA Plans & Rollout",
     title: "Choose the rollout path that fits your team.",
     subtitle:
-      "This page supports a practical rollout conversation: pilot scope, operating readiness, guided setup, and the next production step inside FCA, with Auricrux governing continuity.",
+      "This page supports practical rollout sequencing with narrower pricing steps, deeper tier detail, and clear Academy + Auricrux scope at every level.",
   },
   hero: {
     title: "Move from pricing into rollout readiness",
     detail:
-      "This is more than a static price sheet. It ties scope to the live product experience, project visibility, team readiness, and next steps under Auricrux guidance.",
+      "This is more than a static price sheet. It ties scope to live product experience, Academy innovation depth, project visibility, team readiness, and next steps under Auricrux guidance.",
   },
   journey: {
     title: "Plans should connect directly to rollout decisions",
@@ -51,12 +51,12 @@ export const publicPricingMessaging = {
     eyebrow: "Choose the right rollout path",
     title: "Pricing is organized around readiness, not guesswork",
     detail:
-      "The goal is to match your team to the right rollout pace, support level, and operating visibility based on current needs.",
+      "The goal is to match your team to the right rollout pace, support level, Academy depth, and operating visibility based on current needs.",
   },
   snapshot: {
     title: "Pricing references live workspace state",
     detail:
-      "This planning surface points directly at tenant, project, and Auricrux continuity so rollout conversations stay attached to the operating workspace.",
+      "This planning surface points directly at tenant, project, Academy, and Auricrux continuity so rollout conversations stay attached to the operating workspace.",
     ctaLabel: "Review platform state before your call",
   },
   actionRail: {

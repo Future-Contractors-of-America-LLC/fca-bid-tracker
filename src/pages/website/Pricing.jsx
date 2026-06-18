@@ -51,6 +51,25 @@ const pricingProductProof = [
   { title: "Show recurring service and advocacy lanes", detail: "Use warranty and referral continuity to prove the revenue story continues after handoff instead of ending at project delivery.", href: "/warranty", label: "Open Warranty Continuity" },
 ];
 
+const academyInnovationSpotlight = [
+  {
+    title: "Not add-on training — operational training",
+    detail: "FCA Academy is built into the same workspace flow as SaaS execution, so teams learn in the exact context where work is happening.",
+  },
+  {
+    title: "Licensure, apprenticeship, and certification pathways",
+    detail: "Academy supports role progression from onboarding through advanced operational leadership rather than simple feature tutorials.",
+  },
+  {
+    title: "Auricrux-guided learning continuity",
+    detail: "Auricrux links blockers in operations to targeted training pathways, then guides the team back into execution with reduced friction.",
+  },
+  {
+    title: "Retention and growth engine",
+    detail: "Academy increases customer stickiness and team capability over time, making it a core innovation and revenue stabilizer, not optional content.",
+  },
+];
+
 export default function Pricing() {
   const { session, login } = useCustomerSession();
 
@@ -98,7 +117,7 @@ export default function Pricing() {
           title="Pricing is now framed as rollout control, not isolated packaging"
           detail="The pricing route now carries a shared operating strip so commercial review stays tied to workspace readiness, founder walkthrough, production next actions, and lifecycle revenue continuity."
           statusLabel="Commercial posture"
-          statusValue="Rollout review recommended"
+          statusValue="Auricrux-governed rollout review recommended"
           items={pricingContinuityItems}
           primaryHref="/contact"
           primaryLabel="Open Contact & Rollout"
@@ -120,15 +139,33 @@ export default function Pricing() {
         highlights={pricingProductProof}
       />
 
+      <div style={{ ...cardStyle, marginTop: 24, marginBottom: 24, background: "linear-gradient(135deg, #fff7e1 0%, #ffffff 55%, #eff6ff 100%)", border: "1px solid #ecd089" }}>
+        <div style={{ color: "#7c5313", fontWeight: 800, letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 8 }}>
+          Academy innovation spotlight
+        </div>
+        <h2 style={{ marginTop: 0 }}>FCA Academy is a core innovation, not a side feature</h2>
+        <p style={{ color: "#4b5563", lineHeight: 1.7 }}>
+          Every pricing tier is now explicit about Academy depth because Academy is one of FCA’s biggest differentiators. This is where workforce capability, credential progression, and execution quality are built and maintained.
+        </p>
+        <div style={responsiveGrid(260)}>
+          {academyInnovationSpotlight.map((item) => (
+            <div key={item.title} style={{ border: "1px solid #e7c77f", borderRadius: 12, padding: 14, background: "#fffdf7" }}>
+              <div style={{ color: "#7c5313", fontWeight: 700, marginBottom: 6 }}>{item.title}</div>
+              <div style={{ color: "#4b5563", lineHeight: 1.65 }}>{item.detail}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div style={{ marginBottom: 24, marginTop: 24 }}>
         <CustomerTrustPanel
           eyebrow={publicPricingMessaging.trust.eyebrow}
           title={publicPricingMessaging.trust.title}
           detail={publicPricingMessaging.trust.detail}
           items={[
-            { title: "Start at the right level", detail: "Use Startup Workspace for low-cost entry, Pilot Workspace for one-time guided launch, Team or Operations Workspace for mid-range growth, or larger rollout paths when the team is ready." },
+            { title: "Start at the right level", detail: "Use Startup Workspace for low-cost entry, Starter Team for early growth, Pilot for guided launch, Team/Operations for active delivery, or Growth/Scale/Enterprise for broader rollout control." },
             { title: "Expand with confidence", detail: "Add billing, training, broader channel continuity, recurring service posture, and referral growth readiness as your team grows into the platform." },
-            { title: "Plan a broader rollout", detail: "Use a larger rollout path when multiple teams, workflows, or operating units need to stay aligned from delivery through post-handover customer retention." },
+            { title: "Plan a broader rollout", detail: "Use larger rollout paths when multiple teams, workflows, or operating units need to stay aligned from delivery through post-handover retention and repeat business." },
           ]}
         />
       </div>
@@ -184,6 +221,11 @@ export default function Pricing() {
             <div style={{ fontSize: 30, fontWeight: 700, marginBottom: 12 }}>{tier.price}</div>
             <p style={{ color: "#4b5563", lineHeight: 1.6 }}>{tier.detail}</p>
 
+            <div style={{ marginBottom: 12, border: "1px solid #e7c77f", borderRadius: 10, padding: 10, background: "#fffdf7" }}>
+              <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "#7c5313", fontWeight: 800, marginBottom: 6 }}>Best for</div>
+              <div style={{ color: "#4b3208", lineHeight: 1.7 }}>{tier.bestFor}</div>
+            </div>
+
             <div style={{ marginBottom: 12 }}>
               <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Included products</div>
               <div style={{ color: "#111827", lineHeight: 1.7 }}>{tier.products.join(" · ")}</div>
@@ -192,6 +234,16 @@ export default function Pricing() {
             <div style={{ marginBottom: 12 }}>
               <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>Included communications</div>
               <div style={{ color: "#111827", lineHeight: 1.7 }}>{tier.comms.join(" · ")}</div>
+            </div>
+
+            <div style={{ marginBottom: 12, border: "1px solid #ecd089", borderRadius: 10, padding: 10, background: "#fffaf0" }}>
+              <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "#7c5313", fontWeight: 800, marginBottom: 6 }}>Academy included</div>
+              <div style={{ color: "#4b3208", lineHeight: 1.7 }}>{tier.academyAccess}</div>
+            </div>
+
+            <div style={{ marginBottom: 12, border: "1px solid #ecd089", borderRadius: 10, padding: 10, background: "#fffaf0" }}>
+              <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "#7c5313", fontWeight: 800, marginBottom: 6 }}>Auricrux role</div>
+              <div style={{ color: "#4b3208", lineHeight: 1.7 }}>{tier.auricruxRole}</div>
             </div>
 
             <ul style={{ paddingLeft: 20, lineHeight: 1.8 }}>
@@ -207,13 +259,13 @@ export default function Pricing() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>How to choose a plan</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-            Use these tiers to frame the conversation around operational maturity, rollout depth, communications coverage, continuity needs, and post-handover growth posture. The objective is to match your team to the right production path, not force a generic self-serve checkout.
+            Use these tiers to frame the conversation around operational maturity, rollout depth, communications coverage, Academy impact, continuity needs, and post-handover growth posture. The objective is to match your team to the right production path, not force a generic self-serve checkout.
           </p>
         </div>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Immediate next actions</h2>
           <p style={{ lineHeight: 1.7, marginBottom: 0, color: "#4b5563" }}>
-            Review the rollout path, activate a real workspace if you are ready to move, then continue into contact, pricing fit, recurring-service posture, referral-readiness, and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.
+            Review the rollout path, activate a real workspace if you are ready to move, then continue into contact, pricing fit, Academy depth, recurring-service posture, referral-readiness, and platform review through the shared action surfaces above.
           </p>
         </div>
       </div>
