@@ -18,6 +18,7 @@ const auricruxColors = brandIdentity.auricrux.colors;
 const fcaColors = brandIdentity.fca.colors;
 const OPEN_STORAGE_KEY = "auricrux-dock-open";
 const COMPACT_STORAGE_KEY = "auricrux-dock-compact";
+const AURICRUX_CENTRAL_BIDS_API = "https://auricrux-central.azurewebsites.net/api/bids";
 
 function safeStorageGet(key) {
   if (typeof window === "undefined") return null;
@@ -164,21 +165,18 @@ export default function AuricruxDock() {
     setText("");
 
     try {
-      const res = await fetch(
-        "https://auricrux-bid-api-node-ftcueggjg4b0ehbs.centralus-01.azurewebsites.net/api/bids",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: `dock-${Date.now()}`,
-            company: "FCA User",
-            value: 100000,
-            status: "new",
-            source: "auricrux-dock",
-            command: cmd,
-          }),
-        }
-      );
+      const res = await fetch(AURICRUX_CENTRAL_BIDS_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: `dock-${Date.now()}`,
+          company: "FCA User",
+          value: 100000,
+          status: "new",
+          source: "auricrux-dock",
+          command: cmd,
+        }),
+      });
 
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}`);

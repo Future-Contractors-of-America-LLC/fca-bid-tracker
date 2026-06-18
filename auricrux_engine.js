@@ -3,7 +3,7 @@ import path from "node:path";
 
 const BID_API =
   process.env.BID_API ||
-  "https://auricrux-bid-api-node-ftcueggjg4b0ehbs.centralus-01.azurewebsites.net/api/bids";
+  "https://auricrux-central.azurewebsites.net/api/bids";
 
 const PILOT_CHECKOUT_BASE =
   process.env.PILOT_CHECKOUT_BASE ||
