@@ -1,21 +1,21 @@
 export const publicHomeMessaging = {
   header: {
     eyebrow: "FCA Contractor Workspace",
-    title: "Run bids, projects, communication, and training in one connected system.",
+    title: "Run bids, projects, communication, and training in one Auricrux-driven system.",
     subtitle:
-      "Future Contractors of America gives contractors a clearer path from opportunity to delivery, customer follow-through, and workforce readiness.",
+      "Future Contractors of America gives contractors a complete operating flow from lead to repeat business, while Auricrux continuously drives execution, guidance, and next actions across every stage.",
   },
   journey: {
     title: "Start with a clear customer path",
     detail:
-      "Visitors should be able to move from public entry into platform visibility, workspace access, customer portal continuity, academy readiness, and rollout planning without switching narratives.",
+      "Visitors should be able to move from public entry into platform visibility, workspace access, customer portal continuity, academy readiness, and rollout planning without switching narratives—and with Auricrux guiding each transition.",
     ctaHref: "/login",
     ctaLabel: "Enter FCA workspace",
   },
   trust: {
     title: "Built to support real contractor work",
     detail:
-      "FCA helps teams keep customers informed, organize delivery, and make the next step clear across bids, projects, communication, and training.",
+      "FCA helps teams keep customers informed, organize delivery, and make the next step clear across bids, projects, communication, and training, with Auricrux operating as the active decision and continuity layer.",
   },
   snapshot: {
     title: "See how the workspace stays connected",
@@ -26,7 +26,7 @@ export const publicHomeMessaging = {
   actionRail: {
     title: "Take the next step with FCA",
     detail:
-      "Keep workspace entry, platform visibility, academy continuity, and guided walkthrough options visible so customers always know where to go next.",
+      "Keep workspace entry, platform visibility, academy continuity, and guided walkthrough options visible so customers always know where to go next with Auricrux in control.",
   },
 };
 
@@ -35,12 +35,12 @@ export const publicPricingMessaging = {
     eyebrow: "FCA Plans & Rollout",
     title: "Choose the rollout path that fits your team.",
     subtitle:
-      "This page supports a practical rollout conversation: pilot scope, operating readiness, guided setup, and the next production step inside FCA.",
+      "This page supports a practical rollout conversation: pilot scope, operating readiness, guided setup, and the next production step inside FCA, with Auricrux governing continuity.",
   },
   hero: {
     title: "Move from pricing into rollout readiness",
     detail:
-      "This is more than a static price sheet. It ties scope to the live product experience, project visibility, team readiness, and next steps.",
+      "This is more than a static price sheet. It ties scope to the live product experience, project visibility, team readiness, and next steps under Auricrux guidance.",
   },
   journey: {
     title: "Plans should connect directly to rollout decisions",
@@ -71,7 +71,7 @@ export const publicContactMessaging = {
     eyebrow: "FCA Contact",
     title: "Talk with FCA about your rollout",
     subtitle:
-      "Move from interest into a walkthrough, pilot conversation, or broader rollout assessment with a clear next step.",
+      "Move from interest into a walkthrough, pilot conversation, or broader rollout assessment with a clear next step led by Auricrux.",
   },
   journey: {
     title: "A walkthrough should feel like the natural next step",
@@ -107,7 +107,7 @@ export const academyContinuityMessaging = {
     eyebrow: "FCA Academy",
     title: "Training, certification, and workforce readiness",
     subtitle:
-      "Academy stays connected to the same customer journey shown in the portal, so onboarding and training remain part of one operating flow.",
+      "Academy stays connected to the same customer journey shown in the portal, so onboarding and training remain part of one operating flow directed by Auricrux.",
   },
   expansion: {
     title: "Academy is part of the same operating system",

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import NotFound from "./pages/website/NotFound";
 import Login from "./pages/website/Login";
 import AccessRestricted from "./pages/website/AccessRestricted";
+import AuricruxFrontendDock from "./components/AuricruxFrontendDock";
 import {
   CUSTOMER_SESSION_EVENT,
   readCustomerSession,
@@ -33,9 +34,6 @@ export default function Router() {
 
   const routeMatch = useMemo(() => resolveRoute(normalizedPath), [normalizedPath]);
 
-  // Legacy validator markers retained intentionally:
-  // const needsCustomerLogin = isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;
-  // const lacksProductAccess = !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);
   const needsCustomerLogin = sessionReady && isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;
   const lacksProductAccess = sessionReady && !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);
   const Page = !sessionReady
@@ -110,11 +108,14 @@ export default function Router() {
   }, [needsCustomerLogin, normalizedPath]);
 
   return (
-    <Page
-      requestedPath={normalizedPath}
-      routeParams={routeMatch?.params || {}}
-      matchedPattern={routeMatch?.pattern || normalizedPath}
-      accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"}
-    />
+    <>
+      <Page
+        requestedPath={normalizedPath}
+        routeParams={routeMatch?.params || {}}
+        matchedPattern={routeMatch?.pattern || normalizedPath}
+        accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"}
+      />
+      <AuricruxFrontendDock />
+    </>
   );
 }

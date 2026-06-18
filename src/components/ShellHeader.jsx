@@ -1,15 +1,16 @@
 import JourneyStrip from "./JourneyStrip";
 import FcaBrandMark from "./FcaBrandMark";
+import AuricruxBrandMark from "./AuricruxBrandMark";
 import PublicTopNav from "./PublicTopNav";
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
 
 const headerShellStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 20,
-  background: "linear-gradient(135deg, #ffffff 0%, #f8fbff 100%)",
+  background: "linear-gradient(135deg, #ffffff 0%, #f0f6ff 62%, #fff8e6 100%)",
   padding: 24,
   marginBottom: 20,
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+  boxShadow: "0 14px 28px rgba(15, 23, 42, 0.06)",
 };
 
 export default function ShellHeader({
@@ -53,22 +54,37 @@ export default function ShellHeader({
               }}
             >
               <FcaBrandMark compact />
+              <AuricruxBrandMark compact showLabel={false} />
               <div
                 style={{
                   padding: "8px 12px",
                   borderRadius: 999,
-                  background: "#eff6ff",
-                  color: "#2563eb",
+                  background: "linear-gradient(135deg, #eff6ff 0%, #fff7e1 100%)",
+                  color: "#1f3ea8",
                   fontWeight: 800,
                   letterSpacing: "0.04em",
+                  border: "1px solid #dbe3ef",
                 }}
               >
                 {eyebrow}
               </div>
+              <div
+                style={{
+                  padding: "8px 12px",
+                  borderRadius: 999,
+                  background: "#fff7e1",
+                  color: "#7c5313",
+                  fontWeight: 800,
+                  letterSpacing: "0.04em",
+                  border: "1px solid #ecd089",
+                }}
+              >
+                Auricrux-driven
+              </div>
             </div>
             <h1 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h1>
             {subtitle ? (
-              <p style={{ marginTop: 0, color: "#4b5563", lineHeight: 1.6, marginBottom: 0 }}>
+              <p style={{ marginTop: 0, color: "#334155", lineHeight: 1.65, marginBottom: 0 }}>
                 {subtitle}
               </p>
             ) : null}

@@ -12,7 +12,7 @@ import { publicActionCatalog } from "../websiteShell";
 const navShellStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 16,
-  background: "#ffffff",
+  background: "linear-gradient(135deg, #ffffff 0%, #f8fbff 60%, #fff8e6 100%)",
   padding: "14px 16px",
   marginBottom: 20,
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.05)",
@@ -29,8 +29,9 @@ const utilityLinkStyle = {
 
 const activeUtilityLinkStyle = {
   ...utilityLinkStyle,
-  background: "#eff6ff",
-  color: "#1d4ed8",
+  background: "linear-gradient(135deg, #fff7e1 0%, #ffffff 100%)",
+  color: "#7c5313",
+  border: "1px solid #ecd089",
 };
 
 const taskLinkStyle = {
@@ -52,7 +53,7 @@ const activeTaskLinkStyle = {
 
 const primaryButtonStyle = {
   textDecoration: "none",
-  background: "#111827",
+  background: "linear-gradient(135deg, #1d4ed8 0%, #3157d7 100%)",
   color: "#fff",
   padding: "10px 14px",
   borderRadius: 10,
@@ -177,6 +178,9 @@ export default function PublicTopNav({ mode = "public" }) {
           </div>
           <div style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.5, marginTop: 4 }}>
             {routeCue}
+          </div>
+          <div style={{ color: "#7c5313", fontSize: 12, lineHeight: 1.5, marginTop: 4, fontWeight: 700 }}>
+            Auricrux drives execution continuity across this route.
           </div>
         </div>
 

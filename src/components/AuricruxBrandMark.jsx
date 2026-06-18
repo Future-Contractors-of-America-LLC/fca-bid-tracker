@@ -1,7 +1,7 @@
 import { brandIdentity } from "../brandIdentity";
 
 export default function AuricruxBrandMark({ compact = false, showLabel = true }) {
-  const iconSize = compact ? 44 : 54;
+  const iconSize = compact ? 44 : 56;
   const { colors } = brandIdentity.auricrux;
 
   return (
@@ -21,24 +21,41 @@ export default function AuricruxBrandMark({ compact = false, showLabel = true })
         aria-hidden="true"
       >
         <defs>
-          <linearGradient id="auricruxGold" x1="19" y1="18" x2="101" y2="102" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#FFE9A6" />
-            <stop offset="0.45" stopColor={colors.primary} />
+          <radialGradient id="auricruxCoreGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(60 60) rotate(90) scale(58)">
+            <stop stopColor="#FFF4D1" />
+            <stop offset="0.5" stopColor={colors.primary} />
+            <stop offset="1" stopColor="#8A5A12" />
+          </radialGradient>
+          <linearGradient id="auricruxEdge" x1="18" y1="18" x2="102" y2="102" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#FFE8AA" />
             <stop offset="1" stopColor="#B77912" />
           </linearGradient>
+          <linearGradient id="auricruxCrux" x1="60" y1="34" x2="60" y2="88" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#2C1803" />
+            <stop offset="1" stopColor="#5A320A" />
+          </linearGradient>
         </defs>
-        <path d="M60 18L74 24L84 36V51C84 66 73 78 60 84C47 78 36 66 36 51V36L46 24L60 18Z" fill="url(#auricruxGold)" stroke="#6B450C" strokeWidth="4" />
-        <path d="M60 34L68 38L72 46V55C72 63 66 70 60 73C54 70 48 63 48 55V46L52 38L60 34Z" fill="#5B2A07" fillOpacity="0.92" />
-        <path d="M22 48L10 44L18 58L10 72L26 66L40 72L34 58L40 44L22 48Z" fill="url(#auricruxGold)" stroke="#6B450C" strokeWidth="3" strokeLinejoin="round" />
-        <path d="M98 48L110 44L102 58L110 72L94 66L80 72L86 58L80 44L98 48Z" fill="url(#auricruxGold)" stroke="#6B450C" strokeWidth="3" strokeLinejoin="round" />
+
+        <circle cx="60" cy="60" r="52" fill="url(#auricruxCoreGlow)" stroke="url(#auricruxEdge)" strokeWidth="4" />
+
+        <path d="M60 20L69 39L89 41L73.5 54L78 74L60 64L42 74L46.5 54L31 41L51 39L60 20Z" fill="#FFF3C8" fillOpacity="0.35" />
+
+        <path d="M60 33L66 45L79 46L69 55L72 68L60 62L48 68L51 55L41 46L54 45L60 33Z" fill="#FFE9A4" fillOpacity="0.7" stroke="#7C5313" strokeWidth="2" />
+
+        <path d="M60 40L67 49V58L60 66L53 58V49L60 40Z" fill="url(#auricruxCrux)" />
+        <path d="M60 66V84" stroke="url(#auricruxCrux)" strokeWidth="7" strokeLinecap="round" />
+        <path d="M47 71H73" stroke="url(#auricruxCrux)" strokeWidth="7" strokeLinecap="round" />
+
+        <circle cx="60" cy="60" r="51" stroke="#4B3208" strokeOpacity="0.22" strokeWidth="1.5" />
       </svg>
+
       {showLabel ? (
         <div>
           <div style={{ fontWeight: 900, letterSpacing: "0.1em", color: colors.primaryDark, textTransform: "uppercase" }}>
             Auricrux
           </div>
-          <div style={{ color: "#6b7280", fontSize: compact ? 11 : 12 }}>
-            Embedded operating layer
+          <div style={{ color: "#7c5313", fontSize: compact ? 11 : 12 }}>
+            System intelligence layer
           </div>
         </div>
       ) : null}

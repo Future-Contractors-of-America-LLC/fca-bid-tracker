@@ -8,19 +8,19 @@ export const pageShellStyle = {
 };
 
 export const cardStyle = {
-  border: "1px solid #e5e7eb",
+  border: "1px solid #dbe4f3",
   borderRadius: 14,
   padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+  background: "linear-gradient(135deg, #ffffff 0%, #f8fbff 100%)",
+  boxShadow: "0 14px 28px rgba(15, 23, 42, 0.06)",
 };
 
 export const heroCardStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 18,
   padding: 24,
-  background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
-  boxShadow: "0 18px 40px rgba(15, 23, 42, 0.06)",
+  background: "linear-gradient(135deg, #e8f0ff 0%, #ffffff 58%, #fff7e5 100%)",
+  boxShadow: "0 20px 44px rgba(15, 23, 42, 0.08)",
 };
 
 export const sectionGridStyle = {
@@ -64,22 +64,23 @@ const baseCtaStyle = {
 
 export const ctaPrimaryStyle = {
   ...baseCtaStyle,
-  background: "#111827",
+  background: "linear-gradient(135deg, #1d4ed8 0%, #3157d7 70%, #1f3ea8 100%)",
   color: "#fff",
+  border: "1px solid #1e40af",
 };
 
 export const ctaSecondaryStyle = {
   ...baseCtaStyle,
-  background: "#eff6ff",
+  background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
   color: "#1d4ed8",
   border: "1px solid #bfdbfe",
 };
 
 export const ctaLightStyle = {
   ...baseCtaStyle,
-  background: "#f8fafc",
-  color: "#111827",
-  border: "1px solid #cbd5e1",
+  background: "linear-gradient(135deg, #fff7e1 0%, #ffffff 100%)",
+  color: "#7c5313",
+  border: "1px solid #ecd089",
 };
 
 export const ctaStyleMap = {
