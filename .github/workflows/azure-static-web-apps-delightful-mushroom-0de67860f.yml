@@ -33,24 +33,7 @@ jobs:
           submodules: true
           lfs: false
 
-      - name: Guard against stale main SHA deployment
-        id: head_guard
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-        run: |
-          set -euo pipefail
-          git fetch --no-tags --depth=1 origin main
-          CURRENT_MAIN_SHA="$(git rev-parse FETCH_HEAD)"
-          echo "current_main_sha=$CURRENT_MAIN_SHA" >> "$GITHUB_OUTPUT"
-          if [ "$CURRENT_MAIN_SHA" = "$GITHUB_SHA" ]; then
-            echo "is_latest=true" >> "$GITHUB_OUTPUT"
-            echo "Latest commit confirmed for deploy: $GITHUB_SHA"
-          else
-            echo "is_latest=false" >> "$GITHUB_OUTPUT"
-            echo "Superseded commit detected. run_sha=$GITHUB_SHA latest_main_sha=$CURRENT_MAIN_SHA"
-          fi
-
       - name: Assert SWA deployment target configuration
-        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main' || steps.head_guard.outputs.is_latest == 'true'
         env:
           AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F }}
         run: |
@@ -60,30 +43,24 @@ jobs:
           echo "Expected continuity hosts: $AURICRUX_EXPECTED_HOSTS"
 
       - name: Setup Node
-        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main' || steps.head_guard.outputs.is_latest == 'true'
         uses: actions/setup-node@v5
         with:
           node-version: '24'
           cache: npm
 
       - name: Install dependencies
-        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main' || steps.head_guard.outputs.is_latest == 'true'
         run: npm ci
 
       - name: Run governed build validation
-        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main' || steps.head_guard.outputs.is_latest == 'true'
         run: npm run build:system
 
       - name: Patch live login continuity and visibility marker
-        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main' || steps.head_guard.outputs.is_latest == 'true'
         run: node scripts/patch-live-login-continuity.mjs
 
       - name: Generate deployable Azure Functions layout
-        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main' || steps.head_guard.outputs.is_latest == 'true'
         run: node scripts/prepare-api-functions.mjs
 
       - name: Verify build artifact exists
-        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main' || steps.head_guard.outputs.is_latest == 'true'
         run: |
           pwd
           find dist -maxdepth 2 -type f -print | sort
@@ -112,7 +89,6 @@ jobs:
           test -f api_generated/projects/index.js
 
       - name: Archive governed deployment payload
-        if: github.event_name == 'pull_request' || github.ref != 'refs/heads/main' || steps.head_guard.outputs.is_latest == 'true'
         run: |
           mkdir -p workspace
           tar -czf workspace/governed_swa_payload.tgz dist api_generated staticwebapp.config.json package.json package-lock.json
@@ -125,7 +101,7 @@ jobs:
 
       - name: Build And Deploy
         id: builddeploy
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && steps.head_guard.outputs.is_latest == 'true'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F }}
@@ -137,7 +113,7 @@ jobs:
           output_location: ''
 
       - name: Post-deploy live domain smoke verification
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && steps.head_guard.outputs.is_latest == 'true'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: npm run verify:live-deployment
         env:
           AURICRUX_LIVE_VERIFY_ATTEMPTS: '4'
@@ -145,13 +121,6 @@ jobs:
           AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}
           AURICRUX_SWA_DEFAULT_HOST: ${{ env.AURICRUX_SWA_DEFAULT_HOST }}
           AURICRUX_SWA_NAME: ${{ env.AURICRUX_SWA_NAME }}
-
-      - name: Mark superseded main run as intentionally skipped
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && steps.head_guard.outputs.is_latest == 'false'
-        run: |
-          echo "No deploy executed because this run is superseded by a newer main commit."
-          echo "Run SHA: $GITHUB_SHA"
-          echo "Latest main SHA: ${{ steps.head_guard.outputs.current_main_sha }}"
 
       - name: Upload live deployment smoke artifacts
         if: always()
