@@ -24,9 +24,9 @@ const homeContinuityItems = [
     detail: "The first route now keeps workspace entry, platform state, and rollout review visible instead of acting like a standalone brochure page.",
   },
   {
-    label: "Narrative continuity",
-    value: "Platform, Auricrux, and Academy stay linked",
-    detail: "The home page now reinforces one connected system story across product explanation, operations, and training follow-through.",
+    label: "System continuity",
+    value: "SaaS, Auricrux, and Academy stay unified",
+    detail: "The home page reinforces FCA as one connected operating system from lead generation through project delivery and repeat business.",
   },
   {
     label: "Next action",
@@ -221,9 +221,9 @@ export default function Home() {
           <p>Use the canonical FCA bid routes first for customer continuity and production rollout planning.</p>
           <PublicCtaRow actions={homeCtaSets.bidProduct} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 10 }} />
           <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.6 }}>
-            Legacy customer links remain available only for compatibility and redirect continuity.
+            Compatibility routes remain available for redirect continuity.
           </p>
-          <PublicCtaRow actions={homeCtaSets.legacyCompatibility} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 8 }} />
+          <PublicCtaRow actions={homeCtaSets.compatibilityRoutes} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 8 }} />
         </div>
       </div>
 

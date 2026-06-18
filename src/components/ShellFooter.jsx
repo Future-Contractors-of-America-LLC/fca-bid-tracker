@@ -111,7 +111,7 @@ export default function ShellFooter() {
         <div>
           <div style={{ fontWeight: 700, marginBottom: 8 }}>Compatibility Routes</div>
           <div style={{ color: "#4b5563", lineHeight: 1.7, marginBottom: 12 }}>
-            Legacy intake and status surfaces remain available for continuity, but canonical FCA shell routes should be used first.
+            Compatibility intake and status routes remain available for continuity, while canonical FCA shell routes remain primary.
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {shellCompatibilityRoutes.map((item) => (

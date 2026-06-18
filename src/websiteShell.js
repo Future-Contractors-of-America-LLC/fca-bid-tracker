@@ -66,7 +66,7 @@ export const publicActionCatalog = {
   },
   walkthrough: {
     label: "Schedule a Walkthrough",
-    href: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
+    href: "mailto:sales@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request",
     variant: "light",
   },
   bidEntry: {
@@ -115,12 +115,12 @@ export const publicActionCatalog = {
     variant: "secondary",
   },
   legacyIntake: {
-    label: "Legacy intake route",
+    label: "Compatibility intake route",
     href: "/fca-customer-entry/index.html",
     variant: "light",
   },
   legacyStatus: {
-    label: "Legacy status route",
+    label: "Compatibility status route",
     href: "/fca-customer-status/index.html",
     variant: "light",
   },
@@ -199,7 +199,7 @@ export const academyCtaSets = {
 
 export const homeCtaSets = {
   bidProduct: [{ ...publicActionCatalog.bidEntry, variant: "primary" }, publicActionCatalog.bidStatus],
-  legacyCompatibility: [publicActionCatalog.legacyIntake, publicActionCatalog.legacyStatus],
+  compatibilityRoutes: [publicActionCatalog.legacyIntake, publicActionCatalog.legacyStatus],
   testDrive: [
     { ...publicActionCatalog.liveTestLogin, variant: "primary" },
     publicActionCatalog.instantTestWorkspace,
@@ -357,8 +357,8 @@ export const publicSurfaceLinks = [
 
 export const contactPaths = [
   { title: "Schedule a Walkthrough", detail: "Walk through the live FCA workspace and see how FCA can support your team from first opportunity through bid handoff, project delivery, customer visibility, training, communications routing, warranty continuity, and referral growth.", cta: publicActionCatalog.walkthrough.href, label: publicActionCatalog.walkthrough.label },
-  { title: "Discuss Startup, Pilot, or Mid-Range Plans", detail: "Talk through startup fit, pilot scope, and mid-range operating needs across the $99/mo Startup Workspace, $2,500 one-time Pilot Workspace, $499/mo Team Workspace, and $899/mo Operations Workspace paths.", cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Startup%20Pilot%20or%20Mid-Range%20Discussion", label: "Discuss Startup / Pilot / Mid-Range" },
-  { title: "Review Growth or Enterprise Rollout", detail: "Review Growth Platform and Enterprise Rollout packaging, communications lanes, rollout sequencing, post-handover continuity, and referral-driven expansion for broader deployment.", cta: "mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Growth%20or%20Enterprise%20Rollout", label: "Review Growth / Enterprise" },
+  { title: "Discuss Startup, Pilot, or Mid-Range Plans", detail: "Talk through startup fit, pilot scope, and mid-range operating needs across the $99/mo Startup Workspace, $2,500 one-time Pilot Workspace, $499/mo Team Workspace, and $899/mo Operations Workspace paths.", cta: "mailto:info@futurecontractorsofamerica.com?subject=FCA%20Startup%20Pilot%20or%20Mid-Range%20Discussion", label: "Discuss Startup / Pilot / Mid-Range" },
+  { title: "Review Growth or Enterprise Rollout", detail: "Review Growth Platform and Enterprise Rollout packaging, communications lanes, rollout sequencing, post-handover continuity, and referral-driven expansion for broader deployment.", cta: "mailto:sales@futurecontractorsofamerica.com?subject=FCA%20Growth%20or%20Enterprise%20Rollout", label: "Review Growth / Enterprise" },
 ];
 
 export const shellJourney = [

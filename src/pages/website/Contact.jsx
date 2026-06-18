@@ -89,7 +89,7 @@ export default function Contact() {
           items={contactContinuityItems}
           primaryHref="/portal/platform"
           primaryLabel="Open Platform Dashboard"
-          secondaryHref="mailto:hello@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
+          secondaryHref="mailto:sales@futurecontractorsofamerica.com?subject=FCA%20Walkthrough%20Request"
           secondaryLabel="Schedule a Walkthrough"
         />
       </div>
