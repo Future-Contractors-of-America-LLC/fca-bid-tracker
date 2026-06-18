@@ -10,7 +10,7 @@ DEFAULT_HOST="${AURICRUX_SWA_DEFAULT_HOST:-delightful-mushroom-0de67860f.7.azure
 EXPECTED_HOSTS="${AURICRUX_EXPECTED_HOSTS:-futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net}"
 COMMIT_WITNESS_ROUTE="/commit-witness-${GIT_SHA}.txt"
 BUILD_MARKER_DATE="June 18, 2026"
-BUILD_MARKER_VERSION="Permanent Investor Landing v3"
+BUILD_MARKER_VERSION="Customer Landing v4"
 
 IFS=',' read -r -a EXPECTED_HOST_ARRAY <<< "$EXPECTED_HOSTS"
 EXPECTED_HOSTS_JSON="$(printf '"%s",' "${EXPECTED_HOST_ARRAY[@]}")"
@@ -93,7 +93,7 @@ header_markup=$(cat <<'HTML'
       <div class="nav-dropdown">
         <a class="nav-link" href="/solutions/">Programs ▾</a>
         <div class="nav-dropdown-menu">
-          <a href="/solutions/">Legacy Contractor Program</a>
+          <a href="/solutions/">Contractor Command Programs</a>
           <a href="/pricing/">Plans and Pricing</a>
           <a href="/auricrux/">Auricrux Guidance</a>
         </div>
@@ -110,7 +110,7 @@ header_markup=$(cat <<'HTML'
     <a href="/features/">Why FCA</a>
     <button type="button" data-toggle-nav="mobilePrograms">Programs</button>
     <div class="mobile-submenu" id="mobilePrograms">
-      <a href="/solutions/">Legacy Contractor Program</a>
+      <a href="/solutions/">Contractor Command Programs</a>
       <a href="/pricing/">Plans and Pricing</a>
       <a href="/auricrux/">Auricrux Guidance</a>
     </div>
@@ -126,8 +126,8 @@ HTML
 footer_markup=$(cat <<'HTML'
 <footer class="footer">
   <div class="wrap grid-2">
-    <div><strong>Future Contractors of America</strong><p>Permanent investor and early customer landing surface for FCA Contractor Command.</p></div>
-    <div><strong>Contact</strong><p>sales@futurecontractorsofamerica.com<br/>info@futurecontractorsofamerica.com<br/>support@futurecontractorsofamerica.com</p></div>
+    <div><strong>Future Contractors of America</strong><p>FCA is the complete construction operating system from lead to repeat business, with one unified flow across delivery, operations, and growth.</p></div>
+    <div><strong>Contact</strong><p><a href="mailto:sales@futurecontractorsofamerica.com">sales@futurecontractorsofamerica.com</a><br/><a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a><br/><a href="mailto:support@futurecontractorsofamerica.com">support@futurecontractorsofamerica.com</a></p></div>
   </div>
 </footer>
 HTML
@@ -158,12 +158,12 @@ ${footer_markup}
 HTML
 }
 
-create_page "/" "Future Contractors of America | Permanent Investor Landing" '<main><section class="page"><div class="wrap hero-grid"><div><span class="eyebrow">Permanent Investor and Legacy Customer Landing</span><h1>The operating system that helps legacy contractors win bigger work and execute with confidence.</h1><p class="lead">FCA Contractor Command turns disconnected sales and operations into one connected commercial engine. Auricrux adds intelligence that guides better decisions at every stage.</p><div class="brand-rail"><div class="brand-chip"><img src="/favicon.svg" alt="FCA" style="width:28px;height:28px" /><span>FCA Operating Platform</span></div><div class="brand-chip"><div class="auricrux-mark">A</div><span style="color:#8a6116">Auricrux Intelligence Layer</span></div></div><div class="pill-row"><span class="pill">Investor ready narrative</span><span class="pill">Legacy contractor onboarding</span><span class="pill">High trust customer journey</span><span class="pill ops-marker">Cross-host login continuity patch active</span></div><div class="cta-row"><a class="btn btn-primary" href="/contact/">Book Investor Demo</a><a class="btn btn-secondary" href="/pricing/">View Launch Plans</a><a class="btn btn-gold" href="/intake/">Apply for Pilot</a></div></div><aside class="card card-pop"><div class="metric-label">Platform value</div><div class="metric">Faster close cycles</div><div class="metric-label" style="margin-top:12px">Operational value</div><div class="metric">Cleaner handoffs</div><div class="metric-label" style="margin-top:12px">Strategic value</div><div class="metric">Stronger client trust</div><p style="margin-top:14px;line-height:1.6;color:#dbeafe">This landing surface is built to sell in investor rooms and convert legacy contractors into active customers.</p></aside></div></section><section class="section"><div class="wrap grid-3"><article class="card"><h3>Revenue acceleration</h3><p class="muted">Move from inquiry to proposal with clearer process and stronger buyer confidence.</p></article><article class="card"><h3>Execution discipline</h3><p class="muted">Keep every active project lane visible across leadership, operations, and delivery teams.</p></article><article class="card"><h3>Market differentiation</h3><p class="muted">Lead with a modern platform story while competitors still use fragmented tools.</p></article></div></section></main>'
+create_page "/" "Future Contractors of America | Construction Operating System" '<main><section class="page"><div class="wrap hero-grid"><div><span class="eyebrow">FCA Contractor Command</span><h1>One connected construction system from first lead to repeat business.</h1><p class="lead">FCA unifies sales, preconstruction, field execution, closeout, and customer follow-through in one seamless operating flow. Auricrux is embedded across every stage, and FCA Academy keeps teams learning while they execute.</p><div class="brand-rail"><div class="brand-chip"><img src="/favicon.svg" alt="FCA" style="width:28px;height:28px" /><span>FCA SaaS Operating Platform</span></div><div class="brand-chip"><div class="auricrux-mark">A</div><span style="color:#8a6116">Auricrux Embedded Intelligence</span></div></div><div class="pill-row"><span class="pill">Lead to repeat workflow continuity</span><span class="pill">Unified SaaS + Academy experience</span><span class="pill">Auricrux integrated in every layer</span><span class="pill ops-marker">Cross-host login continuity patch active</span></div><div class="cta-row"><a class="btn btn-primary" href="/contact/">Book FCA Demo</a><a class="btn btn-secondary" href="/pricing/">View Launch Plans</a><a class="btn btn-gold" href="/intake/">Start Guided Intake</a></div></div><aside class="card card-pop"><div class="metric-label">System advantage</div><div class="metric">One operating flow</div><div class="metric-label" style="margin-top:12px">Team advantage</div><div class="metric">Fewer handoff gaps</div><div class="metric-label" style="margin-top:12px">Growth advantage</div><div class="metric">Stronger customer retention</div><p style="margin-top:14px;line-height:1.6;color:#dbeafe">FCA is built as a full platform: software, execution intelligence, and Academy-driven workforce readiness in one continuous system.</p></aside></div></section><section class="section"><div class="wrap grid-3"><article class="card"><h3>Revenue acceleration</h3><p class="muted">Move from inquiry to proposal with clearer process and stronger buyer confidence.</p></article><article class="card"><h3>Execution discipline</h3><p class="muted">Keep every active project lane visible across leadership, operations, and delivery teams.</p></article><article class="card"><h3>Market differentiation</h3><p class="muted">Lead with a modern platform story while competitors still use fragmented tools.</p></article></div></section></main>'
 
 create_page "/features" "Why FCA" '<main class="page"><div class="wrap"><span class="eyebrow">Why FCA</span><h1>Designed for contractors who need growth without operational chaos</h1><div class="grid-3"><article class="card"><h3>Structured onboarding</h3><p class="muted">Account-based intake creates a reliable start for every client engagement.</p></article><article class="card"><h3>Unified operating view</h3><p class="muted">Project status, files, and activity history stay connected in one surface.</p></article><article class="card"><h3>Auricrux intelligence</h3><p class="muted">Guided decision support keeps rollout momentum high and risk low.</p></article></div></div></main>'
-create_page "/solutions" "Programs" '<main class="page"><div class="wrap"><span class="eyebrow">Programs</span><h1>Program options that match team maturity and growth goals</h1><div class="grid-3"><article class="card"><h3>Legacy Contractor Pilot</h3><p class="muted">Modernize client intake and opportunity flow without disrupting core operations.</p></article><article class="card"><h3>Growth Team Program</h3><p class="muted">Increase bid conversion and improve handoff quality.</p></article><article class="card"><h3>Scaled Rollout Program</h3><p class="muted">Standardize delivery across business units with clear control and visibility.</p></article></div></div></main>'
+create_page "/solutions" "Programs" '<main class="page"><div class="wrap"><span class="eyebrow">Programs</span><h1>Program options that match team maturity and growth goals</h1><div class="grid-3"><article class="card"><h3>Contractor Command Pilot</h3><p class="muted">Modernize client intake and opportunity flow without disrupting core operations.</p></article><article class="card"><h3>Growth Team Program</h3><p class="muted">Increase bid conversion and improve handoff quality.</p></article><article class="card"><h3>Scaled Rollout Program</h3><p class="muted">Standardize delivery across business units with clear control and visibility.</p></article></div></div></main>'
 create_page "/pricing" "Plans and Pricing" '<main class="page"><div class="wrap"><span class="eyebrow">Plans and Pricing</span><h1>Launch plans built for serious contractor adoption</h1><div class="grid-4"><article class="card"><h3>Startup</h3><div class="metric">$99/mo</div><p class="muted">For owner-led companies validating a modern operating process.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=startup">Select Startup</a></div></article><article class="card"><h3>Team</h3><div class="metric">$299/mo</div><p class="muted">For active teams requiring stronger bid and project coordination.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=team">Select Team</a></div></article><article class="card"><h3>Growth</h3><div class="metric">$1,500/mo</div><p class="muted">For scaling contractors improving communication and consistency.</p><div class="cta-row"><a class="btn btn-primary" href="/intake/?plan=growth">Select Growth</a></div></article><article class="card"><h3>Enterprise</h3><div class="metric">$3,500+/mo</div><p class="muted">For multi-team deployments with advanced requirements.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/?plan=enterprise">Select Enterprise</a></div></article></div></div></main>'
-create_page "/contact" "Book Demo" '<main class="page"><div class="wrap"><span class="eyebrow">Book Demo</span><h1>Schedule a live walkthrough for your team or investor group</h1><div class="grid-3"><article class="card"><h3>Sales</h3><p class="muted">sales@futurecontractorsofamerica.com</p></article><article class="card"><h3>Information</h3><p class="muted">info@futurecontractorsofamerica.com</p></article><article class="card"><h3>Support</h3><p class="muted">support@futurecontractorsofamerica.com</p></article></div></div></main>'
+create_page "/contact" "Book Demo" '<main class="page"><div class="wrap"><span class="eyebrow">Book Demo</span><h1>Schedule a live walkthrough for your team</h1><div class="grid-3"><article class="card"><h3>Sales</h3><p class="muted"><a href="mailto:sales@futurecontractorsofamerica.com">sales@futurecontractorsofamerica.com</a></p></article><article class="card"><h3>Information</h3><p class="muted"><a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a></p></article><article class="card"><h3>Support</h3><p class="muted"><a href="mailto:support@futurecontractorsofamerica.com">support@futurecontractorsofamerica.com</a></p></article></div></div></main>'
 create_page "/auricrux" "Auricrux Guidance" '<main class="page"><div class="wrap"><section class="card"><span class="eyebrow eyebrow-gold">Auricrux Guidance</span><div class="brand-rail"><div class="brand-chip"><div class="auricrux-mark">A</div><span style="color:#8a6116">Auricrux Intelligence Layer</span></div></div><h1 style="font-size:48px">Intelligence that helps contractors decide faster and execute stronger.</h1><p class="lead">Auricrux supports plan selection, rollout readiness, and decisive next steps from onboarding through delivery.</p><div class="cta-row"><a class="btn btn-gold" href="/intake/">Start Guided Intake</a><a class="btn btn-secondary" href="/contact/">Book Walkthrough</a></div></section></div></main>'
 
 create_page "/intake" "Pilot Intake" '<main class="page"><div class="wrap"><span class="eyebrow">Step 1</span><h1>Submit your company profile and start pilot onboarding</h1><section class="card"><form id="intakeForm"><div class="grid-2"><div class="field"><label for="plan">Plan</label><select id="plan"><option value="startup">Startup</option><option value="team">Team</option><option value="growth">Growth</option><option value="enterprise">Enterprise</option></select></div><div class="field"><label for="company">Company</label><input id="company" required /></div><div class="field"><label for="name">Contact name</label><input id="name" required /></div><div class="field"><label for="email">Email</label><input id="email" type="email" required /></div><div class="field"><label for="password">Password</label><input id="password" type="password" required /></div><div class="field"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" required /></div></div><div id="intakeStatus" class="status warn" style="margin-top:14px">These credentials will be used for workspace login.</div><div class="cta-row"><button class="btn btn-primary" type="submit">Continue to Activation</button></div></form></section></div></main><script>const params=new URLSearchParams(location.search);const p=params.get("plan");if(p)document.getElementById("plan").value=p;document.getElementById("intakeForm").addEventListener("submit",e=>{e.preventDefault();const pw=password.value;const cp=confirmPassword.value;if(pw!==cp){intakeStatus.className="status warn";intakeStatus.textContent="Passwords do not match.";return;}const rec={plan:plan.value,company:company.value,name:name.value,email:email.value.trim().toLowerCase(),password:pw};localStorage.setItem("fca_customer_record",JSON.stringify(rec));location.href="/checkout/?plan="+encodeURIComponent(rec.plan);});</script>'
@@ -180,7 +180,7 @@ create_page "/referrals" "Referrals" '<main class="page"><div class="wrap"><h1>R
 
 cat > dist/deployment-status.json <<JSON
 {
-  "status": "live-shell-permanent-investor-landing-v3-active",
+  "status": "live-shell-customer-landing-v4-active",
   "shell": "FCA Contractor Command",
   "execution": "Auricrux-Central",
   "nextAction": "MNCL-004",
@@ -216,13 +216,13 @@ shell=FCA Contractor Command
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
 commitWitnessRoute=${COMMIT_WITNESS_ROUTE}
-status=live-shell-permanent-investor-landing-v3-active
+status=live-shell-customer-landing-v4-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
 cat > dist/live-shell-verification.html <<'HTML'
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Permanent investor landing v3 is active. Literal slash-style artifacts have been removed from generated HTML markup.</p></body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>FCA Live Shell Verification</title></head><body><h1>FCA Live Shell Verification</h1><p>Customer landing v4 is active. Literal slash-style artifacts have been removed from generated HTML markup.</p></body></html>
 HTML
 
 cat > dist/host-binding-audit.html <<'HTML'
@@ -236,9 +236,9 @@ HTML
 cat > "dist${COMMIT_WITNESS_ROUTE}" <<EOF
 gitSha=${GIT_SHA}
 defaultHost=${DEFAULT_HOST}
-status=live-shell-permanent-investor-landing-v3-active
+status=live-shell-customer-landing-v4-active
 buildMarkerDate=${BUILD_MARKER_DATE}
 buildMarkerVersion=${BUILD_MARKER_VERSION}
 EOF
 
-echo "FCA permanent investor landing v3 build completed for ${GIT_SHA}"
+echo "FCA customer landing v4 build completed for ${GIT_SHA}"
