@@ -1,1 +1,571 @@
-<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=/public/fca-customer-status/index.html"><title>Redirecting</title></head><body><p>Redirecting…</p></body></html>
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FCA Customer Bid Status | Auricrux</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0f172a;
+      color: #111827;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .shell {
+      max-width: 1150px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      color: white;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #cbd5e1;
+    }
+
+    .toolbar {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .filter-panel {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.16);
+      width: 100%;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 320px) minmax(320px, 1fr);
+      gap: 18px;
+      align-items: end;
+      width: 100%;
+    }
+
+    .field {
+      width: 100%;
+      min-width: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 800;
+      font-size: 13px;
+      color: #374151;
+      margin-bottom: 7px;
+    }
+
+    select,
+    input {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      height: 44px;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      background: white;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button,
+    .link {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      line-height: 1.2;
+    }
+
+    button:hover,
+    .link:hover {
+      background: #1d4ed8;
+    }
+
+    .secondary {
+      background: #334155;
+    }
+
+    .secondary:hover {
+      background: #1e293b;
+    }
+
+    .status {
+      color: #cbd5e1;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.22);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f8fafc;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .meta {
+      color: #6b7280;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 13px;
+      font-weight: 800;
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .badge.reviewed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.new {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .badge.high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .badge.medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge.low {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .card-body {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .fact {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+      background: #f9fafb;
+      min-width: 0;
+    }
+
+    .fact strong {
+      display: block;
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 5px;
+    }
+
+    .fact span {
+      display: block;
+      font-size: 16px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .analysis {
+      border-left: 5px solid #2563eb;
+      background: #eff6ff;
+      padding: 16px;
+      border-radius: 12px;
+      line-height: 1.55;
+    }
+
+    .next {
+      border-left: 5px solid #16a34a;
+      background: #f0fdf4;
+      padding: 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .scope {
+      margin: 0;
+      padding-left: 22px;
+      line-height: 1.6;
+    }
+
+    .empty {
+      background: white;
+      border-radius: 18px;
+      padding: 28px;
+      text-align: center;
+      color: #6b7280;
+      font-weight: 700;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+      border-radius: 14px;
+      padding: 16px;
+      font-weight: 800;
+      white-space: pre-wrap;
+    }
+
+    .footer {
+      color: #cbd5e1;
+      margin-top: 16px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 14px;
+      }
+
+      .hero h1 {
+        font-size: 26px;
+      }
+
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        justify-content: stretch;
+      }
+
+      .actions button,
+      .actions .link {
+        width: 100%;
+        text-align: center;
+      }
+
+      .facts {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>FCA Customer Bid Status</h1>
+      <p>View submitted bids, Auricrux analysis, customer identity, risk, pricing direction, and next actions.</p>
+    </section>
+
+    <section class="toolbar">
+      <div class="filter-panel">
+        <div class="filter-grid">
+          <div class="field">
+            <label for="customerFilter">Customer</label>
+            <select id="customerFilter">
+              <option value="">All Customers</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="searchBox">Search Bids</label>
+            <input id="searchBox" placeholder="Search project, customer, trade, location, status..." />
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="link secondary" href="../fca-customer-entry/index.html">Submit New Bid</a>
+        <button id="refreshBtn" type="button">Refresh Status</button>
+      </div>
+    </section>
+
+    <div class="status" id="statusText">Loading bids...</div>
+
+    <section id="bidGrid" class="grid"></section>
+
+    <div class="footer">
+      FCA Customer Bid Status — Auricrux execution layer
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = "https://auricrux-central.azurewebsites.net/api/bids";
+
+    const bidGrid = document.getElementById("bidGrid");
+    const statusText = document.getElementById("statusText");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const customerFilter = document.getElementById("customerFilter");
+    const searchBox = document.getElementById("searchBox");
+
+    let allBids = [];
+
+    function money(value) {
+      return Number(value || 0).toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      });
+    }
+
+    function safeText(value, fallback) {
+      return value && String(value).trim() ? value : fallback;
+    }
+
+    function statusBadgeClass(status) {
+      if (status === "auricrux-reviewed") return "reviewed";
+      return "new";
+    }
+
+    function riskBadgeClass(risk) {
+      if (risk === "high") return "high";
+      if (risk === "low") return "low";
+      return "medium";
+    }
+
+    function normalizeSearch(value) {
+      return String(value || "").toLowerCase();
+    }
+
+    function renderCustomerOptions(bids) {
+      const customers = new Map();
+
+      bids.forEach(function (bid) {
+        const id = bid.customerId || "default-customer";
+        const name = bid.customerName || bid.company || "Default Customer";
+        customers.set(id, name);
+      });
+
+      const current = customerFilter.value;
+
+      customerFilter.innerHTML = '<option value="">All Customers</option>';
+
+      Array.from(customers.entries())
+        .sort(function (a, b) {
+          return a[1].localeCompare(b[1]);
+        })
+        .forEach(function ([id, name]) {
+          const option = document.createElement("option");
+          option.value = id;
+          option.textContent = name;
+          customerFilter.appendChild(option);
+        });
+
+      customerFilter.value = current;
+    }
+
+    function filterBids() {
+      const selectedCustomer = customerFilter.value;
+      const search = normalizeSearch(searchBox.value);
+
+      return allBids.filter(function (bid) {
+        const matchesCustomer =
+          !selectedCustomer ||
+          bid.customerId === selectedCustomer;
+
+        const searchable = normalizeSearch([
+          bid.id,
+          bid.customerId,
+          safeText(bid.customerName, bid.company || "Unknown Customer"),
+          safeText(bid.company, "Unknown Company"),
+          safeText(bid.projectName, "Unnamed Project"),
+          safeText(bid.trade, "Trade not specified"),
+          safeText(bid.location, "Location not specified"),
+          safeText(bid.status, "new"),
+          safeText(bid.auricruxRisk, "pending"),
+          bid.nextAction,
+          bid.auricruxNarrative
+        ].join(" "));
+
+        const matchesSearch =
+          !search ||
+          searchable.includes(search);
+
+        return matchesCustomer && matchesSearch;
+      });
+    }
+
+    function renderBid(bid) {
+      const scopeItems = Array.isArray(bid.auricruxScope)
+        ? bid.auricruxScope.map(item => "<li>" + item + "</li>").join("")
+        : "";
+
+      const pricing = bid.auricruxPricing || {};
+
+      return `
+        <article class="card">
+          <div class="card-header">
+            <div>
+              <h2>${safeText(bid.projectName, "Unnamed Project")}</h2>
+              <div class="meta">
+                ${safeText(bid.customerName, bid.company || "Unknown Customer")} · ${safeText(bid.trade, "Trade not specified")} · ${safeText(bid.location, "Location not specified")}
+              </div>
+            </div>
+
+            <div class="badge-row">
+              <span class="badge ${statusBadgeClass(bid.status)}">${safeText(bid.status, "new")}</span>
+              <span class="badge ${riskBadgeClass(bid.auricruxRisk)}">Risk: ${safeText(bid.auricruxRisk, "pending")}</span>
+              <span class="badge">Score: ${Number(bid.auricruxScore || 0)}/100</span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="facts">
+              <div class="fact">
+                <strong>Customer</strong>
+                <span>${safeText(bid.customerName, bid.company || "N/A")}</span>
+              </div>
+
+              <div class="fact">
+                <strong>Estimated Value</strong>
+                <span>${money(bid.value)}</span>
+              </div>
+
+              <div class="fact">
+                <strong>Competitive Price</strong>
+                <span>${money(pricing.competitive)}</span>
+              </div>
+
+              <div class="fact">
+                <strong>Bid ID</strong>
+                <span>${safeText(bid.id, "N/A")}</span>
+              </div>
+            </div>
+
+            <div class="analysis">
+              <strong>Auricrux Analysis</strong><br />
+              ${safeText(bid.auricruxNarrative, bid.auricruxRecommendation || "Auricrux analysis pending.")}
+            </div>
+
+            <div class="next">
+              Next Action: ${safeText(bid.nextAction, "Awaiting Auricrux review.")}
+            </div>
+
+            <div>
+              <strong>Scope Review Path</strong>
+              <ul class="scope">
+                ${scopeItems || "<li>Scope review pending.</li>"}
+              </ul>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderFilteredBids() {
+      const bids = filterBids();
+
+      if (!Array.isArray(bids) || bids.length === 0) {
+        statusText.textContent = "No bids match the current filter.";
+        bidGrid.innerHTML = '<div class="empty">No matching bids found.</div>';
+        return;
+      }
+
+      bids.sort(function (a, b) {
+        return String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""));
+      });
+
+      const customerLabel = customerFilter.value
+        ? customerFilter.options[customerFilter.selectedIndex].text
+        : "All Customers";
+
+      statusText.textContent = bids.length + " bid(s) loaded for " + customerLabel + ".";
+      bidGrid.innerHTML = bids.map(renderBid).join("");
+    }
+
+    async function loadBids() {
+      statusText.textContent = "Loading bids...";
+      bidGrid.innerHTML = "";
+
+      try {
+        const response = await fetch(API_BASE);
+
+        if (!response.ok) {
+          throw new Error("API returned HTTP " + response.status);
+        }
+
+        const bids = await response.json();
+
+        allBids = Array.isArray(bids) ? bids : [];
+
+        renderCustomerOptions(allBids);
+        renderFilteredBids();
+      } catch (error) {
+        statusText.textContent = "Unable to load bids.";
+        bidGrid.innerHTML = '<div class="error">Failed to load bid status: ' + error.message + '</div>';
+      }
+    }
+
+    refreshBtn.addEventListener("click", loadBids);
+    customerFilter.addEventListener("change", renderFilteredBids);
+    searchBox.addEventListener("input", renderFilteredBids);
+
+    loadBids();
+  </script>
+</body>
+</html>
