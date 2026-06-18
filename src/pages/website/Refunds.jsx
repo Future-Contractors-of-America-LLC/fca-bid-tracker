@@ -21,7 +21,7 @@ export default function Refunds() {
       </p>
       <h3 style={{ color: "#0f172a" }}>Billing disputes</h3>
       <p>
-        Contact <a href="mailto:hello@futurecontractorsofamerica.com">hello@futurecontractorsofamerica.com</a> before initiating
+        Contact <a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a> before initiating
         a chargeback. We will work to resolve billing issues promptly.
       </p>
     </LegalPageShell>

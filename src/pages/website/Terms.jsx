@@ -28,7 +28,7 @@ export default function Terms() {
         FCA is provided as operational software for contractors. We do not guarantee specific business outcomes. To the maximum extent
         permitted by law, liability is limited to fees paid in the twelve months preceding a claim.
       </p>
-      <p>Questions: <a href="mailto:hello@futurecontractorsofamerica.com">hello@futurecontractorsofamerica.com</a></p>
+      <p>Questions: <a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a></p>
     </LegalPageShell>
   );
 }

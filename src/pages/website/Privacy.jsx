@@ -28,7 +28,7 @@ export default function Privacy() {
         You may request access, correction, or deletion of personal data by contacting us. Some records may be retained where
         required for billing, security, or legal compliance.
       </p>
-      <p>Contact: <a href="mailto:hello@futurecontractorsofamerica.com">hello@futurecontractorsofamerica.com</a></p>
+      <p>Contact: <a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a></p>
     </LegalPageShell>
   );
 }
