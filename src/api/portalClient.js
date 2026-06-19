@@ -72,6 +72,35 @@ export async function issuePortalInvoice(invoiceId) {
   return payload;
 }
 
+export async function fetchInvoiceSummary(invoiceId, options = {}) {
+  const params = new URLSearchParams({ invoiceId });
+  if (options.companyName) params.set("companyName", options.companyName);
+  const response = await centralFetch(`/api/portal-invoices?${params.toString()}`, { method: "GET" });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) {
+    throw new Error(formatApiError(response, payload, "Unable to load invoice summary"));
+  }
+  return payload;
+}
+
+export async function deliverPortalInvoice(invoiceId, options = {}) {
+  const response = await centralFetch("/api/portal-invoices", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "deliver",
+      invoiceId,
+      companyName: options.companyName,
+      recipientEmail: options.recipientEmail,
+    }),
+  });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) {
+    throw new Error(formatApiError(response, payload, "Unable to deliver invoice"));
+  }
+  return payload;
+}
+
 export async function fetchBillingSummary() {
   const response = await centralFetch("/api/billing-summary", { method: "GET" });
   const payload = await readJsonSafe(response);

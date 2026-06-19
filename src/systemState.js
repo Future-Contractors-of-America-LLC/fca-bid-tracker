@@ -526,6 +526,11 @@ export const portalModules = [
     description: "Pipeline, approvals, and conversion readiness",
   },
   {
+    href: "/portal/pipeline",
+    label: "Commercial Pipeline",
+    description: "Guided bid-to-billing workflow in one place",
+  },
+  {
     href: "/portal/files",
     label: "Files",
     description: "Bid packages, permits, and onboarding docs",

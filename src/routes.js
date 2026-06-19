@@ -26,6 +26,7 @@ export const routes = {
   "/portal": lazyPage(() => import("./pages/portal/PortalHome")),
   "/portal/platform": lazyPage(() => import("./pages/portal/PlatformDashboard")),
   "/portal/operations": lazyPage(() => import("./pages/portal/PortalOperations")),
+  "/portal/pipeline": lazyPage(() => import("./pages/portal/PortalPipeline")),
   "/portal/projects": lazyPage(() => import("./pages/portal/PortalProjects")),
   "/portal/files": lazyPage(() => import("./pages/portal/PortalFiles")),
   "/portal/audit": lazyPage(() => import("./pages/portal/PortalAudit")),
@@ -59,6 +60,14 @@ export const routePatterns = [
   {
     pattern: "/portal/projects/:projectId",
     Page: lazyPage(() => import("./pages/portal/PortalProjectDetail")),
+  },
+  {
+    pattern: "/portal/billing/:invoiceId",
+    Page: lazyPage(() => import("./pages/portal/PortalInvoiceDetail")),
+  },
+  {
+    pattern: "/academy/programs/:programId",
+    Page: lazyPage(() => import("./pages/academy/AcademyProgramDetail")),
   },
 ];
 

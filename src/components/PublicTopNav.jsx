@@ -201,6 +201,7 @@ const PORTAL_GROUPS = [
   {
     label: "Operations",
     items: [
+      { label: "Commercial pipeline", href: "/portal/pipeline" },
       { label: "Dashboard", href: "/portal/platform" },
       { label: "Project management", href: "/portal/projects" },
       { label: "Scheduling", href: "/portal/scheduling" },

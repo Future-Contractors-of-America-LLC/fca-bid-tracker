@@ -5,6 +5,7 @@ export const publicPackageRouteGroups = [
     detail: "Real contractor workflow routes for qualification, estimating, project delivery, files, billing, and operations.",
     routes: [
       { href: "/portal/bids", label: "Qualification Board" },
+      { href: "/portal/pipeline", label: "Commercial Pipeline" },
       { href: "/portal/estimates", label: "Estimate Workspace" },
       { href: "/portal/projects", label: "Project Flow" },
       { href: "/portal/files", label: "File Spine" },
@@ -31,6 +32,7 @@ export const publicPackageRouteGroups = [
     routes: [
       { href: "/academy", label: "Academy Home" },
       { href: "/academy/catalog", label: "Academy Catalog" },
+      { href: "/academy/programs", label: "Program lessons" },
       { href: "/portal/academy", label: "Portal Academy" }
     ]
   },
