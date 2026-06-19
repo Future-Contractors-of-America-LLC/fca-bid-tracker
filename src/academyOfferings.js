@@ -5,7 +5,7 @@ export const OFFERING_LANES = [
   {
     key: "apprenticeship",
     label: "Apprenticeship",
-    description: "NCCER-style electrical apprenticeship pathways from Level 1 through specialization.",
+    description: "NCCER-style trade apprenticeship pathways across nine construction trades from Core Level 1 through Level 10 specialization.",
     credentialType: "Apprenticeship Certificate",
   },
   {
@@ -43,6 +43,31 @@ const STATIC_LANE_BY_PROGRAM_KEY = {
   "fca-contractor-command-user-guide": "professional",
 };
 
+const APPRENTICESHIP_PREFIXES = [
+  "electrical-",
+  "plumbing-",
+  "hvac-",
+  "carpentry-",
+  "masonry-",
+  "welding-",
+  "pipefitting-",
+  "sheet-metal-",
+  "fire-sprinkler-",
+];
+
+/** Nine-trade apprenticeship pathway summary (backend-aligned). */
+export const APPRENTICESHIP_TRADES = [
+  { key: "electrical", label: "Electrical", pathway: "Electrical Apprenticeship", coreLevels: 6, specializationTracks: 4, topLevel: 10 },
+  { key: "plumbing", label: "Plumbing", pathway: "Plumbing Apprenticeship", coreLevels: 6, specializationTracks: 4, topLevel: 10 },
+  { key: "hvac", label: "HVAC", pathway: "HVAC Apprenticeship", coreLevels: 6, specializationTracks: 4, topLevel: 10 },
+  { key: "carpentry", label: "Carpentry", pathway: "Carpentry Apprenticeship", coreLevels: 6, specializationTracks: 4, topLevel: 10 },
+  { key: "masonry", label: "Masonry", pathway: "Masonry Apprenticeship", coreLevels: 6, specializationTracks: 4, topLevel: 10 },
+  { key: "welding", label: "Welding", pathway: "Welding Apprenticeship", coreLevels: 6, specializationTracks: 4, topLevel: 10 },
+  { key: "pipefitting", label: "Pipefitting", pathway: "Pipefitting Apprenticeship", coreLevels: 6, specializationTracks: 4, topLevel: 10 },
+  { key: "sheet-metal", label: "Sheet Metal", pathway: "Sheet Metal Apprenticeship", coreLevels: 6, specializationTracks: 4, topLevel: 10 },
+  { key: "fire-sprinkler", label: "Fire Sprinkler", pathway: "Fire Sprinkler Apprenticeship", coreLevels: 6, specializationTracks: 4, topLevel: 10 },
+];
+
 /** Deep electrical apprenticeship catalog (backend-aligned). */
 export const ELECTRICAL_APPRENTICESHIP_LEVELS = [
   { level: 1, key: "electrical-core-level-1", title: "Core / Level 1 - Jobsite Foundations", modules: 12 },
@@ -60,7 +85,8 @@ export const ELECTRICAL_APPRENTICESHIP_LEVELS = [
 function resolveProgramLane(program) {
   if (program.lane) return program.lane;
   if (STATIC_LANE_BY_PROGRAM_KEY[program.key]) return STATIC_LANE_BY_PROGRAM_KEY[program.key];
-  if (program.key?.startsWith("electrical-")) return "apprenticeship";
+  if (APPRENTICESHIP_PREFIXES.some((prefix) => program.key?.startsWith(prefix))) return "apprenticeship";
+  if (program.pathway?.includes("Apprenticeship")) return "apprenticeship";
   if (["project-controls", "precon-estimating", "field-readiness"].includes(program.key)) return "certification";
   return "professional";
 }
