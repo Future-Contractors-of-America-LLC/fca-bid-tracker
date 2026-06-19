@@ -53,7 +53,7 @@ Store copy: `fca-mobile-maui-work/store-listing/STORE_COPY.md`
 
 | # | Action | Notes |
 |---|--------|-------|
-| 18 | Merge open PRs after CI green | See PR links below ? ships /brand, /ip, LMS fix, MAUI icon |
+| 18 | ~~Merge open PRs~~ | Done 2026-06-19 (PRs #138, #33, #1) |
 | 19 | IP filings (trademark, copyright, patent counsel) | Start at [legal/IP_MASTER_INDEX.md](./legal/IP_MASTER_INDEX.md) |
 | 20 | DPA + data residency policy | Required for Procore/Autodesk-tier buyers |
 | 21 | SOC2 roadmap | Enterprise procurement blocker |
@@ -63,9 +63,9 @@ Store copy: `fca-mobile-maui-work/store-listing/STORE_COPY.md`
 
 ## What the build is delivering tonight (no action needed)
 
-- **Auricrux-Central**: Table-backed RFIs + takeoffs (`FcaRecords`), CORS on tenant APIs, mobile push registration; launch.customer LMS enabled in code (pending deploy)
-- **fca-bid-tracker**: `/ip` route, brand specimens in `public/brand/**`, legal prep docs, market QC route fixes
-- **fca-mobile-maui**: App icon updated to FCA hex mark
+- **Auricrux-Central**: launch.customer LMS enabled ? merged PR #33; confirm after Functions deploy propagates
+- **fca-bid-tracker**: `/ip`, `/brand/**`, legal prep ? merged PR #138; SWA emergency deploy completed
+- **fca-mobile-maui**: FCA hex app icon ? merged PR #1
 - **CI**: Mobile asset validation + typecheck passing; central deploy via GitHub Actions on push
 
 ## Competitive positioning (built toward)
@@ -103,37 +103,17 @@ _Last updated: 2026-06-19 - autonomous build sprint_
 | auricrux-central | `feature/launch-customer-lms` | `2af63b8` (launch.customer LMS) | Pushed to origin |
 | fca-mobile-maui | `feature/fca-hex-app-icon` | `1473383` (hex app icons) | Pushed to origin |
 
-**Open PRs (merge after CI green):**
+**Merged PRs (2026-06-19):**
 
-- https://github.com/Future-Contractors-of-America-LLC/fca-bid-tracker/pull/138
-- https://github.com/Future-Contractors-of-America-LLC/auricrux-central/pull/33
-- https://github.com/Future-Contractors-of-America-LLC/fca-mobile-maui/pull/1
+| PR | Repo | Merged |
+|----|------|--------|
+| [#138](https://github.com/Future-Contractors-of-America-LLC/fca-bid-tracker/pull/138) | fca-bid-tracker | 2026-06-19 |
+| [#33](https://github.com/Future-Contractors-of-America-LLC/auricrux-central/pull/33) | auricrux-central | 2026-06-19 |
+| [#1](https://github.com/Future-Contractors-of-America-LLC/fca-mobile-maui/pull/1) | fca-mobile-maui | 2026-06-19 |
 
-**Local QC (2026-06-19):** `npx vite build` passed; `npm run qc:market` 2/2 passed.
+SWA production deploy completed via emergency direct deploy after main merge. Verify `/brand/**` and `/ip` on the live domain.
 
-**Merge via GitHub UI** or:
-
-```powershell
-gh pr merge 138 --repo Future-Contractors-of-America-LLC/fca-bid-tracker --squash
-gh pr merge 33 --repo Future-Contractors-of-America-LLC/auricrux-central --squash
-gh pr merge 1 --repo Future-Contractors-of-America-LLC/fca-mobile-maui --squash
-```
-
-**Manual merge alternative:**
-
-```powershell
-# fca-bid-tracker (SWA marketing site + /brand specimens)
-cd "c:\Users\Auricrux\OneDrive - Future Contractors of America LLC\fca-bid-tracker-work"
-git checkout main; git pull; git merge docs/ip-and-founder-prep; git push origin main
-
-# auricrux-central (Functions API + launch LMS)
-cd "c:\Users\Auricrux\OneDrive - Future Contractors of America LLC\auricrux-central-work"
-git checkout main; git pull; git merge feature/launch-customer-lms; git push origin main
-
-# fca-mobile-maui (icon for CI/store)
-cd "c:\Users\Auricrux\OneDrive - Future Contractors of America LLC\fca-mobile-maui-work"
-git checkout main; git pull; git merge feature/fca-hex-app-icon; git push origin main
-```
+**Local QC:** `npx vite build` passed; `npm run qc:market` 2/2 passed.
 
 **Still founder-only:** Stripe live keys + webhook, USPTO/counsel filings, store keystores/certs, Azure portal secrets (`FCA_SESSION_SECRET`, Key Vault RBAC).
 
