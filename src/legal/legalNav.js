@@ -1,4 +1,4 @@
-/** Public legal pages — keep in sync with docs/legal/enterprise/ */
+/** Public legal pages - keep in sync with docs/legal/enterprise/ */
 export const LEGAL_PAGES = [
   { href: "/legal", label: "Legal Center" },
   { href: "/terms", label: "Terms of Service" },

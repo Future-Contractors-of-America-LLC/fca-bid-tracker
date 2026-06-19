@@ -16,7 +16,7 @@ export default function SubprocessorsContent() {
           ["Microsoft Azure", "Hosting, databases, functions, Key Vault", "United States"],
           ["Microsoft Entra ID", "SSO (if enabled)", "United States"],
           ["Microsoft Azure OpenAI / AI Foundry", "AI inference (if enabled)", "United States"],
-          ["GitHub (Microsoft)", "CI/CD — no production Customer Data", "United States"],
+          ["GitHub (Microsoft)", "CI/CD - no production Customer Data", "United States"],
         ]}
       />
       <LegalH3>Payments</LegalH3>

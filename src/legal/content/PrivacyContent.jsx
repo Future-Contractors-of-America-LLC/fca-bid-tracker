@@ -84,7 +84,7 @@ export default function PrivacyContent() {
         rows={[
           ["Active account data", "Subscription term + export window"],
           ["Billing records", "7 years"],
-          ["Security logs", "12–24 months"],
+          ["Security logs", "12-24 months"],
           ["Support tickets", "3 years after closure"],
         ]}
       />

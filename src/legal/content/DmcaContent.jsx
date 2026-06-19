@@ -7,7 +7,7 @@ export default function DmcaContent() {
       <LegalNotice />
       <LegalH3>1. Policy</LegalH3>
       <LegalP>
-        FCA responds to copyright infringement notices under the Digital Millennium Copyright Act (17 U.S.C. § 512).
+        FCA responds to copyright infringement notices under the Digital Millennium Copyright Act (17 U.S.C. Sec. 512).
       </LegalP>
       <LegalH3>2. Designated agent</LegalH3>
       <LegalP>
@@ -20,11 +20,11 @@ export default function DmcaContent() {
           "Signature of copyright owner or authorized agent",
           "Identification of copyrighted work and infringing material (URL)",
           "Your contact information",
-          "Good-faith statement and perjury statement per 17 U.S.C. § 512",
+          "Good-faith statement and perjury statement per 17 U.S.C. Sec. 512",
         ]}
       />
       <LegalH3>4. Counter-notification</LegalH3>
-      <LegalP>Counter-notifications must comply with 17 U.S.C. § 512(g).</LegalP>
+      <LegalP>Counter-notifications must comply with 17 U.S.C. Sec. 512(g).</LegalP>
       <LegalH3>5. Repeat infringers</LegalH3>
       <LegalP>Accounts of repeat infringers may be terminated.</LegalP>
       <LegalP>

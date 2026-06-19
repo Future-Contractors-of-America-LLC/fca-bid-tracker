@@ -20,7 +20,7 @@ export default function AiPolicyContent() {
           "Inference for suggestions, summaries, and Auricrux workflows",
           "Logging for debugging, abuse prevention, and quality",
           "Aggregated de-identified metrics to improve features",
-          "Opt-in training on anonymized patterns — default off for enterprise",
+          "Opt-in training on anonymized patterns - default off for enterprise",
         ]}
       />
       <LegalH3>3. What we do not do</LegalH3>
