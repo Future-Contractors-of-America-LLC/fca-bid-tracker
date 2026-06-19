@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
           count: items.length,
         },
         {
-          packet: 'REV-002',
+          packet: '061A',
           timestamp: new Date().toISOString(),
           backingSource: backingSource(),
         },
@@ -35,7 +35,7 @@ module.exports = async function handler(req, res) {
             item,
           },
           {
-            packet: 'REV-002',
+            packet: '061A',
             timestamp: new Date().toISOString(),
             backingSource: backingSource(),
           },

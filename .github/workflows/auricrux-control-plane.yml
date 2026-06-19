@@ -137,34 +137,22 @@ jobs:
             updatedAtUtc: null
           });
 
-          let workQueue = readJson(workQueuePath, {
-            version: 1,
-            queueName: 'auricrux-machine-native-queue',
+          const defaultWorkQueue = {
+            version: 2,
+            queueName: 'fca-unified-queue',
+            preservationLock: true,
+            preservationNote: 'Revenue sprint is additive only. See docs/revenue-sprint/REVENUE_SPRINT_PRESERVATION_RULES.md',
             updatedAtUtc: null,
             items: [
-              {
-                id: 'MNCL-001',
-                title: 'Project spine execution baseline',
-                lane: 'product',
-                priority: 'critical',
-                status: 'ready'
-              },
-              {
-                id: 'MNCL-002',
-                title: 'File spine execution baseline',
-                lane: 'product',
-                priority: 'critical',
-                status: 'queued'
-              },
-              {
-                id: 'MNCL-003',
-                title: 'Audit event persistence baseline',
-                lane: 'governance',
-                priority: 'high',
-                status: 'queued'
-              }
+              { id: 'IP-MKT-001', title: 'Brand specimens and /ip notice', lane: 'ip-market', priority: 'critical', status: 'completed', locked: true },
+              { id: 'MNCL-001', title: 'Project spine execution baseline', lane: 'machine-native', priority: 'critical', status: 'ready', locked: true },
+              { id: 'MNCL-002', title: 'File spine execution baseline', lane: 'machine-native', priority: 'critical', status: 'queued', locked: true },
+              { id: 'MNCL-003', title: 'Audit event persistence baseline', lane: 'governance', priority: 'high', status: 'queued', locked: true },
+              { id: 'REV-007', title: 'Startup $99/mo subscription payment link', lane: 'revenue-sprint', priority: 'high', status: 'ready' }
             ]
-          });
+          };
+
+          let workQueue = readJson(workQueuePath, defaultWorkQueue);
 
           state.lastRunUtc = now;
           state.lastMode = mode;

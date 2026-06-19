@@ -1,15 +1,22 @@
 {
   "version": 1,
   "id": "REV-007",
-  "title": "Revenue sprint: provision Startup $99/mo Stripe link",
+  "title": "Revenue sprint: provision Startup $99/mo Stripe link (preserves IP/MNCL work)",
   "mode": "engine",
   "priority": "high",
   "status": "ready",
   "owner": "cursor-agent",
   "blockedBy": ["STRIPE_SECRET_KEY"],
+  "preserves": [
+    "IP-MKT-001 through IP-MKT-004",
+    "MNCL-001 through MNCL-003",
+    "docs/FOUNDER_ONLY_CHECKLIST.md",
+    "brand-assets/",
+    "docs/legal/"
+  ],
   "produces": [
     "VITE_STRIPE_STARTUP_CHECKOUT_URL on SWA",
     "offers.json startup checkoutBase active"
   ],
-  "updatedAtUtc": "2026-06-19T14:00:00.000Z"
+  "updatedAtUtc": "2026-06-19T15:00:00.000Z"
 }

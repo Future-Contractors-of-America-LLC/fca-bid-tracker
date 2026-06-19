@@ -3,6 +3,10 @@
 **Date:** 2026-06-19  
 **Sprint:** FCA 7-Day Hands-Off Revenue Sprint
 
+## Policy
+
+**Additive only.** Revenue sprint must not undo IP, brand, founder, MNCL, or market-ready web work. See `REVENUE_SPRINT_PRESERVATION_RULES.md`.
+
 ## Agent-completed
 
 | Area | Deliverable |
