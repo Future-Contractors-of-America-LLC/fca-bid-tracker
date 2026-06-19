@@ -127,11 +127,11 @@ export default function PortalFinance() {
           invoices.map((inv) => (
             <div key={inv.id} style={cardStyle}>
               <strong>{inv.invoiceName || inv.id}</strong>
-              <div style={{ color: "#475569", marginTop: 6 }}>{inv.amount} ù {inv.status || "Draft"}</div>
+              <div style={{ color: "#475569", marginTop: 6 }}>{inv.amount} | {inv.status || "Draft"}</div>
               {inv.note ? <div style={{ color: "#64748b", marginTop: 6 }}>{inv.note}</div> : null}
               {inv.status === "Issued" ? (
                 <button type="button" onClick={() => payInvoice(inv.id)} disabled={busyId === inv.id} style={{ marginTop: 10, border: "1px solid #16a34a", background: "#16a34a", color: "#fff", borderRadius: 8, padding: "8px 12px", fontWeight: 700, cursor: "pointer" }}>
-                  {busyId === inv.id ? "Opening Stripeù" : "Pay via Stripe"}
+                  {busyId === inv.id ? "Opening Stripe..." : "Pay via Stripe"}
                 </button>
               ) : null}
             </div>
