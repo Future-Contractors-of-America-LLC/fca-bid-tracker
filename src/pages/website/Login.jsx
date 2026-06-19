@@ -149,7 +149,8 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
         });
         if (!result.ok) throw new Error(result.error);
         setAuthStatus("authenticated");
-        navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
+        const destination = resolveWorkspaceEntryHref(result.session, nextHref);
+        window.location.assign(destination);
       } catch (autologinError) {
         setAuthStatus("failed");
         setError(autologinError?.message || "Customer authentication failed.");
@@ -190,7 +191,8 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
       });
       if (!result.ok) throw new Error(result.error);
       setAuthStatus("authenticated");
-      navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
+      const destination = resolveWorkspaceEntryHref(result.session, nextHref);
+      window.location.assign(destination);
     } catch (submitError) {
       setAuthStatus("failed");
       setError(submitError?.message || "Customer authentication failed.");

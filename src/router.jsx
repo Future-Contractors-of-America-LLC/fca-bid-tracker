@@ -34,8 +34,9 @@ export default function Router() {
 
   const routeMatch = useMemo(() => resolveRoute(normalizedPath), [normalizedPath]);
 
-  const needsCustomerLogin = sessionReady && isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;
-  const lacksProductAccess = sessionReady && !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);
+  const activeSession = sessionReady ? session : readCustomerSession();
+  const needsCustomerLogin = sessionReady && isProtectedCustomerRoute(normalizedPath) && !activeSession?.authenticated;
+  const lacksProductAccess = sessionReady && !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(activeSession, normalizedPath);
   const Page = !sessionReady
     ? LoadingRoute
     : needsCustomerLogin
@@ -64,6 +65,7 @@ export default function Router() {
 
     function syncRouteFromLocation() {
       setNormalizedPath(readCurrentPath());
+      setSession(readCustomerSession());
     }
 
     function handleCustomerSessionUpdate() {
