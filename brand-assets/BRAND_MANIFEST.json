@@ -1,0 +1,78 @@
+{
+  "owner": {
+    "legalName": "Future Contractors of America LLC",
+    "jurisdiction": "United States",
+    "contact": "info@futurecontractorsofamerica.com"
+  },
+  "version": "1.0.0",
+  "effectiveDate": "2026-06-18",
+  "authorship": {
+    "createdBy": "Future Contractors of America LLC (work made for hire / company authorship)",
+    "firstUseInCommerce": "2026",
+    "notes": "All assets are original geometric designs. Do not incorporate third-party stock icons or fonts without license transfer."
+  },
+  "marks": [
+    {
+      "id": "fca-hex",
+      "type": "design",
+      "name": "FCA Hex Mark",
+      "file": "fca/fca-hex-mark.svg",
+      "colors": ["#4F7CFF", "#0D1220", "#355BDB"],
+      "description": "Three-dimensional hexagonal shield with inner diamond void."
+    },
+    {
+      "id": "fca-word",
+      "type": "word",
+      "name": "FCA",
+      "file": "fca/fca-wordmark.svg"
+    },
+    {
+      "id": "fca-full-name",
+      "type": "word",
+      "name": "FUTURE CONTRACTORS OF AMERICA",
+      "file": "fca/fca-wordmark.svg"
+    },
+    {
+      "id": "auricrux-crux",
+      "type": "design",
+      "name": "Auricrux Crux Mark",
+      "file": "auricrux/auricrux-crux-mark.svg",
+      "colors": ["#D49A22", "#7C5313", "#FFF4D1"],
+      "description": "Circular gold medallion with star ring, diamond crux, stem, and crossbar."
+    },
+    {
+      "id": "auricrux-word",
+      "type": "word",
+      "name": "AURICRUX",
+      "file": "auricrux/auricrux-wordmark.svg"
+    },
+    {
+      "id": "auricrux-crux-pulse",
+      "type": "motion",
+      "name": "Auricrux Crux Pulse",
+      "file": "animations/auricrux-crux-pulse.svg",
+      "spec": "animations/AURICRUX_CRUX_PULSE_SPEC.md"
+    },
+    {
+      "id": "fca-contractor-command",
+      "type": "word",
+      "name": "FCA CONTRACTOR COMMAND",
+      "file": null,
+      "description": "Product trade name for SaaS workspace."
+    }
+  ],
+  "sourceOfTruth": {
+    "reactComponents": [
+      "src/components/FcaBrandMark.jsx",
+      "src/components/AuricruxBrandMark.jsx"
+    ],
+    "publicUrlsAfterDeploy": [
+      "https://futurecontractorsofamerica.com/brand/fca/fca-hex-mark.svg",
+      "https://futurecontractorsofamerica.com/brand/auricrux/auricrux-crux-mark.svg",
+      "https://futurecontractorsofamerica.com/brand/animations/auricrux-crux-pulse.svg"
+    ],
+    "favicon": "public/favicon.svg"
+  },
+  "trademarkNotice": "FCA, Future Contractors of America, Auricrux, and the FCA hex and Auricrux crux designs are trademarks of Future Contractors of America LLC.",
+  "copyrightNotice": "Copyright (c) 2026 Future Contractors of America LLC. All rights reserved."
+}
