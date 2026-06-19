@@ -24,4 +24,5 @@ export default createOperationalPortalPage({
     createItem: createFieldTask,
     completeItem: completeFieldTask,
   },
+  projectScoped: true,
 });

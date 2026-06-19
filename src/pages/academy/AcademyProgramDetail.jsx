@@ -18,16 +18,18 @@ const cardStyle = {
 export default function AcademyProgramDetail({ routeParams = {} }) {
   const programId = routeParams.programId;
   const { session } = useCustomerSession();
-  const { academyState, completeModule } = useAcademyLms();
+  const { academyState, completeModule, assignProgram } = useAcademyLms();
   const [programDetail, setProgramDetail] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [busyModule, setBusyModule] = useState(null);
+  const [enrollBusy, setEnrollBusy] = useState(false);
   const [actionMessage, setActionMessage] = useState("");
 
+  const learnerId = session?.email || session?.customerId;
+
   const enrollment = useMemo(() => {
-    const learnerId = session?.email || session?.customerId;
     return (academyState.enrollments || []).find((item) => item.programKey === programId && (!learnerId || item.learnerId === learnerId));
-  }, [academyState.enrollments, programId, session]);
+  }, [academyState.enrollments, programId, learnerId]);
 
   useEffect(() => {
     if (!programId) return;
@@ -40,9 +42,26 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
   const program = programDetail?.program;
   const modules = programDetail?.modules || [];
 
+  async function enrollNow() {
+    if (!programId || !learnerId) {
+      setActionMessage("Sign in to enroll in this program.");
+      return;
+    }
+    setEnrollBusy(true);
+    setActionMessage("");
+    try {
+      await assignProgram(learnerId, programId, "Auricrux");
+      setActionMessage("Enrollment active. Start with module 1 below.");
+    } catch (error) {
+      setActionMessage(error.message || "Unable to enroll in this program.");
+    } finally {
+      setEnrollBusy(false);
+    }
+  }
+
   async function markModuleComplete(module) {
     if (!enrollment?.enrollmentId) {
-      setActionMessage("Assign this program from the Academy LMS panel first.");
+      setActionMessage("Enroll in this program to track progress.");
       return;
     }
     setBusyModule(module.moduleNumber);
@@ -85,14 +104,24 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
           <div style={{ ...cardStyle, marginBottom: 24 }}>
             <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>{program.credential}</div>
             <p style={{ color: "#475569", lineHeight: 1.7 }}>
-              <strong>Pathway:</strong> {program.pathway} ù <strong>Level:</strong> {program.level} ù <strong>Modules:</strong> {program.duration}
+              <strong>Pathway:</strong> {program.pathway} | <strong>Level:</strong> {program.level} | <strong>Modules:</strong> {program.duration}
             </p>
             {enrollment ? (
               <div style={{ marginTop: 12, color: "#334155" }}>
-                <strong>Your progress:</strong> {enrollment.progressPercent}% ù {enrollment.completedModules}/{enrollment.totalModules} modules
+                <strong>Your progress:</strong> {enrollment.progressPercent}% | {enrollment.completedModules}/{enrollment.totalModules} modules
               </div>
             ) : (
-              <div style={{ marginTop: 12, color: "#64748b" }}>Assign this program from Academy home to track progress.</div>
+              <div style={{ marginTop: 12 }}>
+                <div style={{ color: "#64748b", marginBottom: 10 }}>You are not enrolled in this program yet.</div>
+                <button
+                  type="button"
+                  disabled={enrollBusy}
+                  onClick={enrollNow}
+                  style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
+                >
+                  {enrollBusy ? "Enrolling..." : "Enroll now"}
+                </button>
+              </div>
             )}
             {actionMessage ? <div style={{ marginTop: 10, color: "#15803d" }}>{actionMessage}</div> : null}
           </div>

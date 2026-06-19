@@ -24,4 +24,5 @@ export default createOperationalPortalPage({
     createItem: createFieldScheduleEvent,
     completeItem: completeFieldScheduleEvent,
   },
+  projectScoped: true,
 });

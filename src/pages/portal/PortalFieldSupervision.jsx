@@ -19,14 +19,15 @@ export default createOperationalPortalPage({
     { key: "focus", label: "Focus area", placeholder: "Safety, quality, schedule" },
     { key: "shift", label: "Shift", type: "select", options: ["Day", "Night", "Weekend"], default: "Day" },
   ],
+  projectScoped: true,
   apiHandlers: {
-    fetchItems: async () => {
-      const payload = await fetchFieldTasks();
+    fetchItems: async (params = {}) => {
+      const payload = await fetchFieldTasks(params);
       return {
         ...payload,
         items: (payload.items || []).map((item) => ({
           ...item,
-          site: item.projectId || "PRJ-001",
+          site: item.projectId || params.projectId || "",
           supervisor: item.assignee,
           focus: item.task,
           shift: item.priority || "Day",
@@ -38,7 +39,7 @@ export default createOperationalPortalPage({
       assignee: draft.supervisor,
       dueDate: "",
       priority: draft.shift || "Normal",
-      projectId: "PRJ-001",
+      projectId: draft.projectId,
     }),
     completeItem: completeFieldTask,
   },

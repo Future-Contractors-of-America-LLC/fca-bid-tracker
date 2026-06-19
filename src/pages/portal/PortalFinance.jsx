@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { fetchBillingSummary, fetchPortalInvoices } from "../../api/portalClient";
-import { createInvoiceCheckout } from "../../api/stripeClient";
+import { createInvoiceCheckout, createBillingPortalSession } from "../../api/stripeClient";
 import { routeStateOverlays } from "../../systemState";
+import useCustomerSession from "../../hooks/useCustomerSession";
 
 const cardStyle = { border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, background: "#fff" };
 
 export default function PortalFinance() {
   const { refreshSyncStamp } = useWorkspaceState();
+  const { session } = useCustomerSession();
   const [invoices, setInvoices] = useState([]);
   const [summary, setSummary] = useState(null);
   const [loadError, setLoadError] = useState("");
@@ -46,6 +48,25 @@ export default function PortalFinance() {
       throw new Error("Stripe checkout URL was not returned.");
     } catch (error) {
       setActionError(error.message || "Unable to start Stripe checkout.");
+      setBusyId("");
+    }
+  }
+
+  async function openBillingPortal() {
+    setActionError("");
+    setBusyId("portal");
+    try {
+      const portal = await createBillingPortalSession({
+        customerEmail: session?.email,
+        returnUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/finance` : undefined,
+      });
+      if (portal.portalUrl) {
+        window.location.href = portal.portalUrl;
+        return;
+      }
+      throw new Error("Stripe billing portal URL was not returned.");
+    } catch (error) {
+      setActionError(error.message || "Unable to open billing portal.");
       setBusyId("");
     }
   }
@@ -88,6 +109,16 @@ export default function PortalFinance() {
         </div>
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 20 }}>
+        <div style={{ fontWeight: 700, marginBottom: 8 }}>Subscription and payment methods</div>
+        <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
+          Update cards, view invoices, and manage your Stripe subscription from the customer portal.
+        </div>
+        <button type="button" onClick={openBillingPortal} disabled={busyId === "portal"} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 8, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
+          {busyId === "portal" ? "Opening portal..." : "Manage billing"}
+        </button>
+      </div>
+
       <h2 style={{ fontSize: 18 }}>Invoices</h2>
       <div style={{ display: "grid", gap: 12 }}>
         {invoices.length === 0 ? (
@@ -96,11 +127,11 @@ export default function PortalFinance() {
           invoices.map((inv) => (
             <div key={inv.id} style={cardStyle}>
               <strong>{inv.invoiceName || inv.id}</strong>
-              <div style={{ color: "#475569", marginTop: 6 }}>{inv.amount} ∑ {inv.status || "Draft"}</div>
+              <div style={{ color: "#475569", marginTop: 6 }}>{inv.amount} ù {inv.status || "Draft"}</div>
               {inv.note ? <div style={{ color: "#64748b", marginTop: 6 }}>{inv.note}</div> : null}
               {inv.status === "Issued" ? (
                 <button type="button" onClick={() => payInvoice(inv.id)} disabled={busyId === inv.id} style={{ marginTop: 10, border: "1px solid #16a34a", background: "#16a34a", color: "#fff", borderRadius: 8, padding: "8px 12px", fontWeight: 700, cursor: "pointer" }}>
-                  {busyId === inv.id ? "Opening StripeÖ" : "Pay via Stripe"}
+                  {busyId === inv.id ? "Opening Stripeù" : "Pay via Stripe"}
                 </button>
               ) : null}
             </div>
