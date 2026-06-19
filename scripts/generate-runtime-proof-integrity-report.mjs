@@ -14,7 +14,7 @@ function has(source, marker) {
 }
 
 const ledgerSource = await read("docs/FCA_EXECUTION_CONTINUITY_LEDGER.md");
-const buildEvidenceSource = await read("scripts/build_evidence_capture.js");
+const buildEvidenceSource = await read("scripts/build_evidence_capture.cjs");
 const buildWorkflowSource = await read(".github/workflows/build-validation.yml");
 const runtimeWorkflowSource = await read(".github/workflows/runtime-smoke-validation.yml");
 const timestamp = new Date().toISOString();

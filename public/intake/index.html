@@ -1,87 +1,10 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>FCA Intake</title>
-  <style>
-    body{font-family:Arial;padding:24px;max-width:900px;margin:auto}
-    .card{border:1px solid #ddd;border-radius:12px;padding:16px;margin:12px 0}
-    input{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px}
-    button{padding:10px 14px;border:1px solid #222;border-radius:10px;background:#fff;cursor:pointer}
-    .muted{opacity:.75;font-size:13px}
-    pre{background:#f7f7f7;border:1px solid #ddd;padding:12px;border-radius:10px;overflow:auto}
-  </style>
+  <meta http-equiv="refresh" content="0;url=/intake" />
+  <title>Redirecting to FCA intake</title>
+  <script>location.replace("/intake");</script>
 </head>
-<body>
-  <h1>FCA Intake</h1>
-  <p class="muted">Start a request. You will receive an Intake ID used for checkout + onboarding continuity.</p>
-
-  <div class="card">
-    <label>Company<br><input id="company" placeholder="Company name"></label><br><br>
-    <label>Project / Job Name<br><input id="project" placeholder="Project name"></label><br><br>
-    <label>Estimated Value (USD)<br><input id="value" type="number" placeholder="125000"></label><br><br>
-    <button id="submit">Submit Intake</button>
-  </div>
-
-  <div class="card">
-    <h2>Result</h2>
-    <pre id="out">Ready.</pre>
-  </div>
-
-<script>
-const BID_API = "https://auricrux-central.azurewebsites.net/api/bids";
-const PILOT_CHECKOUT_BASE = "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01"; // Pilot checkout link [2](https://outlook.office365.com/owa/?ItemID=AAMkADMyNmVmNmI4LWQwMDMtNDhiNy1hOGRkLTQ4ZDExMjI2MGM4ZABGAAAAAADLDCXBdgSDTI8n2XHKXO2rBwCB0dqlD%2b2iTbpUUMk47FqNAAAAAAEJAACB0dqlD%2b2iTbpUUMk47FqNAADpycgRAAA%3d&exvsurl=1&viewmodel=ReadMessageItem)
-
-submit.onclick = async () => {
-  out.textContent = "Submitting...";
-  const intakeId = "intake-" + Date.now();
-
-  const payload = {
-    id: intakeId,
-    company: company.value || "Unknown",
-    project: project.value || "Unnamed Project",
-    value: Number(value.value || 0),
-    status: "new",
-    source: "customer-intake",
-    intakeId: intakeId
-  };
-
-  try {
-    const r = await fetch(BID_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    const j = await r.json().catch(() => ({}));
-
-    if (!r.ok) {
-      out.textContent = "ERROR posting intake:\n" + JSON.stringify(j, null, 2);
-      return;
-    }
-
-    // Attach intakeId to checkout URL so webhook can map payment to this customer
-    const checkoutUrl = PILOT_CHECKOUT_BASE + "?client_reference_id=" + encodeURIComponent(intakeId);
-
-    out.textContent =
-`Intake submitted ✅
-Intake ID: ${intakeId}
-
-Next steps:
-1) Pilot checkout (includes your Intake ID):
-${checkoutUrl}
-
-2) After payment, onboarding will appear at:
-${location.origin}/onboarding/${intakeId}.html
-
-(If payment is not completed yet, the onboarding page will show “awaiting payment.”)`;
-  } catch (e) {
-    out.textContent = "ERROR:\n" + e;
-  }
-};
-</script>
-
-  <p class="muted">Back to product shell: /product/</p>
-</body>
+<body><p><a href="/intake">Continue to company intake</a></p></body>
 </html>

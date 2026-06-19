@@ -39,7 +39,7 @@ export const routeMetadata = {
   "/intake": {
     title: "Intake | Future Contractors of America",
     description:
-      "Submit your company profile to start FCA pilot or workspace onboarding with Auricrux-Central backend continuity.",
+      "Submit your company profile to start FCA pilot or workspace onboarding.",
   },
   "/checkout": {
     title: "Activation | Future Contractors of America",
@@ -155,6 +155,35 @@ export const routeMetadata = {
     title: "Academy | Future Contractors of America",
     description:
       "Explore FCA Academy training, certification, and operational readiness connected to the broader platform shell.",
+  },
+  "/academy/catalog": {
+    title: "Academy Catalog | Future Contractors of America",
+    description:
+      "Browse electrical apprenticeship pathways, safety programs, and supervisor credentials in FCA Academy.",
+  },
+  "/terms": {
+    title: "Terms | Future Contractors of America",
+    description: "Terms of service for FCA Contractor Command, portal access, and Academy programs.",
+  },
+  "/privacy": {
+    title: "Privacy | Future Contractors of America",
+    description: "Privacy policy for Future Contractors of America products and services.",
+  },
+  "/refunds": {
+    title: "Refunds | Future Contractors of America",
+    description: "Refund policy for FCA subscriptions and pilot programs.",
+  },
+  "/ip": {
+    title: "Intellectual Property | Future Contractors of America",
+    description: "Trademark, copyright, and patent notices for FCA and Auricrux brand assets and software.",
+  },
+  "/portal/estimates": {
+    title: "Estimates | Future Contractors of America",
+    description: "Create and manage estimates inside the FCA contractor workspace.",
+  },
+  "/portal/proposals": {
+    title: "Proposals | Future Contractors of America",
+    description: "Package and deliver customer proposals from the FCA portal.",
   },
 };
 

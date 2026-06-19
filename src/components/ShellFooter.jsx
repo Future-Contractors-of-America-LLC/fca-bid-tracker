@@ -126,7 +126,11 @@ export default function ShellFooter() {
             <a href="/terms" style={linkStyle}>Terms of Service</a>
             <a href="/privacy" style={linkStyle}>Privacy Policy</a>
             <a href="/refunds" style={linkStyle}>Refunds & Billing</a>
+            <a href="/ip" style={linkStyle}>Intellectual Property</a>
           </div>
+          <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginTop: 16 }}>
+            Copyright (c) 2026 Future Contractors of America LLC. FCA and Auricrux are trademarks of Future Contractors of America LLC.
+          </p>
         </div>
 
         <div>

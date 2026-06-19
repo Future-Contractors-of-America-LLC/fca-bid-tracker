@@ -1,74 +1,94 @@
-import FcaBrandMark from "../../components/FcaBrandMark";
-import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
-import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
-import FounderJourneyStrip from "../../components/FounderJourneyStrip";
-import PublicActionRail from "../../components/PublicActionRail";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
-import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import ProductProofSection from "../../components/ProductProofSection";
-import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
-import { filterVisibleActions } from "../../ctaBehavior";
-import { homeCtaSets, publicSurfaceLinks, publicRouteCtas, shellJourney } from "../../websiteShell";
+import { homeCtaSets, publicRouteCtas, shellJourney } from "../../websiteShell";
 import { publicHomeMessaging } from "../../systemContinuity";
-import { saasOperationalPathways } from "../../productBlueprint";
-import { websiteMarketReadiness } from "../../websiteMarketReadiness";
 import { PILOT_CHECKOUT_URL, STARTUP_CHECKOUT_URL } from "../../commercialOffers";
-import { cardStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
+import {
+  cardStyle,
+  ctaPrimaryStyle,
+  ctaSecondaryStyle,
+  heroCardStyle,
+  pageShellStyle,
+  responsiveGrid,
+} from "../../publicShellStyles";
 
-const homeContinuityItems = [
+const proofPoints = [
+  { value: "One platform", label: "Website, SaaS workspace, customer portal, and Academy in one company account." },
+  { value: "Lead to closeout", label: "Leads, estimates, projects, plan room, billing, and support on one spine." },
+  { value: "Field-ready crews", label: "Assign safety modules, trade credentials, and supervisor training on site." },
+];
+
+const capabilityCards = [
   {
-    label: "Customer path",
-    value: "Home now leads into live product state",
-    detail: "The first route now keeps workspace entry, platform state, and rollout review visible instead of acting like a standalone brochure page.",
+    title: "Lead pipeline",
+    detail: "Capture opportunities, qualify bids, and move work from first contact to signed contract.",
+    href: "/intake",
+    label: "Start intake",
   },
   {
-    label: "System continuity",
-    value: "SaaS, Auricrux, and Academy stay unified",
-    detail: "The home page reinforces FCA as one connected operating system from lead generation through project delivery and repeat business.",
+    title: "Job sites",
+    detail: "Track active projects, milestones, RFIs, and next actions from every job.",
+    href: "/portal/platform",
+    label: "View platform",
   },
   {
-    label: "Next action",
-    value: "Clear conversion motion remains active",
-    detail: "Visitors can move directly into workspace, platform review, or rollout planning without losing context.",
+    title: "Plan room",
+    detail: "Share drawings, specs, and submittals with your team and customers.",
+    href: "/portal/files",
+    label: "Open files",
+  },
+  {
+    title: "Academy",
+    detail: "Electrical apprenticeship pathways, safety programs, and supervisor credentials.",
+    href: "/academy",
+    label: "Browse training",
+  },
+  {
+    title: "Billing",
+    detail: "Invoices, payment status, and revenue follow-through in your customer portal.",
+    href: "/portal/billing",
+    label: "View billing",
+  },
+  {
+    title: "Customer success",
+    detail: "Branded communications and support cases tied to active work.",
+    href: "/portal/support",
+    label: "Contact support",
   },
 ];
 
-const homeProductProof = [
+const programCards = [
   {
-    title: "Open the live dashboard story",
-    detail: "Go from the public shell into the unified platform dashboard and show real operating continuity instead of stopping at marketing copy.",
-    href: "/portal/platform",
-    label: "Open Platform Dashboard",
+    tier: "Startup",
+    price: "$99/mo",
+    detail: "For owner-operators winning their first commercial accounts.",
+    href: STARTUP_CHECKOUT_URL || "/intake?plan=startup",
+    label: "Start Startup plan",
+    external: Boolean(STARTUP_CHECKOUT_URL),
   },
   {
-    title: "Enter the customer workspace",
-    detail: "Use the login and portal path to demonstrate project, file, message, bid, billing, and support continuity.",
-    href: "/portal",
-    label: "Open Portal Workspace",
+    tier: "Pilot",
+    price: "$2,500",
+    detail: "White-glove onboarding for teams standardizing bids, jobs, and field communication.",
+    href: PILOT_CHECKOUT_URL,
+    label: "Start Pilot",
+    external: true,
   },
   {
-    title: "Walk the bid product",
-    detail: "Move directly into the canonical FCA bid intake route so the product shows a real customer movement path from the home page.",
-    href: "/bid-entry",
-    label: "Open Bid Entry",
-  },
-  {
-    title: "Keep training attached",
-    detail: "Open academy continuity from the same shell so workforce readiness remains part of the product story.",
-    href: "/academy",
-    label: "Open Academy",
+    tier: "Enterprise",
+    price: "Custom",
+    detail: "Multi-office rollouts with advanced controls and dedicated success coverage.",
+    href: "/contact",
+    label: "Book a walkthrough",
+    external: false,
   },
 ];
 
 export default function Home() {
-  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname;
-  const visibleSurfaceLinks = filterVisibleActions(publicSurfaceLinks, currentPath);
-
   return (
-    <div style={pageShellStyle}>
+    <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
         eyebrow={publicHomeMessaging.header.eyebrow}
         title={publicHomeMessaging.header.title}
@@ -81,174 +101,79 @@ export default function Home() {
         currentJourney="public"
       />
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 16,
-          flexWrap: "wrap",
-          alignItems: "center",
-          marginTop: 8,
-          padding: "14px 16px",
-          border: "1px solid #dbe3ef",
-          borderRadius: 18,
-          background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)",
-        }}
-      >
-        <FcaBrandMark />
-        <AuricruxBrandMark />
-      </div>
-
-      <FounderJourneyStrip
-        currentJourney="public"
-        title={publicHomeMessaging.journey.title}
-        detail={publicHomeMessaging.journey.detail}
-        ctaHref={publicHomeMessaging.journey.ctaHref}
-        ctaLabel={publicHomeMessaging.journey.ctaLabel}
-      />
-
-      <div style={{ marginTop: 24, ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Self-serve checkout</div>
-        <h2 style={{ marginTop: 0 }}>Start using FCA today — pay securely with Stripe</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 720 }}>
-          Buy the Pilot rollout package or start the monthly Startup workspace. After payment you will receive onboarding instructions by email.
+      <section style={{ ...heroCardStyle, marginBottom: 24 }}>
+        <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8, letterSpacing: "0.04em", textTransform: "uppercase", fontSize: 13 }}>
+          Commercial contractor operating system
+        </div>
+        <h2 style={{ marginTop: 0, fontSize: "clamp(1.5rem, 3vw, 2rem)", lineHeight: 1.2 }}>
+          Compete with PlanHub-class lead flow, Procore-class job control, and enterprise-grade training
+        </h2>
+        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 760, marginTop: 12 }}>
+          FCA Contractor Command connects your sales pipeline, field delivery, plan room, billing, and workforce readiness so your team works from one operating picture.
         </p>
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }}>
-          <a href={PILOT_CHECKOUT_URL} target="_blank" rel="noopener noreferrer" style={ctaPrimaryStyle}>Buy Pilot — $2,500</a>
-          {STARTUP_CHECKOUT_URL ? (
-            <a href={STARTUP_CHECKOUT_URL} target="_blank" rel="noopener noreferrer" style={{ ...ctaPrimaryStyle, background: "#fff", color: "#1d4ed8", border: "1px solid #2563eb" }}>Buy Startup — $99/mo</a>
-          ) : (
-            <a href="/pricing" style={{ ...ctaPrimaryStyle, background: "#fff", color: "#1d4ed8", border: "1px solid #2563eb" }}>View Startup Plan</a>
-          )}
-          <a href="/login?seeded=1&autologin=1&next=/portal/platform" style={{ ...ctaPrimaryStyle, background: "#f8fafc", color: "#0f172a", border: "1px solid #cbd5e1" }}>Try Demo First</a>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 20 }}>
+          <a href="/intake" style={ctaPrimaryStyle}>Get started</a>
+          <a href="/login" style={ctaSecondaryStyle}>Sign in</a>
+          <a href="/pricing" style={ctaSecondaryStyle}>Compare plans</a>
         </div>
-      </div>
+      </section>
 
-      <div style={{ marginTop: 24 }}>
-        <PublicOperationsStrip
-          eyebrow="Home continuity strip"
-          title="Home now opens the same operating story used deeper in FCA"
-          detail="The public entry route now carries the same continuity posture as platform, pricing, contact, and billing so the product story starts in a live operational direction."
-          statusLabel="Entry posture"
-          statusValue="Unified shell continuity active"
-          items={homeContinuityItems}
-          primaryHref="/login?seeded=1"
-          primaryLabel="Open Live Test Login"
-          secondaryHref="/login?seeded=1&autologin=1&next=/portal/platform"
-          secondaryLabel="Instant Test Workspace"
-        />
-      </div>
-
-      <ProductProofSection
-        eyebrow="Home product proof"
-        title="The home page now demonstrates real FCA product movement"
-        detail="Visitors can validate the dashboard, workspace, bid routes, and academy continuity directly from the public shell instead of relying on abstract claims."
-        highlights={homeProductProof}
-      />
-
-      <div style={{ marginTop: 24 }}>
-        <PublicPackageRouteGroupsPanel
-          eyebrow="Home package route truth"
-          title="Home now shows the real route groups behind the FCA offer"
-          detail="Public entry now exposes exact route groups for SaaS, portal, Academy, Auricrux/comms, and revenue continuity so visitors can move from offer language into reachable product slices."
-        />
-      </div>
-
-      <div style={{ marginTop: 24, ...cardStyle }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Real customer-ready pathways</div>
-        <h2 style={{ marginTop: 0 }}>Public website messaging now points into the actual SaaS motions FCA is selling</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 16 }}>
-          {saasOperationalPathways.map((pathway) => (
-            <div key={pathway.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
-              <div style={{ color: "#475569", fontWeight: 700, marginBottom: 6 }}>{pathway.audience}</div>
-              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{pathway.title}</h3>
-              <p style={{ color: "#334155", lineHeight: 1.7 }}>{pathway.outcome}</p>
-              <a href={pathway.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{pathway.ctaLabel}</a>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ marginTop: 24, ...cardStyle }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Website market-readiness</div>
-        <h2 style={{ marginTop: 0 }}>FCA now defines buyer journeys, trust signals, and conversion actions as a canonical website layer</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 16 }}>
-          {websiteMarketReadiness.buyerJourneys.map((journey) => (
-            <div key={journey.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
-              <div style={{ color: "#475569", fontWeight: 700, marginBottom: 6 }}>{journey.audience}</div>
-              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{journey.title}</h3>
-              <p style={{ color: "#334155", lineHeight: 1.7 }}>{journey.outcome}</p>
-              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-                {journey.proof.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <a href={journey.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{journey.label}</a>
-            </div>
-          ))}
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Trust signals</div>
-            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-              {websiteMarketReadiness.trustSignals.map((signal) => (
-                <li key={signal.title}><strong>{signal.title}</strong> — {signal.detail}</li>
-              ))}
-            </ul>
-          </div>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Conversion actions</div>
-            <PublicCtaRow actions={websiteMarketReadiness.conversionActions} />
-          </div>
-        </div>
-      </div>
-
-      <div style={{ marginTop: 28 }}>
-        <CustomerTrustPanel
-          title={publicHomeMessaging.trust.title}
-          detail={publicHomeMessaging.trust.detail}
-        />
-      </div>
-
-      <div style={{ marginTop: 24 }}>
-        <WorkspaceSnapshotCard
-          title={publicHomeMessaging.snapshot.title}
-          detail={publicHomeMessaging.snapshot.detail}
-          ctaHref="/login?seeded=1"
-          ctaLabel="Open Live Test Login"
-        />
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, marginTop: 24 }}>
-        {visibleSurfaceLinks.map((item) => (
-          <div key={item.key} style={cardStyle}>
-            <h3 style={{ marginTop: 0 }}>{item.title}</h3>
-            <p>{item.detail}</p>
-            <a href={item.href} style={ctaPrimaryStyle}>{item.ctaLabel}</a>
-          </div>
+      <section style={{ ...responsiveGrid(200), marginBottom: 24 }}>
+        {proofPoints.map((point) => (
+          <article key={point.value} style={cardStyle}>
+            <div style={{ fontSize: 22, fontWeight: 800, color: "#1d4ed8", marginBottom: 8 }}>{point.value}</div>
+            <p style={{ color: "#475569", lineHeight: 1.7 }}>{point.label}</p>
+          </article>
         ))}
+      </section>
 
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>Live test-drive entry</h3>
-          <p>Open the real seeded login route or jump straight into the live platform workspace without hunting through the shell first.</p>
-          <PublicCtaRow actions={homeCtaSets.testDrive} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 10 }} />
+      <section style={{ marginBottom: 24 }}>
+        <h2 style={{ marginBottom: 8 }}>Everything your contracting business needs</h2>
+        <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 16, maxWidth: 720 }}>
+          Each module connects to the same company workspace on web and mobile.
+        </p>
+        <div style={responsiveGrid(280)}>
+          {capabilityCards.map((item) => (
+            <article key={item.title} style={cardStyle}>
+              <h3 style={{ marginTop: 0 }}>{item.title}</h3>
+              <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 16 }}>{item.detail}</p>
+              <a href={item.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{item.label}</a>
+            </article>
+          ))}
         </div>
+      </section>
 
-        <div style={cardStyle}>
-          <h3 style={{ marginTop: 0 }}>FCA Bid Product</h3>
-          <p>Use the canonical FCA bid routes first for customer continuity and production rollout planning.</p>
-          <PublicCtaRow actions={homeCtaSets.bidProduct} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 10 }} />
-          <p style={{ marginTop: 12, color: "#4b5563", lineHeight: 1.6 }}>
-            Compatibility routes remain available for redirect continuity.
-          </p>
-          <PublicCtaRow actions={homeCtaSets.compatibilityRoutes} style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "stretch", marginTop: 8 }} />
+      <section style={{ marginBottom: 24 }}>
+        <h2 style={{ marginBottom: 16 }}>Plans for every stage of growth</h2>
+        <div style={responsiveGrid(260)}>
+          {programCards.map((plan) => (
+            <article key={plan.tier} style={{ ...cardStyle, display: "flex", flexDirection: "column", gap: 12 }}>
+              <div>
+                <div style={{ color: "#64748b", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.04em" }}>{plan.tier}</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a" }}>{plan.price}</div>
+              </div>
+              <p style={{ color: "#475569", lineHeight: 1.7, flex: 1 }}>{plan.detail}</p>
+              <a
+                href={plan.href}
+                target={plan.external ? "_blank" : undefined}
+                rel={plan.external ? "noopener noreferrer" : undefined}
+                style={ctaPrimaryStyle}
+              >
+                {plan.label}
+              </a>
+            </article>
+          ))}
         </div>
-      </div>
+      </section>
 
-      <PublicActionRail
-        title={publicHomeMessaging.actionRail.title}
-        detail={publicHomeMessaging.actionRail.detail}
+      <CustomerTrustPanel
+        title={publicHomeMessaging.trust.title}
+        detail={publicHomeMessaging.trust.detail}
       />
+
+      <div style={{ marginTop: 24 }}>
+        <PublicCtaRow actions={homeCtaSets.productionClose} />
+      </div>
 
       <ShellFooter />
     </div>

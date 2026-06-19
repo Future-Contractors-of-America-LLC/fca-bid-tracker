@@ -13,7 +13,7 @@ function has(source, marker) {
   return source.includes(marker);
 }
 
-const runtimeSmokeSource = await read("scripts/runtime_smoke_check.js");
+const runtimeSmokeSource = await read("scripts/runtime_smoke_check.cjs");
 const packageSource = await read("package.json");
 const workflowSource = await read(".github/workflows/runtime-smoke-validation.yml");
 const ledgerSource = await read("docs/FCA_EXECUTION_CONTINUITY_LEDGER.md");

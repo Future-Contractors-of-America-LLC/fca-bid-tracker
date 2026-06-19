@@ -1,29 +1,29 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
-import { homeCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { homeCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, pageShellStyle, responsiveGrid } from "../../publicShellStyles";
 
 const pillars = [
   {
     title: "Structured onboarding",
-    detail: "Account-based intake creates a reliable start for every client engagement and posts directly to Auricrux-Central.",
+    detail: "Account-based intake creates a reliable start for every client engagement and routes straight into your workspace.",
   },
   {
     title: "Unified operating view",
     detail: "Project status, files, billing, messages, and audit history stay connected in one branded workspace.",
   },
   {
-    title: "Auricrux system control",
-    detail: "Auricrux preserves next actions, continuity, and execution quality across the full customer lifecycle.",
+    title: "Guided execution",
+    detail: "FCA preserves next actions, continuity, and execution quality across the full customer lifecycle.",
   },
   {
     title: "Academy-ready workforce",
-    detail: "Electrical apprenticeship L1-L10 and launch classrooms train teams inside the same product surface.",
+    detail: "Electrical apprenticeship L1 through L10 and launch classrooms train teams inside the same product surface.",
   },
   {
     title: "Mobile parity",
-    detail: "iOS and Android apps reach the same central backend for intake, projects, academy, billing, and support.",
+    detail: "Native iOS and Android apps reach the same platform for leads, jobs, plans, billing, and support.",
   },
   {
     title: "Revenue continuity",
@@ -37,7 +37,7 @@ export default function Features() {
       <ShellHeader
         eyebrow="Why FCA"
         title="Designed for contractors who need growth without operational chaos"
-        subtitle="FCA Contractor Command combines SaaS delivery, Academy training, Auricrux guidance, and customer-facing continuity in one system."
+        subtitle="FCA Contractor Command combines SaaS delivery, Academy training, guided operations, and customer-facing continuity in one system."
         primaryHref="/intake"
         primaryLabel="Apply Now"
         secondaryHref="/portal/platform"
@@ -46,7 +46,7 @@ export default function Features() {
         currentJourney="conversion"
       />
 
-      <section style={{ ...responsiveGrid, marginBottom: 24 }}>
+      <section style={{ ...responsiveGrid(), marginBottom: 24 }}>
         {pillars.map((item) => (
           <article key={item.title} style={cardStyle}>
             <h3 style={{ marginTop: 0 }}>{item.title}</h3>

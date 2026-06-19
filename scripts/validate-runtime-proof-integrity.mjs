@@ -15,7 +15,7 @@ function expectIncludes(source, marker, file) {
 }
 
 const ledgerSource = await read("docs/FCA_EXECUTION_CONTINUITY_LEDGER.md");
-const buildEvidenceSource = await read("scripts/build_evidence_capture.js");
+const buildEvidenceSource = await read("scripts/build_evidence_capture.cjs");
 const buildWorkflowSource = await read(".github/workflows/build-validation.yml");
 const runtimeWorkflowSource = await read(".github/workflows/runtime-smoke-validation.yml");
 const packageSource = await read("package.json");
@@ -25,9 +25,9 @@ if (!packetMatch) {
   failures.push("docs/FCA_EXECUTION_CONTINUITY_LEDGER.md is missing an active packet marker.");
 }
 
-expectIncludes(buildEvidenceSource, "readContinuityPacket", "scripts/build_evidence_capture.js");
-expectIncludes(buildEvidenceSource, "docs', 'FCA_EXECUTION_CONTINUITY_LEDGER.md", "scripts/build_evidence_capture.js");
-expectIncludes(buildEvidenceSource, "packet: activePacket", "scripts/build_evidence_capture.js");
+expectIncludes(buildEvidenceSource, "readContinuityPacket", "scripts/build_evidence_capture.cjs");
+expectIncludes(buildEvidenceSource, "docs', 'FCA_EXECUTION_CONTINUITY_LEDGER.md", "scripts/build_evidence_capture.cjs");
+expectIncludes(buildEvidenceSource, "packet: activePacket", "scripts/build_evidence_capture.cjs");
 
 expectIncludes(packageSource, '"validate:runtime-proof-integrity"', "package.json");
 expectIncludes(packageSource, '"generate:runtime-proof-integrity-report"', "package.json");

@@ -1,5 +1,6 @@
 import { brandIdentity } from "../brandIdentity";
 
+/** Canonical SVG sources: brand-assets/auricrux/ (trademark registration specimens). */
 export default function AuricruxBrandMark({ compact = false, showLabel = true }) {
   const iconSize = compact ? 44 : 56;
   const { colors } = brandIdentity.auricrux;

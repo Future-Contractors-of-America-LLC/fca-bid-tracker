@@ -15,16 +15,16 @@ function expectIncludes(source, marker, file) {
 }
 
 const packageSource = await read("package.json");
-const runtimeSmokeSource = await read("scripts/runtime_smoke_check.js");
+const runtimeSmokeSource = await read("scripts/runtime_smoke_check.cjs");
 const workflowSource = await read(".github/workflows/runtime-smoke-validation.yml");
 
 expectIncludes(packageSource, '"validate:runtime-smoke-report-emission"', "package.json");
 expectIncludes(packageSource, '"generate:runtime-smoke-report-emission-report"', "package.json");
 
-expectIncludes(runtimeSmokeSource, "emissionGuaranteed: true", "scripts/runtime_smoke_check.js");
-expectIncludes(runtimeSmokeSource, "writeSummary(repoRoot, summary, results)", "scripts/runtime_smoke_check.js");
-expectIncludes(runtimeSmokeSource, "bodyType: 'exception'", "scripts/runtime_smoke_check.js");
-expectIncludes(runtimeSmokeSource, "fatalError", "scripts/runtime_smoke_check.js");
+expectIncludes(runtimeSmokeSource, "emissionGuaranteed: true", "scripts/runtime_smoke_check.cjs");
+expectIncludes(runtimeSmokeSource, "writeSummary(repoRoot, summary, results)", "scripts/runtime_smoke_check.cjs");
+expectIncludes(runtimeSmokeSource, "bodyType: 'exception'", "scripts/runtime_smoke_check.cjs");
+expectIncludes(runtimeSmokeSource, "fatalError", "scripts/runtime_smoke_check.cjs");
 
 expectIncludes(workflowSource, "npm run validate:runtime-smoke-report-emission", ".github/workflows/runtime-smoke-validation.yml");
 expectIncludes(workflowSource, "npm run generate:runtime-smoke-report-emission-report", ".github/workflows/runtime-smoke-validation.yml");
