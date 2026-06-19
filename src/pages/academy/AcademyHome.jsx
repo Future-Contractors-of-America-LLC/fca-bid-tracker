@@ -6,7 +6,7 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import PublicCtaRow from "../../components/PublicCtaRow";
-import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useAcademyLms from "../../hooks/useAcademyLms";
@@ -275,13 +275,19 @@ export default function AcademyHome() {
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Academy</h2>
-        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
+        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 16 }}>
           <li>Explains the lesson objective and why it matters in the customer workflow</li>
           <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, projects, communications, support, billing, warranty, and tasks</li>
           <li>Executes guided completion signals and keeps learning-to-workflow continuity visible</li>
         </ul>
+        <a href={executiveSignalCtaSets.academy.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
+          {executiveSignalCtaSets.academy.label}
+        </a>
       </div>
 
+      <PublicCtaRow actions={academyCtaSets.continuityActions} />
+      <PublicCtaRow actions={academyCtaSets.connectedPortalRoutes} />
+      <PublicCtaRow actions={publicBodyCtaSets.academyEntry} />
       <PublicCtaRow actions={academyCtaSets.productionClose} />
       <ShellFooter />
     </div>
