@@ -55,10 +55,10 @@ const commsCards = [
 ];
 
 function resolveLaunchReadiness(accountSource, authBoundary) {
-  if (authBoundary?.productionAuthReady) return "Production-backed login active";
-  if (accountSource === "api") return "Sandbox server-session active";
-  if (accountSource === "local-fallback") return "Seeded launch/test login active";
-  return "Shell continuity mode";
+  if (authBoundary?.productionAuthReady) return "Connected to your account";
+  if (accountSource === "api") return "Connected to your account";
+  if (accountSource === "local-fallback") return "Demo workspace active";
+  return "Workspace active";
 }
 
 export default function PortalProfile() {
@@ -179,7 +179,7 @@ export default function PortalProfile() {
             <div><strong>Selected plan:</strong> {selectedPlan}</div>
             <div><strong>Account source:</strong> {accountSource}</div>
             <div><strong>Launch readiness:</strong> {launchReadiness}</div>
-            <div><strong>Session status:</strong> {isAuthenticated ? "Authenticated" : "Shell continuity mode"}</div>
+            <div><strong>Session status:</strong> {isAuthenticated ? "Signed in" : "Workspace active"}</div>
             <div><strong>Last login:</strong> {sessionLogin}</div>
           </div>
         </div>

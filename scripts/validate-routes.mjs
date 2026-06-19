@@ -47,6 +47,7 @@ const explicitRoutes = new Set([
   "/portal/scheduling",
   "/portal/field-tasks",
   "/portal/field-supervision",
+  "/portal/warranty",
   "/academy",
   "/academy/catalog",
   "/deployment-status.json",

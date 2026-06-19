@@ -45,6 +45,7 @@ export const routes = {
   "/portal/scheduling": lazyPage(() => import("./pages/portal/PortalScheduling")),
   "/portal/field-tasks": lazyPage(() => import("./pages/portal/PortalFieldTasks")),
   "/portal/field-supervision": lazyPage(() => import("./pages/portal/PortalFieldSupervision")),
+  "/portal/warranty": lazyPage(() => import("./pages/portal/PortalWarranty")),
 
   "/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
   "/academy/catalog": lazyPage(() => import("./pages/academy/AcademyCatalog")),
