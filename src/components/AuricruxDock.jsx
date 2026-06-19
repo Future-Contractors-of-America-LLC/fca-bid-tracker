@@ -40,20 +40,30 @@ function safeStorageSet(key, value) {
   }
 }
 
-function modeMeta(mode) {
-  if (mode === "live") {
+function modeMeta(mode, poweredByLlm) {
+  if (poweredByLlm || mode === "llm-assistant") {
     return {
-      label: "Live API",
+      label: "Powered by Auricrux",
       tone: "#166534",
       bg: "#dcfce7",
       border: "#86efac",
-      summary: "Connected to active bid-intake behavior.",
+      summary: "Live AI guidance for bids, billing, academy, and pipeline.",
+    };
+  }
+
+  if (mode === "live") {
+    return {
+      label: "Guidance mode",
+      tone: "#166534",
+      bg: "#dcfce7",
+      border: "#86efac",
+      summary: "Connected to Auricrux assistant with rule-based guidance.",
     };
   }
 
   if (mode === "fallback") {
     return {
-      label: "Continuity Mode",
+      label: "Guidance mode",
       tone: auricruxColors.ink,
       bg: auricruxColors.primarySoft,
       border: "#e8c46a",
@@ -63,7 +73,7 @@ function modeMeta(mode) {
   }
 
   return {
-    label: "Ready",
+    label: "Guidance mode",
     tone: auricruxColors.ink,
     bg: auricruxColors.primarySoft,
     border: "#e8c46a",
@@ -114,11 +124,12 @@ export default function AuricruxDock() {
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("ready");
+  const [poweredByLlm, setPoweredByLlm] = useState(false);
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(true);
   const [hydrated, setHydrated] = useState(false);
 
-  const meta = useMemo(() => modeMeta(mode), [mode]);
+  const meta = useMemo(() => modeMeta(mode, poweredByLlm), [mode, poweredByLlm]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -176,7 +187,8 @@ export default function AuricruxDock() {
           projectId: currentProject.id,
         },
       });
-      setMode("live");
+      setMode(data.mode === "llm-assistant" ? "live" : "live");
+      setPoweredByLlm(Boolean(data.poweredByLlm || data.mode === "llm-assistant"));
 
       setLog((prev) => [
         {
@@ -187,6 +199,7 @@ export default function AuricruxDock() {
       ]);
     } catch (err) {
       setMode("fallback");
+      setPoweredByLlm(false);
       const continuityReply = routePromptReply(cmd);
       setLog((prev) => [
         {
@@ -359,7 +372,7 @@ export default function AuricruxDock() {
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Message Auricrux…"
+              placeholder="Message Auricrux..."
               style={{
                 flex: 1,
                 minWidth: 0,

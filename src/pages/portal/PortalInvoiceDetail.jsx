@@ -41,8 +41,14 @@ export default function PortalInvoiceDetail({ routeParams = {} }) {
         companyName,
         recipientEmail: session?.email,
       });
-      setMailtoUrl(payload.mailtoUrl || "");
-      setDeliveryMessage(`Invoice recorded in customer messages (${payload.deliveryRecord?.id || "sent"}).`);
+      const email = payload.recipientEmail || session?.email || "customer";
+      if (payload.delivered) {
+        setDeliveryMessage(`Email sent to ${email}`);
+        setMailtoUrl("");
+      } else {
+        setDeliveryMessage("Saved to portal messages (email pending setup)");
+        setMailtoUrl(payload.mailtoUrl || "");
+      }
     } catch (error) {
       setDeliveryMessage(error.message || "Delivery failed.");
     } finally {

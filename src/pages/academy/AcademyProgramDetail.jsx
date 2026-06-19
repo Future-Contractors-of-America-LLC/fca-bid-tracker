@@ -42,6 +42,60 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
   const program = programDetail?.program;
   const modules = programDetail?.modules || [];
 
+  function moduleHasContent(module) {
+    return Boolean(
+      module.mediaUrl
+      || module.contentHtml
+      || module.objective
+      || (Array.isArray(module.lessons) && module.lessons.length > 0)
+      || module.practicalLab
+      || module.lab
+    );
+  }
+
+  function renderModuleMedia(module) {
+    if (module.mediaUrl) {
+      const url = module.mediaUrl;
+      const isDirectVideo = /\.(mp4|webm|ogg)(\?|$)/i.test(url);
+      if (isDirectVideo) {
+        return (
+          <video
+            controls
+            src={url}
+            style={{ width: "100%", borderRadius: 12, marginTop: 12, background: "#0f172a" }}
+          >
+            Your browser does not support embedded video.
+          </video>
+        );
+      }
+      return (
+        <iframe
+          title={`Module ${module.moduleNumber} video`}
+          src={url}
+          style={{ width: "100%", minHeight: 360, border: "1px solid #e2e8f0", borderRadius: 12, marginTop: 12 }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      );
+    }
+    if (module.contentHtml) {
+      return (
+        <div
+          style={{ marginTop: 12, color: "#334155", lineHeight: 1.7 }}
+          dangerouslySetInnerHTML={{ __html: module.contentHtml }}
+        />
+      );
+    }
+    if (moduleHasContent(module)) {
+      return null;
+    }
+    return (
+      <p style={{ marginTop: 12, color: "#64748b", fontStyle: "italic" }}>
+        Video coming soon. Module outline and lab details are available below.
+      </p>
+    );
+  }
+
   async function enrollNow() {
     if (!programId || !learnerId) {
       setActionMessage("Sign in to enroll in this program.");
@@ -132,16 +186,25 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
             <article key={module.moduleNumber} style={cardStyle}>
               <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>Module {module.moduleNumber}</div>
               <h3 style={{ marginTop: 0 }}>{module.title}</h3>
-              {module.objective ? <p style={{ color: "#334155", lineHeight: 1.7 }}><strong>Objective:</strong> {module.objective}</p> : null}
-              {Array.isArray(module.lessons) ? (
+              {renderModuleMedia(module)}
+              {!module.mediaUrl && !module.contentHtml && module.objective ? (
+                <p style={{ color: "#334155", lineHeight: 1.7 }}><strong>Objective:</strong> {module.objective}</p>
+              ) : null}
+              {!module.contentHtml && Array.isArray(module.lessons) ? (
                 <ul style={{ color: "#475569", lineHeight: 1.8 }}>
                   {module.lessons.map((lesson) => (
                     <li key={typeof lesson === "string" ? lesson : lesson.title}>{typeof lesson === "string" ? lesson : lesson.title}</li>
                   ))}
                 </ul>
               ) : null}
-              {module.practicalLab ? <p style={{ color: "#334155" }}><strong>Lab:</strong> {module.practicalLab}</p> : module.lab ? <p style={{ color: "#334155" }}><strong>Lab:</strong> {module.lab}</p> : null}
-              {module.knowledgeCheck ? <p style={{ color: "#64748b" }}><strong>Knowledge check:</strong> {module.knowledgeCheck}</p> : null}
+              {module.practicalLab && !module.contentHtml ? (
+                <p style={{ color: "#334155" }}><strong>Lab:</strong> {module.practicalLab}</p>
+              ) : module.lab && !module.contentHtml ? (
+                <p style={{ color: "#334155" }}><strong>Lab:</strong> {module.lab}</p>
+              ) : null}
+              {module.knowledgeCheck && !module.contentHtml ? (
+                <p style={{ color: "#64748b" }}><strong>Knowledge check:</strong> {module.knowledgeCheck}</p>
+              ) : null}
               {enrollment ? (
                 <button
                   type="button"
