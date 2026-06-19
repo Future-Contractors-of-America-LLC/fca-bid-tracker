@@ -233,8 +233,13 @@ export default function AcademyHome() {
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live LMS · Auricrux-Central catalog</div>
           <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
-            Apprenticeship and certification programs are served from the backend catalog. Open a program to view module lessons, labs, and mark progress.
+            Apprenticeship and certification programs are served from the backend catalog. Open a program to view module lessons, complete knowledge checks, and track progress.
           </p>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+            <a href="/academy/dashboard" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Learner dashboard</a>
+            <a href="/academy/credentials" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Credentials</a>
+            <a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Full catalog</a>
+          </div>
           {apiPrograms.length > 0 && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 14 }}>
               {apiPrograms.slice(0, 8).map((program) => (

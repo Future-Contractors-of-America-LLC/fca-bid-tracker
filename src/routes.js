@@ -50,6 +50,8 @@ export const routes = {
 
   "/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
   "/academy/catalog": lazyPage(() => import("./pages/academy/AcademyCatalog")),
+  "/academy/dashboard": lazyPage(() => import("./pages/academy/AcademyDashboard")),
+  "/academy/credentials": lazyPage(() => import("./pages/academy/AcademyCredentials")),
 };
 
 export const routePatterns = [
@@ -68,6 +70,10 @@ export const routePatterns = [
   {
     pattern: "/academy/programs/:programId",
     Page: lazyPage(() => import("./pages/academy/AcademyProgramDetail")),
+  },
+  {
+    pattern: "/academy/programs/:programId/modules/:moduleNumber",
+    Page: lazyPage(() => import("./pages/academy/AcademyModuleLesson")),
   },
 ];
 

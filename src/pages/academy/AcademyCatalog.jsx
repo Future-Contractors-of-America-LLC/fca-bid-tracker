@@ -2,10 +2,8 @@ import { useMemo } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
-import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
 import useAcademyLms from "../../hooks/useAcademyLms";
-import { getProgramsByLane, OFFERING_LANES } from "../../academyOfferings";
-import { academyCatalog } from "../../academyCatalog";
+import { ELECTRICAL_APPRENTICESHIP_LEVELS, organizeApiCatalogByLane } from "../../academyOfferings";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -23,128 +21,152 @@ const laneHeaderStyle = {
   marginBottom: 20,
 };
 
+function ProgramCard({ program }) {
+  const isPreview = program.source === "catalog-preview";
+  const moduleCount = program.modules?.length || program.duration || 0;
+
+  return (
+    <article key={program.key} style={cardStyle}>
+      <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>
+        {program.credential || program.credentialTitle}
+        {isPreview ? <span style={{ color: "#64748b", fontWeight: 400, marginLeft: 8 }}>(Preview)</span> : null}
+      </div>
+      <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
+      <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+        {program.pathway ? <><strong>Pathway:</strong> {program.pathway} | </> : null}
+        {program.track ? <><strong>Track:</strong> {program.track} | </> : null}
+        {program.level ? <><strong>Level:</strong> {program.level} | </> : null}
+        <strong>Duration:</strong> {moduleCount} modules
+      </p>
+      {program.completionRule ? (
+        <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.completionRule}</p>
+      ) : program.goal ? (
+        <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.goal}</p>
+      ) : null}
+      <div style={{ marginTop: 14 }}>
+        {isPreview ? (
+          program.linkedSurface ? (
+            <a href={program.linkedSurface} style={{ border: "1px solid #64748b", background: "#64748b", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>
+              {program.linkedLabel || "Open preview"}
+            </a>
+          ) : null
+        ) : (
+          <a href={`/academy/programs/${program.key}`} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>
+            Open program
+          </a>
+        )}
+      </div>
+      {Array.isArray(program.modules) && program.modules.length > 0 ? (
+        <details style={{ marginTop: 14 }}>
+          <summary style={{ cursor: "pointer", fontWeight: 700, color: "#334155" }}>
+            {program.modules.length} modules
+          </summary>
+          <ol style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", marginTop: 10 }}>
+            {program.modules.map((module) => (
+              <li key={module.moduleNumber}>
+                {module.title}
+                {module.lessons ? ` - ${typeof module.lessons === "number" ? module.lessons : module.lessons.length} lessons` : ""}
+                {module.lab ? ` | Lab: ${module.lab}` : ""}
+              </li>
+            ))}
+          </ol>
+        </details>
+      ) : null}
+    </article>
+  );
+}
+
 export default function AcademyCatalog() {
   const { academyState, meta } = useAcademyLms();
   const apiPrograms = academyState?.catalog?.programs || [];
-  const lanes = getProgramsByLane();
-  const programCount = Math.max(academyCatalog.programs.length, apiPrograms.length);
-  const laneCount = OFFERING_LANES.length;
+  const catalogLanes = apiPrograms.length > 0
+    ? (academyState?.catalog?.lanes || []).length > 0
+      ? academyState.catalog.lanes
+      : undefined
+    : undefined;
 
-  const electricalPrograms = useMemo(
-    () => apiPrograms.filter((program) => String(program.pathway || "").toLowerCase().includes("electrical")),
-    [apiPrograms],
+  const lanes = useMemo(
+    () => organizeApiCatalogByLane(apiPrograms, catalogLanes),
+    [apiPrograms, catalogLanes],
   );
+
+  const programCount = apiPrograms.length || lanes.reduce((sum, lane) => sum + lane.programs.length, 0);
+  const apprenticeshipLane = lanes.find((lane) => lane.key === "apprenticeship");
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
         compact
         eyebrow="FCA Academy"
-        title="Programs by lane, degree, certification, and licensure"
-        subtitle={`${programCount} complete programs organized across ${laneCount} lanes—apprenticeship pathways, degree tracks, professional certifications, licensure prep, and operator courses, each linked to live SaaS workflows.`}
-        primaryHref={shellHeaderCtaSets.academy.primaryHref}
-        primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
+        title="Programs by lane"
+        subtitle={`${programCount} programs organized across apprenticeship, certification, degree, licensure, and professional development lanes.`}
+        primaryHref="/academy/dashboard"
+        primaryLabel="Learner dashboard"
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
         secondaryLabel={shellHeaderCtaSets.academy.secondaryLabel}
         journey={shellJourney}
         currentJourney="academy"
       />
 
-      <AcademyLmsControlPanel />
-
       {apiPrograms.length > 0 ? (
-        <section style={{ marginBottom: 40 }}>
-          <div style={laneHeaderStyle}>
-            <h2 style={{ margin: "0 0 6px", fontSize: "1.35rem" }}>Live LMS catalog · Auricrux-Central</h2>
-            <p style={{ margin: 0, color: "#475569", lineHeight: 1.65 }}>
-              {apiPrograms.length} programs from the backend academy catalog ({meta.backingSource}). Module titles and lesson structure are served from API — video URLs can be added later.
-            </p>
-          </div>
-          <div style={{ display: "grid", gap: 18 }}>
-            {electricalPrograms.map((program) => (
-              <article key={program.key} style={cardStyle}>
-                <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>
-                  {program.credential}
-                </div>
-                <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
-                <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
-                  <strong>Pathway:</strong> {program.pathway} · <strong>Track:</strong> {program.track} · <strong>Level:</strong> {program.level} · <strong>Duration:</strong> {program.duration} modules
-                </p>
-                <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.completionRule}</p>
-                <div style={{ marginTop: 14 }}>
-                  <a href={`/academy/programs/${program.key}`} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>
-                    Open program
-                  </a>
-                </div>
-                <div style={{ marginTop: 14 }}>
-                  <strong>Modules</strong>
-                  <ol style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
-                    {(program.modules || []).map((module) => (
-                      <li key={module.moduleNumber}>
-                        {module.title} - {module.lessons} lessons | Lab: {module.lab}
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </article>
-            ))}
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "#eff6ff" }}>
+          <strong style={{ color: "#1d4ed8" }}>Live catalog</strong>
+          <span style={{ color: "#475569", marginLeft: 8 }}>
+            {apiPrograms.length} programs from {meta.backingSource || "Auricrux-Central"}
+          </span>
+        </div>
+      ) : (
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #fde68a", background: "#fffbeb", color: "#92400e" }}>
+          Backend catalog unavailable. Showing preview programs for degree and licensure lanes.
+        </div>
+      )}
+
+      {apprenticeshipLane && apprenticeshipLane.programs.some((p) => p.key?.startsWith("electrical-core")) ? (
+        <section style={{ ...cardStyle, marginBottom: 32 }}>
+          <h2 style={{ marginTop: 0 }}>Electrical apprenticeship pathway (L1-L10)</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65 }}>
+            NCCER-style level progression from core apprenticeship through commercial power systems specialization.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {ELECTRICAL_APPRENTICESHIP_LEVELS.map((level) => {
+              const program = apiPrograms.find((item) => item.key === level.key);
+              return (
+                <a
+                  key={level.key}
+                  href={program ? `/academy/programs/${level.key}` : "/academy/catalog"}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    border: "1px solid #dbeafe",
+                    borderRadius: 12,
+                    padding: 14,
+                    background: program ? "#fff" : "#f8fafc",
+                  }}
+                >
+                  <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13 }}>Level {level.level}</div>
+                  <strong>{level.title}</strong>
+                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{level.modules} modules</div>
+                </a>
+              );
+            })}
           </div>
         </section>
       ) : null}
 
       {lanes.map((lane) => (
-        <section key={lane.key} style={{ marginBottom: 40 }}>
-          <div style={laneHeaderStyle}>
-            <h2 style={{ margin: "0 0 6px", fontSize: "1.35rem" }}>{lane.label}</h2>
-            <p style={{ margin: 0, color: "#475569", lineHeight: 1.65 }}>{lane.description}</p>
-          </div>
-
-          <div style={{ display: "grid", gap: 18 }}>
-            {lane.programs.map((program) => (
-              <article key={program.key} style={cardStyle}>
-                <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>
-                  {program.credential || lane.credentialType}
-                </div>
-                <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
-                {program.audience ? (
-                  <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
-                    <strong>Audience:</strong> {program.audience} · <strong>Duration:</strong> {program.duration}
-                  </p>
-                ) : null}
-                {program.goal ? <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.goal}</p> : null}
-
-                {program.levels ? (
-                  <div style={{ marginTop: 14 }}>
-                    <strong>L1–L10 electrical apprenticeship levels</strong>
-                    <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
-                      {program.levels.map((level) => (
-                        <li key={level.key}>{level.title} — {level.modules} modules</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-
-                {(program.courses || []).map((course) => (
-                  <div key={course.code} style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #e2e8f0" }}>
-                    <strong>{course.title || course.code}</strong>
-                    <div style={{ color: "#64748b", fontSize: 14, marginBottom: 8 }}>{course.lessons} lessons · Lab: {course.lab}</div>
-                    <ol style={{ paddingLeft: 20, lineHeight: 1.75, color: "#334155", margin: 0 }}>
-                      {(course.lessonTitles || []).map((title) => (
-                        <li key={title}>{title}</li>
-                      ))}
-                    </ol>
-                  </div>
-                ))}
-
-                {program.linkedSurface ? (
-                  <a href={program.linkedSurface} style={{ display: "inline-block", marginTop: 14, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
-                    {program.linkedLabel || "Open in workspace"} →
-                  </a>
-                ) : null}
-              </article>
-            ))}
-          </div>
-        </section>
+        lane.programs.length > 0 ? (
+          <section key={lane.key} style={{ marginBottom: 40 }}>
+            <div style={laneHeaderStyle}>
+              <h2 style={{ margin: "0 0 6px", fontSize: "1.35rem" }}>{lane.label}</h2>
+              <p style={{ margin: 0, color: "#475569", lineHeight: 1.65 }}>{lane.description}</p>
+            </div>
+            <div style={{ display: "grid", gap: 18 }}>
+              {lane.programs.map((program) => (
+                <ProgramCard key={program.key} program={program} />
+              ))}
+            </div>
+          </section>
+        ) : null
       ))}
 
       <PublicCtaRow actions={academyCtaSets.productionClose} />
