@@ -1,0 +1,409 @@
+{
+  "generatedAt": "2026-06-19T14:25:14.306Z",
+  "scope": "SaaS QC",
+  "apiBase": "https://auricrux-central.azurewebsites.net",
+  "summary": {
+    "passed": 79,
+    "failed": 0,
+    "warnings": 0
+  },
+  "portalRouteCount": 15,
+  "apiEndpointCount": 12,
+  "findings": [
+    {
+      "status": "pass",
+      "label": "script:validate-routes.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-critical-routes.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-public-package-route-groups.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-ctas.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/platform",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/bids",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/estimates",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/proposals",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/projects",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/files",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/messages",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/billing",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/support",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/admin",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/auricrux",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/academy",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/operations",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/audit",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/profile",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/api/workflowClient.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/api/portalClient.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/api/intakeClient.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/hooks/useWorkspaceState.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Home",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Platform",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Login",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Intake",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Checkout",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Pricing",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Features",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Solutions",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Contact",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Auricrux",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Warranty",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Referrals",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Terms",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Privacy",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Refunds",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/IpNotice",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/NotFound",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/LegacyBidEntry",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/LegacyBidStatus",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalHome",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PlatformDashboard",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalOperations",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalProjects",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalFiles",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalAudit",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalMessages",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalNotifications",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalBids",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalEstimates",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalProposals",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalBilling",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalSupport",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalAdmin",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalProfile",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalAuricrux",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyHome",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyHome",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyCatalog",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalOpportunityDetail",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalProjectDetail",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/health",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/bids",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/projects",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/files",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/estimates",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/proposals",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/portal-messages",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/portal-invoices",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/billing-summary",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/support-tickets",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/workflow-audit",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/customer-login",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "blueprint:/portal/bids",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "blueprint:/portal/projects",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "blueprint:/portal/files",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "blueprint:/warranty",
+      "detail": ""
+    }
+  ]
+}

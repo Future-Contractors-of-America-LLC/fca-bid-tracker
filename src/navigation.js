@@ -1,5 +1,5 @@
-import { isProtectedCustomerRoute } from "./customerSession";
-import { normalizePath, routes } from "./routes";
+import { isProtectedCustomerRoute } from "./customerSession.js";
+import { normalizePath, routes } from "./routes.js";
 
 export const NAVIGATION_EVENT = "auricrux:navigate";
 

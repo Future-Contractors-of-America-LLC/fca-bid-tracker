@@ -1,0 +1,352 @@
+{
+  "generatedAt": "2026-06-19T14:25:01.707Z",
+  "scope": "LMS depth + content QC",
+  "apiBase": "https://auricrux-central.azurewebsites.net",
+  "programCount": 6,
+  "totalLessons": 34,
+  "lessonsWithMedia": 0,
+  "lessonsMissingMedia": 34,
+  "mediaCoveragePct": 0,
+  "summary": {
+    "passed": 33,
+    "failed": 0,
+    "warnings": 34
+  },
+  "findings": [
+    {
+      "status": "pass",
+      "label": "script:validate-academy-ctas.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:fca-workspace-quick-start",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:fca-workspace-quick-start",
+      "detail": "/portal/projects"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:ONB-001",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:ONB-001",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:ONB-001:1",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:ONB-001:2",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:ONB-001:3",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:ONB-001:4",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:electrical-apprenticeship-year1",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:electrical-apprenticeship-year1",
+      "detail": "/portal/support"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:APP-ELEC-101",
+      "detail": "6 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:APP-ELEC-101",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:APP-ELEC-101:1",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:APP-ELEC-101:2",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:APP-ELEC-101:3",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:APP-ELEC-101:4",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:APP-ELEC-101:5",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:APP-ELEC-101:6",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:osha30-certification-prep",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:osha30-certification-prep",
+      "detail": "/portal/audit"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:CERT-OSHA30-201",
+      "detail": "6 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:CERT-OSHA30-201",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:CERT-OSHA30-201:1",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:CERT-OSHA30-201:2",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:CERT-OSHA30-201:3",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:CERT-OSHA30-201:4",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:CERT-OSHA30-201:5",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:CERT-OSHA30-201:6",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:aas-construction-operations-sem1",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:aas-construction-operations-sem1",
+      "detail": "/portal/platform"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:DEG-AAS-110",
+      "detail": "6 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:DEG-AAS-110",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:DEG-AAS-110:1",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:DEG-AAS-110:2",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:DEG-AAS-110:3",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:DEG-AAS-110:4",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:DEG-AAS-110:5",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:DEG-AAS-110:6",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:virginia-dpor-residential-license-prep",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:virginia-dpor-residential-license-prep",
+      "detail": "/portal/files"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:LIC-DPOR-301",
+      "detail": "6 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:LIC-DPOR-301",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LIC-DPOR-301:1",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LIC-DPOR-301:2",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LIC-DPOR-301:3",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LIC-DPOR-301:4",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LIC-DPOR-301:5",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LIC-DPOR-301:6",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:fca-contractor-command-user-guide",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:fca-contractor-command-user-guide",
+      "detail": "/portal"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:GUIDE-FCA-001",
+      "detail": "6 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:GUIDE-FCA-001",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:GUIDE-FCA-001:1",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:GUIDE-FCA-001:2",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:GUIDE-FCA-001:3",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:GUIDE-FCA-001:4",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:GUIDE-FCA-001:5",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:GUIDE-FCA-001:6",
+      "detail": "lecture=false labDemo=false eval=false � media pending production"
+    },
+    {
+      "status": "pass",
+      "label": "pathways",
+      "detail": "3 defined"
+    },
+    {
+      "status": "pass",
+      "label": "api:academy-lms",
+      "detail": "programs in API: 16"
+    },
+    {
+      "status": "pass",
+      "label": "api:academy-learners",
+      "detail": "4 learners"
+    },
+    {
+      "status": "pass",
+      "label": "api:academy-enrollments",
+      "detail": "4 enrollments"
+    },
+    {
+      "status": "pass",
+      "label": "lms-surface:src/pages/academy/AcademyHome.jsx",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lms-surface:src/pages/academy/AcademyCatalog.jsx",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lms-surface:src/hooks/useAcademyLms.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lms-surface:src/api/academyClient.js",
+      "detail": ""
+    }
+  ]
+}

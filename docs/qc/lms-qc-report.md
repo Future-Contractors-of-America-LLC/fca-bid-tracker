@@ -1,0 +1,83 @@
+# LMS Depth & Content QC Report
+
+- Generated: 2026-06-19T14:25:01.707Z
+- Programs: 6
+- Total lessons: 34
+- Lessons with full media: 0
+- Lessons pending media: 34
+- Media coverage: 0%
+- Passed: 33 | Failed: 0 | Warnings: 34
+
+## Content depth notes
+- Every program must have courses, lesson counts matching titles, and a valid linked portal surface.
+- Prerecorded lecture + lab demo + performance eval videos are tracked per lesson via `course.lessonMedia[]`.
+- Warnings for missing media are expected until Foundry production pipeline fills slots.
+
+## Findings
+- **PASS** script:validate-academy-ctas.mjs
+- **PASS** program-meta:fca-workspace-quick-start
+- **PASS** program-link:fca-workspace-quick-start: /portal/projects
+- **PASS** course-lessons:ONB-001: 4 lessons
+- **PASS** course-titles:ONB-001
+- **WARN** lesson-media:ONB-001:1: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:ONB-001:2: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:ONB-001:3: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:ONB-001:4: lecture=false labDemo=false eval=false � media pending production
+- **PASS** program-meta:electrical-apprenticeship-year1
+- **PASS** program-link:electrical-apprenticeship-year1: /portal/support
+- **PASS** course-lessons:APP-ELEC-101: 6 lessons
+- **PASS** course-titles:APP-ELEC-101
+- **WARN** lesson-media:APP-ELEC-101:1: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:APP-ELEC-101:2: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:APP-ELEC-101:3: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:APP-ELEC-101:4: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:APP-ELEC-101:5: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:APP-ELEC-101:6: lecture=false labDemo=false eval=false � media pending production
+- **PASS** program-meta:osha30-certification-prep
+- **PASS** program-link:osha30-certification-prep: /portal/audit
+- **PASS** course-lessons:CERT-OSHA30-201: 6 lessons
+- **PASS** course-titles:CERT-OSHA30-201
+- **WARN** lesson-media:CERT-OSHA30-201:1: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:CERT-OSHA30-201:2: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:CERT-OSHA30-201:3: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:CERT-OSHA30-201:4: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:CERT-OSHA30-201:5: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:CERT-OSHA30-201:6: lecture=false labDemo=false eval=false � media pending production
+- **PASS** program-meta:aas-construction-operations-sem1
+- **PASS** program-link:aas-construction-operations-sem1: /portal/platform
+- **PASS** course-lessons:DEG-AAS-110: 6 lessons
+- **PASS** course-titles:DEG-AAS-110
+- **WARN** lesson-media:DEG-AAS-110:1: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:DEG-AAS-110:2: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:DEG-AAS-110:3: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:DEG-AAS-110:4: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:DEG-AAS-110:5: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:DEG-AAS-110:6: lecture=false labDemo=false eval=false � media pending production
+- **PASS** program-meta:virginia-dpor-residential-license-prep
+- **PASS** program-link:virginia-dpor-residential-license-prep: /portal/files
+- **PASS** course-lessons:LIC-DPOR-301: 6 lessons
+- **PASS** course-titles:LIC-DPOR-301
+- **WARN** lesson-media:LIC-DPOR-301:1: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:LIC-DPOR-301:2: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:LIC-DPOR-301:3: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:LIC-DPOR-301:4: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:LIC-DPOR-301:5: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:LIC-DPOR-301:6: lecture=false labDemo=false eval=false � media pending production
+- **PASS** program-meta:fca-contractor-command-user-guide
+- **PASS** program-link:fca-contractor-command-user-guide: /portal
+- **PASS** course-lessons:GUIDE-FCA-001: 6 lessons
+- **PASS** course-titles:GUIDE-FCA-001
+- **WARN** lesson-media:GUIDE-FCA-001:1: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:GUIDE-FCA-001:2: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:GUIDE-FCA-001:3: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:GUIDE-FCA-001:4: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:GUIDE-FCA-001:5: lecture=false labDemo=false eval=false � media pending production
+- **WARN** lesson-media:GUIDE-FCA-001:6: lecture=false labDemo=false eval=false � media pending production
+- **PASS** pathways: 3 defined
+- **PASS** api:academy-lms: programs in API: 16
+- **PASS** api:academy-learners: 4 learners
+- **PASS** api:academy-enrollments: 4 enrollments
+- **PASS** lms-surface:src/pages/academy/AcademyHome.jsx
+- **PASS** lms-surface:src/pages/academy/AcademyCatalog.jsx
+- **PASS** lms-surface:src/hooks/useAcademyLms.js
+- **PASS** lms-surface:src/api/academyClient.js

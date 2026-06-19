@@ -42,7 +42,7 @@ function broadcastCustomerSessionUpdate() {
   window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_EVENT));
 }
 
-import { centralFetch } from "./api/backendBase";
+import { centralFetch } from "./api/backendBase.js";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";

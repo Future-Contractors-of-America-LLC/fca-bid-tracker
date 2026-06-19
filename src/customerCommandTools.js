@@ -1,4 +1,4 @@
-import { navigateTo } from "./navigation";
+import { navigateTo } from "./navigation.js";
 
 const SUPPORT_COMMAND_KEY = "fca_customer_support_command_v3";
 const BILLING_COMMAND_KEY = "fca_customer_billing_command_v2";

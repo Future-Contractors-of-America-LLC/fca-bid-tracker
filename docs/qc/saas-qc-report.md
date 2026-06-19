@@ -1,0 +1,105 @@
+# SaaS Quality Control Report
+
+- Generated: 2026-06-19T14:25:14.306Z
+- API base: https://auricrux-central.azurewebsites.net
+- Passed: 79
+- Failed: 0
+- Warnings: 0
+
+## Portal routes checked
+- /portal/platform
+- /portal/bids
+- /portal/estimates
+- /portal/proposals
+- /portal/projects
+- /portal/files
+- /portal/messages
+- /portal/billing
+- /portal/support
+- /portal/admin
+- /portal/auricrux
+- /portal/academy
+- /portal/operations
+- /portal/audit
+- /portal/profile
+
+## Findings
+- **PASS** script:validate-routes.mjs
+- **PASS** script:validate-critical-routes.mjs
+- **PASS** script:validate-public-package-route-groups.mjs
+- **PASS** script:validate-academy-ctas.mjs
+- **PASS** route:/portal/platform
+- **PASS** route:/portal/bids
+- **PASS** route:/portal/estimates
+- **PASS** route:/portal/proposals
+- **PASS** route:/portal/projects
+- **PASS** route:/portal/files
+- **PASS** route:/portal/messages
+- **PASS** route:/portal/billing
+- **PASS** route:/portal/support
+- **PASS** route:/portal/admin
+- **PASS** route:/portal/auricrux
+- **PASS** route:/portal/academy
+- **PASS** route:/portal/operations
+- **PASS** route:/portal/audit
+- **PASS** route:/portal/profile
+- **PASS** client:src/api/workflowClient.js
+- **PASS** client:src/api/portalClient.js
+- **PASS** client:src/api/intakeClient.js
+- **PASS** client:src/hooks/useWorkspaceState.js
+- **PASS** page:website/Home
+- **PASS** page:website/Platform
+- **PASS** page:website/Login
+- **PASS** page:website/Intake
+- **PASS** page:website/Checkout
+- **PASS** page:website/Pricing
+- **PASS** page:website/Features
+- **PASS** page:website/Solutions
+- **PASS** page:website/Contact
+- **PASS** page:website/Auricrux
+- **PASS** page:website/Warranty
+- **PASS** page:website/Referrals
+- **PASS** page:website/Terms
+- **PASS** page:website/Privacy
+- **PASS** page:website/Refunds
+- **PASS** page:website/IpNotice
+- **PASS** page:website/NotFound
+- **PASS** page:website/LegacyBidEntry
+- **PASS** page:website/LegacyBidStatus
+- **PASS** page:portal/PortalHome
+- **PASS** page:portal/PlatformDashboard
+- **PASS** page:portal/PortalOperations
+- **PASS** page:portal/PortalProjects
+- **PASS** page:portal/PortalFiles
+- **PASS** page:portal/PortalAudit
+- **PASS** page:portal/PortalMessages
+- **PASS** page:portal/PortalNotifications
+- **PASS** page:portal/PortalBids
+- **PASS** page:portal/PortalEstimates
+- **PASS** page:portal/PortalProposals
+- **PASS** page:portal/PortalBilling
+- **PASS** page:portal/PortalSupport
+- **PASS** page:portal/PortalAdmin
+- **PASS** page:portal/PortalProfile
+- **PASS** page:portal/PortalAuricrux
+- **PASS** page:academy/AcademyHome
+- **PASS** page:academy/AcademyHome
+- **PASS** page:academy/AcademyCatalog
+- **PASS** page:portal/PortalOpportunityDetail
+- **PASS** page:portal/PortalProjectDetail
+- **PASS** api:/api/health: HTTP 200
+- **PASS** api:/api/bids: HTTP 200
+- **PASS** api:/api/projects: HTTP 200
+- **PASS** api:/api/files: HTTP 200
+- **PASS** api:/api/estimates: HTTP 200
+- **PASS** api:/api/proposals: HTTP 200
+- **PASS** api:/api/portal-messages: HTTP 200
+- **PASS** api:/api/portal-invoices: HTTP 200
+- **PASS** api:/api/billing-summary: HTTP 200
+- **PASS** api:/api/support-tickets: HTTP 200
+- **PASS** api:/api/workflow-audit: HTTP 200
+- **PASS** api:/api/customer-login: HTTP 200
+- **PASS** blueprint:/portal/bids
+- **PASS** blueprint:/portal/projects
+- **PASS** blueprint:/portal/files
+- **PASS** blueprint:/warranty
