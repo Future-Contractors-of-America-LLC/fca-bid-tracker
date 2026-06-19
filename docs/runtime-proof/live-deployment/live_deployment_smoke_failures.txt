@@ -1,1 +1,16 @@
-
+https://futurecontractorsofamerica.com/commit-witness-6b3894f428f4a89c7832ad7dd37630df958ee70c.txt returned 404
+futurecontractorsofamerica.com is serving stale deployment-status SHA f5884552d789e28c30b9c0676f890c3a98015a9b; expected 6b3894f428f4a89c7832ad7dd37630df958ee70c
+futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA f5884552d789e28c30b9c0676f890c3a98015a9b; expected 6b3894f428f4a89c7832ad7dd37630df958ee70c
+futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-f5884552d789e28c30b9c0676f890c3a98015a9b.txt; expected /commit-witness-6b3894f428f4a89c7832ad7dd37630df958ee70c.txt
+https://futurecontractorsofamerica.com/commit-witness-6b3894f428f4a89c7832ad7dd37630df958ee70c.txt returned 404
+https://www.futurecontractorsofamerica.com/commit-witness-6b3894f428f4a89c7832ad7dd37630df958ee70c.txt returned 404
+www.futurecontractorsofamerica.com is serving stale deployment-status SHA f5884552d789e28c30b9c0676f890c3a98015a9b; expected 6b3894f428f4a89c7832ad7dd37630df958ee70c
+www.futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA f5884552d789e28c30b9c0676f890c3a98015a9b; expected 6b3894f428f4a89c7832ad7dd37630df958ee70c
+www.futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-f5884552d789e28c30b9c0676f890c3a98015a9b.txt; expected /commit-witness-6b3894f428f4a89c7832ad7dd37630df958ee70c.txt
+https://www.futurecontractorsofamerica.com/commit-witness-6b3894f428f4a89c7832ad7dd37630df958ee70c.txt returned 404
+https://delightful-mushroom-0de67860f.7.azurestaticapps.net/commit-witness-6b3894f428f4a89c7832ad7dd37630df958ee70c.txt returned 404
+delightful-mushroom-0de67860f.7.azurestaticapps.net is serving stale deployment-status SHA f5884552d789e28c30b9c0676f890c3a98015a9b; expected 6b3894f428f4a89c7832ad7dd37630df958ee70c
+delightful-mushroom-0de67860f.7.azurestaticapps.net is serving stale runtime-fingerprint SHA f5884552d789e28c30b9c0676f890c3a98015a9b; expected 6b3894f428f4a89c7832ad7dd37630df958ee70c
+delightful-mushroom-0de67860f.7.azurestaticapps.net deployment manifest reports commit witness /commit-witness-f5884552d789e28c30b9c0676f890c3a98015a9b.txt; expected /commit-witness-6b3894f428f4a89c7832ad7dd37630df958ee70c.txt
+https://delightful-mushroom-0de67860f.7.azurestaticapps.net/commit-witness-6b3894f428f4a89c7832ad7dd37630df958ee70c.txt returned 404
+All hosts remained stale after 20 attempts. This strongly indicates SWA deployment token/resource mismatch or deployment targeting drift. Expected gitSha=6b3894f428f4a89c7832ad7dd37630df958ee70c.
