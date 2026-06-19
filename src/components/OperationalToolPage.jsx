@@ -63,35 +63,88 @@ export function createOperationalPortalPage({
   seedItems,
   fields,
   journey = "lead",
+  apiHandlers = null,
 }) {
   return function OperationalPortalPage() {
     const { state, refreshSyncStamp } = useWorkspaceState();
     const { session } = useCustomerSession();
     const companyName = session?.company || state?.tenant?.name || "Your company";
-    const [items, setItems] = useOperationalStore(storageKey, seedItems);
+    const [localItems, setLocalItems] = useOperationalStore(storageKey, seedItems);
+    const [apiItems, setApiItems] = useState([]);
+    const [backingSource, setBackingSource] = useState(apiHandlers ? "loading" : "localStorage");
+    const [loadError, setLoadError] = useState("");
+    const [actionError, setActionError] = useState("");
+    const [busy, setBusy] = useState(false);
     const [draft, setDraft] = useState(() => Object.fromEntries(fields.map((f) => [f.key, f.default || ""])));
+
+    const items = apiHandlers ? apiItems : localItems;
+
+    async function reloadApiItems() {
+      if (!apiHandlers?.fetchItems) return;
+      const payload = await apiHandlers.fetchItems();
+      setApiItems(payload.items || []);
+      setBackingSource(payload.backingSource || "auricrux-central-table-store");
+    }
 
     useEffect(() => {
       refreshSyncStamp(`${title} workspace active`);
+      if (!apiHandlers?.fetchItems) return undefined;
+      let active = true;
+      setLoadError("");
+      reloadApiItems()
+        .catch((error) => {
+          if (!active) return;
+          setLoadError(error.message || `Unable to load ${itemLabel.toLowerCase()} data.`);
+          setBackingSource("unavailable");
+        });
+      return () => {
+        active = false;
+      };
     }, [refreshSyncStamp]);
 
-    function addItem() {
+    async function addItem() {
       const required = fields.filter((f) => f.required);
       if (required.some((f) => !String(draft[f.key] || "").trim())) return;
-      setItems((current) => [
-        {
-          id: `${storageKey}-${Date.now()}`,
-          ...draft,
-          status: "Open",
-          createdAt: new Date().toISOString(),
-        },
-        ...current,
-      ]);
-      setDraft(Object.fromEntries(fields.map((f) => [f.key, f.default || ""])));
+      setActionError("");
+      setBusy(true);
+      try {
+        if (apiHandlers?.createItem) {
+          await apiHandlers.createItem(draft);
+          await reloadApiItems();
+        } else {
+          setLocalItems((current) => [
+            {
+              id: `${storageKey}-${Date.now()}`,
+              ...draft,
+              status: "Open",
+              createdAt: new Date().toISOString(),
+            },
+            ...current,
+          ]);
+        }
+        setDraft(Object.fromEntries(fields.map((f) => [f.key, f.default || ""])));
+      } catch (error) {
+        setActionError(error.message || `Unable to create ${itemLabel.toLowerCase()}.`);
+      } finally {
+        setBusy(false);
+      }
     }
 
-    function completeItem(id) {
-      setItems((current) => current.map((item) => (item.id === id ? { ...item, status: "Complete" } : item)));
+    async function completeItem(id) {
+      setActionError("");
+      setBusy(true);
+      try {
+        if (apiHandlers?.completeItem) {
+          await apiHandlers.completeItem(id);
+          await reloadApiItems();
+        } else {
+          setLocalItems((current) => current.map((item) => (item.id === id ? { ...item, status: "Complete" } : item)));
+        }
+      } catch (error) {
+        setActionError(error.message || `Unable to complete ${itemLabel.toLowerCase()}.`);
+      } finally {
+        setBusy(false);
+      }
     }
 
     return (
@@ -104,6 +157,24 @@ export function createOperationalPortalPage({
         primaryHref="/portal/platform"
         primaryLabel="Back to dashboard"
       >
+        {apiHandlers ? (
+          <div style={{ ...cardStyle, marginBottom: 18, background: "#f8fafc" }}>
+            <div style={{ color: "#475569" }}><strong>Data source:</strong> {backingSource}</div>
+          </div>
+        ) : null}
+
+        {loadError ? (
+          <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
+            {loadError}
+          </div>
+        ) : null}
+
+        {actionError ? (
+          <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
+            {actionError}
+          </div>
+        ) : null}
+
         <div style={{ ...cardStyle, marginBottom: 18, borderLeft: "4px solid #1d4ed8" }}>
           <h2 style={{ marginTop: 0, fontSize: 18 }}>Create {itemLabel}</h2>
           {fields.map((field) => (
@@ -129,7 +200,9 @@ export function createOperationalPortalPage({
               )}
             </div>
           ))}
-          <button type="button" style={buttonStyle} onClick={addItem}>Add {itemLabel}</button>
+          <button type="button" style={buttonStyle} onClick={addItem} disabled={busy}>
+            {busy ? "Saving…" : `Add ${itemLabel}`}
+          </button>
         </div>
 
         <div style={{ display: "grid", gap: 12 }}>
@@ -146,7 +219,7 @@ export function createOperationalPortalPage({
                     <strong>{item[fields[0]?.key] || itemLabel}</strong>
                   </div>
                   {item.status !== "Complete" ? (
-                    <button type="button" style={{ ...buttonStyle, background: "#fff", color: "#1d4ed8", border: "1px solid #1d4ed8" }} onClick={() => completeItem(item.id)}>
+                    <button type="button" style={{ ...buttonStyle, background: "#fff", color: "#1d4ed8", border: "1px solid #1d4ed8" }} onClick={() => completeItem(item.id)} disabled={busy}>
                       Mark complete
                     </button>
                   ) : null}
