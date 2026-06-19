@@ -50,6 +50,7 @@ export default function PortalBilling() {
   const [apiBacking, setApiBacking] = useState("loading");
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
+  const [deliveryNotice, setDeliveryNotice] = useState("");
   const [busyId, setBusyId] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -134,14 +135,21 @@ export default function PortalBilling() {
 
   async function deliverInvoice(invoiceId) {
     setActionError("");
+    setDeliveryNotice("");
     setBusyId(`deliver-${invoiceId}`);
     try {
       const payload = await deliverPortalInvoice(invoiceId, {
         companyName,
         recipientEmail: session?.email,
       });
-      if (payload.mailtoUrl && typeof window !== "undefined") {
-        window.open(payload.mailtoUrl, "_blank");
+      const email = payload.recipientEmail || session?.email || "customer";
+      if (payload.delivered) {
+        setDeliveryNotice(`Email sent to ${email}`);
+      } else {
+        setDeliveryNotice("Saved to portal messages (email pending setup)");
+        if (payload.mailtoUrl && typeof window !== "undefined") {
+          window.open(payload.mailtoUrl, "_blank");
+        }
       }
       refreshSyncStamp("Invoice delivered via customer messages");
     } catch (error) {
@@ -223,6 +231,12 @@ export default function PortalBilling() {
       {actionError ? (
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
           {actionError}
+        </div>
+      ) : null}
+
+      {deliveryNotice ? (
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bbf7d0", background: "#f0fdf4", color: "#166534" }}>
+          {deliveryNotice}
         </div>
       ) : null}
 
