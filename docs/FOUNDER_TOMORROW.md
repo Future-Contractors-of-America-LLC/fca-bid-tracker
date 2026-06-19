@@ -103,13 +103,23 @@ _Last updated: 2026-06-19 - autonomous build sprint_
 | auricrux-central | `feature/launch-customer-lms` | `2af63b8` (launch.customer LMS) | Pushed to origin |
 | fca-mobile-maui | `feature/fca-hex-app-icon` | `1473383` (hex app icons) | Pushed to origin |
 
-**Open PRs (no `gh` on this machine; use GitHub UI or install GitHub CLI):**
+**Open PRs (merge after CI green):**
 
-- https://github.com/Future-Contractors-of-America-LLC/fca-bid-tracker/compare/main...docs/ip-and-founder-prep
-- https://github.com/Future-Contractors-of-America-LLC/auricrux-central/compare/main...feature/launch-customer-lms
-- https://github.com/Future-Contractors-of-America-LLC/fca-mobile-maui/compare/main...feature/fca-hex-app-icon
+- https://github.com/Future-Contractors-of-America-LLC/fca-bid-tracker/pull/138
+- https://github.com/Future-Contractors-of-America-LLC/auricrux-central/pull/33
+- https://github.com/Future-Contractors-of-America-LLC/fca-mobile-maui/pull/1
 
-**Founder merge/deploy (after PR approval):**
+**Local QC (2026-06-19):** `npx vite build` passed; `npm run qc:market` 2/2 passed.
+
+**Merge via GitHub UI** or:
+
+```powershell
+gh pr merge 138 --repo Future-Contractors-of-America-LLC/fca-bid-tracker --squash
+gh pr merge 33 --repo Future-Contractors-of-America-LLC/auricrux-central --squash
+gh pr merge 1 --repo Future-Contractors-of-America-LLC/fca-mobile-maui --squash
+```
+
+**Manual merge alternative:**
 
 ```powershell
 # fca-bid-tracker (SWA marketing site + /brand specimens)
@@ -125,16 +135,5 @@ cd "c:\Users\Auricrux\OneDrive - Future Contractors of America LLC\fca-mobile-ma
 git checkout main; git pull; git merge feature/fca-hex-app-icon; git push origin main
 ```
 
-**Local QC not run here:** Node.js/npm not on PATH (`vite build`, `npm run qc:market`). Install Node 20+ then:
-
-```powershell
-cd "c:\Users\Auricrux\OneDrive - Future Contractors of America LLC\fca-bid-tracker-work"
-npm ci; npm run build; npm run qc:market
-```
-
-**MAUI build:** `dotnet restore` then `dotnet build -f net8.0-android` (requires Android workload/SDK).
-
-**Excluded from git:** `build-log.txt` (local log only).
-
-**Still founder-only:** Stripe live keys + webhook, USPTO/counsel filings, store keystores/certs, Azure portal secrets (`FCA_SESSION_SECRET`, Key Vault RBAC), PR merge if you prefer review before deploy.
+**Still founder-only:** Stripe live keys + webhook, USPTO/counsel filings, store keystores/certs, Azure portal secrets (`FCA_SESSION_SECRET`, Key Vault RBAC).
 
