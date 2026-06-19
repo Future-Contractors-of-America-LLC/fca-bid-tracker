@@ -113,6 +113,8 @@ export function writeCustomerSession(session) {
 export async function syncCustomerSessionFromServer() {
   if (typeof window === "undefined") return null;
 
+  const localSession = readCustomerSession();
+
   try {
     const response = await centralFetch("/api/customer-session", {
       method: "GET",
@@ -120,21 +122,22 @@ export async function syncCustomerSessionFromServer() {
 
     const payload = await readJsonSafe(response);
 
-    if (!response.ok || !payload?.ok || !payload?.authenticated || !payload?.account) {
-      await clearCustomerSession();
-      return null;
+    if (response.ok && payload?.ok && payload?.authenticated && payload?.account) {
+      return writeCustomerSession({
+        ...payload.account,
+        authenticated: true,
+        accountSource: payload.session?.sessionSource || payload.authenticationMode || "server-session",
+        accountMode: payload.account?.accountMode || "seeded",
+        authBoundary: payload.authBoundary,
+        lastLoginAt: new Date().toISOString(),
+        nextHref: localSession?.nextHref || payload.account?.nextHref || "/portal/platform",
+      });
     }
 
-    return writeCustomerSession({
-      ...payload.account,
-      authenticated: true,
-      accountSource: payload.session?.sessionSource || payload.authenticationMode || "server-session",
-      accountMode: payload.account?.accountMode || "seeded",
-      authBoundary: payload.authBoundary,
-      lastLoginAt: new Date().toISOString(),
-    });
+    // Cross-origin API cannot read browser session cookies from the SWA domain — keep local session.
+    return localSession;
   } catch {
-    return readCustomerSession();
+    return localSession;
   }
 }
 
