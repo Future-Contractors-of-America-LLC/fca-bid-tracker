@@ -1,7 +1,7 @@
 const { CreateRFIPayloadSchema } = require('../../../_lib/validation/fcaSchemas')
 const { assertValid } = require('../../../_lib/validation/assertValid')
 const { makeApiSuccess, makeApiError } = require('../../../_lib/contracts/fcaContracts')
-const { getProject, listRFIs, createRFI } = require('../../../_lib/runtime/fcaRuntimeStore')
+const { getProject, listRFIs, createRFI, backingSource } = require('../../../_lib/runtime/fcaRuntimeStore')
 
 module.exports = async function handler(req, res) {
   const { projectId } = req.query || {}
@@ -10,13 +10,13 @@ module.exports = async function handler(req, res) {
     return res.status(400).json(makeApiError('MISSING_PROJECT_ID', 'projectId is required'))
   }
 
-  const project = getProject(projectId)
+  const project = await getProject(projectId)
   if (!project) {
     return res.status(404).json(makeApiError('PROJECT_NOT_FOUND', `Project not found: ${projectId}`))
   }
 
   if (req.method === 'GET') {
-    const items = listRFIs(projectId)
+    const items = await listRFIs(projectId)
     return res.status(200).json(
       makeApiSuccess(
         {
@@ -26,9 +26,9 @@ module.exports = async function handler(req, res) {
           count: items.length,
         },
         {
-          packet: '061A',
+          packet: 'REV-002',
           timestamp: new Date().toISOString(),
-          backingSource: 'fca-runtime-store',
+          backingSource: backingSource(),
         },
       ),
     )
@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const payload = assertValid(CreateRFIPayloadSchema, req.body || {})
-      const item = createRFI(projectId, payload)
+      const item = await createRFI(projectId, payload)
 
       return res.status(202).json(
         makeApiSuccess(
@@ -47,9 +47,9 @@ module.exports = async function handler(req, res) {
             item,
           },
           {
-            packet: '061A',
+            packet: 'REV-002',
             timestamp: new Date().toISOString(),
-            backingSource: 'fca-runtime-store',
+            backingSource: backingSource(),
           },
         ),
       )

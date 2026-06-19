@@ -1,41 +1,48 @@
 {
   "version": 1,
-  "updatedUtc": "2026-06-18T00:00:00Z",
+  "updatedUtc": "2026-06-19T00:00:00.000Z",
   "products": [
     {
-      "id": "contractor-business-system",
-      "name": "Contractor Business System Starter Kit",
-      "priceUsd": 79,
-      "summary": "Lead tracking, estimating, execution, and closeout in one workbook system.",
-      "status": "active"
-    },
-    {
-      "id": "ai-contractors-toolkit",
-      "name": "AI for Contractors Toolkit",
+      "id": "gc-bid-quick-start",
+      "name": "GC Bid Tool Quick Start Kit",
       "priceUsd": 49,
-      "summary": "AI prompts and workflows for estimates, scope, client communication, and job planning.",
-      "status": "active"
+      "stripePaymentLink": "",
+      "assetPath": "/products/FCA_GC_Bid_Tool_Quick_Start.pdf",
+      "description": "Estimator-ready templates and bid workflow checklist for commercial GC teams adopting FCA.",
+      "audience": "Estimators and precon leads"
     },
     {
-      "id": "contractor-templates-pack",
-      "name": "Contractor Templates Pack",
-      "priceUsd": 39,
-      "summary": "Estimate template, lead tracker, job tracker, daily checklist, and Start Here guide.",
-      "status": "active"
-    },
-    {
-      "id": "minimal-contractor-system",
-      "name": "Minimal Contractor System",
+      "id": "safety-field-pack",
+      "name": "Field Safety Documentation Pack",
       "priceUsd": 29,
-      "summary": "Stripped-down quick-start for contractors who want the basics only.",
-      "status": "active"
+      "stripePaymentLink": "",
+      "description": "Toolbox talk templates, hazard escalation forms, and jobsite readiness checklists.",
+      "audience": "Field supervisors and safety coordinators"
     },
     {
-      "id": "follow-up-message-pack",
-      "name": "Follow-Up and Client Message Pack",
-      "priceUsd": 29,
-      "summary": "Copy-and-send client messages for follow-ups, updates, reminders, and closeout.",
-      "status": "active"
+      "id": "subcontractor-onboarding",
+      "name": "Subcontractor Onboarding Bundle",
+      "priceUsd": 79,
+      "stripePaymentLink": "",
+      "description": "COI tracking, scope alignment worksheets, and submittal coordination templates.",
+      "audience": "Project coordinators and PMs"
+    },
+    {
+      "id": "proposal-closeout-kit",
+      "name": "Proposal & Closeout Kit",
+      "priceUsd": 99,
+      "stripePaymentLink": "",
+      "description": "Customer-facing proposal shell, change-order log, and closeout punch workflow.",
+      "audience": "Owners and project executives"
+    },
+    {
+      "id": "academy-instructor-pack",
+      "name": "Academy Instructor Starter Pack",
+      "priceUsd": 149,
+      "stripePaymentLink": "",
+      "description": "Lesson plan scaffolds for electrical apprenticeship and OSHA 30 prep cohorts.",
+      "audience": "Training leads and workforce development"
     }
-  ]
+  ],
+  "notes": "Payment links provisioned when STRIPE_SECRET_KEY is set. Run npm run stripe:provision-catalog."
 }

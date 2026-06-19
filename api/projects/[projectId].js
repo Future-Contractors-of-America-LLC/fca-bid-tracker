@@ -1,5 +1,5 @@
 const { makeApiSuccess, makeApiError } = require('../_lib/contracts/fcaContracts')
-const { getProject, updateProject } = require('../_lib/runtime/fcaRuntimeStore')
+const { getProject, updateProject, backingSource } = require('../_lib/runtime/fcaRuntimeStore')
 
 module.exports = async function handler(req, res) {
   const { projectId } = req.query || {}
@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
-    const item = getProject(projectId)
+    const item = await getProject(projectId)
 
     if (!item) {
       return res.status(404).json(makeApiError('PROJECT_NOT_FOUND', `Project not found: ${projectId}`))
@@ -25,14 +25,14 @@ module.exports = async function handler(req, res) {
         {
           packet: '061A',
           timestamp: new Date().toISOString(),
-          backingSource: 'fca-runtime-store',
+          backingSource: backingSource(),
         },
       ),
     )
   }
 
   if (req.method === 'PATCH') {
-    const item = updateProject(projectId, req.body || {})
+    const item = await updateProject(projectId, req.body || {})
 
     if (!item) {
       return res.status(404).json(makeApiError('PROJECT_NOT_FOUND', `Project not found: ${projectId}`))
@@ -48,7 +48,7 @@ module.exports = async function handler(req, res) {
         {
           packet: '061A',
           timestamp: new Date().toISOString(),
-          backingSource: 'fca-runtime-store',
+          backingSource: backingSource(),
         },
       ),
     )

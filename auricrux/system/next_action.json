@@ -1,16 +1,15 @@
 {
   "version": 1,
-  "id": "REV-001",
-  "title": "Revenue sprint: wire Stripe checkout CTAs and deploy production shell",
-  "mode": "build",
-  "priority": "critical",
-  "status": "in_progress",
+  "id": "REV-007",
+  "title": "Revenue sprint: provision Startup $99/mo Stripe link",
+  "mode": "engine",
+  "priority": "high",
+  "status": "ready",
   "owner": "cursor-agent",
-  "blockedBy": [],
+  "blockedBy": ["STRIPE_SECRET_KEY"],
   "produces": [
-    "live Pilot checkout on pricing and home",
-    "legal pages",
-    "table-backed workflow persistence"
+    "VITE_STRIPE_STARTUP_CHECKOUT_URL on SWA",
+    "offers.json startup checkoutBase active"
   ],
-  "updatedAtUtc": "2026-06-19T12:34:37.193Z"
+  "updatedAtUtc": "2026-06-19T14:00:00.000Z"
 }

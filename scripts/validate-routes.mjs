@@ -22,6 +22,7 @@ const explicitRoutes = new Set([
   "/privacy",
   "/refunds",
   "/ip",
+  "/products",
   "/not-found",
   "/bid-entry",
   "/bid-status",

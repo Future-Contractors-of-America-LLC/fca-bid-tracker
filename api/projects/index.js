@@ -1,11 +1,11 @@
 const { CreateProjectPayloadSchema } = require('../_lib/validation/fcaSchemas')
 const { assertValid } = require('../_lib/validation/assertValid')
 const { makeApiSuccess, makeApiError } = require('../_lib/contracts/fcaContracts')
-const { listProjects, createProject } = require('../_lib/runtime/fcaRuntimeStore')
+const { listProjects, createProject, backingSource } = require('../_lib/runtime/fcaRuntimeStore')
 
 module.exports = async function handler(req, res) {
   if (req.method === 'GET') {
-    const items = listProjects()
+    const items = await listProjects()
 
     return res.status(200).json(
       makeApiSuccess(
@@ -15,9 +15,9 @@ module.exports = async function handler(req, res) {
           count: items.length,
         },
         {
-          packet: '061A',
+          packet: 'REV-002',
           timestamp: new Date().toISOString(),
-          backingSource: 'fca-runtime-store',
+          backingSource: backingSource(),
         },
       ),
     )
@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const payload = assertValid(CreateProjectPayloadSchema, req.body || {})
-      const item = createProject(payload)
+      const item = await createProject(payload)
 
       return res.status(202).json(
         makeApiSuccess(
@@ -35,9 +35,9 @@ module.exports = async function handler(req, res) {
             item,
           },
           {
-            packet: '061A',
+            packet: 'REV-002',
             timestamp: new Date().toISOString(),
-            backingSource: 'fca-runtime-store',
+            backingSource: backingSource(),
           },
         ),
       )

@@ -177,6 +177,10 @@ export const routeMetadata = {
     title: "Intellectual Property | Future Contractors of America",
     description: "Trademark, copyright, and patent notices for FCA and Auricrux brand assets and software.",
   },
+  "/products": {
+    title: "Digital Products | Future Contractors of America",
+    description: "Contractor toolkits, templates, and downloadable kits from Future Contractors of America.",
+  },
   "/portal/estimates": {
     title: "Estimates | Future Contractors of America",
     description: "Create and manage estimates inside the FCA contractor workspace.",

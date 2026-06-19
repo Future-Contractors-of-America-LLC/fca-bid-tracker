@@ -18,6 +18,8 @@
     "build:system": "npm run build",
     "build": "bash ./build.sh",
     "qc:market": "node scripts/run-market-qc.mjs",
+    "qc:revenue-sprint": "node scripts/run-revenue-sprint-smoke.mjs",
+    "stripe:provision-startup": "node scripts/provision-stripe-startup.mjs",
     "verify:live-deployment": "node scripts/verify-live-deployment.mjs",
     "validate:runtime-smoke": "node scripts/runtime_smoke_check.cjs",
     "capture:build-evidence": "node scripts/build_evidence_capture.cjs",

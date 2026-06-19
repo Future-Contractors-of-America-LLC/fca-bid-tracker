@@ -1,56 +1,57 @@
 {
   "version": 1,
   "queueName": "fca-revenue-sprint-queue",
-  "updatedAtUtc": "2026-06-19T12:34:37.193Z",
+  "updatedAtUtc": "2026-06-19T14:00:00.000Z",
+  "sprintPhase": "continuous",
   "items": [
     {
       "id": "REV-001",
       "title": "Wire Stripe checkout CTAs on home and pricing",
       "lane": "revenue",
       "priority": "critical",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "id": "REV-002",
       "title": "Azure Table persistence for projects/bids/files",
       "lane": "product",
       "priority": "critical",
-      "status": "in_progress"
+      "status": "completed"
     },
     {
       "id": "REV-003",
       "title": "Academy Workspace Quick Start course",
       "lane": "academy",
       "priority": "high",
-      "status": "ready"
+      "status": "completed"
     },
     {
       "id": "REV-004",
       "title": "Digital product catalog and Stripe payment links",
       "lane": "revenue",
       "priority": "high",
-      "status": "queued"
+      "status": "completed"
     },
     {
       "id": "REV-005",
       "title": "Controlled SWA production deploy and smoke verify",
       "lane": "deploy",
       "priority": "critical",
-      "status": "queued"
+      "status": "completed"
     },
     {
       "id": "REV-006",
       "title": "Stripe webhook + customer provisioning automation",
       "lane": "revenue",
       "priority": "high",
-      "status": "queued"
+      "status": "completed"
     },
     {
       "id": "REV-007",
       "title": "Startup $99/mo subscription payment link",
       "lane": "revenue",
       "priority": "high",
-      "status": "queued"
+      "status": "ready"
     }
   ]
 }
