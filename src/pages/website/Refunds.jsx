@@ -2,8 +2,8 @@ import LegalPageShell from "../../components/LegalPageShell";
 
 export default function Refunds() {
   return (
-    <LegalPageShell title="Refunds & Billing Policy" eyebrow="Legal">
-      <p><strong>Effective date:</strong> June 18, 2026</p>
+    <LegalPageShell title="Refunds & Billing Policy" eyebrow="Legal" currentHref="/refunds">
+      <p><strong>Effective date:</strong> June 19, 2026</p>
       <h3 style={{ color: "#0f172a" }}>Subscriptions ($99/mo and recurring plans)</h3>
       <p>
         Monthly subscriptions may be cancelled at any time. Cancellation stops future billing cycles. We do not provide prorated

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
@@ -8,6 +8,11 @@ import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useProjectWorkspaceDetail from "../../hooks/useProjectWorkspaceDetail";
+import FinanceConstructionPanel from "../../components/finance/FinanceConstructionPanel";
+import useFinancialWorkspace from "../../hooks/useFinancialWorkspace";
+import useJobCost from "../../hooks/useJobCost";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import { fetchProjectRfis } from "../../api/constructionClient";
 import { publicBodyCtaSets } from "../../websiteShell";
 
 const cardStyle = {
@@ -42,6 +47,14 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
   const { projects, activeProject, meta: projectListMeta } = useProjectWorkspace();
   const { projectId, project, routeMatchedProject } = resolveProjectIdentity(requestedPath, routeParams, projects, activeProject || state.project);
   const { item, meta } = useProjectWorkspaceDetail(projectId, project);
+  const jobBilling = useFinancialWorkspace("construction", projectId || "A-117");
+  const jobCost = useJobCost(projectId || "A-117");
+  const [rfis, setRfis] = useState([]);
+
+  useEffect(() => {
+    if (!projectId) return;
+    fetchProjectRfis(projectId).then((items) => setRfis(items || [])).catch(() => setRfis([]));
+  }, [projectId]);
 
   const visible = item || (project
     ? {
@@ -166,6 +179,67 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
             <div style={statCardStyle}>
               <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Audit records</div>
               <div style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>{visible.auditSummary?.total ?? 0}</div>
+            </div>
+          </div>
+
+          <div style={{ ...cardStyle, marginBottom: 16 }}>
+            <AuricruxInsightPanel
+              title="Auricrux Project Intelligence"
+              nextAction={visible.auricruxSummary?.nextAction || state.workspace.currentNextAction}
+              metrics={[
+                { label: "Stage", value: visible.stage || "—" },
+                { label: "Open RFIs", value: rfis.length },
+                { label: "Contract", value: jobBilling.data?.package?.metrics?.contractValue || jobCost.rollup?.contractValue || "—" },
+              ]}
+              recommendations={[
+                { summary: "Advance job billing and SOV from priced estimate lines.", href: `/portal/finance?view=construction&projectId=${encodeURIComponent(projectId)}` },
+                { summary: "Coordinate field tasks against schedule and job cost.", href: `/portal/field-tasks?projectId=${encodeURIComponent(projectId)}` },
+              ]}
+              tone="blue"
+            />
+          </div>
+
+          <div style={{ ...cardStyle, marginBottom: 16 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 12 }}>
+              <h2 style={{ margin: 0 }}>Job billing & SOV</h2>
+              <a href={`/portal/finance?view=construction&projectId=${encodeURIComponent(projectId)}`} style={{ color: "#2563eb", fontWeight: 700, textDecoration: "none" }}>
+                Open in Finance
+              </a>
+            </div>
+            <FinanceConstructionPanel
+              packageData={jobBilling.data?.package}
+              projectId={projectId}
+              onCreatePayApp={() => jobBilling.createPayAppFromSov(projectId)}
+              onAdvancePayApp={(payAppId, status) => jobBilling.advancePayApp(payAppId, status)}
+              onUpdateSovLine={(body) => jobBilling.upsertSovLine({ ...body, projectId })}
+              onGeneratePayAppDoc={(pid, payAppId) => jobBilling.generatePayAppDocument(pid, payAppId)}
+              busy={jobBilling.loading}
+            />
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+            <div style={cardStyle}>
+              <h2 style={{ marginTop: 0 }}>Job cost rollup</h2>
+              {jobCost.loading ? <div style={{ color: "#64748b" }}>Loading job cost…</div> : null}
+              <div style={{ color: "#475569", lineHeight: 1.9 }}>
+                <div>Contract: <strong>{jobCost.rollup?.contractValue || jobBilling.data?.package?.metrics?.contractValue || "—"}</strong></div>
+                <div>Actual cost: <strong>{jobCost.rollup?.actualCost || jobBilling.data?.package?.jobCost?.actualCost || "—"}</strong></div>
+                <div>Committed: <strong>{jobCost.rollup?.committedCost || jobBilling.data?.package?.jobCost?.committedCost || "—"}</strong></div>
+                <div>Margin forecast: <strong>{jobCost.rollup?.grossMarginForecast || jobBilling.data?.package?.jobCost?.grossMarginForecast || "—"}</strong></div>
+              </div>
+              <a href={`/portal/finance?view=construction&projectId=${encodeURIComponent(projectId)}`} style={{ display: "inline-block", marginTop: 12, fontWeight: 700, color: "#2563eb", textDecoration: "none" }}>Open job billing</a>
+            </div>
+            <div style={cardStyle}>
+              <h2 style={{ marginTop: 0 }}>Field coordination</h2>
+              <div style={{ color: "#475569", lineHeight: 1.9, marginBottom: 12 }}>
+                <div><strong>Open RFIs:</strong> {rfis.length}</div>
+                <div><strong>Field tasks:</strong> governed in Field Ops</div>
+              </div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <a href={`/portal/rfis?projectId=${encodeURIComponent(projectId)}`} style={{ fontWeight: 700, color: "#2563eb", textDecoration: "none" }}>RFI register</a>
+                <a href={`/portal/field-tasks?projectId=${encodeURIComponent(projectId)}`} style={{ fontWeight: 700, color: "#2563eb", textDecoration: "none" }}>Field tasks</a>
+                <a href={`/portal/change-orders?projectId=${encodeURIComponent(projectId)}`} style={{ fontWeight: 700, color: "#2563eb", textDecoration: "none" }}>Change orders</a>
+              </div>
             </div>
           </div>
 

@@ -5,6 +5,10 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useEstimateWorkspace from "../../hooks/useEstimateWorkspace";
+import usePreconContinuity from "../../hooks/usePreconContinuity";
+import TakeoffEstimatePanel from "../../components/design/TakeoffEstimatePanel";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import { createInvoiceFromEstimate } from "../../api/financialClient";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -57,10 +61,47 @@ function writeEstimateDrafts(drafts) {
 
 export default function PortalEstimates() {
   const { state } = useWorkspaceState();
-  const { estimates, meta, advanceEstimate, generateProposal } = useEstimateWorkspace();
+  const { estimates, meta, advanceEstimate, generateProposal, refresh } = useEstimateWorkspace();
+  const projectId = state?.project?.id || "A-117";
+  const precon = usePreconContinuity(projectId);
   const brandSkin = readBrandSkin();
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
   const [drafts, setDrafts] = useState(() => readEstimateDrafts());
+  const [statusMessage, setStatusMessage] = useState("");
+  const [actionError, setActionError] = useState("");
+  const [lastInvoice, setLastInvoice] = useState(null);
+  const [busyAction, setBusyAction] = useState("");
+
+  async function handleCreateInvoice(estimateId) {
+    setActionError("");
+    setStatusMessage("");
+    setBusyAction(`invoice-${estimateId}`);
+    try {
+      const result = await createInvoiceFromEstimate(estimateId, projectId);
+      setLastInvoice(result?.portalInvoice || null);
+      setStatusMessage(
+        `Invoice ${result?.portalInvoice?.id || ""} issued from ${estimateId}. GL posted${result?.scheduleOfValues ? " and SOV seeded" : ""}.`,
+      );
+    } catch (invoiceError) {
+      setActionError(invoiceError.message || "Unable to create invoice from estimate.");
+    } finally {
+      setBusyAction("");
+    }
+  }
+
+  async function handlePriceEstimate(estimateId) {
+    setActionError("");
+    setBusyAction(`price-${estimateId}`);
+    try {
+      const result = await precon.priceEstimate(estimateId);
+      await refresh();
+      setStatusMessage(`Applied unit pricing to ${result?.pricedLineCount || 0} line(s). New total: ${result?.estimate?.total || ""}.`);
+    } catch (priceError) {
+      setActionError(priceError.message || "Unable to apply unit pricing.");
+    } finally {
+      setBusyAction("");
+    }
+  }
 
   const brandedNarrative = useMemo(() => `${companyName} estimate studio turns qualified opportunities into customer-ready pricing packages with editable line items, scope notes, and Auricrux-guided next actions.`, [companyName]);
 
@@ -110,6 +151,46 @@ export default function PortalEstimates() {
       <CommercialContinuityFeed title="Estimate commercial continuity feed" detail="Estimate advancement, pricing review, and proposal generation events remain visible here so pricing does not disappear between bid qualification and customer packaging." />
       <AutomationRecoveryFeed title="Estimate automation feed" detail="Recent estimate and proposal-generation actions remain visible across routes so pricing actions are durable rather than local-only UI gestures." />
 
+      {actionError ? (
+        <div style={{ ...cardStyle, marginBottom: 16, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b" }}>{actionError}</div>
+      ) : null}
+      {statusMessage ? (
+        <div style={{ ...cardStyle, marginBottom: 16, background: "#f0fdf4", border: "1px solid #86efac", color: "#166534" }}>
+          <div>{statusMessage}</div>
+          {lastInvoice?.id ? (
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 12 }}>
+              <a href={`/portal/billing/${lastInvoice.id}`} style={{ ...buttonStyle(), textDecoration: "none", display: "inline-block" }}>View invoice</a>
+              <a href={`/portal/finance?view=payments&invoiceId=${encodeURIComponent(lastInvoice.id)}`} style={{ ...buttonStyle(true), textDecoration: "none", display: "inline-block" }}>Record payment</a>
+              <a href={`/portal/finance?view=construction&projectId=${encodeURIComponent(projectId)}`} style={{ ...buttonStyle(), textDecoration: "none", display: "inline-block" }}>Open SOV</a>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+
+      <AuricruxInsightPanel
+        title="Auricrux Precon Intelligence"
+        nextAction={precon.continuity?.nextAction}
+        metrics={[
+          { label: "Tethered", value: `${precon.continuity?.tetheredTakeoffCount || 0}/${precon.continuity?.takeoffCount || 0}` },
+          { label: "Unpriced", value: precon.continuity?.unpricedLineCount || 0 },
+          { label: "Estimate", value: precon.continuity?.estimateId || "—" },
+        ]}
+        actionHref={`/portal/design?projectId=${encodeURIComponent(projectId)}`}
+        actionLabel="Open Design Workspace"
+      />
+
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <TakeoffEstimatePanel
+          continuity={precon.continuity}
+          loading={precon.loading}
+          error={precon.error}
+          busy={!!busyAction}
+          onSyncAll={() => precon.syncAll(precon.continuity?.estimateId)}
+          onTetherOne={(takeoffId) => precon.tetherOne(takeoffId, precon.continuity?.estimateId)}
+          onPriceEstimate={() => precon.priceEstimate(precon.continuity?.estimateId)}
+        />
+      </div>
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
         {estimates.map((estimate) => {
           const draft = drafts[estimate.estimateId] || { scopeNote: "", newLines: [] };
@@ -143,10 +224,25 @@ export default function PortalEstimates() {
                 </div>
                 <div style={{ display: "grid", gap: 8 }}>
                   {estimate.lineItems.map((item) => (
-                    <div key={item.code} style={{ border: "1px solid #e5e7eb", borderRadius: 10, padding: 10, background: "#f8fafc", display: "flex", justifyContent: "space-between", gap: 12 }}>
+                    <div key={item.code} style={{ border: item.sourceTakeoffId ? `1px solid ${brandSkin.accent || "#1d4ed8"}` : "1px solid #e5e7eb", borderRadius: 10, padding: 10, background: item.sourceTakeoffId ? (brandSkin.surface || "#eff6ff") : "#f8fafc", display: "flex", justifyContent: "space-between", gap: 12 }}>
                       <div>
                         <div style={{ fontWeight: 700 }}>{item.label}</div>
                         <div style={{ color: "#64748b", fontSize: 12 }}>{item.code}</div>
+                        {item.sourceTakeoffId ? (
+                          <div style={{ color: "#475569", fontSize: 12, marginTop: 4 }}>
+                            Tethered from takeoff {item.sourceTakeoffId}
+                            {item.quantity != null ? ` · ${item.quantity} ${item.unit || ""}` : ""}
+                            {item.unitRate != null ? ` @ $${item.unitRate}/${item.unit || "EA"}` : ""}
+                            {item.projectId && item.sourceFileId ? (
+                              <>
+                                {" · "}
+                                <a href={`/portal/design?projectId=${encodeURIComponent(item.projectId)}&fileId=${encodeURIComponent(item.sourceFileId)}`} style={{ color: brandSkin.accent || "#1d4ed8" }}>
+                                  Open in Design Workspace
+                                </a>
+                              </>
+                            ) : null}
+                          </div>
+                        ) : null}
                       </div>
                       <div style={{ fontWeight: 700 }}>{item.amount}</div>
                     </div>
@@ -162,6 +258,12 @@ export default function PortalEstimates() {
               </div>
 
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+                <button type="button" style={buttonStyle()} onClick={() => handlePriceEstimate(estimate.estimateId)} disabled={busyAction === `price-${estimate.estimateId}` || !precon.continuity?.unpricedLineCount}>
+                  {busyAction === `price-${estimate.estimateId}` ? "Pricing…" : "Apply Unit Pricing"}
+                </button>
+                <button type="button" style={buttonStyle()} onClick={() => handleCreateInvoice(estimate.estimateId)} disabled={busyAction === `invoice-${estimate.estimateId}`}>
+                  {busyAction === `invoice-${estimate.estimateId}` ? "Creating…" : "Create AR Invoice"}
+                </button>
                 <button type="button" style={buttonStyle()} onClick={() => advanceEstimate(estimate.estimateId, "Internal review complete", `Auricrux closed internal pricing review for ${estimate.package}.`)}>Close Review</button>
                 <button type="button" style={buttonStyle(true)} onClick={() => generateProposal(estimate.estimateId, `Auricrux generated a customer proposal package from ${estimate.estimateId}. Scope note: ${draft.scopeNote || "Not provided"}`)}>Generate Proposal</button>
               </div>

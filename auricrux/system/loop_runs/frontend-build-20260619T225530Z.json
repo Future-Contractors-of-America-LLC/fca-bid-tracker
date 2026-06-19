@@ -1,0 +1,27 @@
+{
+  "loopId": "frontend-build",
+  "generatedUtc": "2026-06-19T22:55:30Z",
+  "ok": false,
+  "summary": "Frontend build loop run 1: 0/2 validators passed.",
+  "metrics": {
+    "runCount": 1,
+    "passed": 0,
+    "failed": 2
+  },
+  "details": {
+    "results": [
+      {
+        "script": "validate-routes.mjs",
+        "ok": false,
+        "reason": "validation-failed",
+        "detail": "'node' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+      },
+      {
+        "script": "validate-finance-workspace.mjs",
+        "ok": false,
+        "reason": "validation-failed",
+        "detail": "'node' is not recognized as an internal or external command,\r\noperable program or batch file.\r\n"
+      }
+    ]
+  }
+}

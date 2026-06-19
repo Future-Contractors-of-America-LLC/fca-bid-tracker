@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "runCount": 3,
+  "lastRunUtc": "2026-06-19T23:04:16Z",
+  "lastOk": true,
+  "validators": [
+    {
+      "script": "validate-routes.mjs",
+      "ok": true
+    },
+    {
+      "script": "validate-finance-workspace.mjs",
+      "ok": true
+    }
+  ]
+}

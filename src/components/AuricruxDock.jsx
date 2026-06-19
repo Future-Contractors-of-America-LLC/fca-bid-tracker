@@ -96,6 +96,10 @@ function routePromptReply(command) {
     return `Revenue is blocked by ${auricruxRail.currentBlocker.toLowerCase()}. ${auricruxRail.blockerImpact} Clear the approval path in Bids, then advance Billing.`;
   }
 
+  if (normalized.includes("sheet") || normalized.includes("markup") || normalized.includes("takeoff") || normalized.includes("plan")) {
+    return `${routeStateOverlays.design.primaryDetail} ${routeStateOverlays.design.auricruxDetail}`;
+  }
+
   if (normalized.includes("connected")) {
     return `I'm connected to ${portalTenant.name}. Ask me about next actions, training, or billing.`;
   }
@@ -177,6 +181,7 @@ export default function AuricruxDock() {
 
     try {
       const route = typeof window !== "undefined" ? window.location.pathname : "/portal/platform";
+      const designParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
       const data = await sendAuricruxMessage({
         message: cmd,
         route,
@@ -185,6 +190,13 @@ export default function AuricruxDock() {
           nextAction: workspaceContext.currentNextAction,
           blocker: auricruxRail.currentBlocker,
           projectId: currentProject.id,
+          designContext: route.includes("/portal/design")
+            ? {
+                fileId: designParams.get("fileId") || "",
+                sheetId: designParams.get("sheetId") || "",
+                overlay: routeStateOverlays.design,
+              }
+            : null,
         },
       });
       setMode(data.mode === "llm-assistant" ? "live" : "live");

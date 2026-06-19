@@ -2,8 +2,8 @@ import LegalPageShell from "../../components/LegalPageShell";
 
 export default function IpNotice() {
   return (
-    <LegalPageShell title="Intellectual Property" eyebrow="Legal">
-      <p><strong>Effective date:</strong> June 18, 2026</p>
+    <LegalPageShell title="Intellectual Property" eyebrow="Legal" currentHref="/ip">
+      <p><strong>Effective date:</strong> June 19, 2026</p>
       <p>
         Future Contractors of America LLC (&quot;FCA&quot;) owns the intellectual property described on this page.
         Unauthorized use of FCA or Auricrux marks, artwork, software, or training content is prohibited.
@@ -46,8 +46,9 @@ export default function IpNotice() {
 
       <h3 style={{ color: "#0f172a" }}>Reporting infringement</h3>
       <p>
-        Email <a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a> with
-        subject line &quot;IP Notice&quot; to report unauthorized use or request licensing.
+        Email <a href="mailto:dmca@futurecontractorsofamerica.com">dmca@futurecontractorsofamerica.com</a> for DMCA notices
+        per our <a href="/dmca">DMCA Copyright Policy</a>. General IP inquiries:{" "}
+        <a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a>.
       </p>
     </LegalPageShell>
   );

@@ -1,142 +1,302 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { fetchBillingSummary, fetchPortalInvoices } from "../../api/portalClient";
-import { createInvoiceCheckout, createBillingPortalSession } from "../../api/stripeClient";
-import { routeStateOverlays } from "../../systemState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useFinancialWorkspace from "../../hooks/useFinancialWorkspace";
+import { fetchPortalInvoices } from "../../api/portalClient";
+import FinanceSidebar from "../../components/finance/FinanceSidebar";
+import FinanceConstructionPanel from "../../components/finance/FinanceConstructionPanel";
+import FinanceJournalPanel from "../../components/finance/FinanceJournalPanel";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import { FinanceBankImportPanel, FinancePaymentsPanel, FinanceRecurringPanel } from "../../components/finance/FinanceNativePanels";
+import {
+  FinanceBankingPanel,
+  FinanceBillsPanel,
+  FinanceDashboardPanel,
+  FinanceExpensesPanel,
+  FinanceMasterDataPanel,
+  FinanceReportsPanel,
+} from "../../components/finance/FinancePanels";
+import { routeStateOverlays } from "../../systemState";
 
-const cardStyle = { border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, background: "#fff" };
+function readViewFromUrl() {
+  if (typeof window === "undefined") return { view: "dashboard", projectId: "", invoiceId: "" };
+  const params = new URLSearchParams(window.location.search);
+  return {
+    view: params.get("view") || "dashboard",
+    projectId: params.get("projectId") || "",
+    invoiceId: params.get("invoiceId") || "",
+  };
+}
 
 export default function PortalFinance() {
-  const { refreshSyncStamp } = useWorkspaceState();
+  const deepLink = useMemo(() => readViewFromUrl(), []);
+  const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
-  const [invoices, setInvoices] = useState([]);
-  const [summary, setSummary] = useState(null);
-  const [loadError, setLoadError] = useState("");
+  const finance = useFinancialWorkspace(deepLink.view, deepLink.projectId || state?.project?.id || "A-117");
+  const [portalInvoices, setPortalInvoices] = useState([]);
   const [actionError, setActionError] = useState("");
-  const [busyId, setBusyId] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const companyName = state?.tenant?.name || session?.company || "FCA Books";
 
   useEffect(() => {
     refreshSyncStamp("Finance workspace active");
-    setLoadError("");
-    Promise.all([
-      fetchPortalInvoices(),
-      fetchBillingSummary().catch(() => null),
-    ])
-      .then(([inv, sum]) => {
-        setInvoices(inv?.items || []);
-        if (sum) setSummary(sum);
-      })
-      .catch((error) => {
-        setLoadError(error.message || "Unable to load finance data.");
-      });
+    fetchPortalInvoices()
+      .then((payload) => setPortalInvoices(payload.items || []))
+      .catch(() => setPortalInvoices([]));
   }, [refreshSyncStamp]);
 
-  async function payInvoice(invoiceId) {
-    setActionError("");
-    setBusyId(invoiceId);
-    try {
-      const checkout = await createInvoiceCheckout(invoiceId, {
-        successUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/finance?payment=success` : undefined,
-        cancelUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/finance?payment=cancelled` : undefined,
-      });
-      if (checkout.checkoutUrl) {
-        window.location.href = checkout.checkoutUrl;
-        return;
-      }
-      throw new Error("Stripe checkout URL was not returned.");
-    } catch (error) {
-      setActionError(error.message || "Unable to start Stripe checkout.");
-      setBusyId("");
+  useEffect(() => {
+    finance.setView(deepLink.view);
+    if (deepLink.projectId) finance.setProjectId(deepLink.projectId);
+  }, [deepLink.view, deepLink.projectId]);
+
+  function navigate(view) {
+    finance.setView(view);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("view", view);
+      window.history.replaceState({}, "", url.toString());
     }
   }
 
-  async function openBillingPortal() {
-    setActionError("");
-    setBusyId("portal");
+  async function handleCreateExpense(body) {
+    setBusy(true);
     try {
-      const portal = await createBillingPortalSession({
-        customerEmail: session?.email,
-        returnUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/finance` : undefined,
-      });
-      if (portal.portalUrl) {
-        window.location.href = portal.portalUrl;
-        return;
-      }
-      throw new Error("Stripe billing portal URL was not returned.");
+      await finance.createExpense(body);
+      setStatusMessage(`Expense recorded for ${body.payee}.`);
     } catch (error) {
-      setActionError(error.message || "Unable to open billing portal.");
-      setBusyId("");
+      setActionError(error.message || "Unable to record expense.");
+    } finally {
+      setBusy(false);
     }
   }
 
-  const outstanding = invoices.filter((invoice) => invoice.status !== "Paid");
+  async function handleCreateBill(body) {
+    setBusy(true);
+    try {
+      await finance.createBill(body);
+      setStatusMessage(`Bill saved for ${body.vendorName}.`);
+    } catch (error) {
+      setActionError(error.message || "Unable to save bill.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function renderContent() {
+    if (finance.loading && !finance.data) return <div style={{ padding: 24 }}>Loading books…</div>;
+    const payload = finance.data || {};
+    switch (finance.view) {
+      case "expenses":
+        return <FinanceExpensesPanel items={payload.items} onCreate={handleCreateExpense} busy={busy} />;
+      case "bills":
+        return <FinanceBillsPanel items={payload.items} onCreate={handleCreateBill} onPay={(billId) => finance.payBill(billId)} busy={busy} />;
+      case "banking":
+        return (
+          <div style={{ display: "grid", gap: 16 }}>
+            <FinanceBankImportPanel
+              onImport={async (body) => {
+                setBusy(true);
+                try {
+                  const result = await finance.importBankCsv(body);
+                  setStatusMessage(`${result?.importedCount ?? 0} bank transaction(s) imported into FCA register.`);
+                } catch (error) {
+                  setActionError(error.message || "Unable to import bank CSV.");
+                } finally {
+                  setBusy(false);
+                }
+              }}
+              busy={busy}
+            />
+            <FinanceBankingPanel accounts={payload.accounts} transactions={payload.transactions} onReconcile={(id) => finance.reconcileTransaction(id)} busy={busy} />
+          </div>
+        );
+      case "reports":
+        return (
+          <FinanceReportsPanel
+            report={payload.report}
+            availableReports={payload.availableReports}
+            activeReport={finance.report}
+            onSelectReport={(id) => finance.setReport(id)}
+            onExport={async (reportType) => {
+              const result = await finance.exportReport(reportType);
+              if (result?.csv && typeof window !== "undefined") {
+                const blob = new Blob([result.csv], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `fca-${reportType || finance.report}.csv`;
+                link.click();
+                URL.revokeObjectURL(url);
+                setStatusMessage("Report exported from FCA native books.");
+              }
+            }}
+            busy={busy}
+          />
+        );
+      case "payments":
+        return (
+          <FinancePaymentsPanel
+            items={payload.items}
+            invoices={portalInvoices}
+            initialInvoiceId={deepLink.invoiceId}
+            onRecord={async (body) => {
+              setBusy(true);
+              try {
+                await finance.recordNativePayment(body);
+                await fetchPortalInvoices().then((p) => setPortalInvoices(p.items || []));
+                setStatusMessage(`Payment recorded for ${body.invoiceId}.`);
+              } catch (error) {
+                setActionError(error.message || "Unable to record payment.");
+              } finally {
+                setBusy(false);
+              }
+            }}
+            busy={busy}
+          />
+        );
+      case "recurring":
+        return (
+          <FinanceRecurringPanel
+            items={payload.items}
+            onCreate={async (body) => {
+              setBusy(true);
+              try {
+                await finance.createRecurringInvoice(body);
+                setStatusMessage(`Recurring template saved: ${body.label}`);
+              } catch (error) {
+                setActionError(error.message || "Unable to save recurring template.");
+              } finally {
+                setBusy(false);
+              }
+            }}
+            onRun={async (recurringId) => {
+              setBusy(true);
+              try {
+                const result = await finance.runRecurringInvoice(recurringId);
+                setStatusMessage(`Invoice ${result?.portalInvoice?.id || ""} generated from recurring template.`);
+              } catch (error) {
+                setActionError(error.message || "Unable to run recurring invoice.");
+              } finally {
+                setBusy(false);
+              }
+            }}
+            busy={busy}
+          />
+        );
+      case "construction":
+        return (
+          <FinanceConstructionPanel
+            packageData={payload.package}
+            projectId={finance.projectId}
+            onProjectChange={(id) => finance.setProjectId(id)}
+            onCreatePayApp={(id) => finance.createPayAppFromSov(id)}
+            onAdvancePayApp={(payAppId, status) => finance.advancePayApp(payAppId, status)}
+            onUpdateSovLine={(body) => finance.upsertSovLine(body)}
+            onGeneratePayAppDoc={(pid, payAppId) => finance.generatePayAppDocument(pid, payAppId)}
+            busy={busy}
+          />
+        );
+      case "customers":
+        return <FinanceMasterDataPanel customers={payload.customers} vendors={payload.vendors} />;
+      case "coa":
+        return <FinanceMasterDataPanel customers={[]} vendors={[]} accounts={payload.items} />;
+      case "journal":
+        return (
+          <div style={{ display: "grid", gap: 16 }}>
+            <AuricruxInsightPanel
+              title="Auricrux Books Intelligence"
+              nextAction={payload.intelligence?.nextAction}
+              recommendations={payload.intelligence?.recommendations}
+              tone="green"
+            />
+            <FinanceJournalPanel
+              items={payload.items}
+              busy={busy}
+              onPost={async (body) => {
+                setBusy(true);
+                try {
+                  await finance.postJournalEntry(body);
+                  setStatusMessage("Journal entry posted to governed GL.");
+                } catch (error) {
+                  setActionError(error.message || "Unable to post journal entry.");
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            />
+          </div>
+        );
+      case "dashboard":
+      default:
+        return (
+          <div style={{ display: "grid", gap: 16 }}>
+            <FinanceDashboardPanel dashboard={payload.dashboard} intelligence={payload.intelligence} onNavigate={navigate} />
+            <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, background: "#fff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 12 }}>
+                <div>
+                  <div style={{ fontWeight: 800 }}>Open invoices</div>
+                  <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>Record payments natively in FCA Books — no external processor required.</div>
+                </div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <a href="/portal/billing" style={{ textDecoration: "none", border: "1px solid #cbd5e1", borderRadius: 8, padding: "8px 12px", color: "#334155", fontWeight: 700 }}>Create invoice</a>
+                  <button type="button" onClick={() => navigate("payments")} style={{ border: "none", borderRadius: 8, padding: "8px 12px", background: "#2ca01c", color: "#fff", fontWeight: 700, cursor: "pointer" }}>
+                    Record payment
+                  </button>
+                </div>
+              </div>
+              <div style={{ display: "grid", gap: 10 }}>
+                {portalInvoices.map((inv) => (
+                  <div key={inv.id} style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", borderTop: "1px solid #f1f5f9", paddingTop: 10 }}>
+                    <div>
+                      <div style={{ fontWeight: 700 }}>{inv.invoiceName}</div>
+                      <div style={{ color: "#64748b", fontSize: 13 }}>{inv.amount} · {inv.status}</div>
+                    </div>
+                    {inv.status === "Issued" ? (
+                      <button type="button" onClick={() => navigate("payments")} style={{ border: "none", borderRadius: 8, padding: "8px 12px", background: "#2ca01c", color: "#fff", fontWeight: 700, cursor: "pointer" }}>
+                        Record payment
+                      </button>
+                    ) : null}
+                  </div>
+                ))}
+                {!portalInvoices.length ? <div style={{ color: "#64748b" }}>No open invoices yet.</div> : null}
+              </div>
+            </div>
+          </div>
+        );
+    }
+  }
 
   return (
     <PortalShell
-      title="Finance and Revenue"
-      subtitle="Track invoices, payment status, and billing milestones for active jobs."
+      title="Finance"
+      subtitle="FCA-native books — AR, AP, GL, job billing, pay apps, and governed payment recording without external dependencies."
       activeHref="/portal/finance"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.billing}
       primaryHref="/portal/billing"
-      primaryLabel="Open billing"
+      primaryLabel="Create invoice"
     >
-      {loadError ? (
-        <div style={{ ...cardStyle, marginBottom: 20, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
-          {loadError}
-        </div>
-      ) : null}
-      {actionError ? (
-        <div style={{ ...cardStyle, marginBottom: 20, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
-          {actionError}
-        </div>
-      ) : null}
+      {actionError ? <div style={{ marginBottom: 16, padding: 14, borderRadius: 12, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b" }}>{actionError}</div> : null}
+      {statusMessage ? <div style={{ marginBottom: 16, padding: 14, borderRadius: 12, background: "#ecfdf5", border: "1px solid #86efac", color: "#166534" }}>{statusMessage}</div> : null}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 20 }}>
-        <div style={cardStyle}>
-          <div style={{ color: "#64748b", fontSize: 13 }}>Outstanding invoices</div>
-          <div style={{ fontSize: 28, fontWeight: 800 }}>{outstanding.length}</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#64748b", fontSize: 13 }}>Paid invoices</div>
-          <div style={{ fontSize: 28, fontWeight: 800 }}>{invoices.filter((invoice) => invoice.status === "Paid").length}</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#64748b", fontSize: 13 }}>Billing records</div>
-          <div style={{ fontSize: 28, fontWeight: 800 }}>{summary?.count ?? invoices.length}</div>
-        </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 20 }}>
-        <div style={{ fontWeight: 700, marginBottom: 8 }}>Subscription and payment methods</div>
-        <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>
-          Update cards, view invoices, and manage your Stripe subscription from the customer portal.
-        </div>
-        <button type="button" onClick={openBillingPortal} disabled={busyId === "portal"} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 8, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-          {busyId === "portal" ? "Opening portal..." : "Manage billing"}
-        </button>
-      </div>
-
-      <h2 style={{ fontSize: 18 }}>Invoices</h2>
-      <div style={{ display: "grid", gap: 12 }}>
-        {invoices.length === 0 ? (
-          <div style={cardStyle}>No invoices yet. Stage invoices from Billing or project milestones.</div>
-        ) : (
-          invoices.map((inv) => (
-            <div key={inv.id} style={cardStyle}>
-              <strong>{inv.invoiceName || inv.id}</strong>
-              <div style={{ color: "#475569", marginTop: 6 }}>{inv.amount} | {inv.status || "Draft"}</div>
-              {inv.note ? <div style={{ color: "#64748b", marginTop: 6 }}>{inv.note}</div> : null}
-              {inv.status === "Issued" ? (
-                <button type="button" onClick={() => payInvoice(inv.id)} disabled={busyId === inv.id} style={{ marginTop: 10, border: "1px solid #16a34a", background: "#16a34a", color: "#fff", borderRadius: 8, padding: "8px 12px", fontWeight: 700, cursor: "pointer" }}>
-                  {busyId === inv.id ? "Opening Stripe..." : "Pay via Stripe"}
-                </button>
-              ) : null}
+      <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 18, alignItems: "start" }}>
+        <FinanceSidebar activeView={finance.view} onNavigate={navigate} companyName={companyName} />
+        <div>
+          <div style={{ marginBottom: 14, display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+            <div>
+              <div style={{ color: "#64748b", fontSize: 13 }}>Backing source: {finance.meta.backingSource}</div>
+              <h1 style={{ margin: "4px 0 0", fontSize: 28, textTransform: "capitalize" }}>{finance.view.replace(/_/g, " ")}</h1>
             </div>
-          ))
-        )}
+            <button type="button" onClick={() => finance.refresh()} style={{ border: "1px solid #cbd5e1", background: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
+              Refresh books
+            </button>
+          </div>
+          {renderContent()}
+        </div>
       </div>
     </PortalShell>
   );
