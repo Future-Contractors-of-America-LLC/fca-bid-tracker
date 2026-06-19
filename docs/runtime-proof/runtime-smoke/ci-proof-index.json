@@ -1,33 +1,22 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-19T22:44:36.918Z",
+  "generatedAt": "2026-06-19T23:05:56.801Z",
   "github": {
     "repository": "Future-Contractors-of-America-LLC/fca-bid-tracker",
     "ref": "refs/heads/main",
-    "sha": "331fd14f4acf9c17aafad2ce36cd30ade0dd9444",
-    "runId": "27851748374",
+    "sha": "78a770dbe1b8d2f017a60b0f1eb52dbe760afe7f",
+    "runId": "27852383644",
     "workflow": "FCA Runtime Smoke Validation"
   },
   "artifacts": {
-    "buildEvidencePresent": true,
-    "runtimeSmokePresent": true
+    "buildEvidencePresent": false,
+    "runtimeSmokePresent": false
   },
-  "buildEvidenceSummary": {
-    "packet": "062Y",
-    "buildSystem": "npm run build",
-    "build": "bash ./build.sh",
-    "hasBuildValidationWorkflow": true,
-    "invokesBuildSystem": true
-  },
-  "runtimeSmokeSummary": {
-    "packet": "062Y",
-    "total": 10,
-    "passed": 10,
-    "failed": 0
-  },
+  "buildEvidenceSummary": null,
+  "runtimeSmokeSummary": null,
   "gateAssessment": {
-    "buildEvidenceReady": true,
-    "runtimeSmokeReady": true,
-    "runtimeSmokePass": true
+    "buildEvidenceReady": false,
+    "runtimeSmokeReady": false,
+    "runtimeSmokePass": false
   }
 }
