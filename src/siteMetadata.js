@@ -26,6 +26,26 @@ export const routeMetadata = {
     description:
       "Review FCA pricing options for contractor visibility, workflow control, and Auricrux-enabled operating continuity.",
   },
+  "/features": {
+    title: "Why FCA | Future Contractors of America",
+    description:
+      "See why contractors choose FCA for structured onboarding, unified operations, Auricrux guidance, and academy-ready workforce continuity.",
+  },
+  "/solutions": {
+    title: "Programs | Future Contractors of America",
+    description:
+      "Compare FCA pilot, startup, growth, and scaled rollout programs tied to live SaaS, LMS, and mobile product surfaces.",
+  },
+  "/intake": {
+    title: "Intake | Future Contractors of America",
+    description:
+      "Submit your company profile to start FCA pilot or workspace onboarding with Auricrux-Central backend continuity.",
+  },
+  "/checkout": {
+    title: "Activation | Future Contractors of America",
+    description:
+      "Apply your activation code and continue into the branded FCA customer workspace.",
+  },
   "/contact": {
     title: "Contact | Future Contractors of America",
     description:

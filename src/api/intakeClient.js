@@ -1,4 +1,5 @@
 import { centralFetch } from "./backendBase";
+import { checkoutUrlForTier, PILOT_CHECKOUT_URL } from "../commercialOffers.js";
 
 function planValue(plan) {
   if (plan === "pilot") return 2500;
@@ -7,14 +8,11 @@ function planValue(plan) {
 }
 
 export function checkoutUrlForPlan(plan, clientReferenceId) {
-  const backend = typeof window !== "undefined" ? window.FCA_BACKEND : null;
-  const pilot = backend?.pilotCheckout || "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01";
-  const startup = backend?.startupCheckout || "";
   const ref = encodeURIComponent(clientReferenceId || "");
   const joiner = (url) => (url.includes("?") ? "&" : "?") + `client_reference_id=${ref}`;
-
-  if (plan === "pilot") return `${pilot}${joiner(pilot)}`;
-  if (plan === "startup" && startup) return `${startup}${joiner(startup)}`;
+  const tierUrl = checkoutUrlForTier(plan);
+  if (tierUrl) return `${tierUrl}${joiner(tierUrl)}`;
+  if (plan === "pilot") return `${PILOT_CHECKOUT_URL}${joiner(PILOT_CHECKOUT_URL)}`;
   return null;
 }
 
