@@ -34,7 +34,7 @@ export default createOperationalPortalPage({
       };
     },
     createItem: (draft) => createFieldTask({
-      task: `${draft.focus || "Supervision review"} — ${draft.site}`,
+      task: `${draft.focus || "Supervision review"} - ${draft.site}`,
       assignee: draft.supervisor,
       dueDate: "",
       priority: draft.shift || "Normal",

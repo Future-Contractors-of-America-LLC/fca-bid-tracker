@@ -85,11 +85,11 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
           <div style={{ ...cardStyle, marginBottom: 24 }}>
             <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>{program.credential}</div>
             <p style={{ color: "#475569", lineHeight: 1.7 }}>
-              <strong>Pathway:</strong> {program.pathway} ∑ <strong>Level:</strong> {program.level} ∑ <strong>Modules:</strong> {program.duration}
+              <strong>Pathway:</strong> {program.pathway} ù <strong>Level:</strong> {program.level} ù <strong>Modules:</strong> {program.duration}
             </p>
             {enrollment ? (
               <div style={{ marginTop: 12, color: "#334155" }}>
-                <strong>Your progress:</strong> {enrollment.progressPercent}% ∑ {enrollment.completedModules}/{enrollment.totalModules} modules
+                <strong>Your progress:</strong> {enrollment.progressPercent}% ù {enrollment.completedModules}/{enrollment.totalModules} modules
               </div>
             ) : (
               <div style={{ marginTop: 12, color: "#64748b" }}>Assign this program from Academy home to track progress.</div>
@@ -120,7 +120,7 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
                   onClick={() => markModuleComplete(module)}
                   style={{ marginTop: 12, border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
                 >
-                  {busyModule === module.moduleNumber ? "SavingÖ" : "Mark module complete"}
+                  {busyModule === module.moduleNumber ? "Saving..." : "Mark module complete"}
                 </button>
               ) : null}
             </article>

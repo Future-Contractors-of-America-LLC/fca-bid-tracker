@@ -219,14 +219,14 @@ export default function PortalBilling() {
         </label>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
           <button type="button" onClick={createInvoice} disabled={busyId === "create"} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-            {busyId === "create" ? "Creating…" : "Create Invoice"}
+            {busyId === "create" ? "Creating..." : "Create Invoice"}
           </button>
         </div>
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Invoice board</h2>
-        {loading ? <div style={{ color: "#64748b" }}>Loading invoices…</div> : null}
+        {loading ? <div style={{ color: "#64748b" }}>Loading invoices...</div> : null}
         {!loading && invoices.length === 0 ? (
           <div style={{ color: "#64748b" }}>No invoices yet. Create one above to start the billing flow.</div>
         ) : null}
@@ -242,18 +242,17 @@ export default function PortalBilling() {
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
                 {invoice.status === "Draft" ? (
                   <button type="button" onClick={() => issueInvoice(invoice.id)} disabled={busyId === invoice.id} style={{ border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-                    {busyId === invoice.id ? "Issuing…" : "Issue Invoice"}
+                    {busyId === invoice.id ? "Issuing..." : "Issue Invoice"}
                   </button>
                 ) : null}
                 {invoice.status === "Issued" ? (
-                {invoice.status === "Issued" ? (
                   <>
                     <button type="button" onClick={() => deliverInvoice(invoice.id)} disabled={busyId === `deliver-${invoice.id}`} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-                      {busyId === `deliver-${invoice.id}` ? "Sending…" : "Send Invoice"}
+                      {busyId === `deliver-${invoice.id}` ? "Sending..." : "Send Invoice"}
                     </button>
                     <a href={`/portal/billing/${invoice.id}`} style={{ border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>View / Print</a>
                     <button type="button" onClick={() => payInvoice(invoice.id)} disabled={busyId === `pay-${invoice.id}`} style={{ border: "1px solid #16a34a", background: "#16a34a", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-                      {busyId === `pay-${invoice.id}` ? "Opening Stripe…" : "Pay via Stripe"}
+                      {busyId === `pay-${invoice.id}` ? "Opening Stripe..." : "Pay via Stripe"}
                     </button>
                   </>
                 ) : null}

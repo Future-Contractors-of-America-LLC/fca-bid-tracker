@@ -34,7 +34,7 @@ const actionButtonStyle = {
 
 const STEPS = [
   { key: "qualify", label: "Qualify bid", detail: "Score and qualify the opportunity." },
-  { key: "project", label: "Award ? project", detail: "Convert won work into a live project." },
+  { key: "project", label: "Award to project", detail: "Convert won work into a live project." },
   { key: "estimate", label: "Estimate (optional)", detail: "Route to estimate or skip." },
   { key: "invoice", label: "Issue invoice", detail: "Create and issue customer invoice." },
   { key: "payment", label: "Collect payment", detail: "Pay via Stripe checkout." },
@@ -247,10 +247,10 @@ export default function PortalPipeline() {
                 cursor: "pointer",
               }}
             >
-              <strong>{bid.package}</strong> · {bid.value}
+              <strong>{bid.package}</strong> | {bid.value}
               <div style={{ color: "#475569", fontSize: 14, marginTop: 4 }}>
                 {current === "done" ? "Complete" : `Next: ${STEPS.find((s) => s.key === current)?.label || current}`}
-                {" · "}
+                {" | "}
                 {Object.values(complete).filter(Boolean).length}/{STEPS.length} steps
               </div>
             </button>
@@ -278,7 +278,7 @@ export default function PortalPipeline() {
                     fontWeight: active ? 700 : 500,
                   }}
                 >
-                  {done ? "? " : `${index + 1}. `}{step.label}
+                  {done ? "Done: " : `${index + 1}. `}{step.label}
                 </div>
               );
             })}
@@ -289,18 +289,18 @@ export default function PortalPipeline() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 14 }}>
             {activePipeline.current === "qualify" ? (
               <button type="button" style={actionButtonStyle} disabled={busy === "qualify"} onClick={runQualify}>
-                {busy === "qualify" ? "Qualifying…" : "Qualify Opportunity"}
+                {busy === "qualify" ? "Qualifying..." : "Qualify Opportunity"}
               </button>
             ) : null}
             {activePipeline.current === "project" ? (
               <button type="button" style={actionButtonStyle} disabled={busy === "project"} onClick={runAward}>
-                {busy === "project" ? "Converting…" : "Award and Create Project"}
+                {busy === "project" ? "Converting..." : "Award and Create Project"}
               </button>
             ) : null}
             {activePipeline.current === "estimate" ? (
               <>
                 <button type="button" style={actionButtonStyle} disabled={busy === "estimate"} onClick={runEstimate}>
-                  {busy === "estimate" ? "Routing…" : "Route to Estimate"}
+                  {busy === "estimate" ? "Routing..." : "Route to Estimate"}
                 </button>
                 <button type="button" style={actionButtonStyle} onClick={skipEstimate}>Skip estimate</button>
               </>
@@ -312,14 +312,14 @@ export default function PortalPipeline() {
                   <input placeholder="Amount" value={invoiceDraft.amount} onChange={(e) => setInvoiceDraft((c) => ({ ...c, amount: e.target.value }))} style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }} />
                 </div>
                 <button type="button" style={actionButtonStyle} disabled={busy === "invoice"} onClick={runInvoice}>
-                  {busy === "invoice" ? "Issuing…" : "Create and Issue Invoice"}
+                  {busy === "invoice" ? "Issuing..." : "Create and Issue Invoice"}
                 </button>
               </div>
             ) : null}
             {activePipeline.current === "payment" ? (
               <>
                 <button type="button" style={{ ...actionButtonStyle, borderColor: "#16a34a", background: "#16a34a", color: "#fff" }} disabled={busy === "payment"} onClick={runPayment}>
-                  {busy === "payment" ? "Opening Stripe…" : "Pay via Stripe"}
+                  {busy === "payment" ? "Opening Stripe..." : "Pay via Stripe"}
                 </button>
                 <a href={`/portal/billing/${activePipeline.linkedInvoice?.id || activePipeline.link?.invoiceId}`} style={{ ...actionButtonStyle, textDecoration: "none", display: "inline-block" }}>View invoice</a>
               </>
