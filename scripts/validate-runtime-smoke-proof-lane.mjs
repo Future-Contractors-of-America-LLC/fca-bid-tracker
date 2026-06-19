@@ -17,7 +17,7 @@ function expectIncludes(source, marker, file) {
 const ledgerSource = await read("docs/FCA_EXECUTION_CONTINUITY_LEDGER.md");
 const packageSource = await read("package.json");
 const runtimeSmokeSource = await read("scripts/runtime_smoke_check.js");
-const ciProofSource = await read("scripts/ci_proof_index.js");
+const ciProofSource = await read("scripts/ci_proof_index.cjs");
 const workflowSource = await read(".github/workflows/runtime-smoke-validation.yml");
 
 const packetMatch = ledgerSource.match(/- Active packet: `([^`]+)`/);
@@ -33,9 +33,9 @@ expectIncludes(runtimeSmokeSource, "readContinuityPacket", "scripts/runtime_smok
 expectIncludes(runtimeSmokeSource, "packet: activePacket", "scripts/runtime_smoke_check.js");
 expectIncludes(runtimeSmokeSource, "Runtime smoke check passed for all bounded routes in packet", "scripts/runtime_smoke_check.js");
 
-expectIncludes(ciProofSource, "readContinuityPacket", "scripts/ci_proof_index.js");
-expectIncludes(ciProofSource, "packet: activePacket", "scripts/ci_proof_index.js");
-expectIncludes(ciProofSource, "runtime-smoke-check-report.json", "scripts/ci_proof_index.js");
+expectIncludes(ciProofSource, "readContinuityPacket", "scripts/ci_proof_index.cjs");
+expectIncludes(ciProofSource, "packet: activePacket", "scripts/ci_proof_index.cjs");
+expectIncludes(ciProofSource, "runtime-smoke-check-report.json", "scripts/ci_proof_index.cjs");
 
 expectIncludes(workflowSource, "npm run capture:ci-proof-index", ".github/workflows/runtime-smoke-validation.yml");
 expectIncludes(workflowSource, "npm run validate:runtime-smoke-proof-lane", ".github/workflows/runtime-smoke-validation.yml");
