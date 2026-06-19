@@ -15,21 +15,30 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+function moduleStatus(moduleNumber, enrollment) {
+  const completed = enrollment?.completedModuleNumbers || [];
+  if (completed.includes(moduleNumber)) return "complete";
+  const next = (enrollment?.completedModules || 0) + 1;
+  if (moduleNumber === next) return "current";
+  if (moduleNumber <= (enrollment?.completedModules || 0) + 1) return "available";
+  return "locked";
+}
+
 export default function AcademyProgramDetail({ routeParams = {} }) {
   const programId = routeParams.programId;
   const { session } = useCustomerSession();
-  const { academyState, completeModule, assignProgram } = useAcademyLms();
+  const { academyState, assignProgram } = useAcademyLms();
   const [programDetail, setProgramDetail] = useState(null);
   const [loadError, setLoadError] = useState("");
-  const [busyModule, setBusyModule] = useState(null);
   const [enrollBusy, setEnrollBusy] = useState(false);
   const [actionMessage, setActionMessage] = useState("");
 
   const learnerId = session?.email || session?.customerId;
 
-  const enrollment = useMemo(() => {
-    return (academyState.enrollments || []).find((item) => item.programKey === programId && (!learnerId || item.learnerId === learnerId));
-  }, [academyState.enrollments, programId, learnerId]);
+  const enrollment = useMemo(
+    () => (academyState.enrollments || []).find((item) => item.programKey === programId && (!learnerId || item.learnerId === learnerId)),
+    [academyState.enrollments, programId, learnerId],
+  );
 
   useEffect(() => {
     if (!programId) return;
@@ -41,60 +50,7 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
 
   const program = programDetail?.program;
   const modules = programDetail?.modules || [];
-
-  function moduleHasContent(module) {
-    return Boolean(
-      module.mediaUrl
-      || module.contentHtml
-      || module.objective
-      || (Array.isArray(module.lessons) && module.lessons.length > 0)
-      || module.practicalLab
-      || module.lab
-    );
-  }
-
-  function renderModuleMedia(module) {
-    if (module.mediaUrl) {
-      const url = module.mediaUrl;
-      const isDirectVideo = /\.(mp4|webm|ogg)(\?|$)/i.test(url);
-      if (isDirectVideo) {
-        return (
-          <video
-            controls
-            src={url}
-            style={{ width: "100%", borderRadius: 12, marginTop: 12, background: "#0f172a" }}
-          >
-            Your browser does not support embedded video.
-          </video>
-        );
-      }
-      return (
-        <iframe
-          title={`Module ${module.moduleNumber} video`}
-          src={url}
-          style={{ width: "100%", minHeight: 360, border: "1px solid #e2e8f0", borderRadius: 12, marginTop: 12 }}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      );
-    }
-    if (module.contentHtml) {
-      return (
-        <div
-          style={{ marginTop: 12, color: "#334155", lineHeight: 1.7 }}
-          dangerouslySetInnerHTML={{ __html: module.contentHtml }}
-        />
-      );
-    }
-    if (moduleHasContent(module)) {
-      return null;
-    }
-    return (
-      <p style={{ marginTop: 12, color: "#64748b", fontStyle: "italic" }}>
-        Video coming soon. Module outline and lab details are available below.
-      </p>
-    );
-  }
+  const completionRequirements = programDetail?.completionRequirements;
 
   async function enrollNow() {
     if (!programId || !learnerId) {
@@ -113,36 +69,15 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
     }
   }
 
-  async function markModuleComplete(module) {
-    if (!enrollment?.enrollmentId) {
-      setActionMessage("Enroll in this program to track progress.");
-      return;
-    }
-    setBusyModule(module.moduleNumber);
-    setActionMessage("");
-    try {
-      await completeModule(enrollment.enrollmentId, {
-        moduleNumber: module.moduleNumber,
-        moduleTitle: module.title,
-        nextLesson: module.title,
-      });
-      setActionMessage(`Module ${module.moduleNumber} marked complete.`);
-    } catch (error) {
-      setActionMessage(error.message || "Unable to update progress.");
-    } finally {
-      setBusyModule(null);
-    }
-  }
-
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
         compact
         eyebrow="FCA Academy"
         title={program?.title || "Program"}
-        subtitle={program?.completionRule || "Module-based training from Auricrux-Central catalog."}
-        primaryHref={shellHeaderCtaSets.academy.primaryHref}
-        primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
+        subtitle={program?.completionRule || program?.deliveryModel || "Module-based training with knowledge checks and practical labs."}
+        primaryHref="/academy/dashboard"
+        primaryLabel="Learner dashboard"
         secondaryHref="/academy/catalog"
         secondaryLabel="Back to catalog"
         journey={shellJourney}
@@ -158,15 +93,35 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
           <div style={{ ...cardStyle, marginBottom: 24 }}>
             <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>{program.credential}</div>
             <p style={{ color: "#475569", lineHeight: 1.7 }}>
-              <strong>Pathway:</strong> {program.pathway} | <strong>Level:</strong> {program.level} | <strong>Modules:</strong> {program.duration}
+              <strong>Pathway:</strong> {program.pathway || "General"} | <strong>Track:</strong> {program.track || "Core"} | <strong>Level:</strong> {program.level || "-"} | <strong>Modules:</strong> {program.duration}
             </p>
+            {program.deliveryModel ? (
+              <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.deliveryModel}</p>
+            ) : null}
             {enrollment ? (
-              <div style={{ marginTop: 12, color: "#334155" }}>
-                <strong>Your progress:</strong> {enrollment.progressPercent}% | {enrollment.completedModules}/{enrollment.totalModules} modules
+              <div style={{ marginTop: 12 }}>
+                <div style={{ color: "#334155", marginBottom: 8 }}>
+                  <strong>Your progress:</strong> {enrollment.progressPercent}% | {enrollment.completedModules}/{enrollment.totalModules} modules
+                </div>
+                <div style={{ height: 10, borderRadius: 999, background: "#e2e8f0", overflow: "hidden" }}>
+                  <div style={{ width: `${enrollment.progressPercent}%`, height: "100%", background: "#2563eb" }} />
+                </div>
+                {enrollment.progressPercent < 100 ? (
+                  <a
+                    href={`/academy/programs/${programId}/modules/${(enrollment.completedModules || 0) + 1}`}
+                    style={{ display: "inline-block", marginTop: 12, border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}
+                  >
+                    Continue: Module {(enrollment.completedModules || 0) + 1}
+                  </a>
+                ) : (
+                  <a href="/academy/credentials" style={{ display: "inline-block", marginTop: 12, color: "#15803d", fontWeight: 700, textDecoration: "none" }}>
+                    Program complete - view credential
+                  </a>
+                )}
               </div>
             ) : (
               <div style={{ marginTop: 12 }}>
-                <div style={{ color: "#64748b", marginBottom: 10 }}>You are not enrolled in this program yet.</div>
+                <div style={{ color: "#64748b", marginBottom: 10 }}>Enroll to access module lessons, knowledge checks, and progress tracking.</div>
                 <button
                   type="button"
                   disabled={enrollBusy}
@@ -181,42 +136,63 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
           </div>
         ) : null}
 
-        <div style={{ display: "grid", gap: 16 }}>
-          {modules.map((module) => (
-            <article key={module.moduleNumber} style={cardStyle}>
-              <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>Module {module.moduleNumber}</div>
-              <h3 style={{ marginTop: 0 }}>{module.title}</h3>
-              {renderModuleMedia(module)}
-              {!module.mediaUrl && !module.contentHtml && module.objective ? (
-                <p style={{ color: "#334155", lineHeight: 1.7 }}><strong>Objective:</strong> {module.objective}</p>
-              ) : null}
-              {!module.contentHtml && Array.isArray(module.lessons) ? (
-                <ul style={{ color: "#475569", lineHeight: 1.8 }}>
-                  {module.lessons.map((lesson) => (
-                    <li key={typeof lesson === "string" ? lesson : lesson.title}>{typeof lesson === "string" ? lesson : lesson.title}</li>
-                  ))}
-                </ul>
-              ) : null}
-              {module.practicalLab && !module.contentHtml ? (
-                <p style={{ color: "#334155" }}><strong>Lab:</strong> {module.practicalLab}</p>
-              ) : module.lab && !module.contentHtml ? (
-                <p style={{ color: "#334155" }}><strong>Lab:</strong> {module.lab}</p>
-              ) : null}
-              {module.knowledgeCheck && !module.contentHtml ? (
-                <p style={{ color: "#64748b" }}><strong>Knowledge check:</strong> {module.knowledgeCheck}</p>
-              ) : null}
-              {enrollment ? (
-                <button
-                  type="button"
-                  disabled={busyModule === module.moduleNumber}
-                  onClick={() => markModuleComplete(module)}
-                  style={{ marginTop: 12, border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
-                >
-                  {busyModule === module.moduleNumber ? "Saving..." : "Mark module complete"}
-                </button>
-              ) : null}
-            </article>
-          ))}
+        {completionRequirements ? (
+          <div style={{ ...cardStyle, marginBottom: 24, background: "#f8fafc" }}>
+            <h3 style={{ marginTop: 0 }}>Completion requirements</h3>
+            <ul style={{ paddingLeft: 20, lineHeight: 1.85, color: "#334155", marginBottom: 0 }}>
+              {Object.entries(completionRequirements).map(([key, value]) => (
+                <li key={key}>{value}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        <h2 style={{ marginBottom: 16 }}>Module sequence</h2>
+        <div style={{ display: "grid", gap: 12 }}>
+          {modules.map((module) => {
+            const status = enrollment ? moduleStatus(module.moduleNumber, enrollment) : "preview";
+            const score = enrollment?.moduleScores?.[String(module.moduleNumber)];
+            const statusColors = {
+              complete: { border: "#86efac", bg: "#f0fdf4", label: "Complete", labelColor: "#15803d" },
+              current: { border: "#93c5fd", bg: "#eff6ff", label: "Current", labelColor: "#2563eb" },
+              available: { border: "#e2e8f0", bg: "#fff", label: "Available", labelColor: "#64748b" },
+              locked: { border: "#e2e8f0", bg: "#f8fafc", label: "Locked", labelColor: "#94a3b8" },
+              preview: { border: "#e2e8f0", bg: "#fff", label: "Preview", labelColor: "#64748b" },
+            };
+            const colors = statusColors[status] || statusColors.preview;
+
+            return (
+              <article key={module.moduleNumber} style={{ ...cardStyle, border: `1px solid ${colors.border}`, background: colors.bg }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "flex-start" }}>
+                  <div>
+                    <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 4 }}>Module {module.moduleNumber}</div>
+                    <h3 style={{ margin: 0 }}>{module.title}</h3>
+                  </div>
+                  <span style={{ color: colors.labelColor, fontWeight: 700, fontSize: 13 }}>
+                    {colors.label}{score !== undefined ? ` (${score}%)` : ""}
+                  </span>
+                </div>
+                {module.objective ? (
+                  <p style={{ color: "#475569", lineHeight: 1.65, marginBottom: 8 }}>{module.objective}</p>
+                ) : null}
+                <div style={{ color: "#64748b", fontSize: 14, marginBottom: 12 }}>
+                  {Array.isArray(module.lessons) ? `${module.lessons.length} lessons` : module.lessons ? `${module.lessons} lessons` : ""}
+                  {module.practicalLab || module.lab ? ` | Lab: ${module.practicalLab || module.lab}` : ""}
+                  {module.knowledgeCheck ? ` | Knowledge check required (80%)` : ""}
+                </div>
+                {status !== "locked" ? (
+                  <a
+                    href={`/academy/programs/${programId}/modules/${module.moduleNumber}`}
+                    style={{ border: "1px solid #2563eb", background: status === "current" ? "#2563eb" : "#fff", color: status === "current" ? "#fff" : "#2563eb", borderRadius: 10, padding: "8px 14px", fontWeight: 700, textDecoration: "none", display: "inline-block" }}
+                  >
+                    {status === "complete" ? "Review module" : "Open module"}
+                  </a>
+                ) : (
+                  <span style={{ color: "#94a3b8", fontSize: 14 }}>Complete prior modules to unlock</span>
+                )}
+              </article>
+            );
+          })}
         </div>
       </main>
 

@@ -1,0 +1,223 @@
+import { useMemo } from "react";
+import ShellHeader from "../../components/ShellHeader";
+import ShellFooter from "../../components/ShellFooter";
+import useAcademyLms from "../../hooks/useAcademyLms";
+import useCustomerSession from "../../hooks/useCustomerSession";
+import { ELECTRICAL_APPRENTICESHIP_LEVELS, organizeApiCatalogByLane } from "../../academyOfferings";
+import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { pageShellStyle } from "../../publicShellStyles";
+
+const cardStyle = {
+  border: "1px solid #e5e7eb",
+  borderRadius: 14,
+  padding: 18,
+  background: "#fff",
+  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+};
+
+function ProgressBar({ percent }) {
+  return (
+    <div style={{ height: 10, borderRadius: 999, background: "#e2e8f0", overflow: "hidden" }}>
+      <div style={{ width: `${Math.min(100, percent || 0)}%`, height: "100%", background: "#2563eb", borderRadius: 999 }} />
+    </div>
+  );
+}
+
+export default function AcademyDashboard() {
+  const { session } = useCustomerSession();
+  const { academyState } = useAcademyLms();
+  const learnerId = session?.email || session?.customerId;
+
+  const enrollments = useMemo(
+    () => (academyState.enrollments || []).filter((item) => !learnerId || item.learnerId === learnerId),
+    [academyState.enrollments, learnerId],
+  );
+
+  const certificates = useMemo(
+    () => (academyState.certificates || []).filter((item) => !learnerId || item.learnerId === learnerId),
+    [academyState.certificates, learnerId],
+  );
+
+  const apiPrograms = academyState?.catalog?.programs || [];
+  const lanes = organizeApiCatalogByLane(apiPrograms);
+
+  const electricalPathway = ELECTRICAL_APPRENTICESHIP_LEVELS.map((level) => {
+    const enrollment = enrollments.find((item) => item.programKey === level.key);
+    return { ...level, enrollment };
+  });
+
+  return (
+    <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
+      <ShellHeader
+        compact
+        eyebrow="FCA Academy"
+        title="Learner dashboard"
+        subtitle="Track enrollments, pathway progression, credentials, and your next module."
+        primaryHref="/academy/catalog"
+        primaryLabel="Browse catalog"
+        secondaryHref="/academy/credentials"
+        secondaryLabel="View credentials"
+        journey={shellJourney}
+        currentJourney="academy"
+      />
+
+      <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Active enrollments</h2>
+          {enrollments.length === 0 ? (
+            <p style={{ color: "#64748b", lineHeight: 1.65 }}>
+              No active enrollments yet. <a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700 }}>Browse the catalog</a> to get started.
+            </p>
+          ) : (
+            <div style={{ display: "grid", gap: 16 }}>
+              {enrollments.map((enrollment) => {
+                const nextModule = (enrollment.completedModules || 0) + 1;
+                return (
+                  <div key={enrollment.enrollmentId} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 16 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 10 }}>
+                      <strong>{enrollment.programTitle}</strong>
+                      <span style={{ color: "#64748b" }}>{enrollment.status}</span>
+                    </div>
+                    <ProgressBar percent={enrollment.progressPercent} />
+                    <div style={{ color: "#475569", marginTop: 8, marginBottom: 12 }}>
+                      {enrollment.completedModules}/{enrollment.totalModules} modules - {enrollment.progressPercent}% complete
+                    </div>
+                    {enrollment.progressPercent < 100 ? (
+                      <a
+                        href={`/academy/programs/${enrollment.programKey}/modules/${nextModule}`}
+                        style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}
+                      >
+                        Continue: Module {nextModule} - {enrollment.nextLesson}
+                      </a>
+                    ) : (
+                      <a href="/academy/credentials" style={{ color: "#15803d", fontWeight: 700, textDecoration: "none" }}>
+                        Program complete - view credential
+                      </a>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Electrical apprenticeship pathway (L1-L10)</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            NCCER-style level progression from core apprenticeship through specialization tracks.
+          </p>
+          <div style={{ display: "grid", gap: 8 }}>
+            {electricalPathway.map((level) => {
+              const complete = level.enrollment?.progressPercent >= 100;
+              const active = level.enrollment && !complete;
+              const enrolled = Boolean(level.enrollment);
+              return (
+                <div
+                  key={level.key}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 12,
+                    flexWrap: "wrap",
+                    padding: "12px 14px",
+                    borderRadius: 10,
+                    border: `1px solid ${complete ? "#86efac" : active ? "#93c5fd" : "#e2e8f0"}`,
+                    background: complete ? "#f0fdf4" : active ? "#eff6ff" : "#fff",
+                  }}
+                >
+                  <div>
+                    <strong>L{level.level}</strong>
+                    <span style={{ color: "#64748b", marginLeft: 8 }}>{level.title}</span>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    {enrolled ? (
+                      <span style={{ color: complete ? "#15803d" : "#2563eb", fontWeight: 700, fontSize: 14 }}>
+                        {level.enrollment.progressPercent}%
+                      </span>
+                    ) : null}
+                    <a href={`/academy/programs/${level.key}`} style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                      {enrolled ? "Open" : "View"}
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Credentials earned</h2>
+          {certificates.length === 0 ? (
+            <p style={{ color: "#64748b" }}>Complete a program to earn your first credential.</p>
+          ) : (
+            <div style={{ display: "grid", gap: 12 }}>
+              {certificates.map((cert) => (
+                <div key={cert.certificateId} style={{ border: "1px solid #bfdbfe", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
+                  <strong>{cert.title}</strong>
+                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 4 }}>
+                    Status: {cert.status} | Issued: {cert.issuedAt ? new Date(cert.issuedAt).toLocaleDateString() : "Pending"}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <a href="/academy/credentials" style={{ display: "inline-block", marginTop: 14, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
+            View all credentials
+          </a>
+        </section>
+
+        <section style={{ ...cardStyle }}>
+          <h2 style={{ marginTop: 0 }}>Transcript summary</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
+            <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+              <div style={{ color: "#64748b", fontSize: 13 }}>Programs enrolled</div>
+              <strong style={{ fontSize: 24 }}>{enrollments.length}</strong>
+            </div>
+            <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+              <div style={{ color: "#64748b", fontSize: 13 }}>Programs completed</div>
+              <strong style={{ fontSize: 24 }}>{enrollments.filter((item) => item.progressPercent >= 100).length}</strong>
+            </div>
+            <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+              <div style={{ color: "#64748b", fontSize: 13 }}>Credentials issued</div>
+              <strong style={{ fontSize: 24 }}>{certificates.filter((item) => item.status === "Issued").length}</strong>
+            </div>
+            <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+              <div style={{ color: "#64748b", fontSize: 13 }}>Catalog lanes</div>
+              <strong style={{ fontSize: 24 }}>{lanes.filter((lane) => lane.programs.length > 0).length}</strong>
+            </div>
+          </div>
+
+          {enrollments.length > 0 ? (
+            <table style={{ width: "100%", marginTop: 20, borderCollapse: "collapse", fontSize: 14 }}>
+              <thead>
+                <tr style={{ borderBottom: "2px solid #e2e8f0", textAlign: "left" }}>
+                  <th style={{ padding: "8px 6px" }}>Program</th>
+                  <th style={{ padding: "8px 6px" }}>Progress</th>
+                  <th style={{ padding: "8px 6px" }}>Score avg</th>
+                  <th style={{ padding: "8px 6px" }}>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {enrollments.map((enrollment) => {
+                  const scores = Object.values(enrollment.moduleScores || {});
+                  const avgScore = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null;
+                  return (
+                    <tr key={enrollment.enrollmentId} style={{ borderBottom: "1px solid #f1f5f9" }}>
+                      <td style={{ padding: "10px 6px" }}>{enrollment.programTitle}</td>
+                      <td style={{ padding: "10px 6px" }}>{enrollment.progressPercent}%</td>
+                      <td style={{ padding: "10px 6px" }}>{avgScore !== null ? `${avgScore}%` : "-"}</td>
+                      <td style={{ padding: "10px 6px" }}>{enrollment.status}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          ) : null}
+        </section>
+      </main>
+
+      <ShellFooter ctaSet={academyCtaSets.home} />
+    </div>
+  );
+}

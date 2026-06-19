@@ -77,8 +77,15 @@ export default function useAcademyLms() {
       appendCommercialLog({ type: "academy-progress", title: `${enrollmentId} learner progress advanced`, detail: `Learner progress now supports mobilization and readiness continuity.`, route: "/academy" });
       return payload;
     },
-    async completeModule(enrollmentId, { moduleNumber, moduleTitle, nextLesson } = {}) {
-      const payload = await mutateAcademyLms("complete-module", { enrollmentId, moduleNumber, moduleTitle, nextLesson });
+    async completeModule(enrollmentId, { moduleNumber, moduleTitle, nextLesson, knowledgeCheckScore, instructorOverride } = {}) {
+      const payload = await mutateAcademyLms("complete-module", {
+        enrollmentId,
+        moduleNumber,
+        moduleTitle,
+        nextLesson,
+        knowledgeCheckScore,
+        instructorOverride,
+      });
       setAcademyState(payload);
       setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy module completion active", lastSyncedAt: new Date().toISOString() });
       appendAutomationLog({ type: "academy-module", title: `${enrollmentId} completed module ${moduleNumber}`, detail: moduleTitle || `Module ${moduleNumber} marked complete.`, route: "/academy" });

@@ -29,6 +29,7 @@ export const routes = {
   "/portal/pipeline": lazyPage(() => import("./pages/portal/PortalPipeline")),
   "/portal/projects": lazyPage(() => import("./pages/portal/PortalProjects")),
   "/portal/files": lazyPage(() => import("./pages/portal/PortalFiles")),
+  "/portal/design": lazyPage(() => import("./pages/portal/PortalDesignWorkspace")),
   "/portal/audit": lazyPage(() => import("./pages/portal/PortalAudit")),
   "/portal/messages": lazyPage(() => import("./pages/portal/PortalMessages")),
   "/portal/notifications": lazyPage(() => import("./pages/portal/PortalNotifications")),
@@ -50,6 +51,8 @@ export const routes = {
 
   "/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
   "/academy/catalog": lazyPage(() => import("./pages/academy/AcademyCatalog")),
+  "/academy/dashboard": lazyPage(() => import("./pages/academy/AcademyDashboard")),
+  "/academy/credentials": lazyPage(() => import("./pages/academy/AcademyCredentials")),
 };
 
 export const routePatterns = [
@@ -68,6 +71,10 @@ export const routePatterns = [
   {
     pattern: "/academy/programs/:programId",
     Page: lazyPage(() => import("./pages/academy/AcademyProgramDetail")),
+  },
+  {
+    pattern: "/academy/programs/:programId/modules/:moduleNumber",
+    Page: lazyPage(() => import("./pages/academy/AcademyModuleLesson")),
   },
 ];
 
