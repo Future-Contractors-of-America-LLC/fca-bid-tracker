@@ -8,6 +8,7 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
+import { centralFetch } from "../../api/backendBase";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -93,7 +94,7 @@ function resolveLocalFallbackAccount(email, password) {
 
 async function authenticateWorkspaceAccount(email, password) {
   try {
-    const response = await fetch("/api/customer-login", {
+    const response = await centralFetch("/api/customer-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

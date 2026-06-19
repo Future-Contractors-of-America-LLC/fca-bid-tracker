@@ -42,6 +42,8 @@ function broadcastCustomerSessionUpdate() {
   window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_EVENT));
 }
 
+import { centralFetch } from "./backendBase";
+
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
   if (!contentType.toLowerCase().includes("application/json")) return null;
@@ -112,12 +114,8 @@ export async function syncCustomerSessionFromServer() {
   if (typeof window === "undefined") return null;
 
   try {
-    const response = await fetch("/api/customer-session", {
+    const response = await centralFetch("/api/customer-session", {
       method: "GET",
-      credentials: "same-origin",
-      headers: {
-        Accept: "application/json",
-      },
     });
 
     const payload = await readJsonSafe(response);
@@ -174,9 +172,8 @@ export async function clearCustomerSession({ server = false } = {}) {
 
   if (server && typeof window !== "undefined") {
     try {
-      await fetch("/api/customer-logout", {
+      await centralFetch("/api/customer-logout", {
         method: "POST",
-        credentials: "same-origin",
       });
     } catch {
       // best-effort server logout only

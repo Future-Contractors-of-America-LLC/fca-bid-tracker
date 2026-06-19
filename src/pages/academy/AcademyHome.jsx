@@ -9,6 +9,7 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useAcademyLms from "../../hooks/useAcademyLms";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -171,7 +172,11 @@ function writeCourseProgress(progress) {
 export default function AcademyHome() {
   const { session } = useCustomerSession();
   const { refreshSyncStamp } = useWorkspaceState();
+  const { academyState, meta } = useAcademyLms();
   const [progress, setProgress] = useState(() => readCourseProgress());
+
+  const apiPrograms = academyState?.catalog?.programs ?? [];
+  const enrollments = academyState?.enrollments ?? [];
 
   useEffect(() => {
     refreshSyncStamp("Academy classroom continuity active");
@@ -215,6 +220,28 @@ export default function AcademyHome() {
 
       <ProductAccessStatusPanel session={session} />
       <CustomerCommsLaunchpad session={session} title="Launch training and communications from one branded customer experience" />
+
+      {(apiPrograms.length > 0 || enrollments.length > 0) && (
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live LMS · Auricrux-Central</div>
+          <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
+            {meta.persistenceState} · {meta.backingSource}
+          </p>
+          {apiPrograms.length > 0 && (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 14 }}>
+              {apiPrograms.slice(0, 6).map((program) => (
+                <div key={program.programId || program.title} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff" }}>
+                  <strong>{program.title || program.name}</strong>
+                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{program.level || program.status || "open"}</div>
+                </div>
+              ))}
+            </div>
+          )}
+          {enrollments.length > 0 && (
+            <p style={{ color: "#334155", marginBottom: 0 }}><strong>{enrollments.length}</strong> active enrollment(s) tracked on the backend.</p>
+          )}
+        </div>
+      )}
 
       <div style={{ display: "grid", gap: 24, marginBottom: 24 }}>
         {classroomSummaries.map((classroom) => (
