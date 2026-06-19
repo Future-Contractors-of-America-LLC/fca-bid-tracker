@@ -189,9 +189,17 @@ const NAV_MENUS = [
   {
     label: "Legal",
     items: [
-      { label: "Terms", href: "/terms" },
-      { label: "Privacy", href: "/privacy" },
-      { label: "Refunds", href: "/refunds" },
+      { label: "Legal Center", href: "/legal" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Cookie Policy", href: "/cookies" },
+      { label: "Acceptable Use", href: "/acceptable-use" },
+      { label: "Security", href: "/security" },
+      { label: "Subprocessors", href: "/subprocessors" },
+      { label: "AI Data Use", href: "/ai-policy" },
+      { label: "Accessibility", href: "/accessibility" },
+      { label: "DMCA", href: "/dmca" },
+      { label: "Refunds & Billing", href: "/refunds" },
       { label: "Intellectual Property", href: "/ip" },
     ],
   },
@@ -211,6 +219,7 @@ const PORTAL_GROUPS = [
       { label: "Estimates", href: "/portal/estimates" },
       { label: "Proposals", href: "/portal/proposals" },
       { label: "Files", href: "/portal/files" },
+      { label: "Design", href: "/portal/design" },
     ],
   },
   {

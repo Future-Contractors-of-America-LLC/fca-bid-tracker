@@ -22,6 +22,7 @@ const explicitRoutes = new Set([
   "/privacy",
   "/refunds",
   "/ip",
+  "/legal",
   "/not-found",
   "/bid-entry",
   "/bid-status",
@@ -52,6 +53,8 @@ const explicitRoutes = new Set([
   "/academy",
   "/academy/catalog",
   "/academy/programs",
+  "/academy/dashboard",
+  "/academy/credentials",
   "/deployment-status.json",
   "/runtime-fingerprint.txt",
   "/live-shell-verification.html",
@@ -133,6 +136,11 @@ for (const file of filesToScan) {
   for (const href of collectInternalHrefsFromContent(content)) {
     hrefs.add(href);
   }
+}
+
+const routesModule = await import(pathToFileURL(path.join(root, "src", "routes.js")).href);
+for (const route of Object.keys(routesModule.routes || {})) {
+  explicitRoutes.add(route);
 }
 
 const websiteShellModule = await import(pathToFileURL(path.join(root, "src", "websiteShell.js")).href);

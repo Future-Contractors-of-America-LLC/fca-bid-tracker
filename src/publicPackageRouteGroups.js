@@ -9,6 +9,7 @@ export const publicPackageRouteGroups = [
       { href: "/portal/estimates", label: "Estimate Workspace" },
       { href: "/portal/projects", label: "Project Flow" },
       { href: "/portal/files", label: "File Spine" },
+      { href: "/portal/design", label: "Design Workspace" },
       { href: "/portal/billing", label: "Billing Command" },
       { href: "/portal/operations", label: "Operations Pipeline" }
     ]

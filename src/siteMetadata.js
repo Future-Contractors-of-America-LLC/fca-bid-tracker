@@ -162,16 +162,48 @@ export const routeMetadata = {
       "Browse electrical apprenticeship pathways, safety programs, and supervisor credentials in FCA Academy.",
   },
   "/terms": {
-    title: "Terms | Future Contractors of America",
-    description: "Terms of service for FCA Contractor Command, portal access, and Academy programs.",
+    title: "Terms of Service | Future Contractors of America",
+    description: "Terms of service for FCA Contractor Command, portal access, Academy, and enterprise subscriptions.",
   },
   "/privacy": {
-    title: "Privacy | Future Contractors of America",
-    description: "Privacy policy for Future Contractors of America products and services.",
+    title: "Privacy Policy | Future Contractors of America",
+    description: "Privacy policy for Future Contractors of America products, GDPR/CCPA rights, and data practices.",
+  },
+  "/legal": {
+    title: "Legal Center | Future Contractors of America",
+    description: "Legal, privacy, security, and trust policies for FCA enterprise and commercial customers.",
+  },
+  "/cookies": {
+    title: "Cookie Policy | Future Contractors of America",
+    description: "How FCA uses cookies and similar technologies on futurecontractorsofamerica.com.",
+  },
+  "/acceptable-use": {
+    title: "Acceptable Use Policy | Future Contractors of America",
+    description: "Permitted and prohibited uses of the FCA platform and Auricrux services.",
+  },
+  "/security": {
+    title: "Security | Future Contractors of America",
+    description: "Security controls, infrastructure, and trust overview for FCA enterprise procurement.",
+  },
+  "/subprocessors": {
+    title: "Subprocessors | Future Contractors of America",
+    description: "List of subprocessors that process data on behalf of Future Contractors of America LLC.",
+  },
+  "/ai-policy": {
+    title: "AI Data Use Policy | Future Contractors of America",
+    description: "How FCA and Auricrux use artificial intelligence with customer data.",
+  },
+  "/accessibility": {
+    title: "Accessibility | Future Contractors of America",
+    description: "Accessibility commitment and WCAG conformance statement for FCA products.",
+  },
+  "/dmca": {
+    title: "DMCA Policy | Future Contractors of America",
+    description: "Digital Millennium Copyright Act notice and takedown policy for FCA.",
   },
   "/refunds": {
-    title: "Refunds | Future Contractors of America",
-    description: "Refund policy for FCA subscriptions and pilot programs.",
+    title: "Refunds & Billing | Future Contractors of America",
+    description: "Refund and billing policy for FCA subscriptions and pilot programs.",
   },
   "/ip": {
     title: "Intellectual Property | Future Contractors of America",

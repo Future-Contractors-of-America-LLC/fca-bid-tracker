@@ -15,7 +15,7 @@ import {
   pipelineItemsToMap,
   upsertPipelineLink,
 } from "../../api/pipelineClient";
-import { createInvoiceCheckout } from "../../api/stripeClient";
+import { createInvoiceFromEstimate } from "../../api/financialClient";
 import { routeStateOverlays } from "../../systemState";
 
 const PIPELINE_KEY = "fca_commercial_pipeline_v1";
@@ -43,7 +43,7 @@ const STEPS = [
   { key: "project", label: "Award to project", detail: "Convert won work into a live project." },
   { key: "estimate", label: "Estimate (optional)", detail: "Route to estimate or skip." },
   { key: "invoice", label: "Issue invoice", detail: "Create and issue customer invoice." },
-  { key: "payment", label: "Collect payment", detail: "Pay via Stripe checkout." },
+  { key: "payment", label: "Collect payment", detail: "Record payment in FCA Books and post to GL." },
 ];
 
 function readLocalPipelineLinks() {
@@ -256,44 +256,46 @@ export default function PortalPipeline() {
 
   async function runInvoice() {
     if (!activeBid) return;
-    const name = invoiceDraft.invoiceName.trim() || `${activeBid.package} mobilization`;
-    const amount = invoiceDraft.amount.trim() || activeBid.value?.replace(/[^\d.]/g, "") || "1000";
+    const projectId = activePipeline?.link?.projectId || "A-117";
+    const estimateId = activePipeline?.link?.estimateId || "EST-1";
     setBusy("invoice");
     setError("");
     try {
-      const created = await createPortalInvoice({ invoiceName: name, amount: amount.startsWith("$") ? amount : `$${amount}`, note: invoiceDraft.note || `Invoice for ${activeBid.package}` });
-      const invoiceId = created.item?.id;
+      const bridged = await createInvoiceFromEstimate(estimateId, projectId);
+      const invoiceId = bridged?.portalInvoice?.id;
       if (invoiceId) {
-        await issuePortalInvoice(invoiceId);
-        await savePipelineLink(activeBid.id, { invoiceId });
+        await savePipelineLink(activeBid.id, { invoiceId, projectId, estimateId });
         const payload = await fetchPortalInvoices();
         setInvoices(payload.items || []);
+        refreshSyncStamp("Pipeline invoice issued from governed estimate bridge");
+        return;
       }
-      refreshSyncStamp("Pipeline invoice issued");
-    } catch (err) {
-      setError(err.message || "Invoice creation failed.");
+      throw new Error("Estimate bridge did not return an invoice.");
+    } catch (bridgeError) {
+      const name = invoiceDraft.invoiceName.trim() || `${activeBid.package} mobilization`;
+      const amount = invoiceDraft.amount.trim() || activeBid.value?.replace(/[^\d.]/g, "") || "1000";
+      try {
+        const created = await createPortalInvoice({ invoiceName: name, amount: amount.startsWith("$") ? amount : `$${amount}`, note: invoiceDraft.note || `Invoice for ${activeBid.package}` });
+        const invoiceId = created.item?.id;
+        if (invoiceId) {
+          await issuePortalInvoice(invoiceId);
+          await savePipelineLink(activeBid.id, { invoiceId, projectId });
+          const payload = await fetchPortalInvoices();
+          setInvoices(payload.items || []);
+        }
+        refreshSyncStamp("Pipeline invoice issued");
+      } catch (err) {
+        setError(bridgeError.message || err.message || "Invoice creation failed.");
+      }
     } finally {
       setBusy("");
     }
   }
 
-  async function runPayment() {
+  function runPayment() {
     const invoiceId = activePipeline?.linkedInvoice?.id || activePipeline?.link?.invoiceId;
-    if (!invoiceId) return;
-    setBusy("payment");
-    setError("");
-    try {
-      const checkout = await createInvoiceCheckout(invoiceId, {
-        customerEmail: session?.email,
-        successUrl: `${window.location.origin}/portal/pipeline?payment=success`,
-        cancelUrl: `${window.location.origin}/portal/pipeline?payment=cancelled`,
-      });
-      if (checkout.checkoutUrl) window.location.href = checkout.checkoutUrl;
-      else throw new Error("Stripe checkout URL was not returned.");
-    } catch (err) {
-      setError(err.message || "Payment failed.");
-      setBusy("");
-    }
+    if (!invoiceId || typeof window === "undefined") return;
+    window.location.href = `/portal/finance?view=payments&invoiceId=${encodeURIComponent(invoiceId)}`;
   }
 
   return (
@@ -408,8 +410,8 @@ export default function PortalPipeline() {
             ) : null}
             {activePipeline.current === "payment" ? (
               <>
-                <button type="button" style={{ ...actionButtonStyle, borderColor: "#16a34a", background: "#16a34a", color: "#fff" }} disabled={busy === "payment"} onClick={runPayment}>
-                  {busy === "payment" ? "Opening Stripe..." : "Pay via Stripe"}
+                <button type="button" style={{ ...actionButtonStyle, borderColor: "#16a34a", background: "#16a34a", color: "#fff" }} onClick={runPayment}>
+                  Record payment in FCA Books
                 </button>
                 <a href={`/portal/billing/${activePipeline.linkedInvoice?.id || activePipeline.link?.invoiceId}`} style={{ ...actionButtonStyle, textDecoration: "none", display: "inline-block" }}>View invoice</a>
               </>

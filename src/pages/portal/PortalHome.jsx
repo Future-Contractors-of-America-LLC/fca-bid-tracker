@@ -177,6 +177,7 @@ export default function PortalHome() {
     { title: "Estimates", detail: "Move pricing, scope notes, and proposal packaging forward.", href: "/portal/estimates", label: "Open Estimates" },
     { title: "Projects", detail: "Control stage movement, milestones, and delivery posture.", href: "/portal/projects", label: "Open Projects" },
     { title: "Files", detail: "Keep evidence, permit packets, and customer documents attached to the right context.", href: "/portal/files", label: "Open Files" },
+    { title: "Design Workspace", detail: "Review PDF, DWG, and RVT plan sets with markup, takeoff, and Auricrux coordination.", href: "/portal/design", label: "Open Design Workspace" },
     { title: "Billing", detail: "Stage invoices and preserve revenue continuity.", href: "/portal/billing", label: "Open Billing" },
     { title: "Commercial Pipeline", detail: "Run bid qualification through project award, invoice, and payment.", href: "/portal/pipeline", label: "Open Pipeline" },
     { title: "Academy", detail: "Train teams through apprenticeship, certification, degree, licensure, and how-to tracks.", href: "/academy/catalog", label: "Open Academy Catalog" },

@@ -33,7 +33,7 @@ const actionButtonStyle = {
   cursor: "pointer",
 };
 
-export default function ProjectFileAuditPanel({ project, files = [], auditEvents = [], onRegisterReview, onClassifyFile, onLinkEvidence, onCreateBriefing, busyFileId = null, targetedFileId = "" }) {
+export default function ProjectFileAuditPanel({ project, files = [], auditEvents = [], onRegisterReview, onClassifyFile, onLinkEvidence, onCreateBriefing, onOpenDesign, busyFileId = null, targetedFileId = "" }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16, marginTop: 24 }}>
       <div style={sectionStyle}>
@@ -106,6 +106,11 @@ export default function ProjectFileAuditPanel({ project, files = [], auditEvents
                     {onCreateBriefing ? (
                       <button type="button" style={actionButtonStyle} disabled={busyFileId === file.fileId} onClick={() => onCreateBriefing(file)}>
                         {busyFileId === file.fileId ? "Working…" : "Create briefing"}
+                      </button>
+                    ) : null}
+                    {onOpenDesign ? (
+                      <button type="button" style={actionButtonStyle} disabled={busyFileId === file.fileId} onClick={() => onOpenDesign(file)}>
+                        Open in Design Workspace
                       </button>
                     ) : null}
                   </div>

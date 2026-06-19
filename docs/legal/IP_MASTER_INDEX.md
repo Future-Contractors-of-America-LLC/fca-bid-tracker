@@ -10,6 +10,7 @@
 
 | Topic | Document |
 |-------|----------|
+| **Enterprise legal corpus (MSA, DPA, SLA, policies)** | [enterprise/LEGAL_ENTERPRISE_INDEX.md](./enterprise/LEGAL_ENTERPRISE_INDEX.md) |
 | **Brand assets (trademark specimens)** | `brand-assets/BRAND_MANIFEST.json` |
 | **Copyright registration** | [COPYRIGHT_FILING_PREP.md](./COPYRIGHT_FILING_PREP.md) |
 | **Trademark registration** | [TRADEMARK_FILING_PREP.md](./TRADEMARK_FILING_PREP.md) |

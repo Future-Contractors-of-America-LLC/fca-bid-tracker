@@ -146,6 +146,17 @@ export const routeStateOverlays = {
     auricruxRole: "Read and contextualize",
     auricruxDetail: "Auricrux reads file context, explains what each artifact means, and detects documentation gaps.",
   },
+  design: {
+    title: "Design Workspace route state",
+    summary: "Design Workspace unifies PDF, DWG, and RVT viewing with shared markup, takeoff, and coordination continuity.",
+    status: "Design session active",
+    primaryFocus: "Plan review and markup",
+    primaryDetail: "This route anchors governed plan sets, sheet navigation, markup layers, and takeoff linkage in one enterprise workspace.",
+    dependency: "Binary file spine and sheet manifest",
+    dependencyDetail: "Design Workspace depends on blob-backed file artifacts, extraction manifests, and project linkage.",
+    auricruxRole: "Explain, recommend, and act",
+    auricruxDetail: "Auricrux reads active sheets and markups, explains revision changes, recommends takeoff gaps, and can spawn RFIs or takeoffs.",
+  },
   messages: {
     title: "Message route state",
     summary: "Messages specialize the shared state around communication continuity, escalation awareness, and customer movement to the next step.",
@@ -631,7 +642,7 @@ export const portalJourney = [
   { key: "lead", label: "Lead / Intake", href: "/login" },
   { key: "bid", label: "Bid / Estimate", href: "/portal/bids" },
   { key: "job", label: "Project / Job", href: "/portal/projects" },
-  { key: "coordination", label: "Files + Messages", href: "/portal/files" },
+  { key: "coordination", label: "Files + Design", href: "/portal/files" },
   { key: "finance", label: "Billing / Admin", href: "/portal/billing" },
   { key: "academy", label: "Academy / Support", href: "/portal/academy" },
 ];

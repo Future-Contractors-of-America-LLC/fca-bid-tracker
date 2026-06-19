@@ -1,5 +1,6 @@
 import DeploymentStatusBeacon from "./DeploymentStatusBeacon";
 import FcaBrandMark from "./FcaBrandMark";
+import { LEGAL_FOOTER_PAGES } from "../legal/legalNav";
 
 export default function ShellFooter() {
   return (
@@ -29,10 +30,12 @@ export default function ShellFooter() {
         <div>
           <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 14 }}>Legal</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, fontSize: 14 }}>
-            <a href="/terms" style={{ color: "#334155", textDecoration: "none" }}>Terms of Service</a>
-            <a href="/privacy" style={{ color: "#334155", textDecoration: "none" }}>Privacy Policy</a>
-            <a href="/refunds" style={{ color: "#334155", textDecoration: "none" }}>Refunds & Billing</a>
-            <a href="/ip" style={{ color: "#334155", textDecoration: "none" }}>Intellectual Property</a>
+            <a href="/legal" style={{ color: "#334155", textDecoration: "none", fontWeight: 600 }}>Legal Center</a>
+            {LEGAL_FOOTER_PAGES.map((page) => (
+              <a key={page.href} href={page.href} style={{ color: "#334155", textDecoration: "none" }}>
+                {page.label}
+              </a>
+            ))}
           </div>
         </div>
 

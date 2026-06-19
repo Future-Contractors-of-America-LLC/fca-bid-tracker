@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "lucide-react": "^1.14.0",
+    "pdfjs-dist": "^4.10.38",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
@@ -104,6 +105,8 @@
     "validate:first-persisted-control-run-gate": "node scripts/validate-first-persisted-control-run-gate.mjs",
     "generate:first-persisted-control-run-gate-report": "node scripts/generate-first-persisted-control-run-gate-report.mjs",
     "validate:public-package-route-groups": "node scripts/validate-public-package-route-groups.mjs",
+    "validate:design-workspace": "node scripts/validate-design-workspace.cjs",
+    "validate:finance-workspace": "node scripts/validate-finance-workspace.mjs",
     "generate:public-package-route-groups-report": "node scripts/generate-public-package-route-groups-report.mjs",
     "validate:public-conversion-surface-route-truth": "node scripts/validate-public-conversion-surface-route-truth.mjs",
     "generate:public-conversion-surface-route-truth-report": "node scripts/generate-public-conversion-surface-route-truth-report.mjs",

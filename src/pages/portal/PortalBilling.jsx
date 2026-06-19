@@ -9,7 +9,6 @@ import {
   fetchPortalInvoices,
   issuePortalInvoice,
 } from "../../api/portalClient";
-import { createInvoiceCheckout, createBillingPortalSession } from "../../api/stripeClient";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -159,49 +158,10 @@ export default function PortalBilling() {
     }
   }
 
-  async function openBillingPortal() {
-    setActionError("");
-    setBusyId("portal");
-    try {
-      const portal = await createBillingPortalSession({
-        customerEmail: session?.email,
-        returnUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/billing` : undefined,
-      });
-      if (portal.portalUrl) {
-        window.location.href = portal.portalUrl;
-        return;
-      }
-      throw new Error("Stripe billing portal URL was not returned.");
-    } catch (error) {
-      setActionError(error.message || "Unable to open billing portal.");
-      setBusyId("");
-    }
-  }
-
-  async function payInvoice(invoiceId) {
-    setActionError("");
-    setBusyId(`pay-${invoiceId}`);
-    try {
-      const checkout = await createInvoiceCheckout(invoiceId, {
-        customerEmail: session?.email,
-        successUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/billing?payment=success` : undefined,
-        cancelUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/billing?payment=cancelled` : undefined,
-      });
-      if (checkout.checkoutUrl) {
-        window.location.href = checkout.checkoutUrl;
-        return;
-      }
-      throw new Error("Stripe checkout URL was not returned.");
-    } catch (error) {
-      setActionError(error.message || "Unable to start Stripe checkout.");
-      setBusyId("");
-    }
-  }
-
   return (
     <PortalShell
       title={`${companyName} Billing`}
-      subtitle="Create invoices, issue them to customers, and collect payment through Stripe."
+      subtitle="Create and issue customer invoices, then record payment natively in FCA Books."
       activeHref="/portal/billing"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.billing}
@@ -217,9 +177,9 @@ export default function PortalBilling() {
           <div><strong>Account:</strong> {session?.email || "Not signed in"}</div>
           <div><strong>Plan:</strong> {session?.selectedPlan || "startup"}</div>
         </div>
-        <button type="button" onClick={openBillingPortal} disabled={busyId === "portal"} style={{ marginTop: 14, border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-          {busyId === "portal" ? "Opening portal..." : "Manage billing"}
-        </button>
+        <a href="/portal/finance" style={{ marginTop: 14, display: "inline-block", border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>
+          Open FCA Books
+        </a>
       </div>
 
       {loadError ? (
@@ -278,6 +238,7 @@ export default function PortalBilling() {
               </div>
               <div style={{ color: "#475569", lineHeight: 1.7, marginTop: 8 }}>{invoice.note}</div>
               <div style={{ color: "#0f172a", marginTop: 8 }}><strong>Status:</strong> {invoice.status}</div>
+              {invoice.estimateId ? <div style={{ color: "#475569", marginTop: 6 }}><strong>Estimate lineage:</strong> {invoice.estimateId}</div> : null}
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 10 }}>
                 {invoice.status === "Draft" ? (
                   <button type="button" onClick={() => issueInvoice(invoice.id)} disabled={busyId === invoice.id} style={{ border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
@@ -290,9 +251,9 @@ export default function PortalBilling() {
                       {busyId === `deliver-${invoice.id}` ? "Sending..." : "Send Invoice"}
                     </button>
                     <a href={`/portal/billing/${invoice.id}`} style={{ border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>View / Print</a>
-                    <button type="button" onClick={() => payInvoice(invoice.id)} disabled={busyId === `pay-${invoice.id}`} style={{ border: "1px solid #16a34a", background: "#16a34a", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-                      {busyId === `pay-${invoice.id}` ? "Opening Stripe..." : "Pay via Stripe"}
-                    </button>
+                    <a href={`/portal/finance?view=payments&invoiceId=${encodeURIComponent(invoice.id)}`} style={{ border: "1px solid #16a34a", background: "#16a34a", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>
+                      Record payment
+                    </a>
                   </>
                 ) : null}
                 {invoice.status === "Paid" ? (

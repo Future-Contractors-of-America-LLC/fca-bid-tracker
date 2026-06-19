@@ -362,12 +362,16 @@ After SSO works, disable or rotate:
 
 ## Section 5 � Legal / enterprise procurement
 
+**Canonical drafts:** [legal/enterprise/LEGAL_ENTERPRISE_INDEX.md](./legal/enterprise/LEGAL_ENTERPRISE_INDEX.md)
+
 | Item | Action | Owner |
 |------|--------|-------|
+| **Enterprise legal corpus** | Review full pack at `legal/enterprise/` (MSA, DPA, SLA, security, subprocessors, policies) | Legal counsel + you |
 | **IP filing pack** | Trademark, copyright, patent prep � start at [legal/IP_MASTER_INDEX.md](./legal/IP_MASTER_INDEX.md) | Legal counsel + you |
-| **Privacy policy** | Publish at `/privacy` � confirm matches data collected (email, company, usage) | Legal / you |
-| **Terms of service** | Publish at `/terms` � subscription terms, SLA expectations | Legal / you |
-| **DPA** | Data Processing Agreement for enterprise buyers (Procore/Autodesk tier) | Legal counsel |
+| **Privacy policy** | Counsel approves `legal/enterprise/PRIVACY_POLICY.md`; publish at `/privacy` | Legal / you |
+| **Terms of service** | Counsel approves `legal/enterprise/TERMS_OF_SERVICE.md`; publish at `/terms` | Legal / you |
+| **DPA / MSA / SLA** | Execute templates in `legal/enterprise/` with Order Form | Legal counsel |
+| **VA SCC certificate** | Download Certificate of Fact for Google verification | You |
 | **SOC 2** | Roadmap + vendor (Vanta, Drata, etc.) if pursuing enterprise | Leadership |
 | **Academy accreditation** | Sign-off on electrical apprenticeship content (NCCER alignment claims) | Trade / training lead |
 

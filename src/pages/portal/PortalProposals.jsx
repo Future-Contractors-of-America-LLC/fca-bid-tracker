@@ -66,10 +66,33 @@ export default function PortalProposals() {
               <div><strong>Delivery mode:</strong> {proposal.deliveryMode}</div>
             </div>
             <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.7 }}>
-              <div><strong>Narrative:</strong> {proposal.commercialNarrative}</div>
+              <div><strong>Total:</strong> {proposal.total || proposal.scopePackage?.total || "—"}</div>
+              <div style={{ marginTop: 8 }}><strong>Narrative:</strong> {proposal.commercialNarrative}</div>
               <div style={{ marginTop: 8 }}><strong>Assumptions summary:</strong> {proposal.assumptionsSummary}</div>
+              {proposal.exclusionsSummary ? <div style={{ marginTop: 8 }}><strong>Exclusions:</strong> {proposal.exclusionsSummary}</div> : null}
               <div style={{ marginTop: 8 }}><strong>Next action:</strong> {proposal.nextAction}</div>
             </div>
+            {proposal.scopePackage?.designSourcedLines?.length ? (
+              <div style={{ marginTop: 14 }}>
+                <div style={{ fontWeight: 700, marginBottom: 8 }}>Design-sourced scope ({proposal.scopePackage.designLineCount})</div>
+                <div style={{ display: "grid", gap: 8 }}>
+                  {proposal.scopePackage.designSourcedLines.map((line) => (
+                    <div key={line.code} style={{ border: "1px solid #dbeafe", borderRadius: 10, padding: 10, background: "#eff6ff" }}>
+                      <div style={{ fontWeight: 700 }}>{line.label}</div>
+                      <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
+                        {line.quantity} {line.unit} · {line.amount}
+                        {line.sourceTakeoffId ? ` · takeoff ${line.sourceTakeoffId}` : ""}
+                      </div>
+                      {line.projectId && line.sourceFileId ? (
+                        <a href={`/portal/design?projectId=${encodeURIComponent(line.projectId)}&fileId=${encodeURIComponent(line.sourceFileId)}`} style={{ fontSize: 12, color: "#2563eb" }}>
+                          Trace to Design Workspace
+                        </a>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
               <button type="button" style={buttonStyle()} onClick={() => advanceProposal(proposal.proposalId, "Sent", `Auricrux sent ${proposal.proposalId} into customer review.`, "Track customer response")}>Send Proposal</button>
               <button type="button" style={buttonStyle(true)} onClick={() => advanceProposal(proposal.proposalId, "Approved", `Auricrux recorded approval for ${proposal.proposalId}.`, "Create project handoff package")}>Mark Approved</button>
