@@ -8,7 +8,7 @@ export default createOperationalPortalPage({
   itemLabel: "Plan review",
   journey: "lead",
   seedItems: [
-    { id: "plan-1", name: "Enterprise — Full SaaS + Academy", owner: "Owner", reviewDate: "2026-06-01", status: "Open", notes: "Annual review scheduled" },
+    { id: "plan-1", name: "Enterprise - Full SaaS + Academy", owner: "Owner", reviewDate: "2026-06-01", status: "Open", notes: "Annual review scheduled" },
   ],
   fields: [
     { key: "name", label: "Plan or package name", required: true, placeholder: "Enterprise rollout" },

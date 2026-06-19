@@ -96,7 +96,7 @@ export function createOperationalPortalPage({
 
     return (
       <PortalShell
-        title={`${companyName} · ${title}`}
+        title={`${companyName} - ${title}`}
         subtitle={subtitle}
         activeHref={activeHref}
         currentJourney={journey}

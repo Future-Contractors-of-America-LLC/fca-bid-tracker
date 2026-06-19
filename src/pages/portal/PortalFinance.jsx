@@ -7,7 +7,7 @@ import { routeStateOverlays } from "../../systemState";
 const cardStyle = { border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, background: "#fff" };
 
 export default function PortalFinance() {
-  const { state, refreshSyncStamp } = useWorkspaceState();
+  const { refreshSyncStamp } = useWorkspaceState();
   const [invoices, setInvoices] = useState([]);
   const [summary, setSummary] = useState(null);
 
@@ -24,7 +24,7 @@ export default function PortalFinance() {
 
   return (
     <PortalShell
-      title="Finance & Revenue"
+      title="Finance and Revenue"
       subtitle="Track invoices, payment status, and billing milestones for active jobs."
       activeHref="/portal/finance"
       currentJourney="lead"
@@ -55,7 +55,7 @@ export default function PortalFinance() {
           invoices.map((inv) => (
             <div key={inv.id} style={cardStyle}>
               <strong>{inv.name || inv.subject || inv.id}</strong>
-              <div style={{ color: "#475569", marginTop: 6 }}>{inv.amount || inv.total} · {inv.status || "Draft"}</div>
+              <div style={{ color: "#475569", marginTop: 6 }}>{inv.amount || inv.total} - {inv.status || "Draft"}</div>
             </div>
           ))
         )}
