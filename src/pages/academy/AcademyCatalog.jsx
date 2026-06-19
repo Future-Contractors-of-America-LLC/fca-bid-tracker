@@ -1,7 +1,8 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
-import { getProgramsByLane } from "../../academyOfferings";
+import { getProgramsByLane, OFFERING_LANES } from "../../academyOfferings";
+import { academyCatalog } from "../../academyCatalog";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -21,6 +22,8 @@ const laneHeaderStyle = {
 
 export default function AcademyCatalog() {
   const lanes = getProgramsByLane();
+  const programCount = academyCatalog.programs.length;
+  const laneCount = OFFERING_LANES.length;
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -28,7 +31,7 @@ export default function AcademyCatalog() {
         compact
         eyebrow="FCA Academy"
         title="Programs by lane, degree, certification, and licensure"
-        subtitle="Every offering is organized for customers and investors: apprenticeship pathways, degree tracks, professional certifications, licensure prep, and operator courses—each linked to live SaaS workflows."
+        subtitle={`${programCount} complete programs organized across ${laneCount} lanes—apprenticeship pathways, degree tracks, professional certifications, licensure prep, and operator courses, each linked to live SaaS workflows.`}
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}

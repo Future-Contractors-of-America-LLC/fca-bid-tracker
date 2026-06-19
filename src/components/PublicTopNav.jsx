@@ -218,7 +218,7 @@ const PORTAL_GROUPS = [
       { label: "Plans", href: "/portal/plans" },
       { label: "Finance", href: "/portal/finance" },
       { label: "Billing", href: "/portal/billing" },
-      { label: "Warranty", href: "/warranty" },
+      { label: "Warranty", href: "/portal/warranty" },
       { label: "Messages", href: "/portal/messages" },
       { label: "Support", href: "/portal/support" },
     ],

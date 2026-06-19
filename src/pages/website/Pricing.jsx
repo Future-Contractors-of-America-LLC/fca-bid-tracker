@@ -5,7 +5,6 @@ import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
-import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
@@ -14,7 +13,7 @@ import PricingActionCenter from "../../components/PricingActionCenter";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { publicPackageRouteGroups } from "../../publicPackageRouteGroups";
-import { executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { executiveSignalCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
@@ -100,14 +99,6 @@ export default function Pricing() {
         </div>
         <p style={{ lineHeight: 1.7, color: "#334155", maxWidth: 860, marginBottom: 0 }}>{publicPricingMessaging.hero.detail}</p>
       </div>
-
-      <FounderJourneyStrip
-        currentJourney="conversion"
-        title={publicPricingMessaging.journey.title}
-        detail={publicPricingMessaging.journey.detail}
-        ctaHref={founderJourneyCtaSets.conversion.href}
-        ctaLabel={founderJourneyCtaSets.conversion.label}
-      />
 
       <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.conversion.href} nextLabel={executiveSignalCtaSets.conversion.label} />
 

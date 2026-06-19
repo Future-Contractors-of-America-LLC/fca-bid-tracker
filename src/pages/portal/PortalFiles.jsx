@@ -209,7 +209,7 @@ export default function PortalFiles() {
         <div style={{ marginBottom: 16 }}>
           <ExecutionTruthBanner
             title="File spine shell is active"
-            status="Shell continuity active"
+            status="Workspace active"
             source={evidenceMeta.backingSource}
             tone="warning"
             whatIsLive={[

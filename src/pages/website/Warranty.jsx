@@ -1,57 +1,12 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
-import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicActionRail from "../../components/PublicActionRail";
+import { warrantyItems, warrantyProof } from "../../content/warrantyContent";
 import { cardStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
-import { founderJourneyCtaSets, publicActionCatalog, publicRouteCtas, shellJourney } from "../../websiteShell";
-
-const warrantyItems = [
-  {
-    label: "Lifecycle continuity",
-    value: "Post-handover support stays inside FCA",
-    detail: "Warranty requests, service coordination, and resolution history now belong to the same operating system as bids, projects, billing, and support.",
-  },
-  {
-    label: "Revenue protection",
-    value: "Warranty becomes retention and repeat-work infrastructure",
-    detail: "This surface frames warranty not as cost leakage, but as a controlled path into maintenance contracts, follow-on scopes, and customer retention.",
-  },
-  {
-    label: "Operational artifact",
-    value: "Service logs and handoff readiness stay visible",
-    detail: "The route reinforces that FCA should capture service records, closeout continuity, and customer follow-through as governed artifacts.",
-  },
-];
-
-const warrantyProof = [
-  {
-    title: "Open support continuity",
-    detail: "Move from public warranty narrative into the live support workspace so service and escalation posture are shown in real operating context.",
-    href: "/portal/support",
-    label: "Open Support",
-  },
-  {
-    title: "Review files and closeout readiness",
-    detail: "Use the files workspace to reinforce how manuals, turnover records, and project artifacts should remain accessible after handoff.",
-    href: "/portal/files",
-    label: "Open Files",
-  },
-  {
-    title: "Keep customer messaging attached",
-    detail: "Move into the message workspace so warranty follow-through stays linked to real communication channels rather than disconnected inboxes.",
-    href: "/portal/messages",
-    label: "Open Messages",
-  },
-  {
-    title: "Close toward recurring service",
-    detail: "Use contact and walkthrough motion to position maintenance plans, post-occupancy service, and repeat-project conversation as the next governed step.",
-    href: "/contact",
-    label: "Open Contact & Rollout",
-  },
-];
+import { publicActionCatalog, publicRouteCtas, shellJourney } from "../../websiteShell";
 
 export default function Warranty() {
   return (
@@ -66,14 +21,6 @@ export default function Warranty() {
         secondaryLabel={publicActionCatalog.support.label}
         journey={shellJourney}
         currentJourney="conversion"
-      />
-
-      <FounderJourneyStrip
-        currentJourney="conversion"
-        title="Warranty should extend the lifecycle instead of ending it"
-        detail="FCA treats post-occupancy support, service coordination, and customer retention as an operating continuation rather than an afterthought."
-        ctaHref={founderJourneyCtaSets.contact.href}
-        ctaLabel={founderJourneyCtaSets.contact.label}
       />
 
       <div style={{ marginTop: 24 }}>

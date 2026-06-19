@@ -209,7 +209,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
       <div style={pageShellStyle}>
         <ShellHeader
           compact
-          eyebrow={internalMode ? "Internal validation" : "Sign in"}
+          eyebrow="Sign in"
           title="Access your FCA workspace"
           subtitle="Sign in to reach SaaS operations, customer portal, Academy, and Auricrux from one account."
         />

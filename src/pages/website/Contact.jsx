@@ -4,7 +4,6 @@ import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
-import FounderJourneyStrip from "../../components/FounderJourneyStrip";
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicOperationsStrip from "../../components/PublicOperationsStrip";
@@ -15,7 +14,7 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { contactPaths, executiveSignalCtaSets, founderJourneyCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { contactPaths, executiveSignalCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels } from "../../systemState";
 import { cardStyle, pageShellStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
@@ -58,14 +57,6 @@ export default function Contact() {
       />
 
       <div style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}><FcaBrandMark compact /></div>
-
-      <FounderJourneyStrip
-        currentJourney="conversion"
-        title={publicContactMessaging.journey.title}
-        detail={publicContactMessaging.journey.detail}
-        ctaHref={founderJourneyCtaSets.contact.href}
-        ctaLabel={founderJourneyCtaSets.contact.label}
-      />
 
       <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.contact.href} nextLabel={executiveSignalCtaSets.contact.label} />
 

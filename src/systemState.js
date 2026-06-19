@@ -551,6 +551,61 @@ export const portalModules = [
     description: "Invoices, review queue, and account follow-through",
   },
   {
+    href: "/portal/estimates",
+    label: "Estimates",
+    description: "Estimate studio, pricing review, and proposal packaging",
+  },
+  {
+    href: "/portal/proposals",
+    label: "Proposals",
+    description: "Customer-ready proposal handoff and delivery",
+  },
+  {
+    href: "/portal/plans",
+    label: "Plans",
+    description: "Commercial plan review and upgrade paths",
+  },
+  {
+    href: "/portal/finance",
+    label: "Finance",
+    description: "Revenue posture, invoicing context, and financial continuity",
+  },
+  {
+    href: "/portal/scheduling",
+    label: "Scheduling",
+    description: "Mobilization, milestone, and field scheduling",
+  },
+  {
+    href: "/portal/field-tasks",
+    label: "Field tasks",
+    description: "Customer-visible field work and task execution",
+  },
+  {
+    href: "/portal/field-supervision",
+    label: "Field supervision",
+    description: "Superintendent oversight and site readiness",
+  },
+  {
+    href: "/portal/warranty",
+    label: "Warranty",
+    description: "Post-handover service, retention, and recurring work",
+  },
+  {
+    href: "/portal/operations",
+    label: "Operations",
+    description: "Cross-route operating summary and coordination",
+  },
+  {
+    href: "/portal/auricrux",
+    label: "Auricrux",
+    description: "Guided next actions and continuity intelligence",
+  },
+  {
+    href: "/portal/profile",
+    label: "Profile",
+    description: "Account settings, access, and communications preferences",
+  },
+  {
     href: "/portal/academy",
     label: "Academy",
     description: "Training continuity tied to the same customer journey",
@@ -584,8 +639,8 @@ export const defaultWorkspaceState = {
   workspace: workspaceContext,
   auricrux: auricruxRail,
   meta: {
-    backingSource: "localStorage",
-    persistenceState: "Seeded from canonical shell state",
+    backingSource: "workspace",
+    persistenceState: "Workspace synchronized",
     lastSyncedAt: null,
   },
 };

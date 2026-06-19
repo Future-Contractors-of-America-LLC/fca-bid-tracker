@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import PortalShell from "../../components/PortalShell";
-import useWorkspaceState from "../../hooks/useWorkspaceState";
-import useCustomerSession from "../../hooks/useCustomerSession";
-import { routeStateOverlays } from "../../systemState";
+import PortalShell from "./PortalShell";
+import useWorkspaceState from "../hooks/useWorkspaceState";
+import useCustomerSession from "../hooks/useCustomerSession";
+import { routeStateOverlays } from "../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",

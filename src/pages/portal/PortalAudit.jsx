@@ -79,7 +79,7 @@ export default function PortalAudit() {
         <div style={{ marginBottom: 16 }}>
           <ExecutionTruthBanner
             title="Audit continuity shell is active"
-            status="Shell continuity active"
+            status="Workspace active"
             source={auditMeta.backingSource}
             tone="warning"
             whatIsLive={[

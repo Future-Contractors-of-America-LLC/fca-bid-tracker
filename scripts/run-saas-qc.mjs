@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SaaS quality control — portal tools, routes, API surfaces, governance.
+ * SaaS quality control  portal tools, routes, API surfaces, governance.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -31,6 +31,7 @@ const SAAS_PORTAL_ROUTES = [
   "/portal/scheduling",
   "/portal/field-tasks",
   "/portal/field-supervision",
+  "/portal/warranty",
 ];
 
 const SAAS_API_ENDPOINTS = [
@@ -71,18 +72,18 @@ let failed = 0;
 function pass(label, detail = "") {
   passed += 1;
   findings.push({ status: "pass", label, detail });
-  console.log(`PASS: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? `  ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
   findings.push({ status: "fail", label, detail });
-  console.error(`FAIL: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? `  ${detail}` : ""}`);
 }
 
 function warn(label, detail = "") {
   findings.push({ status: "warn", label, detail });
-  console.warn(`WARN: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.warn(`WARN: ${label}${detail ? `  ${detail}` : ""}`);
 }
 
 for (const script of SCRIPT_CHECKS) {
@@ -135,7 +136,7 @@ for (const endpoint of SAAS_API_ENDPOINTS) {
 const blueprintSource = fs.readFileSync(path.join(root, "src", "productBlueprint.js"), "utf8");
 const blueprintHrefs = [...blueprintSource.matchAll(/href:\s*"(\/[^"]+)"/g)].map((m) => m[1]);
 for (const href of blueprintHrefs) {
-  if (routeKeys.includes(href) || href === "/warranty") pass(`blueprint:${href}`);
+  if (routeKeys.includes(href) || href === "/warranty" || href === "/portal/warranty") pass(`blueprint:${href}`);
   else warn(`blueprint:${href}`, "href not in SPA routes (may be public static)");
 }
 

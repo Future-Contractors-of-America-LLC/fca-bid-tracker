@@ -98,7 +98,7 @@ export default function PortalProjects() {
         <div style={{ marginBottom: 16 }}>
           <ExecutionTruthBanner
             title="Project continuity shell is active"
-            status="Shell continuity active"
+            status="Workspace active"
             source={meta.backingSource}
             tone="warning"
             whatIsLive={[

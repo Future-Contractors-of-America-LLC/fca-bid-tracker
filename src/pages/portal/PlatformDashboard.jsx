@@ -95,11 +95,8 @@ export default function PlatformDashboard() {
           </div>
         </div>
         <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
-          <div><strong>Source:</strong> {state.meta.backingSource}</div>
-          <div><strong>Workspace status:</strong> {state.meta.persistenceState}</div>
-          <div><strong>Last refresh:</strong> {state.meta.lastSyncedAt || "Pending initial refresh"}</div>
-          <div><strong>Account source:</strong> {accountSource}</div>
-          <div><strong>Launch readiness:</strong> {launchReadiness}</div>
+          <div><strong>Last refresh:</strong> {state.meta.lastSyncedAt || "Just now"}</div>
+          <div><strong>Account:</strong> {launchReadiness}</div>
         </div>
         <PublicCtaRow actions={publicBodyCtaSets.portalEntry} />
       </div>

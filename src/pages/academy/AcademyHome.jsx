@@ -10,7 +10,8 @@ import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderC
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useAcademyLms from "../../hooks/useAcademyLms";
-import { flattenCatalogLessons } from "../../academyOfferings";
+import { flattenCatalogLessons, getProgramsByLane, OFFERING_LANES } from "../../academyOfferings";
+import { academyCatalog } from "../../academyCatalog";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -192,6 +193,8 @@ export default function AcademyHome() {
   }
 
   const catalogLessons = useMemo(() => flattenCatalogLessons(), []);
+  const catalogLanes = useMemo(() => getProgramsByLane(), []);
+  const catalogProgramCount = academyCatalog.programs.length;
 
   const classroomSummaries = useMemo(() => classrooms.map((classroom) => {
     const completedCount = classroom.lessons.filter((lesson) => progress[lesson.id]).length;
@@ -247,8 +250,24 @@ export default function AcademyHome() {
       )}
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Catalog overview</h2>
+        <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+          <strong>{catalogProgramCount}</strong> programs across <strong>{OFFERING_LANES.length}</strong> lanes: {OFFERING_LANES.map((lane) => lane.label).join(", ")}.
+          {" "}<a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700 }}>View full catalog by lane →</a>
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+          {catalogLanes.filter((lane) => lane.programs.length > 0).map((lane) => (
+            <div key={lane.key} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: "#f8fafc" }}>
+              <strong>{lane.label}</strong>
+              <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{lane.programs.length} program{lane.programs.length === 1 ? "" : "s"}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Catalog lessons</h2>
-        <p style={{ color: "#475569", lineHeight: 1.65 }}>Structured lessons across apprenticeship, certification, degree, licensure, and operator tracks. <a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700 }}>View full catalog by lane →</a></p>
+        <p style={{ color: "#475569", lineHeight: 1.65 }}>Structured lessons across apprenticeship, certification, degree, licensure, and operator tracks.</p>
         <div style={{ display: "grid", gap: 10, maxHeight: 360, overflow: "auto" }}>
           {catalogLessons.map((lesson) => (
             <div key={lesson.id} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: progress[lesson.id] ? "#f0fdf4" : "#fff" }}>

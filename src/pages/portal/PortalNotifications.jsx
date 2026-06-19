@@ -42,10 +42,10 @@ export default function PortalNotifications() {
 
   const accountSource = session?.accountSource || "workspace-shell";
   const launchReadiness = accountSource === "api"
-    ? "Production-backed login active"
+    ? "Connected to your account"
     : accountSource === "local-fallback"
-      ? "Seeded launch/test login active"
-      : "Shell continuity mode";
+      ? "Demo workspace active"
+      : "Workspace active";
 
   const scopedAuditEvents = useMemo(() => scopeAuditEventsToProject(projectAuditEvents, state.project), [state.project]);
 
