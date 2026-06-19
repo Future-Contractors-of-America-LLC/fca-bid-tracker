@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 import NotFound from "./pages/website/NotFound";
 import Login from "./pages/website/Login";
@@ -109,12 +109,14 @@ export default function Router() {
 
   return (
     <>
-      <Page
-        requestedPath={normalizedPath}
-        routeParams={routeMatch?.params || {}}
-        matchedPattern={routeMatch?.pattern || normalizedPath}
-        accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"}
-      />
+      <Suspense fallback={<LoadingRoute />}>
+        <Page
+          requestedPath={normalizedPath}
+          routeParams={routeMatch?.params || {}}
+          matchedPattern={routeMatch?.pattern || normalizedPath}
+          accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"}
+        />
+      </Suspense>
       <AuricruxFrontendDock />
     </>
   );

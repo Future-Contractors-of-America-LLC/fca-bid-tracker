@@ -1,90 +1,55 @@
-import Home from "./pages/website/Home";
-import Platform from "./pages/website/Platform";
-import Login from "./pages/website/Login";
-import Intake from "./pages/website/Intake";
-import Checkout from "./pages/website/Checkout";
-import Pricing from "./pages/website/Pricing";
-import Contact from "./pages/website/Contact";
-import Auricrux from "./pages/website/Auricrux";
-import Warranty from "./pages/website/Warranty";
-import Referrals from "./pages/website/Referrals";
-import Terms from "./pages/website/Terms";
-import Privacy from "./pages/website/Privacy";
-import Refunds from "./pages/website/Refunds";
-import NotFound from "./pages/website/NotFound";
-import LegacyBidEntry from "./pages/website/LegacyBidEntry";
-import LegacyBidStatus from "./pages/website/LegacyBidStatus";
+import { lazy } from "react";
 
-import PortalHome from "./pages/portal/PortalHome";
-import PlatformDashboard from "./pages/portal/PlatformDashboard";
-import PortalProjects from "./pages/portal/PortalProjects";
-import PortalFiles from "./pages/portal/PortalFiles";
-import PortalAudit from "./pages/portal/PortalAudit";
-import PortalMessages from "./pages/portal/PortalMessages";
-import PortalNotifications from "./pages/portal/PortalNotifications";
-import PortalBids from "./pages/portal/PortalBids";
-import PortalEstimates from "./pages/portal/PortalEstimates";
-import PortalProposals from "./pages/portal/PortalProposals";
-import PortalBilling from "./pages/portal/PortalBilling";
-import PortalSupport from "./pages/portal/PortalSupport";
-import PortalAdmin from "./pages/portal/PortalAdmin";
-import PortalProfile from "./pages/portal/PortalProfile";
-import PortalAuricrux from "./pages/portal/PortalAuricrux";
-import PortalOperations from "./pages/portal/PortalOperations";
-import PortalOpportunityDetail from "./pages/portal/PortalOpportunityDetail";
-import PortalProjectDetail from "./pages/portal/PortalProjectDetail";
-
-import AcademyHome from "./pages/academy/AcademyHome";
-import AcademyCatalog from "./pages/academy/AcademyCatalog";
+const lazyPage = (loader) => lazy(loader);
 
 export const routes = {
-  "/": Home,
-  "/platform": Platform,
-  "/login": Login,
-  "/intake": Intake,
-  "/checkout": Checkout,
-  "/pricing": Pricing,
-  "/contact": Contact,
-  "/auricrux": Auricrux,
-  "/warranty": Warranty,
-  "/referrals": Referrals,
-  "/terms": Terms,
-  "/privacy": Privacy,
-  "/refunds": Refunds,
-  "/not-found": NotFound,
-  "/bid-entry": LegacyBidEntry,
-  "/bid-status": LegacyBidStatus,
+  "/": lazyPage(() => import("./pages/website/Home")),
+  "/platform": lazyPage(() => import("./pages/website/Platform")),
+  "/login": lazyPage(() => import("./pages/website/Login")),
+  "/intake": lazyPage(() => import("./pages/website/Intake")),
+  "/checkout": lazyPage(() => import("./pages/website/Checkout")),
+  "/pricing": lazyPage(() => import("./pages/website/Pricing")),
+  "/contact": lazyPage(() => import("./pages/website/Contact")),
+  "/auricrux": lazyPage(() => import("./pages/website/Auricrux")),
+  "/warranty": lazyPage(() => import("./pages/website/Warranty")),
+  "/referrals": lazyPage(() => import("./pages/website/Referrals")),
+  "/terms": lazyPage(() => import("./pages/website/Terms")),
+  "/privacy": lazyPage(() => import("./pages/website/Privacy")),
+  "/refunds": lazyPage(() => import("./pages/website/Refunds")),
+  "/not-found": lazyPage(() => import("./pages/website/NotFound")),
+  "/bid-entry": lazyPage(() => import("./pages/website/LegacyBidEntry")),
+  "/bid-status": lazyPage(() => import("./pages/website/LegacyBidStatus")),
 
-  "/portal": PortalHome,
-  "/portal/platform": PlatformDashboard,
-  "/portal/operations": PortalOperations,
-  "/portal/projects": PortalProjects,
-  "/portal/files": PortalFiles,
-  "/portal/audit": PortalAudit,
-  "/portal/messages": PortalMessages,
-  "/portal/notifications": PortalNotifications,
-  "/portal/bids": PortalBids,
-  "/portal/estimates": PortalEstimates,
-  "/portal/proposals": PortalProposals,
-  "/portal/billing": PortalBilling,
-  "/portal/support": PortalSupport,
-  "/portal/admin": PortalAdmin,
-  "/portal/profile": PortalProfile,
-  "/portal/auricrux": PortalAuricrux,
-  "/portal/academy": AcademyHome,
+  "/portal": lazyPage(() => import("./pages/portal/PortalHome")),
+  "/portal/platform": lazyPage(() => import("./pages/portal/PlatformDashboard")),
+  "/portal/operations": lazyPage(() => import("./pages/portal/PortalOperations")),
+  "/portal/projects": lazyPage(() => import("./pages/portal/PortalProjects")),
+  "/portal/files": lazyPage(() => import("./pages/portal/PortalFiles")),
+  "/portal/audit": lazyPage(() => import("./pages/portal/PortalAudit")),
+  "/portal/messages": lazyPage(() => import("./pages/portal/PortalMessages")),
+  "/portal/notifications": lazyPage(() => import("./pages/portal/PortalNotifications")),
+  "/portal/bids": lazyPage(() => import("./pages/portal/PortalBids")),
+  "/portal/estimates": lazyPage(() => import("./pages/portal/PortalEstimates")),
+  "/portal/proposals": lazyPage(() => import("./pages/portal/PortalProposals")),
+  "/portal/billing": lazyPage(() => import("./pages/portal/PortalBilling")),
+  "/portal/support": lazyPage(() => import("./pages/portal/PortalSupport")),
+  "/portal/admin": lazyPage(() => import("./pages/portal/PortalAdmin")),
+  "/portal/profile": lazyPage(() => import("./pages/portal/PortalProfile")),
+  "/portal/auricrux": lazyPage(() => import("./pages/portal/PortalAuricrux")),
+  "/portal/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
 
-  "/academy": AcademyHome,
-  "/academy/catalog": AcademyCatalog,
+  "/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
+  "/academy/catalog": lazyPage(() => import("./pages/academy/AcademyCatalog")),
 };
 
 export const routePatterns = [
   {
     pattern: "/portal/opportunities/:opportunityId",
-    Page: PortalOpportunityDetail,
+    Page: lazyPage(() => import("./pages/portal/PortalOpportunityDetail")),
   },
   {
     pattern: "/portal/projects/:projectId",
-    Page: PortalProjectDetail,
+    Page: lazyPage(() => import("./pages/portal/PortalProjectDetail")),
   },
 ];
 
