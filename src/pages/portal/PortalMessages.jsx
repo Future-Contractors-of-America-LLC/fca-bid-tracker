@@ -3,6 +3,10 @@ import PortalShell from "../../components/PortalShell";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import {
+  fetchPortalMessages,
+  sendPortalMessage,
+} from "../../api/portalClient";
 import { auricruxCommsChannels, portalMessages, routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -57,8 +61,31 @@ export default function PortalMessages() {
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
   const [drafts, setDrafts] = useState(() => readLocalJson(MESSAGE_COMMAND_KEY, { subject: "", message: "", channel: "email", sent: [] }));
 
+  const [apiBacking, setApiBacking] = useState("local-fallback");
+
   useEffect(() => {
-    refreshSyncStamp("Persisted message continuity state active");
+    let active = true;
+    fetchPortalMessages()
+      .then((payload) => {
+        if (!active || !payload?.items?.length) return;
+        setApiBacking(payload.backingSource || "auricrux-central-portal-store");
+        setDrafts((current) => ({
+          ...current,
+          sent: payload.items.map((item) => ({
+            id: item.id,
+            subject: item.subject,
+            message: item.message,
+            channel: item.channel || "email",
+          })),
+        }));
+        refreshSyncStamp("Portal messages synced from Auricrux-Central");
+      })
+      .catch(() => {
+        if (active) setApiBacking("local-fallback");
+      });
+    return () => {
+      active = false;
+    };
   }, [refreshSyncStamp]);
 
   useEffect(() => {
@@ -93,18 +120,42 @@ export default function PortalMessages() {
 
   function sendMessage() {
     if (!drafts.subject.trim() || !drafts.message.trim()) return;
-    setDrafts((current) => ({
-      ...current,
-      sent: [{
-        id: `msg-${Date.now()}`,
-        subject: current.subject,
-        message: current.message,
-        channel: current.channel,
-      }, ...(current.sent || [])],
-      subject: "",
-      message: "",
-    }));
-    refreshSyncStamp(`Customer communication sent through ${drafts.channel}.`);
+    const payload = {
+      subject: drafts.subject,
+      message: drafts.message,
+      channel: drafts.channel,
+    };
+    sendPortalMessage(payload)
+      .then(() => fetchPortalMessages())
+      .then((result) => {
+        setApiBacking(result?.backingSource || "auricrux-central-portal-store");
+        setDrafts((current) => ({
+          ...current,
+          sent: (result?.items || []).map((item) => ({
+            id: item.id,
+            subject: item.subject,
+            message: item.message,
+            channel: item.channel || "email",
+          })),
+          subject: "",
+          message: "",
+        }));
+        refreshSyncStamp(`Customer communication sent through ${payload.channel}.`);
+      })
+      .catch(() => {
+        setDrafts((current) => ({
+          ...current,
+          sent: [{
+            id: `msg-${Date.now()}`,
+            subject: current.subject,
+            message: current.message,
+            channel: current.channel,
+          }, ...(current.sent || [])],
+          subject: "",
+          message: "",
+        }));
+        refreshSyncStamp(`Customer communication sent through ${drafts.channel}.`);
+      });
   }
 
   return (
@@ -126,7 +177,7 @@ export default function PortalMessages() {
           {companyName} can now send branded customer communications, preserve message continuity across channels, and let Auricrux explain, recommend, and execute the next communication move.
         </p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Source:</strong> {apiBacking || state.meta.backingSource}</div>
           <div><strong>Status:</strong> {state.meta.persistenceState}</div>
           <div><strong>Channel focus:</strong> {activeChannel ? activeChannel.toUpperCase() : "All channels"}</div>
           <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>

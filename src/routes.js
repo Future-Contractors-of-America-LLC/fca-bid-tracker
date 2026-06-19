@@ -39,6 +39,8 @@ export const routes = {
   "/": Home,
   "/platform": Platform,
   "/login": Login,
+  "/intake": Login,
+  "/checkout": Login,
   "/pricing": Pricing,
   "/contact": Contact,
   "/auricrux": Auricrux,

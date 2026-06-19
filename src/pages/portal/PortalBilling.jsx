@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import {
+  createPortalInvoice,
+  fetchBillingSummary,
+  fetchPortalInvoices,
+  issuePortalInvoice,
+} from "../../api/portalClient";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -41,8 +47,35 @@ export default function PortalBilling() {
   const [billingState, setBillingState] = useState(() => readLocalJson(BILLING_COMMAND_KEY, { invoiceName: "", amount: "", note: "", invoices: [] }));
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
 
+  const [billingSummary, setBillingSummary] = useState(null);
+  const [apiBacking, setApiBacking] = useState("local-fallback");
+
   useEffect(() => {
-    refreshSyncStamp("Persisted billing continuity state active");
+    let active = true;
+    Promise.all([
+      fetchPortalInvoices().catch(() => null),
+      fetchBillingSummary().catch(() => null),
+    ]).then(([invoicesPayload, summaryPayload]) => {
+      if (!active) return;
+      if (invoicesPayload?.items?.length) {
+        setApiBacking(invoicesPayload.backingSource || "auricrux-central-portal-store");
+        setBillingState((current) => ({
+          ...current,
+          invoices: invoicesPayload.items.map((item) => ({
+            id: item.id,
+            invoiceName: item.invoiceName,
+            amount: item.amount,
+            note: item.note,
+            status: item.status || "Draft",
+          })),
+        }));
+      }
+      if (summaryPayload) setBillingSummary(summaryPayload);
+      refreshSyncStamp("Portal billing synced from Auricrux-Central");
+    });
+    return () => {
+      active = false;
+    };
   }, [refreshSyncStamp]);
 
   useEffect(() => {
@@ -55,28 +88,70 @@ export default function PortalBilling() {
 
   function createInvoice() {
     if (!billingState.invoiceName.trim() || !billingState.amount.trim()) return;
-    setBillingState((current) => ({
-      ...current,
-      invoices: [{
-        id: `invoice-${Date.now()}`,
-        invoiceName: current.invoiceName,
-        amount: current.amount,
-        note: current.note,
-        status: "Draft",
-      }, ...(current.invoices || [])],
-      invoiceName: "",
-      amount: "",
-      note: "",
-    }));
-    refreshSyncStamp("Customer billing command invoice created");
+    const body = {
+      invoiceName: billingState.invoiceName,
+      amount: billingState.amount,
+      note: billingState.note,
+    };
+    createPortalInvoice(body)
+      .then(() => fetchPortalInvoices())
+      .then((result) => {
+        setBillingState((current) => ({
+          ...current,
+          invoices: (result?.items || []).map((item) => ({
+            id: item.id,
+            invoiceName: item.invoiceName,
+            amount: item.amount,
+            note: item.note,
+            status: item.status || "Draft",
+          })),
+          invoiceName: "",
+          amount: "",
+          note: "",
+        }));
+        refreshSyncStamp("Customer billing command invoice created");
+      })
+      .catch(() => {
+        setBillingState((current) => ({
+          ...current,
+          invoices: [{
+            id: `invoice-${Date.now()}`,
+            invoiceName: current.invoiceName,
+            amount: current.amount,
+            note: current.note,
+            status: "Draft",
+          }, ...(current.invoices || [])],
+          invoiceName: "",
+          amount: "",
+          note: "",
+        }));
+        refreshSyncStamp("Customer billing command invoice created");
+      });
   }
 
   function issueInvoice(invoiceId) {
-    setBillingState((current) => ({
-      ...current,
-      invoices: current.invoices.map((invoice) => invoice.id === invoiceId ? { ...invoice, status: "Issued" } : invoice),
-    }));
-    refreshSyncStamp("Customer billing command invoice issued");
+    issuePortalInvoice(invoiceId)
+      .then(() => fetchPortalInvoices())
+      .then((result) => {
+        setBillingState((current) => ({
+          ...current,
+          invoices: (result?.items || current.invoices).map((item) => ({
+            id: item.id,
+            invoiceName: item.invoiceName,
+            amount: item.amount,
+            note: item.note,
+            status: item.status || "Draft",
+          })),
+        }));
+        refreshSyncStamp("Customer billing command invoice issued");
+      })
+      .catch(() => {
+        setBillingState((current) => ({
+          ...current,
+          invoices: current.invoices.map((invoice) => invoice.id === invoiceId ? { ...invoice, status: "Issued" } : invoice),
+        }));
+        refreshSyncStamp("Customer billing command invoice issued");
+      });
   }
 
   return (
@@ -96,7 +171,8 @@ export default function PortalBilling() {
           {companyName} can now stage invoices, issue revenue actions, and keep customer-ready billing continuity visible inside the branded workspace.
         </p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Workspace state source:</strong> {apiBacking || state.meta.backingSource}</div>
+          {billingSummary?.count != null ? <div><strong>Construction billing records:</strong> {billingSummary.count}</div> : null}
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
           <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
           <div><strong>Selected plan:</strong> {session?.selectedPlan || "enterprise"}</div>

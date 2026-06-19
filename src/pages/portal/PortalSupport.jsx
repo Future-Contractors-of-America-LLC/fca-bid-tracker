@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import {
+  createSupportTicket,
+  fetchSupportTickets,
+  resolveSupportTicket,
+} from "../../api/portalClient";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -41,8 +46,32 @@ export default function PortalSupport() {
   const [supportState, setSupportState] = useState(() => readLocalJson(SUPPORT_COMMAND_KEY, { subject: "", priority: "normal", detail: "", tickets: [] }));
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
 
+  const [apiBacking, setApiBacking] = useState("local-fallback");
+
   useEffect(() => {
-    refreshSyncStamp("Persisted support continuity state active");
+    let active = true;
+    fetchSupportTickets()
+      .then((payload) => {
+        if (!active || !payload?.items?.length) return;
+        setApiBacking(payload.backingSource || "auricrux-central-portal-store");
+        setSupportState((current) => ({
+          ...current,
+          tickets: payload.items.map((item) => ({
+            id: item.id,
+            subject: item.subject,
+            priority: item.priority || "normal",
+            detail: item.detail,
+            status: item.status || "Open",
+          })),
+        }));
+        refreshSyncStamp("Portal support synced from Auricrux-Central");
+      })
+      .catch(() => {
+        if (active) setApiBacking("local-fallback");
+      });
+    return () => {
+      active = false;
+    };
   }, [refreshSyncStamp]);
 
   useEffect(() => {
@@ -55,28 +84,70 @@ export default function PortalSupport() {
 
   function createTicket() {
     if (!supportState.subject.trim() || !supportState.detail.trim()) return;
-    setSupportState((current) => ({
-      ...current,
-      tickets: [{
-        id: `ticket-${Date.now()}`,
-        subject: current.subject,
-        priority: current.priority,
-        detail: current.detail,
-        status: "Open",
-      }, ...(current.tickets || [])],
-      subject: "",
-      detail: "",
-      priority: "normal",
-    }));
-    refreshSyncStamp("Customer support request created");
+    const body = {
+      subject: supportState.subject,
+      priority: supportState.priority,
+      detail: supportState.detail,
+    };
+    createSupportTicket(body)
+      .then(() => fetchSupportTickets())
+      .then((result) => {
+        setSupportState((current) => ({
+          ...current,
+          tickets: (result?.items || []).map((item) => ({
+            id: item.id,
+            subject: item.subject,
+            priority: item.priority || "normal",
+            detail: item.detail,
+            status: item.status || "Open",
+          })),
+          subject: "",
+          detail: "",
+          priority: "normal",
+        }));
+        refreshSyncStamp("Customer support request created");
+      })
+      .catch(() => {
+        setSupportState((current) => ({
+          ...current,
+          tickets: [{
+            id: `ticket-${Date.now()}`,
+            subject: current.subject,
+            priority: current.priority,
+            detail: current.detail,
+            status: "Open",
+          }, ...(current.tickets || [])],
+          subject: "",
+          detail: "",
+          priority: "normal",
+        }));
+        refreshSyncStamp("Customer support request created");
+      });
   }
 
   function resolveTicket(ticketId) {
-    setSupportState((current) => ({
-      ...current,
-      tickets: current.tickets.map((ticket) => ticket.id === ticketId ? { ...ticket, status: "Resolved" } : ticket),
-    }));
-    refreshSyncStamp("Support ticket resolved");
+    resolveSupportTicket(ticketId)
+      .then(() => fetchSupportTickets())
+      .then((result) => {
+        setSupportState((current) => ({
+          ...current,
+          tickets: (result?.items || current.tickets).map((item) => ({
+            id: item.id,
+            subject: item.subject,
+            priority: item.priority || "normal",
+            detail: item.detail,
+            status: item.status || "Open",
+          })),
+        }));
+        refreshSyncStamp("Support ticket resolved");
+      })
+      .catch(() => {
+        setSupportState((current) => ({
+          ...current,
+          tickets: current.tickets.map((ticket) => ticket.id === ticketId ? { ...ticket, status: "Resolved" } : ticket),
+        }));
+        refreshSyncStamp("Support ticket resolved");
+      });
   }
 
   return (
@@ -96,7 +167,7 @@ export default function PortalSupport() {
           {companyName} can now open service requests, preserve support continuity, and keep customer-facing recovery visible inside the branded workspace.
         </p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>
+          <div><strong>Workspace state source:</strong> {apiBacking || state.meta.backingSource}</div>
           <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
           <div><strong>Selected plan:</strong> {session?.selectedPlan || "enterprise"}</div>
           <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>

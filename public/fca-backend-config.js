@@ -16,6 +16,10 @@ window.FCA_BACKEND = {
   stripeWebhookApi: "https://auricrux-central.azurewebsites.net/api/stripe/webhook",
   stripeWebhookSwaApi: "https://futurecontractorsofamerica.com/api/stripe-webhook",
   mobileRegisterApi: "https://auricrux-central.azurewebsites.net/api/mobile/register",
+  portalMessagesApi: "https://auricrux-central.azurewebsites.net/api/portal-messages",
+  portalInvoicesApi: "https://auricrux-central.azurewebsites.net/api/portal-invoices",
+  supportTicketsApi: "https://auricrux-central.azurewebsites.net/api/support-tickets",
+  billingSummaryApi: "https://auricrux-central.azurewebsites.net/api/billing-summary",
   pilotCheckout: "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01",
   projectRfisApi: function (projectId) {
     return this.baseUrl + "/api/projects/" + encodeURIComponent(projectId) + "/rfis";

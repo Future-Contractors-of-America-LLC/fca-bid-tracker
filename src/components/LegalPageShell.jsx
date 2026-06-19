@@ -9,7 +9,7 @@ export default function LegalPageShell({ title, eyebrow, children }) {
       <ShellHeader
         eyebrow={eyebrow}
         title={title}
-        subtitle="Future Contractors of America — legal and billing policies"
+        subtitle="Future Contractors of America - legal and billing policies"
         primaryHref="/pricing"
         primaryLabel="View Plans"
         secondaryHref="/contact"
