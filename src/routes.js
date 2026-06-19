@@ -18,6 +18,7 @@ export const routes = {
   "/terms": lazyPage(() => import("./pages/website/Terms")),
   "/privacy": lazyPage(() => import("./pages/website/Privacy")),
   "/refunds": lazyPage(() => import("./pages/website/Refunds")),
+  "/ip": lazyPage(() => import("./pages/website/IpNotice")),
   "/not-found": lazyPage(() => import("./pages/website/NotFound")),
   "/bid-entry": lazyPage(() => import("./pages/website/LegacyBidEntry")),
   "/bid-status": lazyPage(() => import("./pages/website/LegacyBidStatus")),

@@ -1,5 +1,6 @@
 import { brandIdentity } from "../brandIdentity";
 
+/** Canonical SVG sources: brand-assets/fca/ and brand-assets/auricrux/ (trademark registration specimens). */
 export default function FcaBrandMark({ compact = false, showTagline = true }) {
   const iconSize = compact ? 46 : 62;
   const wordmarkSize = compact ? 28 : 38;

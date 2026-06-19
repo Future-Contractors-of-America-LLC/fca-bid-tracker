@@ -1,16 +1,16 @@
-import LegacyRouteBridge from "../../components/LegacyRouteBridge";
+import { useEffect } from "react";
+import { navigateTo } from "../../navigation";
 
-export default function LegacyBidEntry({ requestedPath = "/bid-entry" }) {
+export default function LegacyBidEntry() {
+  useEffect(() => {
+    const params = typeof window !== "undefined" ? window.location.search : "";
+    navigateTo(`/intake${params || "?plan=startup"}`);
+  }, []);
+
   return (
-    <LegacyRouteBridge
-      eyebrow="Bid intake bridge"
-      title="Redirecting to FCA bid intake"
-      subtitle="The shorthand bid-entry route now forwards into the compatible FCA customer intake surface so button flows continue to work."
-      requestedPath={requestedPath}
-      targetHref="/fca-customer-entry/index.html"
-      targetLabel="Open Bid Intake"
-      companionHref="/bid-status"
-      companionLabel="Open Bid Status"
-    />
+    <main style={{ padding: 48, fontFamily: "system-ui, sans-serif", textAlign: "center" }}>
+      <h1>Opening company intake</h1>
+      <p style={{ color: "#64748b" }}>Redirecting you to the FCA onboarding form.</p>
+    </main>
   );
 }

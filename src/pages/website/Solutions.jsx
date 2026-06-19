@@ -1,13 +1,13 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
-import { homeCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { homeCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, pageShellStyle, responsiveGrid } from "../../publicShellStyles";
 
 const programs = [
   {
     title: "Contractor Command Pilot",
-    detail: "Guided 30-day launch for teams moving from fragmented tools into one FCA workspace with Auricrux active.",
+    detail: "Guided 30-day launch for teams moving from fragmented tools into one FCA workspace.",
     href: "/intake?plan=pilot",
     label: "Start Pilot Intake",
   },
@@ -32,14 +32,14 @@ const programs = [
   {
     title: "Academy Apprenticeship Track",
     detail: "NCCER-aligned electrical progression from Level 1 through Level 10 with live LMS tracking.",
-    href: "/academy/catalog",
-    label: "Open Academy Catalog",
+    href: "/academy",
+    label: "Open Academy",
   },
   {
-    title: "Auricrux-Guided Operations",
-    detail: "Embed explain, recommend, and execute posture across intake, field ops, billing, and customer comms.",
+    title: "Guided Operations",
+    detail: "Embedded guidance across intake, field operations, billing, and customer communications.",
     href: "/auricrux",
-    label: "Meet Auricrux",
+    label: "Learn about Auricrux",
   },
 ];
 
@@ -49,7 +49,7 @@ export default function Solutions() {
       <ShellHeader
         eyebrow="Programs"
         title="Program options that match team maturity and growth goals"
-        subtitle="Every program routes into the same live FCA product surface on web and mobile with Auricrux-Central as the backend spine."
+        subtitle="Every program routes into the same FCA product surface on web and mobile - leads, jobs, plans, billing, and training in one place."
         primaryHref="/intake"
         primaryLabel="Apply Now"
         secondaryHref="/pricing"
@@ -58,7 +58,7 @@ export default function Solutions() {
         currentJourney="conversion"
       />
 
-      <section style={{ ...responsiveGrid, marginBottom: 24 }}>
+      <section style={{ ...responsiveGrid(), marginBottom: 24 }}>
         {programs.map((item) => (
           <article key={item.title} style={cardStyle}>
             <h3 style={{ marginTop: 0 }}>{item.title}</h3>

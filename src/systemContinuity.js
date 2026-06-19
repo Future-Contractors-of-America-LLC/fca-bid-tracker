@@ -1,32 +1,32 @@
 export const publicHomeMessaging = {
   header: {
-    eyebrow: "FCA Contractor Workspace",
-    title: "Run bids, projects, communication, and training in one Auricrux-driven system.",
+    eyebrow: "FCA Contractor Command",
+    title: "Win more work, run every job, and train your workforce in one platform.",
     subtitle:
-      "Future Contractors of America gives contractors a complete operating flow from lead to repeat business, while Auricrux continuously drives execution, guidance, and next actions across every stage.",
+      "Future Contractors of America gives commercial contractors a unified operating system for leads, bids, projects, plan rooms, billing, customer communication, and Academy training.",
   },
   journey: {
-    title: "Start with a clear customer path",
+    title: "Start with the path that fits your team",
     detail:
-      "Visitors should be able to move from public entry into platform visibility, workspace access, customer portal continuity, academy readiness, and rollout planning without switching narratives—and with Auricrux guiding each transition.",
-    ctaHref: "/login",
-    ctaLabel: "Enter FCA workspace",
+      "Move from your first conversation into a live workspace with lead pipeline, job controls, customer portal, and workforce training ready to use.",
+    ctaHref: "/intake",
+    ctaLabel: "Get started",
   },
   trust: {
-    title: "Built to support real contractor work",
+    title: "Built for contractors competing at enterprise scale",
     detail:
-      "FCA helps teams keep customers informed, organize delivery, and make the next step clear across bids, projects, communication, and training, with Auricrux operating as the active decision and continuity layer.",
+      "FCA helps teams keep customers informed, organize delivery, and make the next step clear across sales, field operations, billing, and training.",
   },
   snapshot: {
-    title: "See how the workspace stays connected",
+    title: "See your operating picture in one place",
     detail:
-      "The home page previews the same tenant, project, and Auricrux continuity that carries through the platform dashboard and portal routes.",
-    ctaLabel: "Enter workspace with continuity",
+      "The platform dashboard connects leads, active jobs, documents, billing, and Academy progress under one company workspace.",
+    ctaLabel: "Open your workspace",
   },
   actionRail: {
-    title: "Take the next step with FCA",
+    title: "Take the next step",
     detail:
-      "Keep workspace entry, platform visibility, academy continuity, and guided walkthrough options visible so customers always know where to go next with Auricrux in control.",
+      "Apply for a plan, book a walkthrough, or sign in to your existing FCA workspace.",
   },
 };
 

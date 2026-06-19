@@ -46,7 +46,7 @@ export default function Intake() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [status, setStatus] = useState("Intake posts to Auricrux-Central backend and continues to activation.");
+  const [status, setStatus] = useState("Complete your company profile to activate your FCA workspace.");
   const [statusTone, setStatusTone] = useState("info");
 
   useEffect(() => {
@@ -73,16 +73,16 @@ export default function Intake() {
     };
 
     setStatusTone("info");
-    setStatus("Saving intake to backend...");
+    setStatus("Saving your company profile...");
     saveCustomerRecord(record);
 
     try {
       await submitIntakeBid(record);
       setStatusTone("success");
-      setStatus("Intake saved to backend. Continuing...");
+      setStatus("Profile saved. Continuing to activation...");
     } catch {
       setStatusTone("warn");
-      setStatus("Local intake saved; backend sync will retry on next visit.");
+      setStatus("Profile saved on this device. We will sync when you return.");
     }
 
     const checkout = checkoutUrlForPlan(plan, record.email);
@@ -104,7 +104,7 @@ export default function Intake() {
       <ShellHeader
         eyebrow="Step 1"
         title="Submit your company profile and start pilot onboarding"
-        subtitle="Intake creates your customer record, posts to Auricrux-Central, and routes you to activation or checkout."
+        subtitle="Tell us about your company. We will stand up your lead pipeline, job controls, and customer portal."
         primaryHref={shellHeaderCtaSets.conversion.primaryHref}
         primaryLabel={shellHeaderCtaSets.conversion.primaryLabel}
         secondaryHref="/pricing"

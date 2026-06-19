@@ -17,6 +17,7 @@
     "build:spa": "vite build",
     "build:system": "npm run build",
     "build": "bash ./build.sh",
+    "qc:market": "node scripts/run-market-qc.mjs",
     "verify:live-deployment": "node scripts/verify-live-deployment.mjs",
     "validate:runtime-smoke": "node scripts/runtime_smoke_check.js",
     "capture:build-evidence": "node scripts/build_evidence_capture.js",

@@ -1,10 +1,11 @@
 export const pageShellStyle = {
   padding: "clamp(20px, 4vw, 40px)",
-  fontFamily: "Arial",
+  fontFamily: '"Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif',
   maxWidth: 1120,
   margin: "0 auto",
   boxSizing: "border-box",
   width: "100%",
+  color: "#0f172a",
 };
 
 export const cardStyle = {

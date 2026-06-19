@@ -28,6 +28,12 @@ export default function Terms() {
         FCA is provided as operational software for contractors. We do not guarantee specific business outcomes. To the maximum extent
         permitted by law, liability is limited to fees paid in the twelve months preceding a claim.
       </p>
+      <h3 style={{ color: "#0f172a" }}>Intellectual property</h3>
+      <p>
+        FCA, Auricrux, and related marks, artwork, software, and Academy content are owned by Future Contractors of America LLC.
+        See our <a href="/ip">Intellectual Property Notice</a> for trademark and copyright terms. You receive a limited license to use
+        the service during an active subscription; no ownership of platform IP transfers to customers.
+      </p>
       <p>Questions: <a href="mailto:info@futurecontractorsofamerica.com">info@futurecontractorsofamerica.com</a></p>
     </LegalPageShell>
   );
