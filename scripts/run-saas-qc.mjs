@@ -26,6 +26,11 @@ const SAAS_PORTAL_ROUTES = [
   "/portal/operations",
   "/portal/audit",
   "/portal/profile",
+  "/portal/plans",
+  "/portal/finance",
+  "/portal/scheduling",
+  "/portal/field-tasks",
+  "/portal/field-supervision",
 ];
 
 const SAAS_API_ENDPOINTS = [

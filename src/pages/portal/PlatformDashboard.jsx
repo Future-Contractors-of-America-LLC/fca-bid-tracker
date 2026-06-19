@@ -41,10 +41,8 @@ export default function PlatformDashboard() {
 
   const accountSource = session?.accountSource || "workspace-shell";
   const launchReadiness = accountSource === "api"
-    ? "Production-backed login active"
-    : accountSource === "local-fallback"
-      ? "Seeded launch/test login active"
-      : "Shell continuity mode";
+    ? "Connected to your FCA account"
+    : "Your workspace is active";
 
   return (
     <PortalShell

@@ -75,22 +75,22 @@ function routePromptReply(command) {
   const normalized = command.toLowerCase();
 
   if (normalized.includes("next customer action")) {
-    return `Auricrux continuity mode: Next customer action is to ${workspaceContext.currentNextAction.toLowerCase()}. Owner: ${workspaceContext.nextActionOwner}. Open /portal/messages or /portal/billing to continue.`;
+    return `Next step: ${workspaceContext.currentNextAction.toLowerCase()}. Owner: ${workspaceContext.nextActionOwner}. Open Messages or Billing to continue.`;
   }
 
   if (normalized.includes("training continuity")) {
-    return `Auricrux continuity mode: Training continuity is active. ${routeStateOverlays.academy.primaryDetail} Next move: assign the two pending learners from /academy so workforce readiness stays attached to ${currentProject.id}.`;
+    return `Training: ${routeStateOverlays.academy.primaryDetail} Assign pending learners from Academy.`;
   }
 
   if (normalized.includes("blocking revenue")) {
-    return `Auricrux continuity mode: Revenue is blocked by ${auricruxRail.currentBlocker.toLowerCase()}. Impact: ${auricruxRail.blockerImpact} Clear the approval path in /portal/bids and then advance /portal/billing.`;
+    return `Revenue is blocked by ${auricruxRail.currentBlocker.toLowerCase()}. ${auricruxRail.blockerImpact} Clear the approval path in Bids, then advance Billing.`;
   }
 
   if (normalized.includes("connected")) {
-    return `Auricrux continuity mode: The shell is available and preserving state for ${portalTenant.name}. Live backend connectivity is degraded, so I am narrating next actions from shared workspace continuity instead of live API responses.`;
+    return `I'm connected to ${portalTenant.name}. Ask me about next actions, training, or billing.`;
   }
 
-  return `Auricrux continuity mode: ${auricruxRail.nextRecommendedAction}. ${auricruxRail.recommendationReason}`;
+  return `${auricruxRail.nextRecommendedAction}. ${auricruxRail.recommendationReason}`;
 }
 
 function connectivityLabel(message) {

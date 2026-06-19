@@ -2,19 +2,11 @@ import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
-import ExecutiveSignalBar from "../../components/ExecutiveSignalBar";
-import FounderJourneyStrip from "../../components/FounderJourneyStrip";
-import PublicActionRail from "../../components/PublicActionRail";
-import BuildExpansionCommandDeck from "../../components/BuildExpansionCommandDeck";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
-import PublicOperationsStrip from "../../components/PublicOperationsStrip";
-import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import {
   auricruxCapabilities,
   auricruxWalkthroughPath,
-  executiveSignalCtaSets,
-  founderJourneyCtaSets,
   publicBodyCtaSets,
   publicRouteCtas,
   shellJourney,
@@ -22,28 +14,10 @@ import {
 import { cardStyle, heroCardStyle, pageShellStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
-  "Read persisted tenant, project, bid, and workspace state rather than treating pages as disconnected views.",
-  "Surface the current recommended action and blocker so customers and teams can see what should happen next across approvals, permits, billing, and mobilization.",
-  "Maintain continuity as users move between platform dashboard, portal routes, academy, support, and admin.",
-  "Keep the experience feeling active, guided, and operational rather than static or brochure-like.",
-];
-
-const auricruxContinuityItems = [
-  {
-    label: "Guidance layer",
-    value: "Auricrux now mirrors public-shell continuity",
-    detail: "The route now explicitly carries the same operating strip used on other conversion surfaces so guidance feels embedded in the product story.",
-  },
-  {
-    label: "System role",
-    value: "Public explanation tied to live state",
-    detail: "Auricrux framing now stays anchored to platform, portal, academy, and founder-review motion instead of reading like isolated brand copy.",
-  },
-  {
-    label: "Next move",
-    value: "Review dashboard or rollout path",
-    detail: "The route closes toward live workspace inspection or rollout planning so customer guidance remains actionable.",
-  },
+  "Reads your live tenant, project, and bid state—not static marketing pages.",
+  "Surfaces the recommended next action so teams know what to do next.",
+  "Stays with you across dashboard, portal, Academy, support, and admin.",
+  "Feels active and operational—not a brochure.",
 ];
 
 export default function AuricruxPage() {
@@ -75,39 +49,6 @@ export default function AuricruxPage() {
         <PublicCtaRow actions={publicBodyCtaSets.auricruxHero} />
       </div>
 
-      <FounderJourneyStrip
-        currentJourney="platform"
-        title="Auricrux should support the same customer journey visible across FCA"
-        detail="This route reinforces the path from public framing into workspace, portal continuity, academy readiness, and rollout planning while Auricrux explains what should happen next."
-        ctaHref={founderJourneyCtaSets.publicAuricrux.href}
-        ctaLabel={founderJourneyCtaSets.publicAuricrux.label}
-      />
-
-      <ExecutiveSignalBar mode="public" nextHref={executiveSignalCtaSets.publicAuricrux.href} nextLabel={executiveSignalCtaSets.publicAuricrux.label} />
-
-      <div style={{ marginBottom: 24 }}>
-        <PublicOperationsStrip
-          eyebrow="Auricrux continuity strip"
-          title="Auricrux now carries the same continuity posture as the rest of the shell"
-          detail="This route now explicitly shares the same operating strip used across public conversion pages so the guidance layer feels connected to live product state and rollout motion."
-          statusLabel="Guidance posture"
-          statusValue="System continuity active"
-          items={auricruxContinuityItems}
-          primaryHref="/portal/platform"
-          primaryLabel="Open Platform Dashboard"
-          secondaryHref="/pricing"
-          secondaryLabel="Plans & Rollout"
-        />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <PublicPackageRouteGroupsPanel
-          eyebrow="Auricrux package route truth"
-          title="Auricrux now explains the same exact product route groups as the rest of FCA"
-          detail="The Auricrux surface now points to the same route-backed SaaS, portal, Academy, communications, and revenue continuity package truth used across other public conversion pages."
-        />
-      </div>
-
       <div style={{ marginBottom: 24 }}>
         <CustomerTrustPanel
           eyebrow="What Auricrux improves"
@@ -129,15 +70,6 @@ export default function AuricruxPage() {
           ]}
         />
       </div>
-
-      <BuildExpansionCommandDeck
-        title="Build expansion now has a visible command layer"
-        detail="This page shows that the FCA build is expanding as one governed system across automation, SaaS continuity, website conversion, academy readiness, and communications follow-through."
-        primaryHref="/portal/platform"
-        primaryLabel="Open Platform Dashboard"
-        secondaryHref="/pricing"
-        secondaryLabel="Plans & Rollout"
-      />
 
       <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
         <div style={{ display: "grid", gap: 16 }}>
@@ -163,10 +95,10 @@ export default function AuricruxPage() {
         </div>
 
         <WorkspaceSnapshotCard
-          title="Auricrux is tied to live workspace continuity"
-          detail="This page references the same persisted tenant, project, and Auricrux state used across the platform dashboard and portal surfaces so the guidance story stays believable."
+          title="Connected to your workspace"
+          detail="Auricrux reads the same tenant, project, and job data you see in your dashboard—so guidance matches what is actually happening."
           ctaHref="/portal/platform"
-          ctaLabel="Open Platform Dashboard"
+          ctaLabel="Open your dashboard"
         />
       </div>
 
@@ -206,10 +138,7 @@ export default function AuricruxPage() {
         </p>
       </div>
 
-      <PublicActionRail
-        title="Close the Auricrux story with clear next steps"
-        detail="This page ends in the same clear next steps as the rest of the public site so guidance, platform state, and conversion stay aligned."
-      />
+      <PublicCtaRow actions={publicBodyCtaSets.auricruxHero} style={{ marginTop: 24 }} />
 
       <ShellFooter />
     </div>

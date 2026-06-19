@@ -40,6 +40,11 @@ export const routes = {
   "/portal/profile": lazyPage(() => import("./pages/portal/PortalProfile")),
   "/portal/auricrux": lazyPage(() => import("./pages/portal/PortalAuricrux")),
   "/portal/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
+  "/portal/plans": lazyPage(() => import("./pages/portal/PortalPlans")),
+  "/portal/finance": lazyPage(() => import("./pages/portal/PortalFinance")),
+  "/portal/scheduling": lazyPage(() => import("./pages/portal/PortalScheduling")),
+  "/portal/field-tasks": lazyPage(() => import("./pages/portal/PortalFieldTasks")),
+  "/portal/field-supervision": lazyPage(() => import("./pages/portal/PortalFieldSupervision")),
 
   "/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
   "/academy/catalog": lazyPage(() => import("./pages/academy/AcademyCatalog")),

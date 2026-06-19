@@ -1,10 +1,8 @@
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
-import FcaBrandMark from "../../components/FcaBrandMark";
-import AuricruxBrandMark from "../../components/AuricruxBrandMark";
-import { academyCatalog } from "../../academyCatalog";
-import { academyCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { getProgramsByLane } from "../../academyOfferings";
+import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -15,13 +13,22 @@ const cardStyle = {
   boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
 };
 
+const laneHeaderStyle = {
+  borderBottom: "2px solid #1d4ed8",
+  paddingBottom: 12,
+  marginBottom: 20,
+};
+
 export default function AcademyCatalog() {
+  const lanes = getProgramsByLane();
+
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
-        eyebrow="FCA Academy Catalog"
-        title="Real classroom programs tied to contractor operations"
-        subtitle="Each FCA Academy program is mapped to real SaaS workflows so curriculum, labs, and credentials support live project execution rather than detached training theory."
+        compact
+        eyebrow="FCA Academy"
+        title="Programs by lane, degree, certification, and licensure"
+        subtitle="Every offering is organized for customers and investors: apprenticeship pathways, degree tracks, professional certifications, licensure prep, and operator courses—each linked to live SaaS workflows."
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
@@ -30,84 +37,62 @@ export default function AcademyCatalog() {
         currentJourney="academy"
       />
 
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 18, padding: "14px 16px", border: "1px solid #dbe3ef", borderRadius: 18, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
-        <FcaBrandMark compact />
-        <AuricruxBrandMark compact />
-      </div>
+      {lanes.map((lane) => (
+        <section key={lane.key} style={{ marginBottom: 40 }}>
+          <div style={laneHeaderStyle}>
+            <h2 style={{ margin: "0 0 6px", fontSize: "1.35rem" }}>{lane.label}</h2>
+            <p style={{ margin: 0, color: "#475569", lineHeight: 1.65 }}>{lane.description}</p>
+          </div>
 
-      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Academy catalog</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Five complete track-specific courses are now live in one place</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          This catalog now includes a specific apprenticeship course, certification course, degree course, licensure course, and FCA user-guide how-to course, each linked back to real portal surfaces.
-        </p>
-      </div>
-
-      <div style={{ display: "grid", gap: 18 }}>
-        {academyCatalog.programs.map((program) => (
-          <section key={program.key} style={cardStyle}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 12 }}>
-              <div>
-                <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>{program.credential}</div>
-                <h2 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h2>
-                <div style={{ color: "#475569", lineHeight: 1.7 }}>
-                  <div><strong>Audience:</strong> {program.audience}</div>
-                  <div><strong>Duration:</strong> {program.duration}</div>
-                  <div><strong>Format:</strong> {program.format}</div>
+          <div style={{ display: "grid", gap: 18 }}>
+            {lane.programs.map((program) => (
+              <article key={program.key} style={cardStyle}>
+                <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>
+                  {program.credential || lane.credentialType}
                 </div>
-              </div>
-              <div style={{ maxWidth: 420, color: "#334155", lineHeight: 1.7 }}>
-                <strong>Program goal</strong>
-                <div>{program.goal}</div>
-              </div>
-            </div>
+                <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
+                {program.audience ? (
+                  <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+                    <strong>Audience:</strong> {program.audience} · <strong>Duration:</strong> {program.duration}
+                  </p>
+                ) : null}
+                {program.goal ? <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.goal}</p> : null}
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 16 }}>
-              <div>
-                <h3 style={{ marginTop: 0 }}>Outcomes</h3>
-                <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155" }}>
-                  {program.outcomes.map((outcome) => (
-                    <li key={outcome}>{outcome}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h3 style={{ marginTop: 0 }}>Course sequence</h3>
-                <div style={{ display: "grid", gap: 12 }}>
-                  {program.courses.map((course) => (
-                    <div key={course.code} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
-                      <div style={{ color: "#2563eb", fontWeight: 700 }}>{course.code}</div>
-                      <div style={{ fontWeight: 700, margin: "6px 0" }}>{course.title}</div>
-                      <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 10 }}>
-                        <div><strong>Lessons:</strong> {course.lessons}</div>
-                        <div><strong>Lab:</strong> {course.lab}</div>
-                      </div>
-                      <div style={{ color: "#334155", lineHeight: 1.8 }}>
-                        {course.lessonTitles.map((lesson) => (
-                          <div key={lesson}>• {lesson}</div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+                {program.levels ? (
+                  <div style={{ marginTop: 14 }}>
+                    <strong>L1–L10 electrical apprenticeship levels</strong>
+                    <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
+                      {program.levels.map((level) => (
+                        <li key={level.key}>{level.title} — {level.modules} modules</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
 
-            <div style={{ marginTop: 16 }}>
-              <a href={program.linkedSurface} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{program.linkedLabel}</a>
-            </div>
-          </section>
-        ))}
-      </div>
+                {(program.courses || []).map((course) => (
+                  <div key={course.code} style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid #e2e8f0" }}>
+                    <strong>{course.title || course.code}</strong>
+                    <div style={{ color: "#64748b", fontSize: 14, marginBottom: 8 }}>{course.lessons} lessons · Lab: {course.lab}</div>
+                    <ol style={{ paddingLeft: 20, lineHeight: 1.75, color: "#334155", margin: 0 }}>
+                      {(course.lessonTitles || []).map((title) => (
+                        <li key={title}>{title}</li>
+                      ))}
+                    </ol>
+                  </div>
+                ))}
 
-      <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Continue through FCA</h2>
-        <PublicCtaRow actions={academyCtaSets.connectedPortalRoutes} style={{ display: "grid", gap: 12 }} />
-        <div style={{ marginTop: 14 }}>
-          <PublicCtaRow actions={publicBodyCtaSets.academyEntry} />
-        </div>
-      </div>
+                {program.linkedSurface ? (
+                  <a href={program.linkedSurface} style={{ display: "inline-block", marginTop: 14, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
+                    {program.linkedLabel || "Open in workspace"} →
+                  </a>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
 
+      <PublicCtaRow actions={academyCtaSets.productionClose} />
       <ShellFooter />
     </div>
   );

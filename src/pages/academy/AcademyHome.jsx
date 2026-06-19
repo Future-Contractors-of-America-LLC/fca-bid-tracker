@@ -10,6 +10,7 @@ import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderC
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useAcademyLms from "../../hooks/useAcademyLms";
+import { flattenCatalogLessons } from "../../academyOfferings";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -190,6 +191,8 @@ export default function AcademyHome() {
     setProgress((current) => ({ ...current, [lessonId]: !current[lessonId] }));
   }
 
+  const catalogLessons = useMemo(() => flattenCatalogLessons(), []);
+
   const classroomSummaries = useMemo(() => classrooms.map((classroom) => {
     const completedCount = classroom.lessons.filter((lesson) => progress[lesson.id]).length;
     return {
@@ -203,8 +206,8 @@ export default function AcademyHome() {
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
         eyebrow="FCA Academy"
-        title="Customer classroom delivery"
-        subtitle="Every customer workspace now includes complete classrooms that train teams to use Contractor Command with Auricrux embedded across intake, qualification, estimates, files, projects, communications, support, billing, warranty, tasks, and execution continuity."
+        title="Workforce training & certification"
+        subtitle="Hands-on lessons for your team—linked to bids, projects, files, billing, and field operations in your live workspace."
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={shellHeaderCtaSets.academy.secondaryHref}
@@ -225,7 +228,7 @@ export default function AcademyHome() {
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live LMS · Auricrux-Central</div>
           <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
-            {meta.persistenceState} · {meta.backingSource}
+            Your enrolled programs and progress sync with your company account.
           </p>
           {apiPrograms.length > 0 && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 14 }}>
@@ -242,6 +245,24 @@ export default function AcademyHome() {
           )}
         </div>
       )}
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Catalog lessons</h2>
+        <p style={{ color: "#475569", lineHeight: 1.65 }}>Structured lessons across apprenticeship, certification, degree, licensure, and operator tracks. <a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700 }}>View full catalog by lane →</a></p>
+        <div style={{ display: "grid", gap: 10, maxHeight: 360, overflow: "auto" }}>
+          {catalogLessons.map((lesson) => (
+            <div key={lesson.id} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: progress[lesson.id] ? "#f0fdf4" : "#fff" }}>
+              <label style={{ display: "flex", gap: 10, alignItems: "flex-start", cursor: "pointer" }}>
+                <input type="checkbox" checked={Boolean(progress[lesson.id])} onChange={() => toggleLesson(lesson.id)} />
+                <span>
+                  <strong>{lesson.title}</strong>
+                  <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{lesson.programTitle} · <a href={lesson.linkedSurface} style={{ color: "#1d4ed8" }}>Open lab surface</a></div>
+                </span>
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div style={{ display: "grid", gap: 24, marginBottom: 24 }}>
         {classroomSummaries.map((classroom) => (

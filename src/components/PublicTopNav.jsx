@@ -202,7 +202,10 @@ const PORTAL_GROUPS = [
     label: "Operations",
     items: [
       { label: "Dashboard", href: "/portal/platform" },
-      { label: "Projects", href: "/portal/projects" },
+      { label: "Project management", href: "/portal/projects" },
+      { label: "Scheduling", href: "/portal/scheduling" },
+      { label: "Field tasks", href: "/portal/field-tasks" },
+      { label: "Field supervision", href: "/portal/field-supervision" },
       { label: "Bids", href: "/portal/bids" },
       { label: "Estimates", href: "/portal/estimates" },
       { label: "Proposals", href: "/portal/proposals" },
@@ -210,12 +213,21 @@ const PORTAL_GROUPS = [
     ],
   },
   {
-    label: "Account",
+    label: "Commercial",
     items: [
-      { label: "Messages", href: "/portal/messages" },
+      { label: "Plans", href: "/portal/plans" },
+      { label: "Finance", href: "/portal/finance" },
       { label: "Billing", href: "/portal/billing" },
+      { label: "Warranty", href: "/warranty" },
+      { label: "Messages", href: "/portal/messages" },
       { label: "Support", href: "/portal/support" },
+    ],
+  },
+  {
+    label: "Training & admin",
+    items: [
       { label: "Academy", href: "/portal/academy" },
+      { label: "Course catalog", href: "/academy/catalog" },
       { label: "Auricrux", href: "/portal/auricrux" },
       { label: "Admin", href: "/portal/admin" },
     ],

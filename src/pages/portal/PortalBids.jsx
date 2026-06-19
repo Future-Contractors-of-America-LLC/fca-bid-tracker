@@ -57,9 +57,8 @@ export default function PortalBids() {
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, margin: 0 }}>{brandedNarrative}</p>
         <div style={{ color: "#475569", lineHeight: 1.7, marginTop: 12 }}>
-          <div><strong>Backing source:</strong> {meta.backingSource}</div>
-          <div><strong>Persistence state:</strong> {meta.persistenceState}</div>
-          <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
+          <div><strong>Qualification tools:</strong> score opportunities, route to estimate, and mark awards</div>
+          <div><strong>Auricrux:</strong> guided next actions on every opportunity</div>
         </div>
       </div>
 
