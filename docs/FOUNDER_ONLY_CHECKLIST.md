@@ -58,8 +58,8 @@ Prioritized tasks only **you** can complete. Engineering agents handle code, doc
 
 | Priority | Item | Why | Doc link | Blocker for |
 |:--------:|------|-----|----------|-------------|
-| 1 | **Push + deploy** `fca-bid-tracker-work` (uncommitted) | `/brand/**` specimens 404 live; IP pack not deployed | [FOUNDER_ONLY_ACTIONS.md](./FOUNDER_ONLY_ACTIONS.md) | Trademark specimens, `/ip` links |
-| 1 | **Push + deploy** `auricrux-central-work` (LMS fix) | `launch.customer` LMS still disabled in production | [FOUNDER_ONLY_ACTIONS.md](./FOUNDER_ONLY_ACTIONS.md) | Launch customer Academy |
+| 1 | **Merge PR + deploy** `fca-bid-tracker` branch `docs/ip-and-founder-prep` | `/brand/**` specimens 404 live; IP pack not deployed | [FOUNDER_ONLY_ACTIONS.md](./FOUNDER_ONLY_ACTIONS.md) | Trademark specimens, `/ip` links |
+| 1 | **Merge PR + deploy** `auricrux-central` branch `feature/launch-customer-lms` | `launch.customer` LMS still disabled in production | [FOUNDER_ONLY_ACTIONS.md](./FOUNDER_ONLY_ACTIONS.md) | Launch customer Academy |
 | 2 | Set `FCA_SESSION_SECRET` | Production session signing | [FOUNDER_COMPLETION_GUIDE.md](./FOUNDER_COMPLETION_GUIDE.md) �3.2 | Managed auth promotion |
 | 3 | Key Vault RBAC on `auricrux-kv` | CLI/scripts cannot read secrets | [FOUNDER_COMPLETION_GUIDE.md](./FOUNDER_COMPLETION_GUIDE.md) �4.1 | Secret rotation |
 | 3 | M365 Graph + SharePoint write consent | Document bridge beyond read/preflight | [FOUNDER_COMPLETION_GUIDE.md](./FOUNDER_COMPLETION_GUIDE.md) �4.2 | SharePoint write |
@@ -95,8 +95,8 @@ Prioritized tasks only **you** can complete. Engineering agents handle code, doc
 
 | # | Item | Group |
 |---|------|-------|
-| 1 | Push + deploy `fca-bid-tracker-work` (brand + IP + routes) | Azure / infra |
-| 2 | Push + deploy `auricrux-central-work` (launch.customer LMS) | Azure / infra |
+| 1 | Merge PR + deploy fca-bid-tracker (`docs/ip-and-founder-prep`) | Azure / infra |
+| 2 | Merge PR + deploy auricrux-central (`feature/launch-customer-lms`) | Azure / infra |
 | 3 | Stripe live keys + webhook | Payments |
 | 4 | $99/mo Startup Payment Link | Payments |
 | 5 | USPTO TESS trademark search | Legal / IP |
@@ -110,7 +110,7 @@ Prioritized tasks only **you** can complete. Engineering agents handle code, doc
 
 ## Agent-completed (no founder action)
 
-- `/ip` route, footer links, and `siteMetadata` entry
+- `/ip` route, footer links, and `siteMetadata` entry (on branch `docs/ip-and-founder-prep`)
 - `public/brand/**` and `brand-assets/**` specimens prepared locally
 - Legal prep docs: copyright, trademark, patent, invention template
 - `validate-routes.mjs` updated for `/ip`, `/brand/**`, and missing SPA routes

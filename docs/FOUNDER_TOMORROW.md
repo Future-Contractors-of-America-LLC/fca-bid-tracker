@@ -23,8 +23,8 @@ Script ready: `fca-bid-tracker-work/scripts/configure-stripe-azure.ps1`
 |---|--------|-------|-------|
 | 5 | Apple Developer enrollment | developer.apple.com | App ID `com.futurecontractorsofamerica.mobile` |
 | 6 | Google Play Console | play.google.com/console | Create app, complete store listing |
-| 7 | Android release keystore | Local + GitHub secrets | See FOUNDER_COMPLETION_GUIDE �2.3 |
-| 8 | iOS signing cert + profile | Apple Developer + GitHub secrets | See FOUNDER_COMPLETION_GUIDE �2.4 |
+| 7 | Android release keystore | Local + GitHub secrets | See FOUNDER_COMPLETION_GUIDE Section 2.3 |
+| 8 | iOS signing cert + profile | Apple Developer + GitHub secrets | See FOUNDER_COMPLETION_GUIDE Section 2.4 |
 | 9 | Install Android SDK (local) | Android Studio | Required for `dotnet build -f net8.0-android` on your PC |
 | 10 | Device screenshots | iPhone + Android | Replace placeholders; see `fca-mobile-maui-work/store-listing/` |
 | 11 | Submit signed builds | Play Console + App Store Connect | After CI produces AAB/IPA |
@@ -53,7 +53,7 @@ Store copy: `fca-mobile-maui-work/store-listing/STORE_COPY.md`
 
 | # | Action | Notes |
 |---|--------|-------|
-| 18 | Push uncommitted repos (web + central + mobile) | See [FOUNDER_ONLY_ACTIONS.md](./FOUNDER_ONLY_ACTIONS.md) deploy commands |
+| 18 | Merge open PRs after CI green | See PR links below ? ships /brand, /ip, LMS fix, MAUI icon |
 | 19 | IP filings (trademark, copyright, patent counsel) | Start at [legal/IP_MASTER_INDEX.md](./legal/IP_MASTER_INDEX.md) |
 | 20 | DPA + data residency policy | Required for Procore/Autodesk-tier buyers |
 | 21 | SOC2 roadmap | Enterprise procurement blocker |
@@ -90,3 +90,51 @@ curl -sL -o /dev/null -w "%{http_code}" https://futurecontractorsofamerica.com/b
 ---
 
 _Last updated: 2026-06-19 - autonomous build sprint_
+
+---
+
+## Agent commit session (2026-06-19)
+
+**Decision:** Feature branches + PR to `main` (safer than direct merge; CI/deploy runs after merge).
+
+| Repo | Branch | Commits | Push |
+|------|--------|---------|------|
+| fca-bid-tracker | `docs/ip-and-founder-prep` | `209de50c` (brand/legal/founder docs), `aad633ab` (/ip, QC, shells) | Pushed to origin |
+| auricrux-central | `feature/launch-customer-lms` | `2af63b8` (launch.customer LMS) | Pushed to origin |
+| fca-mobile-maui | `feature/fca-hex-app-icon` | `1473383` (hex app icons) | Pushed to origin |
+
+**Open PRs (no `gh` on this machine; use GitHub UI or install GitHub CLI):**
+
+- https://github.com/Future-Contractors-of-America-LLC/fca-bid-tracker/compare/main...docs/ip-and-founder-prep
+- https://github.com/Future-Contractors-of-America-LLC/auricrux-central/compare/main...feature/launch-customer-lms
+- https://github.com/Future-Contractors-of-America-LLC/fca-mobile-maui/compare/main...feature/fca-hex-app-icon
+
+**Founder merge/deploy (after PR approval):**
+
+```powershell
+# fca-bid-tracker (SWA marketing site + /brand specimens)
+cd "c:\Users\Auricrux\OneDrive - Future Contractors of America LLC\fca-bid-tracker-work"
+git checkout main; git pull; git merge docs/ip-and-founder-prep; git push origin main
+
+# auricrux-central (Functions API + launch LMS)
+cd "c:\Users\Auricrux\OneDrive - Future Contractors of America LLC\auricrux-central-work"
+git checkout main; git pull; git merge feature/launch-customer-lms; git push origin main
+
+# fca-mobile-maui (icon for CI/store)
+cd "c:\Users\Auricrux\OneDrive - Future Contractors of America LLC\fca-mobile-maui-work"
+git checkout main; git pull; git merge feature/fca-hex-app-icon; git push origin main
+```
+
+**Local QC not run here:** Node.js/npm not on PATH (`vite build`, `npm run qc:market`). Install Node 20+ then:
+
+```powershell
+cd "c:\Users\Auricrux\OneDrive - Future Contractors of America LLC\fca-bid-tracker-work"
+npm ci; npm run build; npm run qc:market
+```
+
+**MAUI build:** `dotnet restore` then `dotnet build -f net8.0-android` (requires Android workload/SDK).
+
+**Excluded from git:** `build-log.txt` (local log only).
+
+**Still founder-only:** Stripe live keys + webhook, USPTO/counsel filings, store keystores/certs, Azure portal secrets (`FCA_SESSION_SECRET`, Key Vault RBAC), PR merge if you prefer review before deploy.
+
