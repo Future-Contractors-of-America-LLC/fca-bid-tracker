@@ -21,6 +21,7 @@ window.FCA_BACKEND = {
   supportTicketsApi: "https://auricrux-central.azurewebsites.net/api/support-tickets",
   billingSummaryApi: "https://auricrux-central.azurewebsites.net/api/billing-summary",
   pilotCheckout: "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01",
+  startupCheckout: "",
   projectRfisApi: function (projectId) {
     return this.baseUrl + "/api/projects/" + encodeURIComponent(projectId) + "/rfis";
   },

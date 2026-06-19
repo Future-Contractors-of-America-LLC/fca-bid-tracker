@@ -1,6 +1,8 @@
 import Home from "./pages/website/Home";
 import Platform from "./pages/website/Platform";
 import Login from "./pages/website/Login";
+import Intake from "./pages/website/Intake";
+import Checkout from "./pages/website/Checkout";
 import Pricing from "./pages/website/Pricing";
 import Contact from "./pages/website/Contact";
 import Auricrux from "./pages/website/Auricrux";
@@ -39,8 +41,8 @@ export const routes = {
   "/": Home,
   "/platform": Platform,
   "/login": Login,
-  "/intake": Login,
-  "/checkout": Login,
+  "/intake": Intake,
+  "/checkout": Checkout,
   "/pricing": Pricing,
   "/contact": Contact,
   "/auricrux": Auricrux,
