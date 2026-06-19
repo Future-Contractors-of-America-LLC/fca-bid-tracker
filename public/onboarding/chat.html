@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auricrux Onboarding Chat | FCA</title>
+  <link rel="stylesheet" href="/leads/leads.css" />
+  <style>
+    .chat-log { display:flex; flex-direction:column; gap:12px; max-height:420px; overflow:auto; margin-bottom:16px; }
+    .chat-bubble { padding:12px 16px; border-radius:12px; max-width:85%; font-size:14px; line-height:1.5; }
+    .chat-bubble.auricrux { background:#0f172a; color:#e2e8f0; align-self:flex-start; }
+    .chat-bubble.user { background:#dbeafe; color:#1e3a8a; align-self:flex-end; }
+  </style>
+</head>
+<body>
+  <main class="fca-shell">
+    <div id="topbar"></div>
+
+    <section class="fca-hero">
+      <h2>Auricrux Onboarding</h2>
+      <p>Guided company setup via Auricrux Central <code>/api/onboarding</code>.</p>
+    </section>
+
+    <section class="fca-panel">
+      <div class="fca-panel-header"><h3>Conversation</h3></div>
+      <div class="chat-log" id="chatLog"></div>
+      <form id="chatForm" class="fca-toolbar">
+        <input class="fca-input" id="reply" placeholder="Your answer..." style="flex:1" required />
+        <button class="fca-btn fca-btn-primary" type="submit">Send</button>
+      </form>
+      <div class="fca-status" id="statusBox"></div>
+    </section>
+  </main>
+
+  <script src="/config/auricrux-central.js"></script>
+  <script src="/leads/leads.js"></script>
+  <script>
+    topbar.innerHTML = FCALeads.renderTopbar("onboarding");
+
+    const collected = {};
+    let currentStep = null;
+    const chatLog = document.getElementById("chatLog");
+    const chatForm = document.getElementById("chatForm");
+    const reply = document.getElementById("reply");
+    const statusBox = document.getElementById("statusBox");
+
+    function addBubble(text, role) {
+      const div = document.createElement("div");
+      div.className = "chat-bubble " + role;
+      div.textContent = text;
+      chatLog.appendChild(div);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    async function postOnboarding(payload) {
+      const cfg = window.FCA_AURICRUX;
+      if (cfg && cfg.centralFetch) {
+        return cfg.centralFetch("/onboarding", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      }
+      const res = await fetch(cfg.onboardingUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Onboarding request failed");
+      return data;
+    }
+
+    async function step() {
+      statusBox.className = "fca-status show";
+      statusBox.textContent = "Auricrux is thinking...";
+      try {
+        const data = await postOnboarding(collected);
+        statusBox.className = "fca-status";
+        statusBox.textContent = "";
+        addBubble(data.auricrux || "Continue onboarding.", "auricrux");
+        if (data.onboardingComplete) {
+          currentStep = null;
+          reply.disabled = true;
+          chatForm.querySelector("button").disabled = true;
+          statusBox.className = "fca-status show success";
+          statusBox.textContent = "Onboarding complete. Continue to Lead Pipeline or Product Shell.";
+        } else {
+          currentStep = data.step || null;
+        }
+      } catch (err) {
+        statusBox.className = "fca-status show error";
+        statusBox.textContent = err.message;
+      }
+    }
+
+    chatForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const value = reply.value.trim();
+      if (!value) return;
+      addBubble(value, "user");
+      if (currentStep) collected[currentStep] = value;
+      reply.value = "";
+      await step();
+    });
+
+    step();
+  </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FCA Lead Pipeline | Auricrux</title>
+  <link rel="stylesheet" href="/leads/leads.css" />
+</head>
+<body>
+  <main class="fca-shell">
+    <div id="topbar"></div>
+
+    <section class="fca-hero">
+      <h2>Construction Lead Pipeline</h2>
+      <p>
+        PlanHub-grade lead intelligence for general contractors, subs, and owners.
+        Every lead is scored, routed, and orchestrated by Auricrux across intake,
+        qualification, proposal, and close.
+      </p>
+    </section>
+
+    <section class="fca-metrics" id="metrics"></section>
+
+    <section class="fca-panel">
+      <div class="fca-panel-header">
+        <h3>Pipeline Board</h3>
+        <div class="fca-toolbar">
+          <input class="fca-input" id="search" placeholder="Search company, project, trade, location..." style="width:280px" />
+          <select class="fca-select" id="tradeFilter" style="width:180px">
+            <option value="">All trades</option>
+            <option>General Construction</option>
+            <option>Electrical</option>
+            <option>Mechanical</option>
+            <option>Plumbing</option>
+            <option>Sitework</option>
+            <option>Other</option>
+          </select>
+          <button class="fca-btn fca-btn-secondary" id="refreshBtn">Refresh</button>
+        </div>
+      </div>
+      <div class="fca-pipeline" id="pipeline"></div>
+    </section>
+
+    <section class="fca-panel">
+      <div class="fca-panel-header">
+        <h3>Lead Register</h3>
+        <span id="tableCount" style="color:#64748b;font-size:13px;font-weight:700"></span>
+      </div>
+      <div class="fca-table-wrap">
+        <table class="fca-table">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Project</th>
+              <th>Trade</th>
+              <th>Value</th>
+              <th>Stage</th>
+              <th>Auricrux</th>
+              <th>Next Action</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="fca-footer">FCA Lead Intelligence — Auricrux execution layer</div>
+  </main>
+
+  <script src="/config/auricrux-central.js"></script>
+  <script src="/leads/leads.js"></script>
+  <script>
+    let allLeads = [];
+
+    function renderMetrics(leads) {
+      const m = FCALeads.computeMetrics(leads);
+      metrics.innerHTML =
+        '<div class="fca-metric"><div class="fca-metric-label">Total Leads</div><div class="fca-metric-value">' + m.totalLeads + '</div><div class="fca-metric-sub">All captured opportunities</div></div>' +
+        '<div class="fca-metric"><div class="fca-metric-label">Active Pipeline</div><div class="fca-metric-value">' + m.activeLeads + '</div><div class="fca-metric-sub">Excludes lost</div></div>' +
+        '<div class="fca-metric"><div class="fca-metric-label">Pipeline Value</div><div class="fca-metric-value">' + FCALeads.formatCurrency(m.pipelineValue) + '</div><div class="fca-metric-sub">Active opportunity value</div></div>' +
+        '<div class="fca-metric"><div class="fca-metric-label">Avg Auricrux Score</div><div class="fca-metric-value">' + m.avgScore + '</div><div class="fca-metric-sub">Lead quality index</div></div>';
+    }
+
+    function filterLeads() {
+      const q = (search.value || "").trim().toLowerCase();
+      const trade = tradeFilter.value;
+      return allLeads.filter(function (lead) {
+        const hay = [
+          lead.company,
+          lead.projectName,
+          lead.trade,
+          lead.location,
+          lead.contactName,
+          lead.contactEmail
+        ].join(" ").toLowerCase();
+        if (q && hay.indexOf(q) === -1) return false;
+        if (trade && lead.trade !== trade) return false;
+        return true;
+      });
+    }
+
+    function renderPipeline(leads) {
+      const grouped = FCALeads.groupByStage(leads);
+      pipeline.innerHTML = FCALeads.PIPELINE_STAGES.map(function (stage) {
+        const items = grouped[stage] || [];
+        return (
+          '<div class="fca-stage">' +
+          '<div class="fca-stage-head">' +
+          FCALeads.STAGE_LABELS[stage] +
+          '<span class="fca-stage-count">' + items.length + '</span></div>' +
+          '<div class="fca-stage-body">' +
+          (items.length
+            ? items.map(function (lead) {
+                return (
+                  '<div class="fca-lead-card" data-id="' + lead.id + '">' +
+                  '<h4>' + (lead.company || "Unknown") + '</h4>' +
+                  '<p>' + (lead.projectName || "Unnamed project") + '</p>' +
+                  '<p>' + FCALeads.formatCurrency(lead.value) + ' · ' + (lead.trade || "Trade TBD") + '</p>' +
+                  '<div style="margin-top:8px;display:flex;gap:6px;align-items:center">' +
+                  '<span class="' + FCALeads.scoreClass(lead.auricruxScore) + ' fca-score">' + (lead.auricruxScore || 0) + '</span>' +
+                  '<span class="' + FCALeads.stageBadgeClass(lead.pipelineStage) + '">' + (lead.pipelineStage || "new") + '</span>' +
+                  '</div></div>'
+                );
+              }).join("")
+            : '<div class="fca-empty" style="padding:20px 8px">No leads</div>') +
+          '</div></div>'
+        );
+      }).join("");
+
+      pipeline.querySelectorAll(".fca-lead-card").forEach(function (card) {
+        card.onclick = function () {
+          location.href = "/leads/detail.html?id=" + encodeURIComponent(card.dataset.id);
+        };
+      });
+    }
+
+    function renderTable(leads) {
+      tableCount.textContent = leads.length + " leads";
+      tableBody.innerHTML = leads.length
+        ? leads.map(function (lead) {
+            return (
+              '<tr data-id="' + lead.id + '" style="cursor:pointer">' +
+              '<td><strong>' + (lead.company || "—") + '</strong><br><span style="color:#64748b;font-size:12px">' + (lead.contactName || "") + '</span></td>' +
+              '<td>' + (lead.projectName || "—") + '<br><span style="color:#64748b;font-size:12px">' + (lead.location || "") + '</span></td>' +
+              '<td>' + (lead.trade || "—") + '</td>' +
+              '<td>' + FCALeads.formatCurrency(lead.value) + '</td>' +
+              '<td><span class="' + FCALeads.stageBadgeClass(lead.pipelineStage) + '">' + (lead.pipelineStage || "new") + '</span></td>' +
+              '<td><span class="' + FCALeads.scoreClass(lead.auricruxScore) + ' fca-score">' + (lead.auricruxScore || 0) + '</span><br><span style="color:#64748b;font-size:12px">' + (lead.auricruxRisk || "—") + ' risk</span></td>' +
+              '<td>' + (lead.nextAction || lead.auricruxRecommendation || "—") + '</td>' +
+              '<td>' + FCALeads.formatDate(lead.updatedAt) + '</td>' +
+              '</tr>'
+            );
+          }).join("")
+        : '<tr><td colspan="8"><div class="fca-empty">No leads yet. <a href="/leads/new.html">Capture your first lead</a>.</div></td></tr>';
+
+      tableBody.querySelectorAll("tr[data-id]").forEach(function (row) {
+        row.onclick = function () {
+          location.href = "/leads/detail.html?id=" + encodeURIComponent(row.dataset.id);
+        };
+      });
+    }
+
+    async function load() {
+      topbar.innerHTML = FCALeads.renderTopbar("pipeline");
+      try {
+        allLeads = await FCALeads.fetchLeads();
+        allLeads.sort(function (a, b) {
+          return String(b.updatedAt || "").localeCompare(String(a.updatedAt || ""));
+        });
+        const visible = filterLeads();
+        renderMetrics(allLeads);
+        renderPipeline(visible);
+        renderTable(visible);
+      } catch (error) {
+        pipeline.innerHTML = '<div class="fca-empty">Unable to load leads: ' + error.message + '</div>';
+      }
+    }
+
+    search.oninput = function () {
+      const visible = filterLeads();
+      renderPipeline(visible);
+      renderTable(visible);
+    };
+    tradeFilter.onchange = search.oninput;
+    refreshBtn.onclick = load;
+    load();
+  </script>
+</body>
+</html>

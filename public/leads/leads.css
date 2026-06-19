@@ -1,0 +1,431 @@
+:root {
+  --fca-navy: #0f172a;
+  --fca-navy-light: #1e293b;
+  --fca-slate: #334155;
+  --fca-blue: #2563eb;
+  --fca-blue-dark: #1d4ed8;
+  --fca-green: #16a34a;
+  --fca-amber: #d97706;
+  --fca-red: #dc2626;
+  --fca-border: #e2e8f0;
+  --fca-muted: #64748b;
+  --fca-bg: #f8fafc;
+  --fca-card: #ffffff;
+  --fca-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  background: var(--fca-bg);
+  color: #0f172a;
+  min-height: 100vh;
+}
+
+.fca-shell {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.fca-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.fca-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fca-brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--fca-blue), #7c3aed);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.fca-brand h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.fca-brand p {
+  margin: 2px 0 0;
+  color: var(--fca-muted);
+  font-size: 13px;
+}
+
+.fca-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fca-nav a,
+.fca-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.fca-btn-primary {
+  background: var(--fca-blue);
+  color: white;
+}
+
+.fca-btn-primary:hover { background: var(--fca-blue-dark); }
+
+.fca-btn-secondary {
+  background: white;
+  color: var(--fca-navy);
+  border-color: var(--fca-border);
+}
+
+.fca-btn-secondary:hover { background: #f1f5f9; }
+
+.fca-hero {
+  background: linear-gradient(135deg, var(--fca-navy) 0%, #1e3a5f 100%);
+  color: white;
+  border-radius: 20px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  box-shadow: var(--fca-shadow);
+}
+
+.fca-hero h2 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+
+.fca-hero p {
+  margin: 0;
+  color: #cbd5e1;
+  max-width: 720px;
+  line-height: 1.5;
+}
+
+.fca-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.fca-metric {
+  background: var(--fca-card);
+  border: 1px solid var(--fca-border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.fca-metric-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fca-muted);
+  font-weight: 700;
+}
+
+.fca-metric-value {
+  margin-top: 8px;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.fca-metric-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--fca-muted);
+}
+
+.fca-panel {
+  background: var(--fca-card);
+  border: 1px solid var(--fca-border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  margin-bottom: 24px;
+}
+
+.fca-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--fca-border);
+  background: #fbfdff;
+  flex-wrap: wrap;
+}
+
+.fca-panel-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.fca-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.fca-input,
+.fca-select,
+.fca-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 15px;
+  background: white;
+}
+
+.fca-textarea { min-height: 110px; resize: vertical; }
+
+.fca-input:focus,
+.fca-select:focus,
+.fca-textarea:focus {
+  outline: 2px solid rgba(37, 99, 235, 0.25);
+  border-color: var(--fca-blue);
+}
+
+.fca-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.fca-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.fca-form {
+  padding: 22px;
+  display: grid;
+  gap: 18px;
+}
+
+.fca-label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.fca-full { grid-column: 1 / -1; }
+
+.fca-table-wrap { overflow: auto; }
+
+.fca-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.fca-table th,
+.fca-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--fca-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.fca-table th {
+  background: #f8fafc;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fca-muted);
+}
+
+.fca-table tr:hover td { background: #f8fafc; }
+
+.fca-pipeline {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 18px;
+  overflow-x: auto;
+}
+
+.fca-stage {
+  background: #f8fafc;
+  border: 1px solid var(--fca-border);
+  border-radius: 14px;
+  min-height: 320px;
+}
+
+.fca-stage-head {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--fca-border);
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fca-stage-count {
+  background: white;
+  border: 1px solid var(--fca-border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+.fca-stage-body {
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.fca-lead-card {
+  background: white;
+  border: 1px solid var(--fca-border);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.fca-lead-card:hover {
+  border-color: var(--fca-blue);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
+}
+
+.fca-lead-card h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.fca-lead-card p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--fca-muted);
+}
+
+.fca-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fca-badge-new { background: #dbeafe; color: #1d4ed8; }
+.fca-badge-qualified { background: #e0e7ff; color: #4338ca; }
+.fca-badge-invited { background: #fef3c7; color: #b45309; }
+.fca-badge-proposal { background: #fce7f3; color: #be185d; }
+.fca-badge-negotiation { background: #ffedd5; color: #c2410c; }
+.fca-badge-won { background: #dcfce7; color: #15803d; }
+.fca-badge-lost { background: #fee2e2; color: #b91c1c; }
+
+.fca-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  height: 28px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.fca-score-high { background: #dcfce7; color: #166534; }
+.fca-score-mid { background: #fef3c7; color: #92400e; }
+.fca-score-low { background: #fee2e2; color: #991b1b; }
+
+.fca-auricrux {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  color: #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.fca-auricrux h3 {
+  margin: 0 0 12px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fca-auricrux p {
+  margin: 0 0 12px;
+  line-height: 1.6;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.fca-auricrux ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.fca-status {
+  display: none;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.fca-status.show { display: block; }
+.fca-status.success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.fca-status.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+.fca-footer {
+  color: var(--fca-muted);
+  font-size: 13px;
+  text-align: center;
+  padding: 16px 0 8px;
+}
+
+.fca-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--fca-muted);
+}
+
+@media (max-width: 960px) {
+  .fca-metrics,
+  .fca-grid-2,
+  .fca-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .fca-pipeline {
+    grid-template-columns: 1fr;
+  }
+}

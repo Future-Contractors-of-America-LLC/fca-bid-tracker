@@ -1,7 +1,42 @@
-<!doctype html><html><head><meta charset="utf-8"><title>Pilot</title></head>
-<body style="font-family:Arial;padding:24px;max-width:900px;margin:auto">
-<h1>$2500 FCA Pilot (30 Days)</h1>
-<p>Primary offer when readiness triggers exist.</p>
-<p>Checkout (requires Intake ID): Start at <a href="/intake/">/intake/</a>.</p>
-<p><a href="/product/">Back to Product Shell</a></p>
-</body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FCA Pilot | Auricrux Central</title>
+  <link rel="stylesheet" href="/leads/leads.css" />
+</head>
+<body>
+  <main class="fca-shell">
+    <div id="topbar"></div>
+
+    <section class="fca-hero">
+      <h2>FCA Pilot — 30 Days</h2>
+      <p>
+        Primary commercial offer ($2,500). Capture a lead or complete quick intake first to receive
+        your Intake ID, then proceed to Stripe checkout orchestrated by Auricrux Central.
+      </p>
+    </section>
+
+    <section class="fca-panel">
+      <div class="fca-panel-header"><h3>Get Started</h3></div>
+      <div class="fca-toolbar">
+        <a class="fca-btn fca-btn-primary" href="/leads/new.html">Capture Lead</a>
+        <a class="fca-btn fca-btn-secondary" href="/intake/">Quick Intake</a>
+        <a class="fca-btn fca-btn-secondary" href="/onboarding/">Onboarding Lookup</a>
+        <a class="fca-btn fca-btn-secondary" href="/product/">Product Shell</a>
+      </div>
+      <p style="margin-top:16px;color:#64748b;font-size:14px">
+        Checkout requires an Intake ID from intake or lead capture. Pilot payment link is managed
+        by Auricrux Central billing configuration.
+      </p>
+    </section>
+  </main>
+
+  <script src="/config/auricrux-central.js"></script>
+  <script src="/leads/leads.js"></script>
+  <script>
+    topbar.innerHTML = FCALeads.renderTopbar("offers");
+  </script>
+</body>
+</html>

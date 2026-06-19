@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Capture Lead | FCA Lead Intelligence</title>
+  <link rel="stylesheet" href="/leads/leads.css" />
+</head>
+<body>
+  <main class="fca-shell">
+    <div id="topbar"></div>
+
+    <section class="fca-hero">
+      <h2>Capture New Lead</h2>
+      <p>
+        Enterprise-grade lead intake for construction opportunities. Submissions are stored in
+        <strong>Auricrux Central</strong> and scored for qualification, estimate handoff, and revenue routing.
+      </p>
+    </section>
+
+    <section class="fca-panel">
+      <div class="fca-panel-header">
+        <h3>Lead Profile</h3>
+        <span style="color:#64748b;font-size:13px">Backed by /api/leads on Auricrux Central</span>
+      </div>
+      <form class="fca-form" id="leadForm">
+        <div class="fca-grid-2">
+          <div>
+            <label class="fca-label" for="company">Company / Organization *</label>
+            <input class="fca-input" id="company" required placeholder="General contractor or owner entity" />
+          </div>
+          <div>
+            <label class="fca-label" for="projectName">Project Name *</label>
+            <input class="fca-input" id="projectName" required placeholder="Commercial renovation, TI build-out, etc." />
+          </div>
+          <div>
+            <label class="fca-label" for="leadType">Lead Type</label>
+            <select class="fca-select" id="leadType">
+              <option value="gc">General Contractor</option>
+              <option value="sub">Subcontractor</option>
+              <option value="owner">Owner / Developer</option>
+              <option value="architect">Architect / Engineer</option>
+            </select>
+          </div>
+          <div>
+            <label class="fca-label" for="projectType">Project Type</label>
+            <select class="fca-select" id="projectType">
+              <option value="commercial">Commercial</option>
+              <option value="residential">Residential</option>
+              <option value="industrial">Industrial</option>
+              <option value="government">Government / Public</option>
+            </select>
+          </div>
+          <div>
+            <label class="fca-label" for="contactName">Primary Contact</label>
+            <input class="fca-input" id="contactName" placeholder="Decision maker or estimator" />
+          </div>
+          <div>
+            <label class="fca-label" for="contactEmail">Contact Email</label>
+            <input class="fca-input" id="contactEmail" type="email" placeholder="name@company.com" />
+          </div>
+          <div>
+            <label class="fca-label" for="contactPhone">Contact Phone</label>
+            <input class="fca-input" id="contactPhone" placeholder="Direct line or mobile" />
+          </div>
+          <div>
+            <label class="fca-label" for="trade">Trade / Scope</label>
+            <select class="fca-select" id="trade">
+              <option value="">Select trade</option>
+              <option value="general-construction">General Construction</option>
+              <option value="electrical">Electrical</option>
+              <option value="mechanical">Mechanical</option>
+              <option value="plumbing">Plumbing</option>
+              <option value="sitework">Sitework</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="fca-label" for="location">Project Location</label>
+            <input class="fca-input" id="location" placeholder="City, State" />
+          </div>
+          <div>
+            <label class="fca-label" for="value">Estimated Project Value (USD) *</label>
+            <input class="fca-input" id="value" type="number" min="0" step="1000" required placeholder="250000" />
+          </div>
+          <div>
+            <label class="fca-label" for="squareFootage">Square Footage</label>
+            <input class="fca-input" id="squareFootage" type="number" min="0" placeholder="12000" />
+          </div>
+          <div>
+            <label class="fca-label" for="bidDeadline">Bid Deadline</label>
+            <input class="fca-input" id="bidDeadline" type="date" />
+          </div>
+          <div>
+            <label class="fca-label" for="unionRequired">Union Requirements</label>
+            <select class="fca-select" id="unionRequired">
+              <option value="unknown">Unknown</option>
+              <option value="yes">Union required</option>
+              <option value="no">Open shop</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fca-full">
+          <label class="fca-label">Qualification Checklist</label>
+          <div class="fca-grid-2" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px">
+            <label><input type="checkbox" id="plansReceived" /> Plans / drawings received</label>
+            <label><input type="checkbox" id="siteWalkComplete" /> Site walk completed</label>
+            <label><input type="checkbox" id="budgetConfirmed" /> Budget range confirmed</label>
+            <label><input type="checkbox" id="decisionMakerIdentified" /> Decision maker identified</label>
+          </div>
+        </div>
+
+        <div class="fca-full">
+          <label class="fca-label" for="notes">Scope Notes & Intelligence</label>
+          <textarea class="fca-textarea" id="notes" placeholder="Add scope details, competition, bonding requirements, prequalification status, or Auricrux routing instructions."></textarea>
+        </div>
+
+        <div class="fca-full" style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="fca-btn fca-btn-primary" id="submitBtn" type="submit">Submit to Auricrux Central</button>
+          <a class="fca-btn fca-btn-secondary" href="/leads/">Back to Pipeline</a>
+        </div>
+
+        <div class="fca-status" id="statusBox"></div>
+      </form>
+    </section>
+  </main>
+
+  <script src="/config/auricrux-central.js"></script>
+  <script src="/leads/leads.js"></script>
+  <script>
+    topbar.innerHTML = FCALeads.renderTopbar("new");
+
+    function setStatus(type, message) {
+      statusBox.className = "fca-status show " + type;
+      statusBox.textContent = message;
+    }
+
+    leadForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      submitBtn.disabled = true;
+
+      try {
+        const saved = await FCALeads.saveLead({
+          company: company.value,
+          projectName: projectName.value,
+          leadType: leadType.value,
+          projectType: projectType.value,
+          contactName: contactName.value,
+          contactEmail: contactEmail.value,
+          contactPhone: contactPhone.value,
+          trade: trade.value,
+          location: location.value,
+          value: value.value,
+          squareFootage: squareFootage.value,
+          bidDeadline: bidDeadline.value,
+          unionRequired: unionRequired.value,
+          notes: notes.value,
+          plansReceived: plansReceived.checked,
+          siteWalkComplete: siteWalkComplete.checked,
+          budgetConfirmed: budgetConfirmed.checked,
+          decisionMakerIdentified: decisionMakerIdentified.checked,
+          source: "lead-gen"
+        });
+
+        setStatus(
+          "success",
+          "Lead captured in Auricrux Central. Score " +
+            saved.auricruxScore +
+            "/100. Redirecting..."
+        );
+        setTimeout(function () {
+          location.href = "/leads/detail.html?id=" + encodeURIComponent(saved.leadId);
+        }, 900);
+      } catch (error) {
+        setStatus("error", "Submission failed: " + error.message);
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lead Detail | FCA Lead Intelligence</title>
+  <link rel="stylesheet" href="/leads/leads.css" />
+</head>
+<body>
+  <main class="fca-shell">
+    <div id="topbar"></div>
+    <div id="content"></div>
+    <div class="fca-footer">FCA Lead Intelligence — Auricrux Central backend</div>
+  </main>
+
+  <script src="/config/auricrux-central.js"></script>
+  <script src="/leads/leads.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const leadId = params.get("id");
+    let currentLead = null;
+
+    function renderDetail(lead, opportunity) {
+      const checkout = FCALeads.checkoutUrl(lead.leadId);
+
+      content.innerHTML =
+        '<section class="fca-hero">' +
+        '<h2>' + lead.company + '</h2>' +
+        '<p>' + lead.projectName + ' · ' + (lead.location || "Location TBD") + ' · ' + FCALeads.formatCurrency(lead.value) + '</p>' +
+        '</section>' +
+        '<div class="fca-grid-2">' +
+        '<section class="fca-panel">' +
+        '<div class="fca-panel-header"><h3>Lead Record</h3><span class="' + FCALeads.stageBadgeClass(lead.pipelineStage) + '">' + lead.pipelineStage + '</span></div>' +
+        '<div class="fca-form">' +
+        row("Lead ID", lead.leadId) +
+        row("Service Line", lead.trade || "—") +
+        row("Project Type", lead.projectType || "—") +
+        row("Budget Status", lead.budgetStatus || "—") +
+        row("Jurisdiction", lead.jurisdictionStatus || "—") +
+        row("Ownership", lead.ownershipStatus || "—") +
+        row("Contact", lead.contactName + (lead.contactEmail ? '<br><span style="color:#64748b">' + lead.contactEmail + '</span>' : "")) +
+        row("Phone", lead.contactPhone || "—") +
+        row("Source", lead.source || "—") +
+        row("Created", FCALeads.formatDate(lead.createdAt)) +
+        row("Updated", FCALeads.formatDate(lead.updatedAt)) +
+        (opportunity ? row("Opportunity", opportunity.opportunityId + " · " + (opportunity.status || "")) : "") +
+        '<div class="fca-full"><label class="fca-label">Notes</label><div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;line-height:1.6">' + (lead.notes || "No notes provided.") + '</div></div>' +
+        '</div></section>' +
+        '<section class="fca-auricrux">' +
+        '<h3>⚡ Auricrux Intelligence</h3>' +
+        '<p>' + (lead.auricruxNarrative || lead.auricruxRecommendation) + '</p>' +
+        '<div class="fca-grid-2" style="margin-bottom:16px">' +
+        '<div><div class="fca-metric-label" style="color:#94a3b8">Score</div><div style="font-size:28px;font-weight:800;color:white">' + lead.auricruxScore + '/100</div></div>' +
+        '<div><div class="fca-metric-label" style="color:#94a3b8">Risk</div><div style="font-size:28px;font-weight:800;color:white;text-transform:capitalize">' + lead.auricruxRisk + '</div></div>' +
+        '</div>' +
+        '<p><strong style="color:white">Next Action:</strong> ' + lead.nextAction + '</p>' +
+        '</section></div>' +
+        '<section class="fca-panel">' +
+        '<div class="fca-panel-header"><h3>Pipeline Actions</h3></div>' +
+        '<div class="fca-form">' +
+        '<div class="fca-grid-2">' +
+        '<div><label class="fca-label" for="stageSelect">Advance Stage</label><select class="fca-select" id="stageSelect">' +
+        FCALeads.PIPELINE_STAGES.map(function (stage) {
+          return '<option value="' + stage + '"' + (lead.pipelineStage === stage ? ' selected' : '') + '>' + FCALeads.STAGE_LABELS[stage] + '</option>';
+        }).join("") +
+        '</select></div>' +
+        '<div><label class="fca-label" for="nextActionInput">Qualification Notes</label><input class="fca-input" id="nextActionInput" placeholder="Optional qualification note" /></div>' +
+        '</div>' +
+        '<div style="display:flex;gap:12px;flex-wrap:wrap">' +
+        '<button class="fca-btn fca-btn-primary" id="saveStageBtn">Save Stage</button>' +
+        '<button class="fca-btn fca-btn-secondary" id="qualifyBtn">Qualify via Auricrux</button>' +
+        '<a class="fca-btn fca-btn-secondary" href="' + checkout + '" target="_blank" rel="noopener">Pilot Checkout</a>' +
+        '<a class="fca-btn fca-btn-secondary" href="/onboarding/">Onboarding Lookup</a>' +
+        '<a class="fca-btn fca-btn-secondary" href="/leads/">Back to Pipeline</a>' +
+        '</div>' +
+        '<div class="fca-status" id="actionStatus"></div>' +
+        '</div></section>';
+    }
+
+    function row(label, value) {
+      return '<div><div class="fca-label">' + label + '</div><div>' + value + '</div></div>';
+    }
+
+    function bindActions() {
+      saveStageBtn.onclick = async function () {
+        actionStatus.className = "fca-status show";
+        actionStatus.textContent = "Saving...";
+        try {
+          const updated = await FCALeads.updateLead(currentLead.leadId, {
+            status: stageSelect.value,
+            reason: nextActionInput.value.trim() || "Stage updated from FCA Lead Intelligence."
+          });
+          currentLead = updated;
+          actionStatus.className = "fca-status show success";
+          actionStatus.textContent = "Stage updated in Auricrux Central.";
+          renderDetail(updated);
+          bindActions();
+        } catch (error) {
+          actionStatus.className = "fca-status show error";
+          actionStatus.textContent = error.message;
+        }
+      };
+
+      qualifyBtn.onclick = async function () {
+        actionStatus.className = "fca-status show";
+        actionStatus.textContent = "Qualifying via Auricrux Central...";
+        try {
+          const result = await FCALeads.qualifyLead(
+            currentLead.leadId,
+            nextActionInput.value.trim()
+          );
+          currentLead = result.lead;
+          actionStatus.className = "fca-status show success";
+          actionStatus.textContent = "Lead qualified. Opportunity " + (result.opportunity?.opportunityId || "created") + ".";
+          renderDetail(result.lead, result.opportunity);
+          bindActions();
+        } catch (error) {
+          actionStatus.className = "fca-status show error";
+          actionStatus.textContent = error.message;
+        }
+      };
+    }
+
+    async function init() {
+      topbar.innerHTML = FCALeads.renderTopbar("pipeline");
+      if (!leadId) {
+        content.innerHTML = '<div class="fca-empty">Missing lead id.</div>';
+        return;
+      }
+      try {
+        currentLead = await FCALeads.fetchLeadById(leadId);
+        renderDetail(currentLead);
+        bindActions();
+      } catch (error) {
+        content.innerHTML = '<div class="fca-empty">Error loading lead: ' + error.message + '</div>';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

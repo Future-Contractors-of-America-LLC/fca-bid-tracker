@@ -1,27 +1,57 @@
 <!doctype html>
-<html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FCA Onboarding</title>
-<style>
-body{font-family:Arial;padding:24px;max-width:900px;margin:auto}
-input{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px}
-button{padding:10px 14px;border:1px solid #222;border-radius:10px;background:#fff;cursor:pointer;margin-top:10px}
-pre{background:#f7f7f7;border:1px solid #ddd;padding:12px;border-radius:10px}
-</style>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FCA Onboarding | Auricrux Central</title>
+  <link rel="stylesheet" href="/leads/leads.css" />
 </head>
 <body>
-<h1>FCA Onboarding</h1>
-<p>Enter your Intake ID to open your onboarding page.</p>
-<input id="iid" placeholder="intake-1234567890">
-<button id="go">Open Onboarding</button>
-<pre id="out">Ready.</pre>
-<script>
-go.onclick = () => {
-  const v = (iid.value || "").trim();
-  if (!v) { out.textContent = "Enter an Intake ID."; return; }
-  location.href = "/onboarding/" + encodeURIComponent(v) + ".html";
-};
-</script>
-<p>Back to product shell: /product/</p>
+  <main class="fca-shell">
+    <div id="topbar"></div>
+
+    <section class="fca-hero">
+      <h2>Onboarding</h2>
+      <p>
+        Look up your Intake ID or start a guided onboarding conversation with Auricrux Central.
+      </p>
+    </section>
+
+    <section class="fca-panel">
+      <div class="fca-panel-header"><h3>Intake Lookup</h3></div>
+      <div class="fca-grid-2">
+        <div class="fca-full">
+          <label class="fca-label" for="iid">Intake / Lead ID</label>
+          <input class="fca-input" id="iid" placeholder="lead_1234567890" />
+        </div>
+      </div>
+      <button class="fca-btn fca-btn-primary" id="go" type="button">Open Onboarding Page</button>
+      <div class="fca-status" id="statusBox"></div>
+    </section>
+
+    <section class="fca-panel">
+      <div class="fca-panel-header"><h3>Guided Onboarding (Central API)</h3></div>
+      <p style="color:#64748b;font-size:14px;margin:0 0 12px">
+        Conversational onboarding powered by <code>/api/onboarding</code> on Auricrux Central.
+      </p>
+      <a class="fca-btn fca-btn-secondary" href="/onboarding/chat.html">Start Auricrux Onboarding Chat</a>
+    </section>
+  </main>
+
+  <script src="/config/auricrux-central.js"></script>
+  <script src="/leads/leads.js"></script>
+  <script>
+    topbar.innerHTML = FCALeads.renderTopbar("onboarding");
+
+    go.onclick = function () {
+      const v = (iid.value || "").trim();
+      if (!v) {
+        statusBox.className = "fca-status show error";
+        statusBox.textContent = "Enter an Intake or Lead ID.";
+        return;
+      }
+      location.href = "/onboarding/" + encodeURIComponent(v) + ".html";
+    };
+  </script>
 </body>
 </html>

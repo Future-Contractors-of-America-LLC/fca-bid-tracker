@@ -1,16 +1,16 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8" />
   <title>FCA Bid System</title>
 </head>
 <body>
 
 <h2>FCA Bid Entry</h2>
 
-<input id="project" placeholder="Project Name"><br><br>
+<input id="projectName" placeholder="Project Name"><br><br>
 <input id="client" placeholder="Client"><br><br>
-<input id="amount" placeholder="Amount"><br><br>
+<input id="amount" placeholder="Amount (USD)"><br><br>
 
 <button onclick="submitBid()">Submit Bid</button>
 
@@ -21,59 +21,54 @@
 <h3>Submitted Bids</h3>
 <div id="bids"></div>
 
+<script src="/config/auricrux-central.js"></script>
 <script>
+const API = window.FCA_AURICRUX.bidsUrl;
+
 async function submitBid() {
-  let data = {
-    id: new Date().toISOString(),
+  const data = {
+    id: "bid-" + Date.now(),
     company: "FCA Customer",
-    project: document.getElementById("project").value,
-    client: document.getElementById("client").value,
-    amount: document.getElementById("amount").value,
-    status: "Active"
+    projectName: document.getElementById("projectName").value,
+    customerName: document.getElementById("client").value,
+    value: Number(document.getElementById("amount").value || 0),
+    status: "new"
   };
 
-  let res = await fetch("/api/bids", {
+  const res = await fetch(API, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   });
 
   document.getElementById("msg").innerText =
-    res.ok ? "✅ Bid submitted" : "❌ Error";
+    res.ok ? "Bid submitted to Auricrux Central" : "Error submitting bid";
 
   loadBids();
 }
 
 async function loadBids() {
   try {
-    let res = await fetch("/api/bids");
-    let raw = await res.text();
-    let bids = [];
-
-    try {
-      bids = JSON.parse(raw);
-    } catch {
-      bids = [];
-    }
-
-    let container = document.getElementById("bids");
+    const res = await fetch(API);
+    const bids = await res.json().catch(function () { return []; });
+    const container = document.getElementById("bids");
     container.innerHTML = "";
 
-    if (!bids || bids.length === 0) {
+    if (!Array.isArray(bids) || bids.length === 0) {
       container.innerHTML = "<p>No bids yet</p>";
       return;
     }
 
-    bids.forEach(b => {
-      container.innerHTML += `
-        <div style="margin-bottom:10px;">
-          <b>${b.project}</b> — ${b.client} — $${b.amount} — ${b.status}
-        </div>
-      `;
+    bids.forEach(function (b) {
+      container.innerHTML +=
+        "<div style=\"margin-bottom:10px;\">" +
+        "<b>" + (b.projectName || b.project || "—") + "</b> — " +
+        (b.customerName || b.client || b.company || "—") + " — $" +
+        (b.value || b.amount || 0) + " — " + (b.status || "new") +
+        "</div>";
     });
   } catch (err) {
-    document.getElementById("bids").innerHTML = "Error loading bids";
-    console.error(err);
+    document.getElementById("bids").innerHTML = "<p>Unable to load bids</p>";
   }
 }
 
