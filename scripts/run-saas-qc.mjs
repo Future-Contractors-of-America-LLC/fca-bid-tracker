@@ -24,6 +24,7 @@ const SAAS_PORTAL_ROUTES = [
   "/portal/auricrux",
   "/portal/academy",
   "/portal/operations",
+  "/portal/pipeline",
   "/portal/audit",
   "/portal/profile",
   "/portal/plans",
@@ -46,6 +47,7 @@ const SAAS_API_ENDPOINTS = [
   "/api/billing-summary",
   "/api/support-tickets",
   "/api/workflow-audit",
+  "/api/academy-lms",
   "/api/customer-login",
 ];
 

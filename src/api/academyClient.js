@@ -25,6 +25,15 @@ export async function fetchAcademyLms() {
   return payload;
 }
 
+export async function fetchAcademyProgram(programKey) {
+  const response = await centralFetch(`/api/academy-lms?programKey=${encodeURIComponent(programKey)}`, { method: "GET" });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) {
+    throw new Error(formatApiError(response, payload, "Unable to load academy program"));
+  }
+  return payload;
+}
+
 export async function mutateAcademyLms(action, body = {}) {
   if (!action || typeof action !== "string") {
     throw new Error("Unable to mutate academy state: action is required.");

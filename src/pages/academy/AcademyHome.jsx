@@ -231,23 +231,23 @@ export default function AcademyHome() {
 
       {(apiPrograms.length > 0 || enrollments.length > 0) && (
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live LMS · Auricrux-Central</div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live LMS · Auricrux-Central catalog</div>
           <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
-            Your enrolled programs and progress sync with your company account.
+            Apprenticeship and certification programs are served from the backend catalog. Open a program to view module lessons, labs, and mark progress.
           </p>
           {apiPrograms.length > 0 && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 14 }}>
-              {apiPrograms.slice(0, 6).map((program) => (
-                <div key={program.programId || program.title} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff" }}>
-                  <strong>{program.title || program.name}</strong>
-                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{program.level || program.status || "open"}</div>
-                </div>
+              {apiPrograms.slice(0, 8).map((program) => (
+                <a key={program.key} href={`/academy/programs/${program.key}`} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff", textDecoration: "none", color: "inherit" }}>
+                  <strong>{program.title}</strong>
+                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>Level {program.level} · {program.duration} modules</div>
+                </a>
               ))}
             </div>
           )}
-          {enrollments.length > 0 && (
+          {enrollments.length > 0 ? (
             <p style={{ color: "#334155", marginBottom: 0 }}><strong>{enrollments.length}</strong> active enrollment(s) tracked on the backend.</p>
-          )}
+          ) : null}
         </div>
       )}
 
@@ -286,6 +286,10 @@ export default function AcademyHome() {
       </div>
 
       <div style={{ display: "grid", gap: 24, marginBottom: 24 }}>
+        <div style={{ ...cardStyle, background: "#f8fafc" }}>
+          <h2 style={{ marginTop: 0 }}>Operator launch classrooms</h2>
+          <p style={{ color: "#64748b", lineHeight: 1.65, marginTop: 0 }}>SaaS workflow drills for Contractor Command. For apprenticeship module content, use the live LMS catalog above.</p>
+        </div>
         {classroomSummaries.map((classroom) => (
           <div key={classroom.id} style={{ ...cardStyle, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>{classroom.credential}</div>

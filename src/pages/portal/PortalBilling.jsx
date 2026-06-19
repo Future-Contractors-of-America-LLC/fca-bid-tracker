@@ -4,6 +4,7 @@ import useWorkspaceState from "../hooks/useWorkspaceState";
 import useCustomerSession from "../hooks/useCustomerSession";
 import {
   createPortalInvoice,
+  deliverPortalInvoice,
   fetchBillingSummary,
   fetchPortalInvoices,
   issuePortalInvoice,
@@ -131,6 +132,22 @@ export default function PortalBilling() {
     }
   }
 
+  async function deliverInvoice(invoiceId) {
+    setActionError("");
+    setBusyId(`deliver-${invoiceId}`);
+    try {
+      await deliverPortalInvoice(invoiceId, {
+        companyName,
+        recipientEmail: session?.email,
+      });
+      refreshSyncStamp("Invoice delivered via customer messages");
+    } catch (error) {
+      setActionError(error.message || "Unable to deliver invoice.");
+    } finally {
+      setBusyId("");
+    }
+  }
+
   async function payInvoice(invoiceId) {
     setActionError("");
     setBusyId(`pay-${invoiceId}`);
@@ -229,9 +246,18 @@ export default function PortalBilling() {
                   </button>
                 ) : null}
                 {invoice.status === "Issued" ? (
-                  <button type="button" onClick={() => payInvoice(invoice.id)} disabled={busyId === `pay-${invoice.id}`} style={{ border: "1px solid #16a34a", background: "#16a34a", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-                    {busyId === `pay-${invoice.id}` ? "Opening Stripe…" : "Pay via Stripe"}
-                  </button>
+                  <>
+                    <button type="button" onClick={() => deliverInvoice(invoice.id)} disabled={busyId === `deliver-${invoice.id}`} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
+                      {busyId === `deliver-${invoice.id}` ? "Sending…" : "Send Invoice"}
+                    </button>
+                    <a href={`/portal/billing/${invoice.id}`} style={{ border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>View / Print</a>
+                    <button type="button" onClick={() => payInvoice(invoice.id)} disabled={busyId === `pay-${invoice.id}`} style={{ border: "1px solid #16a34a", background: "#16a34a", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
+                      {busyId === `pay-${invoice.id}` ? "Opening Stripe…" : "Pay via Stripe"}
+                    </button>
+                  </>
+                ) : null}
+                {invoice.status === "Paid" ? (
+                  <a href={`/portal/billing/${invoice.id}`} style={{ border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>View receipt</a>
                 ) : null}
               </div>
             </div>
