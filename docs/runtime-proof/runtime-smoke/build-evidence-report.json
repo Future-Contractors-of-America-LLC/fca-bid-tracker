@@ -1,11 +1,11 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-19T00:16:02.128Z",
+  "generatedAt": "2026-06-19T12:51:09.111Z",
   "packageScripts": {
     "buildSystem": "npm run build",
     "build": "bash ./build.sh",
-    "validateRuntimeSmoke": "node scripts/runtime_smoke_check.js",
-    "captureBuildEvidence": "node scripts/build_evidence_capture.js"
+    "validateRuntimeSmoke": "node scripts/runtime_smoke_check.cjs",
+    "captureBuildEvidence": "node scripts/build_evidence_capture.cjs"
   },
   "workflowChecks": {
     "hasBuildValidationWorkflow": true,
@@ -14,10 +14,10 @@
     "uploadsArtifacts": true
   },
   "buildScriptChecks": {
-    "createsDist": true,
-    "generatesStyles": true,
-    "generatesWorkspacePack": true,
-    "generatesPlatformProof": true,
+    "createsDist": false,
+    "generatesStyles": false,
+    "generatesWorkspacePack": false,
+    "generatesPlatformProof": false,
     "emitsCompletionLine": false
   }
 }

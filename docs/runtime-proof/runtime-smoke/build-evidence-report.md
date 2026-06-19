@@ -1,13 +1,13 @@
 # Build Evidence Report
 
 - Packet: 062Y
-- Generated: 2026-06-19T00:16:02.128Z
+- Generated: 2026-06-19T12:51:09.111Z
 
 ## Package scripts
 - build:system → npm run build
 - build → bash ./build.sh
-- validate:runtime-smoke → node scripts/runtime_smoke_check.js
-- capture:build-evidence → node scripts/build_evidence_capture.js
+- validate:runtime-smoke → node scripts/runtime_smoke_check.cjs
+- capture:build-evidence → node scripts/build_evidence_capture.cjs
 
 ## Workflow checks
 - hasBuildValidationWorkflow: true
@@ -16,8 +16,8 @@
 - uploadsArtifacts: true
 
 ## Build script checks
-- createsDist: true
-- generatesStyles: true
-- generatesWorkspacePack: true
-- generatesPlatformProof: true
+- createsDist: false
+- generatesStyles: false
+- generatesWorkspacePack: false
+- generatesPlatformProof: false
 - emitsCompletionLine: false
