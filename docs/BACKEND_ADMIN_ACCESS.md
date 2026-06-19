@@ -1,4 +1,4 @@
-# Backend & Admin Access ó FCA SaaS + LMS
+# Backend & Admin Access ù FCA SaaS + LMS
 
 **Last updated:** 2026-06-19
 
@@ -6,21 +6,37 @@ Use these accounts to reach the **full SaaS workspace**, **Academy LMS**, **tena
 
 ---
 
-## Sign in
+## Sign in & navigation
 
-| Surface | URL |
-|---------|-----|
-| Website | https://futurecontractorsofamerica.com |
-| Sign in (header, above the fold) | https://futurecontractorsofamerica.com/login |
-| Admin controls | https://futurecontractorsofamerica.com/portal/admin |
-| Platform dashboard | https://futurecontractorsofamerica.com/portal/platform |
-| Academy | https://futurecontractorsofamerica.com/academy |
+| Link | URL | Purpose |
+|------|-----|---------|
+| Sign in (header) | https://futurecontractorsofamerica.com/login | Standard customer login ù no autofill |
+| Admin workspace (header) | https://futurecontractorsofamerica.com/login?next=/portal/admin | Login then land on admin controls |
+| Admin controls (after auth) | https://futurecontractorsofamerica.com/portal/admin | Direct route ù auth guard redirects to login with `next=` |
+| Platform dashboard | https://futurecontractorsofamerica.com/portal/platform | SaaS command center |
+| Academy | https://futurecontractorsofamerica.com/academy | LMS catalog |
 
 ---
 
 ## Account matrix
 
-### 1. Founder test (full product access)
+### 1. Michael ù founder (production account)
+
+| Field | Value |
+|-------|-------|
+| Email | `michael@futurecontractorsofamerica.com` |
+| Password | `MyGodiswithme01!` |
+| Role | Founder / Owner |
+| Customer ID | `CUST-FCA-FOUNDER-MICHAEL-001` |
+| SaaS | Yes |
+| LMS | Yes |
+| Auricrux | Yes |
+| Admin route | `/portal/admin` |
+
+**Fast autologin:** https://futurecontractorsofamerica.com/login?seeded=1&autologin=1&account=founder&next=/portal/platform  
+**Admin autologin:** https://futurecontractorsofamerica.com/login?seeded=1&autologin=1&account=founder&next=/portal/admin
+
+### 2. Founder test (QA sandbox)
 
 | Field | Value |
 |-------|-------|
@@ -34,7 +50,7 @@ Use these accounts to reach the **full SaaS workspace**, **Academy LMS**, **tena
 
 **Fast autologin:** https://futurecontractorsofamerica.com/login?seeded=1&autologin=1&next=/portal/platform
 
-### 2. Launch customer (full customer simulation)
+### 3. Launch customer (full customer simulation)
 
 | Field | Value |
 |-------|-------|
@@ -45,7 +61,7 @@ Use these accounts to reach the **full SaaS workspace**, **Academy LMS**, **tena
 | LMS | Yes |
 | Auricrux | Yes |
 
-### 3. System admin (backend administration)
+### 4. System admin (backend administration)
 
 | Field | Value |
 |-------|-------|
@@ -57,8 +73,7 @@ Use these accounts to reach the **full SaaS workspace**, **Academy LMS**, **tena
 | Auricrux | Yes |
 | Admin route | `/portal/admin` |
 
-**Fast autologin:** https://futurecontractorsofamerica.com/login?seeded=1&autologin=1&next=/portal/admin  
-(Use `?account=test` with admin credentials manually if autologin seeds founder only.)
+**Fast autologin:** https://futurecontractorsofamerica.com/login?seeded=1&autologin=1&account=admin&next=/portal/admin
 
 ---
 
@@ -71,7 +86,7 @@ These are the **hosted API and control plane** surfaces behind the web app:
 | Auricrux Central API | https://auricrux-central.azurewebsites.net/api/health |
 | Customer login API | `POST /api/customer-login` |
 | Academy LMS API | `/api/academy-lms` |
-| Azure Portal | https://portal.azure.com ó search **auricrux-central** |
+| Azure Portal | https://portal.azure.com ù search **auricrux-central** |
 | Function App logs | Azure Portal ? auricrux-central ? Monitoring ? Log stream |
 | App settings (managed auth) | `FCA_CUSTOMER_ACCOUNTS_JSON`, `FCA_SESSION_SECRET`, `FCA_ALLOW_SEEDED_LOGIN_FALLBACK` |
 

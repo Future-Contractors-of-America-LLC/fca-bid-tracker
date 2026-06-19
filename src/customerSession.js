@@ -200,8 +200,32 @@ export function hasCustomerProductAccess(session, pathname = "/") {
   return session.enabledProducts?.[product] !== false;
 }
 
-export function resolveLoginHref() {
+export function resolveLoginHref(nextPath = null) {
+  if (nextPath && isProtectedCustomerRoute(nextPath)) {
+    return `/login?next=${encodeURIComponent(nextPath)}`;
+  }
   return "/login";
+}
+
+export function resolveAdminWorkspaceHref(session = readCustomerSession()) {
+  const adminPath = "/portal/admin";
+  if (session?.authenticated && hasCustomerProductAccess(session, adminPath)) {
+    return adminPath;
+  }
+  return resolveLoginHref(adminPath);
+}
+
+export function resolveFounderAutologinHref(next = "/portal/platform", accountKey = "test") {
+  const params = new URLSearchParams({
+    seeded: "1",
+    autologin: "1",
+    next,
+  });
+  const normalizedKey = (accountKey || "test").trim().toLowerCase();
+  if (normalizedKey && normalizedKey !== "test") {
+    params.set("account", normalizedKey);
+  }
+  return `/login?${params.toString()}`;
 }
 
 export function resolveSandboxLoginHref(next = "/portal/platform") {
@@ -213,7 +237,7 @@ export function resolveProfileHref(session = readCustomerSession()) {
 }
 
 export function resolveWorkspaceEntryHref(session = readCustomerSession(), requestedPath = "/portal/platform") {
-  if (!session?.authenticated) return resolveLoginHref();
+  if (!session?.authenticated) return resolveLoginHref(requestedPath);
   if (requestedPath && isProtectedCustomerRoute(requestedPath) && hasCustomerProductAccess(session, requestedPath)) return requestedPath;
   if (session.nextHref && isProtectedCustomerRoute(session.nextHref) && hasCustomerProductAccess(session, session.nextHref)) return session.nextHref;
   if (hasCustomerProductAccess(session, "/portal/platform")) return "/portal/platform";
