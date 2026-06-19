@@ -5,6 +5,9 @@ import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel"
 import { routeStateOverlays } from "../../systemState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useBidWorkspace from "../../hooks/useBidWorkspace";
+import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import { fetchCommercialPipeline, pipelineItemsToMap } from "../../api/pipelineClient";
 import { createPermitEscalationTool, stageMobilizationInvoiceTool } from "../../customerCommandTools";
 
 const cardStyle = {
@@ -55,6 +58,32 @@ const defaultBrandSkin = {
   welcomeMessage: "Welcome back. Your workspace is carrying sales, files, tasks, and training continuity forward.",
 };
 
+const PIPELINE_STEPS = [
+  { key: "qualify", label: "Qualify bid" },
+  { key: "project", label: "Award to project" },
+  { key: "estimate", label: "Estimate" },
+  { key: "invoice", label: "Issue invoice" },
+  { key: "payment", label: "Collect payment" },
+];
+
+function derivePipelineSummary(bid, projects, invoices, links) {
+  const link = links[bid.id] || {};
+  const qualified = ["Qualified", "Ready for estimate"].includes(bid.qualification?.status) || bid.status === "Qualified";
+  const won = bid.status === "Won" || projects.some((p) => p.sourceBidId === bid.id || p.name?.includes(bid.package));
+  const estimateDone = link.estimateSkipped || bid.qualification?.nextGate?.toLowerCase().includes("estimate") || bid.status === "Qualified";
+  const linkedInvoice = invoices.find((inv) => inv.id === link.invoiceId);
+  const invoiceIssued = linkedInvoice?.status === "Issued" || linkedInvoice?.status === "Paid";
+  const paid = linkedInvoice?.status === "Paid";
+  const complete = { qualify: qualified, project: won, estimate: estimateDone, invoice: invoiceIssued, payment: paid };
+  let current = "qualify";
+  if (complete.payment) current = "done";
+  else if (complete.invoice) current = "payment";
+  else if (complete.project && complete.estimate) current = "invoice";
+  else if (complete.project) current = "estimate";
+  else if (complete.qualify) current = "project";
+  return { current, complete, doneCount: Object.values(complete).filter(Boolean).length };
+}
+
 function readLocalJson(key, fallback) {
   if (typeof window === "undefined") return fallback;
   try {
@@ -77,9 +106,12 @@ function writeLocalJson(key, value) {
 export default function PortalHome() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
+  const { bids } = useBidWorkspace();
+  const { projects } = useProjectWorkspace();
   const [tasks, setTasks] = useState(() => readLocalJson(TASK_STORAGE_KEY, defaultTasks));
   const [brandSkin, setBrandSkin] = useState(() => readLocalJson(BRAND_STORAGE_KEY, defaultBrandSkin));
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [pipelineLinks, setPipelineLinks] = useState({});
   const companyName = session?.company || state?.tenant?.name || brandSkin.companyName;
 
   useEffect(() => {
@@ -94,6 +126,29 @@ export default function PortalHome() {
     writeLocalJson(BRAND_STORAGE_KEY, brandSkin);
   }, [brandSkin]);
 
+  useEffect(() => {
+    let active = true;
+    fetchCommercialPipeline()
+      .then((payload) => {
+        if (!active) return;
+        setPipelineLinks(pipelineItemsToMap(payload.items));
+      })
+      .catch(() => {
+        if (!active) return;
+        setPipelineLinks({});
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const pipelineRows = useMemo(
+    () => bids
+      .map((bid) => ({ bid, ...derivePipelineSummary(bid, projects, [], pipelineLinks) }))
+      .filter((row) => row.current !== "done"),
+    [bids, projects, pipelineLinks],
+  );
+
   const lanes = useMemo(() => ([
     { key: "today", title: "Today" },
     { key: "this-week", title: "This week" },
@@ -106,6 +161,7 @@ export default function PortalHome() {
     { title: "Projects", detail: "Control stage movement, milestones, and delivery posture.", href: "/portal/projects", label: "Open Projects" },
     { title: "Files", detail: "Keep evidence, permit packets, and customer documents attached to the right context.", href: "/portal/files", label: "Open Files" },
     { title: "Billing", detail: "Stage invoices and preserve revenue continuity.", href: "/portal/billing", label: "Open Billing" },
+    { title: "Commercial Pipeline", detail: "Run bid qualification through project award, invoice, and payment.", href: "/portal/pipeline", label: "Open Pipeline" },
     { title: "Academy", detail: "Train teams through apprenticeship, certification, degree, licensure, and how-to tracks.", href: "/academy/catalog", label: "Open Academy Catalog" },
   ];
 
@@ -152,6 +208,30 @@ export default function PortalHome() {
       <div style={{ marginBottom: 24 }}>
         <CustomerPlanSummaryPanel session={session} title="Commercial package and enabled product scope" />
       </div>
+
+      {pipelineRows.length > 0 ? (
+        <div style={{ ...cardStyle, marginBottom: 24, background: "#eff6ff", borderColor: "#1d4ed8" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+            <div>
+              <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>Active commercial pipeline jobs</div>
+              <div style={{ color: "#475569" }}>Track in-flight bids from qualification through payment.</div>
+            </div>
+            <a href="/portal/pipeline" style={{ color: brandSkin.accent, fontWeight: 700, textDecoration: "none" }}>Open Pipeline</a>
+          </div>
+          <div style={{ display: "grid", gap: 10 }}>
+            {pipelineRows.slice(0, 4).map(({ bid, current, doneCount }) => (
+              <div key={bid.id} style={{ border: "1px solid #dbeafe", borderRadius: 12, padding: 12, background: "#fff" }}>
+                <strong>{bid.package}</strong>
+                <div style={{ color: "#475569", fontSize: 14, marginTop: 4 }}>
+                  Next: {current === "done" ? "Complete" : PIPELINE_STEPS.find((step) => step.key === current)?.label || current}
+                  {" | "}
+                  {doneCount}/{PIPELINE_STEPS.length} steps
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <div style={{ ...cardStyle, marginBottom: 24, background: brandSkin.surface, borderColor: brandSkin.accent }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center" }}>

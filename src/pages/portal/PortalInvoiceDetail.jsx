@@ -22,6 +22,7 @@ export default function PortalInvoiceDetail({ routeParams = {} }) {
   const [summary, setSummary] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [deliveryMessage, setDeliveryMessage] = useState("");
+  const [mailtoUrl, setMailtoUrl] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -40,6 +41,7 @@ export default function PortalInvoiceDetail({ routeParams = {} }) {
         companyName,
         recipientEmail: session?.email,
       });
+      setMailtoUrl(payload.mailtoUrl || "");
       setDeliveryMessage(`Invoice recorded in customer messages (${payload.deliveryRecord?.id || "sent"}).`);
     } catch (error) {
       setDeliveryMessage(error.message || "Delivery failed.");
@@ -90,11 +92,16 @@ export default function PortalInvoiceDetail({ routeParams = {} }) {
               </button>
               {summary.status === "Issued" || summary.status === "Paid" ? (
                 <button type="button" onClick={sendInvoice} disabled={busy} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-                  {busy ? "SendingÖ" : "Send Invoice"}
+                  {busy ? "Sendingù" : "Send Invoice"}
                 </button>
               ) : null}
             </div>
             {deliveryMessage ? <div style={{ marginTop: 12, color: "#15803d" }}>{deliveryMessage}</div> : null}
+            {mailtoUrl ? (
+              <a href={mailtoUrl} style={{ display: "inline-block", marginTop: 10, color: "#2563eb", fontWeight: 700 }}>
+                Open email draft with invoice summary
+              </a>
+            ) : null}
           </div>
 
           {summary.html ? (
@@ -105,7 +112,7 @@ export default function PortalInvoiceDetail({ routeParams = {} }) {
           ) : null}
         </>
       ) : !loadError ? (
-        <div style={cardStyle}>Loading invoiceÖ</div>
+        <div style={cardStyle}>Loading invoiceù</div>
       ) : null}
     </PortalShell>
   );

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PortalShell from "./PortalShell";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import useCustomerSession from "../hooks/useCustomerSession";
+import useProjectWorkspace from "../hooks/useProjectWorkspace";
 import { routeStateOverlays } from "../systemState";
 
 const cardStyle = {
@@ -64,10 +65,13 @@ export function createOperationalPortalPage({
   fields,
   journey = "lead",
   apiHandlers = null,
+  projectScoped = false,
 }) {
   return function OperationalPortalPage() {
     const { state, refreshSyncStamp } = useWorkspaceState();
     const { session } = useCustomerSession();
+    const { projects, activeProject } = useProjectWorkspace();
+    const [selectedProjectId, setSelectedProjectId] = useState(() => activeProject?.id || projects[0]?.id || "");
     const companyName = session?.company || state?.tenant?.name || "Your company";
     const [localItems, setLocalItems] = useOperationalStore(storageKey, seedItems);
     const [apiItems, setApiItems] = useState([]);
@@ -79,9 +83,16 @@ export function createOperationalPortalPage({
 
     const items = apiHandlers ? apiItems : localItems;
 
+    useEffect(() => {
+      if (!projectScoped) return;
+      if (activeProject?.id) setSelectedProjectId(activeProject.id);
+      else if (!selectedProjectId && projects[0]?.id) setSelectedProjectId(projects[0].id);
+    }, [activeProject?.id, projects, projectScoped, selectedProjectId]);
+
     async function reloadApiItems() {
       if (!apiHandlers?.fetchItems) return;
-      const payload = await apiHandlers.fetchItems();
+      const params = projectScoped && selectedProjectId ? { projectId: selectedProjectId } : {};
+      const payload = await apiHandlers.fetchItems(params);
       setApiItems(payload.items || []);
       setBackingSource(payload.backingSource || "auricrux-central-table-store");
     }
@@ -100,7 +111,7 @@ export function createOperationalPortalPage({
       return () => {
         active = false;
       };
-    }, [refreshSyncStamp]);
+    }, [refreshSyncStamp, selectedProjectId]);
 
     async function addItem() {
       const required = fields.filter((f) => f.required);
@@ -109,7 +120,10 @@ export function createOperationalPortalPage({
       setBusy(true);
       try {
         if (apiHandlers?.createItem) {
-          await apiHandlers.createItem(draft);
+          const body = projectScoped && selectedProjectId
+            ? { ...draft, projectId: selectedProjectId }
+            : draft;
+          await apiHandlers.createItem(body);
           await reloadApiItems();
         } else {
           setLocalItems((current) => [
@@ -160,6 +174,21 @@ export function createOperationalPortalPage({
         {apiHandlers ? (
           <div style={{ ...cardStyle, marginBottom: 18, background: "#f8fafc" }}>
             <div style={{ color: "#475569" }}><strong>Data source:</strong> {backingSource}</div>
+            {projectScoped ? (
+              <div style={{ marginTop: 12 }}>
+                <label style={{ fontWeight: 600, fontSize: 14 }}>Project</label>
+                <select
+                  style={inputStyle}
+                  value={selectedProjectId}
+                  onChange={(e) => setSelectedProjectId(e.target.value)}
+                >
+                  {projects.length === 0 ? <option value="">No projects available</option> : null}
+                  {projects.map((project) => (
+                    <option key={project.id} value={project.id}>{project.name || project.id}</option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
           </div>
         ) : null}
 
@@ -201,7 +230,7 @@ export function createOperationalPortalPage({
             </div>
           ))}
           <button type="button" style={buttonStyle} onClick={addItem} disabled={busy}>
-            {busy ? "Saving…" : `Add ${itemLabel}`}
+            {busy ? "Saving..." : `Add ${itemLabel}`}
           </button>
         </div>
 

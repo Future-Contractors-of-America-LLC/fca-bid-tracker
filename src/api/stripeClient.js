@@ -47,3 +47,12 @@ export async function createPlanCheckout(planKey, options = {}) {
     customerEmail: options.customerEmail,
   });
 }
+
+export async function createBillingPortalSession(options = {}) {
+  return createStripeCheckout({
+    action: "portal",
+    customerEmail: options.customerEmail,
+    successUrl: options.returnUrl,
+    returnUrl: options.returnUrl,
+  });
+}

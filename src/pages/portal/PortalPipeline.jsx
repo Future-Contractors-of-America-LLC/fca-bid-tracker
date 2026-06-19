@@ -9,6 +9,11 @@ import {
   fetchPortalInvoices,
   issuePortalInvoice,
 } from "../../api/portalClient";
+import {
+  fetchCommercialPipeline,
+  pipelineItemsToMap,
+  upsertPipelineLink,
+} from "../../api/pipelineClient";
 import { createInvoiceCheckout } from "../../api/stripeClient";
 import { routeStateOverlays } from "../../systemState";
 
@@ -40,23 +45,41 @@ const STEPS = [
   { key: "payment", label: "Collect payment", detail: "Pay via Stripe checkout." },
 ];
 
-function readPipelineLinks() {
+function readLocalPipelineLinks() {
   if (typeof window === "undefined") return {};
   try {
-    return JSON.parse(window.localStorage.getItem(PIPELINE_KEY) || "{}");
+    const raw = JSON.parse(window.localStorage.getItem(PIPELINE_KEY) || "{}");
+    return Object.fromEntries(
+      Object.entries(raw).map(([bidId, link]) => [bidId, { bidId, ...link }]),
+    );
   } catch {
     return {};
   }
 }
 
-function writePipelineLink(bidId, patch) {
+function writeLocalPipelineLink(bidId, patch) {
   if (typeof window === "undefined") return;
-  const current = readPipelineLinks();
-  window.localStorage.setItem(PIPELINE_KEY, JSON.stringify({ ...current, [bidId]: { ...current[bidId], ...patch } }));
+  const current = readLocalPipelineLinks();
+  const legacy = { ...current[bidId] };
+  delete legacy.bidId;
+  window.localStorage.setItem(
+    PIPELINE_KEY,
+    JSON.stringify({ ...current, [bidId]: { ...legacy, ...patch } }),
+  );
+}
+
+function normalizeLink(link = {}) {
+  return {
+    bidId: link.bidId,
+    projectId: link.projectId,
+    invoiceId: link.invoiceId,
+    estimateSkipped: Boolean(link.estimateSkipped),
+    currentStep: link.currentStep,
+  };
 }
 
 function deriveStepStatus(bid, projects, invoices, links) {
-  const link = links[bid.id] || {};
+  const link = normalizeLink(links[bid.id] || {});
   const qualified = ["Qualified", "Ready for estimate"].includes(bid.qualification?.status) || bid.status === "Qualified";
   const won = bid.status === "Won" || projects.some((p) => p.sourceBidId === bid.id || p.name?.includes(bid.package));
   const estimateDone = link.estimateSkipped || bid.qualification?.nextGate?.toLowerCase().includes("estimate") || bid.status === "Qualified";
@@ -91,7 +114,9 @@ export default function PortalPipeline() {
 
   const [activeBidId, setActiveBidId] = useState(() => bids[0]?.id || "");
   const [invoices, setInvoices] = useState([]);
-  const [links, setLinks] = useState(readPipelineLinks);
+  const [links, setLinks] = useState({});
+  const [pipelineSource, setPipelineSource] = useState("loading");
+  const [pipelineBanner, setPipelineBanner] = useState("");
   const [invoiceDraft, setInvoiceDraft] = useState({ invoiceName: "", amount: "", note: "" });
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
@@ -108,6 +133,58 @@ export default function PortalPipeline() {
       .then((payload) => setInvoices(payload.items || []))
       .catch(() => setInvoices([]));
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    setPipelineBanner("");
+    fetchCommercialPipeline()
+      .then((payload) => {
+        if (!active) return;
+        setLinks(pipelineItemsToMap(payload.items));
+        setPipelineSource(payload.backingSource || "auricrux-central-table-store");
+      })
+      .catch(() => {
+        if (!active) return;
+        setLinks(readLocalPipelineLinks());
+        setPipelineSource("localStorage-fallback");
+        setPipelineBanner("Pipeline API unreachable. Showing local fallback data until sync recovers.");
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function savePipelineLink(bidId, patch) {
+    const merged = { ...normalizeLink(links[bidId]), ...patch, bidId };
+    const pipeline = deriveStepStatus(
+      bids.find((bid) => bid.id === bidId) || { id: bidId },
+      projects,
+      invoices,
+      { ...links, [bidId]: merged },
+    );
+    const body = {
+      bidId,
+      projectId: merged.projectId,
+      invoiceId: merged.invoiceId,
+      estimateSkipped: merged.estimateSkipped,
+      currentStep: pipeline.current,
+    };
+    try {
+      const payload = await upsertPipelineLink(body);
+      const nextLinks = { ...links, [bidId]: normalizeLink(payload.item) };
+      setLinks(nextLinks);
+      setPipelineSource(payload.backingSource || "auricrux-central-table-store");
+      setPipelineBanner("");
+      return nextLinks;
+    } catch {
+      writeLocalPipelineLink(bidId, patch);
+      const fallback = readLocalPipelineLinks();
+      setLinks(fallback);
+      setPipelineSource("localStorage-fallback");
+      setPipelineBanner("Pipeline API unreachable. Changes saved locally until sync recovers.");
+      return fallback;
+    }
+  }
 
   const pipelineRows = useMemo(
     () => bids.map((bid) => ({ bid, ...deriveStepStatus(bid, projects, invoices, links) })),
@@ -130,6 +207,7 @@ export default function PortalPipeline() {
         evidence: "Pipeline qualification complete",
         nextGate: "Award and project conversion",
       }, "Pipeline wizard qualified the opportunity.");
+      await savePipelineLink(activeBid.id, {});
       refreshSyncStamp("Pipeline qualification complete");
     } catch (err) {
       setError(err.message || "Qualification failed.");
@@ -144,6 +222,8 @@ export default function PortalPipeline() {
     setError("");
     try {
       await markWonAndCreateProject(activeBid.id, "Pipeline wizard converted award into project.");
+      const project = projects.find((item) => item.sourceBidId === activeBid.id);
+      await savePipelineLink(activeBid.id, { projectId: project?.id });
       refreshSyncStamp("Pipeline project conversion complete");
     } catch (err) {
       setError(err.message || "Project conversion failed.");
@@ -166,10 +246,9 @@ export default function PortalPipeline() {
     }
   }
 
-  function skipEstimate() {
+  async function skipEstimate() {
     if (!activeBid) return;
-    writePipelineLink(activeBid.id, { estimateSkipped: true });
-    setLinks(readPipelineLinks());
+    await savePipelineLink(activeBid.id, { estimateSkipped: true });
     refreshSyncStamp("Estimate step skipped in pipeline");
   }
 
@@ -184,8 +263,7 @@ export default function PortalPipeline() {
       const invoiceId = created.item?.id;
       if (invoiceId) {
         await issuePortalInvoice(invoiceId);
-        writePipelineLink(activeBid.id, { invoiceId });
-        setLinks(readPipelineLinks());
+        await savePipelineLink(activeBid.id, { invoiceId });
         const payload = await fetchPortalInvoices();
         setInvoices(payload.items || []);
       }
@@ -226,9 +304,19 @@ export default function PortalPipeline() {
       primaryHref="/portal/bids"
       primaryLabel="Open Qualification Board"
     >
+      {pipelineBanner ? (
+        <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fde68a", background: "#fffbeb", color: "#92400e" }}>
+          {pipelineBanner}
+        </div>
+      ) : null}
+
       {error ? (
         <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>{error}</div>
       ) : null}
+
+      <div style={{ ...cardStyle, marginBottom: 18, background: "#f8fafc" }}>
+        <div style={{ color: "#475569", fontSize: 14 }}><strong>Pipeline data source:</strong> {pipelineSource}</div>
+      </div>
 
       <div style={{ ...cardStyle, marginBottom: 18, background: "#eff6ff", borderColor: "#1d4ed8" }}>
         <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Active jobs</div>

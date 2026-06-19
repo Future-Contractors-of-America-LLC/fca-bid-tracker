@@ -9,7 +9,7 @@ import {
   fetchPortalInvoices,
   issuePortalInvoice,
 } from "../api/portalClient";
-import { createInvoiceCheckout } from "../api/stripeClient";
+import { createInvoiceCheckout, createBillingPortalSession } from "../api/stripeClient";
 import { routeStateOverlays } from "../systemState";
 
 const cardStyle = {
@@ -136,14 +136,36 @@ export default function PortalBilling() {
     setActionError("");
     setBusyId(`deliver-${invoiceId}`);
     try {
-      await deliverPortalInvoice(invoiceId, {
+      const payload = await deliverPortalInvoice(invoiceId, {
         companyName,
         recipientEmail: session?.email,
       });
+      if (payload.mailtoUrl && typeof window !== "undefined") {
+        window.open(payload.mailtoUrl, "_blank");
+      }
       refreshSyncStamp("Invoice delivered via customer messages");
     } catch (error) {
       setActionError(error.message || "Unable to deliver invoice.");
     } finally {
+      setBusyId("");
+    }
+  }
+
+  async function openBillingPortal() {
+    setActionError("");
+    setBusyId("portal");
+    try {
+      const portal = await createBillingPortalSession({
+        customerEmail: session?.email,
+        returnUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/billing` : undefined,
+      });
+      if (portal.portalUrl) {
+        window.location.href = portal.portalUrl;
+        return;
+      }
+      throw new Error("Stripe billing portal URL was not returned.");
+    } catch (error) {
+      setActionError(error.message || "Unable to open billing portal.");
       setBusyId("");
     }
   }
@@ -187,6 +209,9 @@ export default function PortalBilling() {
           <div><strong>Account:</strong> {session?.email || "Not signed in"}</div>
           <div><strong>Plan:</strong> {session?.selectedPlan || "startup"}</div>
         </div>
+        <button type="button" onClick={openBillingPortal} disabled={busyId === "portal"} style={{ marginTop: 14, border: "1px solid #cbd5e1", background: "#fff", color: "#0f172a", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
+          {busyId === "portal" ? "Opening portal..." : "Manage billing"}
+        </button>
       </div>
 
       {loadError ? (
