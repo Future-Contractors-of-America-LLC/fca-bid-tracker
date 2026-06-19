@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import PortalShell from "./PortalShell";
-import useWorkspaceState from "../hooks/useWorkspaceState";
-import useCustomerSession from "../hooks/useCustomerSession";
+import PortalShell from "../../components/PortalShell";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import {
   createPortalInvoice,
   deliverPortalInvoice,
   fetchBillingSummary,
   fetchPortalInvoices,
   issuePortalInvoice,
-} from "../api/portalClient";
-import { createInvoiceCheckout, createBillingPortalSession } from "../api/stripeClient";
-import { routeStateOverlays } from "../systemState";
+} from "../../api/portalClient";
+import { createInvoiceCheckout, createBillingPortalSession } from "../../api/stripeClient";
+import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
