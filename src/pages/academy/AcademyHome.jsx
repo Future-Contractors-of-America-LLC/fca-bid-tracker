@@ -3,6 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import PublicCtaRow from "../../components/PublicCtaRow";
@@ -194,7 +195,7 @@ export default function AcademyHome() {
 
   const catalogLessons = useMemo(() => flattenCatalogLessons(), []);
   const catalogLanes = useMemo(() => getProgramsByLane(), []);
-  const catalogProgramCount = academyCatalog.programs.length;
+  const catalogProgramCount = Math.max(academyCatalog.programs.length, apiPrograms.length);
 
   const classroomSummaries = useMemo(() => classrooms.map((classroom) => {
     const completedCount = classroom.lessons.filter((lesson) => progress[lesson.id]).length;
@@ -226,6 +227,7 @@ export default function AcademyHome() {
 
       <ProductAccessStatusPanel session={session} />
       <CustomerCommsLaunchpad session={session} title="Launch training and communications from one branded customer experience" />
+      <AcademyLmsControlPanel />
 
       {(apiPrograms.length > 0 || enrollments.length > 0) && (
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>

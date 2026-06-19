@@ -1,6 +1,9 @@
+import { useMemo } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
+import useAcademyLms from "../../hooks/useAcademyLms";
 import { getProgramsByLane, OFFERING_LANES } from "../../academyOfferings";
 import { academyCatalog } from "../../academyCatalog";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
@@ -21,9 +24,16 @@ const laneHeaderStyle = {
 };
 
 export default function AcademyCatalog() {
+  const { academyState, meta } = useAcademyLms();
+  const apiPrograms = academyState?.catalog?.programs || [];
   const lanes = getProgramsByLane();
-  const programCount = academyCatalog.programs.length;
+  const programCount = Math.max(academyCatalog.programs.length, apiPrograms.length);
   const laneCount = OFFERING_LANES.length;
+
+  const electricalPrograms = useMemo(
+    () => apiPrograms.filter((program) => String(program.pathway || "").toLowerCase().includes("electrical")),
+    [apiPrograms],
+  );
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -39,6 +49,43 @@ export default function AcademyCatalog() {
         journey={shellJourney}
         currentJourney="academy"
       />
+
+      <AcademyLmsControlPanel />
+
+      {apiPrograms.length > 0 ? (
+        <section style={{ marginBottom: 40 }}>
+          <div style={laneHeaderStyle}>
+            <h2 style={{ margin: "0 0 6px", fontSize: "1.35rem" }}>Live LMS catalog · Auricrux-Central</h2>
+            <p style={{ margin: 0, color: "#475569", lineHeight: 1.65 }}>
+              {apiPrograms.length} programs from the backend academy catalog ({meta.backingSource}). Module titles and lesson structure are served from API — video URLs can be added later.
+            </p>
+          </div>
+          <div style={{ display: "grid", gap: 18 }}>
+            {electricalPrograms.map((program) => (
+              <article key={program.key} style={cardStyle}>
+                <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>
+                  {program.credential}
+                </div>
+                <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
+                <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+                  <strong>Pathway:</strong> {program.pathway} · <strong>Track:</strong> {program.track} · <strong>Level:</strong> {program.level} · <strong>Duration:</strong> {program.duration} modules
+                </p>
+                <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.completionRule}</p>
+                <div style={{ marginTop: 14 }}>
+                  <strong>Modules</strong>
+                  <ol style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
+                    {(program.modules || []).map((module) => (
+                      <li key={module.moduleNumber}>
+                        {module.title} — {module.lessons} lessons · Lab: {module.lab}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {lanes.map((lane) => (
         <section key={lane.key} style={{ marginBottom: 40 }}>

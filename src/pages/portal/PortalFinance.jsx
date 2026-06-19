@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { fetchBillingSummary, fetchPortalInvoices } from "../../api/portalClient";
+import { createInvoiceCheckout } from "../../api/stripeClient";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = { border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, background: "#fff" };
@@ -10,17 +11,46 @@ export default function PortalFinance() {
   const { refreshSyncStamp } = useWorkspaceState();
   const [invoices, setInvoices] = useState([]);
   const [summary, setSummary] = useState(null);
+  const [loadError, setLoadError] = useState("");
+  const [actionError, setActionError] = useState("");
+  const [busyId, setBusyId] = useState("");
 
   useEffect(() => {
     refreshSyncStamp("Finance workspace active");
+    setLoadError("");
     Promise.all([
-      fetchPortalInvoices().catch(() => null),
+      fetchPortalInvoices(),
       fetchBillingSummary().catch(() => null),
-    ]).then(([inv, sum]) => {
-      if (inv?.items) setInvoices(inv.items);
-      if (sum) setSummary(sum);
-    });
+    ])
+      .then(([inv, sum]) => {
+        setInvoices(inv?.items || []);
+        if (sum) setSummary(sum);
+      })
+      .catch((error) => {
+        setLoadError(error.message || "Unable to load finance data.");
+      });
   }, [refreshSyncStamp]);
+
+  async function payInvoice(invoiceId) {
+    setActionError("");
+    setBusyId(invoiceId);
+    try {
+      const checkout = await createInvoiceCheckout(invoiceId, {
+        successUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/finance?payment=success` : undefined,
+        cancelUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/finance?payment=cancelled` : undefined,
+      });
+      if (checkout.checkoutUrl) {
+        window.location.href = checkout.checkoutUrl;
+        return;
+      }
+      throw new Error("Stripe checkout URL was not returned.");
+    } catch (error) {
+      setActionError(error.message || "Unable to start Stripe checkout.");
+      setBusyId("");
+    }
+  }
+
+  const outstanding = invoices.filter((invoice) => invoice.status !== "Paid");
 
   return (
     <PortalShell
@@ -32,30 +62,47 @@ export default function PortalFinance() {
       primaryHref="/portal/billing"
       primaryLabel="Open billing"
     >
+      {loadError ? (
+        <div style={{ ...cardStyle, marginBottom: 20, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
+          {loadError}
+        </div>
+      ) : null}
+      {actionError ? (
+        <div style={{ ...cardStyle, marginBottom: 20, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
+          {actionError}
+        </div>
+      ) : null}
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 20 }}>
         <div style={cardStyle}>
-          <div style={{ color: "#64748b", fontSize: 13 }}>Outstanding</div>
-          <div style={{ fontSize: 28, fontWeight: 800 }}>{summary?.outstandingTotal || "$0"}</div>
+          <div style={{ color: "#64748b", fontSize: 13 }}>Outstanding invoices</div>
+          <div style={{ fontSize: 28, fontWeight: 800 }}>{outstanding.length}</div>
         </div>
         <div style={cardStyle}>
-          <div style={{ color: "#64748b", fontSize: 13 }}>Collected (30d)</div>
-          <div style={{ fontSize: 28, fontWeight: 800 }}>{summary?.collectedLast30Days || "$0"}</div>
+          <div style={{ color: "#64748b", fontSize: 13 }}>Paid invoices</div>
+          <div style={{ fontSize: 28, fontWeight: 800 }}>{invoices.filter((invoice) => invoice.status === "Paid").length}</div>
         </div>
         <div style={cardStyle}>
-          <div style={{ color: "#64748b", fontSize: 13 }}>Open invoices</div>
-          <div style={{ fontSize: 28, fontWeight: 800 }}>{invoices.filter((i) => i.status !== "Paid").length}</div>
+          <div style={{ color: "#64748b", fontSize: 13 }}>Billing records</div>
+          <div style={{ fontSize: 28, fontWeight: 800 }}>{summary?.count ?? invoices.length}</div>
         </div>
       </div>
 
       <h2 style={{ fontSize: 18 }}>Invoices</h2>
       <div style={{ display: "grid", gap: 12 }}>
         {invoices.length === 0 ? (
-          <div style={cardStyle}>No invoices yet. Stage invoices from Billing or Project milestones.</div>
+          <div style={cardStyle}>No invoices yet. Stage invoices from Billing or project milestones.</div>
         ) : (
           invoices.map((inv) => (
             <div key={inv.id} style={cardStyle}>
-              <strong>{inv.name || inv.subject || inv.id}</strong>
-              <div style={{ color: "#475569", marginTop: 6 }}>{inv.amount || inv.total} - {inv.status || "Draft"}</div>
+              <strong>{inv.invoiceName || inv.id}</strong>
+              <div style={{ color: "#475569", marginTop: 6 }}>{inv.amount} · {inv.status || "Draft"}</div>
+              {inv.note ? <div style={{ color: "#64748b", marginTop: 6 }}>{inv.note}</div> : null}
+              {inv.status === "Issued" ? (
+                <button type="button" onClick={() => payInvoice(inv.id)} disabled={busyId === inv.id} style={{ marginTop: 10, border: "1px solid #16a34a", background: "#16a34a", color: "#fff", borderRadius: 8, padding: "8px 12px", fontWeight: 700, cursor: "pointer" }}>
+                  {busyId === inv.id ? "Opening Stripe…" : "Pay via Stripe"}
+                </button>
+              ) : null}
             </div>
           ))
         )}

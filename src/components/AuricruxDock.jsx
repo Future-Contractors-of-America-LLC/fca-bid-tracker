@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { brandIdentity } from "../brandIdentity";
+import { sendAuricruxMessage } from "../api/auricruxClient";
 import {
   auricruxRail,
   currentProject,
@@ -18,7 +19,6 @@ const auricruxColors = brandIdentity.auricrux.colors;
 const fcaColors = brandIdentity.fca.colors;
 const OPEN_STORAGE_KEY = "auricrux-dock-open";
 const COMPACT_STORAGE_KEY = "auricrux-dock-compact";
-const AURICRUX_CENTRAL_BIDS_API = "https://auricrux-central.azurewebsites.net/api/bids";
 
 function safeStorageGet(key) {
   if (typeof window === "undefined") return null;
@@ -165,30 +165,23 @@ export default function AuricruxDock() {
     setText("");
 
     try {
-      const res = await fetch(AURICRUX_CENTRAL_BIDS_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: `dock-${Date.now()}`,
-          company: "FCA User",
-          value: 100000,
-          status: "new",
-          source: "auricrux-dock",
-          command: cmd,
-        }),
+      const route = typeof window !== "undefined" ? window.location.pathname : "/portal/platform";
+      const data = await sendAuricruxMessage({
+        message: cmd,
+        route,
+        context: {
+          company: portalTenant.name,
+          nextAction: workspaceContext.currentNextAction,
+          blocker: auricruxRail.currentBlocker,
+          projectId: currentProject.id,
+        },
       });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
       setMode("live");
 
       setLog((prev) => [
         {
           t: new Date().toISOString(),
-          m: `SUCCESS: Bid created (${data.id || "no id"})`,
+          m: `AURICRUX: ${data.reply}`,
         },
         ...prev,
       ]);

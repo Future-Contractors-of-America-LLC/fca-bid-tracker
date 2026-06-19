@@ -1,6 +1,6 @@
 import { resolvePlanPreset } from "../pricingPlans";
 import { navigateTo } from "../navigation";
-import { PILOT_CHECKOUT_URL, STARTUP_CHECKOUT_URL } from "../commercialOffers";
+import { createPlanCheckout } from "../api/stripeClient";
 
 const shellStyle = {
   border: "1px solid #dbe3ef",
@@ -29,10 +29,10 @@ const actionButtonStyle = (tone = "primary") => ({
 });
 
 const launchPlans = [
-  { key: "startup", title: "Activate Startup Workspace", role: "Owner / Admin", nextHref: "/portal/platform", checkoutUrl: STARTUP_CHECKOUT_URL },
-  { key: "pilot", title: "Buy Pilot Workspace", role: "Project Coordinator", nextHref: "/portal", checkoutUrl: PILOT_CHECKOUT_URL },
-  { key: "operations", title: "Activate Operations Workspace", role: "Owner / Admin", nextHref: "/portal/platform", checkoutUrl: null },
-  { key: "enterprise", title: "Activate Enterprise Rollout", role: "Owner / Admin", nextHref: "/portal/admin", checkoutUrl: null },
+  { key: "startup", title: "Activate Startup Workspace", role: "Owner / Admin", nextHref: "/portal/platform" },
+  { key: "pilot", title: "Buy Pilot Workspace", role: "Project Coordinator", nextHref: "/portal" },
+  { key: "operations", title: "Activate Operations Workspace", role: "Owner / Admin", nextHref: "/portal/platform" },
+  { key: "enterprise", title: "Activate Enterprise Rollout", role: "Owner / Admin", nextHref: "/portal/admin" },
 ];
 
 export default function PricingActionCenter({ session, login }) {
@@ -53,6 +53,21 @@ export default function PricingActionCenter({ session, login }) {
 
     if (!result.ok) return;
     navigateTo(nextHref);
+  }
+
+  async function payWithStripe(planKey) {
+    try {
+      const checkout = await createPlanCheckout(planKey, {
+        customerEmail: session?.email,
+        successUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/billing?payment=success` : undefined,
+        cancelUrl: typeof window !== "undefined" ? `${window.location.origin}/pricing?payment=cancelled` : undefined,
+      });
+      if (checkout.checkoutUrl) {
+        window.location.href = checkout.checkoutUrl;
+      }
+    } catch {
+      // Checkout API unavailable — user can still activate workspace locally.
+    }
   }
 
   return (
@@ -85,10 +100,10 @@ export default function PricingActionCenter({ session, login }) {
               <button type="button" onClick={() => activatePlan(plan.key, plan.role, plan.nextHref)} style={actionButtonStyle(plan.key === "enterprise" ? "secondary" : "primary")}>
                 {plan.title}
               </button>
-              {plan.checkoutUrl ? (
-                <a href={plan.checkoutUrl} target="_blank" rel="noopener noreferrer" style={{ ...actionButtonStyle("secondary"), display: "inline-block", marginTop: 10, textDecoration: "none", textAlign: "center" }}>
+              {plan.key === "startup" || plan.key === "pilot" ? (
+                <button type="button" onClick={() => payWithStripe(plan.key)} style={{ ...actionButtonStyle("secondary"), display: "inline-block", marginTop: 10, width: "100%" }}>
                   Pay with Stripe — {preset.price}
-                </a>
+                </button>
               ) : null}
             </div>
           );
