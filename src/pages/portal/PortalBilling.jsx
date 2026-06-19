@@ -246,6 +246,7 @@ export default function PortalBilling() {
                   </button>
                 ) : null}
                 {invoice.status === "Issued" ? (
+                {invoice.status === "Issued" ? (
                   <>
                     <button type="button" onClick={() => deliverInvoice(invoice.id)} disabled={busyId === `deliver-${invoice.id}`} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
                       {busyId === `deliver-${invoice.id}` ? "Sending…" : "Send Invoice"}

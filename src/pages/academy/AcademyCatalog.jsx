@@ -72,6 +72,7 @@ export default function AcademyCatalog() {
                 </p>
                 <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.completionRule}</p>
                 <div style={{ marginTop: 14 }}>
+                <div style={{ marginTop: 14 }}>
                   <a href={`/academy/programs/${program.key}`} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>
                     Open program
                   </a>
