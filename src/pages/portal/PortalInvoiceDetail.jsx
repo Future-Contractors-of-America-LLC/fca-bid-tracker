@@ -92,7 +92,7 @@ export default function PortalInvoiceDetail({ routeParams = {} }) {
               </button>
               {summary.status === "Issued" || summary.status === "Paid" ? (
                 <button type="button" onClick={sendInvoice} disabled={busy} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
-                  {busy ? "Sendingù" : "Send Invoice"}
+                  {busy ? "Sending..." : "Send Invoice"}
                 </button>
               ) : null}
             </div>
@@ -112,7 +112,7 @@ export default function PortalInvoiceDetail({ routeParams = {} }) {
           ) : null}
         </>
       ) : !loadError ? (
-        <div style={cardStyle}>Loading invoiceù</div>
+        <div style={cardStyle}>Loading invoice...</div>
       ) : null}
     </PortalShell>
   );
