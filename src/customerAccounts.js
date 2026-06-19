@@ -22,6 +22,30 @@ export const PRIMARY_TEST_ACCOUNT = {
   },
 };
 
+export const ADMIN_BACKEND_ACCOUNT = {
+  email: "admin@futurecontractorsofamerica.com",
+  password: "FCA-Admin-2026!",
+  company: "FCA System Administration",
+  role: "FCA System Admin",
+  customerId: "CUST-FCA-ADMIN-001",
+  workspaceLabel: "FCA Backend Administration",
+  selectedPlan: "enterprise",
+  enabledProducts: {
+    saas: true,
+    lms: true,
+    auricrux: true,
+  },
+  enabledComms: {
+    chat: true,
+    sms: true,
+    phone: true,
+    email: true,
+    teams: true,
+    conference: true,
+    lecture: true,
+  },
+};
+
 export const LAUNCH_SINGLE_USER_ACCOUNT = {
   email: "launch.customer@futurecontractorsofamerica.com",
   password: "FCA-Launch-2026!",
@@ -32,7 +56,7 @@ export const LAUNCH_SINGLE_USER_ACCOUNT = {
   selectedPlan: "enterprise",
   enabledProducts: {
     saas: true,
-    lms: false,
+    lms: true,
     auricrux: true,
   },
   enabledComms: {
@@ -42,11 +66,11 @@ export const LAUNCH_SINGLE_USER_ACCOUNT = {
     email: true,
     teams: true,
     conference: true,
-    lecture: false,
+    lecture: true,
   },
 };
 
-export const TEST_CUSTOMER_ACCOUNTS = [PRIMARY_TEST_ACCOUNT, LAUNCH_SINGLE_USER_ACCOUNT];
+export const TEST_CUSTOMER_ACCOUNTS = [PRIMARY_TEST_ACCOUNT, LAUNCH_SINGLE_USER_ACCOUNT, ADMIN_BACKEND_ACCOUNT];
 
 export function sanitizeSeededCustomerAccount(account) {
   if (!account) return null;

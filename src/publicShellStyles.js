@@ -1,7 +1,7 @@
 export const pageShellStyle = {
   padding: "clamp(20px, 4vw, 40px)",
   fontFamily: '"Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif',
-  maxWidth: 1120,
+  maxWidth: 1280,
   margin: "0 auto",
   boxSizing: "border-box",
   width: "100%",
@@ -9,19 +9,23 @@ export const pageShellStyle = {
 };
 
 export const cardStyle = {
-  border: "1px solid #dbe4f3",
-  borderRadius: 14,
-  padding: 18,
-  background: "linear-gradient(135deg, #ffffff 0%, #f8fbff 100%)",
-  boxShadow: "0 14px 28px rgba(15, 23, 42, 0.06)",
+  border: "1px solid #e2e8f0",
+  borderRadius: 8,
+  padding: 20,
+  background: "#ffffff",
+  boxShadow: "none",
 };
 
 export const heroCardStyle = {
-  border: "1px solid #dbe3ef",
-  borderRadius: 18,
-  padding: 24,
-  background: "linear-gradient(135deg, #e8f0ff 0%, #ffffff 58%, #fff7e5 100%)",
-  boxShadow: "0 20px 44px rgba(15, 23, 42, 0.08)",
+  border: "none",
+  borderRadius: 0,
+  padding: "clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px)",
+  background: "linear-gradient(180deg, #0f172a 0%, #1e293b 100%)",
+  color: "#f8fafc",
+  boxShadow: "none",
+  marginLeft: "calc(-1 * clamp(20px, 4vw, 40px))",
+  marginRight: "calc(-1 * clamp(20px, 4vw, 40px))",
+  marginBottom: 32,
 };
 
 export const sectionGridStyle = {

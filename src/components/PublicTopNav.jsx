@@ -1,157 +1,208 @@
+import { useEffect, useRef, useState } from "react";
+import FcaBrandMark from "./FcaBrandMark";
 import {
   clearCustomerSession,
   readCustomerSession,
   resolveLoginHref,
-  resolveProfileHref,
   resolveWorkspaceEntryHref,
 } from "../customerSession";
 import { navigateTo } from "../navigation";
-import { portalModules, workspaceContext as systemWorkspaceContext } from "../systemState";
-import { publicActionCatalog } from "../websiteShell";
 
-const navShellStyle = {
-  border: "1px solid #dbe3ef",
-  borderRadius: 16,
-  background: "linear-gradient(135deg, #ffffff 0%, #f8fbff 60%, #fff8e6 100%)",
-  padding: "14px 16px",
-  marginBottom: 20,
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.05)",
+const headerStyle = {
+  position: "sticky",
+  top: 0,
+  zIndex: 1000,
+  background: "#ffffff",
+  borderBottom: "1px solid #e2e8f0",
+  boxShadow: "0 1px 0 rgba(15, 23, 42, 0.04)",
 };
 
-const utilityLinkStyle = {
-  textDecoration: "none",
-  color: "#475569",
-  fontWeight: 700,
-  fontSize: 14,
-  padding: "8px 10px",
-  borderRadius: 10,
+const innerStyle = {
+  maxWidth: 1280,
+  margin: "0 auto",
+  padding: "0 clamp(16px, 3vw, 32px)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 16,
+  minHeight: 64,
 };
 
-const activeUtilityLinkStyle = {
-  ...utilityLinkStyle,
-  background: "linear-gradient(135deg, #fff7e1 0%, #ffffff 100%)",
-  color: "#7c5313",
-  border: "1px solid #ecd089",
+const navStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: 4,
+  flexWrap: "wrap",
 };
 
-const taskLinkStyle = {
-  textDecoration: "none",
-  color: "#334155",
-  fontWeight: 700,
+const menuButtonStyle = {
+  border: "none",
+  background: "transparent",
+  color: "#0f172a",
+  fontWeight: 600,
   fontSize: 14,
   padding: "10px 12px",
-  borderRadius: 10,
-  border: "1px solid transparent",
+  borderRadius: 8,
+  cursor: "pointer",
+  fontFamily: "inherit",
 };
 
-const activeTaskLinkStyle = {
-  ...taskLinkStyle,
-  background: "#eff6ff",
-  color: "#1d4ed8",
-  border: "1px solid #bfdbfe",
-};
-
-const primaryButtonStyle = {
+const linkStyle = {
   textDecoration: "none",
-  background: "linear-gradient(135deg, #1d4ed8 0%, #3157d7 100%)",
-  color: "#fff",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
+  color: "#334155",
+  fontWeight: 600,
+  fontSize: 14,
+  padding: "10px 12px",
+  borderRadius: 8,
+  display: "block",
 };
 
-const secondaryButtonStyle = {
-  textDecoration: "none",
+const dropdownStyle = {
+  position: "absolute",
+  top: "calc(100% + 4px)",
+  left: 0,
+  minWidth: 220,
   background: "#fff",
-  color: "#0f172a",
-  padding: "10px 14px",
-  borderRadius: 10,
-  fontWeight: 700,
-  border: "1px solid #cbd5e1",
+  border: "1px solid #e2e8f0",
+  borderRadius: 12,
+  boxShadow: "0 16px 40px rgba(15, 23, 42, 0.12)",
+  padding: 8,
+  zIndex: 1100,
 };
 
-const publicNavGroups = [
+const signInStyle = {
+  textDecoration: "none",
+  color: "#1d4ed8",
+  fontWeight: 700,
+  fontSize: 14,
+  padding: "10px 14px",
+  borderRadius: 8,
+};
+
+const primaryCtaStyle = {
+  textDecoration: "none",
+  background: "linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%)",
+  color: "#fff",
+  fontWeight: 700,
+  fontSize: 14,
+  padding: "10px 16px",
+  borderRadius: 8,
+};
+
+const NAV_MENUS = [
   {
-    key: "public-primary",
-    label: "Public",
+    label: "Platform",
     items: [
-      { label: "Home", href: "/" },
-      { label: "Platform", href: "/platform" },
+      { label: "Overview", href: "/platform" },
+      { label: "Features", href: "/features" },
+      { label: "Solutions", href: "/solutions" },
+      { label: "Auricrux Intelligence", href: "/auricrux" },
+    ],
+  },
+  {
+    label: "Commercial",
+    items: [
       { label: "Pricing", href: "/pricing" },
-      { label: "Academy", href: "/academy" },
-      { label: "Contact", href: "/contact" },
+      { label: "Digital Products", href: "/products" },
+      { label: "Get Started", href: "/intake" },
     ],
   },
-];
-
-const portalNavGroups = [
   {
-    key: "portal-primary",
-    label: "Portal",
+    label: "Academy",
     items: [
-      { label: "Dashboard", href: "/portal/platform" },
-      { label: "Projects", href: "/portal/projects" },
-      { label: "Bids", href: "/portal/bids" },
-      { label: "Estimates", href: "/portal/estimates" },
-      { label: "Proposals", href: "/portal/proposals" },
-      { label: "Files", href: "/portal/files" },
-      { label: "Messages", href: "/portal/messages" },
-      { label: "Billing", href: "/portal/billing" },
-      { label: "Academy", href: "/portal/academy" },
-      { label: "Support", href: "/portal/support" },
+      { label: "Academy Home", href: "/academy" },
+      { label: "Course Catalog", href: "/academy/catalog" },
+    ],
+  },
+  {
+    label: "Company",
+    items: [
+      { label: "Contact", href: "/contact" },
+      { label: "Warranty", href: "/warranty" },
+      { label: "Referrals", href: "/referrals" },
+    ],
+  },
+  {
+    label: "Legal",
+    items: [
+      { label: "Terms", href: "/terms" },
+      { label: "Privacy", href: "/privacy" },
+      { label: "Refunds", href: "/refunds" },
+      { label: "Intellectual Property", href: "/ip" },
     ],
   },
 ];
 
-function normalizePath(value) {
-  if (!value || typeof value !== "string") return "/";
-  const stripped = value.split("#")[0].split("?")[0];
-  return stripped.endsWith("/") && stripped !== "/" ? stripped.slice(0, -1) : stripped;
-}
+function NavDropdown({ menu, currentPath }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
 
-function isActivePath(currentPath, href) {
-  const normalizedCurrent = normalizePath(currentPath);
-  const normalizedHref = normalizePath(href);
-  return normalizedCurrent === normalizedHref;
-}
+  useEffect(() => {
+    function onDocClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, []);
 
-function resolveRouteCue(pathname, mode) {
-  if (mode === "portal") {
-    if (pathname.startsWith("/portal/projects")) return "Project continuity active";
-    if (pathname.startsWith("/portal/estimates")) return "Estimate continuity active";
-    if (pathname.startsWith("/portal/proposals")) return "Proposal continuity active";
-    if (pathname.startsWith("/portal/messages")) return "Communications continuity active";
-    if (pathname.startsWith("/portal/billing")) return "Revenue continuity active";
-    if (pathname.startsWith("/portal/academy")) return "Academy continuity active";
-    return "Workspace continuity active";
-  }
+  const active = menu.items.some((item) => currentPath === item.href || currentPath.startsWith(`${item.href}/`));
 
-  if (pathname === "/platform") return "Platform framing active";
-  if (pathname === "/pricing") return "Commercial rollout active";
-  if (pathname === "/academy") return "Academy continuity active";
-  if (pathname === "/contact") return "Guided contact route active";
-  if (pathname === "/login") return "Customer login route active";
-  return "Public shell entry active";
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <button
+        type="button"
+        style={{
+          ...menuButtonStyle,
+          background: active ? "#eff6ff" : open ? "#f8fafc" : "transparent",
+          color: active ? "#1d4ed8" : "#0f172a",
+        }}
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+      >
+        {menu.label}
+      </button>
+      {open ? (
+        <div style={dropdownStyle}>
+          {menu.items.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              style={{
+                ...linkStyle,
+                background: currentPath === item.href ? "#eff6ff" : "transparent",
+                color: currentPath === item.href ? "#1d4ed8" : "#334155",
+              }}
+              onClick={() => setOpen(false)}
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
-  const currentPath = typeof window === "undefined" ? "/" : normalizePath(window.location.pathname);
+  const currentPath = typeof window === "undefined" ? "/" : window.location.pathname.replace(/\/$/, "") || "/";
   const loginHref = resolveLoginHref();
   const workspaceHref = resolveWorkspaceEntryHref(session, "/portal/platform");
-  const profileHref = resolveProfileHref(session);
-  const navGroups = mode === "portal" ? portalNavGroups : publicNavGroups;
-  const primaryLinks = navGroups[0]?.items || [];
-  const workspaceLabel = session?.authenticated
-    ? session.workspaceLabel || session.company
-    : mode === "portal"
-      ? "Portal workspace"
-      : "Future Contractors of America";
-  const routeCue = resolveRouteCue(currentPath, mode);
-  const actionHref = session?.authenticated ? workspaceHref : loginHref;
-  const actionLabel = session?.authenticated ? "Open Workspace" : "Customer Login";
-  const internalQuickLinks = [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace];
-  const showInternalLinks = currentPath.startsWith("/login") && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("mode") === "internal";
+
+  const portalItems = [
+    { label: "Dashboard", href: "/portal/platform" },
+    { label: "Projects", href: "/portal/projects" },
+    { label: "Bids", href: "/portal/bids" },
+    { label: "Estimates", href: "/portal/estimates" },
+    { label: "Proposals", href: "/portal/proposals" },
+    { label: "Files", href: "/portal/files" },
+    { label: "Messages", href: "/portal/messages" },
+    { label: "Billing", href: "/portal/billing" },
+    { label: "Academy", href: "/portal/academy" },
+    { label: "Auricrux", href: "/portal/auricrux" },
+    { label: "Support", href: "/portal/support" },
+    { label: "Admin", href: "/portal/admin" },
+  ];
 
   async function handleLogout(event) {
     event.preventDefault();
@@ -160,90 +211,65 @@ export default function PublicTopNav({ mode = "public" }) {
   }
 
   return (
-    <div style={navShellStyle}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 16,
-          flexWrap: "wrap",
-          alignItems: "center",
-          marginBottom: 12,
-        }}
-      >
-        <div style={{ minWidth: 0 }}>
-          <div style={{ fontWeight: 800, color: "#111827", marginBottom: 4 }}>{workspaceLabel}</div>
-          <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.5 }}>
-            {mode === "portal" ? systemWorkspaceContext.currentNextAction : "Construction operating system"}
-          </div>
-          <div style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.5, marginTop: 4 }}>
-            {routeCue}
-          </div>
-          <div style={{ color: "#7c5313", fontSize: 12, lineHeight: 1.5, marginTop: 4, fontWeight: 700 }}>
-            Auricrux drives execution continuity across this route.
-          </div>
-        </div>
+    <header style={headerStyle}>
+      <div style={innerStyle}>
+        <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+          <FcaBrandMark compact />
+          <span style={{ fontWeight: 800, color: "#0f172a", fontSize: 15, whiteSpace: "nowrap" }}>
+            Future Contractors of America
+          </span>
+        </a>
 
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-          {session?.authenticated ? <a href={profileHref} style={secondaryButtonStyle}>Profile</a> : null}
-          <a href={actionHref} style={primaryButtonStyle}>
-            {actionLabel}
-          </a>
-          {session?.authenticated ? (
-            <a href={loginHref} onClick={handleLogout} style={secondaryButtonStyle}>Logout</a>
-          ) : null}
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 12,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        <nav style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }} aria-label={mode === "portal" ? "Portal primary navigation" : "Primary navigation"}>
-          {primaryLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              style={isActivePath(currentPath, link.href) ? activeTaskLinkStyle : taskLinkStyle}
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
-
-        {mode === "portal" ? (
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            {[...portalModules.slice(0, 2), { href: "/portal/estimates", label: "Estimates" }, { href: "/portal/proposals", label: "Proposals" }].map((item) => (
+        <nav style={navStyle} aria-label={mode === "portal" ? "Portal navigation" : "Site navigation"}>
+          {mode === "portal" ? (
+            portalItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                style={isActivePath(currentPath, item.href) ? activeUtilityLinkStyle : utilityLinkStyle}
-                title={item.description || item.label}
+                style={{
+                  ...linkStyle,
+                  display: "inline-block",
+                  color: currentPath === item.href ? "#1d4ed8" : "#334155",
+                  background: currentPath === item.href ? "#eff6ff" : "transparent",
+                }}
               >
                 {item.label}
               </a>
-            ))}
-          </div>
-        ) : (
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            {showInternalLinks
-              ? internalQuickLinks.map((item) => {
-                  const resolvedHref = item.href === "/login" || item.href === "/login?seeded=1" ? actionHref : item.href;
-                  return (
-                    <a key={item.href} href={resolvedHref} style={utilityLinkStyle}>{item.label}</a>
-                  );
-                })
-              : null}
-            <a href="/auricrux" style={isActivePath(currentPath, "/auricrux") ? activeUtilityLinkStyle : utilityLinkStyle}>Auricrux</a>
-            <a href="/login" style={isActivePath(currentPath, "/login") ? activeUtilityLinkStyle : utilityLinkStyle}>Login</a>
-          </div>
-        )}
+            ))
+          ) : (
+            <>
+              <a
+                href="/"
+                style={{
+                  ...linkStyle,
+                  display: "inline-block",
+                  color: currentPath === "/" ? "#1d4ed8" : "#334155",
+                  background: currentPath === "/" ? "#eff6ff" : "transparent",
+                }}
+              >
+                Home
+              </a>
+              {NAV_MENUS.map((menu) => (
+                <NavDropdown key={menu.label} menu={menu} currentPath={currentPath} />
+              ))}
+            </>
+          )}
+        </nav>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+          {session?.authenticated ? (
+            <>
+              <a href={workspaceHref} style={signInStyle}>Workspace</a>
+              <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>
+            </>
+          ) : (
+            <>
+              <a href={loginHref} style={signInStyle}>Sign in</a>
+              <a href="/intake" style={primaryCtaStyle}>Get started</a>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </header>
   );
 }

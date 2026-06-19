@@ -44,7 +44,20 @@ Use these credentials to sign in and test **SaaS** (portal, projects, bids, bill
 |-------|-------|
 | **Email** | `launch.customer@futurecontractorsofamerica.com` |
 | **Password** | `FCA-Launch-2026!` |
-| **SaaS + LMS** | Both enabled (updated 2026-06-18) |
+| **SaaS + LMS** | Both enabled |
+
+---
+
+## System admin account (backend + admin route)
+
+| Field | Value |
+|-------|-------|
+| **Email** | `admin@futurecontractorsofamerica.com` |
+| **Password** | `FCA-Admin-2026!` |
+| **Role** | FCA System Admin |
+| **Admin route** | `/portal/admin` |
+
+Full matrix: `docs/BACKEND_ADMIN_ACCESS.md`
 
 ---
 
