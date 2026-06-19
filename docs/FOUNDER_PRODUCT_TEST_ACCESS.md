@@ -1,8 +1,8 @@
-# FCA Product Test Access ó Founder & QA
+# FCA Product Test Access ù Founder & QA
 
 Use these credentials to sign in and test **SaaS** (portal, projects, bids, billing) and **Academy LMS** on the live platform.
 
-**Last updated:** 2026-06-18
+**Last updated:** 2026-06-19
 
 ---
 
@@ -12,13 +12,37 @@ Use these credentials to sign in and test **SaaS** (portal, projects, bids, bill
 |---------|-----|
 | Website (React SPA) | https://futurecontractorsofamerica.com |
 | Sign in | https://futurecontractorsofamerica.com/login |
+| Admin workspace (login with redirect) | https://futurecontractorsofamerica.com/login?next=/portal/admin |
 | Platform dashboard | https://futurecontractorsofamerica.com/portal/platform |
 | Academy | https://futurecontractorsofamerica.com/academy |
 | API (direct) | https://auricrux-central.azurewebsites.net/api/health |
 
 ---
 
-## Recommended test account (full SaaS + LMS + Auricrux)
+## Michael ù founder account (primary)
+
+| Field | Value |
+|-------|-------|
+| **Email** | `michael@futurecontractorsofamerica.com` |
+| **Password** | `MyGodiswithme01!` |
+| **Company** | Future Contractors of America |
+| **Role** | Founder / Owner |
+| **Customer ID** | `CUST-FCA-FOUNDER-MICHAEL-001` |
+| **Plan** | Enterprise |
+| **SaaS** | Enabled |
+| **LMS (Academy)** | Enabled |
+| **Auricrux** | Enabled |
+
+### Fast sign-in links
+
+- **Login page:** https://futurecontractorsofamerica.com/login  
+- **Founder autologin (platform):** https://futurecontractorsofamerica.com/login?seeded=1&autologin=1&account=founder&next=/portal/platform  
+- **Founder autologin (admin):** https://futurecontractorsofamerica.com/login?seeded=1&autologin=1&account=founder&next=/portal/admin  
+- **Academy after login:** https://futurecontractorsofamerica.com/academy  
+
+---
+
+## QA test account (sandbox)
 
 | Field | Value |
 |-------|-------|
@@ -32,9 +56,7 @@ Use these credentials to sign in and test **SaaS** (portal, projects, bids, bill
 
 ### Fast sign-in links
 
-- **Login page:** https://futurecontractorsofamerica.com/login  
 - **Instant workspace (demo autologin):** https://futurecontractorsofamerica.com/login?seeded=1&autologin=1&next=/portal/platform  
-- **Academy after login:** https://futurecontractorsofamerica.com/academy  
 
 ---
 
@@ -80,7 +102,7 @@ Full matrix: `docs/BACKEND_ADMIN_ACCESS.md`
 | Route | What you should see |
 |-------|---------------------|
 | `/academy` | Training catalog, programs |
-| `/academy/catalog` | Electrical apprenticeship L1ñL10 pathways |
+| `/academy/catalog` | Electrical apprenticeship L1ùL10 pathways |
 
 **API check (no login required for catalog read):**
 ```powershell
@@ -106,7 +128,7 @@ $base = "https://auricrux-central.azurewebsites.net/api"
 
 **Login test:**
 ```powershell
-$body = @{ email = "founder.test@futurecontractorsofamerica.com"; password = "FCA-HandsOff-2026!" } | ConvertTo-Json
+$body = @{ email = "michael@futurecontractorsofamerica.com"; password = "MyGodiswithme01!" } | ConvertTo-Json
 Invoke-RestMethod -Uri "https://auricrux-central.azurewebsites.net/api/customer-login" -Method POST -Body $body -ContentType "application/json"
 ```
 
@@ -118,7 +140,7 @@ Expect `"ok": true` in the response.
 
 SharePoint bridge is **read/preflight only** today. Founder actions for full M365 write access are in `FOUNDER_COMPLETION_GUIDE.md` Section 4.
 
-Auricrux can surface SharePoint-linked content once Key Vault + Graph permissions are granted ó not available for self-serve testing yet.
+Auricrux can surface SharePoint-linked content once Key Vault + Graph permissions are granted ù not available for self-serve testing yet.
 
 ---
 

@@ -5,7 +5,7 @@ import { centralFetch } from "../../api/backendBase";
 import { resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { PRIMARY_TEST_ACCOUNT, resolveSeededCustomerAccount } from "../../customerAccounts";
+import { resolveSeededCustomerAccount, resolveSeededAccountByKey } from "../../customerAccounts";
 import { pageShellStyle, cardStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const fieldStyle = {
@@ -41,14 +41,16 @@ const LOCAL_FALLBACK_AUTH_BOUNDARY = {
 
 function readLoginQueryState() {
   if (typeof window === "undefined") {
-    return { seeded: false, autologin: false, internal: false, nextHref: null };
+    return { seeded: false, autologin: false, internal: false, nextHref: null, accountKey: "test" };
   }
   const params = new URLSearchParams(window.location.search);
-  const seeded = params.get("seeded") === "1" || params.get("account") === "test";
-  const autologin = seeded && params.get("autologin") === "1";
+  const accountParam = params.get("account");
+  const accountKey = accountParam || "test";
+  const seeded = params.get("seeded") === "1" || Boolean(accountParam);
+  const autologin = params.get("autologin") === "1" && seeded;
   const internal = params.get("mode") === "internal" || seeded;
   const nextHref = params.get("next");
-  return { seeded, autologin, internal, nextHref };
+  return { seeded, autologin, internal, nextHref, accountKey };
 }
 
 function resolveLocalFallbackAccount(email, password) {
@@ -102,20 +104,21 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
   const autologinAttemptedRef = useRef(false);
   const queryState = readLoginQueryState();
   const internalMode = queryState.internal;
+  const seededAccount = resolveSeededAccountByKey(queryState.accountKey);
 
   useEffect(() => {
     if (!queryState.seeded) return;
     setForm({
-      email: PRIMARY_TEST_ACCOUNT.email,
-      password: PRIMARY_TEST_ACCOUNT.password,
-      company: PRIMARY_TEST_ACCOUNT.company,
-      role: PRIMARY_TEST_ACCOUNT.role,
-      selectedPlan: PRIMARY_TEST_ACCOUNT.selectedPlan,
-      enabledProducts: PRIMARY_TEST_ACCOUNT.enabledProducts,
-      enabledComms: PRIMARY_TEST_ACCOUNT.enabledComms,
+      email: seededAccount.email,
+      password: seededAccount.password,
+      company: seededAccount.company,
+      role: seededAccount.role,
+      selectedPlan: seededAccount.selectedPlan,
+      enabledProducts: seededAccount.enabledProducts,
+      enabledComms: seededAccount.enabledComms,
     });
     setAuthStatus(queryState.autologin ? "authenticating" : "seeded");
-  }, [queryState.autologin, queryState.seeded]);
+  }, [queryState.autologin, queryState.accountKey, queryState.seeded, seededAccount]);
 
   const requestedWorkspaceHref = accessMode === "protected"
     ? requestedPath
@@ -129,15 +132,15 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
     autologinAttemptedRef.current = true;
     async function runAutologin() {
       try {
-        const authenticatedAccount = await authenticateWorkspaceAccount(PRIMARY_TEST_ACCOUNT.email, PRIMARY_TEST_ACCOUNT.password);
+        const authenticatedAccount = await authenticateWorkspaceAccount(seededAccount.email, seededAccount.password);
         const result = login({
-          email: authenticatedAccount.email || PRIMARY_TEST_ACCOUNT.email,
-          company: authenticatedAccount.company || PRIMARY_TEST_ACCOUNT.company,
-          role: authenticatedAccount.role || PRIMARY_TEST_ACCOUNT.role,
+          email: authenticatedAccount.email || seededAccount.email,
+          company: authenticatedAccount.company || seededAccount.company,
+          role: authenticatedAccount.role || seededAccount.role,
           nextHref,
-          selectedPlan: authenticatedAccount.selectedPlan || PRIMARY_TEST_ACCOUNT.selectedPlan,
-          enabledProducts: authenticatedAccount.enabledProducts || PRIMARY_TEST_ACCOUNT.enabledProducts,
-          enabledComms: authenticatedAccount.enabledComms || PRIMARY_TEST_ACCOUNT.enabledComms,
+          selectedPlan: authenticatedAccount.selectedPlan || seededAccount.selectedPlan,
+          enabledProducts: authenticatedAccount.enabledProducts || seededAccount.enabledProducts,
+          enabledComms: authenticatedAccount.enabledComms || seededAccount.enabledComms,
           customerId: authenticatedAccount.customerId,
           workspaceLabel: authenticatedAccount.workspaceLabel,
           accountSource: authenticatedAccount.accountSource,
@@ -153,7 +156,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
       }
     }
     runAutologin();
-  }, [login, nextHref, queryState.autologin, queryState.seeded]);
+  }, [login, nextHref, queryState.autologin, queryState.seeded, seededAccount]);
 
   async function handleSubmit(event) {
     event.preventDefault();

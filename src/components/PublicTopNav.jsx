@@ -3,6 +3,7 @@ import FcaBrandMark from "./FcaBrandMark";
 import {
   clearCustomerSession,
   readCustomerSession,
+  resolveAdminWorkspaceHref,
   resolveLoginHref,
   resolveWorkspaceEntryHref,
 } from "../customerSession";
@@ -187,6 +188,7 @@ export default function PublicTopNav({ mode = "public" }) {
   const session = readCustomerSession();
   const currentPath = typeof window === "undefined" ? "/" : window.location.pathname.replace(/\/$/, "") || "/";
   const loginHref = resolveLoginHref();
+  const adminWorkspaceHref = resolveAdminWorkspaceHref(session);
   const workspaceHref = resolveWorkspaceEntryHref(session, "/portal/platform");
 
   const portalItems = [
@@ -201,7 +203,7 @@ export default function PublicTopNav({ mode = "public" }) {
     { label: "Academy", href: "/portal/academy" },
     { label: "Auricrux", href: "/portal/auricrux" },
     { label: "Support", href: "/portal/support" },
-    { label: "Admin", href: "/portal/admin" },
+    { label: "Admin", href: adminWorkspaceHref },
   ];
 
   async function handleLogout(event) {
@@ -265,6 +267,7 @@ export default function PublicTopNav({ mode = "public" }) {
           ) : (
             <>
               <a href={loginHref} style={signInStyle}>Sign in</a>
+              <a href={adminWorkspaceHref} style={signInStyle}>Admin workspace</a>
               <a href="/intake" style={primaryCtaStyle}>Get started</a>
             </>
           )}

@@ -1,3 +1,27 @@
+export const MICHAEL_FOUNDER_ACCOUNT = {
+  email: "michael@futurecontractorsofamerica.com",
+  password: "MyGodiswithme01!",
+  company: "Future Contractors of America",
+  role: "Founder / Owner",
+  customerId: "CUST-FCA-FOUNDER-MICHAEL-001",
+  workspaceLabel: "Michael — FCA Founder Workspace",
+  selectedPlan: "enterprise",
+  enabledProducts: {
+    saas: true,
+    lms: true,
+    auricrux: true,
+  },
+  enabledComms: {
+    chat: true,
+    sms: true,
+    phone: true,
+    email: true,
+    teams: true,
+    conference: true,
+    lecture: true,
+  },
+};
+
 export const PRIMARY_TEST_ACCOUNT = {
   email: "founder.test@futurecontractorsofamerica.com",
   password: "FCA-HandsOff-2026!",
@@ -70,7 +94,25 @@ export const LAUNCH_SINGLE_USER_ACCOUNT = {
   },
 };
 
-export const TEST_CUSTOMER_ACCOUNTS = [PRIMARY_TEST_ACCOUNT, LAUNCH_SINGLE_USER_ACCOUNT, ADMIN_BACKEND_ACCOUNT];
+export const SEEDED_ACCOUNT_KEYS = {
+  test: PRIMARY_TEST_ACCOUNT,
+  founder: MICHAEL_FOUNDER_ACCOUNT,
+  michael: MICHAEL_FOUNDER_ACCOUNT,
+  admin: ADMIN_BACKEND_ACCOUNT,
+  launch: LAUNCH_SINGLE_USER_ACCOUNT,
+};
+
+export const TEST_CUSTOMER_ACCOUNTS = [
+  PRIMARY_TEST_ACCOUNT,
+  MICHAEL_FOUNDER_ACCOUNT,
+  LAUNCH_SINGLE_USER_ACCOUNT,
+  ADMIN_BACKEND_ACCOUNT,
+];
+
+export function resolveSeededAccountByKey(key = "test") {
+  const normalizedKey = (key || "test").trim().toLowerCase();
+  return SEEDED_ACCOUNT_KEYS[normalizedKey] || PRIMARY_TEST_ACCOUNT;
+}
 
 export function sanitizeSeededCustomerAccount(account) {
   if (!account) return null;
