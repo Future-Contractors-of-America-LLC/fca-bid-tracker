@@ -11,7 +11,7 @@ export const OFFERING_LANES = [
   {
     key: "certification",
     label: "Certification",
-    description: "Professional certifications including OSHA, safety, and trade readiness.",
+    description: "Professional certification pathways covering construction management, project controls, estimating, OSHA safety, BIM, superintendency, QA/QC, commissioning, LEED sustainability, and trade journeyman credentials.",
     credentialType: "Professional Certificate",
   },
   {
@@ -42,6 +42,40 @@ const STATIC_LANE_BY_PROGRAM_KEY = {
   "virginia-dpor-residential-license-prep": "licensure",
   "fca-contractor-command-user-guide": "professional",
 };
+
+const CERTIFICATION_PREFIXES = ["cert-", "project-controls", "precon-estimating", "field-readiness"];
+
+/** Ten certification pathway summaries (backend-aligned). */
+export const CERTIFICATION_PATHWAYS = [
+  { key: "construction-management-certification", label: "Construction Management", pathway: "Construction Management Certification", units: 5 },
+  { key: "project-controls-certification", label: "Project Controls", pathway: "Project Controls Certification", units: 5 },
+  { key: "estimating-preconstruction-certification", label: "Estimating and Preconstruction", pathway: "Estimating and Preconstruction Certification", units: 5 },
+  { key: "safety-osha-certification", label: "Safety and OSHA", pathway: "Safety and OSHA Certification", units: 6 },
+  { key: "bim-certification", label: "BIM", pathway: "BIM Certification", units: 5 },
+  { key: "superintendent-certification", label: "Superintendent", pathway: "Superintendent Certification", units: 5 },
+  { key: "qaqc-certification", label: "QA/QC", pathway: "QA/QC Certification", units: 5 },
+  { key: "commissioning-certification", label: "Commissioning", pathway: "Commissioning Certification", units: 5 },
+  { key: "sustainability-leed-certification", label: "Sustainability and LEED", pathway: "Sustainability and LEED Certification", units: 5 },
+  { key: "trade-journeyman-certification", label: "Trade Journeyman", pathway: "Trade Journeyman Certification", units: 27 },
+];
+
+/** Featured certification unit progression (backend-aligned). */
+export const PROJECT_CONTROLS_CERT_UNITS = [
+  { unit: 1, key: "project-controls", title: "Document Governance", modules: 5 },
+  { unit: 2, key: "cert-schedule-controls", title: "Schedule Controls", modules: 5 },
+  { unit: 3, key: "cert-cost-controls", title: "Cost Controls", modules: 5 },
+  { unit: 4, key: "cert-earned-value", title: "Earned Value", modules: 5 },
+  { unit: 5, key: "cert-portfolio-controls", title: "Portfolio Controls", modules: 5 },
+];
+
+export const OSHA_CERT_UNITS = [
+  { unit: 1, key: "field-readiness", title: "Field Readiness", modules: 3 },
+  { unit: 2, key: "cert-osha-10-construction", title: "OSHA 10", modules: 4 },
+  { unit: 3, key: "cert-osha-30-construction", title: "OSHA 30", modules: 6 },
+  { unit: 4, key: "cert-fall-protection", title: "Fall Protection", modules: 4 },
+  { unit: 5, key: "cert-confined-space-excavation", title: "Confined Space", modules: 4 },
+  { unit: 6, key: "cert-hazcom-silica", title: "HazCom and Silica", modules: 4 },
+];
 
 const APPRENTICESHIP_PREFIXES = [
   "electrical-",
@@ -87,7 +121,8 @@ function resolveProgramLane(program) {
   if (STATIC_LANE_BY_PROGRAM_KEY[program.key]) return STATIC_LANE_BY_PROGRAM_KEY[program.key];
   if (APPRENTICESHIP_PREFIXES.some((prefix) => program.key?.startsWith(prefix))) return "apprenticeship";
   if (program.pathway?.includes("Apprenticeship")) return "apprenticeship";
-  if (["project-controls", "precon-estimating", "field-readiness"].includes(program.key)) return "certification";
+  if (CERTIFICATION_PREFIXES.some((prefix) => program.key?.startsWith(prefix) || program.key === prefix)) return "certification";
+  if (program.pathway?.includes("Certification")) return "certification";
   return "professional";
 }
 

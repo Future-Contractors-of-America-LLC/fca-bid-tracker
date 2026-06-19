@@ -3,7 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import useAcademyLms from "../../hooks/useAcademyLms";
-import { ELECTRICAL_APPRENTICESHIP_LEVELS, organizeApiCatalogByLane } from "../../academyOfferings";
+import { ELECTRICAL_APPRENTICESHIP_LEVELS, OSHA_CERT_UNITS, PROJECT_CONTROLS_CERT_UNITS, organizeApiCatalogByLane } from "../../academyOfferings";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -146,6 +146,70 @@ export default function AcademyCatalog() {
                   <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13 }}>Level {level.level}</div>
                   <strong>{level.title}</strong>
                   <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{level.modules} modules</div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {lanes.find((lane) => lane.key === "certification")?.programs.some((p) => p.key === "project-controls") ? (
+        <section style={{ ...cardStyle, marginBottom: 32 }}>
+          <h2 style={{ marginTop: 0 }}>Project controls certification pathway</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65 }}>
+            Pearson-style certification progression from document governance through portfolio controls and executive reporting.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {PROJECT_CONTROLS_CERT_UNITS.map((unit) => {
+              const program = apiPrograms.find((item) => item.key === unit.key);
+              return (
+                <a
+                  key={unit.key}
+                  href={program ? `/academy/programs/${unit.key}` : "/academy/catalog"}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    border: "1px solid #bbf7d0",
+                    borderRadius: 12,
+                    padding: 14,
+                    background: program ? "#fff" : "#f8fafc",
+                  }}
+                >
+                  <div style={{ color: "#15803d", fontWeight: 700, fontSize: 13 }}>Unit {unit.unit}</div>
+                  <strong>{unit.title}</strong>
+                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{unit.modules} modules</div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {lanes.find((lane) => lane.key === "certification")?.programs.some((p) => p.key === "cert-osha-30-construction") ? (
+        <section style={{ ...cardStyle, marginBottom: 32 }}>
+          <h2 style={{ marginTop: 0 }}>Safety and OSHA certification pathway</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65 }}>
+            Field readiness through OSHA 10/30, fall protection competent person, and environmental safety credentials.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {OSHA_CERT_UNITS.map((unit) => {
+              const program = apiPrograms.find((item) => item.key === unit.key);
+              return (
+                <a
+                  key={unit.key}
+                  href={program ? `/academy/programs/${unit.key}` : "/academy/catalog"}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    border: "1px solid #bbf7d0",
+                    borderRadius: 12,
+                    padding: 14,
+                    background: program ? "#fff" : "#f8fafc",
+                  }}
+                >
+                  <div style={{ color: "#15803d", fontWeight: 700, fontSize: 13 }}>Unit {unit.unit}</div>
+                  <strong>{unit.title}</strong>
+                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{unit.modules} modules</div>
                 </a>
               );
             })}
