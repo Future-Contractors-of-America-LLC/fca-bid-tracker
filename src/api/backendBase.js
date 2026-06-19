@@ -14,8 +14,9 @@ export function centralApi(path) {
 }
 
 export function centralFetch(path, options = {}) {
+  const isSameOrigin = typeof window !== "undefined" && centralApi(path).startsWith(window.location.origin);
   return fetch(centralApi(path), {
-    credentials: "omit",
+    credentials: isSameOrigin ? "include" : "omit",
     ...options,
     headers: {
       Accept: "application/json",
