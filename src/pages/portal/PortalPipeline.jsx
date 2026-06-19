@@ -11,6 +11,7 @@ import {
 } from "../../api/portalClient";
 import {
   fetchCommercialPipeline,
+  migrateLocalPipelineToApi,
   pipelineItemsToMap,
   upsertPipelineLink,
 } from "../../api/pipelineClient";
@@ -138,9 +139,10 @@ export default function PortalPipeline() {
     let active = true;
     setPipelineBanner("");
     fetchCommercialPipeline()
-      .then((payload) => {
+      .then(async (payload) => {
         if (!active) return;
-        setLinks(pipelineItemsToMap(payload.items));
+        const items = await migrateLocalPipelineToApi(payload.items || []);
+        setLinks(pipelineItemsToMap(items));
         setPipelineSource(payload.backingSource || "auricrux-central-table-store");
       })
       .catch(() => {

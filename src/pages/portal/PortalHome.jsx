@@ -7,7 +7,8 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
-import { fetchCommercialPipeline, pipelineItemsToMap } from "../../api/pipelineClient";
+import { fetchCommercialPipeline, migrateLocalPipelineToApi, pipelineItemsToMap } from "../../api/pipelineClient";
+import { fetchPortalInvoices } from "../../api/portalClient";
 import { createPermitEscalationTool, stageMobilizationInvoiceTool } from "../../customerCommandTools";
 
 const cardStyle = {
@@ -112,6 +113,7 @@ export default function PortalHome() {
   const [brandSkin, setBrandSkin] = useState(() => readLocalJson(BRAND_STORAGE_KEY, defaultBrandSkin));
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [pipelineLinks, setPipelineLinks] = useState({});
+  const [invoices, setInvoices] = useState([]);
   const companyName = session?.company || state?.tenant?.name || brandSkin.companyName;
 
   useEffect(() => {
@@ -128,10 +130,25 @@ export default function PortalHome() {
 
   useEffect(() => {
     let active = true;
-    fetchCommercialPipeline()
+    fetchPortalInvoices()
       .then((payload) => {
+        if (active) setInvoices(payload.items || []);
+      })
+      .catch(() => {
+        if (active) setInvoices([]);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    fetchCommercialPipeline()
+      .then(async (payload) => {
         if (!active) return;
-        setPipelineLinks(pipelineItemsToMap(payload.items));
+        const items = await migrateLocalPipelineToApi(payload.items || []);
+        setPipelineLinks(pipelineItemsToMap(items));
       })
       .catch(() => {
         if (!active) return;
@@ -144,9 +161,9 @@ export default function PortalHome() {
 
   const pipelineRows = useMemo(
     () => bids
-      .map((bid) => ({ bid, ...derivePipelineSummary(bid, projects, [], pipelineLinks) }))
+      .map((bid) => ({ bid, ...derivePipelineSummary(bid, projects, invoices, pipelineLinks) }))
       .filter((row) => row.current !== "done"),
-    [bids, projects, pipelineLinks],
+    [bids, projects, invoices, pipelineLinks],
   );
 
   const lanes = useMemo(() => ([
