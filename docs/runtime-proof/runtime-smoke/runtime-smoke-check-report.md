@@ -1,10 +1,10 @@
 # Runtime Smoke Check Report
 
 - Packet: 062Y
-- Generated: 2026-06-20T00:46:49.067Z
+- Generated: 2026-06-20T01:16:28.831Z
 - Total routes checked: 10
-- Passed: 10
-- Failed: 0
+- Passed: 8
+- Failed: 2
 - Emission guaranteed: true
 
 | Route | Status | Expected | Body Type | Expected Type | Passed | Error |
@@ -17,5 +17,5 @@
 | takeoffs_post | 202 | 202 | success | success | yes | no |
 | rfis_get | 200 | 200 | success | success | yes | no |
 | rfis_post | 202 | 202 | success | success | yes | no |
-| auricrux_actions_post | 202 | 202 | success | success | yes | no |
-| auricrux_actions_method_guard | 405 | 405 | error | error | yes | no |
+| auricrux_actions_post | 404 | 202 | error | success | no | no |
+| auricrux_actions_method_guard | 404 | 405 | unknown | error | no | no |
