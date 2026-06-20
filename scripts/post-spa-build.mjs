@@ -29,6 +29,31 @@ if (!fs.existsSync(distRoot)) {
   throw new Error("dist directory missing. Run vite build first.");
 }
 
+// Vite 8 / rolldown may omit the main stylesheet link from index.html while lazy
+// chunks still attempt dynamic CSS preload — inject an explicit link so SWA boot
+// does not hit "Unable to preload CSS" on first paint.
+const indexPath = path.join(distRoot, "index.html");
+const assetsDir = path.join(distRoot, "assets");
+if (fs.existsSync(indexPath) && fs.existsSync(assetsDir)) {
+  const cssAsset = fs
+    .readdirSync(assetsDir)
+    .filter((name) => /^main-.*\.css$/.test(name))
+    .sort()
+    .pop();
+  if (cssAsset) {
+    let indexHtml = fs.readFileSync(indexPath, "utf8");
+    const href = `/assets/${cssAsset}`;
+    if (!indexHtml.includes(href)) {
+      indexHtml = indexHtml.replace(
+        "</head>",
+        `    <link rel="stylesheet" crossorigin href="${href}">\n  </head>`,
+      );
+      fs.writeFileSync(indexPath, indexHtml, "utf8");
+      console.log(`Injected stylesheet link into index.html: ${href}`);
+    }
+  }
+}
+
 fs.mkdirSync(dataDir, { recursive: true });
 
 writeJson("data/live-workspace-pack.json", {
