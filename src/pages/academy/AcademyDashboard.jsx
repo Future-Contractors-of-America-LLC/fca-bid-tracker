@@ -3,7 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, ELECTRICAL_APPRENTICESHIP_LEVELS, organizeApiCatalogByLane } from "../../academyOfferings";
+import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, DPOR_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, ELECTRICAL_LICENSURE_UNITS, LICENSURE_PATHWAYS, organizeApiCatalogByLane } from "../../academyOfferings";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -44,6 +44,16 @@ export default function AcademyDashboard() {
   const electricalPathway = ELECTRICAL_APPRENTICESHIP_LEVELS.map((level) => {
     const enrollment = enrollments.find((item) => item.programKey === level.key);
     return { ...level, enrollment };
+  });
+
+  const electricalLicensurePathway = ELECTRICAL_LICENSURE_UNITS.map((unit) => {
+    const enrollment = enrollments.find((item) => item.programKey === unit.key);
+    return { ...unit, enrollment };
+  });
+
+  const dporLicensurePathway = DPOR_LICENSURE_UNITS.map((unit) => {
+    const enrollment = enrollments.find((item) => item.programKey === unit.key);
+    return { ...unit, enrollment };
   });
 
   const degreePrograms = lanes.find((lane) => lane.key === "degree")?.programs || [];
@@ -205,6 +215,113 @@ export default function AcademyDashboard() {
                 <span style={{ color: "#475569", fontSize: 14 }}>{yearBlock.courseCount} courses</span>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Licensure exam prep pathways</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            Trade and contractor licensure exam preparation across nine trades, Virginia DPOR, NASCLA business and law, and exam readiness fundamentals.
+          </p>
+          <div style={{ display: "grid", gap: 10, marginBottom: 20 }}>
+            {LICENSURE_PATHWAYS.map((pathway) => (
+              <div key={pathway.key} style={{ padding: "12px 14px", borderRadius: 10, border: "1px solid #fde68a", background: "#fffbeb" }}>
+                <strong>{pathway.label}</strong>
+                <span style={{ color: "#64748b", marginLeft: 8 }}>
+                  {pathway.units} programs
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Electrical licensure exam prep (journeyman to contractor)</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            NEC-aligned exam preparation with diagnostic assessment, domain modules, and timed practice exams.
+          </p>
+          <div style={{ display: "grid", gap: 8 }}>
+            {electricalLicensurePathway.map((unit) => {
+              const complete = unit.enrollment?.progressPercent >= 100;
+              const active = unit.enrollment && !complete;
+              const enrolled = Boolean(unit.enrollment);
+              return (
+                <div
+                  key={unit.key}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 12,
+                    flexWrap: "wrap",
+                    padding: "12px 14px",
+                    borderRadius: 10,
+                    border: `1px solid ${complete ? "#86efac" : active ? "#fde68a" : "#e2e8f0"}`,
+                    background: complete ? "#f0fdf4" : active ? "#fffbeb" : "#fff",
+                  }}
+                >
+                  <div>
+                    <strong>Unit {unit.unit}</strong>
+                    <span style={{ color: "#64748b", marginLeft: 8 }}>{unit.title}</span>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    {enrolled ? (
+                      <span style={{ color: complete ? "#15803d" : "#b45309", fontWeight: 700, fontSize: 14 }}>
+                        {unit.enrollment.progressPercent}%
+                      </span>
+                    ) : null}
+                    <a href={`/academy/programs/${unit.key}`} style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                      {enrolled ? "Open" : "View"}
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Virginia DPOR contractor licensing</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            Residential and Class A/B/C contractor exam preparation with application checklists and CE renewal guidance.
+          </p>
+          <div style={{ display: "grid", gap: 8 }}>
+            {dporLicensurePathway.map((unit) => {
+              const complete = unit.enrollment?.progressPercent >= 100;
+              const active = unit.enrollment && !complete;
+              const enrolled = Boolean(unit.enrollment);
+              return (
+                <div
+                  key={unit.key}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 12,
+                    flexWrap: "wrap",
+                    padding: "12px 14px",
+                    borderRadius: 10,
+                    border: `1px solid ${complete ? "#86efac" : active ? "#fde68a" : "#e2e8f0"}`,
+                    background: complete ? "#f0fdf4" : active ? "#fffbeb" : "#fff",
+                  }}
+                >
+                  <div>
+                    <strong>Unit {unit.unit}</strong>
+                    <span style={{ color: "#64748b", marginLeft: 8 }}>{unit.title}</span>
+                  </div>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    {enrolled ? (
+                      <span style={{ color: complete ? "#15803d" : "#b45309", fontWeight: 700, fontSize: 14 }}>
+                        {unit.enrollment.progressPercent}%
+                      </span>
+                    ) : null}
+                    <a href={`/academy/programs/${unit.key}`} style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                      {enrolled ? "Open" : "View"}
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 

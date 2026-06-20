@@ -23,7 +23,7 @@ export const OFFERING_LANES = [
   {
     key: "licensure",
     label: "Licensure Prep",
-    description: "State and local contractor licensure preparation programs.",
+    description: "Trade and contractor licensure exam preparation across nine trades, Virginia DPOR classifications, NASCLA business and law, code navigation, and license renewal.",
     credentialType: "Licensure Prep",
   },
   {
@@ -47,6 +47,7 @@ const STATIC_LANE_BY_PROGRAM_KEY = {
 
 const CERTIFICATION_PREFIXES = ["cert-", "project-controls", "precon-estimating", "field-readiness"];
 const DEGREE_PREFIXES = ["deg-"];
+const LICENSURE_PREFIXES = ["lic-", "virginia-dpor", "contractor-business", "contractor-construction"];
 
 /** Nine degree pathway summaries (backend-aligned). */
 export const DEGREE_PATHWAYS = [
@@ -111,6 +112,45 @@ export const OSHA_CERT_UNITS = [
   { unit: 6, key: "cert-hazcom-silica", title: "HazCom and Silica", modules: 4 },
 ];
 
+/** Thirteen licensure pathway summaries (backend-aligned). */
+export const LICENSURE_PATHWAYS = [
+  { key: "electrical-licensure-exam-prep", label: "Electrical Licensure", pathway: "Electrical Licensure Exam Prep", units: 3 },
+  { key: "plumbing-licensure-exam-prep", label: "Plumbing Licensure", pathway: "Plumbing Licensure Exam Prep", units: 3 },
+  { key: "hvac-licensure-exam-prep", label: "HVAC Licensure", pathway: "HVAC Licensure Exam Prep", units: 3 },
+  { key: "carpentry-licensure-exam-prep", label: "Carpentry Contractor", pathway: "Carpentry Contractor Licensure Exam Prep", units: 1 },
+  { key: "masonry-licensure-exam-prep", label: "Masonry Contractor", pathway: "Masonry Contractor Licensure Exam Prep", units: 1 },
+  { key: "welding-licensure-exam-prep", label: "Welding and CWI", pathway: "Welding Licensure and CWI Exam Prep", units: 2 },
+  { key: "pipefitting-licensure-exam-prep", label: "Pipefitting Licensure", pathway: "Pipefitting Licensure Exam Prep", units: 2 },
+  { key: "sheet-metal-licensure-exam-prep", label: "Sheet Metal Licensure", pathway: "Sheet Metal Licensure Exam Prep", units: 2 },
+  { key: "fire-sprinkler-licensure-exam-prep", label: "Fire Sprinkler Licensure", pathway: "Fire Sprinkler Licensure Exam Prep", units: 2 },
+  { key: "general-contractor-licensure", label: "General Contractor", pathway: "General Contractor Licensure Exam Prep", units: 3 },
+  { key: "virginia-dpor-contractor-licensing", label: "Virginia DPOR", pathway: "Virginia DPOR Contractor Licensing", units: 4 },
+  { key: "contractor-business-law-licensure", label: "Business and Law", pathway: "Contractor Business and Law Exam Prep", units: 3 },
+  { key: "licensure-exam-readiness-fundamentals", label: "Exam Readiness", pathway: "Licensure Exam Readiness Fundamentals", units: 3 },
+];
+
+/** Electrical licensure exam prep progression (backend-aligned). */
+export const ELECTRICAL_LICENSURE_UNITS = [
+  { unit: 1, key: "lic-electrical-journeyman-exam-prep", title: "Journeyman Electrician", modules: 7 },
+  { unit: 2, key: "lic-electrical-master-exam-prep", title: "Master Electrician", modules: 7 },
+  { unit: 3, key: "lic-electrical-contractor-exam-prep", title: "Electrical Contractor", modules: 8 },
+];
+
+/** Virginia DPOR contractor licensing progression (backend-aligned). */
+export const DPOR_LICENSURE_UNITS = [
+  { unit: 1, key: "lic-dpor-residential-contractor-prep", title: "Residential Contractor", modules: 7 },
+  { unit: 2, key: "lic-dpor-class-a-contractor-prep", title: "Class A Contractor", modules: 8 },
+  { unit: 3, key: "lic-dpor-class-b-contractor-prep", title: "Class B Contractor", modules: 8 },
+  { unit: 4, key: "lic-dpor-class-c-contractor-prep", title: "Class C Contractor", modules: 7 },
+];
+
+/** NASCLA and business law licensure progression (backend-aligned). */
+export const BUSINESS_LAW_LICENSURE_UNITS = [
+  { unit: 1, key: "lic-nascla-business-law-exam-prep", title: "NASCLA Business and Law", modules: 8 },
+  { unit: 2, key: "lic-contractor-business-formation", title: "Business Formation", modules: 6 },
+  { unit: 3, key: "lic-construction-law-essentials", title: "Construction Law", modules: 6 },
+];
+
 const APPRENTICESHIP_PREFIXES = [
   "electrical-",
   "plumbing-",
@@ -159,6 +199,8 @@ function resolveProgramLane(program) {
   if (program.pathway?.includes("Certification")) return "certification";
   if (DEGREE_PREFIXES.some((prefix) => program.key?.startsWith(prefix))) return "degree";
   if (program.pathway?.includes("AAS") || program.pathway?.includes("BS") || program.pathway?.includes("BAS") || program.pathway === "General Education Core") return "degree";
+  if (LICENSURE_PREFIXES.some((prefix) => program.key?.startsWith(prefix))) return "licensure";
+  if (program.pathway?.includes("Licensure") || program.pathway?.includes("DPOR") || program.pathway?.includes("Exam Prep")) return "licensure";
   return "professional";
 }
 
