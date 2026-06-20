@@ -23,7 +23,7 @@ function requireIncludes(relativePath, needles) {
   });
 }
 
-requireIncludes("src/routes.js", ["/portal/finance", "PortalFinance", "/portal/design", "PortalDesignWorkspace", "/portal/rfis", "/portal/change-orders"]);
+requireIncludes("src/routes.js", ["/portal/finance", "PortalFinance", "/portal/design", "PortalDesignWorkspace", "/portal/rfis", "/portal/change-orders", "/portal/closeout", "PortalCloseout"]);
 requireIncludes("src/api/financialClient.js", [
   "fetchFinancialWorkspace",
   "recordNativePayment",
@@ -105,6 +105,10 @@ requireIncludes("../auricrux-central-work/core/construction_billing.py", [
 ]);
 requireIncludes("../auricrux-central-work/core/commercial_invoice_bridge.py", [
   "create_invoice_from_estimate",
+]);
+requireIncludes("../auricrux-central-work/core/finance.py", [
+  "post_job_cost_actual",
+  "journalEntry",
 ]);
 requireIncludes("../auricrux-central-work/core/auricrux_chat.py", [
   "without external integrations",

@@ -37,10 +37,12 @@ export async function fetchDesignLayers(projectId, fileId) {
   return unwrap(payload);
 }
 
-export async function fetchViewerToken(projectId, fileId, queue = false) {
+export async function fetchViewerToken(projectId, fileId, options = {}) {
+  const params = new URLSearchParams({ fileId: String(fileId) });
+  if (options.format) params.set("format", String(options.format));
   const response = await centralFetch(
-    `/api/projects/${encodeURIComponent(projectId)}/design/viewer-token?fileId=${encodeURIComponent(fileId)}`,
-    { method: queue ? "POST" : "GET" },
+    `/api/projects/${encodeURIComponent(projectId)}/design/viewer-token?${params.toString()}`,
+    { method: options.queue ? "POST" : "GET" },
   );
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload?.error || "Unable to load viewer session.");

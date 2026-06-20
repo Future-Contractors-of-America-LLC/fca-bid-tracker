@@ -1,70 +1,149 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import ProductProofSection from "../../components/ProductProofSection";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { warrantyItems, warrantyProof } from "../../content/warrantyContent";
-import { ctaPrimaryStyle } from "../../publicShellStyles";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import { advanceWarrantyCase, createWarrantyCase, fetchWarrantyCases } from "../../api/constructionClient";
+import { routeStateOverlays } from "../../systemState";
 
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
+const card = { border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, background: "#fff" };
+const button = {
+  background: "#1d4ed8",
+  color: "#fff",
+  border: "none",
+  borderRadius: 8,
+  padding: "8px 14px",
+  fontWeight: 700,
+  cursor: "pointer",
+};
+const input = {
+  width: "100%",
+  padding: "10px 12px",
+  borderRadius: 8,
+  border: "1px solid #cbd5e1",
+  marginTop: 6,
+  marginBottom: 12,
+  boxSizing: "border-box",
 };
 
 export default function PortalWarranty() {
-  const { state, refreshSyncStamp } = useWorkspaceState();
+  const { state } = useWorkspaceState();
+  const projectId = state?.project?.id || "A-117";
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [busyId, setBusyId] = useState("");
+  const [draft, setDraft] = useState({ title: "", description: "", severity: "standard" });
+
+  async function reload() {
+    setLoading(true);
+    setError("");
+    try {
+      const payload = await fetchWarrantyCases(projectId);
+      setItems(payload.items || []);
+    } catch (err) {
+      setError(err.message || "Unable to load warranty cases.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    refreshSyncStamp("Warranty and service continuity workspace active");
-  }, [refreshSyncStamp]);
+    reload();
+  }, [projectId]);
+
+  async function handleCreate(event) {
+    event.preventDefault();
+    if (!draft.title.trim()) return;
+    setNotice("");
+    setError("");
+    try {
+      await createWarrantyCase({
+        projectId,
+        title: draft.title.trim(),
+        description: draft.description.trim() || "Warranty issue logged from portal.",
+        severity: draft.severity,
+      });
+      setDraft({ title: "", description: "", severity: "standard" });
+      setNotice("Warranty case created.");
+      await reload();
+    } catch (err) {
+      setError(err.message || "Unable to create warranty case.");
+    }
+  }
+
+  async function handleAdvance(warrantyCase) {
+    setBusyId(warrantyCase.warrantyCaseId);
+    setNotice("");
+    setError("");
+    try {
+      await advanceWarrantyCase({
+        warrantyCaseId: warrantyCase.warrantyCaseId,
+        status: warrantyCase.status === "open" ? "in_progress" : "resolved",
+        nextAction: warrantyCase.status === "open" ? "Dispatch service crew." : "Close case and archive turnover notes.",
+      });
+      setNotice(`Warranty case ${warrantyCase.warrantyCaseId} advanced.`);
+      await reload();
+    } catch (err) {
+      setError(err.message || "Unable to advance warranty case.");
+    } finally {
+      setBusyId("");
+    }
+  }
 
   return (
     <PortalShell
       title="Warranty & Service Continuity"
-      subtitle="Post-handover service, maintenance opportunities, and retention workflows tied to support, files, messaging, and your active project context."
+      subtitle="Live warranty cases tied to closeout artifacts, support, and project context."
       activeHref="/portal/warranty"
       currentJourney="coordination"
-      primaryHref="/portal/support"
-      primaryLabel="Open Support"
-      workspaceState={state}
+      routeOverlay={routeStateOverlays.projects}
+      primaryHref={`/portal/closeout`}
+      primaryLabel="Closeout packages"
     >
-      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Service continuity</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>Warranty stays inside your FCA workspace</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Track service requests, access closeout artifacts, and keep customer follow-through connected to {state.project.name || "your active project"}.
-        </p>
-      </div>
-
-      <div style={{ display: "grid", gap: 16, marginBottom: 24 }}>
-        {warrantyItems.map((item) => (
-          <div key={item.label} style={cardStyle}>
-            <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>{item.label}</div>
-            <strong>{item.value}</strong>
-            <p style={{ color: "#475569", lineHeight: 1.65, marginBottom: 0 }}>{item.detail}</p>
-          </div>
-        ))}
-      </div>
-
-      <ProductProofSection
-        eyebrow="Warranty actions"
-        title="Demonstrate post-handover continuity from your workspace"
-        detail="Use support, files, and messages to show how FCA keeps service visible and actionable after handoff."
-        highlights={warrantyProof}
+      <AuricruxInsightPanel
+        title="Auricrux Warranty Intelligence"
+        nextAction="Resolve warranty cases only after closeout artifacts are complete and turnover walkthrough is scheduled."
+        actionHref="/portal/closeout"
+        actionLabel="Review closeout"
+        tone="blue"
       />
 
-      <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>What warranty continuity covers</h2>
-        <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
-          <li>Post-occupancy service intake and response</li>
-          <li>Access to closeout, as-built, and turnover artifacts</li>
-          <li>Message continuity between customer, field, and operations</li>
-          <li>Escalation into maintenance, renewal, and repeat-project pathways</li>
-        </ul>
-        <a href="/portal/support" style={{ ...ctaPrimaryStyle, marginTop: 16, display: "inline-flex", marginRight: 12 }}>Open Support Workspace</a>
-        <a href="/warranty" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Public warranty overview ?</a>
+      <form onSubmit={handleCreate} style={{ ...card, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0, fontSize: 18 }}>Log warranty case</h2>
+        <label style={{ fontWeight: 600, fontSize: 14 }}>Title</label>
+        <input style={input} value={draft.title} onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))} placeholder="Lobby finish touch-up" />
+        <label style={{ fontWeight: 600, fontSize: 14 }}>Description</label>
+        <input style={input} value={draft.description} onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))} placeholder="Customer-reported issue details" />
+        <label style={{ fontWeight: 600, fontSize: 14 }}>Severity</label>
+        <select style={input} value={draft.severity} onChange={(e) => setDraft((d) => ({ ...d, severity: e.target.value }))}>
+          <option value="standard">Standard</option>
+          <option value="urgent">Urgent</option>
+        </select>
+        <button type="submit" style={button}>Create case</button>
+      </form>
+
+      {notice ? <div style={{ ...card, color: "#166534", borderColor: "#bbf7d0", background: "#f0fdf4" }}>{notice}</div> : null}
+      {error ? <div style={{ ...card, color: "#991b1b", borderColor: "#fecaca", background: "#fef2f2" }}>{error}</div> : null}
+      {loading ? <div style={card}>Loading warranty cases…</div> : null}
+
+      <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
+        {items.map((item) => (
+          <div key={item.warrantyCaseId} style={card}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+              <strong>{item.title || item.warrantyCaseId}</strong>
+              <span style={{ color: "#64748b", fontSize: 13 }}>{item.status || "open"} · {item.severity || "standard"}</span>
+            </div>
+            <div style={{ color: "#475569", marginTop: 8, lineHeight: 1.7 }}>{item.description}</div>
+            <div style={{ color: "#64748b", fontSize: 13, marginTop: 8 }}>Project {item.projectId || projectId}</div>
+            {item.status !== "resolved" ? (
+              <button type="button" style={{ ...button, marginTop: 12 }} disabled={busyId === item.warrantyCaseId} onClick={() => handleAdvance(item)}>
+                {busyId === item.warrantyCaseId ? "Updating…" : item.status === "open" ? "Start service" : "Resolve case"}
+              </button>
+            ) : null}
+          </div>
+        ))}
+        {!loading && !items.length ? <div style={card}>No warranty cases for {projectId} yet.</div> : null}
       </div>
     </PortalShell>
   );

@@ -57,6 +57,36 @@ export async function advanceCloseoutPackage(body) {
   return payload;
 }
 
+export async function fetchWarrantyCases(projectId) {
+  const search = projectId ? `?projectId=${encodeURIComponent(projectId)}` : "";
+  const response = await centralFetch(`/api/warranty-cases${search}`, { method: "GET" });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) throw new Error(payload?.error || "Unable to load warranty cases.");
+  return payload;
+}
+
+export async function createWarrantyCase(body) {
+  const response = await centralFetch("/api/warranty-cases", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) throw new Error(payload?.error || "Unable to create warranty case.");
+  return payload;
+}
+
+export async function advanceWarrantyCase(body) {
+  const response = await centralFetch("/api/warranty-cases", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "advance-warranty-case", ...body }),
+  });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) throw new Error(payload?.error || "Unable to advance warranty case.");
+  return payload;
+}
+
 export async function fetchChangeOrders(projectId) {
   const search = projectId ? `?projectId=${encodeURIComponent(projectId)}` : "";
   const response = await centralFetch(`/api/change-orders${search}`, { method: "GET" });

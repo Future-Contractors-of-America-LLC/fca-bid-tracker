@@ -55,6 +55,16 @@ function useOperationalStore(storageKey, seed = []) {
   return [items, setItems];
 }
 
+function readProjectIdFromLocation() {
+  if (typeof window === "undefined") return "";
+  try {
+    const params = new URLSearchParams(window.location.search);
+    return (params.get("projectId") || "").trim();
+  } catch {
+    return "";
+  }
+}
+
 export function createOperationalPortalPage({
   title,
   subtitle,
@@ -71,7 +81,10 @@ export function createOperationalPortalPage({
     const { state, refreshSyncStamp } = useWorkspaceState();
     const { session } = useCustomerSession();
     const { projects, activeProject } = useProjectWorkspace();
-    const [selectedProjectId, setSelectedProjectId] = useState(() => activeProject?.id || projects[0]?.id || "");
+    const [selectedProjectId, setSelectedProjectId] = useState(() => {
+      const fromQuery = projectScoped ? readProjectIdFromLocation() : "";
+      return fromQuery || activeProject?.id || projects[0]?.id || "";
+    });
     const companyName = session?.company || state?.tenant?.name || "Your company";
     const [localItems, setLocalItems] = useOperationalStore(storageKey, seedItems);
     const [apiItems, setApiItems] = useState([]);
@@ -86,6 +99,11 @@ export function createOperationalPortalPage({
 
     useEffect(() => {
       if (!projectScoped) return;
+      const fromQuery = readProjectIdFromLocation();
+      if (fromQuery) {
+        setSelectedProjectId(fromQuery);
+        return;
+      }
       if (activeProject?.id) setSelectedProjectId(activeProject.id);
       else if (!selectedProjectId && projects[0]?.id) setSelectedProjectId(projects[0].id);
     }, [activeProject?.id, projects, projectScoped, selectedProjectId]);

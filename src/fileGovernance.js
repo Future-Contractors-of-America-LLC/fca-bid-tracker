@@ -17,15 +17,15 @@ export const fileGovernance = {
     {
       title: "RFI and Submittal Register",
       purpose: "Preserve unanswered questions, approvals, dependencies, and turnaround accountability.",
-      route: "/portal/messages",
-      label: "Open Messages",
+      route: "/portal/rfis",
+      label: "Open RFI Register",
       artifacts: ["Open RFI queue", "Submittal tracker", "Approval dependencies", "Response deadlines"],
     },
     {
       title: "Closeout and Handover Register",
       purpose: "Prepare warranty-ready closeout packages and customer handoff continuity.",
       route: "/portal/closeout",
-      label: "Open Billing",
+      label: "Open Closeout Workspace",
       artifacts: ["Closeout checklist", "Warranty packet", "Selection records", "Final owner package"],
     },
   ],

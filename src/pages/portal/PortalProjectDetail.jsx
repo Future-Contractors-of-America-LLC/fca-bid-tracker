@@ -56,6 +56,13 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
     fetchProjectRfis(projectId).then((items) => setRfis(items || [])).catch(() => setRfis([]));
   }, [projectId]);
 
+  useEffect(() => {
+    if (!projectId) return undefined;
+    const refreshJobCost = () => jobCost.refresh();
+    window.addEventListener("focus", refreshJobCost);
+    return () => window.removeEventListener("focus", refreshJobCost);
+  }, [projectId, jobCost.refresh]);
+
   const visible = item || (project
     ? {
         projectId: project.id,

@@ -38,17 +38,19 @@ export default function useDesignWorkspace(projectId, fileId, sheetId = "") {
     setLoading(true);
     setError("");
     try {
-      const [manifestResult, contentResult, markupResult, contextResult, intelligenceResult, layerResult, viewerResult] = await Promise.all([
+      const [manifestResult, contentResult, markupResult, contextResult, intelligenceResult, layerResult] = await Promise.all([
         fetchFileManifest(fileId).catch(() => ({ manifest: null })),
         fetchFileContent(fileId).catch(() => null),
         fetchDesignMarkups(projectId, { fileId, sheetId: activeSheetId || undefined }),
         fetchDesignContext(projectId, { fileId, sheetId: activeSheetId || undefined }),
         fetchDesignIntelligence(projectId, { fileId, sheetId: activeSheetId || undefined }).catch(() => null),
         fetchDesignLayers(projectId, fileId).catch(() => ({ items: DEFAULT_LAYERS })),
-        fetchViewerToken(projectId, fileId).catch(() => null),
       ]);
 
       const nextManifest = manifestResult?.manifest || contentResult?.manifest || null;
+      const viewerResult = await fetchViewerToken(projectId, fileId, {
+        format: contentResult?.file?.format || contentResult?.file?.fileFormat || nextManifest?.format,
+      }).catch(() => null);
       setManifest(nextManifest);
       setContentUrl(contentResult?.streamUrl ? centralApi(contentResult.streamUrl) : contentResult?.contentUrl || "");
       setFileRecord(contentResult?.file || contextResult?.file || null);

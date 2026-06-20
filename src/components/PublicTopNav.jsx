@@ -191,6 +191,7 @@ const NAV_MENUS = [
     label: "Legal",
     items: [
       { label: "Legal Center", href: "/legal" },
+      { label: "Contractor Legal Resources", href: "/legal/contractor-resources" },
       { label: "Terms of Service", href: "/terms" },
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Cookie Policy", href: "/cookies" },
@@ -221,7 +222,10 @@ const PORTAL_GROUPS = [
       { label: "Estimates", href: "/portal/estimates" },
       { label: "Proposals", href: "/portal/proposals" },
       { label: "Files", href: "/portal/files" },
+      { label: "Legal & compliance", href: "/portal/legal" },
       { label: "Design", href: "/portal/design" },
+      { label: "RFIs", href: "/portal/rfis" },
+      { label: "Change orders", href: "/portal/change-orders" },
     ],
   },
   {
@@ -230,6 +234,7 @@ const PORTAL_GROUPS = [
       { label: "Plans", href: "/portal/plans" },
       { label: "Finance", href: "/portal/finance" },
       { label: "Billing", href: "/portal/billing" },
+      { label: "Closeout", href: "/portal/closeout" },
       { label: "Warranty", href: "/portal/warranty" },
       { label: "Messages", href: "/portal/messages" },
       { label: "Support", href: "/portal/support" },
