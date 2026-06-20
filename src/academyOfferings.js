@@ -17,8 +17,8 @@ export const OFFERING_LANES = [
   {
     key: "degree",
     label: "Degree Programs",
-    description: "Associate and applied degree tracks tied to construction operations.",
-    credentialType: "Degree Track",
+    description: "Ivy League-standard associate and bachelor degree pathways in construction management, engineering technology, BIM, safety, business, project management, sustainability, and construction technology.",
+    credentialType: "Academic Degree",
   },
   {
     key: "licensure",
@@ -44,6 +44,38 @@ const STATIC_LANE_BY_PROGRAM_KEY = {
 };
 
 const CERTIFICATION_PREFIXES = ["cert-", "project-controls", "precon-estimating", "field-readiness"];
+const DEGREE_PREFIXES = ["deg-"];
+
+/** Nine degree pathway summaries (backend-aligned). */
+export const DEGREE_PATHWAYS = [
+  { key: "degree-general-education-core", label: "General Education Core", pathway: "General Education Core", courses: 15, credits: 45 },
+  { key: "degree-aas-construction-management", label: "Construction Management AAS", pathway: "Construction Management AAS", courses: 20, credits: 60, level: "AAS" },
+  { key: "degree-aas-civil-engineering-technology", label: "Civil Engineering Technology AAS", pathway: "Civil and Construction Engineering Technology AAS", courses: 20, credits: 60, level: "AAS" },
+  { key: "degree-aas-bim-digital-construction", label: "BIM and Digital Construction AAS", pathway: "Building Information Modeling and Digital Construction AAS", courses: 20, credits: 60, level: "AAS" },
+  { key: "degree-aas-occupational-safety-health", label: "Occupational Safety and Health AAS", pathway: "Occupational Safety and Health AAS", courses: 20, credits: 60, level: "AAS" },
+  { key: "degree-aas-business-administration-contractors", label: "Business Administration for Contractors AAS", pathway: "Business Administration for Contractors AAS", courses: 20, credits: 60, level: "AAS" },
+  { key: "degree-bs-construction-management", label: "Construction Management BS", pathway: "Construction Management BS", courses: 38, credits: 120, level: "BS" },
+  { key: "degree-bs-project-management-construction", label: "Project Management BS", pathway: "Project Management BS (Construction Focus)", courses: 38, credits: 120, level: "BS" },
+  { key: "degree-bs-sustainable-built-environment", label: "Sustainable Built Environment BS", pathway: "Sustainable Built Environment BS", courses: 38, credits: 120, level: "BS" },
+  { key: "degree-bas-construction-technology-innovation", label: "Construction Technology BAS", pathway: "Construction Technology and Innovation BAS", courses: 38, credits: 120, level: "BAS" },
+];
+
+/** Featured AAS Construction Management term progression (backend-aligned). */
+export const AAS_CONSTRUCTION_MANAGEMENT_TERMS = [
+  { term: 1, courses: ["deg-engl-101", "deg-math-120", "deg-cmgt-101", "deg-cmgt-110"] },
+  { term: 2, courses: ["deg-engl-102", "deg-math-210", "deg-cmgt-120", "deg-cmgt-201"] },
+  { term: 3, courses: ["deg-comm-101", "deg-sci-101", "deg-cmgt-210", "deg-cmgt-220"] },
+  { term: 4, courses: ["deg-sci-102", "deg-busa-101", "deg-cmgt-230", "deg-cmgt-240"] },
+  { term: 5, courses: ["deg-cmgt-250", "deg-cmgt-260", "deg-cmgt-295", "deg-cmgt-299"] },
+];
+
+/** Featured BS Construction Management year progression (backend-aligned). */
+export const BS_CONSTRUCTION_MANAGEMENT_YEARS = [
+  { year: 1, label: "Foundation Year", courseCount: 8 },
+  { year: 2, label: "Core Major Year", courseCount: 8 },
+  { year: 3, label: "Advanced Major Year", courseCount: 10 },
+  { year: 4, label: "Capstone Year", courseCount: 8 },
+];
 
 /** Ten certification pathway summaries (backend-aligned). */
 export const CERTIFICATION_PATHWAYS = [
@@ -123,6 +155,8 @@ function resolveProgramLane(program) {
   if (program.pathway?.includes("Apprenticeship")) return "apprenticeship";
   if (CERTIFICATION_PREFIXES.some((prefix) => program.key?.startsWith(prefix) || program.key === prefix)) return "certification";
   if (program.pathway?.includes("Certification")) return "certification";
+  if (DEGREE_PREFIXES.some((prefix) => program.key?.startsWith(prefix))) return "degree";
+  if (program.pathway?.includes("AAS") || program.pathway?.includes("BS") || program.pathway?.includes("BAS") || program.pathway === "General Education Core") return "degree";
   return "professional";
 }
 

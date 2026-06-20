@@ -94,6 +94,8 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
             <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>{program.credential}</div>
             <p style={{ color: "#475569", lineHeight: 1.7 }}>
               <strong>Pathway:</strong> {program.pathway || "General"} | <strong>Track:</strong> {program.track || "Core"} | <strong>Level:</strong> {program.level || "-"} | <strong>Modules:</strong> {program.duration}
+              {program.courseCode ? <> | <strong>Course:</strong> {program.courseCode}</> : null}
+              {program.creditHours ? <> | <strong>Credits:</strong> {program.creditHours}</> : null}
             </p>
             {program.deliveryModel ? (
               <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.deliveryModel}</p>
