@@ -30,6 +30,7 @@ const routes = [
   "/legal/contractor-resources",
   "/contact",
   "/portal/legal",
+  "/api/academy-lms?programKey=contractor-business-formation-legal",
 ];
 
 const attempts = Number(process.env.AURICRUX_LIVE_VERIFY_ATTEMPTS || 20);
@@ -188,7 +189,10 @@ async function runAttempt(attemptNumber) {
     for (const route of [...routes, targetCommitWitnessRoute]) {
       const url = `https://${host}${route}`;
       const response = await fetchText(url, attemptNumber);
-      routeChecks.push({ route, status: response.status, ok: response.ok });
+      const routePath = route.split("?")[0];
+      const expectsJson = routePath.startsWith("/api/");
+      const ok = response.ok && (!expectsJson || response.text.includes('"ok"'));
+      routeChecks.push({ route, status: response.status, ok });
     }
 
     const indexShellResponse = await fetchText(`https://${host}/index.html`, attemptNumber);
