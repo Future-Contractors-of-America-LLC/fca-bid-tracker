@@ -55,7 +55,8 @@
         '</section></div>' +
         '<section class="fca-panel">' +
         '<div class="fca-toolbar">' +
-        '<a class="fca-btn fca-btn-secondary" href="/bid-status">Bid Status</a>' +
+        '<a class="fca-btn fca-btn-secondary" href="/bids/status.html' + (customerId ? ("?customerId=" + encodeURIComponent(customerId)) : "") + '">Customer Status</a>' +
+        '<a class="fca-btn fca-btn-secondary" href="/bid-status">Bid Status Route</a>' +
         '<a class="fca-btn fca-btn-secondary" href="/bid-entry">New Bid</a>' +
         '<a class="fca-btn fca-btn-primary" href="/leads/">Lead Pipeline</a>' +
         '</div></section>';

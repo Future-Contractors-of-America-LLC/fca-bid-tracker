@@ -2,9 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="refresh" content="0;url=/portal/platform" />
   <title>Redirecting</title>
-  <script>location.replace("/portal/platform");</script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var scoped =
+        params.get("customerId") ||
+        params.get("customer_id") ||
+        params.get("customer") ||
+        params.get("company");
+      if (scoped) {
+        location.replace("/bids/status.html" + location.search);
+        return;
+      }
+      location.replace("/portal/platform");
+    })();
+  </script>
 </head>
-<body><p><a href="/portal/platform">Continue</a></p></body>
+<body><p><a href="/portal/platform">Continue to portal</a></p></body>
 </html>

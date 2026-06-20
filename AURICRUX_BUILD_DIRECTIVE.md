@@ -76,7 +76,7 @@ When given a phase directive, Auricrux should generate the next complete impleme
 
 Preferred Next Phases:
 - Phase 1J: Bid detail view / expanded bid card. (Shipped: `/bids/detail.html?id={bidId}`)
-- Phase 1K: Customer-specific status URL support.
+- Phase 1K: Customer-specific status URL support. (Shipped: `/bids/status.html?customerId=` and `/bid-status?customer=`)
 - Phase 1L: Bid edit/update page.
 - Phase 1M: Proposal-readiness checklist expansion.
 - Phase 1N: Auricrux action history per bid.
