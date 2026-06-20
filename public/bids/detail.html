@@ -24,6 +24,31 @@
       return '<div><div class="fca-metric-label">' + label + '</div><div style="font-weight:600">' + (value || "—") + '</div></div>';
     }
 
+    function editUrl() {
+      const qs = new URLSearchParams({ id: bidId });
+      if (customerId) qs.set("customerId", customerId);
+      return "/bids/edit.html?" + qs.toString();
+    }
+
+    async function fetchScopedBids(scopeId) {
+      const cfg = window.FCA_AURICRUX;
+      if (!scopeId) {
+        const all = await cfg.fetchBids();
+        return Array.isArray(all) ? all : [];
+      }
+      try {
+        const filtered = await cfg.fetchBids({ customerId: scopeId });
+        if (Array.isArray(filtered)) return filtered;
+      } catch { /* client-side fallback */ }
+      const all = await cfg.fetchBids();
+      const list = Array.isArray(all) ? all : [];
+      const normalized = scopeId.toLowerCase();
+      return list.filter(function (bid) {
+        if (String(bid.customerId || "").toLowerCase() === normalized) return true;
+        return String(bid.company || bid.customerName || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") === normalized;
+      });
+    }
+
     function renderBid(bid) {
       const pricing = bid.auricruxPricing || {};
       content.innerHTML =
@@ -58,6 +83,7 @@
         '<a class="fca-btn fca-btn-secondary" href="/bids/status.html' + (customerId ? ("?customerId=" + encodeURIComponent(customerId)) : "") + '">Customer Status</a>' +
         '<a class="fca-btn fca-btn-secondary" href="/bid-status">Bid Status Route</a>' +
         '<a class="fca-btn fca-btn-secondary" href="/bid-entry">New Bid</a>' +
+        '<a class="fca-btn fca-btn-secondary" href="' + editUrl() + '">Edit Bid</a>' +
         '<a class="fca-btn fca-btn-primary" href="/leads/">Lead Pipeline</a>' +
         '</div></section>';
     }
@@ -68,9 +94,7 @@
         return;
       }
       try {
-        const cfg = window.FCA_AURICRUX;
-        const list = await cfg.fetchBids(customerId ? { customerId } : undefined);
-        const bids = Array.isArray(list) ? list : [];
+        const bids = await fetchScopedBids(customerId);
         const bid = bids.find(function (b) { return b.id === bidId; });
         if (!bid) {
           content.innerHTML = '<div class="fca-empty">Bid not found: ' + bidId + '</div>';

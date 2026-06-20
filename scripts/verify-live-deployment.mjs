@@ -27,6 +27,7 @@ const routes = [
   "/config/auricrux-central.js",
   "/bids/detail.html",
   "/bids/status.html",
+  "/bids/edit.html",
 ];
 
 const attempts = Number(process.env.AURICRUX_LIVE_VERIFY_ATTEMPTS || 20);

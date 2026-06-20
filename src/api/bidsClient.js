@@ -67,3 +67,18 @@ export async function fetchBidById(bidId, options = {}) {
   const bids = await fetchBids(options);
   return bids.find((bid) => bid.id === bidId) || null;
 }
+
+export async function updateBid(bidPayload) {
+  const response = await centralFetch("/api/bids", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(bidPayload),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(
+      (payload && payload.error) || "Unable to update bid in Auricrux Central.",
+    );
+  }
+  return payload;
+}

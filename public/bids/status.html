@@ -89,6 +89,12 @@
       return "/bids/detail.html?" + qs.toString();
     }
 
+    function buildEditUrl(bid, customerId) {
+      const qs = new URLSearchParams({ id: bid.id });
+      if (customerId) qs.set("customerId", customerId);
+      return "/bids/edit.html?" + qs.toString();
+    }
+
     async function fetchScopedBids(customerId) {
       const cfg = window.FCA_AURICRUX;
       if (!customerId) {
@@ -148,7 +154,7 @@
                 '<td>' + FCALeads.formatCurrency(bid.value || 0) + '</td>' +
                 '<td>' + (bid.auricruxScore || 0) + '</td>' +
                 '<td>' + FCALeads.formatDate(bid.updatedAt) + '</td>' +
-                '<td><a href="' + buildDetailUrl(bid, customerId) + '">View</a></td>' +
+                '<td><a href="' + buildDetailUrl(bid, customerId) + '">View</a> · <a href="' + buildEditUrl(bid, customerId) + '">Edit</a></td>' +
                 '</tr>';
             }).join("")
           : '<tr><td colspan="6"><div class="fca-empty">No bids found for this customer scope.</div></td></tr>';
