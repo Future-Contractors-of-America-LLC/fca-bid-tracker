@@ -1,1 +1,15 @@
-
+https://futurecontractorsofamerica.com/commit-witness-ed349ad0f0a5eab592f70d28c2a022f543dc4dfc.txt returned 404
+futurecontractorsofamerica.com is serving stale deployment-status SHA e87cf40b0d3d2fc1e110793ca933a991a52a0315; expected ed349ad0f0a5eab592f70d28c2a022f543dc4dfc
+futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA e87cf40b0d3d2fc1e110793ca933a991a52a0315; expected ed349ad0f0a5eab592f70d28c2a022f543dc4dfc
+futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-e87cf40b0d3d2fc1e110793ca933a991a52a0315.txt; expected /commit-witness-ed349ad0f0a5eab592f70d28c2a022f543dc4dfc.txt
+https://futurecontractorsofamerica.com/commit-witness-ed349ad0f0a5eab592f70d28c2a022f543dc4dfc.txt returned 404
+https://www.futurecontractorsofamerica.com/commit-witness-ed349ad0f0a5eab592f70d28c2a022f543dc4dfc.txt returned 404
+www.futurecontractorsofamerica.com is serving stale deployment-status SHA e87cf40b0d3d2fc1e110793ca933a991a52a0315; expected ed349ad0f0a5eab592f70d28c2a022f543dc4dfc
+www.futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA e87cf40b0d3d2fc1e110793ca933a991a52a0315; expected ed349ad0f0a5eab592f70d28c2a022f543dc4dfc
+www.futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-e87cf40b0d3d2fc1e110793ca933a991a52a0315.txt; expected /commit-witness-ed349ad0f0a5eab592f70d28c2a022f543dc4dfc.txt
+https://www.futurecontractorsofamerica.com/commit-witness-ed349ad0f0a5eab592f70d28c2a022f543dc4dfc.txt returned 404
+https://delightful-mushroom-0de67860f.7.azurestaticapps.net/commit-witness-ed349ad0f0a5eab592f70d28c2a022f543dc4dfc.txt returned 404
+delightful-mushroom-0de67860f.7.azurestaticapps.net is serving stale deployment-status SHA e87cf40b0d3d2fc1e110793ca933a991a52a0315; expected ed349ad0f0a5eab592f70d28c2a022f543dc4dfc
+delightful-mushroom-0de67860f.7.azurestaticapps.net is serving stale runtime-fingerprint SHA e87cf40b0d3d2fc1e110793ca933a991a52a0315; expected ed349ad0f0a5eab592f70d28c2a022f543dc4dfc
+delightful-mushroom-0de67860f.7.azurestaticapps.net deployment manifest reports commit witness /commit-witness-e87cf40b0d3d2fc1e110793ca933a991a52a0315.txt; expected /commit-witness-ed349ad0f0a5eab592f70d28c2a022f543dc4dfc.txt
+https://delightful-mushroom-0de67860f.7.azurestaticapps.net/commit-witness-ed349ad0f0a5eab592f70d28c2a022f543dc4dfc.txt returned 404
