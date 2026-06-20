@@ -23,7 +23,7 @@ export default function ContractorLegalResourcesContent() {
       <LegalNotice />
       <LegalH3>Contractor legal operating package</LegalH3>
       <LegalP>
-        FCA provides templates and a live workspace for <strong>your contracting business</strong> — entity formation,
+        FCA provides templates and a live workspace for <strong>your contracting business</strong> - entity formation,
         Virginia DPOR alignment, agreements, lien waivers, insurance, and OSHA documentation. This is separate from FCA
         vendor policies (Terms, Privacy, MSA).
       </LegalP>
@@ -33,10 +33,10 @@ export default function ContractorLegalResourcesContent() {
       <LegalH3>Academy tracks</LegalH3>
       <LegalUl
         items={[
-          "[Business Formation & Legal Setup](/academy/programs/contractor-business-formation-legal/modules/1) — Virginia LLC, EIN, operating agreement",
-          "[Construction Law Essentials](/academy/programs/contractor-construction-law-essentials/modules/1) — contracts, liens, subs",
-          "[Virginia DPOR Residential License Prep](/academy/programs/virginia-dpor-residential-license-prep/modules/1)",
-          "[OSHA 30 Certification Prep](/academy/programs/osha30-certification-prep/modules/1)",
+          "[Business Formation and Legal Setup](/academy/programs/lic-contractor-business-formation/modules/1) - Virginia LLC, EIN, operating agreement",
+          "[Construction Law Essentials](/academy/programs/lic-construction-law-essentials/modules/1) - contracts, liens, subs",
+          "[Virginia DPOR Residential License Prep](/academy/programs/lic-dpor-residential-contractor-prep/modules/1)",
+          "[OSHA 30 Certification Prep](/academy/programs/cert-osha-30-construction/modules/1)",
         ]}
       />
       <LegalH3>Document template library</LegalH3>
@@ -47,7 +47,7 @@ export default function ContractorLegalResourcesContent() {
       {Object.entries(byCategory).map(([category, items]) => (
         <div key={category}>
           <LegalH4>{category}</LegalH4>
-          <LegalUl items={items.map((t) => `${t.title} — ${t.summary}`)} />
+          <LegalUl items={items.map((t) => `${t.title} - ${t.summary}`)} />
         </div>
       ))}
       <LegalH3>FCA entity reference</LegalH3>
