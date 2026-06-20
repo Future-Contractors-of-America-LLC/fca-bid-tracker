@@ -29,16 +29,3 @@ export function formatPrincipalOffice(multiline = false) {
   }
   return `${street}, ${city}, ${state} ${postalCode}`;
 }
-
-export function formatPrincipalOfficeHtml() {
-  const { street, city, state, postalCode } = FCA_ENTITY.principalOffice;
-  return (
-    <>
-      {FCA_ENTITY.legalName}
-      <br />
-      {street}
-      <br />
-      {city}, {state} {postalCode}
-    </>
-  );
-}

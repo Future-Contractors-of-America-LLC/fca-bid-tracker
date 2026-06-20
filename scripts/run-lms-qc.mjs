@@ -112,6 +112,18 @@ if (Array.isArray(academyCatalog.pathways) && academyCatalog.pathways.length > 0
   warn("pathways", "no curriculum pathways defined");
 }
 
+for (const programKey of ["contractor-business-formation-legal", "contractor-construction-law-essentials"]) {
+  const program = academyCatalog.programs.find((item) => item.key === programKey);
+  if (program) pass(`legal-program:${programKey}`, program.title);
+  else fail(`legal-program:${programKey}`, "missing from academy catalog");
+}
+
+if (fs.existsSync(path.join(root, "api/academy-program-modules.js"))) {
+  pass("legal-api:academy-program-modules", "program detail builder present");
+} else {
+  fail("legal-api:academy-program-modules", "missing api/academy-program-modules.js");
+}
+
 try {
   const response = await fetch(`${API_BASE}/api/academy-lms`, { headers: { Accept: "application/json" } });
   const payload = await response.json();
