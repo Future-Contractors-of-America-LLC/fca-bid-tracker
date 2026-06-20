@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
@@ -7,7 +8,8 @@ import PublicCtaRow from "../../components/PublicCtaRow";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { auricruxActions, auricruxCommsChannels, auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
+import { fetchAuricruxActions } from "../../api/auricruxActionsClient";
+import { auricruxActions as fallbackActions, auricruxCommsChannels, auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
 import { publicBodyCtaSets } from "../../websiteShell";
 
 const cardStyle = {
@@ -21,6 +23,7 @@ const cardStyle = {
 export default function PortalAuricrux() {
   const { session } = useCustomerSession();
   const { state } = useWorkspaceState();
+  const [liveActions, setLiveActions] = useState([]);
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
   const commItems = auricruxCommsChannels.map((item) => ({
     ...item,
@@ -28,6 +31,19 @@ export default function PortalAuricrux() {
     href: `/portal/messages#${item.label.toLowerCase()}`,
     ctaLabel: `Open ${item.label}`,
   }));
+
+  useEffect(() => {
+    fetchAuricruxActions()
+      .then((payload) => {
+        const items = (payload?.items || []).map(
+          (item) => `${item.mode} · ${item.targetObjectType} ${item.targetObjectId}: ${item.rationale}`,
+        );
+        if (items.length) setLiveActions(items);
+      })
+      .catch(() => setLiveActions([]));
+  }, []);
+
+  const guidedActions = liveActions.length ? liveActions : fallbackActions;
 
   return (
     <PortalShell
@@ -82,7 +98,7 @@ export default function PortalAuricrux() {
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Current guided actions</h2>
           <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
-            {auricruxActions.map((action) => (
+            {guidedActions.map((action) => (
               <li key={action}>{action}</li>
             ))}
           </ul>
