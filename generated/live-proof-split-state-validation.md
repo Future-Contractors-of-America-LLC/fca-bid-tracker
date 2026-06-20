@@ -1,9 +1,9 @@
 # Live Proof Split State Validation
 
 - Packet: 062Y
-- Generated: 2026-06-20T00:31:41.495Z
+- Generated: 2026-06-20T00:33:23.398Z
 - success: false
-- witnessCommitSha: 6fab49b5ebf4331f47fdc0187c5ba9388dc9baef
+- witnessCommitSha: 17453235944639a34854a01e124c35dd3f2f9c37
 - proofCommitSha: 335857f543b4f1a03c39cc0f926d3b5bd8ac5beb
 
 ## Metadata State
