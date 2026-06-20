@@ -197,6 +197,224 @@ export const academyCatalog = {
       linkedLabel: "Open Command Center"
     },
     {
+      key: "fca-bids-qualification-estimates",
+      title: "FCA Bids, Qualification & Estimates Operator Guide",
+      credential: "FCA How-To Track · Bids & Estimates Operator",
+      audience: "Estimators, coordinators, and owners managing opportunity intake through proposal readiness",
+      duration: "5 lessons · ~60 minutes",
+      format: "Self-paced how-to tied to /portal/bids and estimate workflows",
+      goal: "Move from bid intake through qualification, scope review, and estimate launch inside the live FCA bid spine.",
+      outcomes: [
+        "Create and qualify bids with consistent opportunity posture",
+        "Link bids to active projects and file evidence",
+        "Launch estimates from qualified bid packages",
+        "Package proposal continuity from estimate outputs"
+      ],
+      courses: [
+        {
+          code: "FCA-BIDS-101",
+          title: "Bids, Qualification & Estimates",
+          lessons: 5,
+          lab: "Live portal lab across /portal/bids, /portal/projects, /portal/files, /portal/proposals",
+          lessonTitles: [
+            "Lesson 1 · Bid intake, opportunity fields, and qualification gates",
+            "Lesson 2 · Scope notes, attachments, and bid-to-project linking",
+            "Lesson 3 · Estimate launch posture and revision discipline",
+            "Lesson 4 · Proposal packaging from estimate continuity",
+            "Lesson 5 · Auricrux-guided bid review and next-action routing"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/bids",
+      linkedLabel: "Open Bids Workspace"
+    },
+    {
+      key: "fca-projects-stage-control",
+      title: "FCA Projects & Stage Control Operator Guide",
+      credential: "FCA How-To Track · Projects Operator",
+      audience: "PMs, supers, coordinators, and owners managing active job execution",
+      duration: "5 lessons · ~60 minutes",
+      format: "Self-paced how-to tied to /portal/projects stage control",
+      goal: "Set up projects, manage stage progression, and keep execution continuity on the FCA project spine.",
+      outcomes: [
+        "Create projects with correct job root and stage posture",
+        "Advance stages with audit-safe documentation",
+        "Coordinate field evidence through files and support",
+        "Use Auricrux for daily execution readiness checks"
+      ],
+      courses: [
+        {
+          code: "FCA-PROJ-201",
+          title: "Projects & Stage Control",
+          lessons: 5,
+          lab: "Live portal lab across /portal/projects, /portal/files, /portal/support",
+          lessonTitles: [
+            "Lesson 1 · Project creation, job root, and active project selection",
+            "Lesson 2 · Stage control, milestones, and execution handoff",
+            "Lesson 3 · Linking bids, estimates, and files to the project spine",
+            "Lesson 4 · Field escalation through support command continuity",
+            "Lesson 5 · Close-of-day reporting and Auricrux execution checks"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/projects",
+      linkedLabel: "Open Projects Workspace"
+    },
+    {
+      key: "fca-files-audit-governance",
+      title: "FCA Files, Audit & Document Governance Guide",
+      credential: "FCA How-To Track · Files & Governance Operator",
+      audience: "Coordinators, PMs, compliance staff, and owners managing project evidence",
+      duration: "4 lessons · ~45 minutes",
+      format: "Self-paced how-to tied to /portal/files and /portal/audit",
+      goal: "Register, govern, and audit project files with FCA file-control discipline.",
+      outcomes: [
+        "Upload and classify files under the governed file spine",
+        "Maintain audit continuity across project stages",
+        "Route compliance evidence to legal and billing surfaces",
+        "Use Auricrux to detect missing documentation before delivery"
+      ],
+      courses: [
+        {
+          code: "FCA-FILE-301",
+          title: "Files, Audit & Governance",
+          lessons: 4,
+          lab: "Live portal lab across /portal/files, /portal/audit, /portal/projects",
+          lessonTitles: [
+            "Lesson 1 · File spine structure and upload discipline",
+            "Lesson 2 · Classification, versioning, and project linkage",
+            "Lesson 3 · Audit trails and compliance evidence routing",
+            "Lesson 4 · Auricrux-guided documentation gap detection"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/files",
+      linkedLabel: "Open File Governance"
+    },
+    {
+      key: "fca-billing-invoicing",
+      title: "FCA Billing & Invoicing Operator Guide",
+      credential: "FCA How-To Track · Billing Operator",
+      audience: "Owners, office managers, and PMs managing revenue continuity",
+      duration: "4 lessons · ~45 minutes",
+      format: "Self-paced how-to tied to /portal/billing",
+      goal: "Stage invoices, track billing readiness, and maintain revenue continuity from project execution.",
+      outcomes: [
+        "Understand billing posture tied to project stages",
+        "Stage invoices with correct project and file linkage",
+        "Track payment and revenue continuity in the portal",
+        "Use Auricrux for billing readiness reviews"
+      ],
+      courses: [
+        {
+          code: "FCA-BILL-401",
+          title: "Billing & Invoicing",
+          lessons: 4,
+          lab: "Live portal lab across /portal/billing, /portal/projects, /portal/files",
+          lessonTitles: [
+            "Lesson 1 · Billing readiness and project stage alignment",
+            "Lesson 2 · Invoice staging, line items, and customer context",
+            "Lesson 3 · Payment tracking and revenue continuity",
+            "Lesson 4 · Auricrux-guided billing gap review before send"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/billing",
+      linkedLabel: "Open Billing Workspace"
+    },
+    {
+      key: "fca-legal-command-workspace",
+      title: "FCA Contractor Legal Command Workspace Guide",
+      credential: "FCA How-To Track · Legal Command Operator",
+      audience: "Owners, qualifying individuals, and compliance staff using /portal/legal",
+      duration: "4 lessons · ~45 minutes",
+      format: "Self-paced how-to tied to Contractor Legal Command",
+      goal: "Load entity credentials, track agreements, and maintain licensure-safe legal continuity in FCA.",
+      outcomes: [
+        "Set up the legal workspace with entity and license records",
+        "Track owner contracts, sub agreements, and COI collection",
+        "Execute lien waiver and closeout documentation discipline",
+        "Connect legal records to project files and billing"
+      ],
+      courses: [
+        {
+          code: "FCA-LEGAL-501",
+          title: "Legal Command Workspace",
+          lessons: 4,
+          lab: "Live portal lab across /portal/legal, /portal/files, /portal/billing",
+          lessonTitles: [
+            "Lesson 1 · Legal workspace setup and entity credential loading",
+            "Lesson 2 · Agreement tracker, templates, and COI discipline",
+            "Lesson 3 · Lien waivers and closeout documentation",
+            "Lesson 4 · Auricrux compliance readiness before customer delivery"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/legal",
+      linkedLabel: "Open Contractor Legal Command"
+    },
+    {
+      key: "fca-support-auricrux-operator",
+      title: "FCA Support Command & Auricrux Operator Guide",
+      credential: "FCA How-To Track · Support & Auricrux Operator",
+      audience: "Field leaders, supers, coordinators, and support staff",
+      duration: "4 lessons · ~45 minutes",
+      format: "Self-paced how-to tied to /portal/support and Auricrux guidance",
+      goal: "Create support requests, route field escalation, and use Auricrux for corrective action without losing project context.",
+      outcomes: [
+        "Create and track support requests with project continuity",
+        "Escalate field issues through Support Command",
+        "Use Auricrux explain, recommend, and execute workflows",
+        "Close support loops with audit-safe documentation"
+      ],
+      courses: [
+        {
+          code: "FCA-SUP-601",
+          title: "Support Command & Auricrux",
+          lessons: 4,
+          lab: "Live portal lab across /portal/support, /portal/projects, /portal/files",
+          lessonTitles: [
+            "Lesson 1 · Support request creation and project context",
+            "Lesson 2 · Escalation routing and customer-safe communication",
+            "Lesson 3 · Auricrux explain, recommend, and execute modes",
+            "Lesson 4 · Closeout, follow-through, and audit documentation"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/support",
+      linkedLabel: "Open Field Support Continuity"
+    },
+    {
+      key: "fca-academy-progress-tracking",
+      title: "FCA Academy & Progress Tracking Guide",
+      credential: "FCA How-To Track · Academy Operator",
+      audience: "Learners, trainers, and workforce development leads using FCA Academy",
+      duration: "3 lessons · ~30 minutes",
+      format: "Self-paced how-to tied to /academy routes and learner dashboard",
+      goal: "Navigate the Academy catalog, enroll in courses, and track progress alongside live portal work.",
+      outcomes: [
+        "Browse pathway, topic, and course catalog structure",
+        "View public syllabi and understand enrollment gates",
+        "Track learner progress on the Academy dashboard",
+        "Connect Academy lessons to live portal lab surfaces"
+      ],
+      courses: [
+        {
+          code: "FCA-ACAD-701",
+          title: "Academy & Progress Tracking",
+          lessons: 3,
+          lab: "Live route walkthrough using /academy/catalog, /academy/dashboard, /academy/programs",
+          lessonTitles: [
+            "Lesson 1 · Catalog navigation — pathway, topic, and course",
+            "Lesson 2 · Syllabus visibility, enrollment gates, and prerequisites",
+            "Lesson 3 · Dashboard progress, credentials, and portal lab linkage"
+          ]
+        }
+      ],
+      linkedSurface: "/academy/dashboard",
+      linkedLabel: "Open Learner Dashboard"
+    },
+    {
       key: "contractor-business-formation-legal",
       title: "Contractor Business Formation & Legal Setup",
       credential: "FCA Licensure Track · Business Formation Operator",
@@ -273,10 +491,10 @@ export const academyCatalog = {
       label: "Open Platform Dashboard",
     },
     {
-      title: "User-guide pathway",
-      description: "A route-by-route FCA operator guide for real users moving from login to closeout.",
-      route: "/academy/catalog",
-      label: "Open Academy Catalog",
+      title: "FCA How-To pathway",
+      description: "Route-by-route operator guides for bids, projects, files, billing, legal, support, and Academy.",
+      route: "/academy/catalog?pathway=professional",
+      label: "Open FCA How-To Catalog",
     }
   ]
 };

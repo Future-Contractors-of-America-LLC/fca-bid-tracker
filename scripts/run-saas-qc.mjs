@@ -95,6 +95,7 @@ const SCRIPT_CHECKS = [
   "validate-public-package-route-groups.mjs",
   "validate-academy-ctas.mjs",
   "validate-academy-catalog.mjs",
+  "validate-catalog-balance.mjs",
   "validate-file-governance.mjs",
   "validate-finance-workspace.mjs",
   "validate-design-workspace.cjs",

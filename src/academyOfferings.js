@@ -43,6 +43,14 @@ export const OFFERING_LANES = [
 
 const STATIC_LANE_BY_PROGRAM_KEY = {
   "fca-workspace-quick-start": "professional",
+  "fca-contractor-command-user-guide": "professional",
+  "fca-bids-qualification-estimates": "professional",
+  "fca-projects-stage-control": "professional",
+  "fca-files-audit-governance": "professional",
+  "fca-billing-invoicing": "professional",
+  "fca-legal-command-workspace": "professional",
+  "fca-support-auricrux-operator": "professional",
+  "fca-academy-progress-tracking": "professional",
   "electrical-apprenticeship-year1": "apprenticeship",
   "osha30-certification-prep": "certification",
   "aas-construction-operations-sem1": "degree",
@@ -272,7 +280,7 @@ export function organizeCatalogHierarchy(apiPrograms = []) {
         ...topic,
         courses: (courseBuckets[pathway.key][topic.key] || []).sort((a, b) => (a.level || 0) - (b.level || 0)),
       }))
-      .filter((topic) => topic.courses.length > 0);
+      .filter((topic) => topic.courses.length > 0 || topic.alwaysShow);
 
     const courseCount = topics.reduce((sum, topic) => sum + topic.courses.length, 0);
 
@@ -281,7 +289,7 @@ export function organizeCatalogHierarchy(apiPrograms = []) {
       topics,
       courseCount,
     };
-  }).filter((pathway) => pathway.courseCount > 0);
+  }).filter((pathway) => pathway.courseCount > 0 || pathway.key === "licensure");
 }
 
 export function findCatalogPlacement(pathwayKey, topicKey, programKey) {

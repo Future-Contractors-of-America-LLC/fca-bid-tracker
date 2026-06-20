@@ -111,6 +111,39 @@ function CourseCard({ program, topicKey, pathwayKey }) {
   );
 }
 
+function topicMetaLine(topic, pathwayKey) {
+  if (pathwayKey === "degree" && topic.degreeLevel) {
+    const credits = topic.totalCredits ? `${topic.totalCredits} credits` : "";
+    const courses = topic.typicalCourseCount ? `${topic.typicalCourseCount} courses × 3 cr` : "";
+    return [topic.degreeLevel, credits, courses].filter(Boolean).join(" · ");
+  }
+  if (pathwayKey === "licensure" && topic.stateCode) {
+    return `${topic.stateCode} contractor board`;
+  }
+  if (pathwayKey === "licensure" && topic.key === "universal-licensure") {
+    return "Multi-state · NASCLA · universal exam prep";
+  }
+  return null;
+}
+
+function TopicCard({ topic, pathwayKey, href }) {
+  const metaLine = topicMetaLine(topic, pathwayKey);
+  const isEmpty = topic.courses.length === 0;
+
+  return (
+    <a href={href} style={{ ...sectionCardStyle, opacity: isEmpty ? 0.72 : 1 }}>
+      <h3 style={{ marginTop: 0, marginBottom: 8 }}>{topic.label}</h3>
+      {metaLine ? (
+        <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 8 }}>{metaLine}</div>
+      ) : null}
+      <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>{topic.description}</p>
+      <div style={{ color: "#64748b", fontSize: 14, marginTop: 12 }}>
+        {isEmpty ? "Coming soon — state prep launching" : `${topic.courses.length} courses`}
+      </div>
+    </a>
+  );
+}
+
 function Breadcrumb({ pathway, topic }) {
   return (
     <nav style={{ marginBottom: 20, fontSize: 14, color: "#64748b" }} aria-label="Catalog navigation">
@@ -211,23 +244,57 @@ export default function AcademyCatalog() {
           <section>
             <h2 style={{ marginTop: 0, marginBottom: 8 }}>2. Choose a topic</h2>
             <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0, marginBottom: 20 }}>{selectedPathway.description}</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
-              {selectedPathway.topics.map((topic) => (
-                <a key={topic.key} href={catalogHref(selectedPathway.key, topic.key)} style={sectionCardStyle}>
-                  <h3 style={{ marginTop: 0, marginBottom: 8 }}>{topic.label}</h3>
-                  <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>{topic.description}</p>
-                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 12 }}>{topic.courses.length} courses</div>
-                </a>
-              ))}
-            </div>
+            {selectedPathway.key === "degree" ? (
+              ["Shared", "AAS", "BS", "BAS"].map((level) => {
+                const levelTopics = selectedPathway.topics.filter((topic) => topic.degreeLevel === level);
+                if (levelTopics.length === 0) return null;
+                const levelLabel = level === "Shared" ? "General Education" : level === "AAS" ? "Associate (60 credits)" : level === "BS" ? "Bachelor (120 credits)" : "Applied Bachelor (120 credits)";
+                return (
+                  <div key={level} style={{ marginBottom: 28 }}>
+                    <h3 style={{ marginTop: 0, marginBottom: 12, color: "#0f172a" }}>{levelLabel}</h3>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+                      {levelTopics.map((topic) => (
+                        <TopicCard key={topic.key} topic={topic} pathwayKey={selectedPathway.key} href={catalogHref(selectedPathway.key, topic.key)} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })
+            ) : selectedPathway.key === "licensure" ? (
+              <>
+                <h3 style={{ marginTop: 0, marginBottom: 12, color: "#0f172a" }}>Universal & trade prep</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14, marginBottom: 28 }}>
+                  {selectedPathway.topics.filter((topic) => !topic.stateCode).map((topic) => (
+                    <TopicCard key={topic.key} topic={topic} pathwayKey={selectedPathway.key} href={catalogHref(selectedPathway.key, topic.key)} />
+                  ))}
+                </div>
+                <h3 style={{ marginTop: 0, marginBottom: 12, color: "#0f172a" }}>State contractor boards</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
+                  {selectedPathway.topics.filter((topic) => topic.stateCode).map((topic) => (
+                    <TopicCard key={topic.key} topic={topic} pathwayKey={selectedPathway.key} href={catalogHref(selectedPathway.key, topic.key)} />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+                {selectedPathway.topics.map((topic) => (
+                  <TopicCard key={topic.key} topic={topic} pathwayKey={selectedPathway.key} href={catalogHref(selectedPathway.key, topic.key)} />
+                ))}
+              </div>
+            )}
           </section>
         ) : null}
 
         {selectedPathway && selectedTopic ? (
           <section>
             <h2 style={{ marginTop: 0, marginBottom: 8 }}>3. Courses in {selectedTopic.label}</h2>
+            {topicMetaLine(selectedTopic, selectedPathway.key) ? (
+              <p style={{ color: "#1d4ed8", fontWeight: 700, marginTop: 0, marginBottom: 8 }}>{topicMetaLine(selectedTopic, selectedPathway.key)}</p>
+            ) : null}
             <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0, marginBottom: 20 }}>
-              All syllabi and curriculum outlines are visible. Enrollment requires an eligible subscription, add-on, and any listed prerequisites.
+              {selectedTopic.courses.length === 0
+                ? "State-specific prep for this jurisdiction is launching soon. Universal and trade prep courses are available in other licensure topics."
+                : "All syllabi and curriculum outlines are visible. Enrollment requires an eligible subscription, add-on, and any listed prerequisites."}
             </p>
             <div style={{ display: "grid", gap: 18 }}>
               {selectedTopic.courses.map((program) => (
