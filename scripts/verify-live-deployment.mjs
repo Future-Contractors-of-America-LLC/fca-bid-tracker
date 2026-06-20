@@ -26,6 +26,10 @@ const routes = [
   "/leads/new.html",
   "/config/auricrux-central.js",
   "/bids/detail.html",
+  "/legal",
+  "/legal/contractor-resources",
+  "/contact",
+  "/portal/legal",
 ];
 
 const attempts = Number(process.env.AURICRUX_LIVE_VERIFY_ATTEMPTS || 20);
@@ -186,6 +190,16 @@ async function runAttempt(attemptNumber) {
       const response = await fetchText(url, attemptNumber);
       routeChecks.push({ route, status: response.status, ok: response.ok });
     }
+
+    const indexShellResponse = await fetchText(`https://${host}/index.html`, attemptNumber);
+    const spaBoot = {
+      route: "/index.html",
+      status: indexShellResponse.status,
+      ok: indexShellResponse.ok
+        && indexShellResponse.text.includes('rel="stylesheet"')
+        && /\/assets\/main-[^"]+\.css/.test(indexShellResponse.text),
+    };
+    routeChecks.push(spaBoot);
 
     const hostResult = evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, commitWitnessResponse, routeChecks);
     summary.push({

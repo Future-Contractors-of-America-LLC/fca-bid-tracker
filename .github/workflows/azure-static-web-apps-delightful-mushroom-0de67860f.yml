@@ -81,6 +81,8 @@ jobs:
           test -f dist/host-binding-audit.html
           test -f dist/api-continuity-audit.html
           grep -q 'id="root"' dist/index.html
+          grep -q 'rel="stylesheet"' dist/index.html
+          grep -qE '/assets/main-[^"]+\.css' dist/index.html
           grep -q "Cross-host login continuity patch active" dist/index.html
           grep -q "fcaCrossHostLoginPatch" dist/index.html
           grep -q "FCA_LIVE_BRANDING_VISIBILITY_PATCH_V1" dist/styles.css
