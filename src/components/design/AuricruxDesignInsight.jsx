@@ -1,4 +1,4 @@
-import AuricruxInsightPanel from "./AuricruxInsightPanel";
+import AuricruxInsightPanel from "../auricrux/AuricruxInsightPanel";
 
 export default function AuricruxDesignInsight({ intelligence, onAskAuricrux, projectId = "", fileId = "" }) {
   if (!intelligence) return null;
