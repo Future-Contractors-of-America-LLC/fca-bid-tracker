@@ -16,6 +16,7 @@ import {
   upsertPipelineLink,
 } from "../../api/pipelineClient";
 import { createInvoiceFromEstimate } from "../../api/financialClient";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { routeStateOverlays } from "../../systemState";
 
 const PIPELINE_KEY = "fca_commercial_pipeline_v1";
@@ -311,6 +312,23 @@ export default function PortalPipeline() {
       {pipelineBanner ? (
         <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fde68a", background: "#fffbeb", color: "#92400e" }}>
           {pipelineBanner}
+        </div>
+      ) : null}
+
+      {activeBid?.id ? (
+        <div style={{ marginBottom: 18 }}>
+          <AuricruxInsightPanel
+            title="Auricrux Pipeline Intelligence"
+            targetObjectType="Bid"
+            targetObjectId={activeBid.id}
+            sourceRoute="/portal/pipeline"
+            rationale={`Advance ${activeBid.package || activeBid.id} through the governed commercial pipeline.`}
+            nextAction={STEPS[Math.max(0, stepIndex)]?.detail || "Continue the active pipeline step with governed billing continuity."}
+            actionHref="/portal/bids"
+            actionLabel="Open qualification board"
+            tone="blue"
+            liveRecommend
+          />
         </div>
       ) : null}
 

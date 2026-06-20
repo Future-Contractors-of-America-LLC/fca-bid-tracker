@@ -6,6 +6,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const portalDir = path.join(root, "src", "pages", "portal");
 
 const REQUIRED_INSIGHT_PAGES = [
+  "PortalHome.jsx",
+  "PortalPipeline.jsx",
+  "PortalProjects.jsx",
+  "PortalFiles.jsx",
   "PortalRfis.jsx",
   "PortalChangeOrders.jsx",
   "PortalCloseout.jsx",

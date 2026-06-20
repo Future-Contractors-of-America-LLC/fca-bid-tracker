@@ -11,6 +11,7 @@ import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets, qualificationEvidenceByProject } from "../../qualificationEvidence";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { submitAuricruxAction } from "../../api/auricruxActionsClient";
 
 const cardStyle = {
@@ -247,6 +248,22 @@ export default function PortalFiles() {
               "Visible file actions can fall back to seeded continuity state when backend workflow calls are unavailable.",
               "This route does not verify full native document intelligence or production-grade durable upload completion.",
             ]}
+          />
+        </div>
+      ) : null}
+
+      {visibleProject?.id ? (
+        <div style={{ marginBottom: 16 }}>
+          <AuricruxInsightPanel
+            title="Auricrux File Intelligence"
+            targetObjectId={visibleProject.id}
+            sourceRoute="/portal/files"
+            rationale="Review governed file posture, evidence links, and briefing readiness for the active project."
+            nextAction="Register missing artifacts, link evidence targets, and generate briefings before execution advances."
+            actionHref={`/portal/design?projectId=${encodeURIComponent(visibleProject.id)}`}
+            actionLabel="Open design workspace"
+            tone="blue"
+            liveRecommend
           />
         </div>
       ) : null}

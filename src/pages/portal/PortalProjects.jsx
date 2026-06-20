@@ -7,6 +7,7 @@ import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -94,6 +95,22 @@ export default function PortalProjects() {
       primaryLabel="Open Files"
       workspaceState={state}
     >
+      {visibleProject?.id ? (
+        <div style={{ marginBottom: 16 }}>
+          <AuricruxInsightPanel
+            title="Auricrux Project Intelligence"
+            targetObjectId={visibleProject.id}
+            sourceRoute="/portal/projects"
+            rationale={visibleProject.nextAction || "Advance the active project with governed field, finance, and closeout continuity."}
+            nextAction={visibleProject.nextAction || "Select the next governed project action and preserve cross-lane continuity."}
+            actionHref={`/portal/projects/${encodeURIComponent(visibleProject.id)}`}
+            actionLabel="Open project home"
+            tone="blue"
+            liveRecommend
+          />
+        </div>
+      ) : null}
+
       {!apiBacked ? (
         <div style={{ marginBottom: 16 }}>
           <ExecutionTruthBanner

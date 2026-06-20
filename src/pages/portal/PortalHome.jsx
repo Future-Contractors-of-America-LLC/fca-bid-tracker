@@ -7,6 +7,7 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import { fetchCommercialPipeline, migrateLocalPipelineToApi, pipelineItemsToMap } from "../../api/pipelineClient";
 import { fetchPortalInvoices } from "../../api/portalClient";
@@ -109,7 +110,7 @@ export default function PortalHome() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
   const { bids } = useBidWorkspace();
-  const { projects } = useProjectWorkspace();
+  const { projects, activeProject } = useProjectWorkspace();
   const { academyState } = useAcademyLms();
   const [tasks, setTasks] = useState(() => readLocalJson(TASK_STORAGE_KEY, defaultTasks));
   const [brandSkin, setBrandSkin] = useState(() => readLocalJson(BRAND_STORAGE_KEY, defaultBrandSkin));
@@ -240,6 +241,21 @@ export default function PortalHome() {
       primaryLabel="Open Qualification Workflow"
     >
       <ProductAccessStatusPanel session={session} />
+      {activeProject?.id ? (
+        <div style={{ marginBottom: 24 }}>
+          <AuricruxInsightPanel
+            title="Auricrux Command Intelligence"
+            targetObjectId={activeProject.id}
+            sourceRoute="/portal"
+            rationale="Review workspace posture and advance the next governed customer move across bids, projects, and billing."
+            nextAction={activeProject.nextAction || "Select the highest-value open workflow and advance it with governed continuity."}
+            actionHref={`/portal/projects/${encodeURIComponent(activeProject.id)}`}
+            actionLabel="Open active project"
+            tone="blue"
+            liveRecommend
+          />
+        </div>
+      ) : null}
       <div style={{ marginBottom: 24 }}>
         <CustomerPlanSummaryPanel session={session} title="Commercial package and enabled product scope" />
       </div>
