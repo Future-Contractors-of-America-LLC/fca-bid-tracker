@@ -72,7 +72,7 @@ export default function LegalHub() {
         <a href="/legal/contractor-resources" style={legalLink}>
           Contractor Legal Resources
         </a>
-        {" — "}
+        {" - "}
         <a href="/portal/legal" style={legalLink}>Portal Legal Command</a>
       </LegalP>
       <LegalPostalAddress />
