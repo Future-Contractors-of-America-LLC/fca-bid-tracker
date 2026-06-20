@@ -11,6 +11,7 @@ const outputDir = path.join(root, "docs", "qc");
 fs.mkdirSync(outputDir, { recursive: true });
 
 const SAAS_PORTAL_ROUTES = [
+  "/portal",
   "/portal/platform",
   "/portal/bids",
   "/portal/estimates",
@@ -29,6 +30,10 @@ const SAAS_PORTAL_ROUTES = [
   "/portal/profile",
   "/portal/plans",
   "/portal/finance",
+  "/portal/design",
+  "/portal/rfis",
+  "/portal/change-orders",
+  "/portal/closeout",
   "/portal/scheduling",
   "/portal/field-tasks",
   "/portal/field-supervision",

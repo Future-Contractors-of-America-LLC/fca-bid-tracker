@@ -169,6 +169,7 @@ export default function PortalEstimates() {
 
       <AuricruxInsightPanel
         title="Auricrux Precon Intelligence"
+        targetObjectId={projectId}
         nextAction={precon.continuity?.nextAction}
         metrics={[
           { label: "Tethered", value: `${precon.continuity?.tetheredTakeoffCount || 0}/${precon.continuity?.takeoffCount || 0}` },

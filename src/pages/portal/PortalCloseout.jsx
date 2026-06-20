@@ -99,6 +99,7 @@ export default function PortalCloseout() {
     >
       <AuricruxInsightPanel
         title="Auricrux Closeout Intelligence"
+        targetObjectId={projectId}
         nextAction="Closeout artifacts should be complete before final retainage release and warranty activation."
         actionHref="/portal/warranty"
         actionLabel="Open warranty"

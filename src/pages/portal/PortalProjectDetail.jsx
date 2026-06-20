@@ -192,6 +192,7 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
           <div style={{ ...cardStyle, marginBottom: 16 }}>
             <AuricruxInsightPanel
               title="Auricrux Project Intelligence"
+              targetObjectId={projectId}
               nextAction={visible.auricruxSummary?.nextAction || state.workspace.currentNextAction}
               metrics={[
                 { label: "Stage", value: visible.stage || "—" },

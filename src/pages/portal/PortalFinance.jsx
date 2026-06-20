@@ -209,6 +209,7 @@ export default function PortalFinance() {
           <div style={{ display: "grid", gap: 16 }}>
             <AuricruxInsightPanel
               title="Auricrux Books Intelligence"
+              targetObjectId={finance.projectId}
               nextAction={payload.intelligence?.nextAction}
               recommendations={payload.intelligence?.recommendations}
               tone="green"

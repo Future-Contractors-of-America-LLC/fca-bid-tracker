@@ -34,6 +34,7 @@ export default function PortalChangeOrders() {
     >
       <AuricruxInsightPanel
         title="Auricrux Commercial Intelligence"
+        targetObjectId={projectId}
         nextAction="Approved change orders should refresh SOV contract value before the next pay application."
         actionHref={`/portal/finance?view=construction&projectId=${encodeURIComponent(projectId)}`}
         actionLabel="Open SOV"

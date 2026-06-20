@@ -34,6 +34,7 @@ export default function PortalRfis() {
     >
       <AuricruxInsightPanel
         title="Auricrux Field Intelligence"
+        targetObjectId={projectId}
         nextAction={items.length ? "Review open RFIs and link responses to design markups." : "Create RFIs from Design Workspace markups to keep precon continuity governed."}
         actionHref="/portal/design"
         actionLabel="Open Design Workspace"

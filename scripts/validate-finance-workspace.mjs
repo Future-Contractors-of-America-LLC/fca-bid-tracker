@@ -62,7 +62,7 @@ requireIncludes("src/components/finance/FinanceSidebar.jsx", [
   "FCA Books",
 ]);
 requireIncludes("src/components/finance/FinanceJournalPanel.jsx", ["Post manual journal entry", "Journal register"]);
-requireIncludes("src/components/auricrux/AuricruxInsightPanel.jsx", ["Auricrux Intelligence"]);
+requireIncludes("src/components/auricrux/AuricruxInsightPanel.jsx", ["Auricrux Intelligence", "useAuricruxLiveInsight"]);
 requireIncludes("src/pages/portal/PortalEstimates.jsx", ["TakeoffEstimatePanel", "Auricrux Precon Intelligence", "Create AR Invoice"]);
 requireIncludes("../auricrux-central-work/core/design_precon_http.py", ["register_design_precon_routes", "precon-continuity"]);
 requireIncludes("../auricrux-central-work/core/commercial_invoice_bridge.py", ["seed_sov_from_estimate", "_persist_financial"]);

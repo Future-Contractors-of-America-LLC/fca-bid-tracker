@@ -1,3 +1,5 @@
+import useAuricruxLiveInsight from "../../hooks/useAuricruxLiveInsight";
+
 export default function AuricruxInsightPanel({
   title = "Auricrux Intelligence",
   nextAction,
@@ -7,8 +9,27 @@ export default function AuricruxInsightPanel({
   actionHref,
   actionLabel = "Open",
   tone = "amber",
+  liveRecommend = true,
+  targetObjectType = "Project",
+  targetObjectId = "",
+  sourceRoute = "",
+  rationale = "",
 }) {
-  if (!nextAction && !recommendations.length && !children) return null;
+  const resolvedRationale =
+    rationale || nextAction || `Provide governed next-step guidance for ${targetObjectType} ${targetObjectId || "workspace"}.`;
+
+  const live = useAuricruxLiveInsight({
+    enabled: liveRecommend && Boolean(targetObjectId),
+    targetObjectType,
+    targetObjectId,
+    sourceRoute,
+    rationale: resolvedRationale,
+    fallbackNextAction: nextAction || "",
+  });
+
+  const displayNextAction = live.nextAction || nextAction;
+
+  if (!displayNextAction && !recommendations.length && !children) return null;
 
   const palette =
     tone === "blue"
@@ -19,8 +40,15 @@ export default function AuricruxInsightPanel({
 
   return (
     <div style={{ border: `1px solid ${palette.border}`, borderRadius: 14, padding: 16, background: palette.bg, marginBottom: 16 }}>
-      <div style={{ color: palette.label, fontWeight: 800, marginBottom: 8 }}>{title}</div>
-      {nextAction ? <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{nextAction}</div> : null}
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
+        <div style={{ color: palette.label, fontWeight: 800 }}>{title}</div>
+        {liveRecommend && targetObjectId ? (
+          <span style={{ fontSize: 11, fontWeight: 700, color: live.isLive ? "#047857" : "#64748b" }}>
+            {live.loading ? "Auricrux loading…" : live.isLive ? "Live recommendation" : "Guidance mode"}
+          </span>
+        ) : null}
+      </div>
+      {displayNextAction ? <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{displayNextAction}</div> : null}
       {metrics.length ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: 8, marginBottom: 12 }}>
           {metrics.map((metric) => (

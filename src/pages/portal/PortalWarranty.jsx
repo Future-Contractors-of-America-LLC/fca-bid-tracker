@@ -103,6 +103,7 @@ export default function PortalWarranty() {
     >
       <AuricruxInsightPanel
         title="Auricrux Warranty Intelligence"
+        targetObjectId={projectId}
         nextAction="Resolve warranty cases only after closeout artifacts are complete and turnover walkthrough is scheduled."
         actionHref="/portal/closeout"
         actionLabel="Review closeout"
