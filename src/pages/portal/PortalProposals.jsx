@@ -4,6 +4,7 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProposalWorkspace from "../../hooks/useProposalWorkspace";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -27,6 +28,7 @@ const buttonStyle = (primary = false) => ({
 export default function PortalProposals() {
   const { state } = useWorkspaceState();
   const { proposals, meta, advanceProposal } = useProposalWorkspace();
+  const focusProposal = proposals[0] || null;
 
   return (
     <PortalShell
@@ -50,6 +52,23 @@ export default function PortalProposals() {
           <div><strong>Last sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
         </div>
       </div>
+
+      {focusProposal?.proposalId ? (
+        <div style={{ marginBottom: 16 }}>
+          <AuricruxInsightPanel
+            title="Auricrux Proposal Intelligence"
+            targetObjectType="Proposal"
+            targetObjectId={focusProposal.proposalId}
+            sourceRoute="/portal/proposals"
+            rationale={focusProposal.nextAction || "Package scope, assumptions, and approval follow-through for customer delivery."}
+            nextAction={focusProposal.nextAction || "Advance proposal delivery posture toward customer approval."}
+            actionHref="/portal/projects"
+            actionLabel="Open projects"
+            tone="blue"
+            liveRecommend
+          />
+        </div>
+      ) : null}
 
       <CommercialContinuityFeed title="Proposal commercial continuity feed" detail="Proposal drafting, delivery, approval, and project handoff signals remain visible here so the customer package stays attached to live product state." />
       <AutomationRecoveryFeed title="Proposal automation feed" detail="Recent proposal mutations remain visible across routes so FCA can prove proposal handling is part of the operating system rather than static copy." />

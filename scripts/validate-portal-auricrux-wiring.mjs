@@ -17,6 +17,9 @@ const REQUIRED_INSIGHT_PAGES = [
   "PortalEstimates.jsx",
   "PortalFinance.jsx",
   "PortalProjectDetail.jsx",
+  "PortalBilling.jsx",
+  "PortalBids.jsx",
+  "PortalProposals.jsx",
 ];
 
 function fail(message) {

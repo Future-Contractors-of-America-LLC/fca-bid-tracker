@@ -3,6 +3,7 @@ import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { publishPortalPageContext } from "../../portalPageContext";
 import {
   createPortalInvoice,
@@ -170,6 +171,9 @@ export default function PortalBilling() {
     }
   }
 
+  const insightTargetId = activeProject?.id || invoices[0]?.id || "";
+  const insightTargetType = activeProject?.id ? "Project" : invoices[0]?.id ? "Invoice" : "Project";
+
   return (
     <PortalShell
       title={`${companyName} Billing`}
@@ -193,6 +197,23 @@ export default function PortalBilling() {
           Open FCA Books
         </a>
       </div>
+
+      {insightTargetId ? (
+        <div style={{ marginBottom: 24 }}>
+          <AuricruxInsightPanel
+            title="Auricrux Billing Intelligence"
+            targetObjectType={insightTargetType}
+            targetObjectId={insightTargetId}
+            sourceRoute="/portal/billing"
+            rationale="Review open invoices, issue the next customer bill, and preserve payment continuity in FCA Books."
+            nextAction={invoices.find((inv) => inv.status === "Draft") ? "Issue the next draft invoice and route payment follow-up." : "Create or issue the next governed customer invoice."}
+            actionHref="/portal/finance?view=payments"
+            actionLabel="Open payments"
+            tone="green"
+            liveRecommend
+          />
+        </div>
+      ) : null}
 
       {loadError ? (
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>

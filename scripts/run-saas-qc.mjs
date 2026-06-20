@@ -99,6 +99,7 @@ const SCRIPT_CHECKS = [
   "validate-finance-workspace.mjs",
   "validate-design-workspace.cjs",
   "validate-portal-auricrux-wiring.mjs",
+  "smoke-central-spine.mjs",
 ];
 
 const API_BASE = process.env.FCA_API_BASE || "https://auricrux-central.azurewebsites.net";

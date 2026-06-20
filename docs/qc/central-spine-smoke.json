@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-06-20T21:50:41.694Z",
+  "apiBase": "https://auricrux-central.azurewebsites.net",
+  "summary": {
+    "passed": 8,
+    "failed": 0
+  },
+  "findings": [
+    {
+      "status": "pass",
+      "label": "GET /api/health",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/auricrux-comms",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/change-orders",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/job-cost",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/warranty-cases",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/auricrux/actions",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET manifest missing file",
+      "detail": "HTTP 404 honest not-found"
+    },
+    {
+      "status": "pass",
+      "label": "POST /api/auricrux/actions recommend",
+      "detail": "guidance returned"
+    }
+  ]
+}

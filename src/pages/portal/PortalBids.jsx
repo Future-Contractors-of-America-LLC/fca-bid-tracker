@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
 import { routeStateOverlays } from "../../systemState";
 
@@ -37,6 +38,8 @@ function readBrandSkin() {
 export default function PortalBids() {
   const { state } = useWorkspaceState();
   const { bids, meta, updateBidQualification, routeBidToEstimate, markWonAndCreateProject } = useBidWorkspace();
+  const [activeBidId, setActiveBidId] = useState(() => bids[0]?.id || "");
+  const activeBid = bids.find((bid) => bid.id === activeBidId) || bids[0] || null;
   const brandSkin = readBrandSkin();
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
 
@@ -62,11 +65,28 @@ export default function PortalBids() {
         </div>
       </div>
 
+      {activeBid?.id ? (
+        <div style={{ marginBottom: 18 }}>
+          <AuricruxInsightPanel
+            title="Auricrux Qualification Intelligence"
+            targetObjectType="Bid"
+            targetObjectId={activeBid.id}
+            sourceRoute="/portal/bids"
+            rationale={`Advance ${activeBid.package || activeBid.id} through qualification and estimate readiness.`}
+            nextAction={activeBid.qualification?.nextGate || "Complete qualification scoring and route to estimate or award."}
+            actionHref="/portal/pipeline"
+            actionLabel="Open pipeline"
+            tone="blue"
+            liveRecommend
+          />
+        </div>
+      ) : null}
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
         {bids.map((bid) => {
           const evidencePacket = qualificationEvidencePackets.find((packet) => packet.bidId === bid.id);
           return (
-            <div key={bid.id} style={cardStyle}>
+            <div key={bid.id} style={{ ...cardStyle, outline: bid.id === activeBidId ? `2px solid ${brandSkin.accent || "#1d4ed8"}` : "none" }} onClick={() => setActiveBidId(bid.id)} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === "Enter") setActiveBidId(bid.id); }}>
               <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>{bid.status}</div>
               <h3 style={{ marginTop: 0, marginBottom: 10 }}>{bid.package}</h3>
               <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 10 }}>{bid.value}</div>
