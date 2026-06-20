@@ -11,7 +11,19 @@ export const publicPackageRouteGroups = [
       { href: "/portal/files", label: "File Spine" },
       { href: "/portal/design", label: "Design Workspace" },
       { href: "/portal/billing", label: "Billing Command" },
-      { href: "/portal/operations", label: "Operations Pipeline" }
+      { href: "/portal/operations", label: "Operations Pipeline" },
+      { href: "/portal/legal", label: "Contractor Legal Command" }
+    ]
+  },
+  {
+    key: "legal-compliance",
+    title: "Legal & Compliance",
+    detail: "Public trust policies and contractor legal workspace for entity formation, agreements, lien waivers, and Virginia DPOR alignment.",
+    routes: [
+      { href: "/legal", label: "Legal Center" },
+      { href: "/legal/contractor-resources", label: "Contractor Legal Resources" },
+      { href: "/portal/legal", label: "Portal Legal Command" },
+      { href: "/academy/programs/contractor-business-formation-legal/modules/1", label: "Business Formation Academy" }
     ]
   },
   {

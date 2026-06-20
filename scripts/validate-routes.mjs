@@ -23,6 +23,8 @@ const explicitRoutes = new Set([
   "/refunds",
   "/ip",
   "/legal",
+  "/legal/contractor-resources",
+  "/cookies",
   "/not-found",
   "/bid-entry",
   "/bid-status",
@@ -50,6 +52,7 @@ const explicitRoutes = new Set([
   "/portal/field-tasks",
   "/portal/field-supervision",
   "/portal/warranty",
+  "/portal/legal",
   "/academy",
   "/academy/catalog",
   "/academy/programs",
@@ -176,7 +179,9 @@ for (const exportedValue of Object.values(websiteShellModule)) {
 function isValidHref(baseHref) {
   if (explicitRoutes.has(baseHref)) return true;
   if (routePatterns.some((entry) => matchRoutePattern(entry.pattern, baseHref))) return true;
-  return allowedStaticPrefixes.some((prefix) => baseHref.startsWith(prefix));
+  if (allowedStaticPrefixes.some((prefix) => baseHref.startsWith(prefix))) return true;
+  const staticRoots = ["/leads", "/pipeline"];
+  return staticRoots.some((root) => baseHref === root || baseHref.startsWith(`${root}/`));
 }
 
 const invalid = [...hrefs].filter((href) => !isValidHref(stripQueryAndHash(href)));

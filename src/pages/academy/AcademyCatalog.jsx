@@ -3,7 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import useAcademyLms from "../../hooks/useAcademyLms";
-import { ELECTRICAL_APPRENTICESHIP_LEVELS, OSHA_CERT_UNITS, PROJECT_CONTROLS_CERT_UNITS, organizeApiCatalogByLane } from "../../academyOfferings";
+import { BUSINESS_LAW_LICENSURE_UNITS, DPOR_LICENSURE_UNITS, ELECTRICAL_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, OSHA_CERT_UNITS, PROJECT_CONTROLS_CERT_UNITS, organizeApiCatalogByLane } from "../../academyOfferings";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -208,6 +208,102 @@ export default function AcademyCatalog() {
                   }}
                 >
                   <div style={{ color: "#15803d", fontWeight: 700, fontSize: 13 }}>Unit {unit.unit}</div>
+                  <strong>{unit.title}</strong>
+                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{unit.modules} modules</div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {lanes.find((lane) => lane.key === "licensure")?.programs.some((p) => p.key === "lic-electrical-journeyman-exam-prep") ? (
+        <section style={{ ...cardStyle, marginBottom: 32 }}>
+          <h2 style={{ marginTop: 0 }}>Electrical licensure exam prep pathway</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65 }}>
+            NEC-aligned journeyman, master, and electrical contractor exam preparation with diagnostic assessment, code navigation, and timed practice exams.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {ELECTRICAL_LICENSURE_UNITS.map((unit) => {
+              const program = apiPrograms.find((item) => item.key === unit.key);
+              return (
+                <a
+                  key={unit.key}
+                  href={program ? `/academy/programs/${unit.key}` : "/academy/catalog"}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    border: "1px solid #fde68a",
+                    borderRadius: 12,
+                    padding: 14,
+                    background: program ? "#fff" : "#f8fafc",
+                  }}
+                >
+                  <div style={{ color: "#b45309", fontWeight: 700, fontSize: 13 }}>Unit {unit.unit}</div>
+                  <strong>{unit.title}</strong>
+                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{unit.modules} modules</div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {lanes.find((lane) => lane.key === "licensure")?.programs.some((p) => p.key === "lic-dpor-residential-contractor-prep") ? (
+        <section style={{ ...cardStyle, marginBottom: 32 }}>
+          <h2 style={{ marginTop: 0 }}>Virginia DPOR contractor licensing pathway</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65 }}>
+            Virginia DPOR residential and Class A/B/C contractor exam preparation with business law, financial responsibility, and application checklists.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {DPOR_LICENSURE_UNITS.map((unit) => {
+              const program = apiPrograms.find((item) => item.key === unit.key);
+              return (
+                <a
+                  key={unit.key}
+                  href={program ? `/academy/programs/${unit.key}` : "/academy/catalog"}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    border: "1px solid #fde68a",
+                    borderRadius: 12,
+                    padding: 14,
+                    background: program ? "#fff" : "#f8fafc",
+                  }}
+                >
+                  <div style={{ color: "#b45309", fontWeight: 700, fontSize: 13 }}>Unit {unit.unit}</div>
+                  <strong>{unit.title}</strong>
+                  <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{unit.modules} modules</div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {lanes.find((lane) => lane.key === "licensure")?.programs.some((p) => p.key === "lic-nascla-business-law-exam-prep") ? (
+        <section style={{ ...cardStyle, marginBottom: 32 }}>
+          <h2 style={{ marginTop: 0 }}>Contractor business and law exam prep</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65 }}>
+            NASCLA business and law exam preparation, Virginia entity formation, and construction law essentials for licensed contractors.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+            {BUSINESS_LAW_LICENSURE_UNITS.map((unit) => {
+              const program = apiPrograms.find((item) => item.key === unit.key);
+              return (
+                <a
+                  key={unit.key}
+                  href={program ? `/academy/programs/${unit.key}` : "/academy/catalog"}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    border: "1px solid #fde68a",
+                    borderRadius: 12,
+                    padding: 14,
+                    background: program ? "#fff" : "#f8fafc",
+                  }}
+                >
+                  <div style={{ color: "#b45309", fontWeight: 700, fontSize: 13 }}>Unit {unit.unit}</div>
                   <strong>{unit.title}</strong>
                   <div style={{ color: "#64748b", fontSize: 14, marginTop: 6 }}>{unit.modules} modules</div>
                 </a>

@@ -33,6 +33,7 @@ const SAAS_PORTAL_ROUTES = [
   "/portal/field-tasks",
   "/portal/field-supervision",
   "/portal/warranty",
+  "/portal/legal",
 ];
 
 const SAAS_API_ENDPOINTS = [
@@ -56,6 +57,14 @@ const SAAS_CLIENT_MODULES = [
   "src/api/portalClient.js",
   "src/api/intakeClient.js",
   "src/hooks/useWorkspaceState.js",
+];
+
+const LEGAL_SURFACES = [
+  "src/pages/portal/PortalLegal.jsx",
+  "src/pages/website/ContractorLegalResources.jsx",
+  "src/contractorLegal/contractorLegalCatalog.js",
+  "src/legal/entityInfo.js",
+  "api/academy-program-modules.js",
 ];
 
 const SCRIPT_CHECKS = [
@@ -109,6 +118,12 @@ for (const clientPath of SAAS_CLIENT_MODULES) {
   const full = path.join(root, clientPath);
   if (fs.existsSync(full)) pass(`client:${clientPath}`);
   else fail(`client:${clientPath}`, "module missing");
+}
+
+for (const legalPath of LEGAL_SURFACES) {
+  const full = path.join(root, legalPath);
+  if (fs.existsSync(full)) pass(`legal:${legalPath}`);
+  else fail(`legal:${legalPath}`, "contractor legal surface missing");
 }
 
 const importPattern = /import\("\.\/pages\/([^"]+)"\)/g;
