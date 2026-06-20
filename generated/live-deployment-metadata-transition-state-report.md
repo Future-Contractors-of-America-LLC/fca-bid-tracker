@@ -1,14 +1,14 @@
 # Live Deployment Metadata Transition State Report
 
 - Packet: 062Y
-- Generated: 2026-06-20T01:40:07.263Z
+- Generated: 2026-06-20T01:56:26.423Z
 - success: true
 
 ## Observed
 - provenance: github_actions_ci
 - ciPersisted: true
-- ciRunId: 27856050382
-- ciCommitSha: b3dbee3605d79cd81cc0e4f61621e83ed05e48d1
+- ciRunId: 27856449128
+- ciCommitSha: 2597853376c62c4ce5c0e0c7e207cc870dd8a9ba
 - status: ci_surface_present_with_failures
 
 ## Failures
