@@ -463,7 +463,12 @@ export default function PortalDesignWorkspace() {
             </div>
             {(fileFormat === "dwg" || fileFormat === "rvt" || fileFormat === "ifc") ? (
               <div style={panelStyle}>
-                <ForgeViewerPanel viewerSession={workspace.viewerSession} fileFormat={fileFormat} />
+                <ForgeViewerPanel
+                  viewerSession={workspace.viewerSession}
+                  fileFormat={fileFormat}
+                  onQueueTranslation={workspace.queueViewerTranslation}
+                  queueBusy={workspace.queueBusy}
+                />
                 <div style={{ marginTop: 16 }}>
                   {fileFormat === "dwg" ? (
                     <CadEditorPanel activeSheet={activeSheet} onSave={handleCadSave} busy={busy} />
