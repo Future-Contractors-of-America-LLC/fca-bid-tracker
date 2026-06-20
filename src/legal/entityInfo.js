@@ -1,4 +1,4 @@
-/** Canonical FCA legal entity — single source for policies, DMCA, contact, and contractor legal references */
+/** Canonical FCA legal entity - single source for policies, DMCA, contact, and contractor legal references */
 export const FCA_ENTITY = {
   legalName: "Future Contractors of America LLC",
   tradeNames: ["FCA", "Auricrux", "FCA Contractor Command"],
