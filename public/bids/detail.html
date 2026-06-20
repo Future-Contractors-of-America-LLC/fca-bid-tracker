@@ -14,6 +14,7 @@
   </main>
 
   <script src="/config/auricrux-central.js"></script>
+  <script src="/bids/bid-checklist.js"></script>
   <script src="/leads/leads.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
@@ -78,6 +79,7 @@
         (pricing.competitive ? '<p style="color:#cbd5e1"><strong>Competitive:</strong> ' + FCALeads.formatCurrency(pricing.competitive) + '</p>' : '') +
         '<p><strong style="color:white">Next Action:</strong> ' + (bid.nextAction || bid.auricruxRecommendation || "Review bid checklist.") + '</p>' +
         '</section></div>' +
+        FCA_BID_CHECKLIST.renderReadinessSummary(bid.checklist || {}) +
         '<section class="fca-panel">' +
         '<div class="fca-toolbar">' +
         '<a class="fca-btn fca-btn-secondary" href="/bids/status.html' + (customerId ? ("?customerId=" + encodeURIComponent(customerId)) : "") + '">Customer Status</a>' +

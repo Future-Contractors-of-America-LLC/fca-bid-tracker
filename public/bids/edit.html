@@ -14,6 +14,7 @@
   </main>
 
   <script src="/config/auricrux-central.js"></script>
+  <script src="/bids/bid-checklist.js"></script>
   <script src="/leads/leads.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
@@ -67,10 +68,10 @@
         selectField("status", "Status", bid.status || "new", ["new", "under-review", "qualified", "proposal", "won", "lost"]) +
         '</div>' +
         '<div class="fca-full"><label class="fca-label" for="notes">Notes</label><textarea class="fca-input" id="notes" rows="4" style="resize:vertical">' + esc(bid.notes || "") + '</textarea></div>' +
-        '<div class="fca-grid-2">' +
-        checkField("plansReceived", "Plans received", checklist.plansReceived) +
-        checkField("siteWalkComplete", "Site walk complete", checklist.siteWalkComplete) +
-        '</div>' +
+        '<section class="fca-panel" style="margin:0;padding:0;border:none;box-shadow:none">' +
+        '<div class="fca-panel-header" style="padding-left:0;padding-right:0"><h3>Proposal-Readiness Checklist</h3></div>' +
+        FCA_BID_CHECKLIST.renderChecklistEditor(checklist) +
+        '</section>' +
         '<div class="fca-toolbar">' +
         '<button class="fca-btn fca-btn-primary" type="submit">Save to Auricrux Central</button>' +
         '<a class="fca-btn fca-btn-secondary" href="' + detailUrl() + '">Cancel</a>' +
@@ -114,10 +115,7 @@
         value: Number(document.getElementById("value").value || 0),
         status: document.getElementById("status").value,
         notes: document.getElementById("notes").value,
-        checklist: {
-          plansReceived: document.getElementById("plansReceived").checked,
-          siteWalkComplete: document.getElementById("siteWalkComplete").checked,
-        },
+        checklist: FCA_BID_CHECKLIST.readChecklistFromForm(),
       };
     }
 

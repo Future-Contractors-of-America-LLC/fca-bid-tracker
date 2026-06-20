@@ -41,6 +41,7 @@
               <th>Status</th>
               <th>Value</th>
               <th>Score</th>
+              <th>Readiness</th>
               <th>Updated</th>
               <th></th>
             </tr>
@@ -54,6 +55,7 @@
   </main>
 
   <script src="/config/auricrux-central.js"></script>
+  <script src="/bids/bid-checklist.js"></script>
   <script src="/leads/leads.js"></script>
   <script>
     function slugifyCustomerId(value) {
@@ -121,7 +123,7 @@
     async function loadBids(customerId, customerLabel) {
       scopeStatus.className = "fca-status show";
       scopeStatus.textContent = "Loading bids from Auricrux Central...";
-      bidRows.innerHTML = '<tr><td colspan="6"><div class="fca-empty">Loading...</div></td></tr>';
+        bidRows.innerHTML = '<tr><td colspan="7"><div class="fca-empty">Loading...</div></td></tr>';
 
       try {
         const cfg = window.FCA_AURICRUX;
@@ -148,16 +150,18 @@
 
         bidRows.innerHTML = list.length
           ? list.map(function (bid) {
+              var readiness = FCA_BID_CHECKLIST.computeReadiness(bid.checklist || {});
               return '<tr>' +
                 '<td><strong>' + (bid.projectName || "—") + '</strong><br><span style="color:#64748b;font-size:12px">' + (bid.company || bid.customerName || "") + '</span></td>' +
                 '<td><span class="' + FCALeads.stageBadgeClass(bid.status || "new") + '">' + (bid.status || "new") + '</span></td>' +
                 '<td>' + FCALeads.formatCurrency(bid.value || 0) + '</td>' +
                 '<td>' + (bid.auricruxScore || 0) + '</td>' +
+                '<td><span class="' + FCA_BID_CHECKLIST.statusBadgeClass(readiness.status) + '">' + readiness.percent + '%</span></td>' +
                 '<td>' + FCALeads.formatDate(bid.updatedAt) + '</td>' +
                 '<td><a href="' + buildDetailUrl(bid, customerId) + '">View</a> · <a href="' + buildEditUrl(bid, customerId) + '">Edit</a></td>' +
                 '</tr>';
             }).join("")
-          : '<tr><td colspan="6"><div class="fca-empty">No bids found for this customer scope.</div></td></tr>';
+          : '<tr><td colspan="7"><div class="fca-empty">No bids found for this customer scope.</div></td></tr>';
 
         scopeStatus.className = "fca-status show success";
         scopeStatus.textContent = "Loaded from Auricrux Central.";
@@ -168,7 +172,7 @@
       } catch (error) {
         scopeStatus.className = "fca-status show error";
         scopeStatus.textContent = error.message;
-        bidRows.innerHTML = '<tr><td colspan="6"><div class="fca-empty">' + error.message + '</div></td></tr>';
+        bidRows.innerHTML = '<tr><td colspan="7"><div class="fca-empty">' + error.message + '</div></td></tr>';
       }
     }
 

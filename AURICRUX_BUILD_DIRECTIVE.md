@@ -78,7 +78,7 @@ Preferred Next Phases:
 - Phase 1J: Bid detail view / expanded bid card. (Shipped: `/bids/detail.html?id={bidId}`)
 - Phase 1K: Customer-specific status URL support. (Shipped: `/bids/status.html?customerId=` and `/bid-status?customer=`)
 - Phase 1L: Bid edit/update page. (Shipped: `/bids/edit.html?id=` POST upsert to Central)
-- Phase 1M: Proposal-readiness checklist expansion.
+- Phase 1M: Proposal-readiness checklist expansion. (Shipped: `public/bids/bid-checklist.js` + edit/detail/status surfaces)
 - Phase 1N: Auricrux action history per bid.
 - Phase 1O: Customer-safe export/print view.
 - Phase 1P: Internal operator dashboard.
