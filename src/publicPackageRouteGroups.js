@@ -23,7 +23,7 @@ export const publicPackageRouteGroups = [
       { href: "/legal", label: "Legal Center" },
       { href: "/legal/contractor-resources", label: "Contractor Legal Resources" },
       { href: "/portal/legal", label: "Portal Legal Command" },
-      { href: "/academy/programs/contractor-business-formation-legal/modules/1", label: "Business Formation Academy" }
+      { href: "/privacy", label: "Privacy Policy" }
     ]
   },
   {

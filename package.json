@@ -17,7 +17,7 @@
     "dev": "vite",
     "build:spa": "vite build",
     "build:system": "npm run build",
-    "build": "bash ./build.sh",
+    "build": "npx vite build && node scripts/post-spa-build.mjs",
     "qc:market": "node scripts/run-market-qc.mjs",
     "qc:saas": "node scripts/run-saas-qc.mjs",
     "qc:lms": "node scripts/run-lms-qc.mjs",
