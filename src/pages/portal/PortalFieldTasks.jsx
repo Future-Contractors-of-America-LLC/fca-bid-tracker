@@ -18,6 +18,7 @@ export default createOperationalPortalPage({
     { key: "assignee", label: "Assignee", required: true, placeholder: "Crew member or lead" },
     { key: "dueDate", label: "Due date", placeholder: "YYYY-MM-DD" },
     { key: "priority", label: "Priority", type: "select", options: ["Normal", "High", "Urgent"], default: "Normal" },
+    { key: "estimatedCost", label: "Estimated cost", placeholder: "500 or $500" },
   ],
   apiHandlers: {
     fetchItems: fetchFieldTasks,

@@ -1,6 +1,13 @@
 export const fileGovernance = {
   registers: [
     {
+      title: "Legal & Compliance Register",
+      purpose: "Track executed contracts, lien waivers, COIs, formation certificates, and permit evidence.",
+      route: "/portal/legal",
+      label: "Open Legal Command",
+      artifacts: ["Owner contract", "Subcontract", "Conditional lien waiver", "COI", "SCC certificate", "DPOR license copy"],
+    },
+    {
       title: "Drawing Register",
       purpose: "Track issued plan sets, revisions, and field-usable drawing continuity.",
       route: "/portal/files",
@@ -17,7 +24,7 @@ export const fileGovernance = {
     {
       title: "Closeout and Handover Register",
       purpose: "Prepare warranty-ready closeout packages and customer handoff continuity.",
-      route: "/portal/billing",
+      route: "/portal/closeout",
       label: "Open Billing",
       artifacts: ["Closeout checklist", "Warranty packet", "Selection records", "Final owner package"],
     },

@@ -146,6 +146,17 @@ export const routeStateOverlays = {
     auricruxRole: "Read and contextualize",
     auricruxDetail: "Auricrux reads file context, explains what each artifact means, and detects documentation gaps.",
   },
+  legal: {
+    title: "Contractor legal command state",
+    summary: "Legal specializes entity formation, Virginia licensure, agreements, lien waivers, insurance COIs, and compliance checklist continuity.",
+    status: "Legal workspace active",
+    primaryFocus: "Compliance readiness",
+    primaryDetail: "This route tracks licenses, executed agreements, waiver discipline, and formation checklist before customer delivery.",
+    dependency: "File spine and billing linkage",
+    dependencyDetail: "Legal execution depends on storing executed documents on the file spine and aligning lien waivers with billing events.",
+    auricruxRole: "Detect gaps and recommend",
+    auricruxDetail: "Auricrux flags missing DPOR, insurance, or contract steps and routes learners to Academy legal tracks.",
+  },
   design: {
     title: "Design Workspace route state",
     summary: "Design Workspace unifies PDF, DWG, and RVT viewing with shared markup, takeoff, and coordination continuity.",
@@ -544,7 +555,12 @@ export const portalModules = [
   {
     href: "/portal/files",
     label: "Files",
-    description: "Bid packages, permits, and onboarding docs",
+    description: "Bid packages, permits, legal docs, and onboarding artifacts",
+  },
+  {
+    href: "/portal/legal",
+    label: "Legal",
+    description: "Entity, licenses, agreements, lien waivers, and compliance",
   },
   {
     href: "/portal/audit",
@@ -605,6 +621,11 @@ export const portalModules = [
     href: "/portal/warranty",
     label: "Warranty",
     description: "Post-handover service, retention, and recurring work",
+  },
+  {
+    href: "/portal/closeout",
+    label: "Closeout",
+    description: "Turnover binders, artifact tracking, and handoff readiness",
   },
   {
     href: "/portal/operations",

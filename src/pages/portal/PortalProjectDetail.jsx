@@ -226,6 +226,7 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
                 <div>Actual cost: <strong>{jobCost.rollup?.actualCost || jobBilling.data?.package?.jobCost?.actualCost || "—"}</strong></div>
                 <div>Committed: <strong>{jobCost.rollup?.committedCost || jobBilling.data?.package?.jobCost?.committedCost || "—"}</strong></div>
                 <div>Margin forecast: <strong>{jobCost.rollup?.grossMarginForecast || jobBilling.data?.package?.jobCost?.grossMarginForecast || "—"}</strong></div>
+                <a href="/portal/field-tasks" style={{ color: "#2563eb", fontWeight: 700, textDecoration: "none" }}>Field tasks post actuals on completion</a>
               </div>
               <a href={`/portal/finance?view=construction&projectId=${encodeURIComponent(projectId)}`} style={{ display: "inline-block", marginTop: 12, fontWeight: 700, color: "#2563eb", textDecoration: "none" }}>Open job billing</a>
             </div>

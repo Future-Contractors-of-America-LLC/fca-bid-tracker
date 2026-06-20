@@ -78,6 +78,7 @@ export function createOperationalPortalPage({
     const [backingSource, setBackingSource] = useState(apiHandlers ? "loading" : "localStorage");
     const [loadError, setLoadError] = useState("");
     const [actionError, setActionError] = useState("");
+    const [actionNotice, setActionNotice] = useState("");
     const [busy, setBusy] = useState(false);
     const [draft, setDraft] = useState(() => Object.fromEntries(fields.map((f) => [f.key, f.default || ""])));
 
@@ -146,11 +147,18 @@ export function createOperationalPortalPage({
 
     async function completeItem(id) {
       setActionError("");
+      setActionNotice("");
       setBusy(true);
       try {
         if (apiHandlers?.completeItem) {
-          await apiHandlers.completeItem(id);
+          const result = await apiHandlers.completeItem(id);
           await reloadApiItems();
+          const posting = result?.jobCostPosting;
+          if (posting?.jobCost?.actualCost) {
+            setActionNotice(`Task closed. Job cost actual updated to ${posting.jobCost.actualCost}.`);
+          } else if (posting?.lineItem?.amount) {
+            setActionNotice(`Task closed. Posted ${posting.lineItem.amount} to job cost.`);
+          }
         } else {
           setLocalItems((current) => current.map((item) => (item.id === id ? { ...item, status: "Complete" } : item)));
         }
@@ -201,6 +209,11 @@ export function createOperationalPortalPage({
         {actionError ? (
           <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
             {actionError}
+          </div>
+        ) : null}
+        {actionNotice ? (
+          <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #bbf7d0", background: "#f0fdf4", color: "#166534" }}>
+            {actionNotice}
           </div>
         ) : null}
 
