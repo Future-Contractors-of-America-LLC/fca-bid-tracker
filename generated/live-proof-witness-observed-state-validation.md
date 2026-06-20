@@ -1,16 +1,16 @@
 # Live Proof Witness Observed State Validation
 
 - Packet: 062Y
-- Generated: 2026-06-20T00:33:53.992Z
+- Generated: 2026-06-20T00:35:46.501Z
 - success: false
-- observedCommitSha: 8172b1c3aebde956371d2ed49059506ba8493e06
-- observedCommitMessage: Persist live deployment run witness for run 27854730251
+- observedCommitSha: 2406035eeeb2c701ca48d03b7faf3b17cdb580ac
+- observedCommitMessage: Persist live deployment run witness for run 27854772955
 
 ## Observed Witness
 - provenance: github_actions_ci
 - ciPersisted: true
-- ciRunId: 27854772942
-- ciCommitSha: 9138a9d4f8930af2a6c2abf59489a95e003fe05f
+- ciRunId: 27854784504
+- ciCommitSha: 1de91780eabb8832314f032d8d88ff90fadf7551
 - workflow: FCA Live Deployment Proof Stamp
 
 ## Failures
