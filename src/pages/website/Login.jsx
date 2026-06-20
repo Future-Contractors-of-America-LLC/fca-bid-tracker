@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import { centralFetch } from "../../api/backendBase";
-import { resolveWorkspaceEntryHref } from "../../customerSession";
+import { isAllowedPostLoginHref, resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { resolveSeededCustomerAccount, resolveSeededAccountByKey } from "../../customerAccounts";
@@ -123,7 +123,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
   const requestedWorkspaceHref = accessMode === "protected"
     ? requestedPath
     : queryState.nextHref || session?.nextHref || "/portal";
-  const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy"
+  const nextHref = isAllowedPostLoginHref(requestedWorkspaceHref)
     ? requestedWorkspaceHref
     : "/portal";
 

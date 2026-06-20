@@ -3,6 +3,7 @@ import { brandIdentity } from "../brandIdentity";
 import { sendAuricruxMessage } from "../api/auricruxClient";
 import { submitAuricruxAction } from "../api/auricruxActionsClient";
 import { readAcademyContext, subscribeAcademyContext } from "../academyContext";
+import { readPortalPageContext, subscribePortalPageContext } from "../portalPageContext";
 import {
   auricruxRail,
   currentProject,
@@ -141,11 +142,13 @@ export default function AuricruxDock() {
   const [compact, setCompact] = useState(true);
   const [hydrated, setHydrated] = useState(false);
   const [academyContext, setAcademyContext] = useState(() => readAcademyContext());
+  const [portalPageContext, setPortalPageContext] = useState(() => readPortalPageContext());
 
   const meta = useMemo(() => modeMeta(mode, poweredByLlm), [mode, poweredByLlm]);
   const activeQuickPrompts = academyContext ? academyQuickPrompts : quickPrompts;
 
   useEffect(() => subscribeAcademyContext(setAcademyContext), []);
+  useEffect(() => subscribePortalPageContext(setPortalPageContext), []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -194,6 +197,7 @@ export default function AuricruxDock() {
     try {
       const route = typeof window !== "undefined" ? window.location.pathname : "/portal/platform";
       const designParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+      const pageProjectId = portalPageContext?.projectId || currentProject.id;
       const data = await sendAuricruxMessage({
         message: cmd,
         route,
@@ -201,7 +205,10 @@ export default function AuricruxDock() {
           company: portalTenant.name,
           nextAction: workspaceContext.currentNextAction,
           blocker: auricruxRail.currentBlocker,
-          projectId: currentProject.id,
+          projectId: pageProjectId,
+          pipelineStep: portalPageContext?.pipelineStep || null,
+          bidId: portalPageContext?.bidId || null,
+          pageSurface: portalPageContext?.surface || null,
           academyContext: academyContext || null,
           designContext: route.includes("/portal/design")
             ? {
@@ -226,7 +233,7 @@ export default function AuricruxDock() {
       void submitAuricruxAction({
         mode: "recommend",
         targetObjectType: "Project",
-        targetObjectId: currentProject.id,
+        targetObjectId: pageProjectId,
         rationale: cmd,
         sourceRoute: route,
       }).catch(() => {});
@@ -373,7 +380,10 @@ export default function AuricruxDock() {
               <div style={{ fontSize: 12, color: "#475569", marginTop: 4 }}>{portalTenant.roleSummary}</div>
             </div>
             <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#1f2937" }}>
-              <div><strong>Project:</strong> {currentProject.id} · {currentProject.stage}</div>
+              <div><strong>Project:</strong> {portalPageContext?.projectId || currentProject.id} · {currentProject.stage}</div>
+              {portalPageContext?.pipelineStep ? (
+                <div><strong>Pipeline step:</strong> {portalPageContext.pipelineStep}</div>
+              ) : null}
               <div><strong>Next action:</strong> {workspaceContext.currentNextAction}</div>
               <div><strong>Revenue blocker:</strong> {auricruxRail.currentBlocker}</div>
               {academyContext ? (

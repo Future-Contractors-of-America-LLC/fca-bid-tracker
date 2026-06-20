@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import { publishPortalPageContext } from "../../portalPageContext";
 import {
   createPortalInvoice,
   deliverPortalInvoice,
@@ -40,6 +42,7 @@ function statusStyle(status) {
 export default function PortalBilling() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
+  const { activeProject } = useProjectWorkspace();
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
   const companyName = state?.tenant?.name || session?.company || brandSkin.companyName || "Customer Workspace";
 
@@ -85,6 +88,15 @@ export default function PortalBilling() {
       active = false;
     };
   }, [refreshSyncStamp]);
+
+  useEffect(() => {
+    publishPortalPageContext({
+      surface: "billing",
+      projectId: activeProject?.id || state?.project?.id || "",
+      pipelineStep: null,
+    });
+    return () => publishPortalPageContext(null);
+  }, [activeProject?.id, state?.project?.id]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

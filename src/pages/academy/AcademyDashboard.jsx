@@ -28,7 +28,9 @@ export default function AcademyDashboard() {
   const { academyState, exportTranscript } = useAcademyLms();
   const [transcriptBusy, setTranscriptBusy] = useState(false);
   const [transcriptMessage, setTranscriptMessage] = useState("");
+  const [showPrintTranscript, setShowPrintTranscript] = useState(false);
   const learnerId = session?.email || session?.customerId;
+  const learnerName = session?.displayName || session?.company || session?.email || "Learner";
 
   const enrollments = useMemo(
     () => (academyState.enrollments || []).filter((item) => !learnerId || item.learnerId === learnerId),
@@ -131,8 +133,36 @@ export default function AcademyDashboard() {
     }
   }
 
+  async function handlePrintTranscript() {
+    if (!learnerId) {
+      setTranscriptMessage("Sign in to print your transcript.");
+      return;
+    }
+    setShowPrintTranscript(true);
+    setTranscriptMessage("");
+    requestAnimationFrame(() => {
+      window.print();
+      setTimeout(() => setShowPrintTranscript(false), 500);
+    });
+  }
+
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
+      <style>{`
+        @media print {
+          body * { visibility: hidden !important; }
+          #fca-transcript-print, #fca-transcript-print * { visibility: visible !important; }
+          #fca-transcript-print {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 24px;
+            background: #fff;
+            color: #0f172a;
+          }
+        }
+      `}</style>
       <ShellHeader
         compact
         eyebrow="FCA Academy"
@@ -512,6 +542,14 @@ export default function AcademyDashboard() {
             >
               {transcriptBusy ? "Exporting..." : "Download transcript (JSON)"}
             </button>
+            <button
+              type="button"
+              onClick={handlePrintTranscript}
+              disabled={!learnerId}
+              style={{ border: "1px solid #16a34a", background: "#fff", color: "#15803d", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
+            >
+              Print transcript
+            </button>
             {transcriptMessage ? <span style={{ color: "#475569" }}>{transcriptMessage}</span> : null}
           </div>
 
@@ -543,6 +581,61 @@ export default function AcademyDashboard() {
           ) : null}
         </section>
       </main>
+
+      {showPrintTranscript ? (
+        <div id="fca-transcript-print" style={{ display: showPrintTranscript ? "block" : "none" }}>
+          <div style={{ textAlign: "center", borderBottom: "2px solid #1d4ed8", paddingBottom: 16, marginBottom: 20 }}>
+            <div style={{ color: "#1d4ed8", fontWeight: 700, letterSpacing: 2 }}>FCA ACADEMY</div>
+            <h1 style={{ margin: "8px 0 4px", fontSize: 24 }}>Official Learner Transcript</h1>
+            <div style={{ color: "#64748b" }}>{learnerName} · {learnerId}</div>
+            <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>Generated {new Date().toLocaleDateString()}</div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 20 }}>
+            <div><strong>Programs enrolled:</strong> {enrollments.length}</div>
+            <div><strong>Completed:</strong> {enrollments.filter((item) => item.progressPercent >= 100).length}</div>
+            <div><strong>Credentials:</strong> {certificates.filter((item) => item.status === "Issued").length}</div>
+            {degreeGpa ? <div><strong>Degree GPA:</strong> {degreeGpa}</div> : null}
+            {ceuEarned > 0 ? <div><strong>CEU hours:</strong> {ceuEarned}</div> : null}
+          </div>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid #334155" }}>
+                <th style={{ textAlign: "left", padding: 8 }}>Program</th>
+                <th style={{ textAlign: "left", padding: 8 }}>Progress</th>
+                <th style={{ textAlign: "left", padding: 8 }}>Module scores</th>
+                <th style={{ textAlign: "left", padding: 8 }}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {enrollments.map((enrollment) => {
+                const scores = Object.entries(enrollment.moduleScores || {});
+                const avgScore = scores.length
+                  ? Math.round(scores.reduce((sum, [, value]) => sum + Number(value), 0) / scores.length)
+                  : null;
+                return (
+                  <tr key={enrollment.enrollmentId} style={{ borderBottom: "1px solid #e2e8f0" }}>
+                    <td style={{ padding: 8 }}>{enrollment.programTitle}</td>
+                    <td style={{ padding: 8 }}>{enrollment.progressPercent}% ({enrollment.completedModules}/{enrollment.totalModules})</td>
+                    <td style={{ padding: 8 }}>{avgScore !== null ? `${avgScore}% avg` : "-"}</td>
+                    <td style={{ padding: 8 }}>{enrollment.status}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {certificates.length > 0 ? (
+            <div style={{ marginTop: 24 }}>
+              <h2 style={{ fontSize: 16, marginBottom: 8 }}>Credentials</h2>
+              {certificates.map((cert) => (
+                <div key={cert.certificateId} style={{ padding: "8px 0", borderBottom: "1px solid #e2e8f0" }}>
+                  {cert.title} · {cert.status} · {cert.certificateId}
+                  {cert.issuedAt ? ` · Issued ${new Date(cert.issuedAt).toLocaleDateString()}` : ""}
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
 
       <ShellFooter ctaSet={academyCtaSets.home} />
     </div>

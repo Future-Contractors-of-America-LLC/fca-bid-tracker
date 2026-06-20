@@ -61,8 +61,8 @@ export default function useAcademyLms() {
   return useMemo(() => ({
     academyState,
     meta,
-    async assignProgram(learnerId, programKey, coach = "Auricrux") {
-      const payload = await mutateAcademyLms("assign-program", { learnerId, programKey, coach });
+    async assignProgram(learnerId, programKey, coach = "Auricrux", assignedProjectId = "") {
+      const payload = await mutateAcademyLms("assign-program", { learnerId, programKey, coach, assignedProjectId });
       setAcademyState(payload);
       setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy assignment active", lastSyncedAt: new Date().toISOString() });
       appendAutomationLog({ type: "academy-assignment", title: `${learnerId} assigned to ${programKey}`, detail: `Auricrux assigned ${learnerId} into ${programKey} and preserved workforce continuity.`, route: "/academy" });

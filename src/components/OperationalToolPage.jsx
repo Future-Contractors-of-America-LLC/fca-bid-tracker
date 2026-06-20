@@ -3,6 +3,7 @@ import PortalShell from "./PortalShell";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import useCustomerSession from "../hooks/useCustomerSession";
 import useProjectWorkspace from "../hooks/useProjectWorkspace";
+import { publishPortalPageContext } from "../portalPageContext";
 import { routeStateOverlays } from "../systemState";
 
 const cardStyle = {
@@ -107,6 +108,16 @@ export function createOperationalPortalPage({
       if (activeProject?.id) setSelectedProjectId(activeProject.id);
       else if (!selectedProjectId && projects[0]?.id) setSelectedProjectId(projects[0].id);
     }, [activeProject?.id, projects, projectScoped, selectedProjectId]);
+
+    useEffect(() => {
+      if (!projectScoped) return undefined;
+      publishPortalPageContext({
+        surface: "field-ops",
+        projectId: selectedProjectId || activeProject?.id || "",
+        pipelineStep: null,
+      });
+      return () => publishPortalPageContext(null);
+    }, [activeProject?.id, projectScoped, selectedProjectId]);
 
     async function reloadApiItems() {
       if (!apiHandlers?.fetchItems) return;
