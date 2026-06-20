@@ -1,9 +1,9 @@
 # First Persisted Control Run Gate Validation
 
 - Packet: 062Y
-- Generated: 2026-06-20T21:43:35.184Z
+- Generated: 2026-06-20T21:53:06.908Z
 - success: false
-- proofCommitSha: 81c6d9a5f959eb7ee4c21592bb66c40737145ce4
+- proofCommitSha: dca929117a53321ab7e42ebd97d10f655471a1c7
 - surfacePresent: false
 - bundlePresent: false
 
