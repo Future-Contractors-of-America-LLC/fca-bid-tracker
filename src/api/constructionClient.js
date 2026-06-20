@@ -101,3 +101,36 @@ export async function fetchProjectRfis(projectId) {
   if (!response.ok) throw new Error(payload?.error || "Unable to load RFIs.");
   return payload?.data?.items || payload?.items || [];
 }
+
+export async function createProjectRfi(projectId, body) {
+  const response = await centralFetch(`/api/projects/${encodeURIComponent(projectId)}/rfis`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...body, sourceRoute: body?.sourceRoute || "/portal/rfis" }),
+  });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || payload?.ok === false) throw new Error(payload?.error || "Unable to create RFI.");
+  return payload?.data?.item || payload?.item || payload?.data || payload;
+}
+
+export async function createChangeOrder(body) {
+  const response = await centralFetch("/api/change-orders", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...body, sourceRoute: body?.sourceRoute || "/portal/change-orders" }),
+  });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) throw new Error(payload?.error || "Unable to create change order.");
+  return payload;
+}
+
+export async function advanceChangeOrder(body) {
+  const response = await centralFetch("/api/change-orders", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "advance-change-order", ...body, sourceRoute: body?.sourceRoute || "/portal/change-orders" }),
+  });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) throw new Error(payload?.error || "Unable to advance change order.");
+  return payload;
+}

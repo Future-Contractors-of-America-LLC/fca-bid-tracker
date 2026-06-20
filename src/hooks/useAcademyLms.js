@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { fetchAcademyLms, mutateAcademyLms } from "../api/academyClient";
+import { fetchAcademyLms, mutateAcademyLms, exportAcademyTranscript } from "../api/academyClient";
 import { appendAutomationLog } from "../sessionAutomationLog";
 import { appendCommercialLog } from "../sessionCommercialLog";
 
@@ -97,6 +97,12 @@ export default function useAcademyLms() {
       setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy certificate issuance active", lastSyncedAt: new Date().toISOString() });
       appendAutomationLog({ type: "academy-certificate", title: `${enrollmentId} certificate issued`, detail: `Auricrux issued the completion credential for ${enrollmentId}.`, route: "/academy" });
       appendCommercialLog({ type: "academy-certificate", title: `${enrollmentId} credential issued`, detail: `Credential issuance now reinforces customer trust and workforce readiness continuity.`, route: "/academy" });
+      return payload;
+    },
+    async exportTranscript(learnerId) {
+      const payload = await exportAcademyTranscript(learnerId);
+      setAcademyState(payload);
+      setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy transcript export active", lastSyncedAt: new Date().toISOString() });
       return payload;
     },
   }), [academyState, meta]);

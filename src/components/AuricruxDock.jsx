@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { brandIdentity } from "../brandIdentity";
 import { sendAuricruxMessage } from "../api/auricruxClient";
 import { submitAuricruxAction } from "../api/auricruxActionsClient";
+import { readAcademyContext, subscribeAcademyContext } from "../academyContext";
 import {
   auricruxRail,
   currentProject,
@@ -14,6 +15,12 @@ const quickPrompts = [
   "What is the next customer action?",
   "Show training continuity.",
   "What is blocking revenue right now?",
+];
+
+const academyQuickPrompts = [
+  "Explain this module objective.",
+  "What should I focus on in the lab?",
+  "How do I pass the knowledge check?",
 ];
 
 const auricruxColors = brandIdentity.auricrux.colors;
@@ -133,8 +140,12 @@ export default function AuricruxDock() {
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(true);
   const [hydrated, setHydrated] = useState(false);
+  const [academyContext, setAcademyContext] = useState(() => readAcademyContext());
 
   const meta = useMemo(() => modeMeta(mode, poweredByLlm), [mode, poweredByLlm]);
+  const activeQuickPrompts = academyContext ? academyQuickPrompts : quickPrompts;
+
+  useEffect(() => subscribeAcademyContext(setAcademyContext), []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -191,6 +202,7 @@ export default function AuricruxDock() {
           nextAction: workspaceContext.currentNextAction,
           blocker: auricruxRail.currentBlocker,
           projectId: currentProject.id,
+          academyContext: academyContext || null,
           designContext: route.includes("/portal/design")
             ? {
                 fileId: designParams.get("fileId") || "",
@@ -364,7 +376,11 @@ export default function AuricruxDock() {
               <div><strong>Project:</strong> {currentProject.id} · {currentProject.stage}</div>
               <div><strong>Next action:</strong> {workspaceContext.currentNextAction}</div>
               <div><strong>Revenue blocker:</strong> {auricruxRail.currentBlocker}</div>
-              <div><strong>Training:</strong> Two learners need assignment to preserve academy continuity.</div>
+              {academyContext ? (
+                <div><strong>Academy:</strong> {academyContext.programTitle || academyContext.programKey} · Module {academyContext.moduleNumber}</div>
+              ) : (
+                <div><strong>Training:</strong> Two learners need assignment to preserve academy continuity.</div>
+              )}
             </div>
           </div>
 
@@ -376,7 +392,7 @@ export default function AuricruxDock() {
           <div style={{ marginTop: 12 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: auricruxColors.ink, marginBottom: 8 }}>Quick prompts</div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {quickPrompts.map((prompt) => (
+              {activeQuickPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   onClick={() => send(prompt)}

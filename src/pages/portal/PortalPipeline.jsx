@@ -111,7 +111,7 @@ export default function PortalPipeline() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
   const { bids, updateBidQualification, routeBidToEstimate, markWonAndCreateProject } = useBidWorkspace();
-  const { projects } = useProjectWorkspace();
+  const { projects, activeProject } = useProjectWorkspace();
 
   const [activeBidId, setActiveBidId] = useState(() => bids[0]?.id || "");
   const [invoices, setInvoices] = useState([]);
@@ -256,7 +256,7 @@ export default function PortalPipeline() {
 
   async function runInvoice() {
     if (!activeBid) return;
-    const projectId = activePipeline?.link?.projectId || "A-117";
+    const projectId = activePipeline?.link?.projectId || activeProject?.id || "";
     const estimateId = activePipeline?.link?.estimateId || "EST-1";
     setBusy("invoice");
     setError("");

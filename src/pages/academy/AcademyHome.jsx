@@ -180,6 +180,7 @@ export default function AcademyHome() {
 
   const apiPrograms = academyState?.catalog?.programs ?? [];
   const enrollments = academyState?.enrollments ?? [];
+  const laneProgramCounts = academyState?.summary?.laneProgramCounts || {};
 
   useEffect(() => {
     refreshSyncStamp("Academy classroom continuity active");
@@ -259,16 +260,27 @@ export default function AcademyHome() {
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Catalog overview</h2>
         <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
-          <strong>{catalogProgramCount}</strong> programs across <strong>{OFFERING_LANES.length}</strong> lanes: {OFFERING_LANES.map((lane) => lane.label).join(", ")}.
-          {" "}<a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700 }}>View full catalog by lane →</a>
+          <strong>{catalogProgramCount}</strong> programs across <strong>{OFFERING_LANES.length}</strong> lanes.
+          {" "}<a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700 }}>View full catalog by lane</a>
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
-          {catalogLanes.filter((lane) => lane.programs.length > 0).map((lane) => (
-            <div key={lane.key} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: "#f8fafc" }}>
-              <strong>{lane.label}</strong>
-              <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{lane.programs.length} program{lane.programs.length === 1 ? "" : "s"}</div>
-            </div>
-          ))}
+          {OFFERING_LANES.map((lane) => {
+            const liveCount = laneProgramCounts[lane.key];
+            const fallbackCount = catalogLanes.find((item) => item.key === lane.key)?.programs.length || 0;
+            const count = liveCount ?? fallbackCount;
+            if (!count) return null;
+            return (
+              <a
+                key={lane.key}
+                href={`/academy/catalog?lane=${lane.key}`}
+                style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: "#f8fafc", textDecoration: "none", color: "inherit" }}
+              >
+                <strong>{lane.label}</strong>
+                <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{count} program{count === 1 ? "" : "s"}</div>
+                <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginTop: 8 }}>Browse lane</div>
+              </a>
+            );
+          })}
         </div>
       </div>
 

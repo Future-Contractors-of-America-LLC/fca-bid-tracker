@@ -11,7 +11,7 @@ import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
 import { publicBodyCtaSets } from "../../websiteShell";
 import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets, qualificationEvidenceByProject } from "../../qualificationEvidence";
-import { routeStateOverlays } from "../../systemState";
+import { submitAuricruxAction } from "../../api/auricruxActionsClient";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -89,13 +89,13 @@ function isBriefingReady(file = {}) {
   return haystack.includes("briefing");
 }
 
-function buildBriefingMutation(file, visibleProject) {
+function buildBriefingMutation(file, visibleProject, guidanceReply = "") {
   return {
     evidenceStatus: "Briefing generated",
     status: "Auricrux briefing ready",
     actionLabel: "Open briefing",
     briefingTitle: `Auricrux Briefing — ${file.name}`,
-    briefingSummary: `Auricrux generated a governed briefing placeholder for ${file.name} under ${visibleProject.id}.`,
+    briefingSummary: guidanceReply || `Auricrux generated a governed briefing for ${file.name} under ${visibleProject.id}.`,
     briefingKeyFacts: [
       `${file.category || "Document"} artifact is attached to ${visibleProject.id}.`,
       `${file.discipline || "Document Control"} continuity remains governed inside the active file spine.`,
@@ -123,6 +123,7 @@ export default function PortalFiles() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
   const { activeProject, meta: projectMeta } = useProjectWorkspace();
   const [busyFileId, setBusyFileId] = useState(null);
+  const [actionError, setActionError] = useState("");
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState(() => readLocalJson(FILE_INTAKE_DRAFTS_KEY, defaultDraft));
   const [deepLink] = useState(() => readDeepLinkParams());
@@ -166,6 +167,30 @@ export default function PortalFiles() {
       refreshSyncStamp(detail);
     } finally {
       setBusyFileId(null);
+    }
+  }
+
+  async function handleCreateBriefing(file) {
+    setBusyFileId(file.fileId);
+    try {
+      const payload = await submitAuricruxAction({
+        mode: "recommend",
+        targetObjectType: "File",
+        targetObjectId: file.fileId,
+        rationale: `Generate governed briefing for ${file.name} under project ${visibleProject.id}.`,
+        sourceRoute: "/portal/files",
+      });
+      const guidanceReply = payload?.guidance?.reply || "";
+      await handleFileAction(
+        file,
+        "create-briefing",
+        `Auricrux generated a governed briefing for ${file.name} under ${visibleProject.id}.`,
+        buildBriefingMutation(file, visibleProject, guidanceReply),
+      );
+    } catch (error) {
+      setActionError(error.message || "Unable to generate briefing.");
+    } finally {
+      setBusyFileId("");
     }
   }
 
@@ -390,7 +415,7 @@ export default function PortalFiles() {
         onRegisterReview={(file) => handleFileAction(file, "register-review", `${file.name} queued for governed review under ${visibleProject.id}.`)}
         onClassifyFile={(file) => handleFileAction(file, "classify-file", `Auricrux classified ${file.name} for ${visibleProject.id}.`, { category: file.category, evidenceStatus: "Classification complete", status: "Classified", actionLabel: "Classification saved" })}
         onLinkEvidence={(file) => handleFileAction(file, "link-evidence", `${file.name} linked to governed evidence target for ${visibleProject.id}.`, { linkedEvidenceTarget: `${visibleProject.id} governed evidence chain`, evidenceStatus: "Evidence linked", status: "Linked to governed object", actionLabel: "Evidence linked" })}
-        onCreateBriefing={(file) => handleFileAction(file, "create-briefing", `Auricrux generated a briefing placeholder for ${file.name} under ${visibleProject.id}.`, buildBriefingMutation(file, visibleProject))}
+        onCreateBriefing={handleCreateBriefing}
         onOpenDesign={(file) => {
           const href = `/portal/design?projectId=${encodeURIComponent(visibleProject.id)}&fileId=${encodeURIComponent(file.fileId)}`;
           window.location.href = href;

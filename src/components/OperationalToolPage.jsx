@@ -124,8 +124,9 @@ export function createOperationalPortalPage({
       reloadApiItems()
         .catch((error) => {
           if (!active) return;
-          setLoadError(error.message || `Unable to load ${itemLabel.toLowerCase()} data.`);
-          setBackingSource("unavailable");
+          setLoadError(error.message || `Unable to load ${itemLabel.toLowerCase()} data. API unreachable — local queue active.`);
+          setApiItems(localItems);
+          setBackingSource("localStorage-fallback");
         });
       return () => {
         active = false;

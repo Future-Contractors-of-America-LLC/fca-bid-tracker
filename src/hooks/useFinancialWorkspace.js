@@ -14,7 +14,7 @@ import {
   fetchReportExport,
 } from "../api/financialClient";
 
-export default function useFinancialWorkspace(initialView = "dashboard", initialProjectId = "A-117") {
+export default function useFinancialWorkspace(initialView = "dashboard", initialProjectId = "") {
   const [view, setView] = useState(initialView);
   const [report, setReport] = useState("profit_loss");
   const [projectId, setProjectId] = useState(initialProjectId);

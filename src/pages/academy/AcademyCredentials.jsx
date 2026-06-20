@@ -83,6 +83,7 @@ export default function AcademyCredentials() {
             {certificates.map((cert) => (
               <article
                 key={cert.certificateId}
+                id={`certificate-${cert.certificateId}`}
                 style={{
                   ...cardStyle,
                   border: "2px solid #2563eb",
@@ -112,12 +113,21 @@ export default function AcademyCredentials() {
                     <strong>{cert.certificateId}</strong>
                   </div>
                 </div>
-                <a
-                  href={`/academy/programs/${cert.programKey}`}
-                  style={{ display: "inline-block", marginTop: 16, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}
-                >
-                  View program details
-                </a>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }}>
+                  <a
+                    href={`/academy/programs/${cert.programKey}`}
+                    style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}
+                  >
+                    View program details
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    style={{ border: "1px solid #2563eb", background: "#fff", color: "#1d4ed8", borderRadius: 10, padding: "8px 12px", fontWeight: 700, cursor: "pointer" }}
+                  >
+                    Print certificate
+                  </button>
+                </div>
               </article>
             ))}
           </div>
