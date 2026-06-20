@@ -3,7 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { ELECTRICAL_APPRENTICESHIP_LEVELS, organizeApiCatalogByLane } from "../../academyOfferings";
+import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, ELECTRICAL_APPRENTICESHIP_LEVELS, organizeApiCatalogByLane } from "../../academyOfferings";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -45,6 +45,18 @@ export default function AcademyDashboard() {
     const enrollment = enrollments.find((item) => item.programKey === level.key);
     return { ...level, enrollment };
   });
+
+  const degreePrograms = lanes.find((lane) => lane.key === "degree")?.programs || [];
+  const programByKey = Object.fromEntries(degreePrograms.map((p) => [p.key, p]));
+
+  const aasCmTerms = AAS_CONSTRUCTION_MANAGEMENT_TERMS.map((termBlock) => ({
+    ...termBlock,
+    courses: termBlock.courses.map((key) => ({
+      key,
+      title: programByKey[key]?.title || key,
+      enrollment: enrollments.find((item) => item.programKey === key),
+    })),
+  }));
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -99,6 +111,101 @@ export default function AcademyDashboard() {
               })}
             </div>
           )}
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Degree pathways (AAS and BS/BAS)</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            Ivy League-standard academic degree tracks with full semester curricula, general education core, major courses, practicum, and capstone requirements.
+          </p>
+          <div style={{ display: "grid", gap: 10, marginBottom: 20 }}>
+            {DEGREE_PATHWAYS.filter((p) => p.key !== "degree-general-education-core").map((pathway) => (
+              <div key={pathway.key} style={{ padding: "12px 14px", borderRadius: 10, border: "1px solid #e2e8f0", background: "#f8fafc" }}>
+                <strong>{pathway.label}</strong>
+                <span style={{ color: "#64748b", marginLeft: 8 }}>
+                  {pathway.level} - {pathway.credits} credits - {pathway.courses} courses
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>AAS Construction Management - term-by-term map</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            60-credit associate degree with 8 general education courses, 10 major courses, practicum, and capstone.
+          </p>
+          <div style={{ display: "grid", gap: 12 }}>
+            {aasCmTerms.map((termBlock) => (
+              <div key={termBlock.term} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 14 }}>
+                <strong>Term {termBlock.term}</strong>
+                <div style={{ display: "grid", gap: 6, marginTop: 8 }}>
+                  {termBlock.courses.map((course) => {
+                    const complete = course.enrollment?.progressPercent >= 100;
+                    const active = course.enrollment && !complete;
+                    return (
+                      <div
+                        key={course.key}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          gap: 10,
+                          flexWrap: "wrap",
+                          padding: "8px 10px",
+                          borderRadius: 8,
+                          border: `1px solid ${complete ? "#86efac" : active ? "#93c5fd" : "#e2e8f0"}`,
+                          background: complete ? "#f0fdf4" : active ? "#eff6ff" : "#fff",
+                        }}
+                      >
+                        <span style={{ color: "#334155", fontSize: 14 }}>{course.title}</span>
+                        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                          {course.enrollment ? (
+                            <span style={{ color: complete ? "#15803d" : "#2563eb", fontWeight: 700, fontSize: 13 }}>
+                              {course.enrollment.progressPercent}%
+                            </span>
+                          ) : null}
+                          <a href={`/academy/programs/${course.key}`} style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+                            {course.enrollment ? "Open" : "View"}
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>BS Construction Management - year progression</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            120-credit bachelor program with general education, 22 major courses, 4 electives, internship, and capstone sequence.
+          </p>
+          <div style={{ display: "grid", gap: 8 }}>
+            {BS_CONSTRUCTION_MANAGEMENT_YEARS.map((yearBlock) => (
+              <div
+                key={yearBlock.year}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                  flexWrap: "wrap",
+                  padding: "12px 14px",
+                  borderRadius: 10,
+                  border: "1px solid #e2e8f0",
+                  background: "#fff",
+                }}
+              >
+                <div>
+                  <strong>Year {yearBlock.year}</strong>
+                  <span style={{ color: "#64748b", marginLeft: 8 }}>{yearBlock.label}</span>
+                </div>
+                <span style={{ color: "#475569", fontSize: 14 }}>{yearBlock.courseCount} courses</span>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section style={{ ...cardStyle, marginBottom: 24 }}>
