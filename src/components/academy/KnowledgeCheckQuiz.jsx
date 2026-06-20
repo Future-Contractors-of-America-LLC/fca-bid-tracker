@@ -1,5 +1,27 @@
 import { useMemo, useState } from "react";
 
+function knowledgeCheckPassingScore(knowledgeCheck) {
+  if (knowledgeCheck && typeof knowledgeCheck === "object" && knowledgeCheck.passingScore != null) {
+    return Number(knowledgeCheck.passingScore) || 80;
+  }
+  return 80;
+}
+
+function knowledgeCheckIntro(knowledgeCheck) {
+  if (typeof knowledgeCheck === "string" && knowledgeCheck.trim()) {
+    return knowledgeCheck;
+  }
+  if (knowledgeCheck && typeof knowledgeCheck === "object") {
+    const passing = knowledgeCheckPassingScore(knowledgeCheck);
+    const count = knowledgeCheck.questionCount;
+    if (count) {
+      return `Answer all questions. A score of ${passing} percent or higher is required to complete this module (${count} questions).`;
+    }
+    return `Answer all questions. A score of ${passing} percent or higher is required to complete this module.`;
+  }
+  return "Answer all questions. A score of 80 percent or higher is required to complete this module.";
+}
+
 function shuffleOptions(options, correctIndex) {
   const labeled = options.map((text, index) => ({ text, isCorrect: index === correctIndex }));
   for (let i = labeled.length - 1; i > 0; i -= 1) {
@@ -55,10 +77,12 @@ export function buildQuestionsFromModule(module) {
     });
   }
 
+  const passingScore = knowledgeCheckPassingScore(module.knowledgeCheck);
+
   questions.push({
     id: "pass-rule",
     prompt: "What score is required to pass this module knowledge check?",
-    options: ["80 percent or higher", "50 percent or higher", "No minimum score", "100 percent only"],
+    options: [`${passingScore} percent or higher`, "50 percent or higher", "No minimum score", "100 percent only"],
     correctIndex: 0,
   });
 
@@ -74,6 +98,7 @@ const panelStyle = {
 
 export default function KnowledgeCheckQuiz({ module, onSubmit, busy = false }) {
   const questions = useMemo(() => buildQuestionsFromModule(module), [module]);
+  const passingScore = knowledgeCheckPassingScore(module?.knowledgeCheck);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
@@ -110,13 +135,13 @@ export default function KnowledgeCheckQuiz({ module, onSubmit, busy = false }) {
   }
 
   const score = submitted ? computeScore() : null;
-  const passed = score !== null && score >= 80;
+  const passed = score !== null && score >= passingScore;
 
   return (
     <form onSubmit={handleSubmit} style={panelStyle}>
       <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Knowledge Check</div>
       <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
-        {module.knowledgeCheck || "Answer all questions. A score of 80 percent or higher is required to complete this module."}
+        {knowledgeCheckIntro(module.knowledgeCheck)}
       </p>
 
       <div style={{ display: "grid", gap: 16 }}>
@@ -176,7 +201,7 @@ export default function KnowledgeCheckQuiz({ module, onSubmit, busy = false }) {
       {submitted ? (
         <div style={{ marginTop: 16, padding: 14, borderRadius: 12, background: passed ? "#f0fdf4" : "#fef2f2", border: `1px solid ${passed ? "#86efac" : "#fecaca"}` }}>
           <strong style={{ color: passed ? "#15803d" : "#991b1b" }}>
-            Score: {score}% {passed ? "- Passed" : "- Did not pass (80% required)"}
+            Score: {score}% {passed ? "- Passed" : `- Did not pass (${passingScore}% required)`}
           </strong>
         </div>
       ) : (
