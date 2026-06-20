@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { brandIdentity } from "../brandIdentity";
 import { sendAuricruxMessage } from "../api/auricruxClient";
+import { submitAuricruxAction } from "../api/auricruxActionsClient";
 import {
   auricruxRail,
   currentProject,
@@ -209,6 +210,14 @@ export default function AuricruxDock() {
         },
         ...prev,
       ]);
+
+      void submitAuricruxAction({
+        mode: "recommend",
+        targetObjectType: "Project",
+        targetObjectId: currentProject.id,
+        rationale: cmd,
+        sourceRoute: route,
+      }).catch(() => {});
     } catch (err) {
       setMode("fallback");
       setPoweredByLlm(false);
