@@ -22,26 +22,32 @@ const capabilityCards = [
   {
     title: "Lead pipeline",
     detail: "Capture opportunities, qualify bids, and move work from first contact to signed contract.",
+    href: "/leads/",
   },
   {
     title: "Job sites",
     detail: "Track active projects, milestones, RFIs, and next actions from every job.",
+    href: "/portal/projects",
   },
   {
     title: "Plan room",
     detail: "Share drawings, specs, and submittals with your team and customers.",
+    href: "/portal/files",
   },
   {
     title: "Academy",
     detail: "Electrical apprenticeship pathways, safety programs, and supervisor credentials.",
+    href: "/academy",
   },
   {
     title: "Billing",
     detail: "Invoices, payment status, and revenue follow-through in your customer portal.",
+    href: "/portal/billing",
   },
   {
     title: "Customer success",
     detail: "Branded communications and support cases tied to active work.",
+    href: "/portal/support",
   },
 ];
 
@@ -128,7 +134,12 @@ export default function Home() {
             {capabilityCards.map((item) => (
               <article key={item.title} style={cardStyle}>
                 <h3 style={{ marginTop: 0, fontSize: 17 }}>{item.title}</h3>
-                <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0 }}>{item.detail}</p>
+                <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: item.href ? 12 : 0 }}>{item.detail}</p>
+                {item.href ? (
+                  <a href={item.href} style={{ ...ctaSecondaryStyle, display: "inline-block", fontSize: 14 }}>
+                    Open {item.title}
+                  </a>
+                ) : null}
               </article>
             ))}
           </div>

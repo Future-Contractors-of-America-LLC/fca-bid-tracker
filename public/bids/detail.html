@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bid Detail | FCA</title>
+  <link rel="stylesheet" href="/leads/leads.css" />
+</head>
+<body>
+  <main class="fca-shell">
+    <div id="topbar"></div>
+    <div id="content"></div>
+    <div class="fca-footer">FCA Bid Detail — Auricrux Central</div>
+  </main>
+
+  <script src="/config/auricrux-central.js"></script>
+  <script src="/leads/leads.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const bidId = params.get("id");
+    const customerId = params.get("customerId") || "";
+
+    function row(label, value) {
+      return '<div><div class="fca-metric-label">' + label + '</div><div style="font-weight:600">' + (value || "—") + '</div></div>';
+    }
+
+    function renderBid(bid) {
+      const pricing = bid.auricruxPricing || {};
+      content.innerHTML =
+        '<section class="fca-hero">' +
+        '<h2>' + (bid.projectName || "Bid") + '</h2>' +
+        '<p>' + (bid.company || bid.customerName || "") + ' · ' + FCALeads.formatCurrency(bid.value || 0) + '</p>' +
+        '</section>' +
+        '<div class="fca-grid-2">' +
+        '<section class="fca-panel">' +
+        '<div class="fca-panel-header"><h3>Bid Record</h3><span class="fca-badge fca-badge-' + (bid.status || "new") + '">' + (bid.status || "new") + '</span></div>' +
+        '<div class="fca-form fca-grid-2">' +
+        row("Bid ID", bid.id) +
+        row("Customer", bid.customerName || bid.company) +
+        row("Contact", bid.contactName) +
+        row("Email", bid.contactEmail) +
+        row("Trade", bid.trade) +
+        row("Location", bid.location) +
+        row("Updated", FCALeads.formatDate(bid.updatedAt)) +
+        '</div></section>' +
+        '<section class="fca-auricrux">' +
+        '<h3>⚡ Auricrux Analysis</h3>' +
+        '<p>' + (bid.auricruxNarrative || bid.auricruxRecommendation || "Analysis pending.") + '</p>' +
+        '<div class="fca-grid-2" style="margin-bottom:16px">' +
+        '<div><div class="fca-metric-label" style="color:#94a3b8">Score</div><div style="font-size:28px;font-weight:800;color:white">' + (bid.auricruxScore || 0) + '/100</div></div>' +
+        '<div><div class="fca-metric-label" style="color:#94a3b8">Risk</div><div style="font-size:28px;font-weight:800;color:white;text-transform:capitalize">' + (bid.auricruxRisk || "—") + '</div></div>' +
+        '</div>' +
+        (pricing.competitive ? '<p style="color:#cbd5e1"><strong>Competitive:</strong> ' + FCALeads.formatCurrency(pricing.competitive) + '</p>' : '') +
+        '<p><strong style="color:white">Next Action:</strong> ' + (bid.nextAction || bid.auricruxRecommendation || "Review bid checklist.") + '</p>' +
+        '</section></div>' +
+        '<section class="fca-panel">' +
+        '<div class="fca-toolbar">' +
+        '<a class="fca-btn fca-btn-secondary" href="/bid-status">Bid Status</a>' +
+        '<a class="fca-btn fca-btn-secondary" href="/bid-entry">New Bid</a>' +
+        '<a class="fca-btn fca-btn-primary" href="/leads/">Lead Pipeline</a>' +
+        '</div></section>';
+    }
+
+    async function load() {
+      if (!bidId) {
+        content.innerHTML = '<div class="fca-empty">Missing bid ID. Use ?id=bid-123</div>';
+        return;
+      }
+      try {
+        const cfg = window.FCA_AURICRUX;
+        const list = await cfg.fetchBids(customerId ? { customerId } : undefined);
+        const bids = Array.isArray(list) ? list : [];
+        const bid = bids.find(function (b) { return b.id === bidId; });
+        if (!bid) {
+          content.innerHTML = '<div class="fca-empty">Bid not found: ' + bidId + '</div>';
+          return;
+        }
+        topbar.innerHTML = FCALeads.renderTopbar("pipeline");
+        renderBid(bid);
+      } catch (error) {
+        content.innerHTML = '<div class="fca-empty">Unable to load bid: ' + error.message + '</div>';
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

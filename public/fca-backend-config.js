@@ -1,6 +1,9 @@
 window.FCA_BACKEND = {
   baseUrl: "https://auricrux-central.azurewebsites.net",
   bidsApi: "https://auricrux-central.azurewebsites.net/api/bids",
+  leadsApi: "https://auricrux-central.azurewebsites.net/api/leads",
+  commercialPipelineApi: "https://auricrux-central.azurewebsites.net/api/commercial-pipeline",
+  onboardingApi: "https://auricrux-central.azurewebsites.net/api/onboarding",
   healthApi: "https://auricrux-central.azurewebsites.net/api/health",
   statusApi: "https://auricrux-central.azurewebsites.net/api/status",
   executeApi: "https://auricrux-central.azurewebsites.net/api/execute",

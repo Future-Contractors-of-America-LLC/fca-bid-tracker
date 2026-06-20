@@ -22,6 +22,10 @@ const routes = [
   "/api-continuity-audit.html",
   "/warranty",
   "/referrals",
+  "/leads/index.html",
+  "/leads/new.html",
+  "/config/auricrux-central.js",
+  "/bids/detail.html",
 ];
 
 const attempts = Number(process.env.AURICRUX_LIVE_VERIFY_ATTEMPTS || 20);

@@ -168,6 +168,7 @@ const NAV_MENUS = [
     items: [
       { label: "Pricing", href: "/pricing" },
       { label: "Digital Products", href: "/products" },
+      { label: "Lead Pipeline", href: "/leads/" },
       { label: "Get Started", href: "/intake" },
     ],
   },
@@ -210,6 +211,7 @@ const PORTAL_GROUPS = [
     label: "Operations",
     items: [
       { label: "Commercial pipeline", href: "/portal/pipeline" },
+      { label: "Lead intelligence", href: "/leads/" },
       { label: "Dashboard", href: "/portal/platform" },
       { label: "Project management", href: "/portal/projects" },
       { label: "Scheduling", href: "/portal/scheduling" },

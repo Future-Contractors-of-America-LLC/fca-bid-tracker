@@ -23,6 +23,7 @@
     "qc:lms": "node scripts/run-lms-qc.mjs",
     "qc:product": "node scripts/run-saas-qc.mjs && node scripts/run-lms-qc.mjs",
     "verify:live-deployment": "node scripts/verify-live-deployment.mjs",
+    "verify:central-api": "node scripts/verify-central-api.mjs",
     "validate:runtime-smoke": "node scripts/runtime_smoke_check.cjs",
     "capture:build-evidence": "node scripts/build_evidence_capture.cjs",
     "capture:ci-proof-index": "node scripts/ci_proof_index.cjs",

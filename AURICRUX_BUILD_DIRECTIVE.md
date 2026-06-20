@@ -75,7 +75,7 @@ Autonomous Build Mode:
 When given a phase directive, Auricrux should generate the next complete implementation package without asking follow-up questions unless the action requires Founder Approval.
 
 Preferred Next Phases:
-- Phase 1J: Bid detail view / expanded bid card.
+- Phase 1J: Bid detail view / expanded bid card. (Shipped: `/bids/detail.html?id={bidId}`)
 - Phase 1K: Customer-specific status URL support.
 - Phase 1L: Bid edit/update page.
 - Phase 1M: Proposal-readiness checklist expansion.

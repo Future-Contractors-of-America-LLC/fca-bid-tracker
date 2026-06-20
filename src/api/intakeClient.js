@@ -17,24 +17,53 @@ export function checkoutUrlForPlan(plan, clientReferenceId) {
 }
 
 export async function submitIntakeBid(record) {
+  const bidPayload = {
+    company: record.company,
+    projectName: `${record.company} - ${record.plan}`,
+    contactName: record.name,
+    contactEmail: record.email,
+    value: planValue(record.plan),
+    status: "new",
+    intakeId: record.intakeId,
+    source: "fca-web-intake",
+  };
+
   const response = await centralFetch("/api/bids", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      company: record.company,
-      projectName: `${record.company} - ${record.plan}`,
-      contactName: record.name,
-      contactEmail: record.email,
-      value: planValue(record.plan),
-      status: "new",
-      intakeId: record.intakeId,
-      source: "fca-web-intake",
-    }),
+    body: JSON.stringify(bidPayload),
   });
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) {
     throw new Error(payload?.error || "Unable to save intake to backend.");
   }
+
+  try {
+    await centralFetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sourceChannel: "fca-web-intake",
+        serviceLine: "general-construction",
+        projectIntent: record.plan || "commercial",
+        sourceRoute: "/intake",
+        createdBy: "fca-web-intake",
+        client: {
+          name: record.company,
+          contactName: record.name,
+          contactEmail: record.email,
+        },
+        site: {
+          name: `${record.company} - ${record.plan}`,
+          estimatedValue: planValue(record.plan),
+        },
+        notes: `Web intake plan: ${record.plan}`,
+      }),
+    });
+  } catch {
+    // Lead mirror is best-effort; bid record remains source of truth for intake.
+  }
+
   return payload;
 }
 
