@@ -1,4 +1,4 @@
-import { academyCatalog } from "../src/academyCatalog.js";
+import { academyCatalog } from "./_lib/academyCatalog.js";
 
 const LEGAL_MODULE_CONTENT = {
   "contractor-business-formation-legal": {

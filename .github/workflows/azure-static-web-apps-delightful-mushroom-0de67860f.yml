@@ -96,6 +96,7 @@ jobs:
           test -f api_generated/projects/index.js
           test -f api_generated/academy-lms/function.json
           test -f api_generated/academy-lms/index.js
+          test -f api_generated/_lib/academyCatalog.js
 
       - name: Archive governed deployment payload
         run: |

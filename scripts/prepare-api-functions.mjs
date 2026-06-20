@@ -52,6 +52,16 @@ function main() {
     fs.cpSync(libDir, path.join(outRoot, '_lib'), { recursive: true });
   }
 
+  const academyCatalogSource = path.join(repoRoot, 'src', 'academyCatalog.js');
+  const apiLibDir = path.join(apiRoot, '_lib');
+  const generatedLibDir = path.join(outRoot, '_lib');
+  ensureDir(apiLibDir);
+  ensureDir(generatedLibDir);
+  if (fs.existsSync(academyCatalogSource)) {
+    fs.copyFileSync(academyCatalogSource, path.join(apiLibDir, 'academyCatalog.js'));
+    fs.copyFileSync(academyCatalogSource, path.join(generatedLibDir, 'academyCatalog.js'));
+  }
+
   const apiEntries = fs.readdirSync(apiRoot, { withFileTypes: true });
 
   // Only directories that are already real function apps should suppress wrapper generation.
