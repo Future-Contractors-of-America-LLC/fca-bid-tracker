@@ -50,11 +50,9 @@ export default function useDesignWorkspace(projectId, fileId, sheetId = "") {
 
       const nextManifest = manifestResult?.manifest || contentResult?.manifest || null;
       const resolvedFormat = contentResult?.file?.format || contentResult?.file?.fileFormat || nextManifest?.format;
-      const cadFormats = new Set(["dwg", "rvt", "ifc", "nwd", "nwc"]);
-      const shouldQueue = cadFormats.has(String(resolvedFormat || "").toLowerCase());
       const viewerResult = await fetchViewerToken(projectId, fileId, {
         format: resolvedFormat,
-        queue: shouldQueue,
+        queue: false,
       }).catch(() => null);
       setManifest(nextManifest);
       setContentUrl(contentResult?.streamUrl ? centralApi(contentResult.streamUrl) : contentResult?.contentUrl || "");
@@ -92,6 +90,7 @@ export default function useDesignWorkspace(projectId, fileId, sheetId = "") {
 
   const queueViewerTranslation = useCallback(async () => {
     if (!projectId || !fileId) return null;
+    if (!viewerSession?.interop?.enabled) return null;
     setQueueBusy(true);
     try {
       const format = fileRecord?.format || fileRecord?.fileFormat || manifest?.format;
@@ -101,7 +100,7 @@ export default function useDesignWorkspace(projectId, fileId, sheetId = "") {
     } finally {
       setQueueBusy(false);
     }
-  }, [projectId, fileId, fileRecord, manifest]);
+  }, [projectId, fileId, fileRecord, manifest, viewerSession]);
 
   const addMarkup = useCallback(
     async (markupPayload) => {
