@@ -11,7 +11,7 @@ Templates and checklists for **contractors using FCA** to run compliant business
 
 **Portal workspace:** `/portal/legal`  
 **Public index:** `/legal/contractor-resources`  
-**Academy:** `contractor-business-formation-legal`, `virginia-dpor-residential-license-prep`, `osha30-certification-prep`
+**Academy:** `contractor-business-formation-legal`, `contractor-construction-law-essentials`, `virginia-dpor-residential-license-prep`, `osha30-certification-prep`
 
 ---
 

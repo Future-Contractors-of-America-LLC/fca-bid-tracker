@@ -8,7 +8,15 @@ import {
   LegalPostalAddress,
 } from "../../legal/LegalProse";
 import { documentTemplates } from "../../contractorLegal/contractorLegalCatalog";
+import { FCA_ENTITY } from "../../legal/entityInfo";
 import { legalLink } from "../../legal/legalStyles";
+
+const ACADEMY_LEGAL_TRACKS = [
+  { href: "/academy/programs/contractor-business-formation-legal/modules/1", label: "Business Formation and Legal Setup", detail: "Virginia LLC, EIN, operating agreement" },
+  { href: "/academy/programs/contractor-construction-law-essentials/modules/1", label: "Construction Law Essentials", detail: "contracts, liens, subs" },
+  { href: "/academy/programs/virginia-dpor-residential-license-prep/modules/1", label: "Virginia DPOR Residential License Prep", detail: "DPOR licensure path" },
+  { href: "/academy/programs/osha30-certification-prep/modules/1", label: "OSHA 30 Certification Prep", detail: "jobsite safety program" },
+];
 
 export default function ContractorLegalResourcesContent() {
   const byCategory = {};
@@ -32,12 +40,7 @@ export default function ContractorLegalResourcesContent() {
       </LegalP>
       <LegalH3>Academy tracks</LegalH3>
       <LegalUl
-        items={[
-          "[Business Formation and Legal Setup](/academy/programs/lic-contractor-business-formation/modules/1) - Virginia LLC, EIN, operating agreement",
-          "[Construction Law Essentials](/academy/programs/lic-construction-law-essentials/modules/1) - contracts, liens, subs",
-          "[Virginia DPOR Residential License Prep](/academy/programs/lic-dpor-residential-contractor-prep/modules/1)",
-          "[OSHA 30 Certification Prep](/academy/programs/cert-osha-30-construction/modules/1)",
-        ]}
+        items={ACADEMY_LEGAL_TRACKS.map((track) => `[${track.label}](${track.href}) - ${track.detail}`)}
       />
       <LegalH3>Document template library</LegalH3>
       <LegalP>
@@ -47,13 +50,18 @@ export default function ContractorLegalResourcesContent() {
       {Object.entries(byCategory).map(([category, items]) => (
         <div key={category}>
           <LegalH4>{category}</LegalH4>
-          <LegalUl items={items.map((t) => `${t.title} - ${t.summary}`)} />
+          <LegalUl
+            items={items.map((t) => `${t.title} - ${t.summary} (template: \`${t.docPath}\`, file category: ${t.fileCategory})`)}
+          />
         </div>
       ))}
       <LegalH3>FCA entity reference</LegalH3>
       <LegalPostalAddress />
       <LegalP>
-        Template and compliance questions: [legal@futurecontractorsofamerica.com](mailto:legal@futurecontractorsofamerica.com)
+        Template and compliance questions:{" "}
+        <a href={`mailto:${FCA_ENTITY.emails.legal}`} style={legalLink}>
+          {FCA_ENTITY.emails.legal}
+        </a>
       </LegalP>
     </>
   );

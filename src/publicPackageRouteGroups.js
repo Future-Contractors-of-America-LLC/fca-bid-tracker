@@ -46,6 +46,10 @@ export const publicPackageRouteGroups = [
       { href: "/academy", label: "Academy Home" },
       { href: "/academy/catalog", label: "Academy Catalog" },
       { href: "/academy/programs", label: "Program lessons" },
+      { href: "/academy/programs/contractor-business-formation-legal/modules/1", label: "Business Formation Legal" },
+      { href: "/academy/programs/contractor-construction-law-essentials/modules/1", label: "Construction Law Essentials" },
+      { href: "/academy/programs/virginia-dpor-residential-license-prep/modules/1", label: "Virginia DPOR Prep" },
+      { href: "/academy/programs/osha30-certification-prep/modules/1", label: "OSHA 30 Prep" },
       { href: "/portal/academy", label: "Portal Academy" }
     ]
   },

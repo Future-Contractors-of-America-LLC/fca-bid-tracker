@@ -344,6 +344,43 @@ export default function PortalFiles() {
         </ul>
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0 }}>File governance registers</h2>
+        <p style={{ lineHeight: 1.7, color: "#475569", marginTop: 0 }}>
+          Cross-project registers tie legal artifacts, drawings, RFIs, and closeout packages to governed portal routes.
+        </p>
+        <div style={{ display: "grid", gap: 14 }}>
+          {fileGovernance.registers.map((register) => (
+            <div key={register.title} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
+              <div style={{ fontWeight: 800, color: "#0f172a" }}>{register.title}</div>
+              <div style={{ fontSize: 14, color: "#475569", marginTop: 6, lineHeight: 1.6 }}>{register.purpose}</div>
+              <div style={{ fontSize: 13, color: "#64748b", marginTop: 8 }}>
+                Artifacts: {register.artifacts.join(" · ")}
+              </div>
+              <a href={register.route} style={{ ...secondaryButtonStyle, display: "inline-block", marginTop: 10, textDecoration: "none" }}>
+                {register.label}
+              </a>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 18 }}>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Closeout packages</div>
+          <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", margin: 0 }}>
+            {fileGovernance.closeoutPackages.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div style={{ marginTop: 18 }}>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Audit signals</div>
+          <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", margin: 0 }}>
+            {fileGovernance.auditSignals.map((signal) => (
+              <li key={signal}>{signal}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
       <ProjectFileAuditPanel
         project={visibleProject}
         files={files}

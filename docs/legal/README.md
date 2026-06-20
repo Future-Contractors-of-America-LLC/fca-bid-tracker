@@ -16,12 +16,15 @@ docs/legal/
 ??? PATENT_OPPORTUNITIES_PREP.md
 ??? INVENTION_DISCLOSURE_TEMPLATE.md
 ??? enterprise/                        ? Fortune 100 procurement corpus
-    ??? LEGAL_ENTERPRISE_INDEX.md      ? start here
-    ??? TERMS_OF_SERVICE.md
-    ??? PRIVACY_POLICY.md
-    ??? DATA_PROCESSING_AGREEMENT.md
-    ??? MASTER_SERVICES_AGREEMENT.md
-    ??? ù (see index for full list)
+?   ??? LEGAL_ENTERPRISE_INDEX.md      ? start here
+?   ??? TERMS_OF_SERVICE.md
+?   ??? PRIVACY_POLICY.md
+?   ??? DATA_PROCESSING_AGREEMENT.md
+?   ??? MASTER_SERVICES_AGREEMENT.md
+?   ??? ? (see index for full list)
+??? contractor/                        ? contractor legal templates & checklists
+    ??? CONTRACTOR_LEGAL_INDEX.md      ? start here
+    ??? ? (agreements, lien waivers, formation)
 ```
 
 ---

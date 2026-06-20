@@ -1,13 +1,35 @@
 import { publicPackageRouteGroups } from "../src/publicPackageRouteGroups.js";
-import { routes } from "../src/routes.js";
+import { routes, routePatterns } from "../src/routes.js";
 import { academyCatalog } from "../src/academyCatalog.js";
 import * as customerCommandTools from "../src/customerCommandTools.js";
+
+function matchRoutePattern(pattern, pathname) {
+  const normalizedPattern = pattern.endsWith("/") && pattern !== "/" ? pattern.slice(0, -1) : pattern;
+  const normalizedPath = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+  const patternParts = normalizedPattern.split("/").filter(Boolean);
+  const pathParts = normalizedPath.split("/").filter(Boolean);
+  if (patternParts.length !== pathParts.length) return false;
+  for (let index = 0; index < patternParts.length; index += 1) {
+    const patternPart = patternParts[index];
+    const pathPart = pathParts[index];
+    if (patternPart.startsWith(":")) continue;
+    if (patternPart !== pathPart) return false;
+  }
+  return true;
+}
+
+function isBackedRoute(href) {
+  if (routes[href]) return true;
+  return (routePatterns || []).some((entry) => matchRoutePattern(entry.pattern, href));
+}
 
 const requiredAcademyProgramKeys = [
   "electrical-apprenticeship-year1",
   "osha30-certification-prep",
   "aas-construction-operations-sem1",
   "virginia-dpor-residential-license-prep",
+  "contractor-business-formation-legal",
+  "contractor-construction-law-essentials",
   "fca-contractor-command-user-guide"
 ];
 
@@ -32,7 +54,7 @@ for (const group of publicPackageRouteGroups) {
 
   const missingRoutes = group.routes
     .map((route) => route.href)
-    .filter((href) => !routes[href]);
+    .filter((href) => !isBackedRoute(href));
 
   if (missingRoutes.length) {
     failed = true;

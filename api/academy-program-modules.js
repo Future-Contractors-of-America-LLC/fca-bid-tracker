@@ -1,4 +1,7 @@
 import { academyCatalog } from "./_lib/academyCatalog.js";
+import { FCA_ENTITY, formatPrincipalOffice } from "./_lib/entityInfo.js";
+
+const FCA_ENTITY_REFERENCE = `${FCA_ENTITY.legalName}, ${formatPrincipalOffice(false)}`;
 
 const LEGAL_MODULE_CONTENT = {
   "contractor-business-formation-legal": {
@@ -10,7 +13,7 @@ const LEGAL_MODULE_CONTENT = {
         "Record entity choice rationale in /portal/legal entity profile",
       ],
       practicalLab: "Open /portal/legal and draft your entity name, type, and state of formation before SCC filing.",
-      contentHtml: `<p>Virginia contractors typically form an <strong>LLC</strong> to separate personal assets from project liability. Document your structure choice in <a href="/portal/legal">Contractor Legal Command</a> before filing.</p><ul><li>LLC: flexible taxation, limited liability, common for Class A/B and residential builders</li><li>Sole prop: simplest start, no liability shield — rarely appropriate at scale</li><li>S-Corp election: tax planning after counsel and CPA review</li></ul><p>FCA reference entity: <strong>Future Contractors of America LLC</strong>, 22310 Old Vaughan Road, Dinwiddie, VA 23841.</p>`,
+      contentHtml: `<p>Virginia contractors typically form an <strong>LLC</strong> to separate personal assets from project liability. Document your structure choice in <a href="/portal/legal">Contractor Legal Command</a> before filing.</p><ul><li>LLC: flexible taxation, limited liability, common for Class A/B and residential builders</li><li>Sole prop: simplest start, no liability shield — rarely appropriate at scale</li><li>S-Corp election: tax planning after counsel and CPA review</li></ul><p>FCA reference entity: <strong>${FCA_ENTITY_REFERENCE}</strong>.</p>`,
     },
     2: {
       objective: "Complete Virginia State Corporation Commission (SCC) LLC formation and store the Certificate of Fact.",
@@ -103,7 +106,7 @@ function buildModules(program) {
   return Array.from({ length: count }, (_, index) => {
     const moduleNumber = index + 1;
     const titleFromCatalog = titles[index] || `Module ${moduleNumber}`;
-    const title = titleFromCatalog.replace(/^Module \d+ ·\s*/i, "").replace(/^Lesson \d+ ·\s*/i, "");
+    const title = titleFromCatalog.replace(/^Module \d+ —\s*/i, "").replace(/^Lesson \d+ —\s*/i, "");
     const enriched = legalContent[moduleNumber] || {};
 
     return {

@@ -115,6 +115,9 @@ export default function PortalLegal() {
             <a href="/academy/programs/contractor-business-formation-legal/modules/1" style={btnSecondary}>
               Business Formation Academy
             </a>
+            <a href="/academy/programs/contractor-construction-law-essentials/modules/1" style={btnSecondary}>
+              Construction Law Essentials
+            </a>
             <a href="/academy/programs/virginia-dpor-residential-license-prep/modules/1" style={btnSecondary}>
               Virginia DPOR Prep
             </a>
@@ -240,7 +243,7 @@ export default function PortalLegal() {
                     <div style={{ fontWeight: 700 }}>{t.title}</div>
                     <div style={{ fontSize: 13, color: "#64748b", marginTop: 4 }}>{t.summary}</div>
                     <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 6 }}>
-                      {t.jurisdiction} — File as: {t.fileCategory}
+                      {t.jurisdiction} — File as: {t.fileCategory} — Template: <code>{t.docPath}</code>
                     </div>
                   </div>
                 ))}

@@ -35,8 +35,8 @@ export function LegalNotice() {
   return (
     <p style={{ fontSize: 13, color: "#64748b", fontStyle: "italic", marginBottom: 20 }}>
       Prepared for legal review. Enterprise procurement templates are available in our legal corpus upon request at{" "}
-      <a href="mailto:legal@futurecontractorsofamerica.com" style={legalLink}>
-        legal@futurecontractorsofamerica.com
+      <a href={`mailto:${FCA_ENTITY.emails.legal}`} style={legalLink}>
+        {FCA_ENTITY.emails.legal}
       </a>
       .
     </p>

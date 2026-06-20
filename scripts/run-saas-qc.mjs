@@ -61,10 +61,16 @@ const SAAS_CLIENT_MODULES = [
 
 const LEGAL_SURFACES = [
   "src/pages/portal/PortalLegal.jsx",
+  "src/pages/portal/PortalFiles.jsx",
   "src/pages/website/ContractorLegalResources.jsx",
+  "src/legal/content/ContractorLegalResourcesContent.jsx",
   "src/contractorLegal/contractorLegalCatalog.js",
+  "src/contractorLegal/contractorLegalStorage.js",
   "src/legal/entityInfo.js",
+  "src/fileGovernance.js",
   "api/academy-program-modules.js",
+  "api/_lib/entityInfo.js",
+  "docs/legal/contractor/CONTRACTOR_LEGAL_INDEX.md",
 ];
 
 const SCRIPT_CHECKS = [
@@ -72,6 +78,7 @@ const SCRIPT_CHECKS = [
   "validate-critical-routes.mjs",
   "validate-public-package-route-groups.mjs",
   "validate-academy-ctas.mjs",
+  "validate-file-governance.mjs",
 ];
 
 const API_BASE = process.env.FCA_API_BASE || "https://auricrux-central.azurewebsites.net";
@@ -124,6 +131,25 @@ for (const legalPath of LEGAL_SURFACES) {
   const full = path.join(root, legalPath);
   if (fs.existsSync(full)) pass(`legal:${legalPath}`);
   else fail(`legal:${legalPath}`, "contractor legal surface missing");
+}
+
+const catalogSource = fs.readFileSync(path.join(root, "src", "contractorLegal", "contractorLegalCatalog.js"), "utf8");
+const resourcesSource = fs.readFileSync(path.join(root, "src", "legal", "content", "ContractorLegalResourcesContent.jsx"), "utf8");
+const staleSlugPattern = /lic-(contractor-business-formation|construction-law-essentials|dpor-residential-contractor-prep|osha-30-construction)/;
+if (staleSlugPattern.test(resourcesSource) || staleSlugPattern.test(catalogSource)) {
+  fail("legal:academy-slug-parity", "legacy lic-* academy slugs detected in contractor legal surfaces");
+} else {
+  pass("legal:academy-slug-parity", "catalog keys align with contractor legal CTAs");
+}
+
+const dinwiddieMarker = "22310 Old Vaughan Road";
+for (const legalPath of ["src/legal/entityInfo.js", "api/_lib/entityInfo.js"]) {
+  const full = path.join(root, legalPath);
+  if (fs.existsSync(full) && fs.readFileSync(full, "utf8").includes(dinwiddieMarker)) {
+    pass(`legal:principal-office:${legalPath}`);
+  } else {
+    fail(`legal:principal-office:${legalPath}`, "Dinwiddie principal office missing");
+  }
 }
 
 const importPattern = /import\("\.\/pages\/([^"]+)"\)/g;

@@ -53,6 +53,7 @@ function main() {
   }
 
   const academyCatalogSource = path.join(repoRoot, 'src', 'academyCatalog.js');
+  const entityInfoSource = path.join(repoRoot, 'src', 'legal', 'entityInfo.js');
   const apiLibDir = path.join(apiRoot, '_lib');
   const generatedLibDir = path.join(outRoot, '_lib');
   ensureDir(apiLibDir);
@@ -60,6 +61,11 @@ function main() {
   if (fs.existsSync(academyCatalogSource)) {
     fs.copyFileSync(academyCatalogSource, path.join(apiLibDir, 'academyCatalog.js'));
     fs.copyFileSync(academyCatalogSource, path.join(generatedLibDir, 'academyCatalog.js'));
+  }
+  if (fs.existsSync(entityInfoSource)) {
+    const apiEntityInfo = `/** API copy of src/legal/entityInfo.js — synced via prepare-api-functions.mjs */\n${fs.readFileSync(entityInfoSource, 'utf8')}`;
+    fs.writeFileSync(path.join(apiLibDir, 'entityInfo.js'), apiEntityInfo, 'utf8');
+    fs.writeFileSync(path.join(generatedLibDir, 'entityInfo.js'), apiEntityInfo, 'utf8');
   }
 
   const apiEntries = fs.readdirSync(apiRoot, { withFileTypes: true });

@@ -207,7 +207,7 @@ export default function Contact() {
         </p>
         <p style={{ lineHeight: 1.7, marginBottom: 0, color: "#475569" }}>
           Legal and privacy inquiries:{" "}
-          <a href="mailto:legal@futurecontractorsofamerica.com">legal@futurecontractorsofamerica.com</a>
+          <a href={`mailto:${FCA_ENTITY.emails.legal}`}>{FCA_ENTITY.emails.legal}</a>
           {" · "}
           <a href="/legal/contractor-resources">Contractor legal resources</a>
         </p>

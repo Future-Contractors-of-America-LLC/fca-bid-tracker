@@ -1,6 +1,7 @@
 import LegalPageShell from "../../components/LegalPageShell";
 import { LegalEffective, LegalP, LegalH3, LegalPostalAddress } from "../../legal/LegalProse";
 import { LEGAL_PAGES, ENTERPRISE_DOCS } from "../../legal/legalNav";
+import { FCA_ENTITY } from "../../legal/entityInfo";
 import { legalLink } from "../../legal/legalStyles";
 
 export default function LegalHub() {
@@ -51,19 +52,19 @@ export default function LegalHub() {
       </ul>
       <LegalP>
         Contact{" "}
-        <a href="mailto:legal@futurecontractorsofamerica.com" style={legalLink}>
-          legal@futurecontractorsofamerica.com
+        <a href={`mailto:${FCA_ENTITY.emails.legal}`} style={legalLink}>
+          {FCA_ENTITY.emails.legal}
         </a>{" "}
         for MSA, DPA, and SLA execution.
       </LegalP>
       <LegalP>
         Privacy inquiries:{" "}
-        <a href="mailto:privacy@futurecontractorsofamerica.com" style={legalLink}>
-          privacy@futurecontractorsofamerica.com
+        <a href={`mailto:${FCA_ENTITY.emails.privacy}`} style={legalLink}>
+          {FCA_ENTITY.emails.privacy}
         </a>
         . Security:{" "}
-        <a href="mailto:security@futurecontractorsofamerica.com" style={legalLink}>
-          security@futurecontractorsofamerica.com
+        <a href={`mailto:${FCA_ENTITY.emails.security}`} style={legalLink}>
+          {FCA_ENTITY.emails.security}
         </a>
         .
       </LegalP>

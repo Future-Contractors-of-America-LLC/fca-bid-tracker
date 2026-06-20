@@ -94,10 +94,10 @@ export const complianceChecklist = [
   { id: "dpor-license", label: "Virginia DPOR contractor license current (if applicable)", category: "Licensure", academyLink: "/academy/programs/virginia-dpor-residential-license-prep/modules/1" },
   { id: "gl-insurance", label: "General liability insurance active with adequate limits", category: "Insurance" },
   { id: "wc-insurance", label: "Workers compensation coverage in place", category: "Insurance" },
-  { id: "coi-subs", label: "Subcontractor COIs collected and reviewed", category: "Insurance" },
-  { id: "owner-contract", label: "Written owner contract before starting residential work", category: "Agreements", academyLink: "/academy/programs/virginia-dpor-residential-license-prep/modules/2" },
+  { id: "coi-subs", label: "Subcontractor COIs collected and reviewed", category: "Insurance", academyLink: "/academy/programs/contractor-construction-law-essentials/modules/3" },
+  { id: "owner-contract", label: "Written owner contract before starting residential work", category: "Agreements", academyLink: "/academy/programs/contractor-construction-law-essentials/modules/1" },
   { id: "permit-records", label: "Permit and jurisdiction records on project file spine", category: "Compliance", academyLink: "/academy/programs/virginia-dpor-residential-license-prep/modules/3" },
-  { id: "lien-waiver-process", label: "Lien waiver process defined for progress and final pay", category: "Lien Waivers" },
+  { id: "lien-waiver-process", label: "Lien waiver process defined for progress and final pay", category: "Lien Waivers", academyLink: "/academy/programs/contractor-construction-law-essentials/modules/2" },
   { id: "osha-program", label: "Site safety program and incident documentation active", category: "Safety", academyLink: "/academy/programs/osha30-certification-prep/modules/1" },
 ];
 
