@@ -1,5 +1,5 @@
 import LegalPageShell from "../../components/LegalPageShell";
-import { LegalEffective, LegalP, LegalH3 } from "../../legal/LegalProse";
+import { LegalEffective, LegalP, LegalH3, LegalPostalAddress } from "../../legal/LegalProse";
 import { LEGAL_PAGES, ENTERPRISE_DOCS } from "../../legal/legalNav";
 import { legalLink } from "../../legal/legalStyles";
 
@@ -67,6 +67,15 @@ export default function LegalHub() {
         </a>
         .
       </LegalP>
+      <LegalP>
+        <strong>Contractor legal package:</strong>{" "}
+        <a href="/legal/contractor-resources" style={legalLink}>
+          Contractor Legal Resources
+        </a>
+        {" — "}
+        <a href="/portal/legal" style={legalLink}>Portal Legal Command</a>
+      </LegalP>
+      <LegalPostalAddress />
     </LegalPageShell>
   );
 }

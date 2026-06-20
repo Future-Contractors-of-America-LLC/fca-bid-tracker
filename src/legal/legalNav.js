@@ -1,6 +1,7 @@
 /** Public legal pages - keep in sync with docs/legal/enterprise/ */
 export const LEGAL_PAGES = [
   { href: "/legal", label: "Legal Center" },
+  { href: "/legal/contractor-resources", label: "Contractor Legal Resources" },
   { href: "/terms", label: "Terms of Service" },
   { href: "/privacy", label: "Privacy Policy" },
   { href: "/cookies", label: "Cookie Policy" },

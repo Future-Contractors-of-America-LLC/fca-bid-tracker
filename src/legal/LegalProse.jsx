@@ -1,4 +1,5 @@
 import { legalHeading, legalSubheading, legalLink, legalTable, legalTh, legalTd } from "./legalStyles";
+import { FCA_ENTITY, formatPrincipalOffice } from "./entityInfo";
 
 const LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
 
@@ -99,6 +100,18 @@ export function LegalContact({ email, label = "Contact" }) {
       <a href={`mailto:${email}`} style={legalLink}>
         {email}
       </a>
+    </LegalP>
+  );
+}
+
+export function LegalPostalAddress({ label = "Postal address" }) {
+  return (
+    <LegalP>
+      <strong>{label}:</strong>
+      <br />
+      {FCA_ENTITY.legalName}
+      <br />
+      {formatPrincipalOffice(false)}
     </LegalP>
   );
 }

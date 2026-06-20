@@ -40,6 +40,8 @@ const STATIC_LANE_BY_PROGRAM_KEY = {
   "osha30-certification-prep": "certification",
   "aas-construction-operations-sem1": "degree",
   "virginia-dpor-residential-license-prep": "licensure",
+  "contractor-business-formation-legal": "licensure",
+  "contractor-construction-law-essentials": "licensure",
   "fca-contractor-command-user-guide": "professional",
 };
 

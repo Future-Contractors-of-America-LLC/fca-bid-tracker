@@ -173,6 +173,14 @@ export const routeMetadata = {
     title: "Legal Center | Future Contractors of America",
     description: "Legal, privacy, security, and trust policies for FCA enterprise and commercial customers.",
   },
+  "/legal/contractor-resources": {
+    title: "Contractor Legal Resources | Future Contractors of America",
+    description: "Business formation, Virginia DPOR, agreements, lien waivers, and compliance templates for contractors.",
+  },
+  "/portal/legal": {
+    title: "Contractor Legal Command | FCA Portal",
+    description: "Track entity formation, licenses, agreements, lien waivers, and compliance in your FCA workspace.",
+  },
   "/cookies": {
     title: "Cookie Policy | Future Contractors of America",
     description: "How FCA uses cookies and similar technologies on futurecontractorsofamerica.com.",

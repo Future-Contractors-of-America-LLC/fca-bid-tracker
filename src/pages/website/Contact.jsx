@@ -17,6 +17,7 @@ import useCustomerSession from "../../hooks/useCustomerSession";
 import { contactPaths, executiveSignalCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
 import { auricruxCommsChannels } from "../../systemState";
+import { FCA_ENTITY, formatPrincipalOffice } from "../../legal/entityInfo";
 import { cardStyle, pageShellStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
 const checklistStyle = {
@@ -194,6 +195,21 @@ export default function Contact() {
         <h2 style={{ marginTop: 0 }}>{publicContactMessaging.immediate.title}</h2>
         <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
           {publicContactMessaging.immediate.detail} The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options, current pricing paths, shared next actions, and live workspace activation already presented above.
+        </p>
+      </div>
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Principal office</h2>
+        <p style={{ lineHeight: 1.7, marginBottom: 8 }}>
+          <strong>{FCA_ENTITY.legalName}</strong>
+          <br />
+          {formatPrincipalOffice(false)}
+        </p>
+        <p style={{ lineHeight: 1.7, marginBottom: 0, color: "#475569" }}>
+          Legal and privacy inquiries:{" "}
+          <a href="mailto:legal@futurecontractorsofamerica.com">legal@futurecontractorsofamerica.com</a>
+          {" · "}
+          <a href="/legal/contractor-resources">Contractor legal resources</a>
         </p>
       </div>
 

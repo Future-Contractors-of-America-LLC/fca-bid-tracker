@@ -33,7 +33,8 @@ docs/legal/
 | USPTO / copyright.gov filings | `docs/legal/` (IP prep) |
 | Calyndra IP packets | `calyndra-ip/` repo |
 | Customer contracts, DPA, MSA, policies | `docs/legal/enterprise/` |
-| Published website legal pages | `src/pages/website/` (sync from enterprise Tier 1) |
+| **Contractor legal templates** (lien waivers, owner contracts, formation) | `docs/legal/contractor/` |
+| Published website legal pages | `src/pages/website/` + `src/legal/content/` |
 | Internal Calyndra governance | `calyndra-system-law/` (not customer contracts) |
 
 ---

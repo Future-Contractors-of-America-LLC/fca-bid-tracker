@@ -195,6 +195,68 @@ export const academyCatalog = {
       ],
       linkedSurface: "/portal",
       linkedLabel: "Open Command Center"
+    },
+    {
+      key: "contractor-business-formation-legal",
+      title: "Contractor Business Formation & Legal Setup",
+      credential: "FCA Licensure Track · Business Formation Operator",
+      audience: "New contractors, owner-operators, and qualifying individuals forming a Virginia entity",
+      duration: "4 modules",
+      format: "Self-paced + portal legal lab + Virginia SCC/DPOR alignment",
+      goal: "Form and document a legally sound contracting business in Virginia and load credentials into FCA Contractor Legal Command.",
+      outcomes: [
+        "Choose appropriate entity structure for your contracting business",
+        "Complete Virginia SCC LLC formation steps and store certificates",
+        "Obtain EIN, banking, and operating agreement discipline",
+        "Track licenses, insurance, and compliance checklist in /portal/legal"
+      ],
+      courses: [
+        {
+          code: "LEGAL-FORM-201",
+          title: "Business Formation & Legal Setup",
+          lessons: 4,
+          lab: "Portal legal lab at /portal/legal and file spine at /portal/files",
+          lessonTitles: [
+            "Module 1 · Choosing the right business structure (LLC, S-Corp, sole prop)",
+            "Module 2 · Virginia LLC formation — SCC filing, registered agent, certificate",
+            "Module 3 · Federal EIN, banking, NAICS, and local licenses",
+            "Module 4 · Operating agreement, insurance, and FCA legal workspace setup"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/legal",
+      linkedLabel: "Open Contractor Legal Command"
+    },
+    {
+      key: "contractor-construction-law-essentials",
+      title: "Construction Law Essentials for Contractors",
+      credential: "FCA Licensure Track · Construction Law Foundations",
+      audience: "Owners, PMs, and estimators handling owner and subcontract agreements",
+      duration: "4 modules",
+      format: "Law fundamentals + template library + portal agreement tracker",
+      goal: "Understand Virginia contracting law basics, consumer protection, liens, and documentation discipline inside FCA.",
+      outcomes: [
+        "Draft and track owner contracts and change orders",
+        "Manage subcontractor agreements and COI collection",
+        "Execute conditional and unconditional lien waiver discipline",
+        "Tie legal records to project files, billing, and audit spine"
+      ],
+      courses: [
+        {
+          code: "LEGAL-CONST-301",
+          title: "Construction Law Essentials",
+          lessons: 4,
+          lab: "Agreement and waiver lab at /portal/legal; files at /portal/files; billing at /portal/billing",
+          lessonTitles: [
+            "Module 1 · Contract fundamentals and Virginia consumer protection",
+            "Module 2 · Subcontracts, insurance, and indemnity",
+            "Module 3 · Mechanic's liens and waiver sequencing",
+            "Module 4 · Closeout documentation and dispute prevention"
+          ]
+        }
+      ],
+      linkedSurface: "/portal/legal",
+      linkedLabel: "Open Legal Workspace"
     }
   ],
   pathways: [
