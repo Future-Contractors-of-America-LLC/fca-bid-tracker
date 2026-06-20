@@ -7,6 +7,7 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import useAcademyLms from "../../hooks/useAcademyLms";
 import { fetchCommercialPipeline, migrateLocalPipelineToApi, pipelineItemsToMap } from "../../api/pipelineClient";
 import { fetchPortalInvoices } from "../../api/portalClient";
 import { createPermitEscalationTool, stageMobilizationInvoiceTool } from "../../customerCommandTools";
@@ -109,6 +110,7 @@ export default function PortalHome() {
   const { session } = useCustomerSession();
   const { bids } = useBidWorkspace();
   const { projects } = useProjectWorkspace();
+  const { academyState } = useAcademyLms();
   const [tasks, setTasks] = useState(() => readLocalJson(TASK_STORAGE_KEY, defaultTasks));
   const [brandSkin, setBrandSkin] = useState(() => readLocalJson(BRAND_STORAGE_KEY, defaultBrandSkin));
   const [newTaskTitle, setNewTaskTitle] = useState("");
@@ -164,6 +166,21 @@ export default function PortalHome() {
       .map((bid) => ({ bid, ...derivePipelineSummary(bid, projects, invoices, pipelineLinks) }))
       .filter((row) => row.current !== "done"),
     [bids, projects, invoices, pipelineLinks],
+  );
+
+  const learnerId = session?.email || session?.customerId;
+  const academyEnrollments = useMemo(
+    () => (academyState.enrollments || []).filter((item) => !learnerId || item.learnerId === learnerId),
+    [academyState.enrollments, learnerId],
+  );
+  const academyNext = useMemo(() => {
+    const active = academyEnrollments.filter((item) => (item.progressPercent || 0) < 100);
+    if (!active.length) return null;
+    return active.sort((a, b) => (b.progressPercent || 0) - (a.progressPercent || 0))[0];
+  }, [academyEnrollments]);
+  const academyCertificates = useMemo(
+    () => (academyState.certificates || []).filter((item) => !learnerId || item.learnerId === learnerId),
+    [academyState.certificates, learnerId],
   );
 
   const lanes = useMemo(() => ([
@@ -226,6 +243,36 @@ export default function PortalHome() {
       <div style={{ marginBottom: 24 }}>
         <CustomerPlanSummaryPanel session={session} title="Commercial package and enabled product scope" />
       </div>
+
+      {(academyEnrollments.length > 0 || academyCertificates.length > 0) ? (
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+            <div>
+              <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>Academy training progress</div>
+              <div style={{ color: "#475569" }}>
+                {academyEnrollments.length} enrollment(s) · {academyCertificates.filter((item) => item.status === "Issued").length} credential(s) issued
+              </div>
+            </div>
+            <a href="/academy/dashboard" style={{ color: brandSkin.accent, fontWeight: 700, textDecoration: "none" }}>Open learner dashboard</a>
+          </div>
+          {academyNext ? (
+            <div style={{ padding: 12, borderRadius: 12, border: "1px solid #dbeafe", background: "#fff" }}>
+              <strong>{academyNext.programTitle}</strong>
+              <div style={{ color: "#64748b", marginTop: 4 }}>
+                {academyNext.progressPercent}% complete · Next: module {(academyNext.completedModules || 0) + 1}
+              </div>
+              <a
+                href={`/academy/programs/${academyNext.programKey}/modules/${(academyNext.completedModules || 0) + 1}`}
+                style={{ display: "inline-block", marginTop: 10, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}
+              >
+                Resume assigned training
+              </a>
+            </div>
+          ) : (
+            <div style={{ color: "#64748b" }}>All enrolled programs are complete. View credentials or assign new training.</div>
+          )}
+        </div>
+      ) : null}
 
       {pipelineRows.length > 0 ? (
         <div style={{ ...cardStyle, marginBottom: 24, background: "#eff6ff", borderColor: "#1d4ed8" }}>

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import useAcademyLms from "../../hooks/useAcademyLms";
@@ -25,7 +25,9 @@ function ProgressBar({ percent }) {
 
 export default function AcademyDashboard() {
   const { session } = useCustomerSession();
-  const { academyState } = useAcademyLms();
+  const { academyState, exportTranscript } = useAcademyLms();
+  const [transcriptBusy, setTranscriptBusy] = useState(false);
+  const [transcriptMessage, setTranscriptMessage] = useState("");
   const learnerId = session?.email || session?.customerId;
 
   const enrollments = useMemo(
@@ -68,6 +70,67 @@ export default function AcademyDashboard() {
     })),
   }));
 
+  const nextEnrollment = useMemo(() => {
+    const active = enrollments.filter((item) => (item.progressPercent || 0) < 100);
+    if (!active.length) return null;
+    return active.sort((a, b) => (b.progressPercent || 0) - (a.progressPercent || 0))[0];
+  }, [enrollments]);
+
+  const degreeGpa = useMemo(() => {
+    const degreeEnrollments = enrollments.filter((item) => {
+      const program = apiPrograms.find((entry) => entry.key === item.programKey);
+      return program?.lane === "degree";
+    });
+    const gradePoints = [];
+    degreeEnrollments.forEach((enrollment) => {
+      const scores = Object.values(enrollment.moduleScores || {});
+      if (!scores.length) return;
+      const avg = scores.reduce((sum, value) => sum + Number(value), 0) / scores.length;
+      if (avg >= 93) gradePoints.push(4.0);
+      else if (avg >= 90) gradePoints.push(3.7);
+      else if (avg >= 87) gradePoints.push(3.3);
+      else if (avg >= 83) gradePoints.push(3.0);
+      else if (avg >= 80) gradePoints.push(2.7);
+      else gradePoints.push(2.0);
+    });
+    if (!gradePoints.length) return null;
+    return (gradePoints.reduce((sum, value) => sum + value, 0) / gradePoints.length).toFixed(2);
+  }, [enrollments, apiPrograms]);
+
+  const ceuEarned = useMemo(() => {
+    return enrollments
+      .filter((item) => (item.progressPercent || 0) >= 100)
+      .reduce((sum, item) => {
+        const program = apiPrograms.find((entry) => entry.key === item.programKey);
+        if (!program || !["certification", "licensure"].includes(program.lane)) return sum;
+        return sum + Number(program.ceuHours || 0);
+      }, 0);
+  }, [enrollments, apiPrograms]);
+
+  async function handleExportTranscript() {
+    if (!learnerId) {
+      setTranscriptMessage("Sign in to export your transcript.");
+      return;
+    }
+    setTranscriptBusy(true);
+    setTranscriptMessage("");
+    try {
+      const payload = await exportTranscript(learnerId);
+      const blob = new Blob([JSON.stringify(payload.transcript || payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `fca-academy-transcript-${learnerId.replace(/[^a-z0-9.-]+/gi, "-")}.json`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+      setTranscriptMessage("Transcript exported.");
+    } catch (error) {
+      setTranscriptMessage(error.message || "Unable to export transcript.");
+    } finally {
+      setTranscriptBusy(false);
+    }
+  }
+
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
@@ -84,6 +147,22 @@ export default function AcademyDashboard() {
       />
 
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
+        {nextEnrollment ? (
+          <section style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>Next action</div>
+            <strong>{nextEnrollment.programTitle}</strong>
+            <p style={{ color: "#475569", lineHeight: 1.65 }}>
+              Continue module {(nextEnrollment.completedModules || 0) + 1}: {nextEnrollment.nextLesson}
+            </p>
+            <a
+              href={`/academy/programs/${nextEnrollment.programKey}/modules/${(nextEnrollment.completedModules || 0) + 1}`}
+              style={{ display: "inline-block", border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}
+            >
+              Resume learning
+            </a>
+          </section>
+        ) : null}
+
         <section style={{ ...cardStyle, marginBottom: 24 }}>
           <h2 style={{ marginTop: 0 }}>Active enrollments</h2>
           {enrollments.length === 0 ? (
@@ -410,6 +489,30 @@ export default function AcademyDashboard() {
               <div style={{ color: "#64748b", fontSize: 13 }}>Catalog lanes</div>
               <strong style={{ fontSize: 24 }}>{lanes.filter((lane) => lane.programs.length > 0).length}</strong>
             </div>
+            {degreeGpa ? (
+              <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+                <div style={{ color: "#64748b", fontSize: 13 }}>Degree GPA (est.)</div>
+                <strong style={{ fontSize: 24 }}>{degreeGpa}</strong>
+              </div>
+            ) : null}
+            {ceuEarned > 0 ? (
+              <div style={{ padding: 14, borderRadius: 12, background: "#fffbeb", border: "1px solid #fde68a" }}>
+                <div style={{ color: "#64748b", fontSize: 13 }}>CEU hours earned</div>
+                <strong style={{ fontSize: 24 }}>{ceuEarned}</strong>
+              </div>
+            ) : null}
+          </div>
+
+          <div style={{ marginTop: 16, display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+            <button
+              type="button"
+              onClick={handleExportTranscript}
+              disabled={transcriptBusy || !learnerId}
+              style={{ border: "1px solid #2563eb", background: "#fff", color: "#1d4ed8", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
+            >
+              {transcriptBusy ? "Exporting..." : "Download transcript (JSON)"}
+            </button>
+            {transcriptMessage ? <span style={{ color: "#475569" }}>{transcriptMessage}</span> : null}
           </div>
 
           {enrollments.length > 0 ? (

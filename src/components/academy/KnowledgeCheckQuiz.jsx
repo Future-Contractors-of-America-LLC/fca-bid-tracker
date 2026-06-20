@@ -32,6 +32,15 @@ function shuffleOptions(options, correctIndex) {
 }
 
 export function buildQuestionsFromModule(module) {
+  if (Array.isArray(module?.quizQuestions) && module.quizQuestions.length > 0) {
+    return module.quizQuestions.map((question, index) => ({
+      id: question.id || `api-${index + 1}`,
+      prompt: question.prompt,
+      options: question.options || [],
+      correctIndex: Number.isInteger(question.correctIndex) ? question.correctIndex : 0,
+    }));
+  }
+
   const questions = [];
   const lessons = Array.isArray(module.lessons) ? module.lessons : [];
   const lessonTitles = lessons.map((lesson) => (typeof lesson === "string" ? lesson : lesson.title)).filter(Boolean);

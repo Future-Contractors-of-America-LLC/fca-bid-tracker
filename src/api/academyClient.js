@@ -106,4 +106,11 @@ export async function mutateAcademyLms(action, body = {}) {
   return payload;
 }
 
+export async function exportAcademyTranscript(learnerId) {
+  if (!learnerId) {
+    throw new Error("Unable to export transcript: learnerId is required.");
+  }
+  return mutateAcademyLms("export-transcript", { learnerId });
+}
+
 export { centralApi, centralFetch };
