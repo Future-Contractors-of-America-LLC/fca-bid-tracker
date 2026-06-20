@@ -55,13 +55,24 @@ const SAAS_API_ENDPOINTS = [
   "/api/workflow-audit",
   "/api/academy-lms",
   "/api/customer-login",
+  "/api/change-orders",
+  "/api/job-cost",
+  "/api/closeout-packages",
+  "/api/warranty-cases",
+  "/api/auricrux/actions",
+  "/api/auricrux-comms",
 ];
 
 const SAAS_CLIENT_MODULES = [
   "src/api/workflowClient.js",
   "src/api/portalClient.js",
   "src/api/intakeClient.js",
+  "src/api/constructionClient.js",
+  "src/api/auricruxActionsClient.js",
+  "src/api/designWorkspaceClient.js",
   "src/hooks/useWorkspaceState.js",
+  "src/hooks/usePortalProjectId.js",
+  "src/hooks/useAuricruxLiveInsight.js",
 ];
 
 const LEGAL_SURFACES = [
@@ -85,6 +96,9 @@ const SCRIPT_CHECKS = [
   "validate-academy-ctas.mjs",
   "validate-academy-catalog.mjs",
   "validate-file-governance.mjs",
+  "validate-finance-workspace.mjs",
+  "validate-design-workspace.cjs",
+  "validate-portal-auricrux-wiring.mjs",
 ];
 
 const API_BASE = process.env.FCA_API_BASE || "https://auricrux-central.azurewebsites.net";

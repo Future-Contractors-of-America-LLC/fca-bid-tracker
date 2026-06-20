@@ -47,8 +47,8 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
   const { projects, activeProject, meta: projectListMeta } = useProjectWorkspace();
   const { projectId, project, routeMatchedProject } = resolveProjectIdentity(requestedPath, routeParams, projects, activeProject || state.project);
   const { item, meta } = useProjectWorkspaceDetail(projectId, project);
-  const jobBilling = useFinancialWorkspace("construction", projectId || "A-117");
-  const jobCost = useJobCost(projectId || "A-117");
+  const jobBilling = useFinancialWorkspace("construction", projectId || "");
+  const jobCost = useJobCost(projectId || "");
   const [rfis, setRfis] = useState([]);
 
   useEffect(() => {

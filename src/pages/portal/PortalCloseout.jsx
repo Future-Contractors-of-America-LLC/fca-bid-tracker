@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import useWorkspaceState from "../../hooks/useWorkspaceState";
+import usePortalProjectId from "../../hooks/usePortalProjectId";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { advanceCloseoutPackage, createCloseoutPackage, fetchCloseoutPackages } from "../../api/constructionClient";
 import { routeStateOverlays } from "../../systemState";
@@ -17,8 +17,7 @@ const button = {
 };
 
 export default function PortalCloseout() {
-  const { state } = useWorkspaceState();
-  const projectId = state?.project?.id || "A-117";
+  const { projectId, hasProject } = usePortalProjectId();
   const [items, setItems] = useState([]);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");

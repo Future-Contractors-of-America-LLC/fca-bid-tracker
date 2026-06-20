@@ -4,6 +4,7 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import usePortalProjectId from "../../hooks/usePortalProjectId";
 import useEstimateWorkspace from "../../hooks/useEstimateWorkspace";
 import usePreconContinuity from "../../hooks/usePreconContinuity";
 import TakeoffEstimatePanel from "../../components/design/TakeoffEstimatePanel";
@@ -62,7 +63,7 @@ function writeEstimateDrafts(drafts) {
 export default function PortalEstimates() {
   const { state } = useWorkspaceState();
   const { estimates, meta, advanceEstimate, generateProposal, refresh } = useEstimateWorkspace();
-  const projectId = state?.project?.id || "A-117";
+  const { projectId, hasProject } = usePortalProjectId();
   const precon = usePreconContinuity(projectId);
   const brandSkin = readBrandSkin();
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";

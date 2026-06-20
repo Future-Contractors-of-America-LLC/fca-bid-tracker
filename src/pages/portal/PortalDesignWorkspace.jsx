@@ -11,6 +11,7 @@ import FcaNativeViewerPanel from "../../components/design/FcaNativeViewerPanel";
 import ApsInteropPanel from "../../components/design/ApsInteropPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import usePortalProjectId from "../../hooks/usePortalProjectId";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
 import useDesignWorkspace from "../../hooks/useDesignWorkspace";
 import useDesignKeyboard from "../../hooks/useDesignKeyboard";
@@ -54,7 +55,8 @@ export default function PortalDesignWorkspace() {
   const deepLink = useMemo(() => readDesignDeepLink(), []);
   const { state } = useWorkspaceState();
   const { activeProject } = useProjectWorkspace();
-  const projectId = deepLink.projectId || activeProject?.id || state.project?.id || "A-117";
+  const { projectId: activePortalProjectId } = usePortalProjectId(deepLink.projectId);
+  const projectId = activePortalProjectId || deepLink.projectId || activeProject?.id || "";
   const [selectedFileId, setSelectedFileId] = useState(deepLink.fileId || "");
   const [activeTool, setActiveTool] = useState("select");
   const [selectedMarkupId, setSelectedMarkupId] = useState("");
@@ -436,7 +438,7 @@ export default function PortalDesignWorkspace() {
               <FcaNativeViewerPanel viewerSession={workspace.viewerSession} fileFormat={fileFormat} />
             </div>
             <div style={panelStyle}>
-              <AuricruxDesignInsight intelligence={workspace.intelligence} onAskAuricrux={handleAskAuricrux} />
+              <AuricruxDesignInsight intelligence={workspace.intelligence} onAskAuricrux={handleAskAuricrux} projectId={projectId} fileId={workspace.activeFile?.id} />
             </div>
             <div style={panelStyle}>
               <DesignPropertiesPanel activeSheet={activeSheet} selectedMarkup={selectedMarkup} intelligence={workspace.intelligence} />
