@@ -1,4 +1,11 @@
 import { academyCatalog } from "./academyCatalog.js";
+import {
+  CATALOG_PATHWAYS,
+  getPathwayByKey,
+  getTopicByKey,
+  getTopicsForPathway,
+  resolveProgramCatalogMeta,
+} from "./academyCatalogTaxonomy.js";
 
 /** Organized Academy taxonomy aligned with backend lanes. */
 export const OFFERING_LANES = [
@@ -204,7 +211,7 @@ function resolveProgramLane(program) {
   return "professional";
 }
 
-/** Group API catalog programs by lane. Falls back to static catalog for degree/licensure gaps. */
+/** @deprecated Use organizeCatalogHierarchy */
 export function organizeApiCatalogByLane(apiPrograms = [], catalogLanes = OFFERING_LANES) {
   const grouped = Object.fromEntries(catalogLanes.map((lane) => [lane.key, []]));
   const apiKeys = new Set();
@@ -229,6 +236,59 @@ export function organizeApiCatalogByLane(apiPrograms = [], catalogLanes = OFFERI
     ...lane,
     programs: grouped[lane.key].sort((a, b) => (a.level || 0) - (b.level || 0)),
   }));
+}
+
+/** Pathway → topic → course hierarchy for catalog navigation. */
+export function organizeCatalogHierarchy(apiPrograms = []) {
+  const apiKeys = new Set(apiPrograms.map((program) => program.key));
+  const allPrograms = [
+    ...apiPrograms,
+    ...academyCatalog.programs
+      .filter((program) => !apiKeys.has(program.key))
+      .map((program) => ({ ...program, source: "catalog-preview" })),
+  ];
+
+  const courseBuckets = Object.fromEntries(
+    CATALOG_PATHWAYS.map((pathway) => [pathway.key, Object.fromEntries(getTopicsForPathway(pathway.key).map((topic) => [topic.key, []]))]),
+  );
+
+  for (const program of allPrograms) {
+    const { pathwayKey, topicKey, enrollment } = resolveProgramCatalogMeta(program);
+    if (!courseBuckets[pathwayKey]) continue;
+    if (!courseBuckets[pathwayKey][topicKey]) {
+      courseBuckets[pathwayKey][topicKey] = [];
+    }
+    courseBuckets[pathwayKey][topicKey].push({
+      ...program,
+      pathwayKey,
+      topicKey,
+      enrollment,
+    });
+  }
+
+  return CATALOG_PATHWAYS.map((pathway) => {
+    const topics = getTopicsForPathway(pathway.key)
+      .map((topic) => ({
+        ...topic,
+        courses: (courseBuckets[pathway.key][topic.key] || []).sort((a, b) => (a.level || 0) - (b.level || 0)),
+      }))
+      .filter((topic) => topic.courses.length > 0);
+
+    const courseCount = topics.reduce((sum, topic) => sum + topic.courses.length, 0);
+
+    return {
+      ...pathway,
+      topics,
+      courseCount,
+    };
+  }).filter((pathway) => pathway.courseCount > 0);
+}
+
+export function findCatalogPlacement(pathwayKey, topicKey, programKey) {
+  const pathway = getPathwayByKey(pathwayKey);
+  const topic = getTopicByKey(topicKey);
+  if (!pathway || !topic || topic.pathwayKey !== pathwayKey) return null;
+  return { pathway, topic };
 }
 
 /** @deprecated Use organizeApiCatalogByLane with API data */

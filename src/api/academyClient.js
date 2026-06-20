@@ -1,5 +1,6 @@
 import { centralApi, centralFetch } from "./backendBase";
 import { academyCatalog } from "../academyCatalog.js";
+import { resolveProgramCatalogMeta } from "../academyCatalogTaxonomy.js";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
@@ -23,6 +24,7 @@ function buildProgramDetailFromCatalog(programKey) {
 
   const course = program.courses?.[0];
   const lessonTitles = Array.isArray(course?.lessonTitles) ? course.lessonTitles : [];
+  const catalogMeta = resolveProgramCatalogMeta(program);
   const modules = lessonTitles.map((title, index) => ({
     moduleNumber: index + 1,
     title,
@@ -47,6 +49,9 @@ function buildProgramDetailFromCatalog(programKey) {
       linkedLabel: program.linkedLabel,
       deliveryModel: program.format,
       completionRule: "Complete all modules with knowledge checks at 80% or higher.",
+      pathwayKey: catalogMeta.pathwayKey,
+      topicKey: catalogMeta.topicKey,
+      enrollment: catalogMeta.enrollment,
     },
     modules,
     completionRequirements: {

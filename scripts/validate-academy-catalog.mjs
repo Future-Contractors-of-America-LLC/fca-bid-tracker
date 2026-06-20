@@ -3,66 +3,61 @@ import path from "path";
 import { pathToFileURL } from "url";
 
 const root = process.cwd();
-const routesSource = await fs.readFile(path.join(root, "src", "routes.js"), "utf8");
-const academyHomeSource = await fs.readFile(path.join(root, "src", "pages", "academy", "AcademyHome.jsx"), "utf8");
-const catalogModule = await import(pathToFileURL(path.join(root, "src", "academyCatalog.js")).href);
-const { academyCatalog } = catalogModule;
+const catalogSource = await fs.readFile(path.join(root, "src", "pages", "academy", "AcademyCatalog.jsx"), "utf8");
+const taxonomyModule = await import(pathToFileURL(path.join(root, "src", "academyCatalogTaxonomy.js")).href);
+const offeringsModule = await import(pathToFileURL(path.join(root, "src", "academyOfferings.js")).href);
+const { academyCatalog } = await import(pathToFileURL(path.join(root, "src", "academyCatalog.js")).href);
 
-function extractRouteKeys(source) {
-  const routeBlockMatch = source.match(/export const routes = \{([\s\S]*?)\n\};/);
-  if (!routeBlockMatch) {
-    throw new Error("Unable to locate exported routes object in src/routes.js");
-  }
-  return [...routeBlockMatch[1].matchAll(/(["'])(\/[^"']*)\1\s*:/g)].map((match) => match[2]);
-}
+const {
+  CATALOG_PATHWAYS,
+  CATALOG_TOPICS,
+  PROGRAM_CATALOG_META,
+} = taxonomyModule;
+const { organizeCatalogHierarchy } = offeringsModule;
 
-const routeSet = new Set(extractRouteKeys(routesSource));
 const failures = [];
 
-if (!academyCatalog || typeof academyCatalog !== "object") {
-  failures.push("academyCatalog export is missing.");
+if (!Array.isArray(CATALOG_PATHWAYS) || CATALOG_PATHWAYS.length < 4) {
+  failures.push("CATALOG_PATHWAYS must define at least 4 pathways.");
+}
+if (!Array.isArray(CATALOG_TOPICS) || CATALOG_TOPICS.length < 10) {
+  failures.push("CATALOG_TOPICS must define at least 10 topics.");
+}
+if (!academyCatalog?.programs?.length) {
+  failures.push("academyCatalog.programs is missing.");
 }
 
-if (!Array.isArray(academyCatalog.programs) || academyCatalog.programs.length < 4) {
-  failures.push("academyCatalog.programs must contain at least 4 programs.");
-}
-if (!Array.isArray(academyCatalog.credentials) || academyCatalog.credentials.length < 4) {
-  failures.push("academyCatalog.credentials must contain at least 4 credentials.");
-}
-if (!Array.isArray(academyCatalog.pathways) || academyCatalog.pathways.length < 3) {
-  failures.push("academyCatalog.pathways must contain at least 3 pathways.");
-}
-
-for (const [index, program] of (academyCatalog.programs || []).entries()) {
-  if (!program.title || !program.credential || !program.audience || !program.duration || !program.format || !program.outcome) {
-    failures.push(`academyCatalog.programs[${index}] is missing required fields.`);
+for (const program of academyCatalog.programs) {
+  if (!PROGRAM_CATALOG_META[program.key]) {
+    failures.push(`PROGRAM_CATALOG_META missing placement for ${program.key}`);
+    continue;
   }
-  if (!Array.isArray(program.classrooms) || program.classrooms.length === 0) {
-    failures.push(`academyCatalog.programs[${index}] must reference at least one classroom.`);
+  const meta = PROGRAM_CATALOG_META[program.key];
+  if (!meta.pathwayKey || !meta.topicKey || !meta.enrollment) {
+    failures.push(`PROGRAM_CATALOG_META[${program.key}] is incomplete.`);
   }
-  if (!Array.isArray(program.stack) || program.stack.length < 3) {
-    failures.push(`academyCatalog.programs[${index}] must list at least 3 stack surfaces.`);
+  if (meta.enrollment.syllabusPublic !== true) {
+    failures.push(`PROGRAM_CATALOG_META[${program.key}] must keep syllabusPublic: true.`);
   }
 }
 
-for (const [index, pathway] of (academyCatalog.pathways || []).entries()) {
-  if (!pathway.title || !pathway.description || !pathway.label) {
-    failures.push(`academyCatalog.pathways[${index}] is missing required pathway fields.`);
-  }
-  if (!routeSet.has(pathway.route)) {
-    failures.push(`academyCatalog.pathways[${index}] points to unsupported route: ${pathway.route}`);
-  }
+const hierarchy = organizeCatalogHierarchy([]);
+const placedCount = hierarchy.reduce((sum, pathway) => sum + pathway.courseCount, 0);
+if (placedCount < academyCatalog.programs.length) {
+  failures.push(`organizeCatalogHierarchy placed ${placedCount}/${academyCatalog.programs.length} static programs.`);
 }
 
 const requiredMarkers = [
-  "academyCatalog.programs.map((program)",
-  "academyCatalog.credentials.map((credential)",
-  "academyCatalog.pathways.map((pathway)",
+  "organizeCatalogHierarchy",
+  "Choose a pathway",
+  "Choose a topic",
+  "View syllabus",
+  "Enrollment",
 ];
 
 for (const marker of requiredMarkers) {
-  if (!academyHomeSource.includes(marker)) {
-    failures.push(`AcademyHome.jsx no longer references required academy catalog marker: ${marker}`);
+  if (!catalogSource.includes(marker)) {
+    failures.push(`AcademyCatalog.jsx missing required marker: ${marker}`);
   }
 }
 
@@ -74,4 +69,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Academy catalog validation passed for ${academyCatalog.programs.length} programs, ${academyCatalog.credentials.length} credentials, and ${academyCatalog.pathways.length} pathways.`);
+console.log(`Academy catalog validation passed for ${academyCatalog.programs.length} programs across ${CATALOG_PATHWAYS.length} pathways and ${CATALOG_TOPICS.length} topics.`);

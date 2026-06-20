@@ -83,6 +83,7 @@ const SCRIPT_CHECKS = [
   "validate-critical-routes.mjs",
   "validate-public-package-route-groups.mjs",
   "validate-academy-ctas.mjs",
+  "validate-academy-catalog.mjs",
   "validate-file-governance.mjs",
 ];
 

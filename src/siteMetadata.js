@@ -157,9 +157,9 @@ export const routeMetadata = {
       "Explore FCA Academy training, certification, and operational readiness connected to the broader platform shell.",
   },
   "/academy/catalog": {
-    title: "Academy Catalog | Future Contractors of America",
+    title: "Academy Course Catalog | Future Contractors of America",
     description:
-      "Browse electrical apprenticeship pathways, safety programs, and supervisor credentials in FCA Academy.",
+      "Browse FCA Academy by pathway, topic, and course. Syllabi are public; enrollment follows subscription, add-on, and prerequisite rules.",
   },
   "/terms": {
     title: "Terms of Service | Future Contractors of America",
