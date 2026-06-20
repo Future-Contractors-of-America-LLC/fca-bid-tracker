@@ -1,10 +1,10 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-20T01:19:09.272Z",
+  "generatedAt": "2026-06-20T01:22:42.880Z",
   "emissionGuaranteed": true,
   "total": 10,
-  "passed": 8,
-  "failed": 2,
+  "passed": 9,
+  "failed": 1,
   "results": [
     {
       "name": "projects_collection_get",
@@ -80,16 +80,16 @@
     },
     {
       "name": "auricrux_actions_post",
-      "statusCode": 404,
+      "statusCode": 202,
       "expectStatus": 202,
-      "bodyType": "error",
+      "bodyType": "success",
       "expectType": "success",
-      "passed": false,
+      "passed": true,
       "error": null
     },
     {
       "name": "auricrux_actions_method_guard",
-      "statusCode": 404,
+      "statusCode": 200,
       "expectStatus": 405,
       "bodyType": "unknown",
       "expectType": "error",
