@@ -1,13 +1,13 @@
 [
   {
-    "attempt": 3,
+    "attempt": 20,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "662fbf25adf40948a864949ef53997008739f28e",
+    "targetGitSha": "b3dbee3605d79cd81cc0e4f61621e83ed05e48d1",
     "host": "futurecontractorsofamerica.com",
-    "deploymentGitSha": "662fbf25adf40948a864949ef53997008739f28e",
-    "runtimeGitSha": "662fbf25adf40948a864949ef53997008739f28e",
-    "commitWitnessRoute": "/commit-witness-662fbf25adf40948a864949ef53997008739f28e.txt",
+    "deploymentGitSha": "b3dbee3605d79cd81cc0e4f61621e83ed05e48d1",
+    "runtimeGitSha": "b3dbee3605d79cd81cc0e4f61621e83ed05e48d1",
+    "commitWitnessRoute": "/commit-witness-b3dbee3605d79cd81cc0e4f61621e83ed05e48d1.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -95,7 +95,12 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-662fbf25adf40948a864949ef53997008739f28e.txt",
+        "route": "/api/academy-lms?programKey=contractor-business-formation-legal",
+        "status": 404,
+        "ok": false
+      },
+      {
+        "route": "/commit-witness-b3dbee3605d79cd81cc0e4f61621e83ed05e48d1.txt",
         "status": 200,
         "ok": true
       },
@@ -105,17 +110,19 @@
         "ok": true
       }
     ],
-    "failures": []
+    "failures": [
+      "https://futurecontractorsofamerica.com/api/academy-lms?programKey=contractor-business-formation-legal returned 404"
+    ]
   },
   {
-    "attempt": 3,
+    "attempt": 20,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "662fbf25adf40948a864949ef53997008739f28e",
+    "targetGitSha": "b3dbee3605d79cd81cc0e4f61621e83ed05e48d1",
     "host": "www.futurecontractorsofamerica.com",
-    "deploymentGitSha": "662fbf25adf40948a864949ef53997008739f28e",
-    "runtimeGitSha": "662fbf25adf40948a864949ef53997008739f28e",
-    "commitWitnessRoute": "/commit-witness-662fbf25adf40948a864949ef53997008739f28e.txt",
+    "deploymentGitSha": "b3dbee3605d79cd81cc0e4f61621e83ed05e48d1",
+    "runtimeGitSha": "b3dbee3605d79cd81cc0e4f61621e83ed05e48d1",
+    "commitWitnessRoute": "/commit-witness-b3dbee3605d79cd81cc0e4f61621e83ed05e48d1.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -203,7 +210,12 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-662fbf25adf40948a864949ef53997008739f28e.txt",
+        "route": "/api/academy-lms?programKey=contractor-business-formation-legal",
+        "status": 404,
+        "ok": false
+      },
+      {
+        "route": "/commit-witness-b3dbee3605d79cd81cc0e4f61621e83ed05e48d1.txt",
         "status": 200,
         "ok": true
       },
@@ -213,17 +225,19 @@
         "ok": true
       }
     ],
-    "failures": []
+    "failures": [
+      "https://www.futurecontractorsofamerica.com/api/academy-lms?programKey=contractor-business-formation-legal returned 404"
+    ]
   },
   {
-    "attempt": 3,
+    "attempt": 20,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "662fbf25adf40948a864949ef53997008739f28e",
+    "targetGitSha": "b3dbee3605d79cd81cc0e4f61621e83ed05e48d1",
     "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "deploymentGitSha": "662fbf25adf40948a864949ef53997008739f28e",
-    "runtimeGitSha": "662fbf25adf40948a864949ef53997008739f28e",
-    "commitWitnessRoute": "/commit-witness-662fbf25adf40948a864949ef53997008739f28e.txt",
+    "deploymentGitSha": "b3dbee3605d79cd81cc0e4f61621e83ed05e48d1",
+    "runtimeGitSha": "b3dbee3605d79cd81cc0e4f61621e83ed05e48d1",
+    "commitWitnessRoute": "/commit-witness-b3dbee3605d79cd81cc0e4f61621e83ed05e48d1.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -311,7 +325,12 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-662fbf25adf40948a864949ef53997008739f28e.txt",
+        "route": "/api/academy-lms?programKey=contractor-business-formation-legal",
+        "status": 404,
+        "ok": false
+      },
+      {
+        "route": "/commit-witness-b3dbee3605d79cd81cc0e4f61621e83ed05e48d1.txt",
         "status": 200,
         "ok": true
       },
@@ -321,6 +340,8 @@
         "ok": true
       }
     ],
-    "failures": []
+    "failures": [
+      "https://delightful-mushroom-0de67860f.7.azurestaticapps.net/api/academy-lms?programKey=contractor-business-formation-legal returned 404"
+    ]
   }
 ]
