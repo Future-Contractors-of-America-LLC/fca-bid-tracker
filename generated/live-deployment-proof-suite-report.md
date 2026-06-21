@@ -1,13 +1,13 @@
 # Live Deployment Proof Suite Report
 
 - Packet: 062Y
-- Generated: 2026-06-21T20:23:18.598Z
+- Generated: 2026-06-21T22:05:00.014Z
 - success: true
 
 ## Observed
-- witnessCommitSha: d23018d0905f08588cc59eb83990fef6929bb7dd
-- ciProofCommitSha: 47f245b9b25ec898c2141ed2588dcf73f7a04568
-- proofMetadataStatus: ci_surface_present_with_failures
+- witnessCommitSha: a5a37c0eb8f5c17212e127ce996fa84b6f0675da
+- ciProofCommitSha: 09dbcb97c0cd3a695e77ea5209d7525649e1eb40
+- proofMetadataStatus: ci_surface_present_success
 
 ## Failures
 - none
