@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'node:url'
 
 function expectIncludes(source, fragment, sourceName, failures) {
   if (!source.includes(fragment)) {
@@ -25,7 +26,7 @@ function readContinuityPacket(repoRoot) {
 }
 
 function main() {
-  const repoRoot = path.join(path.dirname(new URL(import.meta.url).pathname), '..')
+  const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
   const packageSource = read(repoRoot, 'package.json')
   const workflowSource = read(repoRoot, '.github/workflows/build-validation.yml')
   const failures = []

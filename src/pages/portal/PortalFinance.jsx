@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import usePortalProjectId from "../../hooks/usePortalProjectId";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useFinancialWorkspace from "../../hooks/useFinancialWorkspace";
 import { fetchPortalInvoices } from "../../api/portalClient";
 import FinanceSidebar from "../../components/finance/FinanceSidebar";
@@ -266,7 +267,7 @@ export default function PortalFinance() {
   return (
     <PortalShell
       title="Finance"
-      subtitle="AR, AP, GL, job billing, pay apps, and governed payment recording."
+      subtitle="FCA-native books for AR, AP, GL, job billing, pay apps, and governed payment recording."
       activeHref="/portal/finance"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.billing}

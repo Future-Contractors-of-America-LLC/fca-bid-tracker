@@ -59,7 +59,10 @@
     }
   ],
   "globalHeaders": {
-    "X-Auricrux-Deployment-Intent": "live-login-and-public-shell-verification"
+    "X-Auricrux-Deployment-Intent": "live-login-and-public-shell-verification",
+    "Cache-Control": "no-store, no-cache, must-revalidate",
+    "Pragma": "no-cache",
+    "Expires": "0"
   },
   "navigationFallback": {
     "rewrite": "/index.html",

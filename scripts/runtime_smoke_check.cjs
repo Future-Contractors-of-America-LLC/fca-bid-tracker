@@ -89,7 +89,7 @@ const routes = [
   {
     name: 'auricrux_actions_method_guard',
     file: path.join(__dirname, '..', 'api', 'auricrux', 'actions', 'index.js'),
-    req: { method: 'GET', query: {} },
+    req: { method: 'DELETE', query: {} },
     expectStatus: 405,
     expectType: 'error',
   },

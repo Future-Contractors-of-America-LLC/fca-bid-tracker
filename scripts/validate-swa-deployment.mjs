@@ -13,9 +13,7 @@ const checks = [
       "Assert SWA deployment target configuration",
       "test -n \"$AZURE_STATIC_WEB_APPS_API_TOKEN\"",
       "skip_app_build: true",
-      "skip_api_build: false",
-      "app_location: dist",
-      "api_location: api",
+      "api_location: api_generated",
       "test -f dist/deployment-status.json",
       "test -f dist/domain-continuity.json",
       "test -f dist/runtime-fingerprint.txt",
@@ -29,8 +27,9 @@ const checks = [
       "AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}",
       "workspace/live_deployment_smoke_summary.json",
       "workspace/live_deployment_smoke_failures.txt",
-      "test -f api/customer-login.js",
-      "test -f api/auricrux.js"
+      "test -f api_generated/package.json",
+      "test -f api_generated/host.json",
+      "test -f api_generated/auricrux/index.js"
     ],
     oneOfMarkers: [
       ["actions/upload-artifact@v4", "actions/upload-artifact@v6"]

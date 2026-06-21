@@ -16,6 +16,7 @@
   "scripts": {
     "dev": "vite",
     "build:spa": "vite build",
+    "prebuild": "node scripts/generate-deployment-manifest.mjs && node scripts/generate-domain-continuity-witness.mjs && node scripts/generate-runtime-fingerprint.mjs",
     "build:system": "npm run build",
     "build": "npx vite build && node scripts/post-spa-build.mjs",
     "qc:market": "node scripts/run-market-qc.mjs",
@@ -24,6 +25,7 @@
     "qc:lms": "node scripts/run-lms-qc.mjs",
     "qc:product": "node scripts/run-saas-qc.mjs && node scripts/run-lms-qc.mjs",
     "verify:live-deployment": "node scripts/verify-live-deployment.mjs",
+    "validate:swa-deployment": "node scripts/validate-swa-deployment.mjs",
     "verify:central-api": "node scripts/verify-central-api.mjs",
     "validate:runtime-smoke": "node scripts/runtime_smoke_check.cjs",
     "capture:build-evidence": "node scripts/build_evidence_capture.cjs",
