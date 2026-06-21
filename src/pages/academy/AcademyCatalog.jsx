@@ -6,7 +6,7 @@ import useAcademyLms from "../../hooks/useAcademyLms";
 import { findCatalogPlacement, organizeCatalogHierarchy } from "../../academyOfferings";
 import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
 import { getPathwayLmsConfig } from "../../academyPathwayLms";
-import { getCertificationAgencyAlignment } from "../../academyCatalogTaxonomy";
+import { getCertificationAgencyAlignment, getApprenticeshipCompliance, getDegreeAccreditationFootnote } from "../../academyCatalogTaxonomy";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -55,6 +55,9 @@ function CourseCard({ program, topicKey, pathwayKey }) {
     || program.modules?.map((module) => module.title)
     || [];
   const agency = program.issuingAgency || (pathwayKey === "certification" ? getCertificationAgencyAlignment(topicKey)?.primary : null);
+  const apprenticeship = pathwayKey === "apprenticeship" ? getApprenticeshipCompliance(topicKey) : null;
+  const degreeAcc = pathwayKey === "degree" ? (program.accreditationBody || getDegreeAccreditationFootnote(program.degreeLevel)?.accreditationBody) : null;
+  const stateChip = program.stateCode || (program.licensureScope === "multi-state" ? "Multi-state" : null);
 
   return (
     <article style={cardStyle}>
@@ -63,12 +66,37 @@ function CourseCard({ program, topicKey, pathwayKey }) {
           <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>
             {program.credential || program.credentialTitle}
             {program.licensureScope === "multi-state" ? <span style={{ color: "#7c3aed", fontWeight: 600, marginLeft: 8 }}>Multi-state</span> : null}
+            {stateChip && program.licensureScope !== "multi-state" ? (
+              <span style={{ color: "#b45309", fontWeight: 600, marginLeft: 8, fontSize: 12, border: "1px solid #fcd34d", borderRadius: 6, padding: "2px 6px", background: "#fffbeb" }}>
+                {stateChip}
+              </span>
+            ) : null}
             {program.source === "catalog-preview" ? <span style={{ color: "#64748b", fontWeight: 400, marginLeft: 8 }}>(Catalog)</span> : null}
           </div>
           <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
           {agency ? (
             <div style={{ color: "#047857", fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
               Aligned with {agency}{program.governingBodies?.length ? ` · ${program.governingBodies.slice(0, 3).join(", ")}` : ""}
+            </div>
+          ) : null}
+          {apprenticeship ? (
+            <div style={{ color: "#0369a1", fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
+              {apprenticeship.sponsor} · {apprenticeship.hours.toLocaleString()} OJT hours target
+              {apprenticeship.unions?.length ? ` · ${apprenticeship.unions.join(", ")}` : ""}
+            </div>
+          ) : null}
+          {degreeAcc ? (
+            <div style={{ color: "#6d28d9", fontSize: 12, lineHeight: 1.5, marginBottom: 8 }}>
+              {degreeAcc}
+              {program.regionalAccreditation ? (
+                <div style={{ color: "#64748b", fontWeight: 500, marginTop: 4 }}>{program.regionalAccreditation}</div>
+              ) : null}
+            </div>
+          ) : null}
+          {program.licensureBoard ? (
+            <div style={{ color: "#92400e", fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
+              {program.licensureBoard}
+              {program.examPrerequisites ? <span style={{ fontWeight: 500, color: "#78350f" }}> · {program.examPrerequisites}</span> : null}
             </div>
           ) : null}
           <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>

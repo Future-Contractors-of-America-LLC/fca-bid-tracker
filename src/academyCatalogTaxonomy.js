@@ -227,6 +227,43 @@ export const CERTIFICATION_AGENCY_MAP = {
   "customer-communications-cert": { primary: "PMI", bodies: ["PMI", "CMAA", "DBIA"], associations: ["AGC"] },
 };
 
+/** Apprenticeship trade compliance metadata (alignment language only). */
+export const APPRENTICESHIP_COMPLIANCE_MAP = {
+  electrical: { sponsor: "DOL RA / NCCER electrical curriculum alignment", hours: 8000, unions: ["IBEW", "NECA"], bodies: ["USDOL", "NCCER"] },
+  plumbing: { sponsor: "DOL RA / NCCER plumbing curriculum alignment", hours: 8000, unions: ["UA", "PHCC"], bodies: ["USDOL", "NCCER"] },
+  hvac: { sponsor: "DOL RA / NCCER HVAC curriculum alignment", hours: 8000, unions: ["UA", "SMART"], bodies: ["USDOL", "NCCER", "ACCA"] },
+  carpentry: { sponsor: "DOL RA / NCCER carpentry curriculum alignment", hours: 8000, unions: ["UBC"], bodies: ["USDOL", "NCCER"] },
+  masonry: { sponsor: "DOL RA / NCCER masonry curriculum alignment", hours: 6000, unions: ["OPCMIA"], bodies: ["USDOL", "NCCER"] },
+  welding: { sponsor: "DOL RA / NCCER / AWS alignment", hours: 6000, unions: ["Ironworkers"], bodies: ["USDOL", "NCCER", "AWS"] },
+  pipefitting: { sponsor: "DOL RA / NCCER pipefitting curriculum alignment", hours: 8000, unions: ["UA"], bodies: ["USDOL", "NCCER"] },
+  "sheet-metal": { sponsor: "DOL RA / NCCER sheet metal curriculum alignment", hours: 8000, unions: ["SMART"], bodies: ["USDOL", "NCCER", "SMACNA"] },
+  "fire-sprinkler": { sponsor: "DOL RA / NFPA 13 sprinkler fitter alignment", hours: 8000, unions: ["UA"], bodies: ["USDOL", "NCCER", "NFPA", "NICET"] },
+};
+
+/** Degree accreditation alignment footnotes (not institutional accreditation claims). */
+export const DEGREE_ACCREDITATION_MAP = {
+  Shared: {
+    accreditationBody: "Middle States / SACSCOC-aligned general education core preparation",
+    regionalAccreditation: "Academic rigor preparation - not a regionally accredited institution",
+    creditArticulation: "ACE credit recommendation alignment for transfer review",
+  },
+  AAS: {
+    accreditationBody: "Middle States / SACSCOC-aligned associate degree preparation",
+    regionalAccreditation: "Associate-level rigor preparation - not an accredited degree-granting institution",
+    creditArticulation: "ACE credit recommendation alignment for 60-credit AAS pathways",
+  },
+  BS: {
+    accreditationBody: "Middle States / SACSCOC-aligned baccalaureate preparation",
+    regionalAccreditation: "Bachelor-level rigor preparation - not an accredited degree-granting institution",
+    creditArticulation: "ACE credit recommendation alignment for 120-credit BS pathways",
+  },
+  BAS: {
+    accreditationBody: "Middle States / SACSCOC-aligned applied baccalaureate preparation",
+    regionalAccreditation: "Applied bachelor rigor preparation - not an accredited degree-granting institution",
+    creditArticulation: "ACE credit recommendation alignment for 120-credit BAS pathways",
+  },
+};
+
 /** Programs linked from every state licensure topic (multi-state shared prep). */
 export const LICENSURE_STATE_SHARED_PROGRAMS = [
   "lic-nascla-business-law-exam-prep",
@@ -729,6 +766,14 @@ export function formatAddonLabel(addonKey) {
 
 export function getCertificationAgencyAlignment(topicKey) {
   return CERTIFICATION_AGENCY_MAP[topicKey] || null;
+}
+
+export function getApprenticeshipCompliance(topicKey) {
+  return APPRENTICESHIP_COMPLIANCE_MAP[topicKey] || null;
+}
+
+export function getDegreeAccreditationFootnote(degreeLevel) {
+  return DEGREE_ACCREDITATION_MAP[degreeLevel] || DEGREE_ACCREDITATION_MAP.AAS;
 }
 
 /** Shared multi-state programs to surface on state licensure topic pages. */

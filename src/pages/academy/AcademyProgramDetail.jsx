@@ -6,7 +6,7 @@ import useCustomerSession from "../../hooks/useCustomerSession";
 import { fetchAcademyProgram } from "../../api/academyClient";
 import { evaluateEnrollmentAccess } from "../../academyEnrollmentAccess";
 import { findCatalogPlacement } from "../../academyOfferings";
-import { resolveProgramCatalogMeta, formatAddonLabel, formatPlanLabel, getPathwayByKey, getTopicByKey } from "../../academyCatalogTaxonomy";
+import { resolveProgramCatalogMeta, formatAddonLabel, formatPlanLabel, getPathwayByKey, getTopicByKey, getCertificationAgencyAlignment, getApprenticeshipCompliance, getDegreeAccreditationFootnote } from "../../academyCatalogTaxonomy";
 import AcademyCourseChrome from "../../components/academy/AcademyCourseChrome";
 import { academyPageStyle } from "../../academyDesignSystem";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
@@ -63,6 +63,38 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
     programKey: programId,
     enrollments: academyState.enrollments || [],
   });
+
+  const complianceFootnotes = useMemo(() => {
+    if (!program || !catalogMeta) return [];
+    const lines = [];
+    const { pathwayKey, topicKey } = catalogMeta;
+    if (pathwayKey === "certification") {
+      const agency = program.issuingAgency || getCertificationAgencyAlignment(topicKey)?.primary;
+      if (agency) lines.push({ label: "Certification alignment", value: `${agency}${program.governingBodies?.length ? ` · ${program.governingBodies.join(", ")}` : ""}` });
+      if (program.renewalPolicy) lines.push({ label: "Renewal policy", value: program.renewalPolicy });
+    }
+    if (pathwayKey === "apprenticeship") {
+      const trade = getApprenticeshipCompliance(topicKey);
+      if (program.apprenticeshipSponsor || trade?.sponsor) lines.push({ label: "Apprenticeship alignment", value: program.apprenticeshipSponsor || trade.sponsor });
+      if (program.journeymanHours || trade?.hours) lines.push({ label: "Journeyman OJT target", value: `${(program.journeymanHours || trade.hours).toLocaleString()} hours (varies by sponsor/state)` });
+      if (program.ratioRequirements) lines.push({ label: "Supervision ratio", value: program.ratioRequirements });
+      if (program.curriculumAlignment) lines.push({ label: "Curriculum", value: program.curriculumAlignment });
+    }
+    if (pathwayKey === "degree") {
+      const acc = getDegreeAccreditationFootnote(program.degreeLevel || catalogMeta.degreeLevel);
+      lines.push({ label: "Accreditation alignment", value: program.accreditationBody || acc.accreditationBody });
+      lines.push({ label: "Institutional status", value: program.regionalAccreditation || acc.regionalAccreditation });
+      lines.push({ label: "Credit articulation", value: program.creditArticulation || acc.creditArticulation });
+    }
+    if (pathwayKey === "licensure") {
+      if (program.licensureBoard) lines.push({ label: "Licensure board", value: program.licensureBoard });
+      if (program.stateCode) lines.push({ label: "Jurisdiction", value: program.stateCode });
+      if (program.examPrerequisites) lines.push({ label: "Exam prerequisites", value: program.examPrerequisites });
+      if (program.renewalPolicy) lines.push({ label: "Renewal policy", value: program.renewalPolicy });
+      if (program.licensureScope === "multi-state") lines.push({ label: "Scope", value: "Multi-state shared prep course" });
+    }
+    return lines;
+  }, [program, catalogMeta]);
 
   async function enrollNow() {
     if (!programId) return;
@@ -149,6 +181,23 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
                   <li key={outcome}>{outcome}</li>
                 ))}
               </ul>
+            ) : null}
+
+            {complianceFootnotes.length > 0 ? (
+              <div style={{ marginTop: 16, padding: 14, borderRadius: 12, background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
+                <div style={{ fontWeight: 700, color: "#166534", marginBottom: 8 }}>Compliance and alignment</div>
+                <dl style={{ margin: 0, lineHeight: 1.75, color: "#334155", fontSize: 14 }}>
+                  {complianceFootnotes.map((item) => (
+                    <div key={item.label} style={{ marginBottom: 8 }}>
+                      <dt style={{ fontWeight: 700, color: "#0f172a", display: "inline" }}>{item.label}: </dt>
+                      <dd style={{ display: "inline", margin: 0 }}>{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p style={{ fontSize: 12, color: "#64748b", marginBottom: 0, marginTop: 10 }}>
+                  Alignment statements describe curriculum preparation. FCA Academy does not issue licenses, degrees, or registered apprenticeship credentials.
+                </p>
+              </div>
             ) : null}
 
             <div style={{ marginTop: 16, padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>

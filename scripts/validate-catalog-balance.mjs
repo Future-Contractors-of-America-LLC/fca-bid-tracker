@@ -11,7 +11,7 @@ async function extractProgramKeys(fileName) {
 }
 
 const taxonomyModule = await import(pathToFileURL(path.join(root, "src", "academyCatalogTaxonomy.js")).href);
-const { resolveProgramCatalogMeta } = taxonomyModule;
+const { resolveProgramCatalogMeta, getTopicByKey, CERTIFICATION_AGENCY_MAP, APPRENTICESHIP_COMPLIANCE_MAP, DEGREE_ACCREDITATION_MAP } = taxonomyModule;
 
 const programKeys = [
   ...(await extractProgramKeys("apprenticeship_programs.py")),
@@ -100,6 +100,29 @@ const certTopicsWithCourses = summarize("certification").length;
 if (certTopicsWithCourses < 8) {
   console.error(`\nCertification topics with courses: ${certTopicsWithCourses} (expected at least 8)`);
   process.exit(1);
+}
+
+// Compliance metadata spot-check via taxonomy maps
+const certTopicKeys = summarize("certification").map((e) => e.topic);
+const appTopicKeys = summarize("apprenticeship").map((e) => e.topic);
+
+for (const topic of certTopicKeys) {
+  if (!CERTIFICATION_AGENCY_MAP[topic]) {
+    console.error(`\nCertification topic missing agency map: ${topic}`);
+    process.exit(1);
+  }
+}
+for (const topic of appTopicKeys) {
+  if (!APPRENTICESHIP_COMPLIANCE_MAP[topic]) {
+    console.error(`\nApprenticeship topic missing compliance map: ${topic}`);
+    process.exit(1);
+  }
+}
+for (const level of ["AAS", "BS", "BAS", "Shared"]) {
+  if (!DEGREE_ACCREDITATION_MAP[level]) {
+    console.error(`\nDegree accreditation map missing level: ${level}`);
+    process.exit(1);
+  }
 }
 
 console.log(`\nBalance check passed for ${programKeys.length} API programs.`);
