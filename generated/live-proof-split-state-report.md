@@ -1,9 +1,9 @@
 # Live Proof Split State Report
 
 - Packet: 062Y
-- Generated: 2026-06-21T01:06:36.347Z
+- Generated: 2026-06-21T01:08:23.916Z
 - success: false
-- witnessCommitSha: d97a2e3e38b119aa5bdb3da7a63252bc837bead3
+- witnessCommitSha: bea54b966370c73a5b613d664b8f041aa27dadec
 - proofCommitSha: 9f56178c0a1e4e3921bd14ec8e6ff88799fa0b3a
 
 ## Failures
