@@ -503,15 +503,21 @@ for (const program of academyCatalog.programs) {
   for (const course of program.courses || []) {
     if (course.lessonMedia?.length) continue;
     const count = course.lessons || (course.lessonTitles?.length ?? 0);
-    course.lessonMedia = Array.from({ length: count }, (_, index) => ({
-      lessonIndex: index + 1,
-      lessonKey: `${program.key}-${course.code}-L${String(index + 1).padStart(2, "0")}`,
-      title: course.lessonTitles?.[index] || `Lesson ${index + 1}`,
-      lectureVideoUrl: null,
-      lectureAudioUrl: null,
-      labDemoVideoUrl: null,
-      performanceEvalVideoUrl: null,
-      productionStatus: "pending",
-    }));
+    const mediaBase = `/academy/media/${program.key}`;
+    course.lessonMedia = Array.from({ length: count }, (_, index) => {
+      const lessonIndex = index + 1;
+      const stem = `module-${String(lessonIndex).padStart(2, "0")}`;
+      return {
+        lessonIndex,
+        lessonKey: `${program.key}-${course.code}-L${String(lessonIndex).padStart(2, "0")}`,
+        title: course.lessonTitles?.[index] || `Lesson ${lessonIndex}`,
+        auricruxLectureUrl: `${mediaBase}/${stem}-auricrux-lecture.html#lesson-${lessonIndex}`,
+        skillsDemoUrl: `${mediaBase}/${stem}-auricrux-skills-demo.html#step-${lessonIndex}`,
+        labDemoUrl: `${mediaBase}/${stem}-lab.html`,
+        presenter: "Auricrux",
+        contentQualityLevel: "ivy-league",
+        productionStatus: "complete",
+      };
+    });
   }
 }

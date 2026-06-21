@@ -189,17 +189,46 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   }
 
   function renderLecturePanel() {
-    if (module?.lectureUrl || module?.mediaUrl) {
+    const lectureSrc = module?.auricruxLectureUrl || module?.lectureUrl || module?.mediaUrl;
+    if (lectureSrc) {
       return (
         <iframe
-          title={`Module ${moduleNumber} lecture`}
-          src={module.lectureUrl || module.mediaUrl}
+          title={`Module ${moduleNumber} Auricrux lecture`}
+          src={lectureSrc}
           style={iframeStyle}
           loading="lazy"
         />
       );
     }
     return renderOverview();
+  }
+
+  function renderSkillsDemoPanel() {
+    if (module?.auricruxSkillsDemoUrl) {
+      return (
+        <iframe
+          title={`Module ${moduleNumber} Auricrux skills demonstration`}
+          src={module.auricruxSkillsDemoUrl}
+          style={iframeStyle}
+          loading="lazy"
+        />
+      );
+    }
+    if (Array.isArray(module?.lessonMedia) && module.lessonMedia.length > 0) {
+      const first = module.lessonMedia.find((item) => item.skillsDemoUrl || item.labDemoUrl);
+      const demoSrc = first?.skillsDemoUrl || first?.labDemoUrl;
+      if (demoSrc) {
+        return (
+          <iframe
+            title={`Module ${moduleNumber} skills demonstration`}
+            src={demoSrc}
+            style={iframeStyle}
+            loading="lazy"
+          />
+        );
+      }
+    }
+    return <p style={{ color: "#64748b", lineHeight: 1.65 }}>No Auricrux skills demonstration is linked for this module yet.</p>;
   }
 
   function renderLabPanel() {
@@ -248,6 +277,17 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
           <div style={{ ...cardStyle, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>{loadError}</div>
         ) : null}
 
+        {programDetail?.accreditationStandards ? (
+          <div style={{ ...cardStyle, marginBottom: 16, background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
+            <strong style={{ color: "#15803d" }}>Accreditation & governing bodies</strong>
+            <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#475569", marginBottom: 0 }}>
+              {(programDetail.accreditationStandards.governingBodies || []).map((body) => (
+                <li key={body}>{body}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
         {completionRequirements ? (
           <div style={{ ...cardStyle, marginBottom: 16, background: "#f8fafc" }}>
             <strong>Completion requirements</strong>
@@ -286,7 +326,8 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
               ) : null}
 
               <div style={{ display: "flex", gap: 4, flexWrap: "wrap", borderBottom: "1px solid #e2e8f0", marginBottom: 16 }}>
-                <button type="button" style={tabStyle(activeTab === "lecture")} onClick={() => setActiveTab("lecture")}>Lecture</button>
+                <button type="button" style={tabStyle(activeTab === "lecture")} onClick={() => setActiveTab("lecture")}>Auricrux lecture</button>
+                <button type="button" style={tabStyle(activeTab === "skills")} onClick={() => setActiveTab("skills")}>Skills demo</button>
                 <button type="button" style={tabStyle(activeTab === "lab")} onClick={() => setActiveTab("lab")}>Lab workbook</button>
                 {!isLocked && !isModuleComplete ? (
                   <button type="button" style={tabStyle(activeTab === "quiz")} onClick={() => setActiveTab("quiz")}>Knowledge check</button>
@@ -294,6 +335,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
               </div>
 
               {activeTab === "lecture" ? renderLecturePanel() : null}
+              {activeTab === "skills" ? renderSkillsDemoPanel() : null}
               {activeTab === "lab" ? renderLabPanel() : null}
               {activeTab === "quiz" && !isLocked && !isModuleComplete ? (
                 <KnowledgeCheckQuiz module={module} onSubmit={handleQuizSubmit} busy={quizBusy} />
