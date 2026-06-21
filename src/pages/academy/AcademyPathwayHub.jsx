@@ -65,7 +65,7 @@ function PathwayHero({ config, courseCount, topicCount }) {
             Operated by <strong style={{ color: "#0f172a" }}>{config.operatedBy}</strong>
           </div>
           <div style={{ marginTop: 8, fontSize: 14, color: "#334155" }}>
-            <strong>{topicCount}</strong> topics · <strong>{courseCount}</strong> courses
+            <strong>{topicCount}</strong> topics | <strong>{courseCount}</strong> courses
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@ function TopicRow({ topic, pathwayKey, config }) {
           <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0, marginBottom: 0 }}>{topic.description}</p>
           {agency ? (
             <div style={{ marginTop: 10, fontSize: 13, color: config.accent, fontWeight: 600 }}>
-              Aligned with {agency.primary} · {agency.bodies.slice(0, 3).join(", ")}
+              Aligned with {agency.primary} | {agency.bodies.slice(0, 3).join(", ")}
             </div>
           ) : null}
         </div>
@@ -144,7 +144,7 @@ export default function AcademyPathwayHub() {
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
         compact
-        eyebrow={`${config.heroTitle} · Auricrux`}
+        eyebrow={`${config.heroTitle} | Auricrux`}
         title={config.heroTitle}
         subtitle={`${pathway.courseCount} courses across ${pathway.topics.length} topics`}
         primaryHref={config.dashboardRoute}

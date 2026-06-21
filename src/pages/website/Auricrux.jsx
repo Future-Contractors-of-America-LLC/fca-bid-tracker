@@ -3,6 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import {
   auricruxCapabilities,
@@ -139,6 +140,12 @@ export default function AuricruxPage() {
       </div>
 
       <PublicCtaRow actions={publicBodyCtaSets.auricruxHero} style={{ marginTop: 24 }} />
+
+      <PublicPackageRouteGroupsPanel
+        eyebrow="Product depth"
+        title="Where Auricrux connects across FCA"
+        detail="Route groups where guidance, continuity, and next actions stay visible."
+      />
 
       <ShellFooter />
     </div>

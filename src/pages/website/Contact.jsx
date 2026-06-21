@@ -5,6 +5,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import ContactActionCenter from "../../components/ContactActionCenter";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -133,6 +134,12 @@ export default function Contact() {
       </div>
 
       <PublicActionRail title={publicContactMessaging.actionRail.title} detail={publicContactMessaging.actionRail.detail} />
+
+      <PublicPackageRouteGroupsPanel
+        eyebrow="Product depth"
+        title="What we walk through together"
+        detail="Platform modules and route groups behind the FCA operating system."
+      />
 
       <ShellFooter />
     </div>
