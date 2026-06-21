@@ -1,15 +1,15 @@
 # Live Deployment Proof Provenance Report
 
 - Packet: 062Y
-- Generated: 2026-06-21T09:57:26.411Z
+- Generated: 2026-06-21T18:25:40.327Z
 - success: true
 
 ## Observed
 - provenance: github_actions_ci
 - ciPersisted: true
-- ciRunId: 27900707252
-- ciCommitSha: 703112f6532c2a6efbc6b9e577ac94c933315113
-- status: ci_surface_present_success
+- ciRunId: 27913193714
+- ciCommitSha: 7e8af2eb43786b5702a07035f6c5860628cd88cb
+- status: ci_surface_present_with_failures
 
 ## Failures
 - none
