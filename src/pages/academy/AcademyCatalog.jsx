@@ -3,7 +3,9 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import useAcademyLms from "../../hooks/useAcademyLms";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { findCatalogPlacement, organizeCatalogHierarchy } from "../../academyOfferings";
+import { hasAcademySubscription, shouldShowMemberOnlyPathway } from "../../academySubscriptionAccess";
 import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
 import { getPathwayLmsConfig } from "../../academyPathwayLms";
 import { getCertificationAgencyAlignment, getApprenticeshipCompliance, getDegreeAccreditationFootnote } from "../../academyCatalogTaxonomy";
@@ -207,17 +209,23 @@ function Breadcrumb({ pathway, topic }) {
 }
 
 export default function AcademyCatalog() {
+  const { session } = useCustomerSession();
   const { academyState, meta } = useAcademyLms();
   const apiPrograms = academyState?.catalog?.programs || [];
   const { pathwayKey, topicKey } = readCatalogParams();
+  const includeOperatorGuides = hasAcademySubscription(session);
 
-  const hierarchy = useMemo(() => organizeCatalogHierarchy(apiPrograms), [apiPrograms]);
+  const hierarchy = useMemo(
+    () => organizeCatalogHierarchy(apiPrograms, { includeOperatorGuides }),
+    [apiPrograms, includeOperatorGuides],
+  );
   const catalogIntegrity = useMemo(() => getCatalogIntegrity(academyState), [academyState]);
   const totalCourses = catalogIntegrity.actualTotal || hierarchy.reduce((sum, pathway) => sum + pathway.courseCount, 0);
   const selectedPathway = hierarchy.find((pathway) => pathway.key === pathwayKey) || null;
   const selectedTopic = selectedPathway?.topics.find((topic) => topic.key === topicKey) || null;
   const placement = findCatalogPlacement(pathwayKey, topicKey);
   const pathwayLms = getPathwayLmsConfig(pathwayKey);
+  const memberOnlyBlocked = pathwayKey && !shouldShowMemberOnlyPathway(pathwayKey, session);
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -286,14 +294,26 @@ export default function AcademyCatalog() {
         <div style={{ ...cardStyle, marginBottom: 24, background: "#f8fafc" }}>
           <strong>How the catalog works</strong>
           <ol style={{ paddingLeft: 20, lineHeight: 1.85, color: "#475569", marginBottom: 0, marginTop: 10 }}>
-            <li><strong>Pick a pathway</strong> — apprenticeship, degree, certification, licensure, professional development, or FCA operator guides.</li>
+            <li><strong>Pick a pathway</strong> — apprenticeship, degree, certification, licensure, or professional development{includeOperatorGuides ? ", plus FCA operator guides for members" : ""}.</li>
             <li><strong>Pick a topic</strong> — OSHA, electrical, architectural engineering, Virginia DPOR, and more.</li>
             <li><strong>View any course syllabus</strong> — curriculum is public for every course.</li>
             <li><strong>Enroll when eligible</strong> — subscriptions, add-ons, and prerequisites gate course signup and progress tracking.</li>
           </ol>
         </div>
 
-        {!selectedPathway ? (
+        {memberOnlyBlocked ? (
+          <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #fecaca", background: "#fef2f2" }}>
+            <strong style={{ color: "#b91c1c" }}>Contractor Command subscription required</strong>
+            <p style={{ color: "#475569", lineHeight: 1.65, marginBottom: 0 }}>
+              FCA How-To and Operator Guides are included with every Contractor Command subscription. They are not available in the public catalog or Academy Store.
+            </p>
+            <a href="/login?next=/academy/catalog" style={{ display: "inline-block", marginTop: 12, color: "#dc2626", fontWeight: 700, textDecoration: "none" }}>
+              Sign in to your workspace
+            </a>
+          </div>
+        ) : null}
+
+        {!selectedPathway && !memberOnlyBlocked ? (
           <section>
             <h2 style={{ marginTop: 0, marginBottom: 16 }}>1. Choose a pathway</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
@@ -313,7 +333,7 @@ export default function AcademyCatalog() {
           </section>
         ) : null}
 
-        {selectedPathway && !selectedTopic ? (
+        {selectedPathway && !selectedTopic && !memberOnlyBlocked ? (
           <section>
             <h2 style={{ marginTop: 0, marginBottom: 8 }}>2. Choose a topic</h2>
             <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0, marginBottom: 20 }}>{selectedPathway.description}</p>
@@ -358,7 +378,7 @@ export default function AcademyCatalog() {
           </section>
         ) : null}
 
-        {selectedPathway && selectedTopic ? (
+        {selectedPathway && selectedTopic && !memberOnlyBlocked ? (
           <section>
             <h2 style={{ marginTop: 0, marginBottom: 8 }}>3. Courses in {selectedTopic.label}</h2>
             {topicMetaLine(selectedTopic, selectedPathway.key) ? (

@@ -333,7 +333,8 @@ export function organizeApiCatalogByLane(apiPrograms = [], catalogLanes = OFFERI
 }
 
 /** Pathway → topic → course hierarchy for catalog navigation. */
-export function organizeCatalogHierarchy(apiPrograms = []) {
+export function organizeCatalogHierarchy(apiPrograms = [], options = {}) {
+  const includeOperatorGuides = options.includeOperatorGuides === true;
   const apiKeys = new Set(apiPrograms.map((program) => program.key));
   const allPrograms = apiPrograms.length > 0
     ? [...apiPrograms]
@@ -396,7 +397,8 @@ export function organizeCatalogHierarchy(apiPrograms = []) {
     }
   }
 
-  return CATALOG_PATHWAYS.map((pathway) => {
+  return CATALOG_PATHWAYS.filter((pathway) => includeOperatorGuides || pathway.key !== "fca-how-to")
+    .map((pathway) => {
     const topics = getTopicsForPathway(pathway.key)
       .map((topic) => ({
         ...topic,
@@ -411,7 +413,7 @@ export function organizeCatalogHierarchy(apiPrograms = []) {
       topics,
       courseCount,
     };
-  }).filter((pathway) => pathway.courseCount > 0 || pathway.key === "licensure" || pathway.key === "fca-how-to");
+  }).filter((pathway) => pathway.courseCount > 0 || pathway.key === "licensure" || (includeOperatorGuides && pathway.key === "fca-how-to"));
 }
 
 export function findCatalogPlacement(pathwayKey, topicKey, programKey) {

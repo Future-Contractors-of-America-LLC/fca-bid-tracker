@@ -1,8 +1,9 @@
 import fs from "fs/promises";
 import path from "path";
-import { pathToFileURL } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
-const root = process.cwd();
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(scriptDir, "..");
 const centralRoot = path.resolve(root, "..", "auricrux-central-work", "core");
 
 async function extractProgramKeys(fileName) {

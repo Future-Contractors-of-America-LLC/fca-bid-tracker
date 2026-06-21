@@ -77,7 +77,7 @@ export const PATHWAY_LMS_CONFIG = {
     operatedBy: "Auricrux",
     dashboardRoute: "/academy/dashboard#fca-how-to",
     catalogRoute: "/academy/catalog?pathway=fca-how-to",
-    features: ["Live portal labs", "Open enrollment", "Operator prerequisites", "SaaS-embedded learning"],
+    features: ["Live portal labs", "Subscription included", "Operator prerequisites", "SaaS-embedded learning"],
   },
 };
 

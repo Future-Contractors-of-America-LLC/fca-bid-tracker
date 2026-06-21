@@ -306,47 +306,47 @@ export const PROGRAM_CATALOG_META = {
   "fca-workspace-quick-start": {
     pathwayKey: "fca-how-to",
     topicKey: "fca-platform",
-    enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: [] },
+    enrollment: { syllabusPublic: true, requiresAuth: true, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: [] },
   },
   "fca-contractor-command-user-guide": {
     pathwayKey: "fca-how-to",
     topicKey: "fca-platform",
-    enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: [] },
+    enrollment: { syllabusPublic: true, requiresAuth: true, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: [] },
   },
   "fca-bids-qualification-estimates": {
     pathwayKey: "fca-how-to",
     topicKey: "fca-bids-estimates",
-    enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
+    enrollment: { syllabusPublic: true, requiresAuth: true, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-projects-stage-control": {
     pathwayKey: "fca-how-to",
     topicKey: "fca-projects-execution",
-    enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
+    enrollment: { syllabusPublic: true, requiresAuth: true, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-files-audit-governance": {
     pathwayKey: "fca-how-to",
     topicKey: "fca-files-governance",
-    enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
+    enrollment: { syllabusPublic: true, requiresAuth: true, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-billing-invoicing": {
     pathwayKey: "fca-how-to",
     topicKey: "fca-billing-revenue",
-    enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
+    enrollment: { syllabusPublic: true, requiresAuth: true, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-legal-command-workspace": {
     pathwayKey: "fca-how-to",
     topicKey: "fca-legal-compliance",
-    enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
+    enrollment: { syllabusPublic: true, requiresAuth: true, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-support-auricrux-operator": {
     pathwayKey: "fca-how-to",
     topicKey: "fca-support-auricrux",
-    enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
+    enrollment: { syllabusPublic: true, requiresAuth: true, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-academy-progress-tracking": {
     pathwayKey: "fca-how-to",
     topicKey: "fca-platform",
-    enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
+    enrollment: { syllabusPublic: true, requiresAuth: true, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "electrical-apprenticeship-year1": {
     pathwayKey: "apprenticeship",

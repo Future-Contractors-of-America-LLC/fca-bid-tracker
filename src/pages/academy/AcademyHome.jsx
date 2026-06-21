@@ -12,6 +12,7 @@ import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import { flattenCatalogLessons, getProgramsByLane, OFFERING_LANES } from "../../academyOfferings";
+import { filterVisibleLanes, hasAcademySubscription } from "../../academySubscriptionAccess";
 import { academyCatalog } from "../../academyCatalog";
 import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
 import { academyPageStyle } from "../../academyDesignSystem";
@@ -200,6 +201,10 @@ export default function AcademyHome() {
   const catalogLessons = useMemo(() => flattenCatalogLessons(), []);
   const catalogLanes = useMemo(() => getProgramsByLane(), []);
   const catalogProgramCount = catalogIntegrity.actualTotal || Math.max(academyCatalog.programs.length, apiPrograms.length);
+  const visibleOfferingLanes = useMemo(
+    () => filterVisibleLanes(OFFERING_LANES, session),
+    [session],
+  );
 
   const classroomSummaries = useMemo(() => classrooms.map((classroom) => {
     const completedCount = classroom.lessons.filter((lesson) => progress[lesson.id]).length;
@@ -275,11 +280,11 @@ export default function AcademyHome() {
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Catalog overview</h2>
         <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
-          <strong>{catalogProgramCount}</strong> programs across <strong>{OFFERING_LANES.length}</strong> lanes.
+          <strong>{catalogProgramCount}</strong> programs across <strong>{visibleOfferingLanes.length}</strong> lanes.
           {" "}<a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700 }}>View full catalog by lane</a>
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
-          {OFFERING_LANES.map((lane) => {
+          {visibleOfferingLanes.map((lane) => {
             const liveCount = laneProgramCounts[lane.key];
             const fallbackCount = catalogLanes.find((item) => item.key === lane.key)?.programs.length || 0;
             const count = liveCount ?? fallbackCount;
@@ -301,7 +306,7 @@ export default function AcademyHome() {
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Catalog lessons</h2>
-        <p style={{ color: "#475569", lineHeight: 1.65 }}>Structured lessons across apprenticeship, certification, degree, licensure, and operator tracks.</p>
+        <p style={{ color: "#475569", lineHeight: 1.65 }}>Structured lessons across apprenticeship, certification, degree, licensure{hasAcademySubscription(session) ? ", and operator guides" : ""}.</p>
         <div style={{ display: "grid", gap: 10, maxHeight: 360, overflow: "auto" }}>
           {catalogLessons.map((lesson) => (
             <div key={lesson.id} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: progress[lesson.id] ? "#f0fdf4" : "#fff" }}>

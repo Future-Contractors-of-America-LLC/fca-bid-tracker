@@ -3,7 +3,9 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import useAcademyLms from "../../hooks/useAcademyLms";
+import useCustomerSession from "../../hooks/useCustomerSession";
 import { organizeCatalogHierarchy } from "../../academyOfferings";
+import { hasAcademySubscription, shouldShowMemberOnlyPathway } from "../../academySubscriptionAccess";
 import { getCertificationAgencyAlignment } from "../../academyCatalogTaxonomy";
 import { getPathwayLmsConfig, listPathwayLmsConfigs } from "../../academyPathwayLms";
 import { shellHeaderCtaSets, shellJourney } from "../../websiteShell";
@@ -106,11 +108,48 @@ function TopicRow({ topic, pathwayKey, config }) {
 
 export default function AcademyPathwayHub() {
   const pathwayKey = readPathwayKey();
+  const { session } = useCustomerSession();
   const config = getPathwayLmsConfig(pathwayKey);
   const { academyState } = useAcademyLms();
   const apiPrograms = academyState?.catalog?.programs || [];
-  const hierarchy = useMemo(() => organizeCatalogHierarchy(apiPrograms), [apiPrograms]);
+  const includeOperatorGuides = hasAcademySubscription(session);
+  const hierarchy = useMemo(
+    () => organizeCatalogHierarchy(apiPrograms, { includeOperatorGuides }),
+    [apiPrograms, includeOperatorGuides],
+  );
   const pathway = hierarchy.find((entry) => entry.key === pathwayKey) || null;
+  const memberOnlyBlocked = pathwayKey && !shouldShowMemberOnlyPathway(pathwayKey, session);
+  const visiblePathwayConfigs = useMemo(
+    () => listPathwayLmsConfigs().filter((entry) => shouldShowMemberOnlyPathway(entry.key, session)),
+    [session],
+  );
+
+  if (memberOnlyBlocked) {
+    return (
+      <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
+        <ShellHeader
+          compact
+          eyebrow="FCA Academy"
+          title="Subscription required"
+          subtitle="FCA How-To and Operator Guides are included with Contractor Command subscriptions."
+          primaryHref="/login?next=/academy/pathway?pathway=fca-how-to"
+          primaryLabel="Sign in"
+          journey={shellJourney}
+          currentJourney="academy"
+        />
+        <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
+          <div style={{ ...cardStyle, border: "1px solid #fecaca", background: "#fef2f2" }}>
+            <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+              Operator guides are not sold in the Academy Store and are not shown in the public catalog menu.
+              Sign in with an active Contractor Command workspace to access them from your learner dashboard.
+            </p>
+            <a href="/academy/catalog" style={{ color: "#2563eb", fontWeight: 700, textDecoration: "none" }}>Browse public catalog</a>
+          </div>
+        </main>
+        <ShellFooter />
+      </div>
+    );
+  }
 
   if (!config || !pathway) {
     return (
@@ -127,7 +166,7 @@ export default function AcademyPathwayHub() {
         />
         <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
-            {listPathwayLmsConfigs().map((entry) => (
+            {visiblePathwayConfigs.map((entry) => (
               <a key={entry.key} href={`/academy/pathway?pathway=${entry.key}`} style={{ ...cardStyle, textDecoration: "none", color: "inherit" }}>
                 <h3 style={{ marginTop: 0 }}>{entry.heroTitle}</h3>
                 <p style={{ color: "#475569", lineHeight: 1.65 }}>{entry.heroSubtitle}</p>
@@ -192,7 +231,7 @@ export default function AcademyPathwayHub() {
           <strong>Connected ecosystem</strong>
           <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0 }}>
             This mini-LMS is embedded in FCA Contractor Command and futurecontractorsofamerica.com.
-            Progress, credentials, and portal labs sync through Auricrux-Central - one operator, six pathway experiences.
+            Progress, credentials, and portal labs sync through Auricrux-Central - one operator, multiple pathway experiences.
           </p>
         </section>
       </main>

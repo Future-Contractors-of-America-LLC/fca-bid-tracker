@@ -19,6 +19,8 @@ export async function fetchAcademyCommerceCatalog(options = {}) {
   const params = new URLSearchParams();
   if (options.lane) params.set("lane", options.lane);
   if (options.purchaseType) params.set("purchaseType", options.purchaseType);
+  if (Number.isFinite(options.offset)) params.set("offset", String(options.offset));
+  if (Number.isFinite(options.limit)) params.set("limit", String(options.limit));
   const query = params.toString();
   const response = await centralFetch(`/api/academy-commerce${query ? `?${query}` : ""}`, { method: "GET" });
   const payload = await readJsonSafe(response);

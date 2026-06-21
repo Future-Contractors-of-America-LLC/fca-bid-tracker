@@ -6,6 +6,7 @@ import useCustomerSession from "../../hooks/useCustomerSession";
 import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, DPOR_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, ELECTRICAL_LICENSURE_UNITS, LICENSURE_PATHWAYS, organizeApiCatalogByLane, APPRENTICESHIP_TRADES, APPRENTICESHIP_TRADE_LEVELS, FCA_HOWTO_SEQUENCE, PROFESSIONAL_PATHWAYS } from "../../academyOfferings";
 import { listPathwayLmsConfigs } from "../../academyPathwayLms";
 import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
+import { hasAcademySubscription, shouldShowMemberOnlyPathway } from "../../academySubscriptionAccess";
 import { academyPageStyle } from "../../academyDesignSystem";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
@@ -48,6 +49,11 @@ export default function AcademyDashboard() {
   const apiPrograms = academyState?.catalog?.programs || [];
   const catalogIntegrity = getCatalogIntegrity(academyState);
   const lanes = organizeApiCatalogByLane(apiPrograms);
+  const includeOperatorGuides = hasAcademySubscription(session);
+  const visiblePathwayConfigs = useMemo(
+    () => listPathwayLmsConfigs().filter((config) => shouldShowMemberOnlyPathway(config.key, session)),
+    [session],
+  );
 
   const electricalPathway = ELECTRICAL_APPRENTICESHIP_LEVELS.map((level) => {
     const enrollment = enrollments.find((item) => item.programKey === level.key);
@@ -209,10 +215,11 @@ export default function AcademyDashboard() {
         <section style={{ ...cardStyle, marginBottom: 24 }}>
           <h2 style={{ marginTop: 0 }}>Pathway mini-LMS experiences</h2>
           <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
-            Six Auricrux-operated learning environments — each pathway feels like its own LMS, connected to Contractor Command and the full ecosystem.
+            {visiblePathwayConfigs.length} Auricrux-operated learning environments — each pathway feels like its own LMS, connected to Contractor Command and the full ecosystem.
+            {includeOperatorGuides ? " Operator guides appear here for subscribed workspaces." : ""}
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
-            {listPathwayLmsConfigs().map((config) => (
+            {visiblePathwayConfigs.map((config) => (
               <a
                 key={config.key}
                 href={`/academy/pathway?pathway=${config.key}`}
@@ -544,6 +551,7 @@ export default function AcademyDashboard() {
           </div>
         </section>
 
+        {includeOperatorGuides ? (
         <section style={{ ...cardStyle, marginBottom: 24 }} id="fca-how-to">
           <h2 style={{ marginTop: 0 }}>FCA How-To operator sequence</h2>
           <div style={{ display: "grid", gap: 8 }}>
@@ -562,6 +570,7 @@ export default function AcademyDashboard() {
             })}
           </div>
         </section>
+        ) : null}
 
         <section style={{ ...cardStyle, marginBottom: 24 }} id="professional">
           <h2 style={{ marginTop: 0 }}>Professional development tracks</h2>
