@@ -8,6 +8,8 @@ function buildFallbackState() {
     learners: [],
     enrollments: [],
     certificates: [],
+    catalog: { programs: [], totalPrograms: 0, lanes: [], pathways: [] },
+    catalogIntegrity: { aligned: false, expectedTotalPrograms: 1212, actualTotalPrograms: 0 },
     summary: {
       learnerCount: 0,
       activeEnrollmentCount: 0,

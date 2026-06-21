@@ -335,12 +335,17 @@ export function organizeApiCatalogByLane(apiPrograms = [], catalogLanes = OFFERI
 /** Pathway → topic → course hierarchy for catalog navigation. */
 export function organizeCatalogHierarchy(apiPrograms = []) {
   const apiKeys = new Set(apiPrograms.map((program) => program.key));
-  const allPrograms = [
-    ...apiPrograms,
-    ...academyCatalog.programs
-      .filter((program) => !apiKeys.has(program.key))
-      .map((program) => ({ ...program, source: "catalog-preview" })),
-  ];
+  const allPrograms = apiPrograms.length > 0
+    ? [...apiPrograms]
+    : academyCatalog.programs.map((program) => ({ ...program, source: "catalog-preview" }));
+
+  if (apiPrograms.length > 0) {
+    for (const program of academyCatalog.programs) {
+      if (!apiKeys.has(program.key)) {
+        allPrograms.push({ ...program, source: "catalog-preview" });
+      }
+    }
+  }
 
   const courseBuckets = Object.fromEntries(
     CATALOG_PATHWAYS.map((pathway) => [pathway.key, Object.fromEntries(getTopicsForPathway(pathway.key).map((topic) => [topic.key, []]))]),

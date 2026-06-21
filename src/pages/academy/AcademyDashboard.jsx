@@ -5,6 +5,7 @@ import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, DPOR_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, ELECTRICAL_LICENSURE_UNITS, LICENSURE_PATHWAYS, organizeApiCatalogByLane, APPRENTICESHIP_TRADES, APPRENTICESHIP_TRADE_LEVELS, FCA_HOWTO_SEQUENCE, PROFESSIONAL_PATHWAYS } from "../../academyOfferings";
 import { listPathwayLmsConfigs } from "../../academyPathwayLms";
+import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -44,6 +45,7 @@ export default function AcademyDashboard() {
   );
 
   const apiPrograms = academyState?.catalog?.programs || [];
+  const catalogIntegrity = getCatalogIntegrity(academyState);
   const lanes = organizeApiCatalogByLane(apiPrograms);
 
   const electricalPathway = ELECTRICAL_APPRENTICESHIP_LEVELS.map((level) => {
@@ -178,6 +180,15 @@ export default function AcademyDashboard() {
       />
 
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
+        <div style={{ ...cardStyle, marginBottom: 24, border: catalogIntegrity.aligned ? "1px solid #bbf7d0" : "1px solid #fde68a", background: catalogIntegrity.aligned ? "#f0fdf4" : "#fffbeb" }}>
+          <strong style={{ color: catalogIntegrity.aligned ? "#15803d" : "#b45309" }}>
+            Catalog integrity: {catalogIntegrity.actualTotal}/{catalogIntegrity.expectedTotal} programs
+          </strong>
+          <span style={{ color: "#475569", marginLeft: 8 }}>
+            {catalogIntegrity.aligned ? "Frontend and backend catalog are aligned." : "Backend deploy may still be catching up — Auricrux-Central should report 1,212 programs including fca-how-to."}
+          </span>
+        </div>
+
         {nextEnrollment ? (
           <section style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 6 }}>Next action</div>

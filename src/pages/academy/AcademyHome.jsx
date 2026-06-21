@@ -13,6 +13,8 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import { flattenCatalogLessons, getProgramsByLane, OFFERING_LANES } from "../../academyOfferings";
 import { academyCatalog } from "../../academyCatalog";
+import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
+import { academyPageStyle } from "../../academyDesignSystem";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -181,6 +183,7 @@ export default function AcademyHome() {
   const apiPrograms = academyState?.catalog?.programs ?? [];
   const enrollments = academyState?.enrollments ?? [];
   const laneProgramCounts = academyState?.summary?.laneProgramCounts || {};
+  const catalogIntegrity = useMemo(() => getCatalogIntegrity(academyState), [academyState]);
 
   useEffect(() => {
     refreshSyncStamp("Academy classroom continuity active");
@@ -196,7 +199,7 @@ export default function AcademyHome() {
 
   const catalogLessons = useMemo(() => flattenCatalogLessons(), []);
   const catalogLanes = useMemo(() => getProgramsByLane(), []);
-  const catalogProgramCount = Math.max(academyCatalog.programs.length, apiPrograms.length);
+  const catalogProgramCount = catalogIntegrity.actualTotal || Math.max(academyCatalog.programs.length, apiPrograms.length);
 
   const classroomSummaries = useMemo(() => classrooms.map((classroom) => {
     const completedCount = classroom.lessons.filter((lesson) => progress[lesson.id]).length;
@@ -208,7 +211,7 @@ export default function AcademyHome() {
   }), [progress]);
 
   return (
-    <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
+    <div style={{ ...pageShellStyle, ...academyPageStyle() }}>
       <ShellHeader
         eyebrow="FCA Academy"
         title="Workforce training & certification"
@@ -257,6 +260,17 @@ export default function AcademyHome() {
           ) : null}
         </div>
       )}
+
+      <div style={{ ...cardStyle, marginBottom: 24, border: catalogIntegrity.aligned ? "1px solid #bbf7d0" : "1px solid #fde68a", background: catalogIntegrity.aligned ? "#f0fdf4" : "#fffbeb" }}>
+        <strong style={{ color: catalogIntegrity.aligned ? "#15803d" : "#b45309" }}>
+          {catalogIntegrity.aligned ? "Catalog aligned" : "Catalog sync"}
+        </strong>
+        <span style={{ color: "#475569", marginLeft: 8 }}>
+          {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs from Auricrux-Central
+          {catalogIntegrity.apiConnected ? ` (${meta.backingSource})` : " — API pending"}
+          {catalogIntegrity.aligned ? "." : " — deploy may still be propagating."}
+        </span>
+      </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Catalog overview</h2>

@@ -7,6 +7,8 @@ import { fetchAcademyProgram } from "../../api/academyClient";
 import { evaluateEnrollmentAccess } from "../../academyEnrollmentAccess";
 import { findCatalogPlacement } from "../../academyOfferings";
 import { resolveProgramCatalogMeta, formatAddonLabel, formatPlanLabel, getPathwayByKey, getTopicByKey } from "../../academyCatalogTaxonomy";
+import AcademyCourseChrome from "../../components/academy/AcademyCourseChrome";
+import { academyPageStyle } from "../../academyDesignSystem";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -86,10 +88,10 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
   }
 
   return (
-    <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
+    <div style={{ ...pageShellStyle, ...academyPageStyle() }}>
       <ShellHeader
         compact
-        eyebrow="FCA Academy"
+        eyebrow="Auricrux School of Construction"
         title={program?.title || "Program"}
         subtitle={program?.completionRule || program?.deliveryModel || "Module-based training with knowledge checks and practical labs."}
         primaryHref="/academy/dashboard"
@@ -100,13 +102,20 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
         currentJourney="academy"
       />
 
-      <main style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px 48px" }}>
+      <AcademyCourseChrome
+        program={program}
+        modules={modules}
+        enrollment={enrollment}
+        pathwayKey={catalogMeta?.pathwayKey}
+        topicKey={catalogMeta?.topicKey}
+        showSidebar
+      >
         {loadError ? (
           <div style={{ ...cardStyle, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>{loadError}</div>
         ) : null}
 
         {program ? (
-          <div style={{ ...cardStyle, marginBottom: 24 }}>
+          <div style={{ ...cardStyle, marginBottom: 0 }}>
             <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>{program.credential}</div>
             {catalogMeta ? (
               <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
@@ -225,7 +234,7 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
         ) : null}
 
         {completionRequirements ? (
-          <div style={{ ...cardStyle, marginBottom: 24, background: "#f8fafc" }}>
+          <div style={{ ...cardStyle, marginBottom: 16, background: "#f8fafc" }}>
             <h3 style={{ marginTop: 0 }}>Completion requirements</h3>
             <ul style={{ paddingLeft: 20, lineHeight: 1.85, color: "#334155", marginBottom: 0 }}>
               {Object.entries(completionRequirements).map(([key, value]) => (
@@ -235,58 +244,14 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
           </div>
         ) : null}
 
-        <h2 style={{ marginBottom: 16 }}>Course syllabus</h2>
-        <div style={{ display: "grid", gap: 12 }}>
-          {modules.map((module) => {
-            const status = enrollment ? moduleStatus(module.moduleNumber, enrollment) : "syllabus";
-            const score = enrollment?.moduleScores?.[String(module.moduleNumber)];
-            const statusColors = {
-              complete: { border: "#86efac", bg: "#f0fdf4", label: "Complete", labelColor: "#15803d" },
-              current: { border: "#93c5fd", bg: "#eff6ff", label: "Current", labelColor: "#2563eb" },
-              available: { border: "#e2e8f0", bg: "#fff", label: "Available", labelColor: "#64748b" },
-              locked: { border: "#e2e8f0", bg: "#f8fafc", label: "Locked", labelColor: "#94a3b8" },
-              syllabus: { border: "#e2e8f0", bg: "#fff", label: "Syllabus", labelColor: "#64748b" },
-              preview: { border: "#e2e8f0", bg: "#fff", label: "Preview", labelColor: "#64748b" },
-            };
-            const colors = statusColors[status] || statusColors.syllabus;
-            const canOpenModule = enrollment && status !== "locked";
-
-            return (
-              <article key={module.moduleNumber} style={{ ...cardStyle, border: `1px solid ${colors.border}`, background: colors.bg }}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "flex-start" }}>
-                  <div>
-                    <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 4 }}>Module {module.moduleNumber}</div>
-                    <h3 style={{ margin: 0 }}>{module.title}</h3>
-                  </div>
-                  <span style={{ color: colors.labelColor, fontWeight: 700, fontSize: 13 }}>
-                    {colors.label}{score !== undefined ? ` (${score}%)` : ""}
-                  </span>
-                </div>
-                {module.objective ? (
-                  <p style={{ color: "#475569", lineHeight: 1.65, marginBottom: 8 }}>{module.objective}</p>
-                ) : null}
-                <div style={{ color: "#64748b", fontSize: 14, marginBottom: 12 }}>
-                  {Array.isArray(module.lessons) ? `${module.lessons.length} lessons` : module.lessons ? `${module.lessons} lessons` : ""}
-                  {module.practicalLab || module.lab ? ` | Lab: ${module.practicalLab || module.lab}` : ""}
-                  {module.knowledgeCheck ? ` | Knowledge check required (80%)` : ""}
-                </div>
-                {canOpenModule ? (
-                  <a
-                    href={`/academy/programs/${programId}/modules/${module.moduleNumber}`}
-                    style={{ border: "1px solid #2563eb", background: status === "current" ? "#2563eb" : "#fff", color: status === "current" ? "#fff" : "#2563eb", borderRadius: 10, padding: "8px 14px", fontWeight: 700, textDecoration: "none", display: "inline-block" }}
-                  >
-                    {status === "complete" ? "Review module" : "Open module"}
-                  </a>
-                ) : enrollment ? (
-                  <span style={{ color: "#94a3b8", fontSize: 14 }}>Complete prior modules to unlock</span>
-                ) : (
-                  <span style={{ color: "#64748b", fontSize: 14 }}>Enroll to start this module</span>
-                )}
-              </article>
-            );
-          })}
+        <div style={{ ...cardStyle, background: "#eff6ff", border: "1px solid #bfdbfe" }}>
+          <h3 style={{ marginTop: 0, color: "#0c2340" }}>Course announcements</h3>
+          <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
+            Select a module from the course navigation panel to open Auricrux lectures, skills demonstrations, labs, and knowledge checks.
+            Syllabus objectives remain public; enrollment unlocks graded progress and credentials.
+          </p>
         </div>
-      </main>
+      </AcademyCourseChrome>
 
       <ShellFooter ctaSet={academyCtaSets.home} />
     </div>

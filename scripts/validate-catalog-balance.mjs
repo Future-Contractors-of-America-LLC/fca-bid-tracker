@@ -7,7 +7,7 @@ const centralRoot = path.resolve(root, "..", "auricrux-central-work", "core");
 
 async function extractProgramKeys(fileName) {
   const source = await fs.readFile(path.join(centralRoot, fileName), "utf8");
-  return [...source.matchAll(/"key": "([^"]+)"/g)].map((match) => match[1]);
+  return [...source.matchAll(/['"]key['"]:\s*['"]([^'"]+)['"]/g)].map((match) => match[1]);
 }
 
 const taxonomyModule = await import(pathToFileURL(path.join(root, "src", "academyCatalogTaxonomy.js")).href);

@@ -2,10 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import KnowledgeCheckQuiz from "../../components/academy/KnowledgeCheckQuiz";
+import AcademyCourseChrome from "../../components/academy/AcademyCourseChrome";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { fetchAcademyProgram } from "../../api/academyClient";
 import { publishAcademyContext } from "../../academyContext";
+import { resolveProgramCatalogMeta } from "../../academyCatalogTaxonomy";
+import { academyPageStyle } from "../../academyDesignSystem";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -72,6 +75,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   const modules = programDetail?.modules || [];
   const module = modules.find((item) => Number(item.moduleNumber) === moduleNumber);
   const completionRequirements = programDetail?.completionRequirements;
+  const catalogMeta = program ? resolveProgramCatalogMeta(program) : null;
 
   const completedNumbers = enrollment?.completedModuleNumbers || [];
   const moduleScore = enrollment?.moduleScores?.[String(moduleNumber)];
@@ -254,21 +258,28 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   }
 
   return (
-    <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
+    <div style={{ ...pageShellStyle, ...academyPageStyle() }}>
       <ShellHeader
         compact
-        eyebrow="FCA Academy"
-        title={module ? `Module ${moduleNumber}: ${module.title}` : "Module lesson"}
+        eyebrow="Auricrux School of Construction"
+        title={module ? `Module ${moduleNumber}` : "Module lesson"}
         subtitle={program?.title || "Structured module lesson with knowledge check."}
         primaryHref={shellHeaderCtaSets.academy.primaryHref}
         primaryLabel={shellHeaderCtaSets.academy.primaryLabel}
         secondaryHref={`/academy/programs/${programId}`}
-        secondaryLabel="Back to program"
+        secondaryLabel="Course home"
         journey={shellJourney}
         currentJourney="academy"
       />
 
-      <main style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px 48px" }}>
+      <AcademyCourseChrome
+        program={program}
+        modules={modules}
+        enrollment={enrollment}
+        currentModuleNumber={moduleNumber}
+        pathwayKey={catalogMeta?.pathwayKey || program?.lane}
+        topicKey={catalogMeta?.topicKey || program?.topicKey}
+      >
         {loadingProgram ? (
           <div style={{ ...cardStyle, color: "#475569" }}>Loading module content...</div>
         ) : null}
@@ -418,7 +429,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
             {actionMessage}
           </div>
         ) : null}
-      </main>
+      </AcademyCourseChrome>
 
       <ShellFooter ctaSet={academyCtaSets.home} />
     </div>

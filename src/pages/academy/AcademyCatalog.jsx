@@ -4,6 +4,7 @@ import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import { findCatalogPlacement, organizeCatalogHierarchy } from "../../academyOfferings";
+import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
 import { getPathwayLmsConfig } from "../../academyPathwayLms";
 import { getCertificationAgencyAlignment } from "../../academyCatalogTaxonomy";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
@@ -49,7 +50,10 @@ function moduleCount(program) {
 
 function CourseCard({ program, topicKey, pathwayKey }) {
   const enrollment = program.enrollment || {};
-  const syllabusLines = program.courses?.[0]?.lessonTitles || program.modules?.map((module) => module.title) || [];
+  const syllabusLines = program.moduleTitles
+    || program.courses?.[0]?.lessonTitles
+    || program.modules?.map((module) => module.title)
+    || [];
   const agency = program.issuingAgency || (pathwayKey === "certification" ? getCertificationAgencyAlignment(topicKey)?.primary : null);
 
   return (
@@ -180,7 +184,8 @@ export default function AcademyCatalog() {
   const { pathwayKey, topicKey } = readCatalogParams();
 
   const hierarchy = useMemo(() => organizeCatalogHierarchy(apiPrograms), [apiPrograms]);
-  const totalCourses = hierarchy.reduce((sum, pathway) => sum + pathway.courseCount, 0);
+  const catalogIntegrity = useMemo(() => getCatalogIntegrity(academyState), [academyState]);
+  const totalCourses = catalogIntegrity.actualTotal || hierarchy.reduce((sum, pathway) => sum + pathway.courseCount, 0);
   const selectedPathway = hierarchy.find((pathway) => pathway.key === pathwayKey) || null;
   const selectedTopic = selectedPathway?.topics.find((topic) => topic.key === topicKey) || null;
   const placement = findCatalogPlacement(pathwayKey, topicKey);
@@ -235,10 +240,13 @@ export default function AcademyCatalog() {
         ) : null}
 
         {apiPrograms.length > 0 ? (
-          <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "#eff6ff" }}>
-            <strong style={{ color: "#1d4ed8" }}>Live catalog</strong>
+          <div style={{ ...cardStyle, marginBottom: 24, border: catalogIntegrity.aligned ? "1px solid #bbf7d0" : "1px solid #fde68a", background: catalogIntegrity.aligned ? "#f0fdf4" : "#fffbeb" }}>
+            <strong style={{ color: catalogIntegrity.aligned ? "#15803d" : "#b45309" }}>
+              {catalogIntegrity.aligned ? "Live catalog aligned" : "Catalog sync in progress"}
+            </strong>
             <span style={{ color: "#475569", marginLeft: 8 }}>
-              {apiPrograms.length} courses from {meta.backingSource || "Auricrux-Central"} merged with FCA syllabus previews.
+              {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs from {meta.backingSource || "Auricrux-Central"}
+              {catalogIntegrity.aligned ? "" : " — deploy may still be propagating; refresh shortly."}
             </span>
           </div>
         ) : (

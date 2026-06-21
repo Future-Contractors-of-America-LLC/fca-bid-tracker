@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-20T21:50:41.694Z",
+  "generatedAt": "2026-06-21T18:26:00.590Z",
   "apiBase": "https://auricrux-central.azurewebsites.net",
   "summary": {
-    "passed": 8,
+    "passed": 10,
     "failed": 0
   },
   "findings": [
@@ -33,6 +33,11 @@
     },
     {
       "status": "pass",
+      "label": "GET /api/field-photos",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
       "label": "GET /api/auricrux/actions",
       "detail": "HTTP 200"
     },
@@ -45,6 +50,11 @@
       "status": "pass",
       "label": "POST /api/auricrux/actions recommend",
       "detail": "guidance returned"
+    },
+    {
+      "status": "pass",
+      "label": "GET field intelligence via field-photos",
+      "detail": "projectId=PRJ-SMOKE-001"
     }
   ]
 }
