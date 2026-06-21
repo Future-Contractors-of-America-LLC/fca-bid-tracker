@@ -19,7 +19,7 @@ function knowledgeCheckIntro(knowledgeCheck) {
     }
     return `Answer all questions. A score of ${passing} percent or higher is required to complete this module.`;
   }
-  return "Answer all questions. A score of 80 percent or higher is required to complete this module.";
+  return "Answer all questions. A score of 80 percent or higher is required to complete this module (minimum 10 questions).";
 }
 
 function shuffleOptions(options, correctIndex) {
@@ -31,37 +31,34 @@ function shuffleOptions(options, correctIndex) {
   return labeled;
 }
 
-export function buildQuestionsFromModule(module) {
-  if (Array.isArray(module?.quizQuestions) && module.quizQuestions.length > 0) {
-    return module.quizQuestions.map((question, index) => ({
-      id: question.id || `api-${index + 1}`,
-      prompt: question.prompt,
-      options: question.options || [],
-      correctIndex: Number.isInteger(question.correctIndex) ? question.correctIndex : 0,
-    }));
-  }
+const MIN_MODULE_QUIZ_QUESTIONS = 10;
 
-  const questions = [];
+function padQuestionsToMinimum(questions, module) {
+  const passingScore = knowledgeCheckPassingScore(module.knowledgeCheck);
+  const moduleNumber = module.moduleNumber || 1;
+  const title = module.title || `Module ${moduleNumber}`;
   const lessons = Array.isArray(module.lessons) ? module.lessons : [];
   const lessonTitles = lessons.map((lesson) => (typeof lesson === "string" ? lesson : lesson.title)).filter(Boolean);
 
-  lessonTitles.slice(0, 3).forEach((title, index) => {
-    const distractors = lessonTitles.filter((item) => item !== title).slice(0, 2);
-    while (distractors.length < 3) {
-      distractors.push(`Topic not covered in module ${module.moduleNumber}`);
-    }
-    questions.push({
+  const fillers = [];
+  lessonTitles.forEach((lessonTitle, index) => {
+    fillers.push({
       id: `lesson-${index + 1}`,
-      prompt: `Which of the following is a learning objective for this module?`,
-      options: [title, ...distractors.slice(0, 3)],
+      prompt: `Which curriculum topic is emphasized in lesson ${index + 1}?`,
+      options: [
+        lessonTitle,
+        "Topic outside this module scope",
+        "Skip knowledge check requirements",
+        "Defer lab documentation",
+      ],
       correctIndex: 0,
     });
   });
 
   if (module.objective) {
-    questions.push({
+    fillers.push({
       id: "objective",
-      prompt: `What is the primary objective of "${module.title}"?`,
+      prompt: `What is the primary objective of "${title}"?`,
       options: [
         module.objective,
         "Skip safety procedures to increase production speed",
@@ -72,8 +69,17 @@ export function buildQuestionsFromModule(module) {
     });
   }
 
+  if (module.deliverable) {
+    fillers.push({
+      id: "deliverable",
+      prompt: "What deliverable confirms completion of this module?",
+      options: [module.deliverable, "No deliverable required", "Blank worksheet only", "Verbal confirmation only"],
+      correctIndex: 0,
+    });
+  }
+
   if (module.practicalLab || module.lab) {
-    questions.push({
+    fillers.push({
       id: "lab",
       prompt: "What practical lab activity supports this module?",
       options: [
@@ -86,16 +92,73 @@ export function buildQuestionsFromModule(module) {
     });
   }
 
-  const passingScore = knowledgeCheckPassingScore(module.knowledgeCheck);
-
-  questions.push({
+  fillers.push({
     id: "pass-rule",
     prompt: "What score is required to pass this module knowledge check?",
     options: [`${passingScore} percent or higher`, "50 percent or higher", "No minimum score", "100 percent only"],
     correctIndex: 0,
   });
 
-  return questions.slice(0, 5);
+  const seen = new Set(questions.map((item) => item.id));
+  for (const filler of fillers) {
+    if (questions.length >= MIN_MODULE_QUIZ_QUESTIONS) {
+      break;
+    }
+    if (seen.has(filler.id)) {
+      continue;
+    }
+    seen.add(filler.id);
+    questions.push(filler);
+  }
+
+  let extra = 1;
+  while (questions.length < MIN_MODULE_QUIZ_QUESTIONS) {
+    questions.push({
+      id: `extra-${extra}`,
+      prompt: `Which statement best reflects competency for "${title}"?`,
+      options: [
+        module.objective || title,
+        "Ignore module materials",
+        "Skip practical verification",
+        "Avoid knowledge checks",
+      ],
+      correctIndex: 0,
+    });
+    extra += 1;
+  }
+
+  return questions;
+}
+
+export function buildQuestionsFromModule(module) {
+  if (Array.isArray(module?.quizQuestions) && module.quizQuestions.length > 0) {
+    const fromApi = module.quizQuestions.map((question, index) => ({
+      id: question.id || `api-${index + 1}`,
+      prompt: question.prompt,
+      options: question.options || [],
+      correctIndex: Number.isInteger(question.correctIndex) ? question.correctIndex : 0,
+    }));
+    return padQuestionsToMinimum(fromApi, module);
+  }
+
+  const questions = [];
+  const lessons = Array.isArray(module.lessons) ? module.lessons : [];
+  const lessonTitles = lessons.map((lesson) => (typeof lesson === "string" ? lesson : lesson.title)).filter(Boolean);
+
+  lessonTitles.forEach((lessonTitle, index) => {
+    const distractors = lessonTitles.filter((item) => item !== lessonTitle).slice(0, 2);
+    while (distractors.length < 3) {
+      distractors.push(`Topic not covered in module ${module.moduleNumber}`);
+    }
+    questions.push({
+      id: `lesson-${index + 1}`,
+      prompt: `Which of the following is a learning objective for this module?`,
+      options: [lessonTitle, ...distractors.slice(0, 3)],
+      correctIndex: 0,
+    });
+  });
+
+  return padQuestionsToMinimum(questions, module);
 }
 
 const panelStyle = {
@@ -151,6 +214,7 @@ export default function KnowledgeCheckQuiz({ module, onSubmit, busy = false }) {
       <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Knowledge Check</div>
       <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
         {knowledgeCheckIntro(module.knowledgeCheck)}
+        {questions.length >= MIN_MODULE_QUIZ_QUESTIONS ? ` (${questions.length} questions.)` : ""}
       </p>
 
       <div style={{ display: "grid", gap: 16 }}>
