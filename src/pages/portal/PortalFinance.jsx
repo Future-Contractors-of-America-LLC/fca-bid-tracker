@@ -268,7 +268,7 @@ export default function PortalFinance() {
       title="Finance"
       subtitle="FCA-native books — AR, AP, GL, job billing, pay apps, and governed payment recording without external dependencies."
       activeHref="/portal/finance"
-      currentJourney="lead"
+      currentJourney="finance"
       routeOverlay={routeStateOverlays.billing}
       primaryHref="/portal/billing"
       primaryLabel="Create invoice"

@@ -102,6 +102,8 @@ const SCRIPT_CHECKS = [
   "validate-finance-workspace.mjs",
   "validate-design-workspace.cjs",
   "validate-portal-auricrux-wiring.mjs",
+  "validate-portal-ux-sweep.mjs",
+  "validate-site-metadata.mjs",
   "smoke-central-spine.mjs",
 ];
 

@@ -9,6 +9,7 @@ import {
 } from "../customerSession";
 import { navigateTo } from "../navigation";
 import { portalNavGroups, portalNavPrimary } from "../systemState";
+import { toggleAuricruxAssistant } from "../auricruxAssistant";
 
 const headerStyle = {
   position: "sticky",
@@ -212,6 +213,34 @@ function isNavActive(currentPath, href) {
   return currentPath === href || (href !== "/portal" && currentPath.startsWith(`${href}/`));
 }
 
+const assistantButtonStyle = {
+  border: "1px solid #e8c46a",
+  background: "linear-gradient(135deg, #fffaf0 0%, #fff 100%)",
+  color: "#8a6a14",
+  fontWeight: 700,
+  fontSize: 13,
+  padding: "8px 12px",
+  borderRadius: 6,
+  whiteSpace: "nowrap",
+  cursor: "pointer",
+  fontFamily: "inherit",
+};
+
+function AuricruxAssistantButton({ onNavigate }) {
+  return (
+    <button
+      type="button"
+      style={assistantButtonStyle}
+      onClick={() => {
+        toggleAuricruxAssistant();
+        onNavigate?.();
+      }}
+    >
+      Ask Auricrux
+    </button>
+  );
+}
+
 function useMediaQuery(query) {
   const [matches, setMatches] = useState(false);
   useEffect(() => {
@@ -322,6 +351,7 @@ export default function PublicTopNav({ mode = "public" }) {
 
   const authActions = session?.authenticated ? (
     <>
+      <AuricruxAssistantButton />
       <a href={workspaceHref} style={signInStyle} onClick={closeMobile}>Workspace</a>
       <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>
     </>
@@ -425,6 +455,7 @@ export default function PublicTopNav({ mode = "public" }) {
         <div style={{ padding: "12px 16px", display: "grid", gap: 8, borderBottom: "1px solid #e2e8f0" }}>
           {session?.authenticated ? (
             <>
+              <AuricruxAssistantButton onNavigate={closeMobile} />
               <a href={workspaceHref} style={primaryCtaStyle} onClick={closeMobile}>Open workspace</a>
               <a href={adminWorkspaceHref} style={signInStyle} onClick={closeMobile}>Admin workspace</a>
               <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>

@@ -225,6 +225,58 @@ export const routeMetadata = {
     title: "Proposals | Future Contractors of America",
     description: "Package and deliver customer proposals from the FCA portal.",
   },
+  "/portal/pipeline": {
+    title: "Commercial Pipeline | Future Contractors of America",
+    description: "Run the guided bid-to-billing pipeline inside the FCA contractor workspace.",
+  },
+  "/portal/plans": {
+    title: "Plans | Future Contractors of America",
+    description: "Review commercial plans, packaging, and upgrade paths for your FCA account.",
+  },
+  "/portal/finance": {
+    title: "Finance | Future Contractors of America",
+    description: "Review revenue posture, invoicing context, and financial continuity in the FCA portal.",
+  },
+  "/portal/design": {
+    title: "Design Workspace | Future Contractors of America",
+    description: "Native plan room for markup, takeoff, coordination, and redline continuity.",
+  },
+  "/portal/rfis": {
+    title: "RFIs | Future Contractors of America",
+    description: "Manage requests for information tied to project sheets, markups, and field conditions.",
+  },
+  "/portal/change-orders": {
+    title: "Change Orders | Future Contractors of America",
+    description: "Track scope changes, pricing, approvals, and job-cost impact in the FCA portal.",
+  },
+  "/portal/closeout": {
+    title: "Closeout | Future Contractors of America",
+    description: "Manage turnover binders, artifact tracking, and handoff readiness.",
+  },
+  "/portal/scheduling": {
+    title: "Scheduling | Future Contractors of America",
+    description: "Coordinate mobilization, milestones, and field scheduling for active projects.",
+  },
+  "/portal/field-tasks": {
+    title: "Field Tasks | Future Contractors of America",
+    description: "Assign, track, and close daily field tasks tied to active jobs.",
+  },
+  "/portal/field-supervision": {
+    title: "Field Supervision | Future Contractors of America",
+    description: "Capture site photos, compare to plans, annotate conditions, and generate redlines.",
+  },
+  "/portal/warranty": {
+    title: "Warranty | Future Contractors of America",
+    description: "Manage post-handover service, retention, and recurring work continuity.",
+  },
+  "/academy/dashboard": {
+    title: "Academy Dashboard | Future Contractors of America",
+    description: "Track learner progress, assignments, and certification readiness in FCA Academy.",
+  },
+  "/academy/credentials": {
+    title: "Academy Credentials | Future Contractors of America",
+    description: "Review earned credentials, certificates, and workforce readiness outcomes.",
+  },
 };
 
 function ensureTag(selector, createTag) {

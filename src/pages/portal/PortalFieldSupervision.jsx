@@ -170,7 +170,7 @@ export default function PortalFieldSupervision() {
       title="Field Supervision"
       subtitle="Capture site photos, annotate conditions, compare to governing plans, and auto-generate redlines with Auricrux guidance."
       activeHref="/portal/field-supervision"
-      currentJourney="project"
+      currentJourney="job"
       routeOverlay={routeStateOverlays.projects}
       primaryHref={hasProject ? `/portal/design?projectId=${encodeURIComponent(projectId)}` : "/portal/projects"}
       primaryLabel="Open Design Workspace"

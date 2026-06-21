@@ -91,7 +91,7 @@ export default function PortalCloseout() {
       title="Closeout Packages"
       subtitle="Turnover binders, artifact tracking, and warranty handoff for active projects."
       activeHref="/portal/closeout"
-      currentJourney="project"
+      currentJourney="job"
       routeOverlay={routeStateOverlays.projects}
       primaryHref={`/portal/projects/${encodeURIComponent(projectId)}`}
       primaryLabel="Project detail"

@@ -49,7 +49,7 @@ export default function PortalRfis() {
       title="RFI Register"
       subtitle="Design-linked requests for information tied to project sheets, markups, and field coordination."
       activeHref="/portal/rfis"
-      currentJourney="project"
+      currentJourney="job"
       routeOverlay={routeStateOverlays.projects}
       primaryHref={`/portal/projects/${encodeURIComponent(projectId)}`}
       primaryLabel="Project home"

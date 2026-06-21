@@ -12,6 +12,12 @@ import {
   workspaceContext,
 } from "../workspaceState";
 
+import {
+  AURICRUX_ASSISTANT_CLOSE,
+  AURICRUX_ASSISTANT_OPEN,
+  AURICRUX_ASSISTANT_TOGGLE,
+} from "../auricruxAssistant";
+
 const quickPrompts = [
   "What is the next customer action?",
   "Show training continuity.",
@@ -126,6 +132,7 @@ function connectivityLabel(message) {
 
 const continuityActions = [
   { href: "/portal/platform", label: "Platform state" },
+  { href: "/portal/auricrux", label: "Auricrux hub" },
   { href: "/portal/messages", label: "Messages" },
   { href: "/portal/billing", label: "Billing" },
   { href: "/academy", label: "Academy" },
@@ -151,35 +158,62 @@ export default function AuricruxDock() {
   useEffect(() => subscribePortalPageContext(setPortalPageContext), []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return undefined;
 
-    const storedOpen = safeStorageGet(OPEN_STORAGE_KEY);
-    const storedCompact = safeStorageGet(COMPACT_STORAGE_KEY);
-
-    if (storedOpen === null) {
-      setOpen(window.innerWidth >= 1440);
-    } else {
-      setOpen(storedOpen === "true");
+    function onToggle() {
+      setOpen((value) => !value);
+    }
+    function onOpen() {
+      setOpen(true);
+    }
+    function onClose() {
+      setOpen(false);
     }
 
-    if (storedCompact === null) {
-      setCompact(window.innerWidth < 1600);
-    } else {
-      setCompact(storedCompact === "true");
-    }
+    window.addEventListener(AURICRUX_ASSISTANT_TOGGLE, onToggle);
+    window.addEventListener(AURICRUX_ASSISTANT_OPEN, onOpen);
+    window.addEventListener(AURICRUX_ASSISTANT_CLOSE, onClose);
+
+    return () => {
+      window.removeEventListener(AURICRUX_ASSISTANT_TOGGLE, onToggle);
+      window.removeEventListener(AURICRUX_ASSISTANT_OPEN, onOpen);
+      window.removeEventListener(AURICRUX_ASSISTANT_CLOSE, onClose);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
 
     setHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (!hydrated) return;
-    safeStorageSet(OPEN_STORAGE_KEY, String(open));
+    if (!hydrated || !open) return;
+    safeStorageSet(OPEN_STORAGE_KEY, "true");
   }, [open, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
     safeStorageSet(COMPACT_STORAGE_KEY, String(compact));
   }, [compact, hydrated]);
+
+  useEffect(() => {
+    if (!open || typeof window === "undefined") return undefined;
+    function onKeyDown(event) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || typeof document === "undefined") return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
 
   async function send(customText) {
     const cmd = (customText ?? text).trim();
@@ -281,28 +315,43 @@ export default function AuricruxDock() {
     }
   }
 
-  const dockWidth = open ? (compact ? "min(320px, calc(100vw - 24px))" : "min(392px, calc(100vw - 24px))") : 76;
+  if (!open) return null;
+
+  const panelWidth = compact ? "min(360px, 100vw)" : "min(420px, 100vw)";
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        right: 12,
-        bottom: 12,
-        width: dockWidth,
-        maxHeight: open ? "min(78vh, 760px)" : "auto",
-        zIndex: 9999,
-        borderRadius: 18,
-        overflow: "hidden",
-        border: `1px solid ${open ? auricruxColors.primary : "#d6b25e"}`,
-        boxShadow: "0 20px 50px rgba(15, 23, 42, 0.2)",
-        background: "#ffffff",
-        fontFamily: "Arial",
-        transition: "width 160ms ease, border-color 160ms ease, max-height 160ms ease",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <>
+      <button
+        type="button"
+        aria-label="Close Auricrux assistant"
+        onClick={() => setOpen(false)}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 9998,
+          border: "none",
+          padding: 0,
+          background: "rgba(15, 23, 42, 0.35)",
+          cursor: "pointer",
+        }}
+      />
+      <aside
+        aria-label="Auricrux assistant"
+        style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          width: panelWidth,
+          height: "100vh",
+          zIndex: 9999,
+          borderLeft: `1px solid ${auricruxColors.primary}`,
+          boxShadow: "-12px 0 40px rgba(15, 23, 42, 0.18)",
+          background: "#ffffff",
+          fontFamily: "Arial",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
       <div
         style={{
           padding: 12,
@@ -314,36 +363,27 @@ export default function AuricruxDock() {
           <div style={{ minWidth: 0 }}>
             <div style={{ fontWeight: 700, letterSpacing: 0.2 }}>Auricrux</div>
             <div style={{ fontSize: 12, opacity: 0.9 }}>
-              {open ? "Executive operating layer" : "Open comms"}
+              Assistant · context-aware guidance
             </div>
           </div>
           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-            {open ? (
-              <>
-                <button
-                  onClick={() => setCompact((v) => !v)}
-                  style={headerButtonStyle}
-                >
-                  {compact ? "Expand" : "Compact"}
-                </button>
-                <button
-                  onClick={() => setOpen(false)}
-                  style={headerButtonStyle}
-                >
-                  Minimize
-                </button>
-              </>
-            ) : (
-              <button onClick={() => setOpen(true)} style={headerButtonStyle}>
-                Open
-              </button>
-            )}
+            <button
+              onClick={() => setCompact((v) => !v)}
+              style={headerButtonStyle}
+            >
+              {compact ? "Wider" : "Narrow"}
+            </button>
+            <button
+              onClick={() => setOpen(false)}
+              style={headerButtonStyle}
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
 
-      {open ? (
-        <div style={{ padding: 14, overflow: "auto" }}>
+        <div style={{ padding: 14, overflow: "auto", flex: 1 }}>
           <div
             style={{
               border: `1px solid ${meta.border}`,
@@ -480,12 +520,8 @@ export default function AuricruxDock() {
             )}
           </div>
         </div>
-      ) : (
-        <div style={{ padding: "10px 12px", background: "#fffdf7", color: "#6b7280", fontSize: 11, lineHeight: 1.5 }}>
-          Open Auricrux without covering the page.
-        </div>
-      )}
-    </div>
+      </aside>
+    </>
   );
 }
 

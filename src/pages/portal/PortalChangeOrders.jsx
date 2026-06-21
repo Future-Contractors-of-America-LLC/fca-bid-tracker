@@ -68,7 +68,7 @@ export default function PortalChangeOrders() {
       title="Change Orders"
       subtitle="Contract adjustments with SOV, job cost, and billing continuity in FCA Books."
       activeHref="/portal/change-orders"
-      currentJourney="project"
+      currentJourney="job"
       routeOverlay={routeStateOverlays.projects}
       primaryHref={hasProject ? `/portal/finance?view=construction&projectId=${encodeURIComponent(projectId)}` : "/portal/projects"}
       primaryLabel="Job billing"

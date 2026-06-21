@@ -328,6 +328,7 @@ export default function PortalDesignWorkspace() {
       title="Design Workspace"
       subtitle="FCA-native plan room for PDF, DWG, RVT, and IFC — markup, takeoff, coordination, and Auricrux intelligence on the sovereign design engine."
       activeHref="/portal/design"
+      currentJourney="coordination"
       routeOverlay={routeStateOverlays.design}
     >
       <div style={{ display: "grid", gap: 16 }}>
