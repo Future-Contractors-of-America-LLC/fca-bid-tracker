@@ -615,7 +615,22 @@ export const portalModules = [
   {
     href: "/portal/field-supervision",
     label: "Field supervision",
-    description: "Superintendent oversight and site readiness",
+    description: "Site photos, plan compare, annotations, and redlines",
+  },
+  {
+    href: "/portal/design",
+    label: "Design",
+    description: "Design workspace, markups, sheets, and redline continuity",
+  },
+  {
+    href: "/portal/rfis",
+    label: "RFIs",
+    description: "Requests for information tied to sheets and field conditions",
+  },
+  {
+    href: "/portal/change-orders",
+    label: "Change orders",
+    description: "Scope changes, pricing, and approval workflow",
   },
   {
     href: "/portal/warranty",
@@ -666,6 +681,74 @@ export const portalJourney = [
   { key: "coordination", label: "Files + Design", href: "/portal/files" },
   { key: "finance", label: "Billing / Admin", href: "/portal/billing" },
   { key: "academy", label: "Academy / Support", href: "/portal/academy" },
+];
+
+/** Hub pages show full section browser; all other portal pages use compact chrome. */
+export const portalHubHrefs = ["/portal/platform", "/portal", "/portal/operations"];
+
+/** Always-visible portal shortcuts in the top nav. */
+export const portalNavPrimary = [
+  { label: "Dashboard", href: "/portal/platform" },
+  { label: "Projects", href: "/portal/projects" },
+  { label: "Pipeline", href: "/portal/pipeline" },
+  { label: "Files", href: "/portal/files" },
+  { label: "Messages", href: "/portal/messages" },
+  { label: "Billing", href: "/portal/billing" },
+];
+
+/** Grouped portal navigation for dropdown menus and mobile drawer. */
+export const portalNavGroups = [
+  {
+    label: "Projects & field",
+    items: [
+      { label: "Projects", href: "/portal/projects" },
+      { label: "Scheduling", href: "/portal/scheduling" },
+      { label: "Field tasks", href: "/portal/field-tasks" },
+      { label: "Field supervision", href: "/portal/field-supervision" },
+      { label: "RFIs", href: "/portal/rfis" },
+      { label: "Change orders", href: "/portal/change-orders" },
+      { label: "Closeout", href: "/portal/closeout" },
+      { label: "Warranty", href: "/portal/warranty" },
+    ],
+  },
+  {
+    label: "Precon & design",
+    items: [
+      { label: "Commercial pipeline", href: "/portal/pipeline" },
+      { label: "Bids", href: "/portal/bids" },
+      { label: "Estimates", href: "/portal/estimates" },
+      { label: "Proposals", href: "/portal/proposals" },
+      { label: "Design workspace", href: "/portal/design" },
+      { label: "Files", href: "/portal/files" },
+      { label: "Legal", href: "/portal/legal" },
+    ],
+  },
+  {
+    label: "Finance",
+    items: [
+      { label: "Finance", href: "/portal/finance" },
+      { label: "Billing", href: "/portal/billing" },
+      { label: "Plans", href: "/portal/plans" },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { label: "Profile", href: "/portal/profile" },
+      { label: "Notifications", href: "/portal/notifications" },
+      { label: "Audit", href: "/portal/audit" },
+      { label: "Support", href: "/portal/support" },
+      { label: "Admin", href: "/portal/admin" },
+    ],
+  },
+  {
+    label: "Training",
+    items: [
+      { label: "Academy", href: "/portal/academy" },
+      { label: "Course catalog", href: "/academy/catalog" },
+      { label: "Auricrux", href: "/portal/auricrux" },
+    ],
+  },
 ];
 
 export const STORAGE_KEY = "fca_workspace_state_v1";

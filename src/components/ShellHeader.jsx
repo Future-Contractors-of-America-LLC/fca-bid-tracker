@@ -31,7 +31,9 @@ export default function ShellHeader({
   topNavMode = "public",
   compact = false,
 }) {
-  const renderHeaderActions = !(showTopNav && topNavMode === "public") && !compact;
+  const renderHeaderActions = topNavMode === "portal"
+    ? Boolean(primaryHref && primaryLabel)
+    : !(showTopNav && topNavMode === "public") && !compact;
 
   return (
     <>

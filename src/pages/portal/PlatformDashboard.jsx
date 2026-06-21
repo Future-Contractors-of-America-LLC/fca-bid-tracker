@@ -47,12 +47,13 @@ export default function PlatformDashboard() {
   return (
     <PortalShell
       title="FCA Platform Dashboard"
-      subtitle="A customer-friendly view of estimating posture, project delivery, document control, billing readiness, training continuity, guided next steps, enabled communications lanes, active commercial packaging, and one-click workspace actions."
+      subtitle="Your command center for projects, pipeline, files, billing, field ops, and training."
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
       primaryHref="/portal/projects"
       primaryLabel="Open Projects"
+      navDensity="full"
     >
       <div style={{ marginBottom: 24 }}>
         <SystemStateSummary

@@ -250,6 +250,7 @@ export default function PortalHome() {
       routeOverlay={routeStateOverlays.overview}
       primaryHref="/portal/bids"
       primaryLabel="Open Qualification Workflow"
+      navDensity="full"
     >
       <ProductAccessStatusPanel session={session} />
       {activeProject?.id ? (

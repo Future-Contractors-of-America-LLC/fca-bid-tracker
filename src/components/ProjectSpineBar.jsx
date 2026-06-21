@@ -1,4 +1,5 @@
 import AuricruxSpineInsight from "./AuricruxSpineInsight";
+import useProjectWorkspace from "../hooks/useProjectWorkspace";
 import { resolveLiveProjectIdentity, resolveLiveTenantIdentity } from "../liveWorkspaceIdentity";
 
 const cardStyle = {
@@ -22,11 +23,73 @@ const badgeStyle = {
   color: "#334155",
 };
 
-export default function ProjectSpineBar({ tenant, project }) {
+const quickLinkStyle = {
+  textDecoration: "none",
+  color: "#1d4ed8",
+  fontWeight: 700,
+  fontSize: 13,
+  padding: "6px 10px",
+  borderRadius: 8,
+  border: "1px solid #bfdbfe",
+  background: "#eff6ff",
+};
+
+export default function ProjectSpineBar({ tenant, project, compact = false }) {
+  const { projects, activeProject, selectActiveProject } = useProjectWorkspace();
+
   if (!tenant || !project) return null;
 
   const liveTenant = resolveLiveTenantIdentity(tenant);
-  const liveProject = resolveLiveProjectIdentity(project);
+  const liveProject = resolveLiveProjectIdentity(activeProject || project);
+  const projectId = liveProject.id;
+
+  async function handleProjectChange(event) {
+    const nextId = event.target.value;
+    if (!nextId || nextId === projectId) return;
+    await selectActiveProject(nextId, "Project context switched from spine bar.");
+    window.location.href = `/portal/projects/${encodeURIComponent(nextId)}`;
+  }
+
+  const quickLinks = [
+    { label: "Project hub", href: `/portal/projects/${encodeURIComponent(projectId)}` },
+    { label: "Files", href: `/portal/files?projectId=${encodeURIComponent(projectId)}` },
+    { label: "Field", href: `/portal/field-supervision?projectId=${encodeURIComponent(projectId)}` },
+    { label: "RFIs", href: `/portal/rfis?project=${encodeURIComponent(projectId)}` },
+    { label: "Design", href: `/portal/design?projectId=${encodeURIComponent(projectId)}` },
+  ];
+
+  if (compact) {
+    return (
+      <div style={{ ...cardStyle, marginBottom: 16, padding: 14 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ color: "#2563eb", fontWeight: 700, fontSize: 12, marginBottom: 4 }}>Active project</div>
+            <div style={{ fontWeight: 800, fontSize: 16 }}>{liveProject.name}</div>
+            <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{liveProject.stage} · {liveTenant.name}</div>
+          </div>
+          {projects.length > 0 ? (
+            <label style={{ display: "grid", gap: 4, minWidth: 200 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#64748b" }}>Switch project</span>
+              <select
+                value={projectId}
+                onChange={handleProjectChange}
+                style={{ padding: "8px 10px", borderRadius: 8, border: "1px solid #cbd5e1", fontWeight: 600 }}
+              >
+                {projects.map((item) => (
+                  <option key={item.id} value={item.id}>{item.name || item.id}</option>
+                ))}
+              </select>
+            </label>
+          ) : null}
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
+          {quickLinks.map((link) => (
+            <a key={link.href} href={link.href} style={quickLinkStyle}>{link.label}</a>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ ...cardStyle, marginBottom: 24 }}>
@@ -35,15 +98,35 @@ export default function ProjectSpineBar({ tenant, project }) {
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Project / Job Spine</div>
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>{liveProject.name}</h2>
           <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 860 }}>
-            This workspace is anchored to a persistent tenant and project context so files, communications,
-            billing, academy continuity, and Auricrux actions can all attach to the same operational record.
+            Files, communications, billing, field photos, and Auricrux actions attach to this project context.
           </div>
         </div>
         <div style={{ display: "grid", gap: 10, minWidth: 260 }}>
           <div style={badgeStyle}><span>Tenant</span><span>{liveTenant.name}</span></div>
-          <div style={badgeStyle}><span>Project ID</span><span>{liveProject.id}</span></div>
+          {projects.length > 0 ? (
+            <label style={{ display: "grid", gap: 4 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: "#64748b" }}>Active project</span>
+              <select
+                value={projectId}
+                onChange={handleProjectChange}
+                style={{ padding: "8px 10px", borderRadius: 8, border: "1px solid #cbd5e1", fontWeight: 600 }}
+              >
+                {projects.map((item) => (
+                  <option key={item.id} value={item.id}>{item.name || item.id}</option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <div style={badgeStyle}><span>Project ID</span><span>{liveProject.id}</span></div>
+          )}
           <div style={badgeStyle}><span>Stage</span><span>{liveProject.stage}</span></div>
         </div>
+      </div>
+
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 14 }}>
+        {quickLinks.map((link) => (
+          <a key={link.href} href={link.href} style={quickLinkStyle}>{link.label}</a>
+        ))}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginTop: 18 }}>

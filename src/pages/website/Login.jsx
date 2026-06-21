@@ -122,7 +122,7 @@ export default function Login({ requestedPath = "/portal", accessMode = "direct"
 
   const requestedWorkspaceHref = accessMode === "protected"
     ? requestedPath
-    : queryState.nextHref || session?.nextHref || "/portal";
+    : queryState.nextHref || session?.nextHref || "/portal/platform";
   const nextHref = isAllowedPostLoginHref(requestedWorkspaceHref)
     ? requestedWorkspaceHref
     : "/portal";
