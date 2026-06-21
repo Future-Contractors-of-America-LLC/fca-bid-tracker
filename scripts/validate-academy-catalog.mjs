@@ -41,7 +41,7 @@ for (const program of academyCatalog.programs) {
   }
 }
 
-const hierarchy = organizeCatalogHierarchy([]);
+const hierarchy = organizeCatalogHierarchy([], { includeOperatorGuides: true });
 const placedCount = hierarchy.reduce((sum, pathway) => sum + pathway.courseCount, 0);
 if (placedCount < academyCatalog.programs.length) {
   failures.push(`organizeCatalogHierarchy placed ${placedCount}/${academyCatalog.programs.length} static programs.`);
