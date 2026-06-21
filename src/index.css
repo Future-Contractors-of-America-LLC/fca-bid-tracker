@@ -12,6 +12,13 @@
   --sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   --heading: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 
+  --fca-radius-sm: 10px;
+  --fca-radius-md: 14px;
+  --fca-radius-lg: 18px;
+  --fca-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --fca-shadow-md: 0 8px 30px rgba(15, 23, 42, 0.08);
+  --fca-shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.1);
+
   font-family: var(--sans);
   font-size: 16px;
   line-height: 1.5;
@@ -52,6 +59,22 @@ h3 {
   font-weight: 700;
   color: var(--fca-ink);
   margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(1.625rem, 2.5vw, 2.125rem);
+  line-height: 1.15;
+}
+
+h2 {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: 1.0625rem;
+  line-height: 1.35;
 }
 
 p {
@@ -75,4 +98,10 @@ code {
   padding: 2px 6px;
   border-radius: 4px;
   background: var(--fca-blue-soft);
+}
+
+.fca-topnav-blur {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.92) !important;
 }

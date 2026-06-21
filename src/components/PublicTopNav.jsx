@@ -382,7 +382,7 @@ export default function PublicTopNav({ mode = "public" }) {
         }
       `}</style>
 
-      <header style={headerStyle}>
+      <header style={headerStyle} className="fca-topnav-blur">
         <div style={innerStyle}>
           <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
             <FcaBrandMark compact />

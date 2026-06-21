@@ -78,7 +78,7 @@ export default function PortalLegal() {
   return (
     <PortalShell
       title="Contractor Legal Command"
-      subtitle="Entity formation, Virginia licensure, agreements, lien waivers, insurance, and compliance — tied to your project file spine and Academy tracks."
+      subtitle="Entity, licenses, agreements, lien waivers, and compliance for your jobs."
       routeOverlay={routeStateOverlays.legal}
       activeHref="/portal/legal"
       currentJourney="coordination"

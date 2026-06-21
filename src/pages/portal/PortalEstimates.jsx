@@ -126,7 +126,7 @@ export default function PortalEstimates() {
   return (
     <PortalShell
       title={`${companyName} Estimate Studio`}
-      subtitle="A branded pricing workspace for real estimate entry, scope packaging, exclusions, assumptions, and proposal launch."
+      subtitle="Build line-item pricing, assumptions, and proposal-ready packages."
       activeHref="/portal/estimates"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}

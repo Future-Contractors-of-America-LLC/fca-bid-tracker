@@ -47,7 +47,7 @@ export default function PortalRfis() {
   return (
     <PortalShell
       title="RFI Register"
-      subtitle="Design-linked requests for information tied to project sheets, markups, and field coordination."
+      subtitle="RFIs linked to sheets, markups, and field coordination."
       activeHref="/portal/rfis"
       currentJourney="job"
       routeOverlay={routeStateOverlays.projects}

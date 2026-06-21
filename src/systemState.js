@@ -683,8 +683,11 @@ export const portalJourney = [
   { key: "academy", label: "Academy / Support", href: "/portal/academy" },
 ];
 
-/** Hub pages show full section browser; all other portal pages use compact chrome. */
+/** Hub pages show full quick-access grid; detail pages use compact chrome. */
 export const portalHubHrefs = ["/portal/platform", "/portal", "/portal/operations"];
+
+/** Portal page subtitles must stay concise — max character count for professional UX. */
+export const PORTAL_SUBTITLE_MAX = 120;
 
 /** Always-visible portal shortcuts in the top nav. */
 export const portalNavPrimary = [
@@ -749,6 +752,22 @@ export const portalNavGroups = [
       { label: "Auricrux", href: "/portal/auricrux" },
     ],
   },
+];
+
+/** Curated hub tiles — full directory available via portalModules. */
+export const portalHubModules = [
+  { href: "/portal/platform", label: "Dashboard", description: "Workspace command center" },
+  { href: "/portal/pipeline", label: "Pipeline", description: "Bid through payment" },
+  { href: "/portal/projects", label: "Projects", description: "Job execution" },
+  { href: "/portal/bids", label: "Bids", description: "Qualify and award" },
+  { href: "/portal/files", label: "Files", description: "Document control" },
+  { href: "/portal/design", label: "Design", description: "Plans, markups, takeoff" },
+  { href: "/portal/field-supervision", label: "Field", description: "Photos and redlines" },
+  { href: "/portal/billing", label: "Billing", description: "Invoices and collections" },
+  { href: "/portal/finance", label: "Finance", description: "Books and job cost" },
+  { href: "/portal/messages", label: "Messages", description: "Team coordination" },
+  { href: "/portal/academy", label: "Academy", description: "Training and certs" },
+  { href: "/portal/auricrux", label: "Auricrux", description: "AI operating layer" },
 ];
 
 export const STORAGE_KEY = "fca_workspace_state_v1";

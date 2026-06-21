@@ -83,7 +83,7 @@ export default function PortalNotifications() {
   return (
     <PortalShell
       title="Live Notifications and Continuity Alerts"
-      subtitle="Workspace alert surface showing approvals, permit/document dependencies, field-readiness cues, Auricrux continuity signals, and launch-account posture in one customer-facing layer."
+      subtitle="Approvals, document flags, and field signals in one feed."
       activeHref="/portal/notifications"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.notifications}

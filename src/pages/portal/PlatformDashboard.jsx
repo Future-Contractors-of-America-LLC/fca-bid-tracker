@@ -61,8 +61,8 @@ export default function PlatformDashboard() {
           project={state.project}
           workspace={state.workspace}
           auricrux={state.auricrux}
-          title="Platform summary now reads from the authenticated workspace"
-          detail="This dashboard now binds live customer session state, tenant visibility, project context, Auricrux guidance, and launch posture into one active workspace summary."
+          title="Live workspace summary"
+          detail={`${state.project?.name || "Active project"} · ${launchReadiness}`}
         />
       </div>
 
@@ -87,8 +87,8 @@ export default function PlatformDashboard() {
       <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
           <div>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live workspace dashboard</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Your platform summary is connected across bids, jobs, files, billing, training, customer communications, and commercial plan state</h2>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live workspace</div>
+            <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: "1.25rem" }}>Projects, pipeline, files, billing, and field — connected</h2>
           </div>
           <div style={{ display: "grid", gap: 10 }}>
             <FcaBrandMark compact />

@@ -266,7 +266,7 @@ export default function PortalFinance() {
   return (
     <PortalShell
       title="Finance"
-      subtitle="FCA-native books — AR, AP, GL, job billing, pay apps, and governed payment recording without external dependencies."
+      subtitle="AR, AP, GL, job billing, pay apps, and governed payment recording."
       activeHref="/portal/finance"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.billing}

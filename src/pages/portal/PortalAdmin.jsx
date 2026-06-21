@@ -34,7 +34,7 @@ export default function PortalAdmin() {
   return (
     <PortalShell
       title="Admin, Rollout, and Governance Control"
-      subtitle="Administrative surface for tenant status, seat visibility, construction-workflow rollout, commercial package awareness, Auricrux governance control, and one-click admin actions."
+      subtitle="Tenant controls, seats, rollout status, and governance."
       activeHref="/portal/admin"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.admin}

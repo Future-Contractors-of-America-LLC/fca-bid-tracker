@@ -48,7 +48,7 @@ export default function PortalBids() {
   return (
     <PortalShell
       title={`${companyName} Opportunity Qualification Board`}
-      subtitle="A branded preconstruction workspace where customers can actually advance qualification, estimate readiness, and award routing instead of reading commentary only."
+      subtitle="Qualify opportunities, build estimates, and route awards to live projects."
       activeHref="/portal/bids"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}

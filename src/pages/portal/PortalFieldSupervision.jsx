@@ -168,7 +168,7 @@ export default function PortalFieldSupervision() {
   return (
     <PortalShell
       title="Field Supervision"
-      subtitle="Capture site photos, annotate conditions, compare to governing plans, and auto-generate redlines with Auricrux guidance."
+      subtitle="Site photos, plan compare, annotations, and auto-generated redlines."
       activeHref="/portal/field-supervision"
       currentJourney="job"
       routeOverlay={routeStateOverlays.projects}

@@ -326,7 +326,7 @@ export default function PortalDesignWorkspace() {
   return (
     <PortalShell
       title="Design Workspace"
-      subtitle="FCA-native plan room for PDF, DWG, RVT, and IFC — markup, takeoff, coordination, and Auricrux intelligence on the sovereign design engine."
+      subtitle="Native plan room — markup, takeoff, coordination, and redlines."
       activeHref="/portal/design"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.design}

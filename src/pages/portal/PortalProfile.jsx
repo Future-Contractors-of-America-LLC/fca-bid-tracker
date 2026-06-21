@@ -124,7 +124,7 @@ export default function PortalProfile() {
   return (
     <PortalShell
       title="Customer Identity and Workspace Profile"
-      subtitle="Live customer identity surface showing workspace ownership, construction-role continuity, Auricrux-guided next actions, plan activation, and communications access inside the active FCA shell."
+      subtitle="Account identity, plan access, and communication preferences."
       activeHref="/portal/profile"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}

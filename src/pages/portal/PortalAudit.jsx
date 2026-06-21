@@ -67,7 +67,7 @@ export default function PortalAudit() {
   return (
     <PortalShell
       title="Audit Timeline and Auricrux Record"
-      subtitle="Continuity surface showing project-linked file movement, accountable workflow mutations, and Auricrux operating history under one project spine."
+      subtitle="File movement and accountable workflow history."
       activeHref="/portal/audit"
       currentJourney="coordination"
       routeOverlay={auditRouteOverlay}

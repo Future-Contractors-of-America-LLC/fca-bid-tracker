@@ -72,7 +72,7 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
   return (
     <PortalShell
       title="Opportunity Workspace"
-      subtitle="Preconstruction continuity shell for a governed opportunity identity, estimate readiness, file posture, and project-conversion path without pretending full execution is live where it is not."
+      subtitle="Estimate readiness, files, and conversion path for this opportunity."
       activeHref="/portal/bids"
       currentJourney="bid"
       primaryHref="/portal/bids"

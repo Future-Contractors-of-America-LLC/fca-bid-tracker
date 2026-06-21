@@ -33,7 +33,7 @@ export default function PortalProposals() {
   return (
     <PortalShell
       title="Proposal Workspace and Customer Packaging"
-      subtitle="Customer-facing commercial packaging for proposal narrative, delivery posture, and approval-path follow-through."
+      subtitle="Package scope, narrative, and approval-ready customer proposals."
       activeHref="/portal/proposals"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}

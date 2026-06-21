@@ -74,7 +74,7 @@ export default function Platform() {
       <ShellHeader
         eyebrow="FCA Platform"
         title="One contractor lifecycle operating system"
-        subtitle="FCA now exposes real route-level product slices for qualification, estimates, proposals, projects, files, billing, support, Academy, and Auricrux instead of stopping at shell language."
+        subtitle="One operating system for the full contractor lifecycle — from first lead through closeout, billing, and workforce training."
         primaryHref={publicRouteCtas.platform.primaryHref}
         primaryLabel={publicRouteCtas.platform.primaryLabel}
         secondaryHref={publicRouteCtas.platform.secondaryHref}

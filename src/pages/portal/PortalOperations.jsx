@@ -24,7 +24,7 @@ export default function PortalOperations() {
   return (
     <PortalShell
       title="FCA Operations Pipeline"
-      subtitle="A customer-ready construction operations view connecting lead intake, qualification, preconstruction, award, document control, billing, closeout, warranty, and referral continuity."
+      subtitle="Intake through closeout — one operational command view."
       activeHref="/portal/operations"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}

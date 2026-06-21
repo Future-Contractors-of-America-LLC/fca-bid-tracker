@@ -87,7 +87,7 @@ export default function PortalProjects() {
   return (
     <PortalShell
       title={`${companyName} Project Command Board`}
-      subtitle="A branded execution workspace where customers can really move projects forward, update delivery posture, and keep Auricrux-guided continuity attached to the active job."
+      subtitle="Track stages, mobilization, and delivery for every active job."
       activeHref="/portal/projects"
       currentJourney="job"
       routeOverlay={routeStateOverlays.projects}

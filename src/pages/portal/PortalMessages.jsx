@@ -161,7 +161,7 @@ export default function PortalMessages() {
   return (
     <PortalShell
       title={`${companyName} Communications Command`}
-      subtitle="A branded coordination workspace where teams can send customer-facing updates, keep communications attached to real work, and let Auricrux guide the next move."
+      subtitle="Team and customer updates tied to bids, jobs, and billing."
       activeHref="/portal/messages"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.messages}

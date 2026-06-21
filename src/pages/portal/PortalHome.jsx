@@ -244,7 +244,7 @@ export default function PortalHome() {
   return (
     <PortalShell
       title={`${companyName} Command Center`}
-      subtitle="A branded contractor workspace for real opportunities, estimate preparation, customer commitments, tasks, and training continuity."
+      subtitle="Your contractor operating system — bids, jobs, field, finance, and training."
       activeHref="/portal"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}

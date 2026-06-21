@@ -97,7 +97,7 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
   return (
     <PortalShell
       title="Project Workspace"
-      subtitle="Project continuity home for route-bound project identity, file summary, audit summary, and Auricrux next-action posture without overstating backend completion."
+      subtitle="Project hub for files, audit trail, and next actions."
       activeHref="/portal/projects"
       currentJourney="job"
       primaryHref="/portal/files"

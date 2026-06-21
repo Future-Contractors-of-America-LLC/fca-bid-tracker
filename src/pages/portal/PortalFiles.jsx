@@ -223,7 +223,7 @@ export default function PortalFiles() {
   return (
     <PortalShell
       title={`${companyName} File Intake and Evidence Workspace`}
-      subtitle="A branded document-control product for registering project files, linking evidence, generating Auricrux briefings, and keeping customer deliverables connected to execution."
+      subtitle="Register project files, link evidence, and control deliverables."
       activeHref="/portal/files"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.files}

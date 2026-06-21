@@ -48,7 +48,7 @@ export default function PortalAuricrux() {
   return (
     <PortalShell
       title="Auricrux Live Guidance Workspace"
-      subtitle="Authenticated customer surface for live Auricrux guidance across approvals, document dependencies, billing follow-through, workforce readiness, and communications orchestration."
+      subtitle="Guidance across approvals, documents, billing, and workforce readiness."
       activeHref="/portal/auricrux"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
