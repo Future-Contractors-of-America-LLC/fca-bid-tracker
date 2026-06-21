@@ -1,6 +1,7 @@
 import { academyCatalog } from "./academyCatalog.js";
 import {
   CATALOG_PATHWAYS,
+  getLicensureSharedProgramKeys,
   getPathwayByKey,
   getTopicByKey,
   getTopicsForPathway,
@@ -36,29 +37,36 @@ export const OFFERING_LANES = [
   {
     key: "professional",
     label: "Professional Development",
-    description: "Pearson-style continuing education and project leadership courses.",
+    description: "Deep continuing education, leadership, ethics, finance literacy, and workforce readiness.",
     credentialType: "Continuing Education",
+  },
+  {
+    key: "fca-how-to",
+    label: "FCA How-To and Operator Guides",
+    description: "Live portal operator guides for Contractor Command — Auricrux-led mini-LMS for FCA workflows.",
+    credentialType: "FCA Operator Certificate",
   },
 ];
 
 const STATIC_LANE_BY_PROGRAM_KEY = {
-  "fca-workspace-quick-start": "professional",
-  "fca-contractor-command-user-guide": "professional",
-  "fca-bids-qualification-estimates": "professional",
-  "fca-projects-stage-control": "professional",
-  "fca-files-audit-governance": "professional",
-  "fca-billing-invoicing": "professional",
-  "fca-legal-command-workspace": "professional",
-  "fca-support-auricrux-operator": "professional",
-  "fca-academy-progress-tracking": "professional",
+  "fca-workspace-quick-start": "fca-how-to",
+  "fca-contractor-command-user-guide": "fca-how-to",
+  "fca-bids-qualification-estimates": "fca-how-to",
+  "fca-projects-stage-control": "fca-how-to",
+  "fca-files-audit-governance": "fca-how-to",
+  "fca-billing-invoicing": "fca-how-to",
+  "fca-legal-command-workspace": "fca-how-to",
+  "fca-support-auricrux-operator": "fca-how-to",
+  "fca-academy-progress-tracking": "fca-how-to",
   "electrical-apprenticeship-year1": "apprenticeship",
   "osha30-certification-prep": "certification",
   "aas-construction-operations-sem1": "degree",
   "virginia-dpor-residential-license-prep": "licensure",
   "contractor-business-formation-legal": "licensure",
   "contractor-construction-law-essentials": "licensure",
-  "fca-contractor-command-user-guide": "professional",
 };
+
+const FCA_HOWTO_PREFIXES = ["fca-"];
 
 const CERTIFICATION_PREFIXES = ["cert-", "project-controls", "precon-estimating", "field-readiness"];
 const DEGREE_PREFIXES = ["deg-"];
@@ -137,6 +145,9 @@ export const CERTIFICATION_PATHWAYS = [
   { key: "commissioning-certification", label: "Commissioning", pathway: "Commissioning Certification", units: 5 },
   { key: "sustainability-leed-certification", label: "Sustainability and LEED", pathway: "Sustainability and LEED Certification", units: 5 },
   { key: "trade-journeyman-certification", label: "Trade Journeyman", pathway: "Trade Journeyman Certification", units: 27 },
+  { key: "business-development-certification", label: "Business Development", pathway: "Business Development Certification", units: 5 },
+  { key: "billing-payapps-certification", label: "Billing and Pay Apps", pathway: "Billing and Pay Application Certification", units: 5 },
+  { key: "customer-communications-certification", label: "Customer Communications", pathway: "Customer Communications Certification", units: 5 },
 ];
 
 /** Featured certification unit progression (backend-aligned). */
@@ -235,6 +246,49 @@ export const ELECTRICAL_APPRENTICESHIP_LEVELS = [
   { level: 10, key: "electrical-commercial-power-systems-level-10", title: "Commercial Power Systems / Level 10", modules: 12 },
 ];
 
+/** Core level progression template for any apprenticeship trade. */
+export function buildApprenticeshipCoreLevels(tradeKey, tradeLabel) {
+  return [1, 2, 3, 4, 5, 6].map((level) => ({
+    level,
+    key: `${tradeKey}-core-level-${level}`,
+    title: `${tradeLabel} Core / Level ${level}`,
+    modules: 12,
+  }));
+}
+
+export const APPRENTICESHIP_TRADE_LEVELS = Object.fromEntries(
+  APPRENTICESHIP_TRADES.map((trade) => [trade.key, buildApprenticeshipCoreLevels(trade.key, trade.label)]),
+);
+
+/** Professional development topic summaries. */
+export const PROFESSIONAL_PATHWAYS = [
+  { key: "continuing-education", label: "Continuing Education", programs: 4 },
+  { key: "workforce-readiness", label: "Workforce Readiness", programs: 4 },
+  { key: "leadership-management", label: "Leadership and Management", programs: 3 },
+  { key: "ethics-professional-conduct", label: "Ethics and Professional Conduct", programs: 1 },
+  { key: "project-leadership", label: "Project Leadership", programs: 2 },
+  { key: "construction-finance", label: "Construction Finance", programs: 2 },
+  { key: "safety-leadership", label: "Safety Leadership", programs: 2 },
+  { key: "contract-administration", label: "Contract Administration", programs: 1 },
+  { key: "customer-excellence", label: "Customer Excellence", programs: 1 },
+  { key: "mentoring-coaching", label: "Mentoring and Coaching", programs: 1 },
+  { key: "technology-adoption", label: "Technology and Field Ops", programs: 1 },
+  { key: "executive-readiness", label: "Executive Readiness", programs: 1 },
+];
+
+/** FCA How-To operator guide sequence. */
+export const FCA_HOWTO_SEQUENCE = [
+  { order: 1, key: "fca-workspace-quick-start", title: "Workspace Quick Start", topicKey: "fca-platform" },
+  { order: 2, key: "fca-contractor-command-user-guide", title: "Contractor Command User Guide", topicKey: "fca-platform" },
+  { order: 3, key: "fca-bids-qualification-estimates", title: "Bids and Estimates", topicKey: "fca-bids-estimates" },
+  { order: 4, key: "fca-projects-stage-control", title: "Projects and Stage Control", topicKey: "fca-projects-execution" },
+  { order: 5, key: "fca-files-audit-governance", title: "Files and Governance", topicKey: "fca-files-governance" },
+  { order: 6, key: "fca-billing-invoicing", title: "Billing and Invoicing", topicKey: "fca-billing-revenue" },
+  { order: 7, key: "fca-legal-command-workspace", title: "Legal Command", topicKey: "fca-legal-compliance" },
+  { order: 8, key: "fca-support-auricrux-operator", title: "Support and Auricrux", topicKey: "fca-support-auricrux" },
+  { order: 9, key: "fca-academy-progress-tracking", title: "Academy Progress", topicKey: "fca-platform" },
+];
+
 function resolveProgramLane(program) {
   if (program.lane) return program.lane;
   if (STATIC_LANE_BY_PROGRAM_KEY[program.key]) return STATIC_LANE_BY_PROGRAM_KEY[program.key];
@@ -246,6 +300,8 @@ function resolveProgramLane(program) {
   if (program.pathway?.includes("AAS") || program.pathway?.includes("BS") || program.pathway?.includes("BAS") || program.pathway === "General Education Core") return "degree";
   if (LICENSURE_PREFIXES.some((prefix) => program.key?.startsWith(prefix))) return "licensure";
   if (program.pathway?.includes("Licensure") || program.pathway?.includes("DPOR") || program.pathway?.includes("Exam Prep")) return "licensure";
+  if (FCA_HOWTO_PREFIXES.some((prefix) => program.key?.startsWith(prefix))) return "fca-how-to";
+  if (program.pathway?.includes("How-To") || program.pathway?.includes("Operator")) return "fca-how-to";
   return "professional";
 }
 
@@ -296,12 +352,43 @@ export function organizeCatalogHierarchy(apiPrograms = []) {
     if (!courseBuckets[pathwayKey][topicKey]) {
       courseBuckets[pathwayKey][topicKey] = [];
     }
-    courseBuckets[pathwayKey][topicKey].push({
-      ...program,
-      pathwayKey,
-      topicKey,
-      enrollment,
-    });
+    const bucket = courseBuckets[pathwayKey][topicKey];
+    if (!bucket.some((entry) => entry.key === program.key)) {
+      bucket.push({
+        ...program,
+        pathwayKey,
+        topicKey,
+        enrollment,
+      });
+    }
+  }
+
+  // Link multi-state licensure shared courses to every state topic page.
+  const programByKey = Object.fromEntries(allPrograms.map((program) => [program.key, program]));
+  for (const pathway of CATALOG_PATHWAYS) {
+    if (pathway.key !== "licensure") continue;
+    for (const topic of getTopicsForPathway("licensure", { includeEmpty: true })) {
+      if (!topic.key?.startsWith("state-")) continue;
+      const sharedKeys = getLicensureSharedProgramKeys(topic.key);
+      for (const sharedKey of sharedKeys) {
+        const sharedProgram = programByKey[sharedKey];
+        if (!sharedProgram) continue;
+        const meta = resolveProgramCatalogMeta(sharedProgram);
+        const bucket = courseBuckets.licensure[topic.key] || [];
+        if (bucket.some((entry) => entry.key === sharedKey)) continue;
+        if (!courseBuckets.licensure[topic.key]) {
+          courseBuckets.licensure[topic.key] = [];
+        }
+        courseBuckets.licensure[topic.key].push({
+          ...sharedProgram,
+          pathwayKey: "licensure",
+          topicKey: topic.key,
+          enrollment: meta.enrollment,
+          sharedFromTopic: meta.topicKey,
+          licensureScope: "multi-state",
+        });
+      }
+    }
   }
 
   return CATALOG_PATHWAYS.map((pathway) => {
@@ -319,7 +406,7 @@ export function organizeCatalogHierarchy(apiPrograms = []) {
       topics,
       courseCount,
     };
-  }).filter((pathway) => pathway.courseCount > 0 || pathway.key === "licensure");
+  }).filter((pathway) => pathway.courseCount > 0 || pathway.key === "licensure" || pathway.key === "fca-how-to");
 }
 
 export function findCatalogPlacement(pathwayKey, topicKey, programKey) {

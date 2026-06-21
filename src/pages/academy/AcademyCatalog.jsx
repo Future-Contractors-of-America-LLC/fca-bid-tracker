@@ -4,6 +4,8 @@ import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import { findCatalogPlacement, organizeCatalogHierarchy } from "../../academyOfferings";
+import { getPathwayLmsConfig } from "../../academyPathwayLms";
+import { getCertificationAgencyAlignment } from "../../academyCatalogTaxonomy";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -28,7 +30,7 @@ function readCatalogParams() {
   if (typeof window === "undefined") return { pathwayKey: "", topicKey: "" };
   const params = new URLSearchParams(window.location.search);
   return {
-    pathwayKey: params.get("pathway") || "",
+    pathwayKey: params.get("pathway") || params.get("lane") || "",
     topicKey: params.get("topic") || "",
   };
 }
@@ -48,6 +50,7 @@ function moduleCount(program) {
 function CourseCard({ program, topicKey, pathwayKey }) {
   const enrollment = program.enrollment || {};
   const syllabusLines = program.courses?.[0]?.lessonTitles || program.modules?.map((module) => module.title) || [];
+  const agency = program.issuingAgency || (pathwayKey === "certification" ? getCertificationAgencyAlignment(topicKey)?.primary : null);
 
   return (
     <article style={cardStyle}>
@@ -55,9 +58,15 @@ function CourseCard({ program, topicKey, pathwayKey }) {
         <div>
           <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>
             {program.credential || program.credentialTitle}
+            {program.licensureScope === "multi-state" ? <span style={{ color: "#7c3aed", fontWeight: 600, marginLeft: 8 }}>Multi-state</span> : null}
             {program.source === "catalog-preview" ? <span style={{ color: "#64748b", fontWeight: 400, marginLeft: 8 }}>(Catalog)</span> : null}
           </div>
           <h3 style={{ marginTop: 0, marginBottom: 8 }}>{program.title}</h3>
+          {agency ? (
+            <div style={{ color: "#047857", fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
+              Aligned with {agency}{program.governingBodies?.length ? ` · ${program.governingBodies.slice(0, 3).join(", ")}` : ""}
+            </div>
+          ) : null}
           <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
             <strong>Duration:</strong> {program.duration || `${moduleCount(program)} modules`}
             {program.format ? <> · <strong>Format:</strong> {program.format}</> : null}
@@ -175,12 +184,13 @@ export default function AcademyCatalog() {
   const selectedPathway = hierarchy.find((pathway) => pathway.key === pathwayKey) || null;
   const selectedTopic = selectedPathway?.topics.find((topic) => topic.key === topicKey) || null;
   const placement = findCatalogPlacement(pathwayKey, topicKey);
+  const pathwayLms = getPathwayLmsConfig(pathwayKey);
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
         compact
-        eyebrow="FCA Academy"
+        eyebrow={pathwayLms ? `${pathwayLms.heroTitle} · Auricrux` : "FCA Academy"}
         title={selectedTopic ? selectedTopic.label : selectedPathway ? selectedPathway.label : "Course catalog"}
         subtitle={
           selectedTopic
@@ -200,6 +210,20 @@ export default function AcademyCatalog() {
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
         <Breadcrumb pathway={placement?.pathway || selectedPathway} topic={placement?.topic || selectedTopic} />
 
+        {pathwayLms && selectedPathway && !selectedTopic ? (
+          <div style={{ ...cardStyle, marginBottom: 24, border: `1px solid ${pathwayLms.border}`, background: pathwayLms.accentSoft }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+              <div>
+                <strong style={{ color: pathwayLms.accent }}>Auricrux-operated mini-LMS</strong>
+                <p style={{ color: "#475569", lineHeight: 1.65, marginBottom: 0, marginTop: 8 }}>{pathwayLms.heroSubtitle}</p>
+              </div>
+              <a href={`/academy/pathway?pathway=${pathwayKey}`} style={{ color: pathwayLms.accent, fontWeight: 700, textDecoration: "none", alignSelf: "center" }}>
+                Open pathway home
+              </a>
+            </div>
+          </div>
+        ) : null}
+
         {apiPrograms.length > 0 ? (
           <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "#eff6ff" }}>
             <strong style={{ color: "#1d4ed8" }}>Live catalog</strong>
@@ -216,7 +240,7 @@ export default function AcademyCatalog() {
         <div style={{ ...cardStyle, marginBottom: 24, background: "#f8fafc" }}>
           <strong>How the catalog works</strong>
           <ol style={{ paddingLeft: 20, lineHeight: 1.85, color: "#475569", marginBottom: 0, marginTop: 10 }}>
-            <li><strong>Pick a pathway</strong> — apprenticeship, degree, certification, licensure, or professional development.</li>
+            <li><strong>Pick a pathway</strong> — apprenticeship, degree, certification, licensure, professional development, or FCA operator guides.</li>
             <li><strong>Pick a topic</strong> — OSHA, electrical, architectural engineering, Virginia DPOR, and more.</li>
             <li><strong>View any course syllabus</strong> — curriculum is public for every course.</li>
             <li><strong>Enroll when eligible</strong> — subscriptions, add-ons, and prerequisites gate course signup and progress tracking.</li>
@@ -227,16 +251,18 @@ export default function AcademyCatalog() {
           <section>
             <h2 style={{ marginTop: 0, marginBottom: 16 }}>1. Choose a pathway</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
-              {hierarchy.map((pathway) => (
-                <a key={pathway.key} href={catalogHref(pathway.key)} style={sectionCardStyle}>
-                  <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>{pathway.credentialType}</div>
+              {hierarchy.map((pathway) => {
+                const lms = getPathwayLmsConfig(pathway.key);
+                return (
+                <a key={pathway.key} href={`/academy/pathway?pathway=${pathway.key}`} style={{ ...sectionCardStyle, borderLeft: lms ? `4px solid ${lms.accent}` : undefined }}>
+                  <div style={{ color: lms?.accent || "#1d4ed8", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>{pathway.credentialType}</div>
                   <h3 style={{ marginTop: 0, marginBottom: 8 }}>{pathway.label}</h3>
                   <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>{pathway.description}</p>
                   <div style={{ color: "#64748b", fontSize: 14, marginTop: 12 }}>
-                    {pathway.topics.length} topics · {pathway.courseCount} courses
+                    {pathway.topics.length} topics · {pathway.courseCount} courses · <span style={{ color: lms?.accent || "#64748b" }}>Auricrux-led mini-LMS</span>
                   </div>
                 </a>
-              ))}
+              );})}
             </div>
           </section>
         ) : null}

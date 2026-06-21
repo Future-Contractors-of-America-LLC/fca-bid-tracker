@@ -40,7 +40,7 @@ const report = {
 console.log(JSON.stringify(report, null, 2));
 
 const ok =
-  programDirs >= 1188 &&
+  programDirs >= 1212 &&
   auricruxLecture >= 6772 &&
   auricruxDemo >= 6772 &&
   lab >= 6772 &&

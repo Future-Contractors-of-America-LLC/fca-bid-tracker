@@ -493,7 +493,7 @@ export const academyCatalog = {
     {
       title: "FCA How-To pathway",
       description: "Route-by-route operator guides for bids, projects, files, billing, legal, support, and Academy.",
-      route: "/academy/catalog?pathway=professional",
+      route: "/academy/pathway?pathway=fca-how-to",
       label: "Open FCA How-To Catalog",
     }
   ]

@@ -83,8 +83,16 @@ export const CATALOG_PATHWAYS = [
   {
     key: "professional",
     label: "Professional Development",
-    description: "FCA operator guides, continuing education, and workforce readiness tied to live portal workflows.",
+    description: "Deep continuing education, leadership, ethics, finance literacy, and workforce readiness — Auricrux-led practitioner development.",
     credentialType: "Continuing Education",
+  },
+  {
+    key: "fca-how-to",
+    label: "FCA How-To & Operator Guides",
+    description: "Live portal operator guides for Contractor Command — workspace, bids, projects, files, billing, legal, support, and Academy progress.",
+    credentialType: "FCA Operator Certificate",
+    operatedBy: "Auricrux",
+    miniLms: true,
   },
 ];
 
@@ -177,7 +185,7 @@ const LICENSURE_TRADE_TOPICS = [
   { key: "licensure-readiness", label: "Exam Readiness", description: "Diagnostic assessment and licensure exam fundamentals." },
 ];
 
-const PROFESSIONAL_TOPICS = [
+const FCA_HOWTO_TOPICS = [
   { key: "fca-platform", label: "FCA Platform", description: "Workspace onboarding and Contractor Command operator guides." },
   { key: "fca-bids-estimates", label: "Bids & Estimates", description: "Qualification, estimating, and proposal workflows in FCA." },
   { key: "fca-projects-execution", label: "Projects & Execution", description: "Project setup, stage control, and field execution in FCA." },
@@ -185,8 +193,54 @@ const PROFESSIONAL_TOPICS = [
   { key: "fca-billing-revenue", label: "Billing & Revenue", description: "Invoicing, billing readiness, and revenue continuity." },
   { key: "fca-legal-compliance", label: "Legal & Compliance", description: "Contractor Legal Command and compliance workflows." },
   { key: "fca-support-auricrux", label: "Support & Auricrux", description: "Field support, Auricrux guidance, and escalation continuity." },
-  { key: "continuing-education", label: "Continuing Education", description: "License renewal CE, OSHA refreshers, and professional development." },
-  { key: "workforce-readiness", label: "Workforce Readiness", description: "Launch classrooms and field-readiness reinforcement." },
+];
+
+const PROFESSIONAL_TOPICS = [
+  { key: "continuing-education", label: "Continuing Education", description: "License renewal CE, OSHA refreshers, code updates, and board documentation." },
+  { key: "workforce-readiness", label: "Workforce Readiness", description: "Jobsite literacy, portal readiness, and apprenticeship entry." },
+  { key: "leadership-management", label: "Leadership & Management", description: "Foreman through executive leadership for commercial contractors." },
+  { key: "ethics-professional-conduct", label: "Ethics & Professional Conduct", description: "Board ethics, conflicts, disclosures, and professional responsibility." },
+  { key: "project-leadership", label: "Project Leadership", description: "PM fundamentals, stakeholder management, and delivery leadership." },
+  { key: "construction-finance", label: "Construction Finance Literacy", description: "Job cost, cash flow, bonding, and financial decision-making." },
+  { key: "safety-leadership", label: "Safety Leadership", description: "Competent person, safety culture, and incident leadership CE." },
+  { key: "contract-administration", label: "Contract Administration", description: "Subcontracts, change orders, claims awareness, and notice discipline." },
+  { key: "customer-excellence", label: "Customer Excellence", description: "Owner relations, retention, and service recovery for contractors." },
+  { key: "mentoring-coaching", label: "Mentoring & Coaching", description: "Apprentice coaching, crew development, and workforce pipelines." },
+  { key: "technology-adoption", label: "Technology & Field Ops", description: "Digital adoption, BIM literacy, and field-to-office integration." },
+  { key: "executive-readiness", label: "Executive Readiness", description: "Owner-operator strategy, succession, and enterprise growth." },
+];
+
+/** Certification topic → governing agencies, unions, and associations. */
+export const CERTIFICATION_AGENCY_MAP = {
+  "safety-osha": { primary: "OSHA", bodies: ["OSHA", "OSHA Training Institute", "NIOSH"], unions: ["Building Trades AFL-CIO"] },
+  "project-controls": { primary: "AACE International", bodies: ["AACE International", "PMI", "CII"], associations: ["AGC", "CMAA"] },
+  "construction-management-cert": { primary: "CMAA", bodies: ["CMAA", "AIC", "AGC CM Division"], associations: ["ABC", "AGC"] },
+  "estimating-preconstruction": { primary: "AACE International", bodies: ["AACE International", "ASPE", "RSMeans"], associations: ["AGC", "ABC"] },
+  "bim-certification": { primary: "buildingSMART", bodies: ["buildingSMART", "Autodesk", "USIBD"], associations: ["AGC BIM Forum"] },
+  "superintendent": { primary: "AGC", bodies: ["AGC", "CMAA", "NCCER"], associations: ["ABC"] },
+  "qaqc": { primary: "ACI", bodies: ["ACI", "ICC", "ASTM"], associations: ["CMAA"] },
+  "commissioning": { primary: "ASHRAE", bodies: ["ASHRAE", "ACG", "NFPA"], associations: ["USGBC"] },
+  "sustainability-leed": { primary: "USGBC / GBCI", bodies: ["USGBC", "GBCI", "ASHRAE"], associations: ["ILFI"] },
+  "trade-journeyman": { primary: "NCCER", bodies: ["NCCER", "NIMS"], unions: ["IBEW", "UA", "SMART", "OPCMIA", "Ironworkers"] },
+  "business-development-cert": { primary: "AGC", bodies: ["AGC", "ABC", "DBIA"], associations: ["CMAA"] },
+  "billing-payapps-cert": { primary: "AIA", bodies: ["AIA", "AGC", "CFMA"], associations: ["AGC"] },
+  "customer-communications-cert": { primary: "PMI", bodies: ["PMI", "CMAA", "DBIA"], associations: ["AGC"] },
+};
+
+/** Programs linked from every state licensure topic (multi-state shared prep). */
+export const LICENSURE_STATE_SHARED_PROGRAMS = [
+  "lic-nascla-business-law-exam-prep",
+  "lic-code-book-navigation-exam-strategy",
+  "lic-application-checklist-renewal-ce",
+  "lic-osha-licensure-prerequisites",
+];
+
+/** Virginia uses DPOR programs instead of lic-state-va. */
+export const LICENSURE_STATE_VA_PROGRAMS = [
+  "lic-dpor-residential-contractor-prep",
+  "lic-dpor-class-a-contractor-prep",
+  "lic-dpor-class-b-contractor-prep",
+  "lic-dpor-class-c-contractor-prep",
 ];
 
 function buildLicensureStateTopics() {
@@ -207,52 +261,53 @@ export const CATALOG_TOPICS = [
   ...LICENSURE_TRADE_TOPICS.map((topic) => ({ ...topic, pathwayKey: "licensure" })),
   ...buildLicensureStateTopics(),
   ...PROFESSIONAL_TOPICS.map((topic) => ({ ...topic, pathwayKey: "professional" })),
+  ...FCA_HOWTO_TOPICS.map((topic) => ({ ...topic, pathwayKey: "fca-how-to" })),
 ];
 
 /** Static program placement and enrollment gates (syllabus always public). */
 export const PROGRAM_CATALOG_META = {
   "fca-workspace-quick-start": {
-    pathwayKey: "professional",
+    pathwayKey: "fca-how-to",
     topicKey: "fca-platform",
     enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: [] },
   },
   "fca-contractor-command-user-guide": {
-    pathwayKey: "professional",
+    pathwayKey: "fca-how-to",
     topicKey: "fca-platform",
     enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: [] },
   },
   "fca-bids-qualification-estimates": {
-    pathwayKey: "professional",
+    pathwayKey: "fca-how-to",
     topicKey: "fca-bids-estimates",
     enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-projects-stage-control": {
-    pathwayKey: "professional",
+    pathwayKey: "fca-how-to",
     topicKey: "fca-projects-execution",
     enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-files-audit-governance": {
-    pathwayKey: "professional",
+    pathwayKey: "fca-how-to",
     topicKey: "fca-files-governance",
     enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-billing-invoicing": {
-    pathwayKey: "professional",
+    pathwayKey: "fca-how-to",
     topicKey: "fca-billing-revenue",
     enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-legal-command-workspace": {
-    pathwayKey: "professional",
+    pathwayKey: "fca-how-to",
     topicKey: "fca-legal-compliance",
     enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-support-auricrux-operator": {
-    pathwayKey: "professional",
+    pathwayKey: "fca-how-to",
     topicKey: "fca-support-auricrux",
     enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
   "fca-academy-progress-tracking": {
-    pathwayKey: "professional",
+    pathwayKey: "fca-how-to",
     topicKey: "fca-platform",
     enrollment: { syllabusPublic: true, requiresAuth: false, minimumPlan: null, addonKey: null, prerequisiteProgramKeys: ["fca-workspace-quick-start"] },
   },
@@ -513,8 +568,8 @@ function resolveLicensureTopic(key) {
   return "licensure-readiness";
 }
 
-function resolveProfessionalTopic(key) {
-  if (key.startsWith("fca-bids-") || key.includes("bids") && key.includes("estimate")) return "fca-bids-estimates";
+function resolveFcaHowToTopic(key) {
+  if (key.startsWith("fca-bids-") || (key.includes("bids") && key.includes("estimate"))) return "fca-bids-estimates";
   if (key.startsWith("fca-projects-") || key.includes("project")) return "fca-projects-execution";
   if (key.startsWith("fca-files-") || key.includes("files") || key.includes("audit")) return "fca-files-governance";
   if (key.startsWith("fca-billing-") || key.includes("billing") || key.includes("invoice")) return "fca-billing-revenue";
@@ -523,8 +578,22 @@ function resolveProfessionalTopic(key) {
   if (key.startsWith("fca-") || key.includes("workspace") || key.includes("user-guide") || key.includes("quick-start") || key.includes("academy-progress")) {
     return "fca-platform";
   }
+  return "fca-platform";
+}
+
+function resolveProfessionalTopic(key) {
   if (key.includes("continuing-education") || key.includes("renewal-ce") || key.startsWith("prof-ce-")) return "continuing-education";
   if (key.startsWith("prof-workforce-")) return "workforce-readiness";
+  if (key.startsWith("prof-lead-") || key.includes("leadership")) return "leadership-management";
+  if (key.startsWith("prof-ethics-") || key.includes("ethics")) return "ethics-professional-conduct";
+  if (key.startsWith("prof-pm-") || key.includes("project-leadership")) return "project-leadership";
+  if (key.startsWith("prof-finance-") || key.includes("finance")) return "construction-finance";
+  if (key.startsWith("prof-safety-lead-")) return "safety-leadership";
+  if (key.startsWith("prof-contract-")) return "contract-administration";
+  if (key.startsWith("prof-customer-")) return "customer-excellence";
+  if (key.startsWith("prof-mentor-") || key.includes("coaching")) return "mentoring-coaching";
+  if (key.startsWith("prof-tech-")) return "technology-adoption";
+  if (key.startsWith("prof-exec-")) return "executive-readiness";
   return "workforce-readiness";
 }
 
@@ -539,6 +608,7 @@ function resolvePathwayKey(program) {
     return "certification";
   }
   if (key.startsWith("lic-") || key.includes("dpor") || key.includes("licensure")) return "licensure";
+  if (key.startsWith("fca-")) return "fca-how-to";
   if (program.pathway?.includes("Apprenticeship")) return "apprenticeship";
   if (program.pathway?.includes("Certification")) return "certification";
   if (program.pathway?.includes("AAS") || program.pathway?.includes("BS") || program.pathway?.includes("BAS") || program.pathway === "General Education Core") {
@@ -568,6 +638,10 @@ export function resolveTopicKeyFromProgram(program) {
 
   if (key.startsWith("lic-") || key.includes("dpor") || key.includes("lic-")) {
     return resolveLicensureTopic(key);
+  }
+
+  if (key.startsWith("fca-")) {
+    return resolveFcaHowToTopic(key);
   }
 
   return resolveProfessionalTopic(key);
@@ -616,7 +690,7 @@ export function resolveProgramCatalogMeta(program) {
     enrollment: program.enrollment || {
       syllabusPublic: true,
       requiresAuth: true,
-      minimumPlan: pathwayKey === "degree" ? "operations" : pathwayKey === "professional" ? null : "starter-team",
+      minimumPlan: pathwayKey === "degree" ? "operations" : (pathwayKey === "professional" || pathwayKey === "fca-how-to") ? null : "starter-team",
       addonKey: pathwayKey === "licensure" ? "licensure-pack" : pathwayKey === "apprenticeship" ? "apprenticeship-track" : pathwayKey === "certification" ? "certification-track" : null,
       prerequisiteProgramKeys: program.prerequisiteProgramKeys || [],
     },
@@ -651,4 +725,19 @@ export function formatAddonLabel(addonKey) {
     "legal-pack": "Contractor Legal Pack add-on",
   };
   return labels[addonKey] || addonKey;
+}
+
+export function getCertificationAgencyAlignment(topicKey) {
+  return CERTIFICATION_AGENCY_MAP[topicKey] || null;
+}
+
+/** Shared multi-state programs to surface on state licensure topic pages. */
+export function getLicensureSharedProgramKeys(topicKey) {
+  if (topicKey === "state-va") return [...LICENSURE_STATE_VA_PROGRAMS, ...LICENSURE_STATE_SHARED_PROGRAMS];
+  if (topicKey?.startsWith("state-")) return [...LICENSURE_STATE_SHARED_PROGRAMS];
+  return [];
+}
+
+export function isLicensureStateTopic(topicKey) {
+  return topicKey?.startsWith("state-") || topicKey === "universal-licensure";
 }

@@ -272,7 +272,7 @@ export default function AcademyHome() {
             return (
               <a
                 key={lane.key}
-                href={`/academy/catalog?lane=${lane.key}`}
+                href={`/academy/pathway?pathway=${lane.key}`}
                 style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: "#f8fafc", textDecoration: "none", color: "inherit" }}
               >
                 <strong>{lane.label}</strong>

@@ -64,6 +64,7 @@ export const routes = {
 
   "/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
   "/academy/catalog": lazyPage(() => import("./pages/academy/AcademyCatalog")),
+  "/academy/pathway": lazyPage(() => import("./pages/academy/AcademyPathwayHub")),
   "/academy/dashboard": lazyPage(() => import("./pages/academy/AcademyDashboard")),
   "/academy/credentials": lazyPage(() => import("./pages/academy/AcademyCredentials")),
 };

@@ -18,6 +18,8 @@ const programKeys = [
   ...(await extractProgramKeys("degree_programs.py")).filter((key) => key.startsWith("deg-")),
   ...(await extractProgramKeys("certification_programs.py")),
   ...(await extractProgramKeys("licensure_programs.py")),
+  ...(await extractProgramKeys("professional_programs.py")),
+  ...(await extractProgramKeys("fca_howto_programs.py")),
 ];
 
 const byPathwayTopic = {};
@@ -31,6 +33,8 @@ function inferLane(key) {
     return "certification";
   }
   if (key.startsWith("lic-")) return "licensure";
+  if (key.startsWith("fca-")) return "fca-how-to";
+  if (key.startsWith("prof-")) return "professional";
   return "professional";
 }
 
@@ -65,6 +69,16 @@ for (const entry of summarize("certification")) {
 
 console.log("\nLicensure topic counts:");
 for (const entry of summarize("licensure")) {
+  console.log(`  ${entry.topic}: ${entry.count}`);
+}
+
+console.log("\nProfessional topic counts:");
+for (const entry of summarize("professional")) {
+  console.log(`  ${entry.topic}: ${entry.count}`);
+}
+
+console.log("\nFCA How-To topic counts:");
+for (const entry of summarize("fca-how-to")) {
   console.log(`  ${entry.topic}: ${entry.count}`);
 }
 

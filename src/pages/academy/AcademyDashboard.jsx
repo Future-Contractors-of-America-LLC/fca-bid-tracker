@@ -3,7 +3,8 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, DPOR_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, ELECTRICAL_LICENSURE_UNITS, LICENSURE_PATHWAYS, organizeApiCatalogByLane } from "../../academyOfferings";
+import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, DPOR_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, ELECTRICAL_LICENSURE_UNITS, LICENSURE_PATHWAYS, organizeApiCatalogByLane, APPRENTICESHIP_TRADES, APPRENTICESHIP_TRADE_LEVELS, FCA_HOWTO_SEQUENCE, PROFESSIONAL_PATHWAYS } from "../../academyOfferings";
+import { listPathwayLmsConfigs } from "../../academyPathwayLms";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -192,6 +193,33 @@ export default function AcademyDashboard() {
             </a>
           </section>
         ) : null}
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Pathway mini-LMS experiences</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            Six Auricrux-operated learning environments — each pathway feels like its own LMS, connected to Contractor Command and the full ecosystem.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
+            {listPathwayLmsConfigs().map((config) => (
+              <a
+                key={config.key}
+                href={`/academy/pathway?pathway=${config.key}`}
+                style={{
+                  border: `1px solid ${config.border}`,
+                  borderRadius: 12,
+                  padding: 16,
+                  textDecoration: "none",
+                  color: "inherit",
+                  background: config.accentSoft,
+                }}
+              >
+                <div style={{ color: config.accent, fontWeight: 700, fontSize: 13, marginBottom: 6 }}>Auricrux · {config.operatedBy}</div>
+                <strong style={{ display: "block", marginBottom: 8 }}>{config.heroTitle}</strong>
+                <span style={{ color: "#64748b", fontSize: 13 }}>Open pathway home</span>
+              </a>
+            ))}
+          </div>
+        </section>
 
         <section style={{ ...cardStyle, marginBottom: 24 }}>
           <h2 style={{ marginTop: 0 }}>Active enrollments</h2>
@@ -476,6 +504,66 @@ export default function AcademyDashboard() {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }} id="apprenticeship">
+          <h2 style={{ marginTop: 0 }}>Nine-trade apprenticeship mini-LMS</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            Core Levels 1-6 across electrical, plumbing, HVAC, carpentry, masonry, welding, pipefitting, sheet metal, and fire sprinkler.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10 }}>
+            {APPRENTICESHIP_TRADES.map((trade) => {
+              const levels = APPRENTICESHIP_TRADE_LEVELS[trade.key] || [];
+              const enrolledCount = levels.filter((level) => enrollments.some((e) => e.programKey === level.key)).length;
+              return (
+                <a
+                  key={trade.key}
+                  href={`/academy/catalog?pathway=apprenticeship&topic=${trade.key}`}
+                  style={{ border: "1px solid #fde68a", borderRadius: 10, padding: 12, textDecoration: "none", color: "inherit", background: "#fffbeb" }}
+                >
+                  <strong>{trade.label}</strong>
+                  <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
+                    {levels.length} core levels{enrolledCount ? ` · ${enrolledCount} enrolled` : ""}
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }} id="fca-how-to">
+          <h2 style={{ marginTop: 0 }}>FCA How-To operator sequence</h2>
+          <div style={{ display: "grid", gap: 8 }}>
+            {FCA_HOWTO_SEQUENCE.map((step) => {
+              const enrollment = enrollments.find((item) => item.programKey === step.key);
+              return (
+                <div key={step.key} style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "10px 12px", border: "1px solid #fecaca", borderRadius: 10, background: "#fef2f2" }}>
+                  <div>
+                    <strong>{step.order}.</strong> {step.title}
+                  </div>
+                  <a href={`/academy/programs/${step.key}`} style={{ color: "#dc2626", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+                    {enrollment ? `${enrollment.progressPercent}%` : "Open"}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }} id="professional">
+          <h2 style={{ marginTop: 0 }}>Professional development tracks</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
+            {PROFESSIONAL_PATHWAYS.map((track) => (
+              <a
+                key={track.key}
+                href={`/academy/catalog?pathway=professional&topic=${track.key}`}
+                style={{ border: "1px solid #99f6e4", borderRadius: 10, padding: 12, textDecoration: "none", color: "inherit", background: "#f0fdfa" }}
+              >
+                <strong>{track.label}</strong>
+                <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{track.programs}+ programs</div>
+              </a>
+            ))}
           </div>
         </section>
 

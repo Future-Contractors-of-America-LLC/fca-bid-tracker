@@ -1,11 +1,11 @@
 {
   "generated": {
-    "programs": 1188,
-    "modules": 6772,
-    "lecture": 6772,
-    "lab": 6772,
-    "auricruxLecture": 6772,
-    "auricruxSkillsDemo": 6772,
+    "programs": 1212,
+    "modules": 6869,
+    "lecture": 6869,
+    "lab": 6869,
+    "auricruxLecture": 6869,
+    "auricruxSkillsDemo": 6869,
     "mediaType": "html",
     "strategy": "Auricrux recorded lecture HTML, skills demonstration HTML, and lab workbooks",
     "lectureCoveragePct": 100.0,
@@ -7487,6 +7487,78 @@
       "auricruxSkillsDemo": 12
     },
     {
+      "programKey": "fca-academy-progress-tracking",
+      "modules": 3,
+      "lecture": 3,
+      "lab": 3,
+      "auricruxLecture": 3,
+      "auricruxSkillsDemo": 3
+    },
+    {
+      "programKey": "fca-bids-qualification-estimates",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "fca-billing-invoicing",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "fca-contractor-command-user-guide",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "fca-files-audit-governance",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "fca-legal-command-workspace",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "fca-projects-stage-control",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "fca-support-auricrux-operator",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "fca-workspace-quick-start",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
       "programKey": "field-readiness",
       "modules": 3,
       "lecture": 3,
@@ -9104,6 +9176,126 @@
     },
     {
       "programKey": "prof-ce-osha-refresher",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-contract-subcontract-admin",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-customer-owner-relations",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-ethics-board-responsibility",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-exec-succession-growth",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-finance-bonding-capital",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-finance-job-cost",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-lead-executive-contractor",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-lead-foreman-fundamentals",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-lead-superintendent-readiness",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-mentor-apprentice-coaching",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-pm-fundamentals",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-pm-stakeholder-delivery",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-safety-lead-competent-person",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-safety-lead-culture",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-tech-field-office-integration",
       "modules": 4,
       "lecture": 4,
       "lab": 4,
