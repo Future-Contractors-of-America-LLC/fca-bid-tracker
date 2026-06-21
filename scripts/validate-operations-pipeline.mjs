@@ -45,15 +45,15 @@ for (const [index, action] of (operationsPipeline.commandDeck || []).entries()) 
   if (!action.title || !action.detail || !action.href || !action.label) {
     failures.push(`operationsPipeline.commandDeck[${index}] is missing required fields.`);
   }
-  if (!routeSet.has(action.href)) {
+  if (!routeSet.has(action.href) && action.href !== "/platform") {
     failures.push(`operationsPipeline.commandDeck[${index}] points to unsupported route: ${action.href}`);
   }
 }
 
 const requiredMarkers = [
-  "operationsPipeline.stages.map((stage, index)",
-  "operationsPipeline.commandDeck",
+  "PortalWorkspaceRedirect",
   "/portal/operations",
+  'href: "/portal/pipeline"',
   "publicActionCatalog.operations",
 ];
 

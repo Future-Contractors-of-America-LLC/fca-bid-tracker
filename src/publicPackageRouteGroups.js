@@ -11,7 +11,7 @@ export const publicPackageRouteGroups = [
       { href: "/portal/files", label: "File Spine" },
       { href: "/portal/design", label: "Design Workspace" },
       { href: "/portal/billing", label: "Billing Command" },
-      { href: "/portal/operations", label: "Operations Pipeline" },
+      { href: "/portal/pipeline", label: "Commercial Pipeline" },
       { href: "/portal/legal", label: "Contractor Legal Command" }
     ]
   },

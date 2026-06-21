@@ -22,13 +22,13 @@ export const publicActionCatalog = {
     variant: "secondary",
   },
   operations: {
-    label: "Open Operations Pipeline",
-    href: "/portal/operations",
+    label: "Open Commercial Pipeline",
+    href: "/portal/pipeline",
     variant: "secondary",
   },
   portal: {
-    label: "Open Portal Workspace",
-    href: "/portal",
+    label: "Open Workspace",
+    href: "/portal/platform",
     variant: "light",
   },
   academy: {
@@ -231,17 +231,17 @@ export const portalEntryCtaSets = {
 
 export const platformDashboardCtaSets = {
   quickActions: [
-    { label: "Projects", href: "/portal/projects", variant: "primary" },
+    { label: "Pipeline", href: "/portal/pipeline", variant: "primary" },
+    { label: "Projects", href: "/portal/projects", variant: "secondary" },
     { label: "Bids", href: "/portal/bids", variant: "secondary" },
     { label: "Files", href: "/portal/files", variant: "secondary" },
     { label: "Auricrux", href: "/portal/auricrux", variant: "light" },
-    { label: "Academy", href: "/academy/catalog", variant: "light" },
   ],
   operationalCards: [
+    { title: "Commercial pipeline", detail: "Qualify bids through award, invoice, and payment.", href: "/portal/pipeline", label: "Open Pipeline" },
     { title: "Bids and estimates", detail: "Qualify opportunities and build pricing.", href: "/portal/bids", label: "Open Bids" },
     { title: "Projects and field", detail: "Jobs, photos, plans, and redlines.", href: "/portal/projects", label: "Open Projects" },
     { title: "Files and design", detail: "Plan room, sheets, and document control.", href: "/portal/files", label: "Open Files" },
-    { title: "Academy", detail: "Training tracks for your workforce.", href: "/academy/catalog", label: "Open Academy" },
   ],
 };
 
@@ -471,7 +471,7 @@ export const shellJourney = [
   { key: "warranty", label: "Warranty", href: "/warranty" },
   { key: "referrals", label: "Referrals", href: "/referrals" },
   { key: "workspace", label: "Workspace", href: "/login" },
-  { key: "portal", label: "Portal", href: "/portal" },
+  { key: "portal", label: "Workspace", href: "/portal/platform" },
   { key: "academy", label: "Academy", href: "/academy" },
   { key: "conversion", label: "Get Started", href: "/contact" },
 ];
@@ -485,7 +485,7 @@ export const shellPrimaryNav = [
   { label: "Pricing", href: "/pricing", journeyKey: "conversion" },
   { label: "Contact", href: "/contact", journeyKey: "conversion" },
   { label: "Login", href: "/login", journeyKey: "workspace" },
-  { label: "Portal", href: "/portal", journeyKey: "portal" },
+  { label: "Workspace", href: "/portal/platform", journeyKey: "portal" },
   { label: "Academy", href: "/academy", journeyKey: "academy" },
 ];
 
@@ -494,8 +494,8 @@ export const shellWorkspaceRoutes = [
   { label: "Live Test Login", href: "/login?seeded=1" },
   { label: "Instant Test Workspace", href: "/login?seeded=1&autologin=1&next=/portal/platform" },
   { label: "Unified Platform Dashboard", href: "/portal/platform" },
-  { label: "Operations Pipeline", href: "/portal/operations" },
-  { label: "Customer Portal", href: "/portal" },
+  { label: "Commercial Pipeline", href: "/portal/pipeline" },
+  { label: "Workspace", href: "/portal/platform" },
   { label: "FCA Academy", href: "/academy" },
   { label: "Bid Entry", href: "/bid-entry" },
   { label: "Bid Status", href: "/bid-status" },

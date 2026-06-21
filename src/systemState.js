@@ -643,11 +643,6 @@ export const portalModules = [
     description: "Turnover binders, artifact tracking, and handoff readiness",
   },
   {
-    href: "/portal/operations",
-    label: "Operations",
-    description: "Cross-route operating summary and coordination",
-  },
-  {
     href: "/portal/auricrux",
     label: "Auricrux",
     description: "Guided next actions and continuity intelligence",
@@ -683,31 +678,40 @@ export const portalJourney = [
   { key: "academy", label: "Academy / Support", href: "/portal/academy" },
 ];
 
-/** Hub pages show full quick-access grid; detail pages use compact chrome. */
-export const portalHubHrefs = ["/portal/platform", "/portal", "/portal/operations"];
+/** Hub pages show full quick-access grid; only the workspace dashboard uses hub chrome. */
+export const portalHubHrefs = ["/portal/platform"];
 
 /** Portal page subtitles must stay concise — max character count for professional UX. */
 export const PORTAL_SUBTITLE_MAX = 120;
 
-/** Always-visible portal shortcuts in the top nav. */
+/** Always-visible portal shortcuts: workspace, products entry, setup, Auricrux. */
 export const portalNavPrimary = [
-  { label: "Dashboard", href: "/portal/platform" },
-  { label: "Projects", href: "/portal/projects" },
+  { label: "Workspace", href: "/portal/platform" },
   { label: "Pipeline", href: "/portal/pipeline" },
+  { label: "Projects", href: "/portal/projects" },
   { label: "Files", href: "/portal/files" },
-  { label: "Messages", href: "/portal/messages" },
-  { label: "Billing", href: "/portal/billing" },
+  { label: "Setup", href: "/portal/admin" },
+  { label: "Auricrux", href: "/portal/auricrux" },
 ];
 
 /** Grouped portal navigation for dropdown menus and mobile drawer. */
 export const portalNavGroups = [
   {
-    label: "Projects & field",
+    label: "Sell and bid",
+    items: [
+      { label: "Commercial pipeline", href: "/portal/pipeline" },
+      { label: "Bids", href: "/portal/bids" },
+      { label: "Estimates", href: "/portal/estimates" },
+      { label: "Proposals", href: "/portal/proposals" },
+    ],
+  },
+  {
+    label: "Deliver",
     items: [
       { label: "Projects", href: "/portal/projects" },
+      { label: "Field supervision", href: "/portal/field-supervision" },
       { label: "Scheduling", href: "/portal/scheduling" },
       { label: "Field tasks", href: "/portal/field-tasks" },
-      { label: "Field supervision", href: "/portal/field-supervision" },
       { label: "RFIs", href: "/portal/rfis" },
       { label: "Change orders", href: "/portal/change-orders" },
       { label: "Closeout", href: "/portal/closeout" },
@@ -715,19 +719,17 @@ export const portalNavGroups = [
     ],
   },
   {
-    label: "Precon & design",
+    label: "Office",
     items: [
-      { label: "Commercial pipeline", href: "/portal/pipeline" },
-      { label: "Bids", href: "/portal/bids" },
-      { label: "Estimates", href: "/portal/estimates" },
-      { label: "Proposals", href: "/portal/proposals" },
-      { label: "Design workspace", href: "/portal/design" },
       { label: "Files", href: "/portal/files" },
+      { label: "Design workspace", href: "/portal/design" },
       { label: "Legal", href: "/portal/legal" },
+      { label: "Messages", href: "/portal/messages" },
+      { label: "Notifications", href: "/portal/notifications" },
     ],
   },
   {
-    label: "Finance",
+    label: "Money",
     items: [
       { label: "Finance", href: "/portal/finance" },
       { label: "Billing", href: "/portal/billing" },
@@ -735,39 +737,34 @@ export const portalNavGroups = [
     ],
   },
   {
-    label: "Account",
-    items: [
-      { label: "Profile", href: "/portal/profile" },
-      { label: "Notifications", href: "/portal/notifications" },
-      { label: "Audit", href: "/portal/audit" },
-      { label: "Support", href: "/portal/support" },
-      { label: "Admin", href: "/portal/admin" },
-    ],
-  },
-  {
     label: "Training",
     items: [
       { label: "Academy", href: "/portal/academy" },
       { label: "Course catalog", href: "/academy/catalog" },
-      { label: "Auricrux", href: "/portal/auricrux" },
+      { label: "Credentials", href: "/academy/credentials" },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { label: "Profile", href: "/portal/profile" },
+      { label: "Audit", href: "/portal/audit" },
+      { label: "Support", href: "/portal/support" },
     ],
   },
 ];
 
-/** Curated hub tiles — full directory available via portalModules. */
+/** Curated hub tiles on workspace dashboard — full directory via portalModules. */
 export const portalHubModules = [
-  { href: "/portal/platform", label: "Dashboard", description: "Workspace command center" },
   { href: "/portal/pipeline", label: "Pipeline", description: "Bid through payment" },
-  { href: "/portal/projects", label: "Projects", description: "Job execution" },
   { href: "/portal/bids", label: "Bids", description: "Qualify and award" },
-  { href: "/portal/files", label: "Files", description: "Document control" },
-  { href: "/portal/design", label: "Design", description: "Plans, markups, takeoff" },
+  { href: "/portal/projects", label: "Projects", description: "Job execution" },
   { href: "/portal/field-supervision", label: "Field", description: "Photos and redlines" },
+  { href: "/portal/files", label: "Files", description: "Document control" },
   { href: "/portal/billing", label: "Billing", description: "Invoices and collections" },
-  { href: "/portal/finance", label: "Finance", description: "Books and job cost" },
   { href: "/portal/messages", label: "Messages", description: "Team coordination" },
   { href: "/portal/academy", label: "Academy", description: "Training and certs" },
-  { href: "/portal/auricrux", label: "Auricrux", description: "AI operating layer" },
+  { href: "/portal/admin", label: "Setup", description: "Admin and rollout" },
 ];
 
 export const STORAGE_KEY = "fca_workspace_state_v1";

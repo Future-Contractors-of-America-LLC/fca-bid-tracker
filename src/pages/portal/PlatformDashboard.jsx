@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
-import ExecutionCommandCenter from "../../components/ExecutionCommandCenter";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
@@ -13,7 +12,7 @@ import { portalButtonPrimary, portalButtonSecondary, portalCardStyle, portalEyeb
 
 export default function PlatformDashboard() {
   const { state, refreshSyncStamp } = useWorkspaceState();
-  const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
+  const { session } = useCustomerSession();
 
   useEffect(() => {
     refreshSyncStamp("Live workspace dashboard active");
@@ -72,14 +71,6 @@ export default function PlatformDashboard() {
 
       <div style={{ display: "grid", gap: 12, marginTop: 16, marginBottom: 16 }}>
         <CustomerPlanSummaryPanel session={session} title="Account and plan" />
-        <ExecutionCommandCenter
-          session={session}
-          state={state}
-          applyPlanPreset={applyPlanPreset}
-          setProductAccess={setProductAccess}
-          setCommsAccess={setCommsAccess}
-          refreshSyncStamp={refreshSyncStamp}
-        />
       </div>
 
       <div style={{ ...portalCardStyle, marginBottom: 16 }}>

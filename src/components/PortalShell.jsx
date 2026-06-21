@@ -9,7 +9,7 @@ import RouteReadinessOverlay from "./RouteReadinessOverlay";
 import useCustomerSession from "../hooks/useCustomerSession";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import { portalShellCtas } from "../websiteShell";
-import { portalHubHrefs, portalHubModules, portalJourney, portalModules } from "../systemState";
+import { portalHubModules, portalJourney, portalModules } from "../systemState";
 import { portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
 
 const shellStyle = {
@@ -77,7 +77,7 @@ export default function PortalShell({
   const resolvedState = workspaceState || workspaceApi.state;
   const { refreshSyncStamp } = workspaceApi;
   const [showAllModules, setShowAllModules] = useState(false);
-  const isHubPage = navDensity === "full" || portalHubHrefs.includes(activeHref);
+  const isHubPage = activeHref === "/portal/platform";
   const sectionModules = showAllModules ? portalModules : portalHubModules;
   const showRouteOverlay = showRouteOverlayProp ?? Boolean(routeOverlay && !isHubPage);
 
@@ -116,21 +116,23 @@ export default function PortalShell({
           <RouteStateOverlay overlay={routeOverlay} compact />
         ) : null}
 
-        <RouteReadinessOverlay
-          activeHref={activeHref}
-          session={session}
-          setProductAccess={setProductAccess}
-          setCommsAccess={setCommsAccess}
-          applyPlanPreset={applyPlanPreset}
-          refreshSyncStamp={refreshSyncStamp}
-        />
+        {!isHubPage ? (
+          <RouteReadinessOverlay
+            activeHref={activeHref}
+            session={session}
+            setProductAccess={setProductAccess}
+            setCommsAccess={setCommsAccess}
+            applyPlanPreset={applyPlanPreset}
+            refreshSyncStamp={refreshSyncStamp}
+          />
+        ) : null}
 
         {isHubPage ? (
-          <nav style={routeTabsWrapStyle} aria-label="Portal quick access">
+          <nav style={routeTabsWrapStyle} aria-label="Portal products">
             <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center", marginBottom: 14 }}>
               <div>
-                <div style={portalEyebrowStyle}>Quick access</div>
-                <div style={{ fontWeight: 800, fontSize: 18, marginTop: 4 }}>Every operational surface in one workspace</div>
+                <div style={portalEyebrowStyle}>Products</div>
+                <div style={{ fontWeight: 800, fontSize: 18, marginTop: 4 }}>Open a lane and work</div>
               </div>
               <button
                 type="button"
@@ -145,7 +147,7 @@ export default function PortalShell({
                   cursor: "pointer",
                 }}
               >
-                {showAllModules ? "Show essentials" : "All modules"}
+                {showAllModules ? "Essentials" : "All modules"}
               </button>
             </div>
             <div style={routeGridStyle}>

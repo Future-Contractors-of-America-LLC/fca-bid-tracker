@@ -1,4 +1,4 @@
-import { ACADEMY_CATALOG_EXPECTED_TOTAL, ACADEMY_CATALOG_VERSION } from "../academyDesignSystem";
+import { ACADEMY_CATALOG_EXPECTED_TOTAL, ACADEMY_CATALOG_VERSION } from "./academyDesignSystem";
 
 export function getCatalogIntegrity(academyState) {
   const integrity = academyState?.catalogIntegrity;

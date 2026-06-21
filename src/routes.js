@@ -32,7 +32,7 @@ export const routes = {
   "/bid-entry": lazyPage(() => import("./pages/website/LegacyBidEntry")),
   "/bid-status": lazyPage(() => import("./pages/website/LegacyBidStatus")),
 
-  "/portal": lazyPage(() => import("./pages/portal/PortalHome")),
+  "/portal": lazyPage(() => import("./pages/portal/PortalWorkspaceRedirect")),
   "/portal/legal": lazyPage(() => import("./pages/portal/PortalLegal")),
   "/portal/platform": lazyPage(() => import("./pages/portal/PlatformDashboard")),
   "/portal/operations": lazyPage(() => import("./pages/portal/PortalOperations")),

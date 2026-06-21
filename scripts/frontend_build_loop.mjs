@@ -52,11 +52,27 @@ function runValidator(script) {
   }
 }
 
+function runSpaBuild() {
+  try {
+    execSync(`"${NODE}" node_modules/vite/bin/vite.js build`, { cwd: ROOT, stdio: "pipe", encoding: "utf8" });
+    return { step: "build:spa", ok: true };
+  } catch (error) {
+    return {
+      step: "build:spa",
+      ok: false,
+      reason: "spa-build-failed",
+      detail: String(error.stdout || error.stderr || error.message).slice(0, 500),
+    };
+  }
+}
+
 function main() {
   ensureDir(LOOP_RUNS_DIR);
 
-  const validators = ["validate-routes.mjs", "validate-finance-workspace.mjs"];
+  const validators = ["validate-routes.mjs", "validate-finance-workspace.mjs", "validate-portal-ux-sweep.mjs"];
   const results = validators.map(runValidator);
+  const buildResult = runSpaBuild();
+  results.push(buildResult);
   const ok = results.every((r) => r.ok || r.skipped);
 
   const state = readJson(STATE_FILE, { runCount: 0 });
