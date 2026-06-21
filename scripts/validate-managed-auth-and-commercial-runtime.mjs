@@ -40,7 +40,7 @@ expectIncludes(customerSessionSource, "enabledProducts", "api/customer-session.j
 expectIncludes(customerSessionSource, "enabledComms", "api/customer-session.js");
 expectIncludes(customerSessionSource, "authBoundary", "api/customer-session.js");
 
-expectIncludes(customerLoginSource, "route: 'customer-login'", "api/customer-login.js");
+expectIncludes(customerLoginSource, 'route: "customer-login"', "api/customer-login.js");
 expectIncludes(customerLoginSource, "validateCustomerCredentials", "api/customer-login.js");
 expectIncludes(customerLoginSource, "Set-Cookie", "api/customer-login.js");
 expectIncludes(customerLoginSource, "authBoundary", "api/customer-login.js");
