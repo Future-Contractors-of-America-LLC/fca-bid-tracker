@@ -77,6 +77,10 @@ export function createOperationalPortalPage({
   journey = "lead",
   apiHandlers = null,
   projectScoped = false,
+  primaryHref = "/portal/platform",
+  primaryLabel = "Back to dashboard",
+  routeOverlay = routeStateOverlays.platform,
+  renderBeforeContent = null,
 }) {
   return function OperationalPortalPage() {
     const { state, refreshSyncStamp } = useWorkspaceState();
@@ -199,16 +203,21 @@ export function createOperationalPortalPage({
       }
     }
 
+    const beforeContent = typeof renderBeforeContent === "function"
+      ? renderBeforeContent({ selectedProjectId, projects, activeProject, busy })
+      : null;
+
     return (
       <PortalShell
         title={`${companyName} - ${title}`}
         subtitle={subtitle}
         activeHref={activeHref}
         currentJourney={journey}
-        routeOverlay={routeStateOverlays.platform}
-        primaryHref="/portal/platform"
-        primaryLabel="Back to dashboard"
+        routeOverlay={routeOverlay}
+        primaryHref={primaryHref}
+        primaryLabel={primaryLabel}
       >
+        {beforeContent}
         {apiHandlers ? (
           <div style={{ ...cardStyle, marginBottom: 18, background: "#f8fafc" }}>
             <div style={{ color: "#475569" }}><strong>Data source:</strong> {backingSource}</div>
