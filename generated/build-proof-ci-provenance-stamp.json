@@ -1,10 +1,10 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-21T22:41:18.169Z",
+  "generatedAt": "2026-06-21T23:08:25.436Z",
   "provenance": "github_actions_ci",
   "ciPersisted": true,
-  "ciRunId": "27919790373",
-  "ciCommitSha": "29cac497727d2acb26c9d8e32a5d7ab61eacc1da",
+  "ciRunId": "27920433793",
+  "ciCommitSha": "3aef565ecc8fe4a0abcdf0e5cf2e648a20b863cb",
   "stamped": [
     "build-evidence-report.json",
     "build-proof-lane-validation.json",
