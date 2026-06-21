@@ -75,6 +75,10 @@ jobs:
         if: ${{ always() }}
         run: npm run generate:academy-catalog-report
 
+      - name: Validate academy Auricrux media coverage
+        if: ${{ always() }}
+        run: node scripts/validate-academy-media.mjs
+
       - name: Generate managed auth and commercial runtime evidence
         if: ${{ always() }}
         run: npm run generate:managed-auth-commercial-runtime-report

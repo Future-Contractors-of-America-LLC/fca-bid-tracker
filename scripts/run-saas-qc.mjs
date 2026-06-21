@@ -97,6 +97,7 @@ const SCRIPT_CHECKS = [
   "validate-academy-ctas.mjs",
   "validate-academy-catalog.mjs",
   "validate-catalog-balance.mjs",
+  "validate-academy-media.mjs",
   "validate-file-governance.mjs",
   "validate-finance-workspace.mjs",
   "validate-design-workspace.cjs",
