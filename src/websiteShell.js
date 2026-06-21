@@ -206,6 +206,10 @@ export const homeCtaSets = {
     { ...publicActionCatalog.liveTestLogin, variant: "primary" },
     publicActionCatalog.instantTestWorkspace,
   ],
+  productionClose: [
+    { href: "/contact", label: "Talk to our team", variant: "primary" },
+    { href: "/intake", label: "Get started", variant: "secondary" },
+  ],
 };
 
 export const portalShellCtas = {
@@ -467,13 +471,8 @@ export const shellJourney = [
   { key: "public", label: "Home", href: "/" },
   { key: "platform", label: "Platform", href: "/platform" },
   { key: "auricrux", label: "Auricrux", href: "/auricrux" },
-  { key: "pricing", label: "Pricing", href: "/pricing" },
-  { key: "warranty", label: "Warranty", href: "/warranty" },
-  { key: "referrals", label: "Referrals", href: "/referrals" },
-  { key: "workspace", label: "Workspace", href: "/login" },
-  { key: "portal", label: "Workspace", href: "/portal/platform" },
   { key: "academy", label: "Academy", href: "/academy" },
-  { key: "conversion", label: "Get Started", href: "/contact" },
+  { key: "conversion", label: "Contact", href: "/contact" },
 ];
 
 export const shellPrimaryNav = [

@@ -1,20 +1,13 @@
 import FcaBrandMark from "../../components/FcaBrandMark";
-import ShellHeader from "../../components/ShellHeader";
-import ShellFooter from "../../components/ShellFooter";
-import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
+import MarketingPageShell from "../../components/MarketingPageShell";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
-import PublicActionRail from "../../components/PublicActionRail";
 import ProductProofSection from "../../components/ProductProofSection";
-import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
-import PublicCtaRow from "../../components/PublicCtaRow";
 import {
-  platformJourneyPath,
   platformModules,
   publicRouteCtas,
-  shellJourney,
 } from "../../websiteShell";
 import { saasOperationalPathways } from "../../productBlueprint";
-import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle } from "../../publicShellStyles";
+import { cardStyle, responsiveGrid } from "../../publicShellStyles";
 
 const platformConstructionProof = [
   {
@@ -45,52 +38,33 @@ const platformConstructionProof = [
 
 export default function Platform() {
   return (
-    <div style={pageShellStyle}>
-      <ShellHeader
-        eyebrow="FCA Platform"
-        title="One contractor lifecycle operating system"
-        subtitle="One operating system for the full contractor lifecycle — from first lead through closeout, billing, and workforce training."
-        primaryHref={publicRouteCtas.platform.primaryHref}
-        primaryLabel={publicRouteCtas.platform.primaryLabel}
-        secondaryHref={publicRouteCtas.platform.secondaryHref}
-        secondaryLabel={publicRouteCtas.platform.secondaryLabel}
-        journey={shellJourney}
-        currentJourney="platform"
-      />
-
-      <div style={heroCardStyle}>
+    <MarketingPageShell
+      eyebrow="FCA Platform"
+      title="One contractor lifecycle operating system"
+      subtitle="One operating system for the full contractor lifecycle - from first lead through closeout, billing, and workforce training."
+      primaryHref={publicRouteCtas.platform.primaryHref}
+      primaryLabel={publicRouteCtas.platform.primaryLabel}
+      secondaryHref={publicRouteCtas.platform.secondaryHref}
+      secondaryLabel={publicRouteCtas.platform.secondaryLabel}
+    >
+      <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
           <div style={{ color: "#2563eb", fontWeight: 700 }}>Platform overview</div>
           <FcaBrandMark compact />
         </div>
-        <h2 style={{ marginTop: 0 }}>Built to feel like one connected system because the slices are actually reachable</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 12 }}>
+        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
           FCA helps contractor teams move from opportunity to delivery with real workflows for bids, estimates, proposals, projects, files, billing, support, Academy, and Auricrux guidance.
         </p>
-        <PublicCtaRow
-          actions={[
-            { href: "/login?seeded=1", label: "Open Live Test Login", variant: "primary" },
-            { href: "/academy/catalog", label: "Open Academy Catalog", variant: "secondary" },
-          ]}
-        />
       </div>
 
       <ProductProofSection
         eyebrow="Live product proof"
         title="Every claim points to a real route"
-        detail="Open the same surfaces your team uses in production — qualification, estimates, projects, and training."
+        detail="Open the same surfaces your team uses in production - qualification, estimates, projects, and training."
         highlights={platformConstructionProof}
       />
 
-      <div style={{ marginTop: 24 }}>
-        <PublicPackageRouteGroupsPanel
-          eyebrow="Platform modules"
-          title="Route groups behind the operating system"
-          detail="SaaS, portal, Academy, Auricrux, and revenue continuity — all reachable from one shell."
-        />
-      </div>
-
-      <div style={{ marginTop: 24, ...cardStyle }}>
+      <div style={{ ...cardStyle, marginTop: 24 }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Contractor pathways</div>
         <h2 style={{ marginTop: 0 }}>Route groups around real work</h2>
         <div style={{ ...responsiveGrid(240), marginTop: 16 }}>
@@ -113,7 +87,7 @@ export default function Platform() {
           items={[
             {
               title: "Track work in one place",
-              detail: "Opportunities, estimates, proposals, projects, files, communications, support, and billing — connected.",
+              detail: "Opportunities, estimates, proposals, projects, files, communications, support, and billing - connected.",
             },
             {
               title: "Stay ahead of blockers",
@@ -135,33 +109,6 @@ export default function Platform() {
           </div>
         ))}
       </div>
-
-      <div style={{ ...twoColumnGridStyle, marginTop: 24 }}>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>How customers move through FCA</h2>
-          <ol style={{ paddingLeft: 20, lineHeight: 1.8 }}>
-            {platformJourneyPath.map((item) => (
-              <li key={item.step}>
-                {item.prefix} <a href={item.href}>{item.label}</a>{item.suffix ? ` ${item.suffix}` : null}
-              </li>
-            ))}
-            <li>Continue into Academy or Auricrux guidance without losing context.</li>
-          </ol>
-        </div>
-        <WorkspaceSnapshotCard
-          title="Live workspace preview"
-          detail="See tenant and project context before you sign in."
-          ctaHref="/login?seeded=1"
-          ctaLabel="Open Live Test Login"
-        />
-      </div>
-
-      <PublicActionRail
-        title="Keep exploring the FCA platform"
-        detail="Clear next steps from every public page into the product experience."
-      />
-
-      <ShellFooter />
-    </div>
+    </MarketingPageShell>
   );
 }

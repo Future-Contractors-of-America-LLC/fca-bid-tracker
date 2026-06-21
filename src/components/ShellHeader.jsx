@@ -30,7 +30,7 @@ export default function ShellHeader({
   showTopNav = true,
   topNavMode = "public",
   compact = false,
-  showJourney = true,
+  showJourney = false,
 }) {
   const renderHeaderActions = topNavMode === "portal"
     ? Boolean(primaryHref && primaryLabel)

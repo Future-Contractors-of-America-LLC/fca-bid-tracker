@@ -51,33 +51,28 @@ export const websiteMarketReadiness = {
   ],
   trustSignals: [
     {
-      title: "Construction-native language",
-      detail: "Website copy now anchors around bids, project delivery, document control, field readiness, warranty, and referrals instead of abstract SaaS claims.",
+      title: "Built for construction teams",
+      detail: "Language and workflows match how contractors qualify work, deliver jobs, control documents, and close out billing.",
     },
     {
-      title: "Live route-backed proof",
-      detail: "Public readers can move from explanation into actual portal, operations, academy, and login routes without losing context.",
+      title: "One connected workspace",
+      detail: "Bids, projects, files, billing, support, and training live in the same product your team uses every day.",
     },
     {
-      title: "Auricrux continuity",
-      detail: "Auricrux remains embedded as the operating layer across the public shell, workspace, academy, and support continuity surfaces.",
+      title: "Guidance when you need it",
+      detail: "Auricrux surfaces next steps across the workspace so owners and coordinators stay aligned without chasing status.",
     },
   ],
   conversionActions: [
     {
-      title: "Open Live Test Login",
-      href: "/login?seeded=1",
-      label: "Open Live Test Login",
+      title: "Get started",
+      href: "/intake",
+      label: "Get started",
     },
     {
-      title: "Open Operations Pipeline",
-      href: "/platform",
-      label: "Explore the Platform",
-    },
-    {
-      title: "Open Contact & Rollout",
+      title: "Contact and rollout",
       href: "/contact",
-      label: "Open Contact & Rollout",
+      label: "Talk to our team",
     },
   ],
 };

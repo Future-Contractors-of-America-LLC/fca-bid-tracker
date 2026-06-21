@@ -280,7 +280,7 @@ function NavDropdown({ menu, currentPath, onNavigate }) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
       >
-        {menu.label} ▾
+        {menu.label} <span aria-hidden style={{ fontSize: 10, marginLeft: 2 }}>v</span>
       </button>
       {open ? (
         <div style={dropdownStyle}>
@@ -440,7 +440,7 @@ export default function PublicTopNav({ mode = "public" }) {
               <a href={workspaceHref} style={{ ...primaryCtaStyle, padding: "8px 12px" }}>Workspace</a>
             )}
             <button type="button" style={hamburgerStyle} onClick={() => setMobileOpen(true)} aria-label="Open menu">
-              ☰
+              Menu
             </button>
           </div>
         </div>
@@ -449,7 +449,7 @@ export default function PublicTopNav({ mode = "public" }) {
       <MobileDrawer open={mobileOpen} onClose={closeMobile}>
         <div style={{ padding: "16px 20px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <strong style={{ fontSize: 16, color: "#0f172a" }}>Menu</strong>
-          <button type="button" onClick={closeMobile} style={{ ...hamburgerStyle, fontSize: 16 }} aria-label="Close">✕</button>
+          <button type="button" onClick={closeMobile} style={{ ...hamburgerStyle, fontSize: 14 }} aria-label="Close">Close</button>
         </div>
 
         <div style={{ padding: "12px 16px", display: "grid", gap: 8, borderBottom: "1px solid #e2e8f0" }}>
