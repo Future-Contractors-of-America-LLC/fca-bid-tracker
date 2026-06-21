@@ -1,5 +1,6 @@
 import { LEGAL_FOOTER_PAGES } from "../legal/legalNav";
 import { FCA_ENTITY, formatPrincipalOffice } from "../legal/entityInfo";
+import FcaBrandMark from "./FcaBrandMark";
 
 export default function ShellFooter() {
   return (
