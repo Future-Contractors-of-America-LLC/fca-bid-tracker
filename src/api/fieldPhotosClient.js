@@ -72,7 +72,10 @@ export async function fetchFieldPhotoFeedback(photoId) {
 }
 
 export async function fetchFieldIntelligence(projectId) {
-  const response = await centralFetch(`/api/projects/${encodeURIComponent(projectId)}/field/intelligence`, { method: "GET" });
+  const response = await centralFetch(
+    `/api/field-photos?projectId=${encodeURIComponent(projectId)}&intelligence=1`,
+    { method: "GET" },
+  );
   const payload = await readJsonSafe(response);
   if (!response.ok) throw new Error(payload?.error || "Unable to load field intelligence.");
   return payload?.data || payload;

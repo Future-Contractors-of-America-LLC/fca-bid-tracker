@@ -97,6 +97,18 @@ try {
   fail("POST /api/auricrux/actions recommend", error.message);
 }
 
+try {
+  const { response, body } = await getJson("/api/field-photos?projectId=PRJ-SMOKE-001&intelligence=1");
+  const intelligence = body?.data;
+  if (response.ok && body?.ok && intelligence?.projectId) {
+    pass("GET field intelligence via field-photos", `projectId=${intelligence.projectId}`);
+  } else {
+    fail("GET field intelligence via field-photos", `HTTP ${response.status}`);
+  }
+} catch (error) {
+  fail("GET field intelligence via field-photos", error.message);
+}
+
 fs.mkdirSync(outputDir, { recursive: true });
 const report = {
   generatedAt: new Date().toISOString(),
