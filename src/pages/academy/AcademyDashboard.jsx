@@ -6,6 +6,7 @@ import useCustomerSession from "../../hooks/useCustomerSession";
 import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, DPOR_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, ELECTRICAL_LICENSURE_UNITS, LICENSURE_PATHWAYS, organizeApiCatalogByLane, APPRENTICESHIP_TRADES, APPRENTICESHIP_TRADE_LEVELS, FCA_HOWTO_SEQUENCE, PROFESSIONAL_PATHWAYS } from "../../academyOfferings";
 import { listPathwayLmsConfigs } from "../../academyPathwayLms";
 import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
+import { academyPageStyle } from "../../academyDesignSystem";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -150,7 +151,7 @@ export default function AcademyDashboard() {
   }
 
   return (
-    <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
+    <div style={{ ...pageShellStyle, ...academyPageStyle() }}>
       <style>{`
         @media print {
           body * { visibility: hidden !important; }
@@ -600,7 +601,10 @@ export default function AcademyDashboard() {
         </section>
 
         <section style={{ ...cardStyle }}>
-          <h2 style={{ marginTop: 0 }}>Transcript summary</h2>
+          <h2 style={{ marginTop: 0 }}>Gradebook and transcript</h2>
+          <p style={{ color: "#64748b", marginTop: 0, lineHeight: 1.65 }}>
+            Canvas-style module scores, degree GPA estimates, and CEU hours from Auricrux-Central catalog metadata.
+          </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
             <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
               <div style={{ color: "#64748b", fontSize: 13 }}>Programs enrolled</div>

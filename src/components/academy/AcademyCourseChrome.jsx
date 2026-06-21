@@ -92,16 +92,16 @@ export default function AcademyCourseChrome({
         <div style={{ display: "flex", justifyContent: "space-between", gap: 20, flexWrap: "wrap", alignItems: "flex-start" }}>
           <div style={{ flex: 1, minWidth: 260 }}>
             <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: academyTheme.ivyGold, marginBottom: 8 }}>
-              {lms?.heroTitle || pathway?.label || "FCA Academy"} ù Auricrux School of Construction
+              {lms?.heroTitle || pathway?.label || "FCA Academy"} | Auricrux School of Construction
             </div>
             <h1 style={{ margin: "0 0 8px", fontFamily: academyTheme.serif, fontSize: 28, fontWeight: 600, lineHeight: 1.25 }}>
               {program?.title}
             </h1>
             <div style={{ color: "#cbd5e1", fontSize: 14, lineHeight: 1.6 }}>
               {program?.credential}
-              {program?.courseCode ? ` ù ${program.courseCode}` : ""}
-              {program?.creditHours ? ` ù ${program.creditHours} credits` : ""}
-              {program?.ceuHours ? ` ù ${program.ceuHours} CEU` : ""}
+              {program?.courseCode ? ` | ${program.courseCode}` : ""}
+              {program?.creditHours ? ` | ${program.creditHours} credits` : ""}
+              {program?.ceuHours ? ` | ${program.ceuHours} CEU` : ""}
             </div>
           </div>
           {enrollment ? (
