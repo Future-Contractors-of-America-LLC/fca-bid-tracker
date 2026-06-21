@@ -35,9 +35,7 @@ const checks = [
     markers: [
       'import useProjectWorkspace from "../../hooks/useProjectWorkspace";',
       'import ProjectActionCenter from "../../components/ProjectActionCenter";',
-      'import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";',
       '<ProjectActionCenter project={project}',
-      '<CommercialContinuityFeed title="Project commercial continuity feed"',
     ],
   },
 ];

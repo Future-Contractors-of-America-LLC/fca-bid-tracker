@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
 import AuditEventCard from "../../components/AuditEventCard";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -82,7 +81,7 @@ export default function PortalNotifications() {
 
   return (
     <PortalShell
-      title="Live Notifications and Continuity Alerts"
+      title="Notifications"
       subtitle="Approvals, document flags, and field signals in one feed."
       activeHref="/portal/notifications"
       currentJourney="coordination"
@@ -91,41 +90,7 @@ export default function PortalNotifications() {
       primaryLabel="Open Messages"
       workspaceState={state}
     >
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={state.project}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="Notifications now read from live workspace continuity"
-          detail="This route unifies customer messages, project audit cues, launch readiness, and Auricrux state so the customer can see what changed and what must happen next."
-        />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted notification state</div>
-        <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Source:</strong> {state.meta.backingSource}</div>
-          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
-          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
-          <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
-          <div><strong>Account source:</strong> {accountSource}</div>
-          <div><strong>Launch readiness:</strong> {launchReadiness}</div>
-        </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Notification continuity</div>
-        <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Customer:</strong> {state.tenant.name}</div>
-          <div><strong>Project spine:</strong> {state.project.id}</div>
-          <div><strong>Current blocker:</strong> {state.auricrux.currentBlocker}</div>
-          <div><strong>Recommended move:</strong> {state.auricrux.nextRecommendedAction}</div>
-          <div><strong>Next action:</strong> {state.workspace.currentNextAction}</div>
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1.05fr 1fr", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Active notifications</h2>
           <div style={{ display: "grid", gap: 12 }}>

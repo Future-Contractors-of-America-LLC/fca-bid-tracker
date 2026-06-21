@@ -1,8 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectActionCenter from "../../components/ProjectActionCenter";
-import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
@@ -70,9 +68,6 @@ export default function PortalProjects() {
 
   const visibleProject = activeProject || state.project;
   const apiBacked = meta.backingSource === "api-workflow-store";
-  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
-  const brandedNarrative = useMemo(() => `${companyName} Project Command keeps awarded work moving from kickoff through mobilization, customer milestones, permit recovery, and closeout readiness without losing branded continuity.`, [companyName]);
-
   function updateDraft(projectId, key, value) {
     setDrafts((current) => ({
       ...current,
@@ -85,7 +80,7 @@ export default function PortalProjects() {
 
   return (
     <PortalShell
-      title={`${companyName} Project Command Board`}
+      title="Projects"
       subtitle="Track stages, mobilization, and delivery for every active job."
       activeHref="/portal/projects"
       currentJourney="job"
@@ -131,32 +126,8 @@ export default function PortalProjects() {
         </div>
       ) : null}
 
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={state.project}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="Project route is anchored to the live workspace state"
-          detail="Project execution visibility now reads from the same tenant, project, next-action, and blocker source as the rest of the FCA shell."
-        />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
-        <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded project command</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{brandedNarrative}</p>
-        <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Workspace state source:</strong> {state.meta.backingSource}</div>
-          <div><strong>Project workflow source:</strong> {meta.backingSource}</div>
-          <div><strong>Project workflow status:</strong> {meta.persistenceState}</div>
-          <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
-        </div>
-      </div>
-
-      <CommercialContinuityFeed title="Project commercial continuity feed" detail="Recent project-stage changes, permit-path repairs, and execution-to-closeout mutations remain visible here so delivery actions stay tied to revenue and rollout continuity." />
       <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <h2 style={{ marginTop: 0 }}>Functional product: Project stage and milestone control</h2>
+        <h2 style={{ marginTop: 0 }}>Active project</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
           <div><strong>Active project root:</strong> {visibleProject?.id || state.project.id}</div>
           <div><strong>Current stage:</strong> {visibleProject?.stage || state.project.stage}</div>

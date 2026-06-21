@@ -5,6 +5,7 @@ import ExecutionCommandCenter from "../../components/ExecutionCommandCenter";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
+import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import { portalMessages, portalMetrics, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -113,8 +114,9 @@ export default function PlatformDashboard() {
         ))}
       </div>
 
-      <div style={{ marginTop: 16 }}>
+      <div style={{ marginTop: 16, display: "grid", gap: 16 }}>
         <AutomationRecoveryFeed title="Activity log" detail="Recent session and workspace actions across your account." />
+        <CommercialContinuityFeed title="Commercial activity" detail="Recent billing, rollout, and plan changes." />
       </div>
     </PortalShell>
   );

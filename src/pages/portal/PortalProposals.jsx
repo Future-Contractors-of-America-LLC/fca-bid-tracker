@@ -1,6 +1,4 @@
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
-import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProposalWorkspace from "../../hooks/useProposalWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
@@ -31,7 +29,7 @@ export default function PortalProposals() {
 
   return (
     <PortalShell
-      title="Proposal Workspace and Customer Packaging"
+      title="Proposals"
       subtitle="Package scope, narrative, and approval-ready customer proposals."
       activeHref="/portal/proposals"
       currentJourney="bid"
@@ -39,19 +37,6 @@ export default function PortalProposals() {
       primaryHref="/portal/projects"
       primaryLabel="Open Projects"
     >
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary tenant={state.tenant} project={state.project} workspace={state.workspace} auricrux={state.auricrux} title="Proposal route completes the sales-to-operations vertical slice" detail="Proposal state now sits between estimate readiness and project handoff so FCA can package scope, assumptions, and approval follow-through inside the live product spine." />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Proposal persistence source</div>
-        <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Source:</strong> {meta.backingSource}</div>
-          <div><strong>Status:</strong> {meta.persistenceState}</div>
-          <div><strong>Last sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
-        </div>
-      </div>
-
       {focusProposal?.proposalId ? (
         <div style={{ marginBottom: 16 }}>
           <AuricruxInsightPanel
@@ -69,7 +54,6 @@ export default function PortalProposals() {
         </div>
       ) : null}
 
-      <CommercialContinuityFeed title="Proposal commercial continuity feed" detail="Proposal drafting, delivery, approval, and project handoff signals remain visible here so the customer package stays attached to live product state." />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
         {proposals.map((proposal) => (
           <div key={proposal.proposalId} style={cardStyle}>

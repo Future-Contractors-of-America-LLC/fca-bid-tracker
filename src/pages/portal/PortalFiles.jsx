@@ -1,14 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
-import PublicCtaRow from "../../components/PublicCtaRow";
-import SystemStateSummary from "../../components/SystemStateSummary";
 import AuricruxBriefingCard from "../../components/AuricruxBriefingCard";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
-import { publicBodyCtaSets } from "../../websiteShell";
 import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets, qualificationEvidenceByProject } from "../../qualificationEvidence";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
@@ -131,7 +128,6 @@ export default function PortalFiles() {
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
 
   const visibleProject = activeProject || state.project;
-  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
   const { files, auditEvents, meta: evidenceMeta, mutateFile, filters, setFilters, summary } = useWorkflowEvidence(visibleProject?.id);
   const evidencePackets = qualificationEvidenceByProject?.[visibleProject?.id] || qualificationEvidencePackets;
   const briefingFiles = useMemo(() => files.filter((file) => isBriefingReady(file)), [files]);
@@ -267,33 +263,6 @@ export default function PortalFiles() {
           />
         </div>
       ) : null}
-
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={visibleProject}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="File route now reads from the active project workspace"
-          detail="Document context, next action, qualification evidence, and blocker visibility stay attached to the same active project root used by Projects and Audit."
-        />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
-        <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded file experience</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{companyName} can now register files, attach evidence, generate Auricrux briefings, and preserve customer-facing document continuity without leaving the branded workspace.</p>
-        <div style={{ color: "#334155", lineHeight: 1.8 }}>
-          <div><strong>Project root:</strong> {visibleProject.id}</div>
-          <div><strong>Project workflow source:</strong> {projectMeta.backingSource}</div>
-          <div><strong>Evidence workflow source:</strong> {evidenceMeta.backingSource}</div>
-          <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
-        </div>
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
-      </div>
 
       {targetedFile ? (
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: `1px solid ${brandSkin.accent || "#2563eb"}` }}>

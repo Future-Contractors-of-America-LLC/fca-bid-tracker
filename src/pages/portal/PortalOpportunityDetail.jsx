@@ -1,12 +1,8 @@
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
-import PublicCtaRow from "../../components/PublicCtaRow";
-import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import useOpportunityWorkspaceDetail from "../../hooks/useOpportunityWorkspaceDetail";
-import { publicBodyCtaSets } from "../../websiteShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -70,7 +66,7 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
 
   return (
     <PortalShell
-      title="Opportunity Workspace"
+      title="Opportunity"
       subtitle="Estimate readiness, files, and conversion path for this opportunity."
       activeHref="/portal/bids"
       currentJourney="bid"
@@ -95,33 +91,6 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
             "This route should not be treated as proof that governed project conversion is fully live end to end.",
           ]}
         />
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={state.project}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="Opportunity route now prefers canonical workspace reads"
-          detail="This route now attempts to resolve opportunity detail from a backend workspace model before falling back to shell continuity state."
-        />
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
-      </div>
-
-      <CommercialContinuityFeed title="Opportunity commercial continuity feed" detail="Recent qualification repairs, approval-path changes, and estimate handoff posture remain visible here so preconstruction movement stays tied to real commercial continuity." />
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Resolved opportunity identity</div>
-        <div style={{ color: "#334155", lineHeight: 1.8 }}>
-          <div><strong>Route pattern:</strong> /portal/opportunities/:opportunityId</div>
-          <div><strong>Requested opportunity ID:</strong> {opportunityId || "None provided"}</div>
-          <div><strong>Workspace source:</strong> {meta.backingSource}</div>
-          <div><strong>Persistence state:</strong> {meta.persistenceState}</div>
-          <div><strong>Last sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
-        </div>
       </div>
 
       {visible ? (

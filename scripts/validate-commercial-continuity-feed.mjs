@@ -29,21 +29,14 @@ const checks = [
     file: path.join(root, "src", "components", "CommercialContinuityFeed.jsx"),
     markers: [
       'import { readCommercialLog } from "../sessionCommercialLog";',
-      'Recent pricing, rollout, billing, and workspace activation actions remain visible so revenue continuity survives route changes and founder context switching.',
+      'portalDesignTokens',
     ],
   },
   {
-    file: path.join(root, "src", "pages", "website", "Pricing.jsx"),
+    file: path.join(root, "src", "pages", "portal", "PlatformDashboard.jsx"),
     markers: [
       'import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";',
-      '<CommercialContinuityFeed title="Pricing and rollout memory"',
-    ],
-  },
-  {
-    file: path.join(root, "src", "pages", "website", "Contact.jsx"),
-    markers: [
-      'import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";',
-      '<CommercialContinuityFeed title="Walkthrough and conversion memory"',
+      '<CommercialContinuityFeed title="Commercial activity"',
     ],
   },
   {

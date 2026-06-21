@@ -4,6 +4,7 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import { publishPortalPageContext } from "../../portalPageContext";
 import {
   createPortalInvoice,
@@ -296,6 +297,10 @@ export default function PortalBilling() {
             </div>
           ))}
         </div>
+      </div>
+
+      <div style={{ marginTop: 16 }}>
+        <CommercialContinuityFeed title="Billing and commercial continuity feed" detail="Recent billing and commercial events for this account." />
       </div>
     </PortalShell>
   );

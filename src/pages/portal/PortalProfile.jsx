@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -123,7 +122,7 @@ export default function PortalProfile() {
 
   return (
     <PortalShell
-      title="Customer Identity and Workspace Profile"
+      title="Profile"
       subtitle="Account identity, plan access, and communication preferences."
       activeHref="/portal/profile"
       currentJourney="lead"
@@ -131,29 +130,8 @@ export default function PortalProfile() {
       primaryHref="/portal/platform"
       primaryLabel="Open Platform Dashboard"
     >
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={state.project}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="Customer profile now reads from the live authenticated workspace"
-          detail="This profile route binds session identity, tenant continuity, project state, Auricrux guidance, plan activation, launch posture, and communications access into one customer-facing operating surface."
-        />
-      </div>
-
-      <CustomerProductLaunchpad session={session} title="Launch real customer product access" />
-      <CustomerCommsLaunchpad session={session} title="Launch real communications access" />
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Persisted profile state</div>
-        <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Source:</strong> {state.meta.backingSource}</div>
-          <div><strong>Status:</strong> {state.meta.persistenceState}</div>
-          <div><strong>Last sync:</strong> {state.meta.lastSyncedAt || "Pending initial sync"}</div>
-          <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
-        </div>
-      </div>
+      <CustomerProductLaunchpad session={session} title="Product access" />
+      <CustomerCommsLaunchpad session={session} title="Communications access" />
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
         <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Authentication truth boundary</div>
