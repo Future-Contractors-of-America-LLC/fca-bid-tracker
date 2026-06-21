@@ -38,8 +38,8 @@ const checks = [
     markers: [
       'import Login from "./pages/website/Login";',
       "hasCustomerProductAccess",
-      "const needsCustomerLogin = isProtectedCustomerRoute(normalizedPath) && !session?.authenticated;",
-      "const lacksProductAccess = !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(session, normalizedPath);",
+      "const needsCustomerLogin = sessionReady && isProtectedCustomerRoute(normalizedPath) && !activeSession?.authenticated;",
+      "const lacksProductAccess = sessionReady && !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(activeSession, normalizedPath);",
       'accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"}',
     ],
   },
@@ -47,19 +47,19 @@ const checks = [
     file: path.join(root, "src", "components", "CustomerSessionBar.jsx"),
     markers: [
       'import useCustomerSession from "../hooks/useCustomerSession";',
-      "Live customer session",
-      "Open Active Workspace",
-      "Open Academy / LMS",
-      "Open Auricrux",
-      "Unavailable",
-      "Sign Out",
+      "Signed in",
+      'label: "Workspace"',
+      'label: "Academy"',
+      'label: "Auricrux"',
+      'action.enabled ?',
+      "Sign out",
     ],
   },
   {
     file: path.join(root, "src", "components", "PortalShell.jsx"),
     markers: [
       'import CustomerSessionBar from "./CustomerSessionBar";',
-      "<CustomerSessionBar requestedPath={activeHref} />",
+      "<CustomerSessionBar requestedPath={activeHref} compact={!isHubPage} />",
     ],
   },
   {

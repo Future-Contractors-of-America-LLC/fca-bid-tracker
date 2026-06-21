@@ -210,6 +210,16 @@ export default function AcademyCatalog() {
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
         <Breadcrumb pathway={placement?.pathway || selectedPathway} topic={placement?.topic || selectedTopic} />
 
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #ddd6fe", background: "#f5f3ff" }}>
+          <strong style={{ color: "#6d28d9" }}>Academy Store</strong>
+          <span style={{ color: "#475569", marginLeft: 8 }}>
+            Purchase individual courses or pathway bundles without a Contractor Command subscription.
+          </span>
+          <a href="/academy/store" style={{ display: "inline-block", marginLeft: 12, color: "#7c3aed", fontWeight: 700, textDecoration: "none" }}>
+            Open store
+          </a>
+        </div>
+
         {pathwayLms && selectedPathway && !selectedTopic ? (
           <div style={{ ...cardStyle, marginBottom: 24, border: `1px solid ${pathwayLms.border}`, background: pathwayLms.accentSoft }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>

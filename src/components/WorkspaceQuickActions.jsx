@@ -30,18 +30,10 @@ export default function WorkspaceQuickActions({ actions = [] }) {
 
   return (
     <div style={cardStyle}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "flex-start" }}>
-        <div>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Quick Actions</div>
-          <h3 style={{ marginTop: 0, marginBottom: 8 }}>Familiar dashboard shortcuts</h3>
-          <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 860 }}>
-            This action row keeps the shell feeling like a modern customer workspace: clear shortcuts,
-            obvious next steps, and direct movement into the most important operational surfaces.
-          </div>
-        </div>
+      <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 10, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+        Shortcuts
       </div>
-
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }}>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         {visibleActions.map((action) => (
           <div key={action.label} style={{ minWidth: 0, maxWidth: 280 }}>
             <a

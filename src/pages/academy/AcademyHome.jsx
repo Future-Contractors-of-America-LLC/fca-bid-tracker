@@ -240,6 +240,7 @@ export default function AcademyHome() {
             <a href="/academy/dashboard" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Learner dashboard</a>
             <a href="/academy/credentials" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Credentials</a>
             <a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Full catalog</a>
+            <a href="/academy/store" style={{ color: "#7c3aed", fontWeight: 700, textDecoration: "none" }}>Browse courses to purchase</a>
           </div>
           {apiPrograms.length > 0 && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 14 }}>

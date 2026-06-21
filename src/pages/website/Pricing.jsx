@@ -6,6 +6,7 @@ import WorkspaceSnapshotCard from "../../components/WorkspaceSnapshotCard";
 import CommercialReadinessPanel from "../../components/CommercialReadinessPanel";
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import PricingActionCenter from "../../components/PricingActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { publicPackageRouteGroups } from "../../publicPackageRouteGroups";
@@ -149,6 +150,12 @@ export default function Pricing() {
       />
 
       <PublicActionRail title={publicPricingMessaging.actionRail.title} detail={publicPricingMessaging.actionRail.detail} />
+
+      <PublicPackageRouteGroupsPanel
+        eyebrow="Product depth"
+        title="Every route group in your rollout"
+        detail="See how SaaS, portal, Academy, Auricrux, and revenue surfaces connect before you commit."
+      />
 
       <ShellFooter />
     </div>

@@ -64,8 +64,13 @@ function buildProgramDetailFromCatalog(programKey) {
   };
 }
 
-export async function fetchAcademyLms() {
-  const response = await centralFetch("/api/academy-lms", { method: "GET" });
+export async function fetchAcademyLms(options = {}) {
+  const params = new URLSearchParams();
+  params.set("view", options.view || "summary");
+  if (options.lane) params.set("lane", options.lane);
+  if (options.offset != null) params.set("offset", String(options.offset));
+  if (options.limit != null) params.set("limit", String(options.limit));
+  const response = await centralFetch(`/api/academy-lms?${params.toString()}`, { method: "GET" });
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
     throw new Error(formatApiError(response, payload, "Unable to load academy state"));

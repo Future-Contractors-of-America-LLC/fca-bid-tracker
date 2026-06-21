@@ -4,8 +4,8 @@ export const websiteMarketReadiness = {
       title: "Startup contractor buyer path",
       audience: "Owner-operators and early-stage builders",
       outcome: "Move from curiosity into a live workspace with low-friction product proof and next-step clarity.",
-      route: "/login",
-      label: "Open FCA Workspace",
+      route: "/intake",
+      label: "Get Started",
       proof: [
         "Live test login access",
         "Canonical bid-entry route",
@@ -16,8 +16,8 @@ export const websiteMarketReadiness = {
       title: "Operations buyer path",
       audience: "Growing contractors evaluating coordination depth",
       outcome: "Show that FCA handles real contractor stages across intake, estimating, delivery, billing, and closeout.",
-      route: "/portal/operations",
-      label: "Open Operations Pipeline",
+      route: "/platform",
+      label: "Explore the Platform",
       proof: [
         "Stage-based operations pipeline",
         "Route-linked artifacts",
@@ -71,8 +71,8 @@ export const websiteMarketReadiness = {
     },
     {
       title: "Open Operations Pipeline",
-      href: "/portal/operations",
-      label: "Open Operations Pipeline",
+      href: "/platform",
+      label: "Explore the Platform",
     },
     {
       title: "Open Contact & Rollout",
