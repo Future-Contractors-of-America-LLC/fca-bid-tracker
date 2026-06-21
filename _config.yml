@@ -1,21 +1,7 @@
 title: Future Contractors of America
 theme: null
-plugins: []
+include:
+  - .nojekyll
+  - jekyll-pages
 exclude:
-  - index.html
-  - node_modules
-  - auricrux
-  - dist
-  - src
-  - scripts
-  - api
-  - api_generated
-  - workspace
-  - generated
-  - docs
-  - public
-  - .github
-  - package.json
-  - package-lock.json
-  - vite.config.js
-  - "*.md"
+  - "*"
