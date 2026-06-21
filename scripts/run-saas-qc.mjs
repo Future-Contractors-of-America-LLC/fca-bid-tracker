@@ -59,6 +59,7 @@ const SAAS_API_ENDPOINTS = [
   "/api/job-cost",
   "/api/closeout-packages",
   "/api/warranty-cases",
+  "/api/field-photos",
   "/api/auricrux/actions",
   "/api/auricrux-comms",
 ];

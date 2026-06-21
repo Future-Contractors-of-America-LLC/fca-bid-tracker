@@ -20,6 +20,7 @@ const REQUIRED_INSIGHT_PAGES = [
   "PortalBilling.jsx",
   "PortalBids.jsx",
   "PortalProposals.jsx",
+  "PortalFieldSupervision.jsx",
 ];
 
 function fail(message) {
@@ -59,6 +60,8 @@ function requireIncludes(file, tokens) {
 requireIncludes("src/hooks/usePortalProjectId.js", ["useProjectWorkspace", "activeProject"]);
 requireIncludes("src/hooks/useAuricruxLiveInsight.js", ["submitAuricruxAction"]);
 requireIncludes("src/api/constructionClient.js", ["createProjectRfi", "createChangeOrder"]);
-requireIncludes("src/components/design/AuricruxDesignInsight.jsx", ["AuricruxInsightPanel", "liveRecommend"]);
+requireIncludes("src/api/fieldPhotosClient.js", ["uploadFieldPhoto", "compareFieldPhoto", "autoRedlineFromPhoto"]);
+requireIncludes("src/components/field/FieldPhotoCapture.jsx", ["getUserMedia"]);
+requireIncludes("src/pages/portal/PortalFieldSupervision.jsx", ["FieldPhotoCapture", "PlanComparePanel"]);
 
 console.log("Portal Auricrux wiring validation passed.");

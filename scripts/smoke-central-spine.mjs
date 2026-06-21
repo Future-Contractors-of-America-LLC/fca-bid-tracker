@@ -57,6 +57,7 @@ const getChecks = [
   "/api/change-orders",
   "/api/job-cost",
   "/api/warranty-cases",
+  "/api/field-photos",
   "/api/auricrux/actions",
 ];
 
