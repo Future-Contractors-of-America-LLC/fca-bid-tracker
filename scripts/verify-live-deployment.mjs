@@ -10,6 +10,7 @@ const hosts = [...new Set([
   ...configuredHosts,
   "futurecontractorsofamerica.com",
   "www.futurecontractorsofamerica.com",
+  "app.futurecontractorsofamerica.com",
   process.env.AURICRUX_SWA_DEFAULT_HOST || "",
 ].filter(Boolean))];
 

@@ -4,7 +4,7 @@ const { makeApiSuccess, makeApiError } = require('../../_lib/contracts/fcaContra
 
 const CENTRAL_API =
   process.env.AURICRUX_CENTRAL_API ||
-  'https://auricrux-central.azurewebsites.net/api'
+  'https://api.futurecontractorsofamerica.com/api'
 
 module.exports = async function handler(req, res) {
   if (req.method === 'GET') {

@@ -1,10 +1,13 @@
-const DEFAULT_BASE = "https://auricrux-central.azurewebsites.net";
+import {
+  FCA_API_BASE,
+  FCA_AZURE_API_FALLBACK_ORIGIN,
+} from "../config/domainHosts.js";
 
 export function backendBaseUrl() {
   if (typeof window !== "undefined" && window.FCA_BACKEND?.baseUrl) {
     return String(window.FCA_BACKEND.baseUrl).replace(/\/$/, "");
   }
-  return DEFAULT_BASE;
+  return FCA_API_BASE || FCA_AZURE_API_FALLBACK_ORIGIN;
 }
 
 export function centralApi(path) {

@@ -5,11 +5,29 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { FCA_API_ORIGIN, FCA_AZURE_API_FALLBACK_ORIGIN } from "./domainHosts.constants.mjs";
 
-const API_BASE = process.env.FCA_API_BASE || "https://auricrux-central.azurewebsites.net";
 const outputDir = path.join(process.cwd(), "docs", "qc");
 const findings = [];
 let failed = 0;
+let API_BASE = process.env.FCA_API_BASE || "";
+
+async function resolveApiBase() {
+  if (API_BASE) return API_BASE;
+  for (const candidate of [FCA_API_ORIGIN, FCA_AZURE_API_FALLBACK_ORIGIN]) {
+    try {
+      const response = await fetch(`${candidate}/api/health`, { headers: { Accept: "application/json" } });
+      if (response.ok) {
+        API_BASE = candidate;
+        return API_BASE;
+      }
+    } catch {
+      // try next candidate
+    }
+  }
+  API_BASE = FCA_AZURE_API_FALLBACK_ORIGIN;
+  return API_BASE;
+}
 
 function pass(label, detail = "") {
   findings.push({ status: "pass", label, detail });
@@ -50,6 +68,9 @@ async function postJson(route, payload) {
   }
   return { response, body };
 }
+
+await resolveApiBase();
+console.log(`Using API base: ${API_BASE}`);
 
 const getChecks = [
   "/api/health",

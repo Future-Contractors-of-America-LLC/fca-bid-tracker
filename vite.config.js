@@ -11,7 +11,12 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (!id.includes("src/pages")) return undefined;
-          if (id.includes("src/pages/portal")) return "portal";
+          if (id.includes("src/pages/portal/PortalFieldSupervision")) return "portal-field";
+          if (id.includes("src/pages/portal/PortalDesignWorkspace")) return "portal-design";
+          if (id.includes("src/pages/portal/PortalFinance")) return "portal-finance";
+          if (id.includes("src/pages/portal/PortalAdmin")) return "portal-admin";
+          if (id.includes("src/pages/portal/PortalPipeline")) return "portal-pipeline";
+          if (id.includes("src/pages/portal")) return "portal-core";
           if (id.includes("src/pages/academy")) return "academy";
           if (id.includes("src/pages/website")) return "website";
           return undefined;

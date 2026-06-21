@@ -6,7 +6,7 @@
 (function (global) {
   const CENTRAL_API =
     global.FCA_CENTRAL_API ||
-    "https://auricrux-central.azurewebsites.net/api";
+    "https://api.futurecontractorsofamerica.com/api";
 
   const PILOT_PAYMENT_LINK =
     global.FCA_PILOT_PAYMENT_LINK ||
