@@ -1,12 +1,12 @@
 # Live Deployment Proof Metadata
 
 - Packet: 062Y
-- Generated: 2026-06-21T00:59:15.903Z
+- Generated: 2026-06-21T01:06:34.278Z
 - provenance: github_actions_ci
 - ciPersisted: true
-- ciRunId: 27889030907
-- ciCommitSha: 3d85759abfa735d47ae9338fad87248e84190cbd
-- status: ci_surface_present_success
+- ciRunId: 27889222766
+- ciCommitSha: 3e784e3866cd13c80d7d019eab302f4f37cd3da7
+- status: ci_surface_present_with_failures
 
 ## Surface
 - summaryPath: docs/runtime-proof/live-deployment/live_deployment_smoke_summary.json
