@@ -1,11 +1,12 @@
 # Live Deployment Current-Head Verifier Report
 
 - Packet: 062Y
-- Generated: 2026-06-21T19:21:32.764Z
-- success: true
+- Generated: 2026-06-21T20:23:18.428Z
+- success: false
 - summaryPresent: true
-- failureFileEmpty: true
-- hostCount: 3
+- failureFileEmpty: false
+- hostCount: 4
 
 ## Failures
-- none
+- current-head live verifier summary still contains host-level failures
+- live deployment failures file is non-empty
