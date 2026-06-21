@@ -4,7 +4,6 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
-import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useProjectWorkspaceDetail from "../../hooks/useProjectWorkspaceDetail";
@@ -139,8 +138,6 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
       </div>
 
       <CommercialContinuityFeed title="Project continuity feed" detail="Recent project-stage changes, file-state changes, and commercial continuity movement remain visible here so the project home stays tied to execution reality." />
-      <AutomationRecoveryFeed title="Project automation feed" detail="Recent Auricrux project-state repairs and continuity adjustments remain visible across the project workspace shell." />
-
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Resolved project identity</div>
         <div style={{ color: "#334155", lineHeight: 1.8 }}>

@@ -1,7 +1,6 @@
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
-import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProposalWorkspace from "../../hooks/useProposalWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
@@ -71,8 +70,6 @@ export default function PortalProposals() {
       ) : null}
 
       <CommercialContinuityFeed title="Proposal commercial continuity feed" detail="Proposal drafting, delivery, approval, and project handoff signals remain visible here so the customer package stays attached to live product state." />
-      <AutomationRecoveryFeed title="Proposal automation feed" detail="Recent proposal mutations remain visible across routes so FCA can prove proposal handling is part of the operating system rather than static copy." />
-
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
         {proposals.map((proposal) => (
           <div key={proposal.proposalId} style={cardStyle}>

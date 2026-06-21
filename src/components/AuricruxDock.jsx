@@ -17,6 +17,7 @@ import {
   AURICRUX_ASSISTANT_OPEN,
   AURICRUX_ASSISTANT_TOGGLE,
 } from "../auricruxAssistant";
+import { portalTokens } from "../portalDesignTokens";
 
 const quickPrompts = [
   "What is the next customer action?",
@@ -347,7 +348,7 @@ export default function AuricruxDock() {
           borderLeft: `1px solid ${auricruxColors.primary}`,
           boxShadow: "-12px 0 40px rgba(15, 23, 42, 0.18)",
           background: "#ffffff",
-          fontFamily: "Arial",
+          fontFamily: portalTokens.font,
           display: "flex",
           flexDirection: "column",
         }}

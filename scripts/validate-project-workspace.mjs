@@ -36,10 +36,8 @@ const checks = [
       'import useProjectWorkspace from "../../hooks/useProjectWorkspace";',
       'import ProjectActionCenter from "../../components/ProjectActionCenter";',
       'import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";',
-      'import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";',
       '<ProjectActionCenter project={project}',
       '<CommercialContinuityFeed title="Project commercial continuity feed"',
-      '<AutomationRecoveryFeed title="Project automation feed"',
     ],
   },
 ];

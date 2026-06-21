@@ -3,7 +3,6 @@ import SystemStateSummary from "../../components/SystemStateSummary";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
-import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import useOpportunityWorkspaceDetail from "../../hooks/useOpportunityWorkspaceDetail";
@@ -114,8 +113,6 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
       </div>
 
       <CommercialContinuityFeed title="Opportunity commercial continuity feed" detail="Recent qualification repairs, approval-path changes, and estimate handoff posture remain visible here so preconstruction movement stays tied to real commercial continuity." />
-      <AutomationRecoveryFeed title="Opportunity automation feed" detail="Recent Auricrux continuity repairs and bid-to-estimate routing changes remain visible across the workspace shell." />
-
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Resolved opportunity identity</div>
         <div style={{ color: "#334155", lineHeight: 1.8 }}>

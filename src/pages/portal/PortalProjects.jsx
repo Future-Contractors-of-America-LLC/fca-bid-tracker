@@ -3,7 +3,6 @@ import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectActionCenter from "../../components/ProjectActionCenter";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
-import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
@@ -156,8 +155,6 @@ export default function PortalProjects() {
       </div>
 
       <CommercialContinuityFeed title="Project commercial continuity feed" detail="Recent project-stage changes, permit-path repairs, and execution-to-closeout mutations remain visible here so delivery actions stay tied to revenue and rollout continuity." />
-      <AutomationRecoveryFeed title="Project automation feed" detail="Recent Auricrux project repairs and stage transitions remain visible across routes so execution-state changes are durable." />
-
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>Functional product: Project stage and milestone control</h2>
         <div style={{ color: "#4b5563", lineHeight: 1.8 }}>

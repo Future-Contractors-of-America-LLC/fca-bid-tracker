@@ -35,3 +35,55 @@ export const portalEyebrowStyle = {
   textTransform: "uppercase",
   letterSpacing: "0.08em",
 };
+
+export const portalInputStyle = {
+  width: "100%",
+  padding: "10px 12px",
+  borderRadius: portalTokens.radiusSm,
+  border: `1px solid ${portalTokens.borderStrong}`,
+  marginTop: 6,
+  marginBottom: 12,
+  boxSizing: "border-box",
+  background: portalTokens.panel,
+  color: portalTokens.ink,
+};
+
+export const portalButtonPrimary = {
+  background: `linear-gradient(135deg, ${portalTokens.primaryInk} 0%, ${portalTokens.primary} 100%)`,
+  color: "#fff",
+  border: "none",
+  borderRadius: portalTokens.radiusSm,
+  padding: "10px 16px",
+  fontWeight: 700,
+  cursor: "pointer",
+  textDecoration: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+export const portalButtonSecondary = {
+  background: portalTokens.panel,
+  color: portalTokens.primaryInk,
+  border: `1px solid #bfdbfe`,
+  borderRadius: portalTokens.radiusSm,
+  padding: "10px 16px",
+  fontWeight: 700,
+  cursor: "pointer",
+  textDecoration: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+export const portalStatusPill = (active = false) => ({
+  display: "inline-flex",
+  alignItems: "center",
+  padding: "6px 12px",
+  borderRadius: 999,
+  fontSize: 12,
+  fontWeight: 700,
+  border: `1px solid ${active ? "#bfdbfe" : portalTokens.border}`,
+  background: active ? portalTokens.primarySoft : portalTokens.panel,
+  color: active ? portalTokens.primaryInk : portalTokens.body,
+});

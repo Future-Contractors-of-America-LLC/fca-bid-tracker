@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import SystemStateSummary from "../../components/SystemStateSummary";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
-import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import usePortalProjectId from "../../hooks/usePortalProjectId";
 import useEstimateWorkspace from "../../hooks/useEstimateWorkspace";
@@ -150,8 +149,6 @@ export default function PortalEstimates() {
       </div>
 
       <CommercialContinuityFeed title="Estimate commercial continuity feed" detail="Estimate advancement, pricing review, and proposal generation events remain visible here so pricing does not disappear between bid qualification and customer packaging." />
-      <AutomationRecoveryFeed title="Estimate automation feed" detail="Recent estimate and proposal-generation actions remain visible across routes so pricing actions are durable rather than local-only UI gestures." />
-
       {actionError ? (
         <div style={{ ...cardStyle, marginBottom: 16, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b" }}>{actionError}</div>
       ) : null}

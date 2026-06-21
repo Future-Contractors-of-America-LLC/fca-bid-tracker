@@ -47,6 +47,13 @@ if (!sessionBar.includes("compact = false")) fail("CustomerSessionBar must suppo
 
 if (!journeyStrip.includes("showGuidance = false")) fail("JourneyStrip must hide verbose Auricrux guidance by default");
 
+if (!portalShell.includes("showRouteOverlay")) fail("PortalShell must support showRouteOverlay for detail pages");
+
+const designTokens = read("src/portalDesignTokens.js");
+const operationalToolPage = read("src/components/OperationalToolPage.jsx");
+if (!designTokens.includes("portalButtonPrimary")) fail("portalDesignTokens must export shared button styles");
+if (!operationalToolPage.includes("portalDesignTokens")) fail("OperationalToolPage must use portalDesignTokens");
+
 for (const page of fs.readdirSync(portalDir).filter((name) => name.endsWith(".jsx"))) {
   const source = fs.readFileSync(path.join(portalDir, page), "utf8");
   if (source.includes('currentJourney="project"')) {

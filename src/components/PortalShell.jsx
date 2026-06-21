@@ -70,6 +70,7 @@ export default function PortalShell({
   primaryLabel = "Open Messages",
   workspaceState = null,
   navDensity = "compact",
+  showRouteOverlay: showRouteOverlayProp = null,
 }) {
   const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const workspaceApi = useWorkspaceState();
@@ -78,6 +79,7 @@ export default function PortalShell({
   const [showAllModules, setShowAllModules] = useState(false);
   const isHubPage = navDensity === "full" || portalHubHrefs.includes(activeHref);
   const sectionModules = showAllModules ? portalModules : portalHubModules;
+  const showRouteOverlay = showRouteOverlayProp ?? Boolean(routeOverlay && !isHubPage);
 
   return (
     <div style={shellStyle}>
@@ -110,7 +112,9 @@ export default function PortalShell({
           <WorkspaceContextBar tenant={resolvedState.tenant} project={resolvedState.project} workspace={resolvedState.workspace} />
         ) : null}
 
-        <RouteStateOverlay overlay={routeOverlay} />
+        {showRouteOverlay && routeOverlay ? (
+          <RouteStateOverlay overlay={routeOverlay} compact />
+        ) : null}
 
         <RouteReadinessOverlay
           activeHref={activeHref}
