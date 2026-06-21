@@ -24,7 +24,7 @@ export const OFFERING_LANES = [
   {
     key: "degree",
     label: "Degree Programs",
-    description: "Ivy League-standard associate and bachelor degree pathways in construction management, engineering technology, BIM, safety, business, project management, sustainability, and construction technology.",
+    description: "39 FCA Matrix-aligned associate and bachelor pathways covering the full construction lifecycle, platform operations, and Contractor Command.",
     credentialType: "Academic Degree",
   },
   {
@@ -64,18 +64,48 @@ const CERTIFICATION_PREFIXES = ["cert-", "project-controls", "precon-estimating"
 const DEGREE_PREFIXES = ["deg-"];
 const LICENSURE_PREFIXES = ["lic-", "virginia-dpor", "contractor-business", "contractor-construction"];
 
-/** Nine degree pathway summaries (backend-aligned). */
+/** FCA Coverage Matrix-aligned degree pathway summaries (backend-aligned). */
 export const DEGREE_PATHWAYS = [
   { key: "degree-general-education-core", label: "General Education Core", pathway: "General Education Core", courses: 15, credits: 45 },
-  { key: "degree-aas-construction-management", label: "Construction Management AAS", pathway: "Construction Management AAS", courses: 20, credits: 60, level: "AAS" },
-  { key: "degree-aas-civil-engineering-technology", label: "Civil Engineering Technology AAS", pathway: "Civil and Construction Engineering Technology AAS", courses: 20, credits: 60, level: "AAS" },
-  { key: "degree-aas-bim-digital-construction", label: "BIM and Digital Construction AAS", pathway: "Building Information Modeling and Digital Construction AAS", courses: 20, credits: 60, level: "AAS" },
-  { key: "degree-aas-occupational-safety-health", label: "Occupational Safety and Health AAS", pathway: "Occupational Safety and Health AAS", courses: 20, credits: 60, level: "AAS" },
-  { key: "degree-aas-business-administration-contractors", label: "Business Administration for Contractors AAS", pathway: "Business Administration for Contractors AAS", courses: 20, credits: 60, level: "AAS" },
-  { key: "degree-bs-construction-management", label: "Construction Management BS", pathway: "Construction Management BS", courses: 38, credits: 120, level: "BS" },
-  { key: "degree-bs-project-management-construction", label: "Project Management BS", pathway: "Project Management BS (Construction Focus)", courses: 38, credits: 120, level: "BS" },
-  { key: "degree-bs-sustainable-built-environment", label: "Sustainable Built Environment BS", pathway: "Sustainable Built Environment BS", courses: 38, credits: 120, level: "BS" },
-  { key: "degree-bas-construction-technology-innovation", label: "Construction Technology BAS", pathway: "Construction Technology and Innovation BAS", courses: 38, credits: 120, level: "BAS" },
+  { key: "degree-aas-construction-management", label: "Construction Management AAS", pathway: "Construction Management AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Project Setup · Scheduling · Field Execution" },
+  { key: "degree-aas-civil-engineering-technology", label: "Civil Engineering Technology AAS", pathway: "Civil and Construction Engineering Technology AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Heavy Civil · Infrastructure" },
+  { key: "degree-aas-bim-digital-construction", label: "BIM and Digital Construction AAS", pathway: "Building Information Modeling and Digital Construction AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Documents & Plans · Takeoffs" },
+  { key: "degree-aas-occupational-safety-health", label: "Occupational Safety and Health AAS", pathway: "Occupational Safety and Health AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Field Execution · Audit" },
+  { key: "degree-aas-business-administration-contractors", label: "Business Administration for Contractors AAS", pathway: "Business Administration for Contractors AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Accounting · Admin Control" },
+  { key: "degree-aas-building-construction-technology", label: "Building Construction Technology AAS", pathway: "Building Construction Technology AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Field Execution · QC & Punch" },
+  { key: "degree-aas-architectural-engineering-technology", label: "Architectural Engineering Technology AAS", pathway: "Architectural Engineering Technology AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Documents & Plans · Design" },
+  { key: "degree-aas-estimating-preconstruction", label: "Estimating and Preconstruction AAS", pathway: "Estimating and Preconstruction AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Bid · Estimate · Proposal" },
+  { key: "degree-aas-mep-systems-technology", label: "MEP Systems Technology AAS", pathway: "MEP Systems Technology AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "MEP · Commissioning" },
+  { key: "degree-aas-heavy-civil-infrastructure", label: "Heavy Civil and Infrastructure AAS", pathway: "Heavy Civil and Infrastructure AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Heavy Civil · Infrastructure" },
+  { key: "degree-aas-document-control-digital-delivery", label: "Document Control and Digital Delivery AAS", pathway: "Document Control and Digital Delivery AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Document Control · RFIs · Takeoffs" },
+  { key: "degree-aas-field-operations-scheduling", label: "Field Operations and Scheduling AAS", pathway: "Field Operations and Scheduling AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Scheduling · Field Execution" },
+  { key: "degree-aas-construction-accounting-job-cost", label: "Construction Accounting and Job Cost AAS", pathway: "Construction Accounting and Job Cost AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Job Cost · Billing · Accounting" },
+  { key: "degree-aas-quality-control-inspection", label: "Quality Control and Inspection AAS", pathway: "Quality Control and Inspection AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Quality Control · Punch · Closeout" },
+  { key: "degree-aas-construction-law-compliance", label: "Construction Law and Compliance AAS", pathway: "Construction Law and Compliance AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Legal · Audit · Governance" },
+  { key: "degree-aas-residential-construction", label: "Residential Construction AAS", pathway: "Residential Construction AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Residential · Customer Portal" },
+  { key: "degree-aas-facilities-maintenance", label: "Facilities and Maintenance Technology AAS", pathway: "Facilities and Maintenance Technology AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Facilities · Warranty" },
+  { key: "degree-aas-warranty-service-operations", label: "Warranty and Service Operations AAS", pathway: "Warranty and Service Operations AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "Warranty · Recurring Work" },
+  { key: "degree-aas-fca-platform-operations", label: "FCA Platform Operations AAS", pathway: "FCA Platform Operations AAS", courses: 20, credits: 60, level: "AAS", fcaMatrix: "FCA Platform · Auricrux · Academy" },
+  { key: "degree-bs-construction-management", label: "Construction Management BS", pathway: "Construction Management BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Full lifecycle · Program management" },
+  { key: "degree-bs-project-management-construction", label: "Project Management BS", pathway: "Project Management BS (Construction Focus)", courses: 40, credits: 120, level: "BS", fcaMatrix: "Project Controls · Change Orders" },
+  { key: "degree-bs-sustainable-built-environment", label: "Sustainable Built Environment BS", pathway: "Sustainable Built Environment BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Sustainability · Commissioning" },
+  { key: "degree-bas-construction-technology-innovation", label: "Construction Technology BAS", pathway: "Construction Technology and Innovation BAS", courses: 40, credits: 120, level: "BAS", fcaMatrix: "Technology · Innovation" },
+  { key: "degree-bs-architectural-engineering", label: "Architectural Engineering BS", pathway: "Architectural Engineering BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Design · Building Systems" },
+  { key: "degree-bs-building-construction-science", label: "Building Construction Science BS", pathway: "Building Construction Science BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Field Execution · QC" },
+  { key: "degree-bs-estimating-construction-finance", label: "Estimating and Construction Finance BS", pathway: "Estimating and Construction Finance BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Bid · Estimate · Finance" },
+  { key: "degree-bs-digital-project-delivery", label: "Digital Project Delivery BS", pathway: "Digital Project Delivery BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Documents · RFIs · Change Orders" },
+  { key: "degree-bs-field-operations-management", label: "Field Operations Management BS", pathway: "Field Operations Management BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Field Execution · Scheduling" },
+  { key: "degree-bs-construction-finance-accounting", label: "Construction Finance and Accounting BS", pathway: "Construction Finance and Accounting BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Accounting · Billing · Job Cost" },
+  { key: "degree-bs-quality-punch-closeout", label: "Quality, Punch and Closeout BS", pathway: "Quality, Punch and Closeout BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "QC · Punch · Closeout" },
+  { key: "degree-bs-heavy-civil-engineering", label: "Heavy Civil Engineering BS", pathway: "Heavy Civil Engineering BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Heavy Civil · Infrastructure" },
+  { key: "degree-bs-mep-engineering-technology", label: "MEP Engineering Technology BS", pathway: "MEP Engineering Technology BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "MEP · Commissioning" },
+  { key: "degree-bs-construction-safety-management", label: "Construction Safety Management BS", pathway: "Construction Safety Management BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Safety · Audit" },
+  { key: "degree-bs-construction-law", label: "Construction Law BS", pathway: "Construction Law BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Legal · Governance" },
+  { key: "degree-bs-facilities-asset-management", label: "Facilities and Asset Management BS", pathway: "Facilities and Asset Management BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Facilities · Warranty" },
+  { key: "degree-bs-real-estate-development", label: "Real Estate Development BS", pathway: "Real Estate Development BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Market Network · Development" },
+  { key: "degree-bs-contractor-entrepreneurship", label: "Contractor Entrepreneurship BS", pathway: "Contractor Entrepreneurship BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "Business · Admin Control" },
+  { key: "degree-bs-fca-contractor-operations", label: "FCA Contractor Command Operations BS", pathway: "FCA Contractor Command Operations BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "FCA Platform · Full spine" },
+  { key: "degree-bs-digital-construction-bim", label: "Digital Construction and BIM BS", pathway: "Digital Construction and BIM BS", courses: 40, credits: 120, level: "BS", fcaMatrix: "BIM · Takeoffs · Design" },
 ];
 
 /** Featured AAS Construction Management term progression (backend-aligned). */

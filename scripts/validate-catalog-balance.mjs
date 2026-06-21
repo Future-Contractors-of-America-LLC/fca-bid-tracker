@@ -77,8 +77,8 @@ if (maxApp - minApp > 2) {
 }
 
 const degreeTopicsWithCourses = summarize("degree").length;
-if (degreeTopicsWithCourses < 8) {
-  console.error(`\nDegree topics with courses: ${degreeTopicsWithCourses} (expected at least 8)`);
+if (degreeTopicsWithCourses < 25) {
+  console.error(`\nDegree topics with courses: ${degreeTopicsWithCourses} (expected at least 25)`);
   process.exit(1);
 }
 

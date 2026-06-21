@@ -115,7 +115,8 @@ function topicMetaLine(topic, pathwayKey) {
   if (pathwayKey === "degree" && topic.degreeLevel) {
     const credits = topic.totalCredits ? `${topic.totalCredits} credits` : "";
     const courses = topic.typicalCourseCount ? `${topic.typicalCourseCount} courses × 3 cr` : "";
-    return [topic.degreeLevel, credits, courses].filter(Boolean).join(" · ");
+    const matrix = topic.fcaMatrix ? topic.fcaMatrix : "";
+    return [topic.degreeLevel, credits, courses, matrix].filter(Boolean).join(" · ");
   }
   if (pathwayKey === "licensure" && topic.stateCode) {
     return `${topic.stateCode} contractor board`;

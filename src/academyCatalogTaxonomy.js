@@ -65,7 +65,7 @@ export const CATALOG_PATHWAYS = [
   {
     key: "degree",
     label: "Degree Programs",
-    description: "Associate (60 credits) and bachelor (120 credits) pathways with standard 3-credit courses.",
+    description: "39 FCA Matrix-aligned associate and bachelor pathways covering construction lifecycle, platform operations, and Contractor Command.",
     credentialType: "Academic Degree",
   },
   {
@@ -109,88 +109,49 @@ const DEGREE_TOPICS = [
     totalCredits: 45,
     creditsPerCourse: 3,
     typicalCourseCount: 15,
+    fcaMatrix: "Academic foundation",
   },
-  {
-    key: "aas-construction-management",
-    label: "Construction Management AAS",
-    description: "Associate of Applied Science — 60 credits (20 courses × 3 credits).",
-    degreeLevel: "AAS",
-    totalCredits: 60,
-    creditsPerCourse: 3,
-    typicalCourseCount: 20,
-  },
-  {
-    key: "aas-civil-engineering-technology",
-    label: "Civil Engineering Technology AAS",
-    description: "Associate of Applied Science — 60 credits (20 courses × 3 credits).",
-    degreeLevel: "AAS",
-    totalCredits: 60,
-    creditsPerCourse: 3,
-    typicalCourseCount: 20,
-  },
-  {
-    key: "aas-bim-digital-construction",
-    label: "BIM & Digital Construction AAS",
-    description: "Associate of Applied Science — 60 credits (20 courses × 3 credits).",
-    degreeLevel: "AAS",
-    totalCredits: 60,
-    creditsPerCourse: 3,
-    typicalCourseCount: 20,
-  },
-  {
-    key: "aas-occupational-safety-health",
-    label: "Occupational Safety & Health AAS",
-    description: "Associate of Applied Science — 60 credits (20 courses × 3 credits).",
-    degreeLevel: "AAS",
-    totalCredits: 60,
-    creditsPerCourse: 3,
-    typicalCourseCount: 20,
-  },
-  {
-    key: "aas-business-administration-contractors",
-    label: "Business Administration for Contractors AAS",
-    description: "Associate of Applied Science — 60 credits (20 courses × 3 credits).",
-    degreeLevel: "AAS",
-    totalCredits: 60,
-    creditsPerCourse: 3,
-    typicalCourseCount: 20,
-  },
-  {
-    key: "bs-construction-management",
-    label: "Construction Management BS",
-    description: "Bachelor of Science — 120 credits (40 courses × 3 credits).",
-    degreeLevel: "BS",
-    totalCredits: 120,
-    creditsPerCourse: 3,
-    typicalCourseCount: 40,
-  },
-  {
-    key: "bs-project-management",
-    label: "Project Management BS",
-    description: "Bachelor of Science — 120 credits (40 courses × 3 credits).",
-    degreeLevel: "BS",
-    totalCredits: 120,
-    creditsPerCourse: 3,
-    typicalCourseCount: 40,
-  },
-  {
-    key: "bs-sustainable-built-environment",
-    label: "Sustainable Built Environment BS",
-    description: "Bachelor of Science — 120 credits (40 courses × 3 credits).",
-    degreeLevel: "BS",
-    totalCredits: 120,
-    creditsPerCourse: 3,
-    typicalCourseCount: 40,
-  },
-  {
-    key: "bas-construction-technology-innovation",
-    label: "Construction Technology BAS",
-    description: "Bachelor of Applied Science — 120 credits (40 courses × 3 credits).",
-    degreeLevel: "BAS",
-    totalCredits: 120,
-    creditsPerCourse: 3,
-    typicalCourseCount: 40,
-  },
+  // Associate (60 credits)
+  { key: "aas-construction-management", label: "Construction Management AAS", description: "Lifecycle operations, scheduling, cost control, and field leadership.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Project Setup · Scheduling · Field Execution" },
+  { key: "aas-civil-engineering-technology", label: "Civil Engineering Technology AAS", description: "Surveying, structures, infrastructure, and site engineering technology.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Heavy Civil · Infrastructure" },
+  { key: "aas-bim-digital-construction", label: "BIM & Digital Construction AAS", description: "Modeling, coordination, 4D/5D, and digital twin fundamentals.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Documents & Plans · Takeoffs" },
+  { key: "aas-occupational-safety-health", label: "Occupational Safety & Health AAS", description: "OSHA programs, hazard control, and safety leadership.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Field Execution · Audit" },
+  { key: "aas-business-administration-contractors", label: "Business Administration for Contractors AAS", description: "Accounting, HR, marketing, and contractor business operations.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Accounting · Admin Control" },
+  { key: "aas-building-construction-technology", label: "Building Construction Technology AAS", description: "Materials, methods, framing, envelope, and field building systems.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Field Execution · QC & Punch" },
+  { key: "aas-architectural-engineering-technology", label: "Architectural Engineering Technology AAS", description: "Building systems design, coordination, and construction documents.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Documents & Plans · Design" },
+  { key: "aas-estimating-preconstruction", label: "Estimating & Preconstruction AAS", description: "Takeoff, pricing, bid strategy, and proposal packaging.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Bid · Estimate · Proposal" },
+  { key: "aas-mep-systems-technology", label: "MEP Systems Technology AAS", description: "Mechanical, electrical, plumbing, and fire protection systems.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "MEP · Commissioning" },
+  { key: "aas-heavy-civil-infrastructure", label: "Heavy Civil & Infrastructure AAS", description: "Earthwork, utilities, highway, bridge, and public infrastructure.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Heavy Civil · Infrastructure" },
+  { key: "aas-document-control-digital-delivery", label: "Document Control & Digital Delivery AAS", description: "Plans, specs, RFIs, submittals, redlines, and file governance.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Document Control · RFIs · Takeoffs" },
+  { key: "aas-field-operations-scheduling", label: "Field Operations & Scheduling AAS", description: "Superintendent readiness, production control, and look-ahead planning.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Scheduling · Field Execution" },
+  { key: "aas-construction-accounting-job-cost", label: "Construction Accounting & Job Cost AAS", description: "Job cost, WIP, pay apps, and contractor financial controls.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Job Cost · Billing · Accounting" },
+  { key: "aas-quality-control-inspection", label: "Quality Control & Inspection AAS", description: "QA/QC plans, inspection, punch, and turnover quality.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Quality Control · Punch · Closeout" },
+  { key: "aas-construction-law-compliance", label: "Construction Law & Compliance AAS", description: "Contracts, licensing, liens, insurance, and regulatory compliance.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Legal · Audit · Governance" },
+  { key: "aas-residential-construction", label: "Residential Construction AAS", description: "Residential delivery, customer selections, and warranty readiness.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Residential · Customer Portal" },
+  { key: "aas-facilities-maintenance", label: "Facilities & Maintenance Technology AAS", description: "Facilities operations, PM programs, and asset lifecycle.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Facilities · Warranty" },
+  { key: "aas-warranty-service-operations", label: "Warranty & Service Operations AAS", description: "Warranty cases, recurring service, and callback prevention.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "Warranty · Recurring Work" },
+  { key: "aas-fca-platform-operations", label: "FCA Platform Operations AAS", description: "Contractor Command operator mastery across the FCA platform spine.", degreeLevel: "AAS", totalCredits: 60, creditsPerCourse: 3, typicalCourseCount: 20, fcaMatrix: "FCA Platform · Auricrux · Academy" },
+  // Bachelor (120 credits)
+  { key: "bs-construction-management", label: "Construction Management BS", description: "Advanced CM, finance, risk, leadership, and program management.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Full lifecycle · Program management" },
+  { key: "bs-project-management", label: "Project Management BS", description: "Scope, schedule, cost, risk, and construction PM integration.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Project Controls · Change Orders" },
+  { key: "bs-sustainable-built-environment", label: "Sustainable Built Environment BS", description: "Green building, LEED, energy, and resilient infrastructure.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Sustainability · Commissioning" },
+  { key: "bas-construction-technology-innovation", label: "Construction Technology BAS", description: "Robotics, IoT, prefab, ML, and construction innovation.", degreeLevel: "BAS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Technology · Innovation" },
+  { key: "bs-architectural-engineering", label: "Architectural Engineering BS", description: "Advanced building systems engineering and design integration.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Design · Building Systems" },
+  { key: "bs-building-construction-science", label: "Building Construction Science BS", description: "Materials science, constructability, and production systems.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Field Execution · QC" },
+  { key: "bs-estimating-construction-finance", label: "Estimating & Construction Finance BS", description: "Advanced estimating, commercial strategy, and construction finance.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Bid · Estimate · Finance" },
+  { key: "bs-digital-project-delivery", label: "Digital Project Delivery BS", description: "Document control, RFIs, change orders, and digital handoff.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Documents · RFIs · Change Orders" },
+  { key: "bs-field-operations-management", label: "Field Operations Management BS", description: "Superintendent leadership, lean production, and field analytics.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Field Execution · Scheduling" },
+  { key: "bs-construction-finance-accounting", label: "Construction Finance & Accounting BS", description: "Advanced job cost, WIP, revenue recognition, and FP&A.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Accounting · Billing · Job Cost" },
+  { key: "bs-quality-punch-closeout", label: "Quality, Punch & Closeout BS", description: "QA systems, punch, commissioning support, and turnover.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "QC · Punch · Closeout" },
+  { key: "bs-heavy-civil-engineering", label: "Heavy Civil Engineering BS", description: "Infrastructure design, geotechnical, and public works delivery.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Heavy Civil · Infrastructure" },
+  { key: "bs-mep-engineering-technology", label: "MEP Engineering Technology BS", description: "Advanced MEP design, commissioning, and smart building systems.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "MEP · Commissioning" },
+  { key: "bs-construction-safety-management", label: "Construction Safety Management BS", description: "Enterprise safety programs, culture, and regulatory strategy.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Safety · Audit" },
+  { key: "bs-construction-law", label: "Construction Law BS", description: "Advanced contract law, claims, ADR, and compliance.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Legal · Governance" },
+  { key: "bs-facilities-asset-management", label: "Facilities & Asset Management BS", description: "Facilities strategy, asset lifecycle, and operations leadership.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Facilities · Warranty" },
+  { key: "bs-real-estate-development", label: "Real Estate Development BS", description: "Development feasibility, finance, entitlements, and delivery.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Market Network · Development" },
+  { key: "bs-contractor-entrepreneurship", label: "Contractor Entrepreneurship BS", description: "Growth strategy, scaling, M&A, and venture operations.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "Business · Admin Control" },
+  { key: "bs-fca-contractor-operations", label: "FCA Contractor Command Operations BS", description: "Enterprise FCA platform operations, rollout, and Auricrux governance.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "FCA Platform · Full spine" },
+  { key: "bs-digital-construction-bim", label: "Digital Construction & BIM BS", description: "Advanced BIM, computational design, and model-based delivery.", degreeLevel: "BS", totalCredits: 120, creditsPerCourse: 3, typicalCourseCount: 40, fcaMatrix: "BIM · Takeoffs · Design" },
 ];
 
 const CERTIFICATION_TOPICS = [
@@ -371,31 +332,114 @@ function resolveApprenticeshipTopic(key) {
   return match?.topicKey || null;
 }
 
+const DEGREE_PREFIX_TOPIC_MAP = {
+  cmgt: (num) => (num !== null && num < 300 ? "aas-construction-management" : "bs-construction-management"),
+  ciet: () => "aas-civil-engineering-technology",
+  bimd: () => "aas-bim-digital-construction",
+  safe: () => "aas-occupational-safety-health",
+  bcon: () => "aas-business-administration-contractors",
+  bctc: () => "aas-building-construction-technology",
+  arch: () => "aas-architectural-engineering-technology",
+  estm: () => "aas-estimating-preconstruction",
+  mept: () => "aas-mep-systems-technology",
+  hvci: () => "aas-heavy-civil-infrastructure",
+  docm: () => "aas-document-control-digital-delivery",
+  fops: () => "aas-field-operations-scheduling",
+  acct: () => "aas-construction-accounting-job-cost",
+  qins: () => "aas-quality-control-inspection",
+  legl: () => "aas-construction-law-compliance",
+  resc: () => "aas-residential-construction",
+  facm: () => "aas-facilities-maintenance",
+  wrnt: () => "aas-warranty-service-operations",
+  fcap: () => "aas-fca-platform-operations",
+  pmgt: () => "bs-project-management",
+  sust: () => "bs-sustainable-built-environment",
+  ctin: () => "bas-construction-technology-innovation",
+  aren: () => "bs-architectural-engineering",
+  bcsc: () => "bs-building-construction-science",
+  estf: () => "bs-estimating-construction-finance",
+  dpdl: () => "bs-digital-project-delivery",
+  fldm: () => "bs-field-operations-management",
+  cfin: () => "bs-construction-finance-accounting",
+  qcls: () => "bs-quality-punch-closeout",
+  hvcv: () => "bs-heavy-civil-engineering",
+  mepb: () => "bs-mep-engineering-technology",
+  safm: () => "bs-construction-safety-management",
+  legb: () => "bs-construction-law",
+  fcmg: () => "bs-facilities-asset-management",
+  rede: () => "bs-real-estate-development",
+  entr: () => "bs-contractor-entrepreneurship",
+  fcao: () => "bs-fca-contractor-operations",
+  dibc: () => "bs-digital-construction-bim",
+};
+
+const DEGREE_PATHWAY_TOPIC_MAP = {
+  "degree-general-education-core": "general-education",
+  "degree-aas-construction-management": "aas-construction-management",
+  "degree-aas-civil-engineering-technology": "aas-civil-engineering-technology",
+  "degree-aas-bim-digital-construction": "aas-bim-digital-construction",
+  "degree-aas-occupational-safety-health": "aas-occupational-safety-health",
+  "degree-aas-business-administration-contractors": "aas-business-administration-contractors",
+  "degree-aas-building-construction-technology": "aas-building-construction-technology",
+  "degree-aas-architectural-engineering-technology": "aas-architectural-engineering-technology",
+  "degree-aas-estimating-preconstruction": "aas-estimating-preconstruction",
+  "degree-aas-mep-systems-technology": "aas-mep-systems-technology",
+  "degree-aas-heavy-civil-infrastructure": "aas-heavy-civil-infrastructure",
+  "degree-aas-document-control-digital-delivery": "aas-document-control-digital-delivery",
+  "degree-aas-field-operations-scheduling": "aas-field-operations-scheduling",
+  "degree-aas-construction-accounting-job-cost": "aas-construction-accounting-job-cost",
+  "degree-aas-quality-control-inspection": "aas-quality-control-inspection",
+  "degree-aas-construction-law-compliance": "aas-construction-law-compliance",
+  "degree-aas-residential-construction": "aas-residential-construction",
+  "degree-aas-facilities-maintenance": "aas-facilities-maintenance",
+  "degree-aas-warranty-service-operations": "aas-warranty-service-operations",
+  "degree-aas-fca-platform-operations": "aas-fca-platform-operations",
+  "degree-bs-construction-management": "bs-construction-management",
+  "degree-bs-project-management-construction": "bs-project-management",
+  "degree-bs-sustainable-built-environment": "bs-sustainable-built-environment",
+  "degree-bas-construction-technology-innovation": "bas-construction-technology-innovation",
+  "degree-bs-architectural-engineering": "bs-architectural-engineering",
+  "degree-bs-building-construction-science": "bs-building-construction-science",
+  "degree-bs-estimating-construction-finance": "bs-estimating-construction-finance",
+  "degree-bs-digital-project-delivery": "bs-digital-project-delivery",
+  "degree-bs-field-operations-management": "bs-field-operations-management",
+  "degree-bs-construction-finance-accounting": "bs-construction-finance-accounting",
+  "degree-bs-quality-punch-closeout": "bs-quality-punch-closeout",
+  "degree-bs-heavy-civil-engineering": "bs-heavy-civil-engineering",
+  "degree-bs-mep-engineering-technology": "bs-mep-engineering-technology",
+  "degree-bs-construction-safety-management": "bs-construction-safety-management",
+  "degree-bs-construction-law": "bs-construction-law",
+  "degree-bs-facilities-asset-management": "bs-facilities-asset-management",
+  "degree-bs-real-estate-development": "bs-real-estate-development",
+  "degree-bs-contractor-entrepreneurship": "bs-contractor-entrepreneurship",
+  "degree-bs-fca-contractor-operations": "bs-fca-contractor-operations",
+  "degree-bs-digital-construction-bim": "bs-digital-construction-bim",
+};
+
 function resolveDegreeTopic(key) {
   if (GEN_ED_PREFIXES.some((prefix) => key.startsWith(prefix))) {
     return "general-education";
   }
-  if (key.startsWith("deg-cmgt-")) {
-    const courseNumber = parseDegCourseNumber(key);
-    return courseNumber !== null && courseNumber < 300 ? "aas-construction-management" : "bs-construction-management";
+
+  for (const [pathwayKey, topicKey] of Object.entries(DEGREE_PATHWAY_TOPIC_MAP)) {
+    if (key === pathwayKey || key.startsWith(`${pathwayKey}-`)) {
+      return topicKey;
+    }
   }
-  if (key.startsWith("deg-ciet-")) return "aas-civil-engineering-technology";
-  if (key.startsWith("deg-bimd-")) return "aas-bim-digital-construction";
-  if (key.startsWith("deg-safe-")) return "aas-occupational-safety-health";
-  if (key.startsWith("deg-bcon-")) return "aas-business-administration-contractors";
-  if (key.startsWith("deg-pmgt-")) return "bs-project-management";
-  if (key.startsWith("deg-sust-")) return "bs-sustainable-built-environment";
-  if (key.startsWith("deg-ctin-")) return "bas-construction-technology-innovation";
-  if (key.startsWith("degree-general-education")) return "general-education";
-  if (key.startsWith("degree-aas-construction-management")) return "aas-construction-management";
-  if (key.startsWith("degree-aas-civil-engineering")) return "aas-civil-engineering-technology";
-  if (key.startsWith("degree-aas-bim-digital")) return "aas-bim-digital-construction";
-  if (key.startsWith("degree-aas-occupational-safety")) return "aas-occupational-safety-health";
-  if (key.startsWith("degree-aas-business-administration")) return "aas-business-administration-contractors";
-  if (key.startsWith("degree-bs-construction-management")) return "bs-construction-management";
-  if (key.startsWith("degree-bs-project-management")) return "bs-project-management";
-  if (key.startsWith("degree-bs-sustainable-built-environment")) return "bs-sustainable-built-environment";
-  if (key.startsWith("degree-bas-construction-technology")) return "bas-construction-technology-innovation";
+
+  const prefixMatch = key.match(/^deg-([a-z]+)-/);
+  if (prefixMatch) {
+    const prefix = prefixMatch[1];
+    const resolver = DEGREE_PREFIX_TOPIC_MAP[prefix];
+    if (resolver) {
+      const courseNumber = parseDegCourseNumber(key);
+      return prefix === "cmgt" ? resolver(courseNumber) : resolver();
+    }
+  }
+
+  if (key.startsWith("degree-aas-")) return key.replace("degree-", "");
+  if (key.startsWith("degree-bs-")) return key.replace("degree-", "");
+  if (key.startsWith("degree-bas-")) return key.replace("degree-", "");
   return null;
 }
 
