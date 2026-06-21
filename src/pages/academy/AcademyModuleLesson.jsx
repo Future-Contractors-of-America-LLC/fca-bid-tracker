@@ -314,6 +314,25 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
 
         {module ? (
           <>
+            <article style={{ ...cardStyle, marginBottom: 20, background: "linear-gradient(135deg, #0f172a, #1e293b)", color: "#f8fafc", border: "none" }}>
+              <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
+                <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #2563eb, #7c3aed)", display: "grid", placeItems: "center", fontWeight: 800, fontSize: 22, flexShrink: 0 }}>A</div>
+                <div style={{ flex: 1, minWidth: 220 }}>
+                  <div style={{ color: "#93c5fd", fontWeight: 700, fontSize: 12, letterSpacing: "0.06em", textTransform: "uppercase" }}>Your instructor</div>
+                  <h2 style={{ margin: "6px 0 8px", color: "#fff" }}>Auricrux</h2>
+                  <p style={{ margin: 0, lineHeight: 1.7, color: "#cbd5e1", fontSize: 15 }}>
+                    Master practitioner across commercial construction, licensing, and FCA Contractor Command.
+                    Every lecture and skills demo is taught from active field experience — not theory alone.
+                  </p>
+                </div>
+                {programDetail?.contentQualityLevel ? (
+                  <div style={{ padding: "8px 12px", borderRadius: 999, background: "rgba(34,197,94,0.15)", color: "#86efac", fontWeight: 700, fontSize: 12, alignSelf: "flex-start" }}>
+                    {programDetail.contentQualityLevel} standard
+                  </div>
+                ) : null}
+              </div>
+            </article>
+
             <article style={{ ...cardStyle, marginBottom: 20 }}>
               <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>
                 Module {moduleNumber} of {modules.length}
@@ -337,6 +356,16 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
               {activeTab === "lecture" ? renderLecturePanel() : null}
               {activeTab === "skills" ? renderSkillsDemoPanel() : null}
               {activeTab === "lab" ? renderLabPanel() : null}
+              {Array.isArray(module.lessonMedia) && module.lessonMedia.length > 0 && activeTab === "lecture" ? (
+                <div style={{ marginTop: 16, padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+                  <strong style={{ color: "#0f172a" }}>Lesson sequence</strong>
+                  <ol style={{ paddingLeft: 20, lineHeight: 1.85, color: "#475569", marginBottom: 0, marginTop: 10 }}>
+                    {module.lessonMedia.map((item) => (
+                      <li key={item.lessonKey || item.lessonIndex}>{item.title}</li>
+                    ))}
+                  </ol>
+                </div>
+              ) : null}
               {activeTab === "quiz" && !isLocked && !isModuleComplete ? (
                 <KnowledgeCheckQuiz module={module} onSubmit={handleQuizSubmit} busy={quizBusy} />
               ) : null}

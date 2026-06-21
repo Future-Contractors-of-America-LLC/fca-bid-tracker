@@ -40,10 +40,10 @@ const report = {
 console.log(JSON.stringify(report, null, 2));
 
 const ok =
-  programDirs >= 1115 &&
-  auricruxLecture >= 6315 &&
-  auricruxDemo >= 6315 &&
-  lab >= 6315 &&
+  programDirs >= 1188 &&
+  auricruxLecture >= 6772 &&
+  auricruxDemo >= 6772 &&
+  lab >= 6772 &&
   report.manifestPresent;
 
 if (!ok) {

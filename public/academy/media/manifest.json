@@ -1,11 +1,11 @@
 {
   "generated": {
-    "programs": 1115,
-    "modules": 6315,
-    "lecture": 6315,
-    "lab": 6315,
-    "auricruxLecture": 6315,
-    "auricruxSkillsDemo": 6315,
+    "programs": 1188,
+    "modules": 6772,
+    "lecture": 6772,
+    "lab": 6772,
+    "auricruxLecture": 6772,
+    "auricruxSkillsDemo": 6772,
     "mediaType": "html",
     "strategy": "Auricrux recorded lecture HTML, skills demonstration HTML, and lab workbooks",
     "lectureCoveragePct": 100.0,
@@ -199,6 +199,46 @@
       "auricruxSkillsDemo": 12
     },
     {
+      "programKey": "cert-bd-client-development",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-bd-growth-leadership",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-bd-lead-pursuit",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-bd-prequal-packages",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-bd-teaming-partnering",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
       "programKey": "cert-bid-strategy",
       "modules": 5,
       "lecture": 5,
@@ -320,6 +360,46 @@
     },
     {
       "programKey": "cert-commissioning-fundamentals",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-comms-brand-touchpoints",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-comms-conflict-recovery",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-comms-owner-updates",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-comms-retention-leadership",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-comms-stakeholder-management",
       "modules": 5,
       "lecture": 5,
       "lab": 5,
@@ -568,6 +648,46 @@
     },
     {
       "programKey": "cert-owner-gc-interface",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-payapp-g702-g703",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-payapp-lien-waivers",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-payapp-retainage-closeout",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-payapp-revenue-leadership",
+      "modules": 5,
+      "lecture": 5,
+      "lab": 5,
+      "auricruxLecture": 5,
+      "auricruxSkillsDemo": 5
+    },
+    {
+      "programKey": "cert-payapp-sov-fundamentals",
       "modules": 5,
       "lecture": 5,
       "lab": 5,
@@ -7983,6 +8103,406 @@
       "auricruxSkillsDemo": 7
     },
     {
+      "programKey": "lic-state-ak-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-al-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ar-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-az-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ca-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-co-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ct-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-dc-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-de-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-fl-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ga-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-hi-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ia-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-id-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-il-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-in-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ks-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ky-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-la-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ma-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-md-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-me-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-mi-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-mn-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-mo-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ms-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-mt-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-nc-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-nd-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ne-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-nh-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-nj-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-nm-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-nv-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ny-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-oh-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ok-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-or-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-pa-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ri-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-sc-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-sd-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-tn-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-tx-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-ut-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-vt-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-wa-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-wi-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-wv-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
+      "programKey": "lic-state-wy-general-contractor-exam-prep",
+      "modules": 7,
+      "lecture": 7,
+      "lab": 7,
+      "auricruxLecture": 7,
+      "auricruxSkillsDemo": 7
+    },
+    {
       "programKey": "lic-welding-cwi-exam-prep",
       "modules": 8,
       "lecture": 8,
@@ -8557,6 +9077,70 @@
       "lab": 6,
       "auricruxLecture": 6,
       "auricruxSkillsDemo": 6
+    },
+    {
+      "programKey": "prof-ce-code-update",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-ce-leadership-continuity",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-ce-license-renewal",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-ce-osha-refresher",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-workforce-career-pathways",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-workforce-digital-portal",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-workforce-jobsite-literacy",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
+    },
+    {
+      "programKey": "prof-workforce-tool-and-material",
+      "modules": 4,
+      "lecture": 4,
+      "lab": 4,
+      "auricruxLecture": 4,
+      "auricruxSkillsDemo": 4
     },
     {
       "programKey": "project-controls",

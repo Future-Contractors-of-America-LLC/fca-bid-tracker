@@ -165,6 +165,9 @@ const CERTIFICATION_TOPICS = [
   { key: "commissioning", label: "Commissioning", description: "Systems commissioning and turnover readiness." },
   { key: "sustainability-leed", label: "Sustainability & LEED", description: "LEED and sustainability professional credentials." },
   { key: "trade-journeyman", label: "Trade Journeyman", description: "Journeyman-level trade certification pathways." },
+  { key: "business-development-cert", label: "Business Development & Prequal", description: "Lead pursuit, prequalification, and opportunity development for contractors." },
+  { key: "billing-payapps-cert", label: "Billing & Pay Applications", description: "SOV, pay apps, lien waivers, and revenue continuity credentials." },
+  { key: "customer-communications-cert", label: "Customer Communications", description: "Owner updates, stakeholder management, and client retention." },
 ];
 
 const LICENSURE_TRADE_TOPICS = [
@@ -474,12 +477,26 @@ function resolveCertificationTopic(key) {
   if (key === "trade-journeyman-certification" || /cert-(electrical|plumbing|hvac|carpentry|masonry|welding|pipefitting|sheet-metal|fire-sprinkler)-/.test(key)) {
     return "trade-journeyman";
   }
+  if (key.startsWith("cert-bd-") || key.startsWith("cert-lead-") || key.startsWith("cert-prequal-")) {
+    return "business-development-cert";
+  }
+  if (key.startsWith("cert-payapp-") || key.startsWith("cert-billing-") || key.startsWith("cert-sov-")) {
+    return "billing-payapps-cert";
+  }
+  if (key.startsWith("cert-comms-") || key.startsWith("cert-customer-") || key.startsWith("cert-stakeholder-comms-")) {
+    return "customer-communications-cert";
+  }
   return null;
 }
 
 function resolveLicensureTopic(key) {
-  if (key.includes("dpor") || key.startsWith("lic-general-contractor-") || key === "virginia-dpor-residential-license-prep") {
+  const stateMatch = key.match(/^lic-state-([a-z]{2})-/);
+  if (stateMatch) return `state-${stateMatch[1]}`;
+  if (key.includes("dpor") || key === "virginia-dpor-residential-license-prep") {
     return "state-va";
+  }
+  if (key.startsWith("lic-general-contractor-") || key.startsWith("lic-nascla-")) {
+    return "business-law-compliance";
   }
   if (key.startsWith("lic-nascla-") || key.startsWith("lic-code-book-") || key.startsWith("lic-osha-licensure-") || key.startsWith("lic-application-checklist-")) {
     return "universal-licensure";
@@ -506,7 +523,8 @@ function resolveProfessionalTopic(key) {
   if (key.startsWith("fca-") || key.includes("workspace") || key.includes("user-guide") || key.includes("quick-start") || key.includes("academy-progress")) {
     return "fca-platform";
   }
-  if (key.includes("continuing-education") || key.includes("renewal-ce")) return "continuing-education";
+  if (key.includes("continuing-education") || key.includes("renewal-ce") || key.startsWith("prof-ce-")) return "continuing-education";
+  if (key.startsWith("prof-workforce-")) return "workforce-readiness";
   return "workforce-readiness";
 }
 

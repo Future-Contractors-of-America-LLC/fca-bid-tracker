@@ -139,7 +139,7 @@ function TopicCard({ topic, pathwayKey, href }) {
       ) : null}
       <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>{topic.description}</p>
       <div style={{ color: "#64748b", fontSize: 14, marginTop: 12 }}>
-        {isEmpty ? "Coming soon — state prep launching" : `${topic.courses.length} courses`}
+        {isEmpty ? "Programs publishing — check back soon" : `${topic.courses.length} courses · Auricrux-led`}
       </div>
     </a>
   );
