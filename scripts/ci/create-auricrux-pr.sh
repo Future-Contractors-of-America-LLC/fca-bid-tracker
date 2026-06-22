@@ -72,6 +72,7 @@ try_token() {
   local existing pr_number
 
   if [ -z "${token}" ]; then
+    echo "${name} is not set; skipping."
     return 1
   fi
 
@@ -88,6 +89,7 @@ try_token() {
     exit 0
   fi
 
+  echo "${name} could not create the pull request."
   return 1
 }
 
