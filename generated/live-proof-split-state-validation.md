@@ -1,10 +1,10 @@
 # Live Proof Split State Validation
 
 - Packet: 062Y
-- Generated: 2026-06-22T23:24:03.735Z
+- Generated: 2026-06-22T23:48:39.206Z
 - success: false
-- witnessCommitSha: 19ef0d09b3ece09b515950406f50311084bd63ee
-- proofCommitSha: ce38ef0b20791f0f860151743c0c6016a503ff32
+- witnessCommitSha: 063e3a83d17eca9852cf36582fc1a617724b2ad8
+- proofCommitSha: b47324807378f8ef8e6e53a82cf19325795e1dd4
 
 ## Metadata State
 - provenance: github_actions_ci
