@@ -2,6 +2,7 @@ name: FCA Runtime Smoke Validation
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  FCA_RUNTIME_SMOKE: "1"
 
 on:
   push:

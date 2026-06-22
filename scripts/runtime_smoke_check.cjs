@@ -199,6 +199,9 @@ function writeSummary(repoRoot, summary, results) {
 
 async function main() {
   const repoRoot = path.join(__dirname, '..')
+  if (!process.env.FCA_RUNTIME_SMOKE) {
+    process.env.FCA_RUNTIME_SMOKE = '1'
+  }
   const activePacket = readContinuityPacket(repoRoot)
   const results = []
 

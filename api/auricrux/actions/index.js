@@ -23,6 +23,24 @@ module.exports = async function handler(req, res) {
 
   try {
     const payload = assertValid(CreateAuricruxActionPayloadSchema, req.body || {})
+    if (process.env.FCA_RUNTIME_SMOKE === '1') {
+      return res.status(202).json(
+        makeApiSuccess(
+          {
+            route: '/api/auricrux/actions',
+            acceptedPayload: payload,
+            central: { boundedSmoke: true },
+            backingSource: 'fca-runtime-smoke-stub',
+            notYetImplemented: false,
+          },
+          {
+            packet: '061L',
+            timestamp: new Date().toISOString(),
+          },
+        ),
+      )
+    }
+
     const response = await fetch(`${CENTRAL_API}/auricrux/actions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
