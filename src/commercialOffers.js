@@ -24,8 +24,16 @@ export const commercialOffers = {
   },
 };
 
+import { workspaceCheckoutHref } from "./commerceCheckout.js";
+
+/** @deprecated Prefer workspaceCheckoutHref for integrated checkout flow. */
 export function checkoutUrlForTier(tierKey) {
   if (tierKey === "pilot") return PILOT_CHECKOUT_URL;
   if (tierKey === "startup") return STARTUP_CHECKOUT_URL || null;
   return null;
+}
+
+export function checkoutPathForTier(tierKey, options = {}) {
+  if (!tierKey) return "/checkout";
+  return workspaceCheckoutHref(tierKey, options);
 }

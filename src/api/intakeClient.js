@@ -1,5 +1,5 @@
 import { centralFetch } from "./backendBase";
-import { checkoutUrlForTier, PILOT_CHECKOUT_URL } from "../commercialOffers.js";
+import { checkoutPathForTier } from "../commercialOffers.js";
 
 function planValue(plan) {
   if (plan === "pilot") return 2500;
@@ -7,13 +7,8 @@ function planValue(plan) {
   return 249;
 }
 
-export function checkoutUrlForPlan(plan, clientReferenceId) {
-  const ref = encodeURIComponent(clientReferenceId || "");
-  const joiner = (url) => (url.includes("?") ? "&" : "?") + `client_reference_id=${ref}`;
-  const tierUrl = checkoutUrlForTier(plan);
-  if (tierUrl) return `${tierUrl}${joiner(tierUrl)}`;
-  if (plan === "pilot") return `${PILOT_CHECKOUT_URL}${joiner(PILOT_CHECKOUT_URL)}`;
-  return null;
+export function checkoutUrlForPlan(plan, clientReferenceId, email) {
+  return checkoutPathForTier(plan, { ref: clientReferenceId, email });
 }
 
 export async function submitIntakeBid(record) {

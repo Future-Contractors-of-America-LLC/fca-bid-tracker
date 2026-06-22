@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import ShellHeader from "../../components/ShellHeader";
@@ -13,7 +12,7 @@ import ProductProofSection from "../../components/ProductProofSection";
 import PricingActionCenter from "../../components/PricingActionCenter";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import useCustomerSession from "../../hooks/useCustomerSession";
-import { loadStripeCatalog, workspaceCheckoutFromCatalog } from "../../stripeCatalog";
+import { workspaceCheckoutHref } from "../../commerceCheckout";
 import { publicPackageRouteGroups } from "../../publicPackageRouteGroups";
 import { executiveSignalCtaSets, pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
@@ -73,17 +72,10 @@ const academyInnovationSpotlight = [
 
 export default function Pricing() {
   const { session, login } = useCustomerSession();
-  const [stripeCatalog, setStripeCatalog] = useState(null);
 
-  useEffect(() => {
-    loadStripeCatalog().then(setStripeCatalog);
-  }, []);
-
-  function tierCheckoutUrl(tier) {
-    if (tier.planKey) {
-      return workspaceCheckoutFromCatalog(stripeCatalog, tier.planKey) || tier.checkoutUrl || null;
-    }
-    return tier.checkoutUrl || null;
+  function tierCheckoutHref(tier) {
+    if (tier.planKey) return workspaceCheckoutHref(tier.planKey);
+    return null;
   }
 
   return (
@@ -221,9 +213,9 @@ export default function Pricing() {
 
       <div style={responsiveGrid(260)}>
         {pricingTiers.map((tier) => {
-          const checkoutUrl = tierCheckoutUrl(tier);
-          const ctaHref = checkoutUrl || tier.ctaHref;
-          const ctaLabel = checkoutUrl ? `Buy — ${tier.price}` : tier.ctaLabel;
+          const checkoutHref = tierCheckoutHref(tier);
+          const ctaHref = checkoutHref || tier.ctaHref;
+          const ctaLabel = checkoutHref ? `Continue checkout — ${tier.price}` : tier.ctaLabel;
 
           return (
           <div key={tier.name} style={cardStyle}>
@@ -260,7 +252,7 @@ export default function Pricing() {
               {tier.includes.map((item) => <li key={item}>{item}</li>)}
             </ul>
 
-            <a href={ctaHref} style={ctaPrimaryStyle} target={checkoutUrl ? "_blank" : undefined} rel={checkoutUrl ? "noopener noreferrer" : undefined}>{ctaLabel}</a>
+            <a href={ctaHref} style={ctaPrimaryStyle}>{ctaLabel}</a>
           </div>
           );
         })}

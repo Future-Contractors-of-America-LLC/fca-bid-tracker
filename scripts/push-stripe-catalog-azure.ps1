@@ -46,8 +46,17 @@ if ($FromStripeConfig) {
   $cfg = Join-Path $env:USERPROFILE ".config\stripe\config.toml"
   if (Test-Path $cfg) {
     $raw = Get-Content $cfg -Raw
-    if ($raw -match 'api_key\s*=\s*"(sk_[^"]+)"') {
+    if ($raw -match 'test_mode_api_key\s*=\s*"(sk_[^"]+)"') {
       $StripeSecretKey = $Matches[1]
+    } elseif ($raw -match 'api_key\s*=\s*"(sk_[^"]+)"') {
+      $StripeSecretKey = $Matches[1]
+    } elseif ($raw -match 'live_mode_api_key\s*=\s*"(sk_[^"]+)"') {
+      $StripeSecretKey = $Matches[1]
+    }
+    if (-not $StripePublishableKey -and $raw -match 'test_mode_pub_key\s*=\s*"(pk_[^"]+)"') {
+      $StripePublishableKey = $Matches[1]
+    } elseif (-not $StripePublishableKey -and $raw -match 'live_mode_pub_key\s*=\s*"(pk_[^"]+)"') {
+      $StripePublishableKey = $Matches[1]
     }
   }
 }
@@ -70,6 +79,10 @@ $startupUrl = $catalog.workspace.startup.paymentLinkUrl
 $swaSettings = @()
 if ($startupUrl) {
   $swaSettings += "VITE_STRIPE_STARTUP_CHECKOUT_URL=$startupUrl"
+}
+if ($StripeSecretKey) {
+  $swaSettings += "STRIPE_SECRET_KEY=$StripeSecretKey"
+  $swaSettings += "STRIPE_PUBLISHABLE_KEY=$StripePublishableKey"
 }
 if ($StripePublishableKey) {
   $swaSettings += "VITE_STRIPE_PUBLISHABLE_KEY=$StripePublishableKey"

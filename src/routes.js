@@ -8,6 +8,7 @@ export const routes = {
   "/login": lazyPage(() => import("./pages/website/Login")),
   "/intake": lazyPage(() => import("./pages/website/Intake")),
   "/checkout": lazyPage(() => import("./pages/website/Checkout")),
+  "/checkout/success": lazyPage(() => import("./pages/website/CheckoutSuccess")),
   "/pricing": lazyPage(() => import("./pages/website/Pricing")),
   "/features": lazyPage(() => import("./pages/website/Features")),
   "/solutions": lazyPage(() => import("./pages/website/Solutions")),

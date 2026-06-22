@@ -85,18 +85,7 @@ export default function Intake() {
       setStatus("Profile saved on this device. We will sync when you return.");
     }
 
-    const checkout = checkoutUrlForPlan(plan, record.email);
-    if (checkout) {
-      window.location.href = checkout;
-      return;
-    }
-
-    if (plan === "startup") {
-      navigateTo("/checkout");
-      return;
-    }
-
-    navigateTo("/login");
+    navigateTo(checkoutUrlForPlan(plan, record.intakeId, record.email));
   }
 
   return (

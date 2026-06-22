@@ -1,4 +1,4 @@
-window.FCA_BACKEND = {
+﻿window.FCA_BACKEND = {
   baseUrl: "https://auricrux-central.azurewebsites.net",
   bidsApi: "https://auricrux-central.azurewebsites.net/api/bids",
   leadsApi: "https://auricrux-central.azurewebsites.net/api/leads",
@@ -18,6 +18,7 @@ window.FCA_BACKEND = {
   workflowAuditApi: "https://auricrux-central.azurewebsites.net/api/workflow-audit",
   stripeWebhookApi: "https://auricrux-central.azurewebsites.net/api/stripe/webhook",
   stripeCheckoutApi: "https://auricrux-central.azurewebsites.net/api/stripe-checkout",
+  stripePublishableKey: "",
   stripeWebhookSwaApi: "https://futurecontractorsofamerica.com/api/stripe-webhook",
   mobileRegisterApi: "https://auricrux-central.azurewebsites.net/api/mobile/register",
   portalMessagesApi: "https://auricrux-central.azurewebsites.net/api/portal-messages",
@@ -39,3 +40,4 @@ window.FCA_BACKEND = {
     return this.baseUrl + "/api/projects/" + encodeURIComponent(projectId) + "/workspace";
   }
 };
+

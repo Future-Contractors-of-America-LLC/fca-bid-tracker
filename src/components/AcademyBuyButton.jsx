@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { createAcademyCheckout } from "../api/academyCommerceClient";
+import { navigateTo } from "../navigation";
+import { academyCheckoutHref } from "../commerceCheckout";
 
 const buttonStyle = {
   border: "1px solid #15803d",
@@ -32,43 +33,20 @@ export default function AcademyBuyButton({
   lane,
 }) {
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
 
   if (lane && hiddenLanes.includes(lane)) {
     return null;
   }
 
   const priceLabel = retailPrice != null && retailPrice !== "" ? ` — $${retailPrice}` : "";
-  const buttonLabel = label || `Buy now${priceLabel}`;
+  const buttonLabel = label || `Continue checkout${priceLabel}`;
 
-  async function buyNow(event) {
+  function buyNow(event) {
     event?.preventDefault?.();
     event?.stopPropagation?.();
     setBusy(true);
-    setError("");
-    try {
-      const origin = typeof window !== "undefined" ? window.location.origin : "";
-      const checkout = await createAcademyCheckout({
-        programKey,
-        pathwayKey,
-        buyerEmail,
-        successUrl: origin ? `${origin}/academy/store/success` : undefined,
-        cancelUrl: origin ? `${origin}/academy/programs/${programKey || pathwayKey}` : undefined,
-      });
-      if (checkout.checkoutUrl) {
-        window.location.href = checkout.checkoutUrl;
-        return;
-      }
-      if (checkout.mode === "contact-sales") {
-        window.location.href = "/contact";
-        return;
-      }
-      setError("Checkout is unavailable right now.");
-    } catch (checkoutError) {
-      setError(checkoutError.message || "Unable to start checkout.");
-    } finally {
-      setBusy(false);
-    }
+    navigateTo(academyCheckoutHref({ programKey, pathwayKey, email: buyerEmail }));
+    setBusy(false);
   }
 
   return (
@@ -81,7 +59,6 @@ export default function AcademyBuyButton({
       >
         {busy ? "Opening checkout..." : buttonLabel}
       </button>
-      {error ? <span style={{ color: "#b91c1c", fontSize: 13 }}>{error}</span> : null}
     </span>
   );
 }

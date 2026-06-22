@@ -42,9 +42,19 @@ export const routeMetadata = {
       "Submit your company profile to start FCA pilot or workspace onboarding.",
   },
   "/checkout": {
-    title: "Activation | Future Contractors of America",
+    title: "Secure Checkout | Future Contractors of America",
     description:
-      "Apply your activation code and continue into the branded FCA customer workspace.",
+      "Review your FCA package, confirm buyer details, and complete secure payment for workspace rollout or academy enrollment.",
+  },
+  "/checkout/success": {
+    title: "Payment Confirmed | Future Contractors of America",
+    description:
+      "Your FCA purchase is confirmed. Continue into workspace activation or academy enrollment.",
+  },
+  "/legal/contractor-resources": {
+    title: "Contractor Legal Resources | Future Contractors of America",
+    description:
+      "Contractor legal resources for licensing, contracts, lien waivers, insurance, and FCA policy references.",
   },
   "/contact": {
     title: "Contact | Future Contractors of America",
