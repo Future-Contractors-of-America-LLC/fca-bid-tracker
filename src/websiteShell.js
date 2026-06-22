@@ -277,6 +277,7 @@ export const platformModules = [
 
 export const pricingTiers = [
   {
+    planKey: "startup",
     name: "Startup Workspace",
     price: "$99/mo",
     bestFor: "Owner-operator or very small teams moving off spreadsheets",
@@ -298,6 +299,7 @@ export const pricingTiers = [
     ],
   },
   {
+    planKey: "starter-team",
     name: "Starter Team Workspace",
     price: "$249/mo",
     bestFor: "Small teams needing stronger handoffs across precon and customer updates",
@@ -318,6 +320,7 @@ export const pricingTiers = [
     ],
   },
   {
+    planKey: "pilot",
     name: "Pilot Workspace",
     price: "$2,500 one-time",
     bestFor: "Teams that want guided launch, configuration, and adoption",
@@ -339,6 +342,7 @@ export const pricingTiers = [
     ],
   },
   {
+    planKey: "team",
     name: "Team Workspace",
     price: "$499/mo",
     bestFor: "Active delivery teams with recurring estimating and execution flow",
@@ -359,6 +363,7 @@ export const pricingTiers = [
     ],
   },
   {
+    planKey: "operations",
     name: "Operations Workspace",
     price: "$899/mo",
     bestFor: "Mid-size contractor operations with higher coordination load",
@@ -379,6 +384,7 @@ export const pricingTiers = [
     ],
   },
   {
+    planKey: "growth",
     name: "Growth Platform",
     price: "$1,500/mo",
     bestFor: "Growing teams expanding volume, complexity, and workforce scale",
@@ -399,6 +405,7 @@ export const pricingTiers = [
     ],
   },
   {
+    planKey: "scale",
     name: "Scale Operations Platform",
     price: "$2,400/mo",
     bestFor: "Multi-crew organizations preparing for enterprise standardization",
@@ -419,6 +426,7 @@ export const pricingTiers = [
     ],
   },
   {
+    planKey: "enterprise",
     name: "Enterprise Rollout",
     price: "$3,500+/mo",
     bestFor: "Large organizations deploying FCA as their operating standard",

@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import AcademyBuyButton from "../../components/AcademyBuyButton";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import { ELECTRICAL_APPRENTICESHIP_LEVELS, OSHA_CERT_UNITS, PROJECT_CONTROLS_CERT_UNITS, organizeApiCatalogByLane } from "../../academyOfferings";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
@@ -43,7 +44,7 @@ function ProgramCard({ program }) {
       ) : program.goal ? (
         <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.goal}</p>
       ) : null}
-      <div style={{ marginTop: 14 }}>
+      <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center" }}>
         {isPreview ? (
           program.linkedSurface ? (
             <a href={program.linkedSurface} style={{ border: "1px solid #64748b", background: "#64748b", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>
@@ -51,9 +52,17 @@ function ProgramCard({ program }) {
             </a>
           ) : null
         ) : (
-          <a href={`/academy/programs/${program.key}`} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>
-            Open program
-          </a>
+          <>
+            <a href={`/academy/programs/${program.key}`} style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, textDecoration: "none" }}>
+              Open program
+            </a>
+            <AcademyBuyButton
+              programKey={program.key}
+              retailPrice={program.retailPrice}
+              lane={program.lane}
+              variant="secondary"
+            />
+          </>
         )}
       </div>
       {Array.isArray(program.modules) && program.modules.length > 0 ? (

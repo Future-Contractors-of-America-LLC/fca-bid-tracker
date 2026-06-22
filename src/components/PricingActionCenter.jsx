@@ -100,11 +100,9 @@ export default function PricingActionCenter({ session, login }) {
               <button type="button" onClick={() => activatePlan(plan.key, plan.role, plan.nextHref)} style={actionButtonStyle(plan.key === "enterprise" ? "secondary" : "primary")}>
                 {plan.title}
               </button>
-              {plan.key === "startup" || plan.key === "pilot" ? (
-                <button type="button" onClick={() => payWithStripe(plan.key)} style={{ ...actionButtonStyle("secondary"), display: "inline-block", marginTop: 10, width: "100%" }}>
-                  Pay with Stripe — {preset.price}
-                </button>
-              ) : null}
+              <button type="button" onClick={() => payWithStripe(plan.key)} style={{ ...actionButtonStyle("secondary"), display: "inline-block", marginTop: 10, width: "100%" }}>
+                Pay with Stripe — {preset.price}
+              </button>
             </div>
           );
         })}

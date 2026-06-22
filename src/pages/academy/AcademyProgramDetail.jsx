@@ -4,6 +4,7 @@ import ShellFooter from "../../components/ShellFooter";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { fetchAcademyProgram } from "../../api/academyClient";
+import AcademyBuyButton from "../../components/AcademyBuyButton";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -122,15 +123,23 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
                 )}
               </div>
             ) : (
-              <div style={{ marginTop: 12 }}>
-                <div style={{ color: "#64748b", marginBottom: 10 }}>Enroll to access module lessons, knowledge checks, and progress tracking.</div>
+              <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 10, alignItems: "flex-start" }}>
+                <div style={{ color: "#64748b", marginBottom: 4, width: "100%" }}>
+                  Purchase to unlock full access, or enroll if your workspace already includes this program.
+                </div>
+                <AcademyBuyButton
+                  programKey={programId}
+                  retailPrice={program.retailPrice}
+                  lane={program.lane}
+                  buyerEmail={session?.email}
+                />
                 <button
                   type="button"
                   disabled={enrollBusy}
                   onClick={enrollNow}
-                  style={{ border: "1px solid #2563eb", background: "#2563eb", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
+                  style={{ border: "1px solid #2563eb", background: "#fff", color: "#2563eb", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
                 >
-                  {enrollBusy ? "Enrolling..." : "Enroll now"}
+                  {enrollBusy ? "Enrolling..." : "Enroll (included access)"}
                 </button>
               </div>
             )}
