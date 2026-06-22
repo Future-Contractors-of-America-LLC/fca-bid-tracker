@@ -24,15 +24,32 @@ jobs:
           mkdir -p generated
           echo "Auricrux execution cycle $(date -u)" > generated/auricrux-run.txt
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Auricrux autonomous execution cycle"
-          title: "Auricrux autonomous execution"
-          body: "Automated execution cycle using FCA autonomy rules."
-          branch: "auricrux/auto-cycle"
-          base: "main"
-          labels: auricrux-automerge
-          add-paths: |
-            generated/auricrux-run.txt
+      - name: Push autonomous branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B auricrux/auto-cycle
+          git add generated/auricrux-run.txt
+          git commit -m "Auricrux autonomous execution cycle"
+          git push origin auricrux/auto-cycle --force-with-lease
+
+      - name: Create or update pull request
+        env:
+          GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+        run: |
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "::error::AURICRUX_GITHUB_TOKEN is required. GitHub Actions cannot create pull requests in this repository without a classic PAT (repo scope) or enabling workflow PR creation in repo settings."
+            exit 1
+          fi
+          existing="$(gh pr list --repo "${{ github.repository }}" --head auricrux/auto-cycle --base main --state open --json number --jq '.[0].number // empty')"
+          if [ -n "${existing}" ]; then
+            echo "Open PR #${existing} already exists for auricrux/auto-cycle"
+            exit 0
+          fi
+          gh pr create \
+            --repo "${{ github.repository }}" \
+            --base main \
+            --head auricrux/auto-cycle \
+            --title "Auricrux autonomous execution" \
+            --body "Automated execution cycle using FCA autonomy rules." \
+            --label auricrux-automerge
