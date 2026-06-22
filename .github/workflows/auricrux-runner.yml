@@ -15,7 +15,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.AURICRUX_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Generate Auricrux task
         run: |
@@ -25,6 +28,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
+          token: ${{ secrets.AURICRUX_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           commit-message: "Auricrux autonomous execution cycle"
           title: "Auricrux autonomous execution"
           body: "Automated execution cycle using FCA autonomy rules."

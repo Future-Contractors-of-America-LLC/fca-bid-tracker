@@ -21,8 +21,14 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Checkout
+      - name: Checkout frontend
         uses: actions/checkout@v6
+
+      - name: Checkout auricrux-central (finance spine validation)
+        uses: actions/checkout@v6
+        with:
+          repository: Future-Contractors-of-America-LLC/auricrux-central
+          path: auricrux-central-work
 
       - name: Setup Node
         uses: actions/setup-node@v5
@@ -33,6 +39,8 @@ jobs:
         run: npm ci
 
       - name: Run frontend build loop
+        env:
+          FCA_CENTRAL_ROOT: ${{ github.workspace }}/auricrux-central-work
         run: node scripts/frontend_build_loop.mjs
 
       - name: Commit loop artifacts
@@ -45,4 +53,4 @@ jobs:
             exit 0
           fi
           git commit -m "Auricrux frontend build loop $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          git push
+          git push || true
