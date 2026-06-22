@@ -1,42 +1,51 @@
 import { useState } from "react";
-
-const card = { border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, background: "#fff", boxShadow: "0 1px 2px rgba(15,23,42,0.04)" };
-const input = { width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" };
-const btn = (primary = false) => ({
-  border: "none",
-  borderRadius: 10,
-  padding: "10px 14px",
-  fontWeight: 700,
-  cursor: "pointer",
-  background: primary ? "#2ca01c" : "#fff",
-  color: primary ? "#fff" : "#0f172a",
-  border: primary ? "none" : "1px solid #cbd5e1",
-});
+import {
+  PortalEmptyState,
+  PortalQuickStats,
+  PortalStatusBadge,
+} from "../portal/PortalPrimitives";
+import FinancePanelShell from "./FinancePanelShell";
+import {
+  financeCardStyle,
+  financeInputStyle,
+  financeMutedText,
+  financePrimaryButton,
+  financeSecondaryButton,
+  financeSectionTitle,
+  financeTdStyle,
+  financeThStyle,
+  financeTableStyle,
+} from "./financeStyles";
+import { portalTokens } from "../../portalDesignTokens";
 
 export function FinanceDashboardPanel({ dashboard, intelligence, onNavigate }) {
-  if (!dashboard) return null;
+  if (!dashboard) {
+    return (
+      <PortalEmptyState
+        title="Finance dashboard unavailable"
+        detail="Refresh books or confirm your workspace has financial data connected."
+        primaryHref="/portal/billing"
+        primaryLabel="Create invoice"
+      />
+    );
+  }
+
   const recommendations = intelligence?.recommendations || [];
   const kpis = [
-    { label: "Cash on hand", value: dashboard.cashOnHand, tone: "#047857" },
-    { label: "Accounts receivable", value: dashboard.accountsReceivable, tone: "#1d4ed8" },
-    { label: "Accounts payable", value: dashboard.accountsPayable, tone: "#b45309" },
-    { label: "Net income (YTD)", value: dashboard.netIncomeYtd, tone: "#0f172a" },
+    { label: "Cash on hand", value: dashboard.cashOnHand, hint: "Operating cash" },
+    { label: "Accounts receivable", value: dashboard.accountsReceivable, hint: "Open customer balances" },
+    { label: "Accounts payable", value: dashboard.accountsPayable, hint: "Vendor obligations" },
+    { label: "Net income (YTD)", value: dashboard.netIncomeYtd, hint: "Year to date" },
   ];
+
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14 }}>
-        {kpis.map((kpi) => (
-          <div key={kpi.label} style={card}>
-            <div style={{ color: "#64748b", fontSize: 13, marginBottom: 8 }}>{kpi.label}</div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: kpi.tone }}>{kpi.value}</div>
-          </div>
-        ))}
-      </div>
+      <PortalQuickStats items={kpis} />
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>
-        <div style={card}>
-          <div style={{ fontWeight: 800, marginBottom: 12 }}>Profit & Loss snapshot</div>
-          <div style={{ display: "grid", gap: 8, color: "#334155", lineHeight: 1.8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
+        <div style={financeCardStyle}>
+          <div style={financeSectionTitle}>Profit & Loss snapshot</div>
+          <div style={{ display: "grid", gap: 8, color: portalTokens.body, lineHeight: 1.8 }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}><span>Income</span><strong>{dashboard.profitAndLoss?.income}</strong></div>
             <div style={{ display: "flex", justifyContent: "space-between" }}><span>COGS</span><strong>{dashboard.profitAndLoss?.cogs}</strong></div>
             <div style={{ display: "flex", justifyContent: "space-between" }}><span>Expenses</span><strong>{dashboard.profitAndLoss?.expenses}</strong></div>
@@ -45,9 +54,10 @@ export function FinanceDashboardPanel({ dashboard, intelligence, onNavigate }) {
             </div>
           </div>
         </div>
-        <div style={card}>
-          <div style={{ fontWeight: 800, marginBottom: 12 }}>Operations</div>
-          <div style={{ color: "#475569", lineHeight: 1.9, marginBottom: 14 }}>
+
+        <div style={financeCardStyle}>
+          <div style={financeSectionTitle}>Operations summary</div>
+          <div style={{ ...financeMutedText, lineHeight: 1.9, marginBottom: 14 }}>
             <div>{dashboard.openBillCount} open bill(s)</div>
             <div>{dashboard.openArCount} open AR invoice(s)</div>
             <div>{dashboard.unreconciledTransactions} unreconciled bank transaction(s)</div>
@@ -56,9 +66,9 @@ export function FinanceDashboardPanel({ dashboard, intelligence, onNavigate }) {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {(dashboard.quickActions || []).map((action) => (
               action.href ? (
-                <a key={action.label} href={action.href} style={{ ...btn(), textDecoration: "none", display: "inline-block" }}>{action.label}</a>
+                <a key={action.label} href={action.href} style={{ ...financeSecondaryButton, textDecoration: "none" }}>{action.label}</a>
               ) : (
-                <button key={action.label} type="button" style={btn()} onClick={() => onNavigate(action.action === "create-expense" ? "expenses" : action.action === "create-bill" ? "bills" : "dashboard")}>
+                <button key={action.label} type="button" style={financeSecondaryButton} onClick={() => onNavigate(action.action === "create-expense" ? "expenses" : action.action === "create-bill" ? "bills" : "dashboard")}>
                   {action.label}
                 </button>
               )
@@ -67,19 +77,10 @@ export function FinanceDashboardPanel({ dashboard, intelligence, onNavigate }) {
         </div>
       </div>
 
-      <div style={{ ...card, display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
-        <div style={{ fontWeight: 800 }}>Connectivity</div>
-        {Object.entries(dashboard.connectivity || {}).map(([key, value]) => (
-          <span key={key} style={{ background: "#ecfdf5", color: "#047857", borderRadius: 999, padding: "6px 12px", fontSize: 12, fontWeight: 700 }}>
-            {key}: {value}
-          </span>
-        ))}
-      </div>
-
       {recommendations.length ? (
-        <div style={card}>
-          <div style={{ fontWeight: 800, marginBottom: 8 }}>Auricrux next actions</div>
-          <div style={{ color: "#64748b", fontSize: 13, marginBottom: 12 }}>{intelligence?.nextAction}</div>
+        <div style={financeCardStyle}>
+          <div style={financeSectionTitle}>Auricrux next actions</div>
+          <div style={{ ...financeMutedText, marginBottom: 12 }}>{intelligence?.nextAction}</div>
           <div style={{ display: "grid", gap: 10 }}>
             {recommendations.map((item) => (
               <div key={item.action} style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", borderTop: "1px solid #f1f5f9", paddingTop: 10 }}>
@@ -88,9 +89,9 @@ export function FinanceDashboardPanel({ dashboard, intelligence, onNavigate }) {
                   <div style={{ color: "#64748b", fontSize: 13 }}>{item.summary}</div>
                 </div>
                 {item.href ? (
-                  <a href={item.href} style={{ ...btn(true), textDecoration: "none", fontSize: 13 }}>Open</a>
+                  <a href={item.href} style={{ ...financePrimaryButton, textDecoration: "none", fontSize: 13 }}>Open</a>
                 ) : (
-                  <button type="button" style={{ ...btn(true), fontSize: 13 }} onClick={() => onNavigate?.("dashboard")}>Review</button>
+                  <button type="button" style={{ ...financePrimaryButton, fontSize: 13 }} onClick={() => onNavigate?.("dashboard")}>Review</button>
                 )}
               </div>
             ))}
@@ -103,65 +104,101 @@ export function FinanceDashboardPanel({ dashboard, intelligence, onNavigate }) {
 
 export function FinanceExpensesPanel({ items, onCreate, busy }) {
   const [draft, setDraft] = useState({ payee: "", amount: "", category: "Office & Administrative", memo: "", projectId: "A-117" });
+
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <div style={card}>
-        <div style={{ fontWeight: 800, marginBottom: 12 }}>Record expense</div>
+      <FinancePanelShell eyebrow="Expenses" title="Record expense" detail="Capture job or overhead spend and post it to the governed ledger.">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
-          <input style={input} placeholder="Payee" value={draft.payee} onChange={(e) => setDraft({ ...draft, payee: e.target.value })} />
-          <input style={input} placeholder="Amount" value={draft.amount} onChange={(e) => setDraft({ ...draft, amount: e.target.value })} />
-          <input style={input} placeholder="Category" value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value })} />
-          <input style={input} placeholder="Memo" value={draft.memo} onChange={(e) => setDraft({ ...draft, memo: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Payee" value={draft.payee} onChange={(e) => setDraft({ ...draft, payee: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Amount" value={draft.amount} onChange={(e) => setDraft({ ...draft, amount: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Category" value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Memo" value={draft.memo} onChange={(e) => setDraft({ ...draft, memo: e.target.value })} />
         </div>
-        <button type="button" style={{ ...btn(true), marginTop: 12 }} disabled={busy} onClick={() => onCreate(draft)}>Save expense</button>
-      </div>
-      <div style={{ display: "grid", gap: 10 }}>
-        {(items || []).map((item) => (
-          <div key={item.expenseId} style={card}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-              <div>
-                <div style={{ fontWeight: 700 }}>{item.payee}</div>
-                <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{item.date} · {item.category} · {item.paymentMethod}</div>
-                {item.memo ? <div style={{ color: "#475569", fontSize: 13, marginTop: 4 }}>{item.memo}</div> : null}
-              </div>
-              <div style={{ fontWeight: 800 }}>{item.amount}</div>
-            </div>
-          </div>
-        ))}
-      </div>
+        <button type="button" style={{ ...financePrimaryButton, marginTop: 12 }} disabled={busy} onClick={() => onCreate(draft)}>Save expense</button>
+      </FinancePanelShell>
+
+      {!(items || []).length ? (
+        <PortalEmptyState title="No expenses recorded" detail="Record your first expense to populate job cost and P&L reporting." />
+      ) : (
+        <div style={{ ...financeCardStyle, padding: 0, overflow: "hidden" }}>
+          <table style={financeTableStyle}>
+            <thead>
+              <tr>
+                <th style={financeThStyle}>Payee</th>
+                <th style={financeThStyle}>Date</th>
+                <th style={financeThStyle}>Category</th>
+                <th style={financeThStyle}>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(items || []).map((item) => (
+                <tr key={item.expenseId}>
+                  <td style={financeTdStyle}>
+                    <div style={{ fontWeight: 700 }}>{item.payee}</div>
+                    {item.memo ? <div style={{ color: "#64748b", fontSize: 13 }}>{item.memo}</div> : null}
+                  </td>
+                  <td style={financeTdStyle}>{item.date}</td>
+                  <td style={financeTdStyle}>{item.category}</td>
+                  <td style={financeTdStyle}><strong>{item.amount}</strong></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
 
 export function FinanceBillsPanel({ items, onCreate, onPay, busy }) {
   const [draft, setDraft] = useState({ vendorName: "", total: "", billNumber: "", projectId: "A-117" });
+
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <div style={card}>
-        <div style={{ fontWeight: 800, marginBottom: 12 }}>Enter bill</div>
+      <FinancePanelShell eyebrow="Accounts payable" title="Enter bill" detail="Track vendor bills and pay them from FCA Books.">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
-          <input style={input} placeholder="Vendor" value={draft.vendorName} onChange={(e) => setDraft({ ...draft, vendorName: e.target.value })} />
-          <input style={input} placeholder="Bill #" value={draft.billNumber} onChange={(e) => setDraft({ ...draft, billNumber: e.target.value })} />
-          <input style={input} placeholder="Total" value={draft.total} onChange={(e) => setDraft({ ...draft, total: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Vendor" value={draft.vendorName} onChange={(e) => setDraft({ ...draft, vendorName: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Bill #" value={draft.billNumber} onChange={(e) => setDraft({ ...draft, billNumber: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Total" value={draft.total} onChange={(e) => setDraft({ ...draft, total: e.target.value })} />
         </div>
-        <button type="button" style={{ ...btn(true), marginTop: 12 }} disabled={busy} onClick={() => onCreate(draft)}>Save bill</button>
-      </div>
-      {(items || []).map((item) => (
-        <div key={item.billId} style={card}>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "start" }}>
-            <div>
-              <div style={{ fontWeight: 700 }}>{item.vendorName}</div>
-              <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{item.billNumber} · Due {item.dueDate} · {item.status}</div>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontWeight: 800 }}>{item.total}</div>
-              {item.status !== "Paid" ? (
-                <button type="button" style={{ ...btn(true), marginTop: 8, fontSize: 12 }} disabled={busy} onClick={() => onPay(item.billId)}>Pay bill</button>
-              ) : null}
-            </div>
-          </div>
+        <button type="button" style={{ ...financePrimaryButton, marginTop: 12 }} disabled={busy} onClick={() => onCreate(draft)}>Save bill</button>
+      </FinancePanelShell>
+
+      {!(items || []).length ? (
+        <PortalEmptyState title="No bills yet" detail="Enter vendor bills here to manage accounts payable." />
+      ) : (
+        <div style={{ ...financeCardStyle, padding: 0, overflow: "hidden" }}>
+          <table style={financeTableStyle}>
+            <thead>
+              <tr>
+                <th style={financeThStyle}>Vendor</th>
+                <th style={financeThStyle}>Due</th>
+                <th style={financeThStyle}>Status</th>
+                <th style={financeThStyle}>Total</th>
+                <th style={financeThStyle}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(items || []).map((item) => (
+                <tr key={item.billId}>
+                  <td style={financeTdStyle}>
+                    <div style={{ fontWeight: 700 }}>{item.vendorName}</div>
+                    <div style={{ color: "#64748b", fontSize: 13 }}>{item.billNumber}</div>
+                  </td>
+                  <td style={financeTdStyle}>{item.dueDate}</td>
+                  <td style={financeTdStyle}><PortalStatusBadge status={item.status} /></td>
+                  <td style={financeTdStyle}><strong>{item.total}</strong></td>
+                  <td style={financeTdStyle}>
+                    {item.status !== "Paid" ? (
+                      <button type="button" style={{ ...financePrimaryButton, fontSize: 12, padding: "8px 12px" }} disabled={busy} onClick={() => onPay(item.billId)}>Pay bill</button>
+                    ) : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      ))}
+      )}
     </div>
   );
 }
@@ -169,37 +206,48 @@ export function FinanceBillsPanel({ items, onCreate, onPay, busy }) {
 export function FinanceBankingPanel({ accounts, transactions, onReconcile, busy }) {
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 }}>
-        {(accounts || []).map((account) => (
-          <div key={account.bankAccountId} style={card}>
-            <div style={{ fontWeight: 700 }}>{account.name}</div>
-            <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{account.institution} · {account.accountNumberMasked}</div>
-            <div style={{ fontSize: 24, fontWeight: 800, marginTop: 10 }}>${Number(account.balance || 0).toLocaleString()}</div>
-            <div style={{ color: "#64748b", fontSize: 12, marginTop: 8 }}>Last reconciled {account.lastReconciled} · {account.unreconciledCount} unreconciled</div>
-          </div>
-        ))}
-      </div>
-      <div style={card}>
-        <div style={{ fontWeight: 800, marginBottom: 12 }}>Bank transactions</div>
-        <div style={{ display: "grid", gap: 8 }}>
-          {(transactions || []).map((txn) => (
-            <div key={txn.transactionId} style={{ display: "flex", justifyContent: "space-between", gap: 12, padding: "10px 0", borderBottom: "1px solid #f1f5f9", alignItems: "center" }}>
-              <div>
-                <div style={{ fontWeight: 600 }}>{txn.description}</div>
-                <div style={{ color: "#64748b", fontSize: 12 }}>{txn.date} · {txn.status}</div>
-              </div>
-              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                <div style={{ fontWeight: 700, color: txn.amount < 0 ? "#b91c1c" : "#047857" }}>
-                  {txn.amount < 0 ? "-" : "+"}${Math.abs(txn.amount).toLocaleString()}
-                </div>
-                {txn.status === "unreconciled" ? (
-                  <button type="button" style={{ ...btn(true), fontSize: 12, padding: "6px 10px" }} disabled={busy} onClick={() => onReconcile(txn.transactionId)}>Reconcile</button>
-                ) : null}
-              </div>
-            </div>
-          ))}
+      <PortalQuickStats
+        items={(accounts || []).map((account) => ({
+          label: account.name,
+          value: `$${Number(account.balance || 0).toLocaleString()}`,
+          hint: `${account.unreconciledCount || 0} unreconciled`,
+        }))}
+      />
+
+      {!(transactions || []).length ? (
+        <PortalEmptyState title="No bank transactions" detail="Import a CSV or connect banking activity to reconcile cash." primaryHref="/portal/finance?view=banking" primaryLabel="Open banking" />
+      ) : (
+        <div style={{ ...financeCardStyle, padding: 0, overflow: "hidden" }}>
+          <table style={financeTableStyle}>
+            <thead>
+              <tr>
+                <th style={financeThStyle}>Description</th>
+                <th style={financeThStyle}>Date</th>
+                <th style={financeThStyle}>Status</th>
+                <th style={financeThStyle}>Amount</th>
+                <th style={financeThStyle}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(transactions || []).map((txn) => (
+                <tr key={txn.transactionId}>
+                  <td style={financeTdStyle}><strong>{txn.description}</strong></td>
+                  <td style={financeTdStyle}>{txn.date}</td>
+                  <td style={financeTdStyle}><PortalStatusBadge status={txn.status} /></td>
+                  <td style={{ ...financeTdStyle, fontWeight: 700, color: txn.amount < 0 ? "#b91c1c" : "#047857" }}>
+                    {txn.amount < 0 ? "-" : "+"}${Math.abs(txn.amount).toLocaleString()}
+                  </td>
+                  <td style={financeTdStyle}>
+                    {txn.status === "unreconciled" ? (
+                      <button type="button" style={{ ...financePrimaryButton, fontSize: 12, padding: "8px 12px" }} disabled={busy} onClick={() => onReconcile(txn.transactionId)}>Reconcile</button>
+                    ) : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -209,17 +257,24 @@ export function FinanceReportsPanel({ report, availableReports, activeReport, on
     <div style={{ display: "grid", gap: 16 }}>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
         {(availableReports || []).map((id) => (
-          <button key={id} type="button" onClick={() => onSelectReport(id)} style={{ ...btn(activeReport === id), background: activeReport === id ? "#2ca01c" : "#fff", color: activeReport === id ? "#fff" : "#0f172a", border: activeReport === id ? "none" : "1px solid #cbd5e1" }}>
+          <button
+            key={id}
+            type="button"
+            onClick={() => onSelectReport(id)}
+            style={activeReport === id ? financePrimaryButton : financeSecondaryButton}
+          >
             {id.replace(/_/g, " ")}
           </button>
         ))}
-        <button type="button" style={btn(true)} disabled={busy} onClick={() => onExport?.(activeReport)}>
+        <button type="button" style={financePrimaryButton} disabled={busy} onClick={() => onExport?.(activeReport)}>
           Download CSV
         </button>
       </div>
-      {report ? (
-        <div style={card}>
-          <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 16 }}>{report.title}</div>
+      {!report ? (
+        <PortalEmptyState title="Select a report" detail="Choose P&L, balance sheet, or job cost from the report tabs above." />
+      ) : (
+        <div style={financeCardStyle}>
+          <div style={financeSectionTitle}>{report.title}</div>
           {report.totals ? (
             <div style={{ display: "grid", gap: 8, marginBottom: 16 }}>
               {Object.entries(report.totals).map(([key, value]) => (
@@ -227,13 +282,6 @@ export function FinanceReportsPanel({ report, availableReports, activeReport, on
                   <span style={{ textTransform: "capitalize" }}>{key.replace(/([A-Z])/g, " $1")}</span>
                   <strong>{value}</strong>
                 </div>
-              ))}
-            </div>
-          ) : null}
-          {report.buckets ? (
-            <div style={{ display: "grid", gap: 8 }}>
-              {Object.entries(report.buckets).map(([bucket, value]) => (
-                <div key={bucket} style={{ display: "flex", justifyContent: "space-between" }}><span>{bucket}</span><strong>{value}</strong></div>
               ))}
             </div>
           ) : null}
@@ -259,7 +307,7 @@ export function FinanceReportsPanel({ report, availableReports, activeReport, on
             </div>
           )) : null}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
@@ -267,41 +315,53 @@ export function FinanceReportsPanel({ report, availableReports, activeReport, on
 export function FinanceMasterDataPanel({ customers, vendors, accounts }) {
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-        <div style={card}>
-          <div style={{ fontWeight: 800, marginBottom: 12 }}>Customers</div>
-          {(customers || []).map((item) => (
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
+        <div style={financeCardStyle}>
+          <div style={financeSectionTitle}>Customers</div>
+          {(customers || []).length ? (customers || []).map((item) => (
             <div key={item.customerId} style={{ padding: "10px 0", borderBottom: "1px solid #f1f5f9" }}>
               <div style={{ fontWeight: 700 }}>{item.name}</div>
               <div style={{ color: "#64748b", fontSize: 13 }}>{item.email} · {item.terms}</div>
               <div style={{ marginTop: 4 }}>Balance: <strong>${Number(item.balance || 0).toLocaleString()}</strong></div>
             </div>
-          ))}
+          )) : <div style={financeMutedText}>No customers yet.</div>}
         </div>
-        <div style={card}>
-          <div style={{ fontWeight: 800, marginBottom: 12 }}>Vendors</div>
-          {(vendors || []).map((item) => (
+        <div style={financeCardStyle}>
+          <div style={financeSectionTitle}>Vendors</div>
+          {(vendors || []).length ? (vendors || []).map((item) => (
             <div key={item.vendorId} style={{ padding: "10px 0", borderBottom: "1px solid #f1f5f9" }}>
               <div style={{ fontWeight: 700 }}>{item.name}</div>
               <div style={{ color: "#64748b", fontSize: 13 }}>{item.email} · {item.terms}</div>
               <div style={{ marginTop: 4 }}>Balance: <strong>${Number(item.balance || 0).toLocaleString()}</strong></div>
             </div>
-          ))}
+          )) : <div style={financeMutedText}>No vendors yet.</div>}
         </div>
       </div>
       {accounts ? (
-        <div style={card}>
-          <div style={{ fontWeight: 800, marginBottom: 12 }}>Chart of Accounts</div>
-          <div style={{ display: "grid", gap: 6 }}>
-            {accounts.map((account) => (
-              <div key={account.accountId} style={{ display: "grid", gridTemplateColumns: "80px 1fr 100px 120px", gap: 8, fontSize: 14, padding: "6px 0", borderBottom: "1px solid #f8fafc" }}>
-                <span style={{ color: "#64748b" }}>{account.accountId}</span>
-                <span style={{ fontWeight: 600 }}>{account.name}</span>
-                <span style={{ color: "#64748b" }}>{account.type}</span>
-                <span style={{ textAlign: "right", fontWeight: 700 }}>${Number(account.balance || 0).toLocaleString()}</span>
-              </div>
-            ))}
+        <div style={{ ...financeCardStyle, padding: 0, overflow: "hidden" }}>
+          <div style={{ padding: 18, paddingBottom: 0 }}>
+            <div style={financeSectionTitle}>Chart of accounts</div>
           </div>
+          <table style={financeTableStyle}>
+            <thead>
+              <tr>
+                <th style={financeThStyle}>Account</th>
+                <th style={financeThStyle}>Name</th>
+                <th style={financeThStyle}>Type</th>
+                <th style={financeThStyle}>Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {accounts.map((account) => (
+                <tr key={account.accountId}>
+                  <td style={financeTdStyle}>{account.accountId}</td>
+                  <td style={financeTdStyle}><strong>{account.name}</strong></td>
+                  <td style={financeTdStyle}>{account.type}</td>
+                  <td style={financeTdStyle}>${Number(account.balance || 0).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : null}
     </div>

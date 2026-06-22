@@ -21,10 +21,12 @@ import {
 import { routeStateOverlays } from "../../systemState";
 import {
   PortalAlert,
+  PortalEntityTable,
   PortalLoadingState,
   formatFinanceViewTitle,
 } from "../../components/portal/PortalPrimitives";
 import { portalCardStyle, portalTokens } from "../../portalDesignTokens";
+import { financePrimaryButton, financeSecondaryButton } from "../../components/finance/financeStyles";
 
 function readViewFromUrl() {
   if (typeof window === "undefined") return { view: "dashboard", projectId: "", invoiceId: "" };
@@ -235,35 +237,41 @@ export default function PortalFinance() {
         return (
           <div style={{ display: "grid", gap: 16 }}>
             <FinanceDashboardPanel dashboard={payload.dashboard} intelligence={payload.intelligence} onNavigate={navigate} />
-            <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, background: "#fff" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 12 }}>
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 12, flexWrap: "wrap" }}>
                 <div>
                   <div style={{ fontWeight: 800 }}>Open invoices</div>
-                  <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>Record payments natively in FCA Books — no external processor required.</div>
+                  <div style={{ color: portalTokens.muted, fontSize: 13, marginTop: 4 }}>Record payments natively in FCA Books — no external processor required.</div>
                 </div>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <a href="/portal/billing" style={{ textDecoration: "none", border: "1px solid #cbd5e1", borderRadius: 8, padding: "8px 12px", color: "#334155", fontWeight: 700 }}>Create invoice</a>
-                  <button type="button" onClick={() => navigate("payments")} style={{ border: "none", borderRadius: 8, padding: "8px 12px", background: "#2ca01c", color: "#fff", fontWeight: 700, cursor: "pointer" }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <a href="/portal/billing" style={{ ...financeSecondaryButton, textDecoration: "none", display: "inline-flex", alignItems: "center" }}>Create invoice</a>
+                  <button type="button" onClick={() => navigate("payments")} style={financePrimaryButton}>
                     Record payment
                   </button>
                 </div>
               </div>
-              <div style={{ display: "grid", gap: 10 }}>
-                {portalInvoices.map((inv) => (
-                  <div key={inv.id} style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", borderTop: "1px solid #f1f5f9", paddingTop: 10 }}>
-                    <div>
-                      <div style={{ fontWeight: 700 }}>{inv.invoiceName}</div>
-                      <div style={{ color: "#64748b", fontSize: 13 }}>{inv.amount} · {inv.status}</div>
-                    </div>
-                    {inv.status === "Issued" ? (
-                      <button type="button" onClick={() => navigate("payments")} style={{ border: "none", borderRadius: 8, padding: "8px 12px", background: "#2ca01c", color: "#fff", fontWeight: 700, cursor: "pointer" }}>
-                        Record payment
-                      </button>
-                    ) : null}
-                  </div>
-                ))}
-                {!portalInvoices.length ? <div style={{ color: "#64748b" }}>No open invoices yet.</div> : null}
-              </div>
+              <PortalEntityTable
+                columns={[
+                  { key: "invoiceName", label: "Invoice", render: (row) => <strong>{row.invoiceName}</strong> },
+                  { key: "amount", label: "Amount" },
+                  { key: "status", label: "Status" },
+                  {
+                    key: "actions",
+                    label: "",
+                    render: (row) =>
+                      row.status === "Issued" ? (
+                        <button type="button" onClick={() => navigate("payments")} style={{ ...financePrimaryButton, fontSize: 12, padding: "6px 10px" }}>
+                          Record payment
+                        </button>
+                      ) : null,
+                  },
+                ]}
+                rows={portalInvoices}
+                emptyTitle="No open invoices yet"
+                emptyDetail="Create an invoice in billing, then record payment here."
+                emptyPrimaryHref="/portal/billing"
+                emptyPrimaryLabel="Create invoice"
+              />
             </div>
           </div>
         );
@@ -296,7 +304,7 @@ export default function PortalFinance() {
         />
       ) : null}
 
-      <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 18, alignItems: "start", marginTop: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(72px, 260px) 1fr", gap: 18, alignItems: "start", marginTop: 16 }}>
         <FinanceSidebar activeView={finance.view} onNavigate={navigate} companyName={companyName} />
         <div>
           <div style={{ marginBottom: 14, display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", flexWrap: "wrap" }}>

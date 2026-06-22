@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-
-const card = { border: "1px solid #e5e7eb", borderRadius: 14, padding: 18, background: "#fff" };
-const input = { width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" };
-const btn = (primary = false) => ({
-  border: primary ? "none" : "1px solid #cbd5e1",
-  borderRadius: 10,
-  padding: "10px 14px",
-  fontWeight: 700,
-  cursor: "pointer",
-  background: primary ? "#2ca01c" : "#fff",
-  color: primary ? "#fff" : "#0f172a",
-});
+import { PortalEmptyState, PortalStatusBadge } from "../portal/PortalPrimitives";
+import FinancePanelShell from "./FinancePanelShell";
+import {
+  financeCardStyle,
+  financeInputStyle,
+  financePrimaryButton,
+  financeSecondaryButton,
+  financeTdStyle,
+  financeThStyle,
+  financeTableStyle,
+} from "./financeStyles";
 
 export function FinancePaymentsPanel({ items, invoices, onRecord, busy, initialInvoiceId = "" }) {
   const [draft, setDraft] = useState({ invoiceId: initialInvoiceId, amount: "", method: "Check", reference: "", memo: "" });
@@ -23,81 +22,105 @@ export function FinancePaymentsPanel({ items, invoices, onRecord, busy, initialI
       setDraft((current) => ({ ...current, invoiceId: initialInvoiceId, amount: match.amount.replace(/^\$/, "") }));
     }
   }, [initialInvoiceId, invoices]);
+
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <div style={card}>
-        <div style={{ fontWeight: 800, marginBottom: 8 }}>Record native payment</div>
-        <p style={{ color: "#64748b", marginTop: 0, lineHeight: 1.6 }}>Post customer payments directly to FCA books and GL — no external processor required.</p>
+      <FinancePanelShell
+        eyebrow="Receive payment"
+        title="Record native payment"
+        detail="Post customer payments directly to FCA Books and GL — no external processor required."
+      >
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
-          <select value={draft.invoiceId} onChange={(e) => setDraft({ ...draft, invoiceId: e.target.value })} style={input}>
+          <select value={draft.invoiceId} onChange={(e) => setDraft({ ...draft, invoiceId: e.target.value })} style={financeInputStyle}>
             <option value="">Select invoice</option>
             {(invoices || []).filter((inv) => inv.status === "Issued").map((inv) => (
               <option key={inv.id} value={inv.id}>{inv.invoiceName} · {inv.amount}</option>
             ))}
           </select>
-          <input style={input} placeholder="Amount" value={draft.amount} onChange={(e) => setDraft({ ...draft, amount: e.target.value })} />
-          <select value={draft.method} onChange={(e) => setDraft({ ...draft, method: e.target.value })} style={input}>
+          <input style={financeInputStyle} placeholder="Amount" value={draft.amount} onChange={(e) => setDraft({ ...draft, amount: e.target.value })} />
+          <select value={draft.method} onChange={(e) => setDraft({ ...draft, method: e.target.value })} style={financeInputStyle}>
             {["Check", "ACH", "Wire", "Cash", "Card", "Other"].map((method) => <option key={method} value={method}>{method}</option>)}
           </select>
-          <input style={input} placeholder="Reference #" value={draft.reference} onChange={(e) => setDraft({ ...draft, reference: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Reference #" value={draft.reference} onChange={(e) => setDraft({ ...draft, reference: e.target.value })} />
         </div>
-        <button type="button" style={{ ...btn(true), marginTop: 12 }} disabled={busy} onClick={() => onRecord?.({ ...draft, targetType: "portal-invoice" })}>
+        <button type="button" style={{ ...financePrimaryButton, marginTop: 12 }} disabled={busy} onClick={() => onRecord?.({ ...draft, targetType: "portal-invoice" })}>
           Record payment
         </button>
-      </div>
-      <div style={card}>
-        <div style={{ fontWeight: 800, marginBottom: 12 }}>Payment register</div>
-        {(items || []).map((payment) => (
-          <div key={payment.paymentId} style={{ borderBottom: "1px solid #f1f5f9", padding: "10px 0" }}>
-            <div style={{ fontWeight: 700 }}>{payment.amount} · {payment.method}</div>
-            <div style={{ color: "#64748b", fontSize: 13 }}>{payment.targetId} · {payment.reference || "No ref"} · {payment.receivedAt}</div>
-          </div>
-        ))}
-        {!(items || []).length ? <div style={{ color: "#64748b" }}>No native payments recorded yet.</div> : null}
-      </div>
+      </FinancePanelShell>
+
+      {!(items || []).length ? (
+        <PortalEmptyState title="No payments recorded" detail="Issued invoices appear above — record payment to close AR and post to GL." primaryHref="/portal/billing" primaryLabel="Open billing" />
+      ) : (
+        <div style={{ ...financeCardStyle, padding: 0, overflow: "hidden" }}>
+          <table style={financeTableStyle}>
+            <thead>
+              <tr>
+                <th style={financeThStyle}>Amount</th>
+                <th style={financeThStyle}>Method</th>
+                <th style={financeThStyle}>Invoice</th>
+                <th style={financeThStyle}>Received</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(items || []).map((payment) => (
+                <tr key={payment.paymentId}>
+                  <td style={financeTdStyle}><strong>{payment.amount}</strong></td>
+                  <td style={financeTdStyle}>{payment.method}</td>
+                  <td style={financeTdStyle}>{payment.targetId}</td>
+                  <td style={financeTdStyle}>{payment.receivedAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
 
 export function FinanceRecurringPanel({ items, onCreate, onRun, busy }) {
   const [draft, setDraft] = useState({ label: "", amount: "", customerName: "FCA Pilot Customer", projectId: "A-117", cadence: "monthly" });
+
   return (
     <div style={{ display: "grid", gap: 16 }}>
-      <div style={card}>
-        <div style={{ fontWeight: 800, marginBottom: 12 }}>Create recurring invoice template</div>
+      <FinancePanelShell eyebrow="Recurring billing" title="Create recurring invoice template" detail="Automate repeat customer billing on a monthly or custom cadence.">
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
-          <input style={input} placeholder="Label" value={draft.label} onChange={(e) => setDraft({ ...draft, label: e.target.value })} />
-          <input style={input} placeholder="Amount" value={draft.amount} onChange={(e) => setDraft({ ...draft, amount: e.target.value })} />
-          <input style={input} placeholder="Customer" value={draft.customerName} onChange={(e) => setDraft({ ...draft, customerName: e.target.value })} />
-          <input style={input} placeholder="Project ID" value={draft.projectId} onChange={(e) => setDraft({ ...draft, projectId: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Label" value={draft.label} onChange={(e) => setDraft({ ...draft, label: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Amount" value={draft.amount} onChange={(e) => setDraft({ ...draft, amount: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Customer" value={draft.customerName} onChange={(e) => setDraft({ ...draft, customerName: e.target.value })} />
+          <input style={financeInputStyle} placeholder="Project ID" value={draft.projectId} onChange={(e) => setDraft({ ...draft, projectId: e.target.value })} />
         </div>
-        <button type="button" style={{ ...btn(true), marginTop: 12 }} disabled={busy} onClick={() => onCreate?.(draft)}>Save template</button>
-      </div>
-      {(items || []).map((item) => (
-        <div key={item.recurringId} style={card}>
-          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
-            <div>
-              <div style={{ fontWeight: 700 }}>{item.label}</div>
-              <div style={{ color: "#64748b", fontSize: 13 }}>{item.amount} · {item.cadence} · Next {item.nextRunDate}</div>
+        <button type="button" style={{ ...financePrimaryButton, marginTop: 12 }} disabled={busy} onClick={() => onCreate?.(draft)}>Save template</button>
+      </FinancePanelShell>
+
+      {!(items || []).length ? (
+        <PortalEmptyState title="No recurring templates" detail="Create a template for retainers, service plans, or monthly billing." />
+      ) : (
+        (items || []).map((item) => (
+          <div key={item.recurringId} style={financeCardStyle}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+              <div>
+                <div style={{ fontWeight: 700 }}>{item.label}</div>
+                <div style={{ color: "#64748b", fontSize: 13 }}>{item.amount} · {item.cadence} · Next {item.nextRunDate}</div>
+              </div>
+              <button type="button" style={financePrimaryButton} disabled={busy} onClick={() => onRun?.(item.recurringId)}>Run now</button>
             </div>
-            <button type="button" style={btn(true)} disabled={busy} onClick={() => onRun?.(item.recurringId)}>Run now</button>
           </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }
 
 export function FinanceBankImportPanel({ onImport, busy }) {
   const [csvText, setCsvText] = useState("date,description,amount\n2026-06-20,Deposit,5000\n2026-06-21,Vendor payment,-1200");
+
   return (
-    <div style={card}>
-      <div style={{ fontWeight: 800, marginBottom: 8 }}>Import bank transactions (FCA CSV)</div>
-      <p style={{ color: "#64748b", lineHeight: 1.6 }}>Paste CSV with columns: date, description, amount. Negative amounts are debits.</p>
-      <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} style={{ ...input, minHeight: 140, fontFamily: "monospace" }} />
-      <button type="button" style={{ ...btn(true), marginTop: 12 }} disabled={busy} onClick={() => onImport?.({ csvText, bankAccountId: "BANK-001" })}>
+    <FinancePanelShell eyebrow="Bank import" title="Import bank transactions (FCA CSV)" detail="Paste CSV with columns: date, description, amount. Negative amounts are debits.">
+      <textarea value={csvText} onChange={(e) => setCsvText(e.target.value)} style={{ ...financeInputStyle, minHeight: 140, fontFamily: "monospace" }} />
+      <button type="button" style={{ ...financePrimaryButton, marginTop: 12 }} disabled={busy} onClick={() => onImport?.({ csvText, bankAccountId: "BANK-001" })}>
         Import to bank register
       </button>
-    </div>
+    </FinancePanelShell>
   );
 }
