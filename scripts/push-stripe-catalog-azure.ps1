@@ -9,6 +9,7 @@ param(
   [switch]$FromStripeConfig,
   [string]$CatalogPath = (Join-Path $PSScriptRoot "..\public\config\stripe-catalog.json"),
   [string]$StripeSecretKey = "",
+  [string]$StripePublishableKey = "",
   [string]$CentralName = "Auricrux-Central",
   [string]$CentralRg = "Auricrux_group",
   [string]$SwaName = "fca-frontend",
@@ -66,12 +67,19 @@ az functionapp config appsettings set `
   --settings $centralSettings | Out-Null
 
 $startupUrl = $catalog.workspace.startup.paymentLinkUrl
+$swaSettings = @()
 if ($startupUrl) {
-  Write-Host "Setting VITE_STRIPE_STARTUP_CHECKOUT_URL on $SwaName..."
+  $swaSettings += "VITE_STRIPE_STARTUP_CHECKOUT_URL=$startupUrl"
+}
+if ($StripePublishableKey) {
+  $swaSettings += "VITE_STRIPE_PUBLISHABLE_KEY=$StripePublishableKey"
+}
+if ($swaSettings.Count -gt 0) {
+  Write-Host "Setting $($swaSettings.Count) Stripe SWA settings on $SwaName..."
   az staticwebapp appsettings set `
     --name $SwaName `
     --resource-group $SwaRg `
-    --setting-names "VITE_STRIPE_STARTUP_CHECKOUT_URL=$startupUrl" | Out-Null
+    --setting-names $swaSettings | Out-Null
 }
 
 Write-Host "Done. Catalog mode: $($catalog.mode) | workspace links: $($catalog.workspace.PSObject.Properties.Count)"
