@@ -615,7 +615,22 @@ export const portalModules = [
   {
     href: "/portal/field-supervision",
     label: "Field supervision",
-    description: "Superintendent oversight and site readiness",
+    description: "Site photos, plan compare, annotations, and redlines",
+  },
+  {
+    href: "/portal/design",
+    label: "Design",
+    description: "Design workspace, markups, sheets, and redline continuity",
+  },
+  {
+    href: "/portal/rfis",
+    label: "RFIs",
+    description: "Requests for information tied to sheets and field conditions",
+  },
+  {
+    href: "/portal/change-orders",
+    label: "Change orders",
+    description: "Scope changes, pricing, and approval workflow",
   },
   {
     href: "/portal/warranty",
@@ -626,11 +641,6 @@ export const portalModules = [
     href: "/portal/closeout",
     label: "Closeout",
     description: "Turnover binders, artifact tracking, and handoff readiness",
-  },
-  {
-    href: "/portal/operations",
-    label: "Operations",
-    description: "Cross-route operating summary and coordination",
   },
   {
     href: "/portal/auricrux",
@@ -666,6 +676,95 @@ export const portalJourney = [
   { key: "coordination", label: "Files + Design", href: "/portal/files" },
   { key: "finance", label: "Billing / Admin", href: "/portal/billing" },
   { key: "academy", label: "Academy / Support", href: "/portal/academy" },
+];
+
+/** Hub pages show full quick-access grid; only the workspace dashboard uses hub chrome. */
+export const portalHubHrefs = ["/portal/platform"];
+
+/** Portal page subtitles must stay concise — max character count for professional UX. */
+export const PORTAL_SUBTITLE_MAX = 120;
+
+/** Always-visible portal shortcuts: workspace, products entry, setup, Auricrux. */
+export const portalNavPrimary = [
+  { label: "Workspace", href: "/portal/platform" },
+  { label: "Pipeline", href: "/portal/pipeline" },
+  { label: "Projects", href: "/portal/projects" },
+  { label: "Files", href: "/portal/files" },
+  { label: "Setup", href: "/portal/admin" },
+  { label: "Auricrux", href: "/portal/auricrux" },
+];
+
+/** Grouped portal navigation for dropdown menus and mobile drawer. */
+export const portalNavGroups = [
+  {
+    label: "Sell and bid",
+    items: [
+      { label: "Commercial pipeline", href: "/portal/pipeline" },
+      { label: "Bids", href: "/portal/bids" },
+      { label: "Estimates", href: "/portal/estimates" },
+      { label: "Proposals", href: "/portal/proposals" },
+    ],
+  },
+  {
+    label: "Deliver",
+    items: [
+      { label: "Projects", href: "/portal/projects" },
+      { label: "Field supervision", href: "/portal/field-supervision" },
+      { label: "Scheduling", href: "/portal/scheduling" },
+      { label: "Field tasks", href: "/portal/field-tasks" },
+      { label: "RFIs", href: "/portal/rfis" },
+      { label: "Change orders", href: "/portal/change-orders" },
+      { label: "Closeout", href: "/portal/closeout" },
+      { label: "Warranty", href: "/portal/warranty" },
+    ],
+  },
+  {
+    label: "Office",
+    items: [
+      { label: "Files", href: "/portal/files" },
+      { label: "Design workspace", href: "/portal/design" },
+      { label: "Legal", href: "/portal/legal" },
+      { label: "Messages", href: "/portal/messages" },
+      { label: "Notifications", href: "/portal/notifications" },
+    ],
+  },
+  {
+    label: "Money",
+    items: [
+      { label: "Finance", href: "/portal/finance" },
+      { label: "Billing", href: "/portal/billing" },
+      { label: "Plans", href: "/portal/plans" },
+    ],
+  },
+  {
+    label: "Training",
+    items: [
+      { label: "Academy", href: "/portal/academy" },
+      { label: "Course catalog", href: "/academy/catalog" },
+      { label: "Credentials", href: "/academy/credentials" },
+    ],
+  },
+  {
+    label: "Account",
+    items: [
+      { label: "Profile", href: "/portal/profile" },
+      { label: "Audit", href: "/portal/audit" },
+      { label: "Support", href: "/portal/support" },
+    ],
+  },
+];
+
+/** Curated hub tiles on workspace dashboard — full directory via portalModules. */
+export const portalHubModules = [
+  { href: "/portal/pipeline", label: "Pipeline", description: "Bid through payment" },
+  { href: "/portal/bids", label: "Bids", description: "Qualify and award" },
+  { href: "/portal/projects", label: "Projects", description: "Job execution" },
+  { href: "/portal/field-supervision", label: "Field", description: "Photos and redlines" },
+  { href: "/portal/files", label: "Files", description: "Document control" },
+  { href: "/portal/billing", label: "Billing", description: "Invoices and collections" },
+  { href: "/portal/messages", label: "Messages", description: "Team coordination" },
+  { href: "/portal/academy", label: "Academy", description: "Training and certs" },
+  { href: "/portal/admin", label: "Setup", description: "Admin and rollout" },
 ];
 
 export const STORAGE_KEY = "fca_workspace_state_v1";

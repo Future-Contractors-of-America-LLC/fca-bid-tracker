@@ -1,102 +1,95 @@
+import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
-import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
-import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
-import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
-import PublicCtaRow from "../../components/PublicCtaRow";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { auricruxActions, auricruxCommsChannels, auricruxRail, currentProject, portalTenant, routeStateOverlays, workspaceContext } from "../../systemState";
-import { publicBodyCtaSets } from "../../websiteShell";
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-};
+import { fetchAuricruxActions } from "../../api/auricruxActionsClient";
+import { auricruxActions as fallbackActions, auricruxCommsChannels, auricruxRail, routeStateOverlays } from "../../systemState";
+import { portalButtonPrimary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
 
 export default function PortalAuricrux() {
   const { session } = useCustomerSession();
   const { state } = useWorkspaceState();
+  const [liveActions, setLiveActions] = useState([]);
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
   const commItems = auricruxCommsChannels.map((item) => ({
     ...item,
-    value: `${item.value}${enabledComms[item.label.toLowerCase()] === false ? " · Pending for this customer" : " · Enabled for this customer"}`,
+    value: `${item.value}${enabledComms[item.label.toLowerCase()] === false ? " · Pending" : ""}`,
     href: `/portal/messages#${item.label.toLowerCase()}`,
     ctaLabel: `Open ${item.label}`,
   }));
 
+  useEffect(() => {
+    fetchAuricruxActions()
+      .then((payload) => {
+        const items = (payload?.items || []).map(
+          (item) => `${item.mode} · ${item.targetObjectType} ${item.targetObjectId}: ${item.rationale}`,
+        );
+        if (items.length) setLiveActions(items);
+      })
+      .catch(() => setLiveActions([]));
+  }, []);
+
+  const guidedActions = liveActions.length ? liveActions : fallbackActions;
+  const blocker = state.auricrux?.currentBlocker || auricruxRail.currentBlocker;
+  const nextAction = state.workspace?.currentNextAction || auricruxRail.nextRecommendedAction;
+
   return (
     <PortalShell
-      title="Auricrux Live Guidance Workspace"
-      subtitle="Authenticated customer surface for live Auricrux guidance across approvals, document dependencies, billing follow-through, workforce readiness, and communications orchestration."
+      title="Auricrux"
+      subtitle="Guidance across approvals, documents, billing, and workforce readiness."
       activeHref="/portal/auricrux"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
       primaryHref="/portal/platform"
-      primaryLabel="Open Platform Dashboard"
+      primaryLabel="Open Dashboard"
     >
-      <ProductAccessStatusPanel session={session} stateMeta={state.meta} />
-      <CustomerProductLaunchpad session={session} title="Launch real customer product from Auricrux" />
-      <CustomerCommsLaunchpad session={session} title="Launch enabled communications lanes from Auricrux" />
-
-      <div style={{ marginBottom: 24 }}>
-        <SystemStateSummary
-          tenant={portalTenant}
-          project={currentProject}
-          workspace={workspaceContext}
-          auricrux={auricruxRail}
-          title="Auricrux is now a live authenticated product surface"
-          detail="This route gives the customer direct access to Auricrux guidance inside the real workspace shell, tied to the same tenant, project, blocker, next-action, and communications state as the rest of FCA."
-        />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <AuricruxCommsPanel
-          title="Auricrux now acts as the cross-channel communications executive layer"
-          detail="Auricrux communications is now framed as one coordinated control plane across chat, SMS, phone, email, Teams, conference, and lecture so guidance can move execution forward instead of stopping at recommendations."
-          statusLabel="Auricrux comms status"
-          statusValue="Cross-channel orchestration active"
-          items={commItems}
-        />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalEntry} style={{ display: "flex", gap: 12, flexWrap: "wrap" }} />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
-        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Live Auricrux guidance</div>
-        <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Current blocker:</strong> {auricruxRail.currentBlocker}</div>
-          <div><strong>Blocker impact:</strong> {auricruxRail.blockerImpact}</div>
-          <div><strong>Recommended move:</strong> {auricruxRail.nextRecommendedAction}</div>
-          <div><strong>Reason:</strong> {auricruxRail.recommendationReason}</div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: 12,
+          marginBottom: 16,
+        }}
+      >
+        <div style={portalCardStyle}>
+          <div style={portalEyebrowStyle}>Current blocker</div>
+          <div style={{ fontWeight: 700, marginTop: 8, lineHeight: 1.45, color: portalTokens.ink }}>{blocker}</div>
         </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16 }}>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Current guided actions</h2>
-          <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
-            {auricruxActions.map((action) => (
-              <li key={action}>{action}</li>
-            ))}
-          </ul>
+        <div style={portalCardStyle}>
+          <div style={portalEyebrowStyle}>Recommended next</div>
+          <div style={{ fontWeight: 700, marginTop: 8, lineHeight: 1.45, color: portalTokens.ink }}>{nextAction}</div>
         </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Why this is real product access</h2>
-          <div style={{ color: "#475569", lineHeight: 1.8 }}>
-            <div><strong>Session:</strong> {session?.workspaceLabel || "Authenticated customer workspace"}</div>
-            <div><strong>Route:</strong> /portal/auricrux</div>
-            <div><strong>Scope:</strong> SaaS workspace + LMS continuity + live Auricrux guidance + comms orchestration</div>
-            <div><strong>Project spine:</strong> {currentProject.id} · {currentProject.stage}</div>
+        <div style={portalCardStyle}>
+          <div style={portalEyebrowStyle}>Project</div>
+          <div style={{ fontWeight: 700, marginTop: 8, lineHeight: 1.45, color: portalTokens.ink }}>
+            {state.project?.id || "—"} · {state.project?.stage || "—"}
           </div>
         </div>
       </div>
+
+      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${portalTokens.primary}` }}>
+        <div style={portalEyebrowStyle}>Guided actions</div>
+        <ul style={{ paddingLeft: 20, lineHeight: 1.75, marginBottom: 0, marginTop: 10, color: portalTokens.body }}>
+          {guidedActions.slice(0, 8).map((action) => (
+            <li key={action}>{action}</li>
+          ))}
+        </ul>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+          <a href="/portal/messages" style={portalButtonPrimary}>Open Messages</a>
+          <a href="/portal/projects" style={{ ...portalButtonPrimary, background: portalTokens.panel, color: portalTokens.primaryInk, border: `1px solid #bfdbfe` }}>
+            Open Projects
+          </a>
+        </div>
+      </div>
+
+      <AuricruxCommsPanel
+        title="Communications"
+        detail="Chat, SMS, phone, email, Teams, conference, and lecture — from one guidance layer."
+        statusLabel="Channels"
+        statusValue={`${Object.values(enabledComms).filter(Boolean).length} enabled`}
+        items={commItems}
+      />
     </PortalShell>
   );
 }

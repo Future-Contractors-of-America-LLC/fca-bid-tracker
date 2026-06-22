@@ -16,12 +16,15 @@ docs/legal/
 ??? PATENT_OPPORTUNITIES_PREP.md
 ??? INVENTION_DISCLOSURE_TEMPLATE.md
 ??? enterprise/                        ? Fortune 100 procurement corpus
-    ??? LEGAL_ENTERPRISE_INDEX.md      ? start here
-    ??? TERMS_OF_SERVICE.md
-    ??? PRIVACY_POLICY.md
-    ??? DATA_PROCESSING_AGREEMENT.md
-    ??? MASTER_SERVICES_AGREEMENT.md
-    ??? ù (see index for full list)
+?   ??? LEGAL_ENTERPRISE_INDEX.md      ? start here
+?   ??? TERMS_OF_SERVICE.md
+?   ??? PRIVACY_POLICY.md
+?   ??? DATA_PROCESSING_AGREEMENT.md
+?   ??? MASTER_SERVICES_AGREEMENT.md
+?   ??? ? (see index for full list)
+??? contractor/                        ? contractor legal templates & checklists
+    ??? CONTRACTOR_LEGAL_INDEX.md      ? start here
+    ??? ? (agreements, lien waivers, formation)
 ```
 
 ---
@@ -33,7 +36,8 @@ docs/legal/
 | USPTO / copyright.gov filings | `docs/legal/` (IP prep) |
 | Calyndra IP packets | `calyndra-ip/` repo |
 | Customer contracts, DPA, MSA, policies | `docs/legal/enterprise/` |
-| Published website legal pages | `src/pages/website/` (sync from enterprise Tier 1) |
+| **Contractor legal templates** (lien waivers, owner contracts, formation) | `docs/legal/contractor/` |
+| Published website legal pages | `src/pages/website/` + `src/legal/content/` |
 | Internal Calyndra governance | `calyndra-system-law/` (not customer contracts) |
 
 ---

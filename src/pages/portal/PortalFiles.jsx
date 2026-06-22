@@ -1,17 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
-import PublicCtaRow from "../../components/PublicCtaRow";
-import SystemStateSummary from "../../components/SystemStateSummary";
 import AuricruxBriefingCard from "../../components/AuricruxBriefingCard";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
-import { publicBodyCtaSets } from "../../websiteShell";
 import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets, qualificationEvidenceByProject } from "../../qualificationEvidence";
-import { routeStateOverlays } from "../../systemState";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import { submitAuricruxAction } from "../../api/auricruxActionsClient";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -89,13 +87,13 @@ function isBriefingReady(file = {}) {
   return haystack.includes("briefing");
 }
 
-function buildBriefingMutation(file, visibleProject) {
+function buildBriefingMutation(file, visibleProject, guidanceReply = "") {
   return {
     evidenceStatus: "Briefing generated",
     status: "Auricrux briefing ready",
     actionLabel: "Open briefing",
     briefingTitle: `Auricrux Briefing — ${file.name}`,
-    briefingSummary: `Auricrux generated a governed briefing placeholder for ${file.name} under ${visibleProject.id}.`,
+    briefingSummary: guidanceReply || `Auricrux generated a governed briefing for ${file.name} under ${visibleProject.id}.`,
     briefingKeyFacts: [
       `${file.category || "Document"} artifact is attached to ${visibleProject.id}.`,
       `${file.discipline || "Document Control"} continuity remains governed inside the active file spine.`,
@@ -123,13 +121,13 @@ export default function PortalFiles() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
   const { activeProject, meta: projectMeta } = useProjectWorkspace();
   const [busyFileId, setBusyFileId] = useState(null);
+  const [actionError, setActionError] = useState("");
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState(() => readLocalJson(FILE_INTAKE_DRAFTS_KEY, defaultDraft));
   const [deepLink] = useState(() => readDeepLinkParams());
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
 
   const visibleProject = activeProject || state.project;
-  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
   const { files, auditEvents, meta: evidenceMeta, mutateFile, filters, setFilters, summary } = useWorkflowEvidence(visibleProject?.id);
   const evidencePackets = qualificationEvidenceByProject?.[visibleProject?.id] || qualificationEvidencePackets;
   const briefingFiles = useMemo(() => files.filter((file) => isBriefingReady(file)), [files]);
@@ -169,6 +167,30 @@ export default function PortalFiles() {
     }
   }
 
+  async function handleCreateBriefing(file) {
+    setBusyFileId(file.fileId);
+    try {
+      const payload = await submitAuricruxAction({
+        mode: "recommend",
+        targetObjectType: "File",
+        targetObjectId: file.fileId,
+        rationale: `Generate governed briefing for ${file.name} under project ${visibleProject.id}.`,
+        sourceRoute: "/portal/files",
+      });
+      const guidanceReply = payload?.guidance?.reply || "";
+      await handleFileAction(
+        file,
+        "create-briefing",
+        `Auricrux generated a governed briefing for ${file.name} under ${visibleProject.id}.`,
+        buildBriefingMutation(file, visibleProject, guidanceReply),
+      );
+    } catch (error) {
+      setActionError(error.message || "Unable to generate briefing.");
+    } finally {
+      setBusyFileId("");
+    }
+  }
+
   async function handleCreateFileRecord(event) {
     event.preventDefault();
     if (!draft.name.trim()) return;
@@ -197,7 +219,7 @@ export default function PortalFiles() {
   return (
     <PortalShell
       title={`${companyName} File Intake and Evidence Workspace`}
-      subtitle="A branded document-control product for registering project files, linking evidence, generating Auricrux briefings, and keeping customer deliverables connected to execution."
+      subtitle="Register project files, link evidence, and control deliverables."
       activeHref="/portal/files"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.files}
@@ -226,32 +248,21 @@ export default function PortalFiles() {
         </div>
       ) : null}
 
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={visibleProject}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="File route now reads from the active project workspace"
-          detail="Document context, next action, qualification evidence, and blocker visibility stay attached to the same active project root used by Projects and Audit."
-        />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
-        <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded file experience</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{companyName} can now register files, attach evidence, generate Auricrux briefings, and preserve customer-facing document continuity without leaving the branded workspace.</p>
-        <div style={{ color: "#334155", lineHeight: 1.8 }}>
-          <div><strong>Project root:</strong> {visibleProject.id}</div>
-          <div><strong>Project workflow source:</strong> {projectMeta.backingSource}</div>
-          <div><strong>Evidence workflow source:</strong> {evidenceMeta.backingSource}</div>
-          <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
+      {visibleProject?.id ? (
+        <div style={{ marginBottom: 16 }}>
+          <AuricruxInsightPanel
+            title="Auricrux File Intelligence"
+            targetObjectId={visibleProject.id}
+            sourceRoute="/portal/files"
+            rationale="Review governed file posture, evidence links, and briefing readiness for the active project."
+            nextAction="Register missing artifacts, link evidence targets, and generate briefings before execution advances."
+            actionHref={`/portal/design?projectId=${encodeURIComponent(visibleProject.id)}`}
+            actionLabel="Open design workspace"
+            tone="blue"
+            liveRecommend
+          />
         </div>
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
-      </div>
+      ) : null}
 
       {targetedFile ? (
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: `1px solid ${brandSkin.accent || "#2563eb"}` }}>
@@ -344,6 +355,43 @@ export default function PortalFiles() {
         </ul>
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 16 }}>
+        <h2 style={{ marginTop: 0 }}>File governance registers</h2>
+        <p style={{ lineHeight: 1.7, color: "#475569", marginTop: 0 }}>
+          Cross-project registers tie legal artifacts, drawings, RFIs, and closeout packages to governed portal routes.
+        </p>
+        <div style={{ display: "grid", gap: 14 }}>
+          {fileGovernance.registers.map((register) => (
+            <div key={register.title} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
+              <div style={{ fontWeight: 800, color: "#0f172a" }}>{register.title}</div>
+              <div style={{ fontSize: 14, color: "#475569", marginTop: 6, lineHeight: 1.6 }}>{register.purpose}</div>
+              <div style={{ fontSize: 13, color: "#64748b", marginTop: 8 }}>
+                Artifacts: {register.artifacts.join(" · ")}
+              </div>
+              <a href={register.route} style={{ ...secondaryButtonStyle, display: "inline-block", marginTop: 10, textDecoration: "none" }}>
+                {register.label}
+              </a>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 18 }}>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Closeout packages</div>
+          <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", margin: 0 }}>
+            {fileGovernance.closeoutPackages.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div style={{ marginTop: 18 }}>
+          <div style={{ fontWeight: 700, marginBottom: 8 }}>Audit signals</div>
+          <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", margin: 0 }}>
+            {fileGovernance.auditSignals.map((signal) => (
+              <li key={signal}>{signal}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
       <ProjectFileAuditPanel
         project={visibleProject}
         files={files}
@@ -353,7 +401,7 @@ export default function PortalFiles() {
         onRegisterReview={(file) => handleFileAction(file, "register-review", `${file.name} queued for governed review under ${visibleProject.id}.`)}
         onClassifyFile={(file) => handleFileAction(file, "classify-file", `Auricrux classified ${file.name} for ${visibleProject.id}.`, { category: file.category, evidenceStatus: "Classification complete", status: "Classified", actionLabel: "Classification saved" })}
         onLinkEvidence={(file) => handleFileAction(file, "link-evidence", `${file.name} linked to governed evidence target for ${visibleProject.id}.`, { linkedEvidenceTarget: `${visibleProject.id} governed evidence chain`, evidenceStatus: "Evidence linked", status: "Linked to governed object", actionLabel: "Evidence linked" })}
-        onCreateBriefing={(file) => handleFileAction(file, "create-briefing", `Auricrux generated a briefing placeholder for ${file.name} under ${visibleProject.id}.`, buildBriefingMutation(file, visibleProject))}
+        onCreateBriefing={handleCreateBriefing}
         onOpenDesign={(file) => {
           const href = `/portal/design?projectId=${encodeURIComponent(visibleProject.id)}&fileId=${encodeURIComponent(file.fileId)}`;
           window.location.href = href;

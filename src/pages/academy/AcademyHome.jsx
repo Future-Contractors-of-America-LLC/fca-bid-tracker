@@ -12,7 +12,10 @@ import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import { flattenCatalogLessons, getProgramsByLane, OFFERING_LANES } from "../../academyOfferings";
+import { filterVisibleLanes, hasAcademySubscription } from "../../academySubscriptionAccess";
 import { academyCatalog } from "../../academyCatalog";
+import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
+import { academyPageStyle } from "../../academyDesignSystem";
 import { pageShellStyle } from "../../publicShellStyles";
 
 const cardStyle = {
@@ -180,6 +183,8 @@ export default function AcademyHome() {
 
   const apiPrograms = academyState?.catalog?.programs ?? [];
   const enrollments = academyState?.enrollments ?? [];
+  const laneProgramCounts = academyState?.summary?.laneProgramCounts || {};
+  const catalogIntegrity = useMemo(() => getCatalogIntegrity(academyState), [academyState]);
 
   useEffect(() => {
     refreshSyncStamp("Academy classroom continuity active");
@@ -195,7 +200,11 @@ export default function AcademyHome() {
 
   const catalogLessons = useMemo(() => flattenCatalogLessons(), []);
   const catalogLanes = useMemo(() => getProgramsByLane(), []);
-  const catalogProgramCount = Math.max(academyCatalog.programs.length, apiPrograms.length);
+  const catalogProgramCount = catalogIntegrity.actualTotal || Math.max(academyCatalog.programs.length, apiPrograms.length);
+  const visibleOfferingLanes = useMemo(
+    () => filterVisibleLanes(OFFERING_LANES, session),
+    [session],
+  );
 
   const classroomSummaries = useMemo(() => classrooms.map((classroom) => {
     const completedCount = classroom.lessons.filter((lesson) => progress[lesson.id]).length;
@@ -207,7 +216,7 @@ export default function AcademyHome() {
   }), [progress]);
 
   return (
-    <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
+    <div style={{ ...pageShellStyle, ...academyPageStyle() }}>
       <ShellHeader
         eyebrow="FCA Academy"
         title="Workforce training & certification"
@@ -239,6 +248,7 @@ export default function AcademyHome() {
             <a href="/academy/dashboard" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Learner dashboard</a>
             <a href="/academy/credentials" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Credentials</a>
             <a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Full catalog</a>
+            <a href="/academy/store" style={{ color: "#7c3aed", fontWeight: 700, textDecoration: "none" }}>Browse courses to purchase</a>
           </div>
           {apiPrograms.length > 0 && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14, marginBottom: 14 }}>
@@ -256,25 +266,47 @@ export default function AcademyHome() {
         </div>
       )}
 
+      <div style={{ ...cardStyle, marginBottom: 24, border: catalogIntegrity.aligned ? "1px solid #bbf7d0" : "1px solid #fde68a", background: catalogIntegrity.aligned ? "#f0fdf4" : "#fffbeb" }}>
+        <strong style={{ color: catalogIntegrity.aligned ? "#15803d" : "#b45309" }}>
+          {catalogIntegrity.aligned ? "Catalog aligned" : "Catalog sync"}
+        </strong>
+        <span style={{ color: "#475569", marginLeft: 8 }}>
+          {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs from Auricrux-Central
+          {catalogIntegrity.apiConnected ? ` (${meta.backingSource})` : " — API pending"}
+          {catalogIntegrity.aligned ? "." : " — deploy may still be propagating."}
+        </span>
+      </div>
+
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Catalog overview</h2>
         <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
-          <strong>{catalogProgramCount}</strong> programs across <strong>{OFFERING_LANES.length}</strong> lanes: {OFFERING_LANES.map((lane) => lane.label).join(", ")}.
-          {" "}<a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700 }}>View full catalog by lane →</a>
+          <strong>{catalogProgramCount}</strong> programs across <strong>{visibleOfferingLanes.length}</strong> lanes.
+          {" "}<a href="/academy/catalog" style={{ color: "#1d4ed8", fontWeight: 700 }}>View full catalog by lane</a>
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
-          {catalogLanes.filter((lane) => lane.programs.length > 0).map((lane) => (
-            <div key={lane.key} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: "#f8fafc" }}>
-              <strong>{lane.label}</strong>
-              <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{lane.programs.length} program{lane.programs.length === 1 ? "" : "s"}</div>
-            </div>
-          ))}
+          {visibleOfferingLanes.map((lane) => {
+            const liveCount = laneProgramCounts[lane.key];
+            const fallbackCount = catalogLanes.find((item) => item.key === lane.key)?.programs.length || 0;
+            const count = liveCount ?? fallbackCount;
+            if (!count) return null;
+            return (
+              <a
+                key={lane.key}
+                href={`/academy/pathway?pathway=${lane.key}`}
+                style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: "#f8fafc", textDecoration: "none", color: "inherit" }}
+              >
+                <strong>{lane.label}</strong>
+                <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>{count} program{count === 1 ? "" : "s"}</div>
+                <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, marginTop: 8 }}>Browse lane</div>
+              </a>
+            );
+          })}
         </div>
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
         <h2 style={{ marginTop: 0 }}>Catalog lessons</h2>
-        <p style={{ color: "#475569", lineHeight: 1.65 }}>Structured lessons across apprenticeship, certification, degree, licensure, and operator tracks.</p>
+        <p style={{ color: "#475569", lineHeight: 1.65 }}>Structured lessons across apprenticeship, certification, degree, licensure{hasAcademySubscription(session) ? ", and operator guides" : ""}.</p>
         <div style={{ display: "grid", gap: 10, maxHeight: 360, overflow: "auto" }}>
           {catalogLessons.map((lesson) => (
             <div key={lesson.id} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: progress[lesson.id] ? "#f0fdf4" : "#fff" }}>

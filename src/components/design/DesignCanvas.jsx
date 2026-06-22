@@ -1,45 +1,5 @@
 import PdfPlanViewer from "./PdfPlanViewer";
-
-function TransitionalSheetViewer({ activeSheet, fileFormat, markups, activeTool, onMarkupComplete }) {
-  return (
-    <div
-      style={{
-        position: "relative",
-        minHeight: 640,
-        border: "1px solid #dbe3ef",
-        borderRadius: 12,
-        overflow: "hidden",
-        background: "linear-gradient(180deg, #0f172a 0%, #1e293b 100%)",
-        color: "#e2e8f0",
-      }}
-    >
-      <div style={{ padding: 24, textAlign: "center" }}>
-        <div style={{ fontSize: 28, fontWeight: 800 }}>{activeSheet?.name || "Design sheet"}</div>
-        <div style={{ marginTop: 8, lineHeight: 1.7, color: "#cbd5e1" }}>
-          {String(fileFormat).toUpperCase()} coordination surface with governed extraction manifest.
-          <br />
-          Markup tools remain active while APS translation completes.
-        </div>
-      </div>
-      <div style={{ position: "relative", margin: "0 auto", width: "min(960px, 100%)", aspectRatio: "4 / 3", background: "#fff", borderRadius: 8 }}>
-        <canvas
-          width={960}
-          height={720}
-          onClick={(event) => {
-            if (activeTool === "select") return;
-            const rect = event.currentTarget.getBoundingClientRect();
-            const point = [(event.clientX - rect.left) / rect.width, (event.clientY - rect.top) / rect.height];
-            onMarkupComplete?.({ type: activeTool, geometry: { coordinates: [point] }, label: activeTool });
-          }}
-          style={{ width: "100%", height: "100%", cursor: activeTool === "select" ? "default" : "crosshair" }}
-        />
-      </div>
-      <div style={{ position: "absolute", left: 16, bottom: 16, fontSize: 12, color: "#94a3b8" }}>
-        {markups.length} markup(s) on sheet
-      </div>
-    </div>
-  );
-}
+import NativeSheetViewer from "./NativeSheetViewer";
 
 export default function DesignCanvas({
   fileId,
@@ -51,8 +11,9 @@ export default function DesignCanvas({
   onMarkupComplete,
 }) {
   const pageNumber = (activeSheet?.pageIndex ?? 0) + 1;
+  const normalizedFormat = String(fileFormat || "pdf").toLowerCase();
 
-  if (fileFormat === "pdf" && fileId) {
+  if (normalizedFormat === "pdf" && fileId) {
     return (
       <PdfPlanViewer
         fileId={fileId}
@@ -65,13 +26,24 @@ export default function DesignCanvas({
     );
   }
 
+  if (fileId && activeSheet?.sheetId) {
+    return (
+      <NativeSheetViewer
+        fileId={fileId}
+        sheetId={activeSheet.sheetId}
+        activeSheet={activeSheet}
+        fileFormat={normalizedFormat}
+        markups={markups}
+        activeTool={activeTool}
+        scaleLabel={activeSheet?.scale}
+        onMarkupComplete={onMarkupComplete}
+      />
+    );
+  }
+
   return (
-    <TransitionalSheetViewer
-      activeSheet={activeSheet}
-      fileFormat={fileFormat}
-      markups={markups}
-      activeTool={activeTool}
-      onMarkupComplete={onMarkupComplete}
-    />
+    <div style={{ padding: 24, color: "#64748b", textAlign: "center" }}>
+      Select a governed file to open the FCA native design surface.
+    </div>
   );
 }

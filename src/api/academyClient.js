@@ -1,4 +1,6 @@
 import { centralApi, centralFetch } from "./backendBase";
+import { academyCatalog } from "../academyCatalog.js";
+import { resolveProgramCatalogMeta } from "../academyCatalogTaxonomy.js";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
@@ -16,8 +18,59 @@ function formatApiError(response, payload, fallbackMessage) {
   return payload?.error || `${fallbackMessage}${statusSuffix}.`;
 }
 
-export async function fetchAcademyLms() {
-  const response = await centralFetch("/api/academy-lms", { method: "GET" });
+function buildProgramDetailFromCatalog(programKey) {
+  const program = academyCatalog.programs.find((item) => item.key === programKey);
+  if (!program) return null;
+
+  const course = program.courses?.[0];
+  const lessonTitles = Array.isArray(course?.lessonTitles) ? course.lessonTitles : [];
+  const catalogMeta = resolveProgramCatalogMeta(program);
+  const modules = lessonTitles.map((title, index) => ({
+    moduleNumber: index + 1,
+    title,
+    objective: title,
+    lessons: 1,
+    practicalLab: course?.lab,
+    knowledgeCheck: { passingScore: 80, questionCount: 5 },
+  }));
+
+  return {
+    ok: true,
+    program: {
+      key: program.key,
+      title: program.title,
+      credential: program.credential,
+      audience: program.audience,
+      duration: program.duration,
+      format: program.format,
+      goal: program.goal,
+      outcomes: program.outcomes,
+      linkedSurface: program.linkedSurface,
+      linkedLabel: program.linkedLabel,
+      deliveryModel: program.format,
+      completionRule: "Complete all modules with knowledge checks at 80% or higher.",
+      pathwayKey: catalogMeta.pathwayKey,
+      topicKey: catalogMeta.topicKey,
+      enrollment: catalogMeta.enrollment,
+    },
+    modules,
+    completionRequirements: {
+      modules: modules.length,
+      knowledgeCheckPassingScore: "80%",
+      practicalLab: course?.lab || "Complete linked portal lab surfaces where indicated.",
+      credential: program.credential,
+    },
+    backingSource: "client-academy-catalog-fallback",
+  };
+}
+
+export async function fetchAcademyLms(options = {}) {
+  const params = new URLSearchParams();
+  params.set("view", options.view || "summary");
+  if (options.lane) params.set("lane", options.lane);
+  if (options.offset != null) params.set("offset", String(options.offset));
+  if (options.limit != null) params.set("limit", String(options.limit));
+  const response = await centralFetch(`/api/academy-lms?${params.toString()}`, { method: "GET" });
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
     throw new Error(formatApiError(response, payload, "Unable to load academy state"));
@@ -28,10 +81,16 @@ export async function fetchAcademyLms() {
 export async function fetchAcademyProgram(programKey) {
   const response = await centralFetch(`/api/academy-lms?programKey=${encodeURIComponent(programKey)}`, { method: "GET" });
   const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to load academy program"));
+  if (response.ok && payload?.ok) {
+    return payload;
   }
-  return payload;
+
+  const fallback = buildProgramDetailFromCatalog(programKey);
+  if (fallback) {
+    return fallback;
+  }
+
+  throw new Error(formatApiError(response, payload, "Unable to load academy program"));
 }
 
 export async function mutateAcademyLms(action, body = {}) {
@@ -50,6 +109,13 @@ export async function mutateAcademyLms(action, body = {}) {
     throw new Error(formatApiError(response, payload, "Unable to mutate academy state"));
   }
   return payload;
+}
+
+export async function exportAcademyTranscript(learnerId) {
+  if (!learnerId) {
+    throw new Error("Unable to export transcript: learnerId is required.");
+  }
+  return mutateAcademyLms("export-transcript", { learnerId });
 }
 
 export { centralApi, centralFetch };

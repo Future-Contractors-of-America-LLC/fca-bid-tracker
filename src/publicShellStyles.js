@@ -10,10 +10,10 @@ export const pageShellStyle = {
 
 export const cardStyle = {
   border: "1px solid #e2e8f0",
-  borderRadius: 8,
+  borderRadius: 14,
   padding: 20,
   background: "#ffffff",
-  boxShadow: "none",
+  boxShadow: "0 1px 2px rgba(15, 23, 42, 0.05)",
 };
 
 export const heroCardStyle = {

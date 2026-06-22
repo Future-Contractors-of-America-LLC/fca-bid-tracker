@@ -1,9 +1,7 @@
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
-import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
-import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProposalWorkspace from "../../hooks/useProposalWorkspace";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -27,32 +25,34 @@ const buttonStyle = (primary = false) => ({
 export default function PortalProposals() {
   const { state } = useWorkspaceState();
   const { proposals, meta, advanceProposal } = useProposalWorkspace();
+  const focusProposal = proposals[0] || null;
 
   return (
     <PortalShell
-      title="Proposal Workspace and Customer Packaging"
-      subtitle="Customer-facing commercial packaging for proposal narrative, delivery posture, and approval-path follow-through."
+      title="Proposals"
+      subtitle="Package scope, narrative, and approval-ready customer proposals."
       activeHref="/portal/proposals"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}
       primaryHref="/portal/projects"
       primaryLabel="Open Projects"
     >
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary tenant={state.tenant} project={state.project} workspace={state.workspace} auricrux={state.auricrux} title="Proposal route completes the sales-to-operations vertical slice" detail="Proposal state now sits between estimate readiness and project handoff so FCA can package scope, assumptions, and approval follow-through inside the live product spine." />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Proposal persistence source</div>
-        <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Source:</strong> {meta.backingSource}</div>
-          <div><strong>Status:</strong> {meta.persistenceState}</div>
-          <div><strong>Last sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
+      {focusProposal?.proposalId ? (
+        <div style={{ marginBottom: 16 }}>
+          <AuricruxInsightPanel
+            title="Auricrux Proposal Intelligence"
+            targetObjectType="Proposal"
+            targetObjectId={focusProposal.proposalId}
+            sourceRoute="/portal/proposals"
+            rationale={focusProposal.nextAction || "Package scope, assumptions, and approval follow-through for customer delivery."}
+            nextAction={focusProposal.nextAction || "Advance proposal delivery posture toward customer approval."}
+            actionHref="/portal/projects"
+            actionLabel="Open projects"
+            tone="blue"
+            liveRecommend
+          />
         </div>
-      </div>
-
-      <CommercialContinuityFeed title="Proposal commercial continuity feed" detail="Proposal drafting, delivery, approval, and project handoff signals remain visible here so the customer package stays attached to live product state." />
-      <AutomationRecoveryFeed title="Proposal automation feed" detail="Recent proposal mutations remain visible across routes so FCA can prove proposal handling is part of the operating system rather than static copy." />
+      ) : null}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
         {proposals.map((proposal) => (

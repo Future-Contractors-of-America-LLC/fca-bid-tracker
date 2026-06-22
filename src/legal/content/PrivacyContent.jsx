@@ -7,6 +7,7 @@ import {
   LegalUl,
   LegalTable,
   LegalContact,
+  LegalPostalAddress,
 } from "../../legal/LegalProse";
 
 export default function PrivacyContent() {
@@ -112,6 +113,7 @@ export default function PrivacyContent() {
 
       <LegalContact email="privacy@futurecontractorsofamerica.com" label="Privacy / DPO contact" />
       <LegalContact email="legal@futurecontractorsofamerica.com" label="Enterprise DPA requests" />
+      <LegalPostalAddress />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import useWorkspaceState from "../../hooks/useWorkspaceState";
+import usePortalProjectId from "../../hooks/usePortalProjectId";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { advanceWarrantyCase, createWarrantyCase, fetchWarrantyCases } from "../../api/constructionClient";
 import { routeStateOverlays } from "../../systemState";
@@ -26,8 +26,7 @@ const input = {
 };
 
 export default function PortalWarranty() {
-  const { state } = useWorkspaceState();
-  const projectId = state?.project?.id || "A-117";
+  const { projectId, hasProject } = usePortalProjectId();
   const [items, setItems] = useState([]);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -103,6 +102,7 @@ export default function PortalWarranty() {
     >
       <AuricruxInsightPanel
         title="Auricrux Warranty Intelligence"
+        targetObjectId={projectId}
         nextAction="Resolve warranty cases only after closeout artifacts are complete and turnover walkthrough is scheduled."
         actionHref="/portal/closeout"
         actionLabel="Review closeout"

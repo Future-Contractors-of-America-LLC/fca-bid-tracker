@@ -40,9 +40,14 @@ export async function fetchDesignLayers(projectId, fileId) {
 export async function fetchViewerToken(projectId, fileId, options = {}) {
   const params = new URLSearchParams({ fileId: String(fileId) });
   if (options.format) params.set("format", String(options.format));
+  const method = options.queue ? "POST" : "GET";
   const response = await centralFetch(
     `/api/projects/${encodeURIComponent(projectId)}/design/viewer-token?${params.toString()}`,
-    { method: options.queue ? "POST" : "GET" },
+    {
+      method,
+      headers: method === "POST" ? { "Content-Type": "application/json" } : undefined,
+      body: method === "POST" ? JSON.stringify({ queue: true, format: options.format || "" }) : undefined,
+    },
   );
   const payload = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(payload?.error || "Unable to load viewer session.");

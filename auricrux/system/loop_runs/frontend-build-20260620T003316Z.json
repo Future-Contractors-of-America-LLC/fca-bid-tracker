@@ -1,0 +1,23 @@
+{
+  "loopId": "frontend-build",
+  "generatedUtc": "2026-06-20T00:33:16Z",
+  "ok": true,
+  "summary": "Frontend build loop run 5: 2/2 validators passed.",
+  "metrics": {
+    "runCount": 5,
+    "passed": 2,
+    "failed": 0
+  },
+  "details": {
+    "results": [
+      {
+        "script": "validate-routes.mjs",
+        "ok": true
+      },
+      {
+        "script": "validate-finance-workspace.mjs",
+        "ok": true
+      }
+    ]
+  }
+}

@@ -98,63 +98,63 @@ const checks = [
   {
     file: path.join(root, "src", "pages", "website", "Platform.jsx"),
     markers: [
-      'FCA helps contractor teams move from opportunity to delivery with better visibility into bids, approvals, project files, customer updates, billing steps, workforce readiness, and communications routing.',
+      'FCA helps contractor teams move from opportunity to delivery with real workflows for bids, estimates, proposals, projects, files, billing, support, Academy, and Auricrux guidance.',
       'marginBottom: 0',
-      'Linked product areas',
+      'Route groups around real work',
     ],
   },
   {
     file: path.join(root, "src", "pages", "website", "Pricing.jsx"),
     markers: [
-      'Review the rollout path, activate a real workspace if you are ready to move, then continue into contact, pricing fit, recurring-service posture, referral-readiness, and platform review through the shared action surfaces above instead of repeating the same CTA cluster again here.',
-      'Immediate next actions',
+      'Rollout checklist',
+      'Products included in every rollout',
     ],
   },
   {
     file: path.join(root, "src", "pages", "website", "Contact.jsx"),
     markers: [
-      'The route-local CTA cluster was removed here so contact can stay focused on the walkthrough options, current pricing paths, shared next actions, and live workspace activation already presented above.',
       'What happens in a walkthrough',
+      'Walkthrough activation is not yet governed lead intake',
     ],
   },
   {
     file: path.join(root, "src", "pages", "portal", "PortalProfile.jsx"),
     markers: [
-      'Customer profile now reads from the live authenticated workspace',
-      'Persisted profile state',
-      'Why this route matters',
+      "Live customer product controls",
+      "Persisted customer profile state active",
+      "Why this route matters",
     ],
   },
   {
     file: path.join(root, "src", "pages", "portal", "PortalNotifications.jsx"),
     markers: [
-      'Notifications now read from live workspace continuity',
-      'Persisted notification state',
-      'Active notifications',
+      "Notifications now keep launch-user truth visible",
+      "Persisted notifications state active",
+      "Active notifications",
     ],
   },
   {
     file: path.join(root, "src", "pages", "portal", "PortalProjects.jsx"),
     markers: [
-      'Project route is anchored to the live workspace state',
-      'Persisted project state',
-      'Project Lifecycle',
+      "ProjectActionCenter",
+      "Persisted project flow state active",
+      'title="Projects"',
     ],
   },
   {
     file: path.join(root, "src", "pages", "portal", "PortalMessages.jsx"),
     markers: [
-      'Persisted message state',
-      'BuildExpansionCommandDeck',
-      'Coordination stream',
+      "CustomerCommsLaunchpad",
+      "Portal messages synced from Auricrux-Central",
+      "Launch customer-enabled communications lanes",
     ],
   },
   {
     file: path.join(root, "src", "pages", "portal", "PortalBilling.jsx"),
     markers: [
-      'Billing now reads from the live workspace state',
-      'Persisted billing state',
-      'Billing queue',
+      "Billing workspace",
+      "Portal billing synced from Auricrux-Central",
+      "CommercialContinuityFeed",
     ],
   },
 ];

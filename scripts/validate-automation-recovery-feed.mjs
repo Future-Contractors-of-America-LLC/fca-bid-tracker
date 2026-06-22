@@ -32,10 +32,10 @@ const checks = [
     ],
   },
   {
-    file: path.join(root, "src", "components", "PortalShell.jsx"),
+    file: path.join(root, "src", "pages", "portal", "PlatformDashboard.jsx"),
     markers: [
-      'import AutomationRecoveryFeed from "./AutomationRecoveryFeed";',
-      '<AutomationRecoveryFeed title="Shared automation recovery feed"',
+      'import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";',
+      '<AutomationRecoveryFeed title="Activity log"',
     ],
   },
 ];

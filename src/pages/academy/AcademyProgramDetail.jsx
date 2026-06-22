@@ -4,7 +4,11 @@ import ShellFooter from "../../components/ShellFooter";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { fetchAcademyProgram } from "../../api/academyClient";
-import AcademyBuyButton from "../../components/AcademyBuyButton";
+import { evaluateEnrollmentAccess } from "../../academyEnrollmentAccess";
+import { findCatalogPlacement } from "../../academyOfferings";
+import { resolveProgramCatalogMeta, formatAddonLabel, formatPlanLabel, getPathwayByKey, getTopicByKey, getCertificationAgencyAlignment, getApprenticeshipCompliance, getDegreeAccreditationFootnote } from "../../academyCatalogTaxonomy";
+import AcademyCourseChrome from "../../components/academy/AcademyCourseChrome";
+import { academyPageStyle } from "../../academyDesignSystem";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -52,10 +56,55 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
   const program = programDetail?.program;
   const modules = programDetail?.modules || [];
   const completionRequirements = programDetail?.completionRequirements;
+  const catalogMeta = program ? resolveProgramCatalogMeta({ key: programId, ...program }) : null;
+  const placement = catalogMeta ? findCatalogPlacement(catalogMeta.pathwayKey, catalogMeta.topicKey) : null;
+  const access = evaluateEnrollmentAccess({
+    session,
+    programKey: programId,
+    enrollments: academyState.enrollments || [],
+  });
+
+  const complianceFootnotes = useMemo(() => {
+    if (!program || !catalogMeta) return [];
+    const lines = [];
+    const { pathwayKey, topicKey } = catalogMeta;
+    if (pathwayKey === "certification") {
+      const agency = program.issuingAgency || getCertificationAgencyAlignment(topicKey)?.primary;
+      if (agency) lines.push({ label: "Certification alignment", value: `${agency}${program.governingBodies?.length ? ` · ${program.governingBodies.join(", ")}` : ""}` });
+      if (program.renewalPolicy) lines.push({ label: "Renewal policy", value: program.renewalPolicy });
+    }
+    if (pathwayKey === "apprenticeship") {
+      const trade = getApprenticeshipCompliance(topicKey);
+      if (program.apprenticeshipSponsor || trade?.sponsor) lines.push({ label: "Apprenticeship alignment", value: program.apprenticeshipSponsor || trade.sponsor });
+      if (program.journeymanHours || trade?.hours) lines.push({ label: "Journeyman OJT target", value: `${(program.journeymanHours || trade.hours).toLocaleString()} hours (varies by sponsor/state)` });
+      if (program.ratioRequirements) lines.push({ label: "Supervision ratio", value: program.ratioRequirements });
+      if (program.curriculumAlignment) lines.push({ label: "Curriculum", value: program.curriculumAlignment });
+    }
+    if (pathwayKey === "degree") {
+      const acc = getDegreeAccreditationFootnote(program.degreeLevel || catalogMeta.degreeLevel);
+      lines.push({ label: "Accreditation alignment", value: program.accreditationBody || acc.accreditationBody });
+      lines.push({ label: "Institutional status", value: program.regionalAccreditation || acc.regionalAccreditation });
+      lines.push({ label: "Credit articulation", value: program.creditArticulation || acc.creditArticulation });
+    }
+    if (pathwayKey === "licensure") {
+      if (program.licensureBoard) lines.push({ label: "Licensure board", value: program.licensureBoard });
+      if (program.stateCode) lines.push({ label: "Jurisdiction", value: program.stateCode });
+      if (program.examPrerequisites) lines.push({ label: "Exam prerequisites", value: program.examPrerequisites });
+      if (program.renewalPolicy) lines.push({ label: "Renewal policy", value: program.renewalPolicy });
+      if (program.licensureScope === "multi-state") lines.push({ label: "Scope", value: "Multi-state shared prep course" });
+    }
+    return lines;
+  }, [program, catalogMeta]);
 
   async function enrollNow() {
-    if (!programId || !learnerId) {
-      setActionMessage("Sign in to enroll in this program.");
+    if (!programId) return;
+    if (!access.canEnroll) {
+      const firstBlocker = access.blockers[0];
+      setActionMessage(firstBlocker?.message || "Enrollment requirements not met.");
+      return;
+    }
+    if (!learnerId) {
+      setActionMessage("Sign in to enroll in this course.");
       return;
     }
     setEnrollBusy(true);
@@ -71,10 +120,10 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
   }
 
   return (
-    <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
+    <div style={{ ...pageShellStyle, ...academyPageStyle() }}>
       <ShellHeader
         compact
-        eyebrow="FCA Academy"
+        eyebrow="Auricrux School of Construction"
         title={program?.title || "Program"}
         subtitle={program?.completionRule || program?.deliveryModel || "Module-based training with knowledge checks and practical labs."}
         primaryHref="/academy/dashboard"
@@ -85,22 +134,86 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
         currentJourney="academy"
       />
 
-      <main style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px 48px" }}>
+      <AcademyCourseChrome
+        program={program}
+        modules={modules}
+        enrollment={enrollment}
+        pathwayKey={catalogMeta?.pathwayKey}
+        topicKey={catalogMeta?.topicKey}
+        showSidebar
+      >
         {loadError ? (
           <div style={{ ...cardStyle, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>{loadError}</div>
         ) : null}
 
         {program ? (
-          <div style={{ ...cardStyle, marginBottom: 24 }}>
+          <div style={{ ...cardStyle, marginBottom: 0 }}>
             <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>{program.credential}</div>
-            <p style={{ color: "#475569", lineHeight: 1.7 }}>
-              <strong>Pathway:</strong> {program.pathway || "General"} | <strong>Track:</strong> {program.track || "Core"} | <strong>Level:</strong> {program.level || "-"} | <strong>Modules:</strong> {program.duration}
-              {program.courseCode ? <> | <strong>Course:</strong> {program.courseCode}</> : null}
-              {program.creditHours ? <> | <strong>Credits:</strong> {program.creditHours}</> : null}
-            </p>
-            {program.deliveryModel ? (
-              <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.deliveryModel}</p>
+            {catalogMeta ? (
+              <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
+                <strong>Pathway:</strong> {getPathwayByKey(catalogMeta.pathwayKey)?.label || catalogMeta.pathwayKey}
+                {" · "}
+                <strong>Topic:</strong> {getTopicByKey(catalogMeta.topicKey)?.label || catalogMeta.topicKey}
+                {" · "}
+                <strong>Modules:</strong> {modules.length || program.duration}
+              </p>
+            ) : (
+              <p style={{ color: "#475569", lineHeight: 1.7 }}>
+                <strong>Pathway:</strong> {program.pathway || "General"} | <strong>Track:</strong> {program.track || "Core"} | <strong>Level:</strong> {program.level || "-"} | <strong>Modules:</strong> {program.duration}
+                {program.courseCode ? <> | <strong>Course:</strong> {program.courseCode}</> : null}
+                {program.creditHours ? <> | <strong>Credits:</strong> {program.creditHours}</> : null}
+              </p>
+            )}
+            {placement ? (
+              <p style={{ marginTop: 0 }}>
+                <a href={`/academy/catalog?pathway=${catalogMeta.pathwayKey}&topic=${catalogMeta.topicKey}`} style={{ color: "#2563eb", fontWeight: 600, textDecoration: "none" }}>
+                  Back to {placement.topic.label} in {placement.pathway.label}
+                </a>
+              </p>
             ) : null}
+            {program.deliveryModel || program.format ? (
+              <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.deliveryModel || program.format}</p>
+            ) : null}
+            {program.goal ? <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.goal}</p> : null}
+            {Array.isArray(program.outcomes) && program.outcomes.length > 0 ? (
+              <ul style={{ paddingLeft: 20, lineHeight: 1.85, color: "#334155" }}>
+                {program.outcomes.map((outcome) => (
+                  <li key={outcome}>{outcome}</li>
+                ))}
+              </ul>
+            ) : null}
+
+            {complianceFootnotes.length > 0 ? (
+              <div style={{ marginTop: 16, padding: 14, borderRadius: 12, background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
+                <div style={{ fontWeight: 700, color: "#166534", marginBottom: 8 }}>Compliance and alignment</div>
+                <dl style={{ margin: 0, lineHeight: 1.75, color: "#334155", fontSize: 14 }}>
+                  {complianceFootnotes.map((item) => (
+                    <div key={item.label} style={{ marginBottom: 8 }}>
+                      <dt style={{ fontWeight: 700, color: "#0f172a", display: "inline" }}>{item.label}: </dt>
+                      <dd style={{ display: "inline", margin: 0 }}>{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <p style={{ fontSize: 12, color: "#64748b", marginBottom: 0, marginTop: 10 }}>
+                  Alignment statements describe curriculum preparation. FCA Academy does not issue licenses, degrees, or registered apprenticeship credentials.
+                </p>
+              </div>
+            ) : null}
+
+            <div style={{ marginTop: 16, padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+              <div style={{ fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>Public syllabus</div>
+              <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+                Full curriculum and module objectives are visible below. Enrollment unlocks progress tracking, knowledge checks, and credential completion.
+              </p>
+              {access.gates.length > 0 ? (
+                <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", marginBottom: 0 }}>
+                  {access.gates.map((gate) => (
+                    <li key={`${gate.code}-${gate.label}`}>{gate.label}{gate.detail ? ` — ${gate.detail}` : ""}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+
             {enrollment ? (
               <div style={{ marginTop: 12 }}>
                 <div style={{ color: "#334155", marginBottom: 8 }}>
@@ -123,24 +236,46 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
                 )}
               </div>
             ) : (
-              <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 10, alignItems: "flex-start" }}>
-                <div style={{ color: "#64748b", marginBottom: 4, width: "100%" }}>
-                  Purchase to unlock full access, or enroll if your workspace already includes this program.
-                </div>
-                <AcademyBuyButton
-                  programKey={programId}
-                  retailPrice={program.retailPrice}
-                  lane={program.lane}
-                  buyerEmail={session?.email}
-                />
+              <div style={{ marginTop: 12 }}>
+                {access.blockers.length > 0 ? (
+                  <div style={{ marginBottom: 12, padding: 12, borderRadius: 10, background: "#fffbeb", border: "1px solid #fde68a" }}>
+                    <div style={{ fontWeight: 700, color: "#92400e", marginBottom: 8 }}>Enrollment requirements</div>
+                    <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#78350f", margin: 0 }}>
+                      {access.blockers.map((blocker) => (
+                        <li key={blocker.code}>
+                          {blocker.message}{" "}
+                          {blocker.actionHref ? (
+                            <a href={blocker.actionHref} style={{ color: "#b45309", fontWeight: 600 }}>{blocker.actionLabel}</a>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <div style={{ color: "#64748b", marginBottom: 10 }}>Enroll to access knowledge checks, progress tracking, and credential completion.</div>
+                )}
                 <button
                   type="button"
-                  disabled={enrollBusy}
+                  disabled={enrollBusy || !access.canEnroll}
                   onClick={enrollNow}
-                  style={{ border: "1px solid #2563eb", background: "#fff", color: "#2563eb", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
+                  style={{
+                    border: "1px solid #2563eb",
+                    background: access.canEnroll ? "#2563eb" : "#94a3b8",
+                    color: "#fff",
+                    borderRadius: 10,
+                    padding: "10px 14px",
+                    fontWeight: 700,
+                    cursor: access.canEnroll ? "pointer" : "not-allowed",
+                  }}
                 >
-                  {enrollBusy ? "Enrolling..." : "Enroll (included access)"}
+                  {enrollBusy ? "Enrolling..." : access.canEnroll ? "Enroll in course" : "Enrollment locked"}
                 </button>
+                {catalogMeta?.enrollment?.minimumPlan ? (
+                  <div style={{ fontSize: 13, color: "#64748b", marginTop: 8 }}>
+                    Minimum plan: {formatPlanLabel(catalogMeta.enrollment.minimumPlan)}
+                    {catalogMeta.enrollment.addonKey ? ` · ${formatAddonLabel(catalogMeta.enrollment.addonKey)}` : ""}
+                  </div>
+                ) : null}
               </div>
             )}
             {actionMessage ? <div style={{ marginTop: 10, color: "#15803d" }}>{actionMessage}</div> : null}
@@ -148,7 +283,7 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
         ) : null}
 
         {completionRequirements ? (
-          <div style={{ ...cardStyle, marginBottom: 24, background: "#f8fafc" }}>
+          <div style={{ ...cardStyle, marginBottom: 16, background: "#f8fafc" }}>
             <h3 style={{ marginTop: 0 }}>Completion requirements</h3>
             <ul style={{ paddingLeft: 20, lineHeight: 1.85, color: "#334155", marginBottom: 0 }}>
               {Object.entries(completionRequirements).map(([key, value]) => (
@@ -158,54 +293,14 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
           </div>
         ) : null}
 
-        <h2 style={{ marginBottom: 16 }}>Module sequence</h2>
-        <div style={{ display: "grid", gap: 12 }}>
-          {modules.map((module) => {
-            const status = enrollment ? moduleStatus(module.moduleNumber, enrollment) : "preview";
-            const score = enrollment?.moduleScores?.[String(module.moduleNumber)];
-            const statusColors = {
-              complete: { border: "#86efac", bg: "#f0fdf4", label: "Complete", labelColor: "#15803d" },
-              current: { border: "#93c5fd", bg: "#eff6ff", label: "Current", labelColor: "#2563eb" },
-              available: { border: "#e2e8f0", bg: "#fff", label: "Available", labelColor: "#64748b" },
-              locked: { border: "#e2e8f0", bg: "#f8fafc", label: "Locked", labelColor: "#94a3b8" },
-              preview: { border: "#e2e8f0", bg: "#fff", label: "Preview", labelColor: "#64748b" },
-            };
-            const colors = statusColors[status] || statusColors.preview;
-
-            return (
-              <article key={module.moduleNumber} style={{ ...cardStyle, border: `1px solid ${colors.border}`, background: colors.bg }}>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "flex-start" }}>
-                  <div>
-                    <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 4 }}>Module {module.moduleNumber}</div>
-                    <h3 style={{ margin: 0 }}>{module.title}</h3>
-                  </div>
-                  <span style={{ color: colors.labelColor, fontWeight: 700, fontSize: 13 }}>
-                    {colors.label}{score !== undefined ? ` (${score}%)` : ""}
-                  </span>
-                </div>
-                {module.objective ? (
-                  <p style={{ color: "#475569", lineHeight: 1.65, marginBottom: 8 }}>{module.objective}</p>
-                ) : null}
-                <div style={{ color: "#64748b", fontSize: 14, marginBottom: 12 }}>
-                  {Array.isArray(module.lessons) ? `${module.lessons.length} lessons` : module.lessons ? `${module.lessons} lessons` : ""}
-                  {module.practicalLab || module.lab ? ` | Lab: ${module.practicalLab || module.lab}` : ""}
-                  {module.knowledgeCheck ? ` | Knowledge check required (80%)` : ""}
-                </div>
-                {status !== "locked" ? (
-                  <a
-                    href={`/academy/programs/${programId}/modules/${module.moduleNumber}`}
-                    style={{ border: "1px solid #2563eb", background: status === "current" ? "#2563eb" : "#fff", color: status === "current" ? "#fff" : "#2563eb", borderRadius: 10, padding: "8px 14px", fontWeight: 700, textDecoration: "none", display: "inline-block" }}
-                  >
-                    {status === "complete" ? "Review module" : "Open module"}
-                  </a>
-                ) : (
-                  <span style={{ color: "#94a3b8", fontSize: 14 }}>Complete prior modules to unlock</span>
-                )}
-              </article>
-            );
-          })}
+        <div style={{ ...cardStyle, background: "#eff6ff", border: "1px solid #bfdbfe" }}>
+          <h3 style={{ marginTop: 0, color: "#0c2340" }}>Course announcements</h3>
+          <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
+            Select a module from the course navigation panel to open Auricrux lectures, skills demonstrations, labs, and knowledge checks.
+            Syllabus objectives remain public; enrollment unlocks graded progress and credentials.
+          </p>
         </div>
-      </main>
+      </AcademyCourseChrome>
 
       <ShellFooter ctaSet={academyCtaSets.home} />
     </div>

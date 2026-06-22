@@ -39,7 +39,6 @@ const checks = [
       'import useBidWorkspace from "../../hooks/useBidWorkspace";',
       'import BidActionCenter from "../../components/BidActionCenter";',
       'import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";',
-      'import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";',
       'import { qualificationEvidencePackets } from "../../qualificationEvidence";',
       'Qualification command surface',
       'Qualification evidence packet',
@@ -48,7 +47,6 @@ const checks = [
       'Route to Estimate',
       '<BidActionCenter bid={bid}',
       '<CommercialContinuityFeed title="Bid revenue continuity feed"',
-      '<AutomationRecoveryFeed title="Bid automation feed"',
     ],
   },
 ];

@@ -77,6 +77,9 @@ export async function migrateLocalPipelineToApi(existingItems = []) {
         invoiceId: link.invoiceId,
         estimateSkipped: Boolean(link.estimateSkipped),
         currentStep: link.currentStep,
+        assignedProgramKey: link.assignedProgramKey,
+        assignedProgramTitle: link.assignedProgramTitle,
+        trainingAssignedAt: link.trainingAssignedAt,
       });
       if (payload.item) migrated.push(payload.item);
     } catch {

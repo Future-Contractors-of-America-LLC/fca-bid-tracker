@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'node:url'
 
 function readContinuityPacket(repoRoot) {
   const ledgerPath = path.join(repoRoot, 'docs', 'FCA_EXECUTION_CONTINUITY_LEDGER.md')
@@ -16,7 +17,7 @@ function exists(file) {
 }
 
 function main() {
-  const repoRoot = path.join(path.dirname(new URL(import.meta.url).pathname), '..')
+  const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
   const packet = readContinuityPacket(repoRoot)
   const generatedDir = path.join(repoRoot, 'generated')
   fs.mkdirSync(generatedDir, { recursive: true })

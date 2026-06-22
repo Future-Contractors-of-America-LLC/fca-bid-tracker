@@ -1,10 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
-import PublicCtaRow from "../../components/PublicCtaRow";
-import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
-import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useProjectWorkspaceDetail from "../../hooks/useProjectWorkspaceDetail";
@@ -13,7 +9,6 @@ import useFinancialWorkspace from "../../hooks/useFinancialWorkspace";
 import useJobCost from "../../hooks/useJobCost";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { fetchProjectRfis } from "../../api/constructionClient";
-import { publicBodyCtaSets } from "../../websiteShell";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -47,8 +42,8 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
   const { projects, activeProject, meta: projectListMeta } = useProjectWorkspace();
   const { projectId, project, routeMatchedProject } = resolveProjectIdentity(requestedPath, routeParams, projects, activeProject || state.project);
   const { item, meta } = useProjectWorkspaceDetail(projectId, project);
-  const jobBilling = useFinancialWorkspace("construction", projectId || "A-117");
-  const jobCost = useJobCost(projectId || "A-117");
+  const jobBilling = useFinancialWorkspace("construction", projectId || "");
+  const jobCost = useJobCost(projectId || "");
   const [rfis, setRfis] = useState([]);
 
   useEffect(() => {
@@ -96,8 +91,8 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
 
   return (
     <PortalShell
-      title="Project Workspace"
-      subtitle="Project continuity home for route-bound project identity, file summary, audit summary, and Auricrux next-action posture without overstating backend completion."
+      title="Project"
+      subtitle="Project hub for files, audit trail, and next actions."
       activeHref="/portal/projects"
       currentJourney="job"
       primaryHref="/portal/files"
@@ -121,37 +116,6 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
             "This route should not be treated as proof that all file, audit, and correction flows are production-complete end to end.",
           ]}
         />
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={project || state.project}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="Project detail route now prefers canonical workspace reads"
-          detail="This route now attempts to resolve project detail, file summary, and audit summary from backend read models before falling back to shell continuity state."
-        />
-      </div>
-
-      <div style={{ marginBottom: 16 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
-      </div>
-
-      <CommercialContinuityFeed title="Project continuity feed" detail="Recent project-stage changes, file-state changes, and commercial continuity movement remain visible here so the project home stays tied to execution reality." />
-      <AutomationRecoveryFeed title="Project automation feed" detail="Recent Auricrux project-state repairs and continuity adjustments remain visible across the project workspace shell." />
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Resolved project identity</div>
-        <div style={{ color: "#334155", lineHeight: 1.8 }}>
-          <div><strong>Route pattern:</strong> /portal/projects/:projectId</div>
-          <div><strong>Requested project ID:</strong> {projectId || "None provided"}</div>
-          <div><strong>Matched route project:</strong> {routeMatchedProject ? "Yes" : "No — using workspace fallback"}</div>
-          <div><strong>Workspace list source:</strong> {projectListMeta.backingSource}</div>
-          <div><strong>Project workspace source:</strong> {meta.projectSource}</div>
-          <div><strong>File summary source:</strong> {meta.fileSource}</div>
-          <div><strong>Audit summary source:</strong> {meta.auditSource}</div>
-        </div>
       </div>
 
       {visible ? (
@@ -192,6 +156,7 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
           <div style={{ ...cardStyle, marginBottom: 16 }}>
             <AuricruxInsightPanel
               title="Auricrux Project Intelligence"
+              targetObjectId={projectId}
               nextAction={visible.auricruxSummary?.nextAction || state.workspace.currentNextAction}
               metrics={[
                 { label: "Stage", value: visible.stage || "—" },

@@ -1,20 +1,20 @@
 import JourneyStrip from "./JourneyStrip";
 import PublicTopNav from "./PublicTopNav";
 import { ctaLightStyle, ctaPrimaryStyle } from "../publicShellStyles";
+import { portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
 
 const headerShellStyle = {
-  border: "1px solid #dbe3ef",
-  borderRadius: 20,
-  background: "linear-gradient(135deg, #ffffff 0%, #f0f6ff 62%, #fff8e6 100%)",
-  padding: 24,
-  marginBottom: 20,
-  boxShadow: "0 14px 28px rgba(15, 23, 42, 0.06)",
+  border: `1px solid ${portalTokens.border}`,
+  borderRadius: portalTokens.radiusLg,
+  background: portalTokens.panel,
+  padding: "22px 24px",
+  marginBottom: 18,
+  boxShadow: portalTokens.shadowMd,
 };
 
 const compactTitleStyle = {
-  padding: "24px 0 8px",
-  marginBottom: 16,
-  borderBottom: "1px solid #e2e8f0",
+  padding: "8px 0 4px",
+  marginBottom: 14,
 };
 
 export default function ShellHeader({
@@ -30,8 +30,11 @@ export default function ShellHeader({
   showTopNav = true,
   topNavMode = "public",
   compact = false,
+  showJourney = false,
 }) {
-  const renderHeaderActions = !(showTopNav && topNavMode === "public") && !compact;
+  const renderHeaderActions = topNavMode === "portal"
+    ? Boolean(primaryHref && primaryLabel)
+    : !(showTopNav && topNavMode === "public") && !compact;
 
   return (
     <>
@@ -39,12 +42,10 @@ export default function ShellHeader({
 
       {compact ? (
         <div style={compactTitleStyle}>
-          <div style={{ color: "#64748b", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 6 }}>
-            {eyebrow}
-          </div>
-          <h1 style={{ margin: 0, fontSize: "clamp(1.5rem, 3vw, 2rem)" }}>{title}</h1>
+          <div style={{ ...portalEyebrowStyle, marginBottom: 6 }}>{eyebrow}</div>
+          <h1 style={{ margin: 0 }}>{title}</h1>
           {subtitle ? (
-            <p style={{ marginTop: 10, marginBottom: 0, color: "#475569", lineHeight: 1.65, maxWidth: 720 }}>
+            <p style={{ marginTop: 8, marginBottom: 0, color: portalTokens.body, lineHeight: 1.55, maxWidth: 680, fontSize: 15 }}>
               {subtitle}
             </p>
           ) : null}
@@ -58,16 +59,14 @@ export default function ShellHeader({
               gap: 20,
               flexWrap: "wrap",
               alignItems: "flex-start",
-              marginBottom: 18,
+              marginBottom: showJourney ? 16 : 0,
             }}
           >
-            <div style={{ maxWidth: 760, minWidth: 0 }}>
-              <div style={{ color: "#64748b", fontWeight: 700, fontSize: 13, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 10 }}>
-                {eyebrow}
-              </div>
-              <h1 style={{ marginTop: 0, marginBottom: 10 }}>{title}</h1>
+            <div style={{ maxWidth: 720, minWidth: 0 }}>
+              <div style={{ ...portalEyebrowStyle, marginBottom: 8 }}>{eyebrow}</div>
+              <h1 style={{ marginTop: 0, marginBottom: subtitle ? 8 : 0 }}>{title}</h1>
               {subtitle ? (
-                <p style={{ marginTop: 0, color: "#334155", lineHeight: 1.65, marginBottom: 0 }}>
+                <p style={{ marginTop: 0, color: portalTokens.body, lineHeight: 1.55, marginBottom: 0, fontSize: 15, maxWidth: 640 }}>
                   {subtitle}
                 </p>
               ) : null}
@@ -98,7 +97,7 @@ export default function ShellHeader({
             ) : null}
           </div>
 
-          <JourneyStrip items={journey} current={currentJourney} />
+          {showJourney ? <JourneyStrip items={journey} current={currentJourney} /> : null}
         </div>
       )}
     </>

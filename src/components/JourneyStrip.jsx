@@ -14,7 +14,7 @@ const itemStyle = {
   gap: 8,
 };
 
-export default function JourneyStrip({ items = [], current }) {
+export default function JourneyStrip({ items = [], current, showGuidance = false }) {
   if (!items.length) return null;
 
   const activeItem = items.find((item) => item.key === current) || items[0];
@@ -72,7 +72,7 @@ export default function JourneyStrip({ items = [], current }) {
         })}
       </div>
 
-      <AuricruxJourneyGuidance current={current} activeItem={activeItem} />
+      {showGuidance ? <AuricruxJourneyGuidance current={current} activeItem={activeItem} /> : null}
     </div>
   );
 }

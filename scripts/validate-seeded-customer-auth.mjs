@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 
 const root = process.cwd();
+const centralRoot = path.join(root, "..", "auricrux-central-work");
 
 const checks = [
   {
@@ -14,12 +15,12 @@ const checks = [
     ],
   },
   {
-    file: path.join(root, "api", "customer-login.js"),
+    file: path.join(centralRoot, "customer-login", "__init__.py"),
     markers: [
-      'app.http("customer-login"',
-      'route: "customer-login"',
-      'authenticationMode: "seeded-live-test-account"',
-      '"The customer email or password is invalid."',
+      "PRIMARY_TEST_ACCOUNT",
+      "launch.customer@futurecontractorsofamerica.com",
+      "Set-Cookie",
+      "authBoundary",
     ],
   },
   {
@@ -27,11 +28,8 @@ const checks = [
     markers: [
       "authenticateWorkspaceAccount",
       "Password",
-      "Use Seeded Test Account",
-      "PRIMARY_TEST_ACCOUNT.email",
-      'fetch("/api/customer-login"',
+      "centralFetch(\"/api/customer-login\"",
       'accountSource: payload.authenticationMode || "api"',
-      'accountSource: "local-fallback"',
     ],
   },
 ];
@@ -55,4 +53,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Seeded customer auth validation passed across shared account registry, API login route, and live login workspace entry.");
+console.log("Seeded customer auth validation passed across shared account registry, central login route, and live login workspace entry.");

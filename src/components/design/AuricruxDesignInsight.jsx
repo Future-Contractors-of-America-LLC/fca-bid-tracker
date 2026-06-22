@@ -1,30 +1,28 @@
-export default function AuricruxDesignInsight({ intelligence, onAskAuricrux }) {
+import AuricruxInsightPanel from "../auricrux/AuricruxInsightPanel";
+
+export default function AuricruxDesignInsight({ intelligence, onAskAuricrux, projectId = "", fileId = "" }) {
   if (!intelligence) return null;
+  const targetId = projectId || fileId || "";
   return (
-    <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "linear-gradient(180deg, #fffbeb 0%, #fff 100%)" }}>
-      <div style={{ color: "#92400e", fontWeight: 700, marginBottom: 8 }}>Auricrux Design Intelligence</div>
-      <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{intelligence.nextAction}</div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 12 }}>
-        <Metric label="Markups" value={intelligence.counts?.markups ?? 0} />
-        <Metric label="Takeoffs" value={intelligence.counts?.takeoffs ?? 0} />
-        <Metric label="Open punch" value={intelligence.counts?.openPunch ?? 0} />
-      </div>
+    <div style={{ display: "grid", gap: 12 }}>
+      <AuricruxInsightPanel
+        title="Auricrux Design Intelligence"
+        targetObjectType={fileId ? "File" : "Project"}
+        targetObjectId={targetId}
+        sourceRoute="/portal/design"
+        rationale={intelligence.nextAction || "Review design workspace posture and advance governed precon continuity."}
+        nextAction={intelligence.nextAction}
+        counts={intelligence.counts}
+        tone="amber"
+        liveRecommend={Boolean(targetId)}
+      />
       <button
         type="button"
         onClick={onAskAuricrux}
-        style={{ border: "1px solid #d97706", background: "#fef3c7", color: "#92400e", borderRadius: 10, padding: "8px 12px", fontWeight: 700, cursor: "pointer" }}
+        style={{ border: "1px solid #d97706", background: "#fef3c7", color: "#92400e", borderRadius: 10, padding: "8px 12px", fontWeight: 700, cursor: "pointer", justifySelf: "start" }}
       >
         Ask Auricrux about this sheet
       </button>
-    </div>
-  );
-}
-
-function Metric({ label, value }) {
-  return (
-    <div style={{ border: "1px solid #fde68a", borderRadius: 10, padding: 10, background: "#fff" }}>
-      <div style={{ fontSize: 11, color: "#92400e", fontWeight: 700 }}>{label}</div>
-      <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a" }}>{value}</div>
     </div>
   );
 }

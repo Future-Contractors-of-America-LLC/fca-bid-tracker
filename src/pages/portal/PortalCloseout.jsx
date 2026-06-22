@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import useWorkspaceState from "../../hooks/useWorkspaceState";
+import usePortalProjectId from "../../hooks/usePortalProjectId";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { advanceCloseoutPackage, createCloseoutPackage, fetchCloseoutPackages } from "../../api/constructionClient";
 import { routeStateOverlays } from "../../systemState";
@@ -17,8 +17,7 @@ const button = {
 };
 
 export default function PortalCloseout() {
-  const { state } = useWorkspaceState();
-  const projectId = state?.project?.id || "A-117";
+  const { projectId, hasProject } = usePortalProjectId();
   const [items, setItems] = useState([]);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -92,13 +91,14 @@ export default function PortalCloseout() {
       title="Closeout Packages"
       subtitle="Turnover binders, artifact tracking, and warranty handoff for active projects."
       activeHref="/portal/closeout"
-      currentJourney="project"
+      currentJourney="job"
       routeOverlay={routeStateOverlays.projects}
       primaryHref={`/portal/projects/${encodeURIComponent(projectId)}`}
       primaryLabel="Project detail"
     >
       <AuricruxInsightPanel
         title="Auricrux Closeout Intelligence"
+        targetObjectId={projectId}
         nextAction="Closeout artifacts should be complete before final retainage release and warranty activation."
         actionHref="/portal/warranty"
         actionLabel="Open warranty"

@@ -7,9 +7,11 @@ import MarkupLayerPanel from "../../components/design/MarkupLayerPanel";
 import DesignStatusBar from "../../components/design/DesignStatusBar";
 import DesignPropertiesPanel from "../../components/design/DesignPropertiesPanel";
 import AuricruxDesignInsight from "../../components/design/AuricruxDesignInsight";
-import ForgeViewerPanel from "../../components/design/ForgeViewerPanel";
+import FcaNativeViewerPanel from "../../components/design/FcaNativeViewerPanel";
+import ApsInteropPanel from "../../components/design/ApsInteropPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import usePortalProjectId from "../../hooks/usePortalProjectId";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
 import useDesignWorkspace from "../../hooks/useDesignWorkspace";
 import useDesignKeyboard from "../../hooks/useDesignKeyboard";
@@ -53,7 +55,8 @@ export default function PortalDesignWorkspace() {
   const deepLink = useMemo(() => readDesignDeepLink(), []);
   const { state } = useWorkspaceState();
   const { activeProject } = useProjectWorkspace();
-  const projectId = deepLink.projectId || activeProject?.id || state.project?.id || "A-117";
+  const { projectId: activePortalProjectId } = usePortalProjectId(deepLink.projectId);
+  const projectId = activePortalProjectId || deepLink.projectId || activeProject?.id || "";
   const [selectedFileId, setSelectedFileId] = useState(deepLink.fileId || "");
   const [activeTool, setActiveTool] = useState("select");
   const [selectedMarkupId, setSelectedMarkupId] = useState("");
@@ -323,8 +326,9 @@ export default function PortalDesignWorkspace() {
   return (
     <PortalShell
       title="Design Workspace"
-      subtitle="Enterprise plan room for PDF, DWG, and RVT — markup, takeoff, coordination, and Auricrux intelligence in one governed surface."
+      subtitle="Native plan room — markup, takeoff, coordination, and redlines."
       activeHref="/portal/design"
+      currentJourney="coordination"
       routeOverlay={routeStateOverlays.design}
     >
       <div style={{ display: "grid", gap: 16 }}>
@@ -432,7 +436,10 @@ export default function PortalDesignWorkspace() {
               />
             </div>
             <div style={panelStyle}>
-              <AuricruxDesignInsight intelligence={workspace.intelligence} onAskAuricrux={handleAskAuricrux} />
+              <FcaNativeViewerPanel viewerSession={workspace.viewerSession} fileFormat={fileFormat} />
+            </div>
+            <div style={panelStyle}>
+              <AuricruxDesignInsight intelligence={workspace.intelligence} onAskAuricrux={handleAskAuricrux} projectId={projectId} fileId={workspace.activeFile?.id} />
             </div>
             <div style={panelStyle}>
               <DesignPropertiesPanel activeSheet={activeSheet} selectedMarkup={selectedMarkup} intelligence={workspace.intelligence} />
@@ -463,8 +470,7 @@ export default function PortalDesignWorkspace() {
             </div>
             {(fileFormat === "dwg" || fileFormat === "rvt" || fileFormat === "ifc") ? (
               <div style={panelStyle}>
-                <ForgeViewerPanel viewerSession={workspace.viewerSession} fileFormat={fileFormat} />
-                <div style={{ marginTop: 16 }}>
+                <div style={{ marginTop: 0 }}>
                   {fileFormat === "dwg" ? (
                     <CadEditorPanel activeSheet={activeSheet} onSave={handleCadSave} busy={busy} />
                   ) : (
@@ -476,6 +482,14 @@ export default function PortalDesignWorkspace() {
                       busy={busy}
                     />
                   )}
+                </div>
+                <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #e2e8f0" }}>
+                  <ApsInteropPanel
+                    viewerSession={workspace.viewerSession}
+                    fileFormat={fileFormat}
+                    onQueueTranslation={workspace.queueViewerTranslation}
+                    queueBusy={workspace.queueBusy}
+                  />
                 </div>
               </div>
             ) : null}

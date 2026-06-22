@@ -103,8 +103,8 @@ export const operationsPipeline = {
     {
       title: "Open live operations summary",
       detail: "See the active contractor pipeline from intake to service continuity in one surface.",
-      href: "/portal/operations",
-      label: "Open Operations Pipeline",
+      href: "/portal/pipeline",
+      label: "Open Commercial Pipeline",
     },
     {
       title: "Review project delivery state",

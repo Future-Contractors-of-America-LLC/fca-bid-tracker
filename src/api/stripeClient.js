@@ -99,7 +99,20 @@ export async function createPlanCheckout(planKey, options = {}) {
   });
 }
 
-export async function createBillingPortalSession(options = {}) {
+export async function createAcademyCheckout(options = {}) {
+  return createStripeCheckout({
+    action: options.pathwayKey ? "academy-pathway" : "academy-course",
+    purchaseType: options.purchaseType,
+    programKey: options.programKey,
+    pathwayKey: options.pathwayKey,
+    successUrl: options.successUrl,
+    cancelUrl: options.cancelUrl,
+    customerEmail: options.buyerEmail || options.customerEmail,
+    buyerEmail: options.buyerEmail || options.customerEmail,
+  });
+}
+
+export async function createPortalBillingPortal(options = {}) {
   return createStripeCheckout({
     action: "portal",
     customerEmail: options.customerEmail,

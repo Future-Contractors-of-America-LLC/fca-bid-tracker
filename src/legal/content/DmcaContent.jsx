@@ -1,4 +1,4 @@
-import { LegalEffective, LegalNotice, LegalH3, LegalP, LegalUl, LegalContact } from "../../legal/LegalProse";
+import { LegalEffective, LegalNotice, LegalH3, LegalP, LegalUl, LegalContact, LegalPostalAddress } from "../../legal/LegalProse";
 
 export default function DmcaContent() {
   return (
@@ -14,6 +14,7 @@ export default function DmcaContent() {
         <strong>DMCA Agent:</strong> Future Contractors of America LLC
       </LegalP>
       <LegalContact email="dmca@futurecontractorsofamerica.com" label="DMCA agent email" />
+      <LegalPostalAddress label="DMCA agent mailing address" />
       <LegalH3>3. Notice requirements</LegalH3>
       <LegalUl
         items={[

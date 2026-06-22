@@ -1,128 +1,109 @@
 import useCustomerSession from "../hooks/useCustomerSession";
 import { navigateTo } from "../navigation";
-import { auricruxRail, currentProject, workspaceContext } from "../systemState";
-
-const shellStyle = {
-  border: "1px solid #dbe3ef",
-  borderRadius: 16,
-  padding: 16,
-  background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-  marginBottom: 24,
-};
+import { workspaceContext } from "../systemState";
+import { portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
 
 const buttonStyle = {
   textDecoration: "none",
-  background: "#111827",
+  background: portalTokens.ink,
   color: "#fff",
-  padding: "10px 14px",
-  borderRadius: 10,
+  padding: "8px 12px",
+  borderRadius: portalTokens.radiusSm,
   fontWeight: 700,
   border: "none",
   cursor: "pointer",
+  fontSize: 13,
 };
-
-function summarizeComms(enabledComms = {}) {
-  return Object.entries(enabledComms)
-    .filter(([, enabled]) => enabled !== false)
-    .map(([key]) => key)
-    .join(", ") || "None enabled";
-}
 
 export default function CustomerSessionBar({
   requestedPath,
-  mode = "portal",
+  compact = false,
 }) {
   const { session, isAuthenticated, logout } = useCustomerSession();
 
   if (!isAuthenticated || !session) return null;
 
   const resolvedPath = requestedPath || session.nextHref || "/portal/platform";
-  const detail = mode === "login"
-    ? `Customer access is live. Auricrux is preserving continuity from login into ${resolvedPath} for ${session.company}, with SaaS workspace, Academy/LMS, Auricrux guidance, and communications routing controlled inside the same customer shell.`
-    : `Customer access is live for ${session.company}. Auricrux is preserving ${workspaceContext.currentNextAction.toLowerCase()} and ${auricruxRail.currentBlocker.toLowerCase()} inside the active workspace.`;
 
   function handleLogout() {
     logout();
     navigateTo("/login");
   }
 
+  if (compact) {
+    return (
+      <div
+        style={{
+          ...portalCardStyle,
+          marginBottom: 14,
+          padding: "10px 14px",
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 12,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ minWidth: 0 }}>
+          <div style={{ ...portalEyebrowStyle, marginBottom: 2 }}>{session.company}</div>
+          <div style={{ color: portalTokens.body, fontSize: 13, lineHeight: 1.45 }}>
+            {workspaceContext.currentNextAction}
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <a href={resolvedPath} style={buttonStyle}>Workspace</a>
+          <button
+            type="button"
+            onClick={handleLogout}
+            style={{ ...buttonStyle, background: portalTokens.panel, color: portalTokens.ink, border: `1px solid ${portalTokens.borderStrong}` }}
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const actions = [
-    {
-      label: "Open Active Workspace",
-      href: resolvedPath,
-      enabled: session.enabledProducts?.saas !== false,
-      style: buttonStyle,
-    },
-    {
-      label: "Open Academy / LMS",
-      href: "/academy",
-      enabled: session.enabledProducts?.lms !== false,
-      style: { ...buttonStyle, background: "#1d4ed8" },
-    },
-    {
-      label: "Open Auricrux",
-      href: "/portal/auricrux",
-      enabled: session.enabledProducts?.auricrux !== false,
-      style: { ...buttonStyle, background: "#7c3aed" },
-    },
-    {
-      label: "Open Comms Workspace",
-      href: "/portal/messages",
-      enabled: true,
-      style: { ...buttonStyle, background: "#0f766e" },
-    },
+    { label: "Workspace", href: resolvedPath, enabled: session.enabledProducts?.saas !== false },
+    { label: "Academy", href: "/academy", enabled: session.enabledProducts?.lms !== false },
+    { label: "Auricrux", href: "/portal/auricrux", enabled: session.enabledProducts?.auricrux !== false },
+    { label: "Messages", href: "/portal/messages", enabled: true },
   ];
 
   return (
-    <div style={shellStyle}>
+    <div style={{ ...portalCardStyle, marginBottom: 18 }}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
         <div>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live customer session</div>
-          <h3 style={{ marginTop: 0, marginBottom: 8 }}>{session.workspaceLabel}</h3>
-          <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 860 }}>{detail}</div>
+          <div style={{ ...portalEyebrowStyle, marginBottom: 6 }}>Signed in</div>
+          <h3 style={{ marginTop: 0, marginBottom: 6, fontSize: "1.125rem" }}>{session.workspaceLabel || session.company}</h3>
+          <div style={{ color: portalTokens.body, lineHeight: 1.5, maxWidth: 640, fontSize: 14 }}>
+            {workspaceContext.currentNextAction}
+          </div>
         </div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
           {actions.map((action) => (
             <a
               key={action.label}
               href={action.enabled ? action.href : "/portal/profile"}
               style={{
-                ...action.style,
-                background: action.enabled ? action.style.background : "#cbd5e1",
-                color: action.enabled ? action.style.color : "#475569",
+                ...buttonStyle,
+                background: action.enabled ? (action.label === "Auricrux" ? "#7c5313" : action.label === "Academy" ? portalTokens.primaryInk : portalTokens.ink) : "#cbd5e1",
+                color: action.enabled ? "#fff" : "#475569",
               }}
             >
-              {action.enabled ? action.label : `${action.label} Unavailable`}
+              {action.label}
             </a>
           ))}
-          <button onClick={handleLogout} style={{ ...buttonStyle, background: "#f8fafc", color: "#111827", border: "1px solid #cbd5e1" }}>
-            Sign Out
+          <button
+            type="button"
+            onClick={handleLogout}
+            style={{ ...buttonStyle, background: portalTokens.panel, color: portalTokens.ink, border: `1px solid ${portalTokens.borderStrong}` }}
+          >
+            Sign out
           </button>
         </div>
       </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginTop: 14 }}>
-        <SessionCell label="Customer email" value={session.email} />
-        <SessionCell label="Customer ID" value={session.customerId || "CUST-FCA-LIVE-001"} />
-        <SessionCell label="Workspace role" value={session.role || "Owner / Admin"} />
-        <SessionCell label="Workspace route" value={resolvedPath} />
-        <SessionCell label="Next action" value={workspaceContext.currentNextAction} />
-        <SessionCell label="SaaS access" value={session.enabledProducts?.saas ? "Enabled" : "Pending"} />
-        <SessionCell label="LMS access" value={session.enabledProducts?.lms ? "Enabled" : "Pending"} />
-        <SessionCell label="Auricrux access" value={session.enabledProducts?.auricrux ? "Enabled" : "Pending"} />
-        <SessionCell label="Comms channels" value={summarizeComms(session.enabledComms)} />
-        <SessionCell label="Auricrux continuity" value={`${currentProject.id} · ${auricruxRail.nextRecommendedAction}`} />
-      </div>
-    </div>
-  );
-}
-
-function SessionCell({ label, value }) {
-  return (
-    <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 12, background: "#fff" }}>
-      <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>{label}</div>
-      <div style={{ color: "#111827", lineHeight: 1.5, fontSize: 14 }}>{value}</div>
     </div>
   );
 }

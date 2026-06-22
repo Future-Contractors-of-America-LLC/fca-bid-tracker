@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
+import { publishPortalPageContext } from "../../portalPageContext";
 import {
   createPortalInvoice,
   deliverPortalInvoice,
@@ -40,6 +44,7 @@ function statusStyle(status) {
 export default function PortalBilling() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
+  const { activeProject } = useProjectWorkspace();
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
   const companyName = state?.tenant?.name || session?.company || brandSkin.companyName || "Customer Workspace";
 
@@ -85,6 +90,15 @@ export default function PortalBilling() {
       active = false;
     };
   }, [refreshSyncStamp]);
+
+  useEffect(() => {
+    publishPortalPageContext({
+      surface: "billing",
+      projectId: activeProject?.id || state?.project?.id || "",
+      pipelineStep: null,
+    });
+    return () => publishPortalPageContext(null);
+  }, [activeProject?.id, state?.project?.id]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -158,6 +172,9 @@ export default function PortalBilling() {
     }
   }
 
+  const insightTargetId = activeProject?.id || invoices[0]?.id || "";
+  const insightTargetType = activeProject?.id ? "Project" : invoices[0]?.id ? "Invoice" : "Project";
+
   return (
     <PortalShell
       title={`${companyName} Billing`}
@@ -181,6 +198,23 @@ export default function PortalBilling() {
           Open FCA Books
         </a>
       </div>
+
+      {insightTargetId ? (
+        <div style={{ marginBottom: 24 }}>
+          <AuricruxInsightPanel
+            title="Auricrux Billing Intelligence"
+            targetObjectType={insightTargetType}
+            targetObjectId={insightTargetId}
+            sourceRoute="/portal/billing"
+            rationale="Review open invoices, issue the next customer bill, and preserve payment continuity in FCA Books."
+            nextAction={invoices.find((inv) => inv.status === "Draft") ? "Issue the next draft invoice and route payment follow-up." : "Create or issue the next governed customer invoice."}
+            actionHref="/portal/finance?view=payments"
+            actionLabel="Open payments"
+            tone="green"
+            liveRecommend
+          />
+        </div>
+      ) : null}
 
       {loadError ? (
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
@@ -263,6 +297,10 @@ export default function PortalBilling() {
             </div>
           ))}
         </div>
+      </div>
+
+      <div style={{ marginTop: 16 }}>
+        <CommercialContinuityFeed title="Billing and commercial continuity feed" detail="Recent billing and commercial events for this account." />
       </div>
     </PortalShell>
   );

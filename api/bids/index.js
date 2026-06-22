@@ -4,7 +4,7 @@
  */
 const CENTRAL_API =
   process.env.AURICRUX_CENTRAL_API ||
-  "https://auricrux-central.azurewebsites.net/api";
+  "https://api.futurecontractorsofamerica.com/api";
 
 module.exports = async function (context, req) {
   const query = req.query

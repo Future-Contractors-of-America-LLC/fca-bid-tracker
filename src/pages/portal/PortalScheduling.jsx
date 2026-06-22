@@ -18,6 +18,7 @@ export default createOperationalPortalPage({
     { key: "date", label: "Date", required: true, placeholder: "YYYY-MM-DD" },
     { key: "crew", label: "Crew or owner", placeholder: "Assigned team" },
     { key: "project", label: "Project", placeholder: "Job name or ID" },
+    { key: "estimatedCost", label: "Estimated cost", placeholder: "750" },
   ],
   apiHandlers: {
     fetchItems: fetchFieldSchedule,

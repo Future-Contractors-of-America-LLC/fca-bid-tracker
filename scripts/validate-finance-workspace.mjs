@@ -3,10 +3,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const centralRoot = process.env.FCA_CENTRAL_ROOT
+  ? path.resolve(process.env.FCA_CENTRAL_ROOT)
+  : path.resolve(root, "..", "auricrux-central-work");
 const errors = [];
 
-function requireFile(relativePath) {
-  const absolute = path.join(root, relativePath);
+function requireFile(relativePath, baseDir = root) {
+  const absolute = path.join(baseDir, relativePath);
   if (!fs.existsSync(absolute)) {
     errors.push(`Missing required file: ${relativePath}`);
     return "";
@@ -14,13 +17,17 @@ function requireFile(relativePath) {
   return fs.readFileSync(absolute, "utf8");
 }
 
-function requireIncludes(relativePath, needles) {
-  const content = requireFile(relativePath);
+function requireIncludes(relativePath, needles, baseDir = root) {
+  const content = requireFile(relativePath, baseDir);
   needles.forEach((needle) => {
     if (!content.includes(needle)) {
       errors.push(`${relativePath} missing expected content: ${needle}`);
     }
   });
+}
+
+function requireCentralIncludes(relativePath, needles) {
+  requireIncludes(relativePath, needles, centralRoot);
 }
 
 requireIncludes("src/routes.js", ["/portal/finance", "PortalFinance", "/portal/design", "PortalDesignWorkspace", "/portal/rfis", "/portal/change-orders", "/portal/closeout", "PortalCloseout"]);
@@ -62,12 +69,12 @@ requireIncludes("src/components/finance/FinanceSidebar.jsx", [
   "FCA Books",
 ]);
 requireIncludes("src/components/finance/FinanceJournalPanel.jsx", ["Post manual journal entry", "Journal register"]);
-requireIncludes("src/components/auricrux/AuricruxInsightPanel.jsx", ["Auricrux Intelligence"]);
+requireIncludes("src/components/auricrux/AuricruxInsightPanel.jsx", ["Auricrux Intelligence", "useAuricruxLiveInsight"]);
 requireIncludes("src/pages/portal/PortalEstimates.jsx", ["TakeoffEstimatePanel", "Auricrux Precon Intelligence", "Create AR Invoice"]);
-requireIncludes("../auricrux-central-work/core/design_precon_http.py", ["register_design_precon_routes", "precon-continuity"]);
-requireIncludes("../auricrux-central-work/core/commercial_invoice_bridge.py", ["seed_sov_from_estimate", "_persist_financial"]);
-requireIncludes("../auricrux-central-work/core/construction_billing.py", ["seed_sov_from_estimate"]);
-requireIncludes("../auricrux-central-work/core/field_ops.py", ["ensure_project", "A-117"]);
+requireCentralIncludes("core/design_precon_http.py", ["register_design_precon_routes", "precon-continuity"]);
+requireCentralIncludes("core/commercial_invoice_bridge.py", ["seed_sov_from_estimate", "_persist_financial"]);
+requireCentralIncludes("core/construction_billing.py", ["seed_sov_from_estimate"]);
+requireCentralIncludes("core/field_ops.py", ["ensure_project", "A-117"]);
 requireIncludes("src/components/finance/FinanceConstructionPanel.jsx", [
   "Generate G702/G703",
   "onUpdateSovLine",
@@ -80,37 +87,37 @@ requireIncludes("src/pages/portal/PortalProjectDetail.jsx", [
   "onUpdateSovLine",
   "onGeneratePayAppDoc",
 ]);
-requireIncludes("../auricrux-central-work/core/financial_accounting.py", [
+requireCentralIncludes("core/financial_accounting.py", [
   "get_finance_dashboard",
   "get_financial_workspace",
   "record-native-payment",
   "paymentRecording",
 ]);
-requireIncludes("../auricrux-central-work/core/fca_native_finance.py", [
+requireCentralIncludes("core/fca_native_finance.py", [
   "record_native_payment",
   "import_bank_csv",
   "create_recurring_invoice",
   "export_report_csv",
 ]);
-requireIncludes("../auricrux-central-work/core/finance_intelligence.py", [
+requireCentralIncludes("core/finance_intelligence.py", [
   "analyze_finance_workspace",
   "recommendations",
 ]);
-requireIncludes("../auricrux-central-work/core/pay_app_documents.py", [
+requireCentralIncludes("core/pay_app_documents.py", [
   "build_pay_app_documents",
 ]);
-requireIncludes("../auricrux-central-work/core/construction_billing.py", [
+requireCentralIncludes("core/construction_billing.py", [
   "get_construction_billing_package",
   "upsert-sov-line",
 ]);
-requireIncludes("../auricrux-central-work/core/commercial_invoice_bridge.py", [
+requireCentralIncludes("core/commercial_invoice_bridge.py", [
   "create_invoice_from_estimate",
 ]);
-requireIncludes("../auricrux-central-work/core/finance.py", [
+requireCentralIncludes("core/finance.py", [
   "post_job_cost_actual",
   "journalEntry",
 ]);
-requireIncludes("../auricrux-central-work/core/auricrux_chat.py", [
+requireCentralIncludes("core/auricrux_chat.py", [
   "without external integrations",
   "FCA Books",
 ]);

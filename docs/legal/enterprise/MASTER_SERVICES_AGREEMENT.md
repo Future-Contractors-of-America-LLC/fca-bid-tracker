@@ -225,7 +225,7 @@ If the Order Form selects arbitration, disputes are resolved by AAA Commercial R
 ## 15. GENERAL
 
 - **Force Majeure**
-- **Notices:** legal@futurecontractorsofamerica.com (FCA); Order Form address (Customer)
+- **Notices:** legal@futurecontractorsofamerica.com (FCA); Future Contractors of America LLC, 22310 Old Vaughan Road, Dinwiddie, VA 23841; Order Form address (Customer)
 - **Assignment:** Customer may not assign without consent; FCA may assign to affiliate or acquirer
 - **Severability**
 - **Entire Agreement**

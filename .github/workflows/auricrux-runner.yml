@@ -15,18 +15,31 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Generate Auricrux task
         run: |
           mkdir -p generated
           echo "Auricrux execution cycle $(date -u)" > generated/auricrux-run.txt
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8
-        with:
-          commit-message: "Auricrux autonomous execution cycle"
-          title: "Auricrux autonomous execution"
-          body: "Automated execution cycle using FCA autonomy rules."
-          branch: "auricrux/auto-cycle"
-          base: "main"
+      - name: Push autonomous branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B auricrux/auto-cycle
+          git add generated/auricrux-run.txt
+          git commit -m "Auricrux autonomous execution cycle"
+          git push origin auricrux/auto-cycle --force-with-lease
+
+      - name: Create or update pull request
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          AURICRUX_GITHUB_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+        run: |
+          bash scripts/ci/create-auricrux-pr.sh \
+            main \
+            auricrux/auto-cycle \
+            "Auricrux autonomous execution" \
+            "Automated execution cycle using FCA autonomy rules."

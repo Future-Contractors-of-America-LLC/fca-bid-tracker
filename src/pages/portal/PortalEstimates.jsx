@@ -1,9 +1,7 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
-import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
-import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
+import usePortalProjectId from "../../hooks/usePortalProjectId";
 import useEstimateWorkspace from "../../hooks/useEstimateWorkspace";
 import usePreconContinuity from "../../hooks/usePreconContinuity";
 import TakeoffEstimatePanel from "../../components/design/TakeoffEstimatePanel";
@@ -62,10 +60,9 @@ function writeEstimateDrafts(drafts) {
 export default function PortalEstimates() {
   const { state } = useWorkspaceState();
   const { estimates, meta, advanceEstimate, generateProposal, refresh } = useEstimateWorkspace();
-  const projectId = state?.project?.id || "A-117";
+  const { projectId, hasProject } = usePortalProjectId();
   const precon = usePreconContinuity(projectId);
   const brandSkin = readBrandSkin();
-  const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
   const [drafts, setDrafts] = useState(() => readEstimateDrafts());
   const [statusMessage, setStatusMessage] = useState("");
   const [actionError, setActionError] = useState("");
@@ -103,8 +100,6 @@ export default function PortalEstimates() {
     }
   }
 
-  const brandedNarrative = useMemo(() => `${companyName} estimate studio turns qualified opportunities into customer-ready pricing packages with editable line items, scope notes, and Auricrux-guided next actions.`, [companyName]);
-
   function updateDraft(estimateId, key, value) {
     const next = {
       ...drafts,
@@ -124,33 +119,14 @@ export default function PortalEstimates() {
 
   return (
     <PortalShell
-      title={`${companyName} Estimate Studio`}
-      subtitle="A branded pricing workspace for real estimate entry, scope packaging, exclusions, assumptions, and proposal launch."
+      title="Estimates"
+      subtitle="Build line-item pricing, assumptions, and proposal-ready packages."
       activeHref="/portal/estimates"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}
       primaryHref="/portal/proposals"
       primaryLabel="Open Proposals"
     >
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary tenant={state.tenant} project={state.project} workspace={state.workspace} auricrux={state.auricrux} title="Estimate route extends the Contractor Command bid spine" detail="Estimate state now lives as its own pricing workspace so FCA can move from qualification into structured pricing and customer-ready packaging." />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 16, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
-        <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded estimate experience</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>{brandedNarrative}</p>
-        <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Source:</strong> {meta.backingSource}</div>
-          <div><strong>Status:</strong> {meta.persistenceState}</div>
-          <div><strong>Last sync:</strong> {meta.lastSyncedAt || "Pending initial sync"}</div>
-          <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
-        </div>
-      </div>
-
-      <CommercialContinuityFeed title="Estimate commercial continuity feed" detail="Estimate advancement, pricing review, and proposal generation events remain visible here so pricing does not disappear between bid qualification and customer packaging." />
-      <AutomationRecoveryFeed title="Estimate automation feed" detail="Recent estimate and proposal-generation actions remain visible across routes so pricing actions are durable rather than local-only UI gestures." />
-
       {actionError ? (
         <div style={{ ...cardStyle, marginBottom: 16, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b" }}>{actionError}</div>
       ) : null}
@@ -169,6 +145,7 @@ export default function PortalEstimates() {
 
       <AuricruxInsightPanel
         title="Auricrux Precon Intelligence"
+        targetObjectId={projectId}
         nextAction={precon.continuity?.nextAction}
         metrics={[
           { label: "Tethered", value: `${precon.continuity?.tetheredTakeoffCount || 0}/${precon.continuity?.takeoffCount || 0}` },

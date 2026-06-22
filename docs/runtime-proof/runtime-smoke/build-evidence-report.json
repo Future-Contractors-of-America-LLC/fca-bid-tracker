@@ -1,9 +1,9 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-20T00:31:41.906Z",
+  "generatedAt": "2026-06-22T17:19:05.156Z",
   "packageScripts": {
     "buildSystem": "npm run build",
-    "build": "bash ./build.sh",
+    "build": "npx vite build && node scripts/post-spa-build.mjs",
     "validateRuntimeSmoke": "node scripts/runtime_smoke_check.cjs",
     "captureBuildEvidence": "node scripts/build_evidence_capture.cjs"
   },

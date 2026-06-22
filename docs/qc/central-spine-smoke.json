@@ -1,0 +1,60 @@
+{
+  "generatedAt": "2026-06-21T20:11:37.743Z",
+  "apiBase": "https://api.futurecontractorsofamerica.com",
+  "summary": {
+    "passed": 10,
+    "failed": 0
+  },
+  "findings": [
+    {
+      "status": "pass",
+      "label": "GET /api/health",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/auricrux-comms",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/change-orders",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/job-cost",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/warranty-cases",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/field-photos",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/auricrux/actions",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET manifest missing file",
+      "detail": "HTTP 404 honest not-found"
+    },
+    {
+      "status": "pass",
+      "label": "POST /api/auricrux/actions recommend",
+      "detail": "guidance returned"
+    },
+    {
+      "status": "pass",
+      "label": "GET field intelligence via field-photos",
+      "detail": "projectId=PRJ-SMOKE-001"
+    }
+  ]
+}

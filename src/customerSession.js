@@ -184,12 +184,35 @@ export async function clearCustomerSession({ server = false } = {}) {
   }
 }
 
+const ACADEMY_PUBLIC_PREFIXES = ["/academy/catalog"];
+
+function isAcademyModuleLessonRoute(pathname = "/") {
+  return /^\/academy\/programs\/[^/]+\/modules\/[^/]+\/?$/.test(pathname);
+}
+
+export function isAcademyProtectedRoute(pathname = "/") {
+  if (!pathname.startsWith("/academy")) return false;
+  if (ACADEMY_PUBLIC_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))) {
+    return false;
+  }
+  if (pathname === "/academy") return true;
+  if (pathname === "/academy/dashboard" || pathname === "/academy/credentials") return true;
+  if (isAcademyModuleLessonRoute(pathname)) return true;
+  if (pathname.startsWith("/portal/academy")) return true;
+  return false;
+}
+
 export function isProtectedCustomerRoute(pathname = "/") {
-  return pathname.startsWith("/portal") || pathname === "/academy";
+  return pathname.startsWith("/portal") || isAcademyProtectedRoute(pathname);
+}
+
+export function isAllowedPostLoginHref(href = "/") {
+  if (!href || typeof href !== "string") return false;
+  return href.startsWith("/portal") || isAcademyProtectedRoute(href) || href.startsWith("/academy/programs/");
 }
 
 export function resolveCustomerProduct(pathname = "/") {
-  if (pathname === "/academy" || pathname.startsWith("/portal/academy")) return "lms";
+  if (isAcademyProtectedRoute(pathname) || pathname.startsWith("/portal/academy")) return "lms";
   if (pathname.startsWith("/portal/auricrux")) return "auricrux";
   if (pathname.startsWith("/portal") || pathname === "/login") return "saas";
   if (pathname === "/auricrux") return "public";

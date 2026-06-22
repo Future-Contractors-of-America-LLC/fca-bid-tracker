@@ -1,38 +1,30 @@
 import { readCommercialLog } from "../sessionCommercialLog";
-
-const shellStyle = {
-  border: "1px solid #dbe3ef",
-  borderRadius: 16,
-  padding: 18,
-  background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-  marginBottom: 24,
-};
+import { portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
 
 const itemStyle = {
-  borderBottom: "1px solid #dbe3ef",
-  padding: "12px 0",
+  borderBottom: `1px solid ${portalTokens.border}`,
+  padding: "10px 0",
 };
 
-export default function CommercialContinuityFeed({ title = "Commercial continuity feed", detail = "Recent pricing, rollout, billing, and workspace activation actions remain visible so revenue continuity survives route changes and founder context switching." }) {
+export default function CommercialContinuityFeed({ title = "Commercial activity", detail = "Recent billing, rollout, and workspace changes." }) {
   const items = readCommercialLog();
 
   if (!items.length) return null;
 
   return (
-    <div style={shellStyle}>
-      <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Revenue action memory</div>
-      <h2 style={{ marginTop: 0, marginBottom: 8 }}>{title}</h2>
-      <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>{detail}</div>
+    <div style={portalCardStyle}>
+      <div style={portalEyebrowStyle}>Revenue activity</div>
+      <h2 style={{ marginTop: 6, marginBottom: 6, fontSize: 17 }}>{title}</h2>
+      {detail ? <div style={{ color: portalTokens.body, lineHeight: 1.55, marginBottom: 10, fontSize: 14 }}>{detail}</div> : null}
 
-      {items.map((item, index) => (
-        <div key={item.id} style={{ ...itemStyle, borderBottom: index === items.length - 1 ? "none" : itemStyle.borderBottom }}>
+      {items.slice(0, 6).map((item, index) => (
+        <div key={item.id} style={{ ...itemStyle, borderBottom: index === Math.min(items.length, 6) - 1 ? "none" : itemStyle.borderBottom }}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-            <div style={{ fontWeight: 700, color: "#111827" }}>{item.title}</div>
-            <div style={{ fontSize: 12, color: "#2563eb", fontWeight: 700 }}>{item.type}</div>
+            <div style={{ fontWeight: 700, color: portalTokens.ink, fontSize: 14 }}>{item.title}</div>
+            <div style={{ fontSize: 11, color: portalTokens.primaryInk, fontWeight: 700 }}>{item.type}</div>
           </div>
-          <div style={{ color: "#475569", lineHeight: 1.7, marginTop: 4 }}>{item.detail}</div>
-          <div style={{ color: "#64748b", fontSize: 13, marginTop: 6 }}>{item.route} · {item.createdAt}</div>
+          <div style={{ color: portalTokens.body, lineHeight: 1.55, marginTop: 4, fontSize: 13 }}>{item.detail}</div>
+          <div style={{ color: portalTokens.muted, fontSize: 12, marginTop: 4 }}>{item.route} · {item.createdAt}</div>
         </div>
       ))}
     </div>

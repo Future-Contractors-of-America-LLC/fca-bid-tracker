@@ -31,16 +31,21 @@ requireIncludes("src/api/designWorkspaceClient.js", [
   "compareRevisions",
   "runBimClashDetection",
 ]);
-requireIncludes("src/pages/portal/PortalDesignWorkspace.jsx", ["Design Workspace", "MarkupToolbar", "AuricruxDesignInsight", "DesignStatusBar", "TakeoffEstimatePanel"]);
+requireIncludes("src/pages/portal/PortalDesignWorkspace.jsx", ["Design Workspace", "MarkupToolbar", "AuricruxDesignInsight", "DesignStatusBar", "TakeoffEstimatePanel", "FcaNativeViewerPanel"]);
 requireIncludes("src/api/preconClient.js", ["fetchPreconContinuity", "syncTakeoffsToEstimate", "tetherTakeoffToEstimate", "priceEstimateFromTakeoffs"]);
 requireIncludes("src/components/design/PdfPlanViewer.jsx", ["pdfjs-dist", "getDocument"]);
+requireIncludes("src/components/design/NativeSheetViewer.jsx", ["FCA Native Design Engine"]);
+requireIncludes("src/components/design/FcaNativeViewerPanel.jsx", ["FCA Native Design Engine"]);
 requireIncludes("src/systemState.js", ["routeStateOverlays.design", "design:"]);
 requireIncludes("src/components/ProjectFileAuditPanel.jsx", ["Open in Design Workspace"]);
 requireIncludes("../auricrux-central-work/core/design_workspace.py", ["create_markup", "list_markup_layers", "upsert_bim_model"]);
 requireIncludes("../auricrux-central-work/core/precon_pricing.py", ["price_estimate", "build_proposal_package", "resolve_unit_rate"]);
 requireIncludes("../auricrux-central-work/core/design_intelligence.py", ["analyze_design_workspace", "recommendations", "tether-estimate", "price-estimate"]);
 requireIncludes("../auricrux-central-work/core/precon_tether.py", ["tether_takeoff_to_estimate", "get_precon_continuity", "sync_untethered_takeoffs"]);
-requireIncludes("../auricrux-central-work/core/aps_viewer.py", ["get_viewer_session"]);
+requireIncludes("../auricrux-central-work/core/fca_native_design.py", ["get_design_viewer_session", "generate_native_previews", "analyze_source_blob", "derive_sheets_from_analysis", "aps_interop_enabled"]);
+requireIncludes("src/hooks/useAuricruxLiveInsight.js", ["submitAuricruxAction"]);
+requireIncludes("src/components/auricrux/AuricruxInsightPanel.jsx", ["useAuricruxLiveInsight", "Live recommendation"]);
+requireIncludes("../auricrux-central-work/core/aps_viewer.py", ["aps_interop_enabled"]);
 requireIncludes("../auricrux-central-work/core/file_assets.py", ["persist_file_asset"]);
 requireIncludes("../auricrux-central-work/core/blob_store.py", ["upload_bytes", "signed_content_url", "resolve_mime_type"]);
 requireIncludes("../auricrux-central-work/core/format_extract.py", ["run_extract_job", "get_manifest", "_infer_discipline"]);
@@ -49,6 +54,7 @@ requireIncludes("../auricrux-central-work/function_app.py", [
   "projects/{projectId}/design/sessions",
   "files/{fileId}/manifest",
   "files/{fileId}/stream",
+  "files/{fileId}/sheets/{sheetId}/preview",
   "projects/{projectId}/design/intelligence",
   "projects/{projectId}/design/viewer-token",
   "projects/{projectId}/design/cad",

@@ -14,7 +14,7 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
   AURICRUX_SWA_NAME: fca-frontend
   AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
-  AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
+  AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,app.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
 
 concurrency:
   group: swa-deploy-main
@@ -81,6 +81,8 @@ jobs:
           test -f dist/host-binding-audit.html
           test -f dist/api-continuity-audit.html
           grep -q 'id="root"' dist/index.html
+          grep -q 'rel="stylesheet"' dist/index.html
+          grep -qE '/assets/main-[^"]+\.css' dist/index.html
           grep -q "Cross-host login continuity patch active" dist/index.html
           grep -q "fcaCrossHostLoginPatch" dist/index.html
           grep -q "FCA_LIVE_BRANDING_VISIBILITY_PATCH_V1" dist/styles.css
@@ -92,6 +94,9 @@ jobs:
           test -f api_generated/auricrux/index.js
           test -f api_generated/bids/index.js
           test -f api_generated/projects/index.js
+          test -f api_generated/academy-lms/function.json
+          test -f api_generated/academy-lms/index.js
+          test -f api_generated/_lib/academyCatalog.js
 
       - name: Archive governed deployment payload
         run: |

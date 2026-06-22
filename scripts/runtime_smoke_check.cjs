@@ -89,7 +89,7 @@ const routes = [
   {
     name: 'auricrux_actions_method_guard',
     file: path.join(__dirname, '..', 'api', 'auricrux', 'actions', 'index.js'),
-    req: { method: 'GET', query: {} },
+    req: { method: 'DELETE', query: {} },
     expectStatus: 405,
     expectType: 'error',
   },
@@ -199,6 +199,9 @@ function writeSummary(repoRoot, summary, results) {
 
 async function main() {
   const repoRoot = path.join(__dirname, '..')
+  if (!process.env.FCA_RUNTIME_SMOKE) {
+    process.env.FCA_RUNTIME_SMOKE = '1'
+  }
   const activePacket = readContinuityPacket(repoRoot)
   const results = []
 

@@ -1,25 +1,12 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
-import FcaBrandMark from "../../components/FcaBrandMark";
-import AuricruxBrandMark from "../../components/AuricruxBrandMark";
-import PublicCtaRow from "../../components/PublicCtaRow";
-import SystemStateSummary from "../../components/SystemStateSummary";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import AdminActionCenter from "../../components/AdminActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { publicBodyCtaSets } from "../../websiteShell";
 import { adminGovernance } from "../../adminGovernance";
 import { routeStateOverlays } from "../../systemState";
-import { resolvePlanPreset } from "../../pricingPlans";
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-};
+import { portalCardStyle } from "../../portalDesignTokens";
 
 export default function PortalAdmin() {
   const { session, applyPlanPreset, setProductAccess, setCommsAccess } = useCustomerSession();
@@ -29,34 +16,21 @@ export default function PortalAdmin() {
     refreshSyncStamp("Persisted admin governance state active");
   }, [refreshSyncStamp]);
 
-  const selectedPlan = resolvePlanPreset(session?.selectedPlan || "startup");
-
   return (
     <PortalShell
-      title="Admin, Rollout, and Governance Control"
-      subtitle="Administrative surface for tenant status, seat visibility, construction-workflow rollout, commercial package awareness, Auricrux governance control, and one-click admin actions."
+      title="Admin"
+      subtitle="Tenant controls, seats, rollout status, and governance."
       activeHref="/portal/admin"
       currentJourney="finance"
       routeOverlay={routeStateOverlays.admin}
       primaryHref="/pricing"
       primaryLabel="Plans & Rollout"
     >
-      <div style={{ marginBottom: 24 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={state.project}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="Admin route now reads from the canonical control state"
-          detail="Tenant rollout, governance visibility, commercial packaging, and next-action context now come from the same shared system module as the rest of the FCA shell."
-        />
+      <div style={{ marginBottom: 20 }}>
+        <CustomerPlanSummaryPanel session={session} title="Plan and account" />
       </div>
 
-      <div style={{ marginBottom: 24 }}>
-        <CustomerPlanSummaryPanel session={session} title="Admin-aligned customer plan summary" />
-      </div>
-
-      <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 20 }}>
         <AdminActionCenter
           session={session}
           state={state}
@@ -67,98 +41,34 @@ export default function PortalAdmin() {
         />
       </div>
 
-      <div style={{ marginBottom: 24 }}>
-        <PublicCtaRow actions={publicBodyCtaSets.portalCoordination} style={{ display: "flex", flexWrap: "wrap", gap: 12 }} />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 24, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
-          <div>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Governance continuity</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA administration now reads as a construction control surface</h2>
-          </div>
-          <div style={{ display: "grid", gap: 10 }}>
-            <FcaBrandMark compact />
-            <AuricruxBrandMark compact />
-          </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 20 }}>
+        <div style={portalCardStyle}>
+          <div style={{ color: "#64748b", fontSize: 12, fontWeight: 700 }}>Tenant</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.tenant.name}</div>
+          <div style={{ color: "#475569", fontSize: 14 }}>{state.tenant.roleSummary}</div>
         </div>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Tenant rollout posture, seat readiness, project governance, and construction-workflow visibility remain inside the same FCA workspace, with Auricrux maintaining execution awareness rather than handing control off to a separate admin product.
-        </p>
+        <div style={portalCardStyle}>
+          <div style={{ color: "#64748b", fontSize: 12, fontWeight: 700 }}>Seats</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>7</div>
+          <div style={{ color: "#475569", fontSize: 14 }}>Owner through Learner roles</div>
+        </div>
+        <div style={portalCardStyle}>
+          <div style={{ color: "#64748b", fontSize: 12, fontWeight: 700 }}>Active project</div>
+          <div style={{ fontSize: 22, fontWeight: 700, margin: "6px 0" }}>{state.project.id}</div>
+          <div style={{ color: "#475569", fontSize: 14 }}>{state.project.stage}</div>
+        </div>
       </div>
 
-      <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Admin governance layer</div>
-        <h2 style={{ marginTop: 0, marginBottom: 10 }}>FCA now models rollout, seats, and governance visibility as a governed product layer</h2>
-        <div style={{ display: "grid", gap: 16 }}>
+      <div style={portalCardStyle}>
+        <h2 style={{ marginTop: 0, fontSize: 17 }}>Governance controls</h2>
+        <div style={{ display: "grid", gap: 12 }}>
           {adminGovernance.controls.map((control) => (
-            <div key={control.title} style={{ border: "1px solid #dbe3ef", borderRadius: 14, padding: 16, background: "#f8fbff" }}>
-              <h3 style={{ marginTop: 0, marginBottom: 8 }}>{control.title}</h3>
-              <p style={{ color: "#334155", lineHeight: 1.7 }}>{control.purpose}</p>
+            <div key={control.title} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
+              <div style={{ fontWeight: 700, marginBottom: 4 }}>{control.title}</div>
+              <div style={{ color: "#475569", fontSize: 14, lineHeight: 1.55, marginBottom: 8 }}>{control.purpose}</div>
               <a href={control.route} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{control.label}</a>
-              <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 10, marginBottom: 0 }}>
-                {control.artifacts.map((artifact) => (
-                  <li key={artifact}>{artifact}</li>
-                ))}
-              </ul>
             </div>
           ))}
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Readiness signals</div>
-            <ul style={{ paddingLeft: 18, lineHeight: 1.8, color: "#334155", marginTop: 0 }}>
-              {adminGovernance.readinessSignals.map((signal) => (
-                <li key={signal}>{signal}</li>
-              ))}
-            </ul>
-          </div>
-          <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, padding: 16 }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 8 }}>Governance actions</div>
-            <PublicCtaRow actions={adminGovernance.governanceActions} />
-          </div>
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Tenant</div>
-          <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>{state.tenant.name}</div>
-          <div>{state.tenant.roleSummary}</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Seat readiness</div>
-          <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>7 seats</div>
-          <div>Owner, Admin, Estimator, Project Coordinator, Superintendent, Accounting, Learner</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Rollout state</div>
-          <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>Production shell active</div>
-          <div>Bid, file, coordination, billing, academy, and plan continuity are live while deeper persistence hardening continues.</div>
-        </div>
-        <div style={cardStyle}>
-          <div style={{ color: "#6b7280" }}>Governance visibility</div>
-          <div style={{ fontSize: 24, fontWeight: 700, margin: "6px 0" }}>Auricrux monitored</div>
-          <div>Project {state.project.id} remains within shared audit and workspace control.</div>
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16, marginTop: 24 }}>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Administrative priorities</h2>
-          <ul style={{ paddingLeft: 20, lineHeight: 1.9, marginBottom: 0 }}>
-            <li>Confirm tenant rollout sequence and seat assignment by role</li>
-            <li>Validate project-linked file, permit, and audit continuity</li>
-            <li>Track billing, retainage, training readiness, and selected-plan growth together</li>
-            <li>Preserve Auricrux visibility across estimating, job, closeout, and commercial upgrade routes</li>
-          </ul>
-        </div>
-        <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Production posture</h2>
-          <p style={{ lineHeight: 1.7, marginBottom: 0 }}>
-            This control surface is the beginning of the broader platform spine: tenant summary, seat/readiness view,
-            rollout status, selected plan ({selectedPlan.name}), and governance visibility inside the same FCA shell for construction operations.
-          </p>
         </div>
       </div>
     </PortalShell>

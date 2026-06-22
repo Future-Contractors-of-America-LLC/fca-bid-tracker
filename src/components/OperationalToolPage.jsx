@@ -3,34 +3,13 @@ import PortalShell from "./PortalShell";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import useCustomerSession from "../hooks/useCustomerSession";
 import useProjectWorkspace from "../hooks/useProjectWorkspace";
-import { routeStateOverlays } from "../systemState";
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 18,
-  background: "#fff",
-};
-
-const inputStyle = {
-  width: "100%",
-  padding: "10px 12px",
-  borderRadius: 8,
-  border: "1px solid #cbd5e1",
-  marginTop: 6,
-  marginBottom: 12,
-  boxSizing: "border-box",
-};
-
-const buttonStyle = {
-  background: "#1d4ed8",
-  color: "#fff",
-  border: "none",
-  borderRadius: 8,
-  padding: "10px 16px",
-  fontWeight: 700,
-  cursor: "pointer",
-};
+import { publishPortalPageContext } from "../portalPageContext";
+import {
+  portalButtonPrimary,
+  portalButtonSecondary,
+  portalCardStyle,
+  portalInputStyle,
+} from "../portalDesignTokens";
 
 function useOperationalStore(storageKey, seed = []) {
   const [items, setItems] = useState(() => {
@@ -76,6 +55,10 @@ export function createOperationalPortalPage({
   journey = "lead",
   apiHandlers = null,
   projectScoped = false,
+  primaryHref = "/portal/platform",
+  primaryLabel = "Back to dashboard",
+  routeOverlay = null,
+  renderBeforeContent = null,
 }) {
   return function OperationalPortalPage() {
     const { state, refreshSyncStamp } = useWorkspaceState();
@@ -108,6 +91,16 @@ export function createOperationalPortalPage({
       else if (!selectedProjectId && projects[0]?.id) setSelectedProjectId(projects[0].id);
     }, [activeProject?.id, projects, projectScoped, selectedProjectId]);
 
+    useEffect(() => {
+      if (!projectScoped) return undefined;
+      publishPortalPageContext({
+        surface: "field-ops",
+        projectId: selectedProjectId || activeProject?.id || "",
+        pipelineStep: null,
+      });
+      return () => publishPortalPageContext(null);
+    }, [activeProject?.id, projectScoped, selectedProjectId]);
+
     async function reloadApiItems() {
       if (!apiHandlers?.fetchItems) return;
       const params = projectScoped && selectedProjectId ? { projectId: selectedProjectId } : {};
@@ -124,8 +117,9 @@ export function createOperationalPortalPage({
       reloadApiItems()
         .catch((error) => {
           if (!active) return;
-          setLoadError(error.message || `Unable to load ${itemLabel.toLowerCase()} data.`);
-          setBackingSource("unavailable");
+          setLoadError(error.message || `Unable to load ${itemLabel.toLowerCase()} data. API unreachable — local queue active.`);
+          setApiItems(localItems);
+          setBackingSource("localStorage-fallback");
         });
       return () => {
         active = false;
@@ -187,24 +181,30 @@ export function createOperationalPortalPage({
       }
     }
 
+    const beforeContent = typeof renderBeforeContent === "function"
+      ? renderBeforeContent({ selectedProjectId, projects, activeProject, busy })
+      : null;
+
     return (
       <PortalShell
-        title={`${companyName} - ${title}`}
+        title={title}
         subtitle={subtitle}
         activeHref={activeHref}
         currentJourney={journey}
-        routeOverlay={routeStateOverlays.platform}
-        primaryHref="/portal/platform"
-        primaryLabel="Back to dashboard"
+        routeOverlay={routeOverlay}
+        primaryHref={primaryHref}
+        primaryLabel={primaryLabel}
+        navDensity="compact"
       >
+        {beforeContent}
         {apiHandlers ? (
-          <div style={{ ...cardStyle, marginBottom: 18, background: "#f8fafc" }}>
-            <div style={{ color: "#475569" }}><strong>Data source:</strong> {backingSource}</div>
+          <div style={{ marginBottom: 14, fontSize: 12, color: "#64748b" }}>
+            Source: {backingSource}
             {projectScoped ? (
-              <div style={{ marginTop: 12 }}>
-                <label style={{ fontWeight: 600, fontSize: 14 }}>Project</label>
+              <label style={{ display: "block", marginTop: 10, fontWeight: 600, fontSize: 14, color: "#0f172a" }}>
+                Project
                 <select
-                  style={inputStyle}
+                  style={portalInputStyle}
                   value={selectedProjectId}
                   onChange={(e) => setSelectedProjectId(e.target.value)}
                 >
@@ -213,36 +213,36 @@ export function createOperationalPortalPage({
                     <option key={project.id} value={project.id}>{project.name || project.id}</option>
                   ))}
                 </select>
-              </div>
+              </label>
             ) : null}
           </div>
         ) : null}
 
         {loadError ? (
-          <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
+          <div style={{ ...portalCardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
             {loadError}
           </div>
         ) : null}
 
         {actionError ? (
-          <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
+          <div style={{ ...portalCardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
             {actionError}
           </div>
         ) : null}
         {actionNotice ? (
-          <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #bbf7d0", background: "#f0fdf4", color: "#166534" }}>
+          <div style={{ ...portalCardStyle, marginBottom: 18, border: "1px solid #bbf7d0", background: "#f0fdf4", color: "#166534" }}>
             {actionNotice}
           </div>
         ) : null}
 
-        <div style={{ ...cardStyle, marginBottom: 18, borderLeft: "4px solid #1d4ed8" }}>
+        <div style={{ ...portalCardStyle, marginBottom: 18, borderLeft: "4px solid #2563eb" }}>
           <h2 style={{ marginTop: 0, fontSize: 18 }}>Create {itemLabel}</h2>
           {fields.map((field) => (
             <div key={field.key}>
               <label style={{ fontWeight: 600, fontSize: 14 }}>{field.label}</label>
               {field.type === "select" ? (
                 <select
-                  style={inputStyle}
+                  style={portalInputStyle}
                   value={draft[field.key]}
                   onChange={(e) => setDraft((d) => ({ ...d, [field.key]: e.target.value }))}
                 >
@@ -252,7 +252,7 @@ export function createOperationalPortalPage({
                 </select>
               ) : (
                 <input
-                  style={inputStyle}
+                  style={portalInputStyle}
                   value={draft[field.key]}
                   placeholder={field.placeholder || ""}
                   onChange={(e) => setDraft((d) => ({ ...d, [field.key]: e.target.value }))}
@@ -260,17 +260,17 @@ export function createOperationalPortalPage({
               )}
             </div>
           ))}
-          <button type="button" style={buttonStyle} onClick={addItem} disabled={busy}>
+          <button type="button" style={portalButtonPrimary} onClick={addItem} disabled={busy}>
             {busy ? "Saving..." : `Add ${itemLabel}`}
           </button>
         </div>
 
         <div style={{ display: "grid", gap: 12 }}>
           {items.length === 0 ? (
-            <div style={cardStyle}>No {itemLabel.toLowerCase()} yet. Add your first item above.</div>
+            <div style={portalCardStyle}>No {itemLabel.toLowerCase()} yet. Add your first item above.</div>
           ) : (
             items.map((item) => (
-              <div key={item.id} style={cardStyle}>
+              <div key={item.id} style={portalCardStyle}>
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
                   <div>
                     <div style={{ color: item.status === "Complete" ? "#059669" : "#1d4ed8", fontWeight: 700, fontSize: 13 }}>
@@ -279,7 +279,7 @@ export function createOperationalPortalPage({
                     <strong>{item[fields[0]?.key] || itemLabel}</strong>
                   </div>
                   {item.status !== "Complete" ? (
-                    <button type="button" style={{ ...buttonStyle, background: "#fff", color: "#1d4ed8", border: "1px solid #1d4ed8" }} onClick={() => completeItem(item.id)} disabled={busy}>
+                    <button type="button" style={portalButtonSecondary} onClick={() => completeItem(item.id)} disabled={busy}>
                       Mark complete
                     </button>
                   ) : null}

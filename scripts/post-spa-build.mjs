@@ -2,15 +2,15 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { FCA_EXPECTED_SWA_HOSTS_CSV, FCA_API_ORIGIN, FCA_APP_HOST, FCA_AZURE_API_FALLBACK_ORIGIN } from "./domainHosts.constants.mjs";
+
 const distRoot = path.join(process.cwd(), "dist");
 const dataDir = path.join(distRoot, "data");
 
 const gitSha = process.env.GITHUB_SHA || "local-dev";
 const defaultHost =
   process.env.AURICRUX_SWA_DEFAULT_HOST || "delightful-mushroom-0de67860f.7.azurestaticapps.net";
-const expectedHosts =
-  process.env.AURICRUX_EXPECTED_HOSTS ||
-  "futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net";
+const expectedHosts = FCA_EXPECTED_SWA_HOSTS_CSV;
 const commitWitnessRoute = `/commit-witness-${gitSha}.txt`;
 const buildMarkerDate = "June 18, 2026";
 const buildMarkerVersion = "React SPA v1 Portal-Routes";
@@ -27,6 +27,31 @@ function writeText(relativePath, content) {
 
 if (!fs.existsSync(distRoot)) {
   throw new Error("dist directory missing. Run vite build first.");
+}
+
+// Vite 8 / rolldown may omit the main stylesheet link from index.html while lazy
+// chunks still attempt dynamic CSS preload — inject an explicit link so SWA boot
+// does not hit "Unable to preload CSS" on first paint.
+const indexPath = path.join(distRoot, "index.html");
+const assetsDir = path.join(distRoot, "assets");
+if (fs.existsSync(indexPath) && fs.existsSync(assetsDir)) {
+  const cssAsset = fs
+    .readdirSync(assetsDir)
+    .filter((name) => /^main-.*\.css$/.test(name))
+    .sort()
+    .pop();
+  if (cssAsset) {
+    let indexHtml = fs.readFileSync(indexPath, "utf8");
+    const href = `/assets/${cssAsset}`;
+    if (!indexHtml.includes(href)) {
+      indexHtml = indexHtml.replace(
+        "</head>",
+        `    <link rel="stylesheet" crossorigin href="${href}">\n  </head>`,
+      );
+      fs.writeFileSync(indexPath, indexHtml, "utf8");
+      console.log(`Injected stylesheet link into index.html: ${href}`);
+    }
+  }
 }
 
 fs.mkdirSync(dataDir, { recursive: true });
@@ -70,7 +95,7 @@ writeJson("deployment-status.json", {
   execution: "Auricrux-Central",
   nextAction: "MNCL-008",
   proofRoutes: ["/portal/platform", "/portal/messages", "/portal/billing", "/portal/support", "/academy"],
-  stripeWebhookPrimary: "https://auricrux-central.azurewebsites.net/api/stripe/webhook",
+  stripeWebhookPrimary: `${FCA_API_ORIGIN}/api/stripe/webhook`,
   dataPack: "/data/live-workspace-pack.json",
   gitSha,
   defaultHost,
@@ -82,6 +107,9 @@ writeJson("deployment-status.json", {
 writeJson("domain-continuity.json", {
   primary: "futurecontractorsofamerica.com",
   www: "www.futurecontractorsofamerica.com",
+  app: FCA_APP_HOST,
+  api: FCA_API_ORIGIN.replace(/^https:\/\//, ""),
+  apiFallback: FCA_AZURE_API_FALLBACK_ORIGIN.replace(/^https:\/\//, ""),
   swa: defaultHost,
   status: "continuity-preserved",
   expectedHosts: expectedHostArray,

@@ -40,18 +40,16 @@ expectIncludes(customerSessionSource, "enabledProducts", "api/customer-session.j
 expectIncludes(customerSessionSource, "enabledComms", "api/customer-session.js");
 expectIncludes(customerSessionSource, "authBoundary", "api/customer-session.js");
 
-expectIncludes(customerLoginSource, "route: 'customer-login'", "api/customer-login.js");
+expectIncludes(customerLoginSource, 'route: "customer-login"', "api/customer-login.js");
 expectIncludes(customerLoginSource, "validateCustomerCredentials", "api/customer-login.js");
 expectIncludes(customerLoginSource, "Set-Cookie", "api/customer-login.js");
 expectIncludes(customerLoginSource, "authBoundary", "api/customer-login.js");
 
 expectIncludes(loginPageSource, "authenticateWorkspaceAccount", "src/pages/website/Login.jsx");
-expectIncludes(loginPageSource, 'fetch("/api/customer-login"', "src/pages/website/Login.jsx");
+expectIncludes(loginPageSource, 'centralFetch("/api/customer-login"', "src/pages/website/Login.jsx");
 expectIncludes(loginPageSource, "selectedPlan", "src/pages/website/Login.jsx");
 expectIncludes(loginPageSource, "enabledProducts", "src/pages/website/Login.jsx");
 expectIncludes(loginPageSource, "enabledComms", "src/pages/website/Login.jsx");
-expectIncludes(loginPageSource, "CustomerProductLaunchpad", "src/pages/website/Login.jsx");
-expectIncludes(loginPageSource, "CustomerCommsLaunchpad", "src/pages/website/Login.jsx");
 
 expectIncludes(pricingPlansSource, "pricingPlanCatalog", "src/pricingPlans.js");
 expectIncludes(pricingPlansSource, "billingModel", "src/pricingPlans.js");

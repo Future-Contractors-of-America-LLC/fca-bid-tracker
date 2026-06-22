@@ -33,7 +33,7 @@ export const routes = {
   "/bid-entry": lazyPage(() => import("./pages/website/LegacyBidEntry")),
   "/bid-status": lazyPage(() => import("./pages/website/LegacyBidStatus")),
 
-  "/portal": lazyPage(() => import("./pages/portal/PortalHome")),
+  "/portal": lazyPage(() => import("./pages/portal/PortalWorkspaceRedirect")),
   "/portal/legal": lazyPage(() => import("./pages/portal/PortalLegal")),
   "/portal/platform": lazyPage(() => import("./pages/portal/PlatformDashboard")),
   "/portal/operations": lazyPage(() => import("./pages/portal/PortalOperations")),
@@ -65,8 +65,11 @@ export const routes = {
 
   "/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
   "/academy/catalog": lazyPage(() => import("./pages/academy/AcademyCatalog")),
+  "/academy/pathway": lazyPage(() => import("./pages/academy/AcademyPathwayHub")),
   "/academy/dashboard": lazyPage(() => import("./pages/academy/AcademyDashboard")),
   "/academy/credentials": lazyPage(() => import("./pages/academy/AcademyCredentials")),
+  "/academy/store": lazyPage(() => import("./pages/academy/store/AcademyStore")),
+  "/academy/store/success": lazyPage(() => import("./pages/academy/store/AcademyStoreSuccess")),
 };
 
 export const routePatterns = [
@@ -89,6 +92,14 @@ export const routePatterns = [
   {
     pattern: "/academy/programs/:programId/modules/:moduleNumber",
     Page: lazyPage(() => import("./pages/academy/AcademyModuleLesson")),
+  },
+  {
+    pattern: "/academy/store/course/:programKey",
+    Page: lazyPage(() => import("./pages/academy/store/AcademyStoreCourse")),
+  },
+  {
+    pattern: "/academy/store/pathway/:pathwayKey",
+    Page: lazyPage(() => import("./pages/academy/store/AcademyStorePathway")),
   },
 ];
 

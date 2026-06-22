@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
-import SystemStateSummary from "../../components/SystemStateSummary";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -66,8 +65,8 @@ export default function PortalAudit() {
 
   return (
     <PortalShell
-      title="Audit Timeline and Auricrux Record"
-      subtitle="Continuity surface showing project-linked file movement, accountable workflow mutations, and Auricrux operating history under one project spine."
+      title="Audit"
+      subtitle="File movement and accountable workflow history."
       activeHref="/portal/audit"
       currentJourney="coordination"
       routeOverlay={auditRouteOverlay}
@@ -95,17 +94,6 @@ export default function PortalAudit() {
           />
         </div>
       ) : null}
-
-      <div style={{ marginBottom: 16 }}>
-        <SystemStateSummary
-          tenant={state.tenant}
-          project={visibleProject}
-          workspace={state.workspace}
-          auricrux={state.auricrux}
-          title="Audit visibility now reads from the active project workspace"
-          detail="Project-linked file movement, route actions, and Auricrux traces now resolve against the same active project context used by Projects and Files."
-        />
-      </div>
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
         <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Active audit scope</div>

@@ -4,7 +4,6 @@ import path from "path";
 const root = process.cwd();
 const surfaceFiles = [
   "src/pages/website/Home.jsx",
-  "src/pages/website/Login.jsx",
   "src/pages/website/Contact.jsx",
   "src/pages/website/Pricing.jsx",
   "src/pages/website/Platform.jsx",

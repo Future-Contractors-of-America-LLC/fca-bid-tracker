@@ -30,9 +30,22 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run advancement engine
         run: node auricrux_engine.js
+
+      - name: Verify SPA build when source changes
+        run: |
+          if git diff --quiet -- src/ scripts/; then
+            echo "No frontend source changes — skipping SPA build gate."
+            exit 0
+          fi
+          npm run build:spa
+          node scripts/validate-portal-ux-sweep.mjs
 
       - name: Commit shipped changes
         shell: bash

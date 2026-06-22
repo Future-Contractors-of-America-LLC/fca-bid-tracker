@@ -153,7 +153,7 @@ export default function PortalSupport() {
   return (
     <PortalShell
       title={`${companyName} Support and Service Request Command`}
-      subtitle="A branded support workspace where customers can open real service requests, keep recovery tied to active work, and let Auricrux guide the next support move."
+      subtitle="Open service requests with full project and billing context."
       activeHref="/portal/support"
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.support}

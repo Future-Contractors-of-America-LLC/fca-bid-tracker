@@ -1,82 +1,19 @@
 import PublicTopNav from "../../components/PublicTopNav";
 import ShellFooter from "../../components/ShellFooter";
-import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import { filterVisibleActions } from "../../ctaBehavior";
 import { publicHomeMessaging } from "../../systemContinuity";
-import { PILOT_CHECKOUT_URL, STARTUP_CHECKOUT_URL } from "../../commercialOffers";
+import { websiteMarketReadiness } from "../../websiteMarketReadiness";
+import { publicSurfaceLinks } from "../../websiteShell";
+import { brandIdentity } from "../../brandIdentity";
 import {
   cardStyle,
   ctaPrimaryStyle,
   ctaSecondaryStyle,
-  heroCardStyle,
   pageShellStyle,
   responsiveGrid,
 } from "../../publicShellStyles";
-
-const proofPoints = [
-  { value: "One platform", label: "Website, SaaS workspace, customer portal, and Academy in one company account." },
-  { value: "Lead to closeout", label: "Leads, estimates, projects, plan room, billing, and support on one spine." },
-  { value: "Enterprise-ready", label: "Multi-office rollouts with governed admin controls and dedicated success coverage." },
-];
-
-const capabilityCards = [
-  {
-    title: "Lead pipeline",
-    detail: "Capture opportunities, qualify bids, and move work from first contact to signed contract.",
-    href: "/leads/",
-  },
-  {
-    title: "Job sites",
-    detail: "Track active projects, milestones, RFIs, and next actions from every job.",
-    href: "/portal/projects",
-  },
-  {
-    title: "Plan room",
-    detail: "Share drawings, specs, and submittals with your team and customers.",
-    href: "/portal/files",
-  },
-  {
-    title: "Academy",
-    detail: "Electrical apprenticeship pathways, safety programs, and supervisor credentials.",
-    href: "/academy",
-  },
-  {
-    title: "Billing",
-    detail: "Invoices, payment status, and revenue follow-through in your customer portal.",
-    href: "/portal/billing",
-  },
-  {
-    title: "Customer success",
-    detail: "Branded communications and support cases tied to active work.",
-    href: "/portal/support",
-  },
-];
-
-const programCards = [
-  {
-    tier: "Startup",
-    price: "$99/mo",
-    detail: "For owner-operators winning their first commercial accounts.",
-    href: STARTUP_CHECKOUT_URL || "/intake?plan=startup",
-    label: "Start Startup plan",
-    external: Boolean(STARTUP_CHECKOUT_URL),
-  },
-  {
-    tier: "Pilot",
-    price: "$2,500",
-    detail: "White-glove onboarding for teams standardizing bids, jobs, and field communication.",
-    href: PILOT_CHECKOUT_URL,
-    label: "Start Pilot",
-    external: true,
-  },
-  {
-    tier: "Enterprise",
-    price: "Custom",
-    detail: "Multi-office rollouts with advanced controls and dedicated success coverage.",
-    href: "/contact",
-    label: "Book a walkthrough",
-    external: false,
-  },
-];
 
 const heroCtaOnDark = {
   ...ctaPrimaryStyle,
@@ -89,89 +26,134 @@ const heroCtaSecondaryOnDark = {
   ...ctaSecondaryStyle,
   background: "transparent",
   color: "#e2e8f0",
-  border: "1px solid rgba(226, 232, 240, 0.4)",
+  border: "1px solid rgba(226, 232, 240, 0.45)",
 };
 
-export default function Home() {
+const homeExploreLinks = publicSurfaceLinks.filter((item) => item.key !== "pricing");
+
+function BrandArtBand() {
+  const fca = brandIdentity.fca.colors;
+  const auricrux = brandIdentity.auricrux.colors;
   return (
-    <div style={{ ...pageShellStyle, background: "#ffffff", minHeight: "100vh", paddingTop: 0 }}>
+    <div
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        borderRadius: 20,
+        marginBottom: 48,
+        padding: "clamp(28px, 5vw, 48px)",
+        background: `linear-gradient(135deg, ${fca.primarySoft} 0%, #fff 45%, ${auricrux.primarySoft} 100%)`,
+        border: `1px solid ${fca.primary}22`,
+      }}
+    >
+      <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24 }}>
+        <FcaBrandMark />
+        <AuricruxBrandMark />
+      </div>
+      <p style={{ position: "relative", marginTop: 20, marginBottom: 0, maxWidth: 640, color: "#475569", lineHeight: 1.7, fontSize: 17 }}>
+        FCA is the contractor operating system. Auricrux is the intelligence layer inside it, guiding teams from first lead through delivery, billing, and training.
+      </p>
+    </div>
+  );
+}
+
+export default function Home() {
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
+  const visibleSurfaceLinks = filterVisibleActions(homeExploreLinks, currentPath);
+
+  return (
+    <div style={{ ...pageShellStyle, background: "#ffffff", minHeight: "100vh", paddingTop: 0, maxWidth: "none", margin: 0, width: "100%" }}>
       <PublicTopNav />
 
-      <section style={heroCardStyle}>
+      <section
+        style={{
+          background: "linear-gradient(165deg, #0f172a 0%, #1e3a5f 42%, #0f172a 100%)",
+          padding: "clamp(48px, 8vw, 88px) clamp(20px, 4vw, 40px)",
+          marginBottom: 0,
+        }}
+      >
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <div style={{ color: "#93c5fd", fontWeight: 700, marginBottom: 12, letterSpacing: "0.08em", textTransform: "uppercase", fontSize: 12 }}>
-            Commercial contractor operating system
-          </div>
-          <h1 style={{ marginTop: 0, fontSize: "clamp(2rem, 4vw, 3rem)", lineHeight: 1.15, fontWeight: 800, maxWidth: 820 }}>
-            {publicHomeMessaging.header.title}
-          </h1>
-          <p style={{ color: "#cbd5e1", lineHeight: 1.75, maxWidth: 640, marginTop: 16, fontSize: 18 }}>
-            {publicHomeMessaging.header.subtitle}
-          </p>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 28 }}>
-            <a href="/intake" style={heroCtaOnDark}>Get started</a>
-            <a href="/login" style={heroCtaSecondaryOnDark}>Sign in</a>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 32, marginBottom: 32 }}>
+            <div style={{ flex: "1 1 360px" }}>
+              <div style={{ color: "#93c5fd", fontWeight: 700, marginBottom: 12, letterSpacing: "0.1em", textTransform: "uppercase", fontSize: 12 }}>
+                {publicHomeMessaging.header.eyebrow}
+              </div>
+              <h1 style={{ marginTop: 0, fontSize: "clamp(2.25rem, 4.5vw, 3.25rem)", lineHeight: 1.1, fontWeight: 800, maxWidth: 720, color: "#f8fafc" }}>
+                {publicHomeMessaging.header.title}
+              </h1>
+              <p style={{ color: "#cbd5e1", lineHeight: 1.75, maxWidth: 560, marginTop: 18, fontSize: 18 }}>
+                {publicHomeMessaging.header.subtitle}
+              </p>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 28 }}>
+                <a href="/intake" style={heroCtaOnDark}>Get started</a>
+                <a href="/contact" style={heroCtaSecondaryOnDark}>Talk to our team</a>
+              </div>
+            </div>
+            <div style={{ flex: "0 1 auto", display: "grid", gap: 16, padding: 20, borderRadius: 18, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
+              <div style={{ filter: "brightness(1.15)" }}>
+                <FcaBrandMark compact showTagline={false} />
+              </div>
+              <div style={{ height: 1, background: "rgba(255,255,255,0.15)" }} />
+              <AuricruxBrandMark compact />
+            </div>
           </div>
         </div>
       </section>
 
-      <div style={{ padding: "0 clamp(20px, 4vw, 40px)" }}>
-        <section style={{ ...responsiveGrid(200), marginBottom: 40 }}>
-          {proofPoints.map((point) => (
-            <article key={point.value} style={{ ...cardStyle, borderLeft: "3px solid #1d4ed8" }}>
-              <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginBottom: 8 }}>{point.value}</div>
-              <p style={{ color: "#475569", lineHeight: 1.7, margin: 0 }}>{point.label}</p>
-            </article>
-          ))}
-        </section>
+      <div style={{ padding: "clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px)", maxWidth: 1280, margin: "0 auto", boxSizing: "border-box" }}>
+        <BrandArtBand />
 
-        <section style={{ marginBottom: 40 }}>
-          <h2 style={{ marginBottom: 8, fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)" }}>Everything your contracting business needs</h2>
-          <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 24, maxWidth: 720 }}>
-            Each module connects to the same company workspace on web and mobile. Use the header to explore platform, pricing, Academy, and company resources.
+        <section style={{ marginBottom: 48 }}>
+          <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: "clamp(1.35rem, 2.5vw, 1.85rem)" }}>What FCA delivers</h2>
+          <p style={{ color: "#64748b", marginBottom: 24, maxWidth: 620, lineHeight: 1.65 }}>
+            One operating system for bids, projects, billing, customer communication, and workforce training.
           </p>
-          <div style={responsiveGrid(280)}>
-            {capabilityCards.map((item) => (
-              <article key={item.title} style={cardStyle}>
-                <h3 style={{ marginTop: 0, fontSize: 17 }}>{item.title}</h3>
-                <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: item.href ? 12 : 0 }}>{item.detail}</p>
-                {item.href ? (
-                  <a href={item.href} style={{ ...ctaSecondaryStyle, display: "inline-block", fontSize: 14 }}>
-                    Open {item.title}
-                  </a>
-                ) : null}
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section style={{ marginBottom: 40 }}>
-          <h2 style={{ marginBottom: 16, fontSize: "clamp(1.25rem, 2.5vw, 1.75rem)" }}>Plans for every stage of growth</h2>
           <div style={responsiveGrid(260)}>
-            {programCards.map((plan) => (
-              <article key={plan.tier} style={{ ...cardStyle, display: "flex", flexDirection: "column", gap: 12 }}>
-                <div>
-                  <div style={{ color: "#64748b", fontWeight: 700, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em" }}>{plan.tier}</div>
-                  <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a" }}>{plan.price}</div>
+            {visibleSurfaceLinks.map((item) => (
+              <a
+                key={item.key}
+                href={item.href}
+                style={{ ...cardStyle, borderTop: `3px solid ${brandIdentity.fca.colors.primary}`, textDecoration: "none", color: "inherit", display: "block" }}
+              >
+                <h3 style={{ marginTop: 0, fontSize: 17 }}>{item.title}</h3>
+                <p style={{ color: "#475569", lineHeight: 1.65, marginBottom: 0, fontSize: 14 }}>{item.detail}</p>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ marginBottom: 48 }}>
+          <h2 style={{ marginBottom: 20, fontSize: "clamp(1.25rem, 2.5vw, 1.65rem)" }}>Built for every stage of growth</h2>
+          <div style={responsiveGrid(280)}>
+            {websiteMarketReadiness.buyerJourneys.map((journey) => (
+              <article
+                key={journey.title}
+                style={{
+                  ...cardStyle,
+                  background: `linear-gradient(180deg, ${brandIdentity.fca.colors.primarySoft} 0%, #fff 100%)`,
+                }}
+              >
+                <div style={{ color: brandIdentity.fca.colors.primaryDark, fontWeight: 800, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
+                  {journey.audience}
                 </div>
-                <p style={{ color: "#475569", lineHeight: 1.7, flex: 1, margin: 0 }}>{plan.detail}</p>
-                <a
-                  href={plan.href}
-                  target={plan.external ? "_blank" : undefined}
-                  rel={plan.external ? "noopener noreferrer" : undefined}
-                  style={ctaPrimaryStyle}
-                >
-                  {plan.label}
-                </a>
+                <h3 style={{ marginTop: 0, fontSize: 17 }}>{journey.title}</h3>
+                <p style={{ color: "#475569", lineHeight: 1.65, fontSize: 14, marginBottom: 12 }}>{journey.outcome}</p>
+                <a href={journey.route} style={{ ...ctaPrimaryStyle, display: "inline-block", fontSize: 14 }}>{journey.label}</a>
               </article>
             ))}
           </div>
         </section>
 
-        <CustomerTrustPanel
-          title={publicHomeMessaging.trust.title}
-          detail={publicHomeMessaging.trust.detail}
-        />
+        <section style={{ marginBottom: 48 }}>
+          <div style={responsiveGrid(200)}>
+            {websiteMarketReadiness.trustSignals.map((signal) => (
+              <article key={signal.title} style={{ ...cardStyle, padding: 16 }}>
+                <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: 6, fontSize: 15 }}>{signal.title}</div>
+                <p style={{ color: "#64748b", lineHeight: 1.6, margin: 0, fontSize: 14 }}>{signal.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
 
         <ShellFooter />
       </div>

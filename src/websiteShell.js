@@ -22,13 +22,13 @@ export const publicActionCatalog = {
     variant: "secondary",
   },
   operations: {
-    label: "Open Operations Pipeline",
-    href: "/portal/operations",
+    label: "Open Commercial Pipeline",
+    href: "/portal/pipeline",
     variant: "secondary",
   },
   portal: {
-    label: "Open Portal Workspace",
-    href: "/portal",
+    label: "Open Workspace",
+    href: "/portal/platform",
     variant: "light",
   },
   academy: {
@@ -206,6 +206,10 @@ export const homeCtaSets = {
     { ...publicActionCatalog.liveTestLogin, variant: "primary" },
     publicActionCatalog.instantTestWorkspace,
   ],
+  productionClose: [
+    { href: "/contact", label: "Talk to our team", variant: "primary" },
+    { href: "/intake", label: "Get started", variant: "secondary" },
+  ],
 };
 
 export const portalShellCtas = {
@@ -231,17 +235,17 @@ export const portalEntryCtaSets = {
 
 export const platformDashboardCtaSets = {
   quickActions: [
-    { label: publicActionCatalog.portal.label, href: publicActionCatalog.portal.href, variant: "primary" },
-    { label: publicActionCatalog.operations.label, href: publicActionCatalog.operations.href, variant: "secondary" },
-    { label: publicActionCatalog.support.label, href: publicActionCatalog.support.href, variant: "secondary" },
-    { label: publicActionCatalog.admin.label, href: publicActionCatalog.admin.href, variant: "secondary" },
-    { label: publicActionCatalog.academy.label, href: publicActionCatalog.academy.href, variant: "light" },
+    { label: "Pipeline", href: "/portal/pipeline", variant: "primary" },
+    { label: "Projects", href: "/portal/projects", variant: "secondary" },
+    { label: "Bids", href: "/portal/bids", variant: "secondary" },
+    { label: "Files", href: "/portal/files", variant: "secondary" },
+    { label: "Auricrux", href: "/portal/auricrux", variant: "light" },
   ],
   operationalCards: [
-    { title: "Portal operations", detail: "Project visibility, file control, RFIs, messages, and billing continuity remain attached to one tenant and project spine.", href: publicActionCatalog.portal.href, label: publicActionCatalog.portal.label },
-    { title: "Operations pipeline", detail: "Lead intake, qualification, preconstruction, award, document control, closeout, and service continuity are now visible in one contractor pipeline.", href: publicActionCatalog.operations.href, label: publicActionCatalog.operations.label },
-    { title: "Academy continuity", detail: "Workforce readiness, learner assignment, and certification visibility now participate in the same shell state.", href: publicActionCatalog.academy.href, label: publicActionCatalog.academy.label },
-    { title: "Support posture", detail: "Escalations, continuity recovery, and customer help remain inside the operating shell rather than outside it.", href: publicActionCatalog.support.href, label: publicActionCatalog.support.label },
+    { title: "Commercial pipeline", detail: "Qualify bids through award, invoice, and payment.", href: "/portal/pipeline", label: "Open Pipeline" },
+    { title: "Bids and estimates", detail: "Qualify opportunities and build pricing.", href: "/portal/bids", label: "Open Bids" },
+    { title: "Projects and field", detail: "Jobs, photos, plans, and redlines.", href: "/portal/projects", label: "Open Projects" },
+    { title: "Files and design", detail: "Plan room, sheets, and document control.", href: "/portal/files", label: "Open Files" },
   ],
 };
 
@@ -456,15 +460,13 @@ export const auricruxCapabilities = [
 ];
 
 export const publicSurfaceLinks = [
-  { key: "platform", title: "Platform Overview", detail: "See how FCA keeps bids, project visibility, communication, field documentation, and training connected in one operating system.", href: "/platform", ctaLabel: "Platform Overview" },
-  { key: "auricrux", title: "Auricrux Guidance", detail: "See how the operating layer keeps next steps, customer visibility, and execution continuity clear.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
-  { key: "portal", title: "Customer Portal", detail: "Projects, files, notifications, billing follow-through, and customer-facing visibility.", href: "/portal", ctaLabel: "Open Portal Workspace" },
-  { key: "operations", title: "Operations Pipeline", detail: "See the contractor execution stages from intake through warranty as one usable SaaS pathway.", href: "/portal/operations", ctaLabel: "Open Operations Pipeline" },
-  { key: "academy", title: "FCA Academy", detail: "Training pathways, certification progress, safety reinforcement, and workforce readiness tied to the same customer journey.", href: "/academy", ctaLabel: "Open Academy" },
-  { key: "warranty", title: "Warranty Continuity", detail: "Post-handover service, support posture, maintenance continuity, and recurring customer retention flow.", href: "/warranty", ctaLabel: "Open Warranty Continuity" },
-  { key: "referrals", title: "Referral Continuity", detail: "Turn finished work into reviews, customer advocacy, and guided new-opportunity motion.", href: "/referrals", ctaLabel: "Open Referral Continuity" },
-  { key: "pricing", title: "Plans & Rollout", detail: "Move from interest into rollout planning, guided setup, and next implementation steps.", href: "/pricing", ctaLabel: "Plans & Rollout" },
-  { key: "contact", title: "Contact & Rollout", detail: "Start a walkthrough, pilot discussion, or rollout review from the same connected shell.", href: "/contact", ctaLabel: "Open Contact & Rollout" },
+  { key: "platform", title: "Platform Overview", detail: "How bids, projects, files, billing, and training connect in one system.", href: "/platform", ctaLabel: "Platform Overview" },
+  { key: "auricrux", title: "Auricrux Intelligence", detail: "The embedded operating layer for next steps and execution continuity.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
+  { key: "features", title: "Features", detail: "Structured onboarding, unified operations, field supervision, and Academy.", href: "/features", ctaLabel: "See Features" },
+  { key: "solutions", title: "Solutions", detail: "Paths for electrical, GC, and specialty contractor teams.", href: "/solutions", ctaLabel: "View Solutions" },
+  { key: "academy", title: "FCA Academy", detail: "Apprenticeship, certification, safety, and supervisor training.", href: "/academy", ctaLabel: "Open Academy" },
+  { key: "pricing", title: "Plans and Rollout", detail: "Move from interest into rollout planning, guided setup, and next implementation steps.", href: "/pricing", ctaLabel: "Plans and Rollout" },
+  { key: "contact", title: "Contact and Rollout", detail: "Start a walkthrough, pilot discussion, or rollout review.", href: "/contact", ctaLabel: "Open Contact" },
 ];
 
 export const contactPaths = [
@@ -477,13 +479,8 @@ export const shellJourney = [
   { key: "public", label: "Home", href: "/" },
   { key: "platform", label: "Platform", href: "/platform" },
   { key: "auricrux", label: "Auricrux", href: "/auricrux" },
-  { key: "pricing", label: "Pricing", href: "/pricing" },
-  { key: "warranty", label: "Warranty", href: "/warranty" },
-  { key: "referrals", label: "Referrals", href: "/referrals" },
-  { key: "workspace", label: "Workspace", href: "/login" },
-  { key: "portal", label: "Portal", href: "/portal" },
   { key: "academy", label: "Academy", href: "/academy" },
-  { key: "conversion", label: "Get Started", href: "/contact" },
+  { key: "conversion", label: "Contact", href: "/contact" },
 ];
 
 export const shellPrimaryNav = [
@@ -495,7 +492,7 @@ export const shellPrimaryNav = [
   { label: "Pricing", href: "/pricing", journeyKey: "conversion" },
   { label: "Contact", href: "/contact", journeyKey: "conversion" },
   { label: "Login", href: "/login", journeyKey: "workspace" },
-  { label: "Portal", href: "/portal", journeyKey: "portal" },
+  { label: "Workspace", href: "/portal/platform", journeyKey: "portal" },
   { label: "Academy", href: "/academy", journeyKey: "academy" },
 ];
 
@@ -504,8 +501,8 @@ export const shellWorkspaceRoutes = [
   { label: "Live Test Login", href: "/login?seeded=1" },
   { label: "Instant Test Workspace", href: "/login?seeded=1&autologin=1&next=/portal/platform" },
   { label: "Unified Platform Dashboard", href: "/portal/platform" },
-  { label: "Operations Pipeline", href: "/portal/operations" },
-  { label: "Customer Portal", href: "/portal" },
+  { label: "Commercial Pipeline", href: "/portal/pipeline" },
+  { label: "Workspace", href: "/portal/platform" },
   { label: "FCA Academy", href: "/academy" },
   { label: "Bid Entry", href: "/bid-entry" },
   { label: "Bid Status", href: "/bid-status" },

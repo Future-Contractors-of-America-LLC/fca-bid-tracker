@@ -1,6 +1,7 @@
+import { FCA_CENTRAL_API } from "./domainHosts.js";
+
 export const CENTRAL_API =
-  import.meta.env.VITE_AURICRUX_CENTRAL_API ||
-  "https://auricrux-central.azurewebsites.net/api";
+  import.meta.env.VITE_AURICRUX_CENTRAL_API || FCA_CENTRAL_API;
 
 export const PILOT_PAYMENT_LINK =
   import.meta.env.VITE_FCA_PILOT_PAYMENT_LINK ||

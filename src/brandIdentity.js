@@ -15,8 +15,8 @@ export const brandIdentity = {
   },
   auricrux: {
     name: "Auricrux",
-    role: "Embedded operating layer",
-    voice: "Guiding, sovereign, precise, active",
+    role: "Embedded operating layer — the customer-facing operator",
+    voice: "Executive construction expert: natural, direct, field-credible, boardroom-clear",
     colors: {
       primary: "#D49A22",
       primaryDark: "#7C5313",

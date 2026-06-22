@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import "./index.css";
+import { ensureProductHostContinuity } from "./hostContinuity";
 import Router from "./router";
 import RootErrorBoundary from "./components/RootErrorBoundary.jsx";
 
@@ -11,10 +12,12 @@ if (!rootElement) {
   throw new Error('Application root element with id "root" was not found.');
 }
 
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <RootErrorBoundary>
-      <Router />
-    </RootErrorBoundary>
-  </React.StrictMode>,
-);
+if (!ensureProductHostContinuity()) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <RootErrorBoundary>
+        <Router />
+      </RootErrorBoundary>
+    </React.StrictMode>,
+  );
+}

@@ -64,7 +64,7 @@ jobs:
         if: ${{ always() && github.ref == 'refs/heads/main' }}
         env:
           AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
-          AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
+          AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,app.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
         run: npm run verify:live-deployment || true
 
       - name: Generate product readiness evidence
@@ -74,6 +74,10 @@ jobs:
       - name: Generate academy catalog evidence
         if: ${{ always() }}
         run: npm run generate:academy-catalog-report
+
+      - name: Validate academy Auricrux media coverage
+        if: ${{ always() }}
+        run: node scripts/validate-academy-media.mjs
 
       - name: Generate managed auth and commercial runtime evidence
         if: ${{ always() }}

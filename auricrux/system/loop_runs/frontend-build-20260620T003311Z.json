@@ -1,0 +1,25 @@
+{
+  "loopId": "frontend-build",
+  "generatedUtc": "2026-06-20T00:33:11Z",
+  "ok": false,
+  "summary": "Frontend build loop run 4: 1/2 validators passed.",
+  "metrics": {
+    "runCount": 4,
+    "passed": 1,
+    "failed": 1
+  },
+  "details": {
+    "results": [
+      {
+        "script": "validate-routes.mjs",
+        "ok": false,
+        "reason": "validation-failed",
+        "detail": "Route validation failed. These href values are not backed by router routes or approved static prefixes:\n - /pipeline\n"
+      },
+      {
+        "script": "validate-finance-workspace.mjs",
+        "ok": true
+      }
+    ]
+  }
+}

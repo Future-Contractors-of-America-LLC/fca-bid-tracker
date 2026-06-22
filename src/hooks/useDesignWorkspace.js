@@ -25,6 +25,7 @@ export default function useDesignWorkspace(projectId, fileId, sheetId = "") {
   const [intelligence, setIntelligence] = useState(null);
   const [layers, setLayers] = useState(DEFAULT_LAYERS);
   const [viewerSession, setViewerSession] = useState(null);
+  const [queueBusy, setQueueBusy] = useState(false);
   const [activeSheetId, setActiveSheetId] = useState(sheetId);
 
   const sheets = useMemo(() => manifest?.sheets || [], [manifest]);
@@ -48,8 +49,10 @@ export default function useDesignWorkspace(projectId, fileId, sheetId = "") {
       ]);
 
       const nextManifest = manifestResult?.manifest || contentResult?.manifest || null;
+      const resolvedFormat = contentResult?.file?.format || contentResult?.file?.fileFormat || nextManifest?.format;
       const viewerResult = await fetchViewerToken(projectId, fileId, {
-        format: contentResult?.file?.format || contentResult?.file?.fileFormat || nextManifest?.format,
+        format: resolvedFormat,
+        queue: false,
       }).catch(() => null);
       setManifest(nextManifest);
       setContentUrl(contentResult?.streamUrl ? centralApi(contentResult.streamUrl) : contentResult?.contentUrl || "");
@@ -84,6 +87,20 @@ export default function useDesignWorkspace(projectId, fileId, sheetId = "") {
     if (!projectId || !fileId) return null;
     return createDesignSession(projectId, { fileId, sheetId: activeSheetId, mode: "markup" });
   }, [projectId, fileId, activeSheetId]);
+
+  const queueViewerTranslation = useCallback(async () => {
+    if (!projectId || !fileId) return null;
+    if (!viewerSession?.interop?.enabled) return null;
+    setQueueBusy(true);
+    try {
+      const format = fileRecord?.format || fileRecord?.fileFormat || manifest?.format;
+      const viewerResult = await fetchViewerToken(projectId, fileId, { format, queue: true });
+      setViewerSession(viewerResult || null);
+      return viewerResult;
+    } finally {
+      setQueueBusy(false);
+    }
+  }, [projectId, fileId, fileRecord, manifest, viewerSession]);
 
   const addMarkup = useCallback(
     async (markupPayload) => {
@@ -132,6 +149,8 @@ export default function useDesignWorkspace(projectId, fileId, sheetId = "") {
     intelligence,
     layers,
     viewerSession,
+    queueBusy,
+    queueViewerTranslation,
     sheets,
     activeSheetId,
     setActiveSheetId,

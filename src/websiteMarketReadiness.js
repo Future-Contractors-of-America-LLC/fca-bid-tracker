@@ -4,8 +4,8 @@ export const websiteMarketReadiness = {
       title: "Startup contractor buyer path",
       audience: "Owner-operators and early-stage builders",
       outcome: "Move from curiosity into a live workspace with low-friction product proof and next-step clarity.",
-      route: "/login",
-      label: "Open FCA Workspace",
+      route: "/intake",
+      label: "Get Started",
       proof: [
         "Live test login access",
         "Canonical bid-entry route",
@@ -16,8 +16,8 @@ export const websiteMarketReadiness = {
       title: "Operations buyer path",
       audience: "Growing contractors evaluating coordination depth",
       outcome: "Show that FCA handles real contractor stages across intake, estimating, delivery, billing, and closeout.",
-      route: "/portal/operations",
-      label: "Open Operations Pipeline",
+      route: "/platform",
+      label: "Explore the Platform",
       proof: [
         "Stage-based operations pipeline",
         "Route-linked artifacts",
@@ -51,33 +51,28 @@ export const websiteMarketReadiness = {
   ],
   trustSignals: [
     {
-      title: "Construction-native language",
-      detail: "Website copy now anchors around bids, project delivery, document control, field readiness, warranty, and referrals instead of abstract SaaS claims.",
+      title: "Built for construction teams",
+      detail: "Language and workflows match how contractors qualify work, deliver jobs, control documents, and close out billing.",
     },
     {
-      title: "Live route-backed proof",
-      detail: "Public readers can move from explanation into actual portal, operations, academy, and login routes without losing context.",
+      title: "One connected workspace",
+      detail: "Bids, projects, files, billing, support, and training live in the same product your team uses every day.",
     },
     {
-      title: "Auricrux continuity",
-      detail: "Auricrux remains embedded as the operating layer across the public shell, workspace, academy, and support continuity surfaces.",
+      title: "Guidance when you need it",
+      detail: "Auricrux surfaces next steps across the workspace so owners and coordinators stay aligned without chasing status.",
     },
   ],
   conversionActions: [
     {
-      title: "Open Live Test Login",
-      href: "/login?seeded=1",
-      label: "Open Live Test Login",
+      title: "Get started",
+      href: "/intake",
+      label: "Get started",
     },
     {
-      title: "Open Operations Pipeline",
-      href: "/portal/operations",
-      label: "Open Operations Pipeline",
-    },
-    {
-      title: "Open Contact & Rollout",
+      title: "Contact and rollout",
       href: "/contact",
-      label: "Open Contact & Rollout",
+      label: "Talk to our team",
     },
   ],
 };

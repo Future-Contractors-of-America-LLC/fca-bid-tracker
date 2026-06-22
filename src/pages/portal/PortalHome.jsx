@@ -7,6 +7,8 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import useAcademyLms from "../../hooks/useAcademyLms";
 import { fetchCommercialPipeline, migrateLocalPipelineToApi, pipelineItemsToMap } from "../../api/pipelineClient";
 import { fetchPortalInvoices } from "../../api/portalClient";
 import { createPermitEscalationTool, stageMobilizationInvoiceTool } from "../../customerCommandTools";
@@ -108,7 +110,8 @@ export default function PortalHome() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
   const { bids } = useBidWorkspace();
-  const { projects } = useProjectWorkspace();
+  const { projects, activeProject } = useProjectWorkspace();
+  const { academyState } = useAcademyLms();
   const [tasks, setTasks] = useState(() => readLocalJson(TASK_STORAGE_KEY, defaultTasks));
   const [brandSkin, setBrandSkin] = useState(() => readLocalJson(BRAND_STORAGE_KEY, defaultBrandSkin));
   const [newTaskTitle, setNewTaskTitle] = useState("");
@@ -166,6 +169,32 @@ export default function PortalHome() {
     [bids, projects, invoices, pipelineLinks],
   );
 
+  const learnerId = session?.email || session?.customerId;
+  const academyEnrollments = useMemo(
+    () => (academyState.enrollments || []).filter((item) => !learnerId || item.learnerId === learnerId),
+    [academyState.enrollments, learnerId],
+  );
+  const academyNext = useMemo(() => {
+    const projectLink = activeProject?.id
+      ? Object.values(pipelineLinks).find((link) => link.projectId === activeProject.id && link.assignedProgramKey)
+      : null;
+    const active = academyEnrollments.filter((item) => (item.progressPercent || 0) < 100);
+    if (!active.length) return null;
+    if (projectLink?.assignedProgramKey) {
+      const scoped = active.find((item) => item.programKey === projectLink.assignedProgramKey);
+      if (scoped) return { ...scoped, projectScoped: true, projectId: activeProject.id };
+    }
+    return active.sort((a, b) => (b.progressPercent || 0) - (a.progressPercent || 0))[0];
+  }, [academyEnrollments, pipelineLinks, activeProject?.id]);
+  const projectTrainingAssignment = useMemo(() => {
+    if (!activeProject?.id) return null;
+    return Object.values(pipelineLinks).find((link) => link.projectId === activeProject.id && link.assignedProgramKey) || null;
+  }, [pipelineLinks, activeProject?.id]);
+  const academyCertificates = useMemo(
+    () => (academyState.certificates || []).filter((item) => !learnerId || item.learnerId === learnerId),
+    [academyState.certificates, learnerId],
+  );
+
   const lanes = useMemo(() => ([
     { key: "today", title: "Today" },
     { key: "this-week", title: "This week" },
@@ -215,17 +244,77 @@ export default function PortalHome() {
   return (
     <PortalShell
       title={`${companyName} Command Center`}
-      subtitle="A branded contractor workspace for real opportunities, estimate preparation, customer commitments, tasks, and training continuity."
+      subtitle="Your contractor operating system — bids, jobs, field, finance, and training."
       activeHref="/portal"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}
       primaryHref="/portal/bids"
       primaryLabel="Open Qualification Workflow"
+      navDensity="full"
     >
       <ProductAccessStatusPanel session={session} />
+      {activeProject?.id ? (
+        <div style={{ marginBottom: 24 }}>
+          <AuricruxInsightPanel
+            title="Auricrux Command Intelligence"
+            targetObjectId={activeProject.id}
+            sourceRoute="/portal"
+            rationale="Review workspace posture and advance the next governed customer move across bids, projects, and billing."
+            nextAction={activeProject.nextAction || "Select the highest-value open workflow and advance it with governed continuity."}
+            actionHref={`/portal/projects/${encodeURIComponent(activeProject.id)}`}
+            actionLabel="Open active project"
+            tone="blue"
+            liveRecommend
+          />
+        </div>
+      ) : null}
       <div style={{ marginBottom: 24 }}>
         <CustomerPlanSummaryPanel session={session} title="Commercial package and enabled product scope" />
       </div>
+
+      {(academyEnrollments.length > 0 || academyCertificates.length > 0 || projectTrainingAssignment) ? (
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
+            <div>
+              <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 6 }}>Academy training progress</div>
+              <div style={{ color: "#475569" }}>
+                {academyEnrollments.length} enrollment(s) · {academyCertificates.filter((item) => item.status === "Issued").length} credential(s) issued
+                {projectTrainingAssignment ? ` · Project ${activeProject?.id} program assigned` : ""}
+              </div>
+            </div>
+            <a href="/academy/dashboard" style={{ color: brandSkin.accent, fontWeight: 700, textDecoration: "none" }}>Open learner dashboard</a>
+          </div>
+          {projectTrainingAssignment && !academyNext ? (
+            <div style={{ padding: 12, borderRadius: 12, border: "1px solid #dbeafe", background: "#fff", marginBottom: academyNext ? 10 : 0 }}>
+              <strong>{projectTrainingAssignment.assignedProgramTitle}</strong>
+              <div style={{ color: "#64748b", marginTop: 4 }}>Assigned to project {activeProject?.id} from commercial pipeline.</div>
+              <a
+                href={`/academy/programs/${projectTrainingAssignment.assignedProgramKey}`}
+                style={{ display: "inline-block", marginTop: 10, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}
+              >
+                Open project training program
+              </a>
+            </div>
+          ) : null}
+          {academyNext ? (
+            <div style={{ padding: 12, borderRadius: 12, border: "1px solid #dbeafe", background: "#fff" }}>
+              <strong>{academyNext.programTitle}</strong>
+              <div style={{ color: "#64748b", marginTop: 4 }}>
+                {academyNext.progressPercent}% complete · Next: module {(academyNext.completedModules || 0) + 1}
+                {academyNext.projectScoped ? ` · Project ${academyNext.projectId} assignment` : ""}
+              </div>
+              <a
+                href={`/academy/programs/${academyNext.programKey}/modules/${(academyNext.completedModules || 0) + 1}`}
+                style={{ display: "inline-block", marginTop: 10, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}
+              >
+                Resume assigned training
+              </a>
+            </div>
+          ) : (
+            <div style={{ color: "#64748b" }}>All enrolled programs are complete. View credentials or assign new training.</div>
+          )}
+        </div>
+      ) : null}
 
       {pipelineRows.length > 0 ? (
         <div style={{ ...cardStyle, marginBottom: 24, background: "#eff6ff", borderColor: "#1d4ed8" }}>

@@ -1,8 +1,5 @@
-import ShellHeader from "../../components/ShellHeader";
-import ShellFooter from "../../components/ShellFooter";
-import PublicCtaRow from "../../components/PublicCtaRow";
-import { homeCtaSets, shellJourney } from "../../websiteShell";
-import { cardStyle, pageShellStyle, responsiveGrid } from "../../publicShellStyles";
+import MarketingPageShell from "../../components/MarketingPageShell";
+import { cardStyle, responsiveGrid } from "../../publicShellStyles";
 
 const pillars = [
   {
@@ -19,7 +16,7 @@ const pillars = [
   },
   {
     title: "Academy-ready workforce",
-    detail: "Electrical apprenticeship L1 through L10 and launch classrooms train teams inside the same product surface.",
+    detail: "Apprenticeship, certification, and supervisor training live inside the same product your team uses on jobs.",
   },
   {
     title: "Mobile parity",
@@ -27,26 +24,22 @@ const pillars = [
   },
   {
     title: "Revenue continuity",
-    detail: "Pilot and startup checkout lanes connect intake to Stripe while preserving workspace login afterward.",
+    detail: "Pilot and startup activation connect intake to billing while preserving workspace login afterward.",
   },
 ];
 
 export default function Features() {
   return (
-    <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
-      <ShellHeader
-        eyebrow="Why FCA"
-        title="Designed for contractors who need growth without operational chaos"
-        subtitle="FCA Contractor Command combines SaaS delivery, Academy training, guided operations, and customer-facing continuity in one system."
-        primaryHref="/intake"
-        primaryLabel="Apply Now"
-        secondaryHref="/portal/platform"
-        secondaryLabel="Open Platform Dashboard"
-        journey={shellJourney}
-        currentJourney="conversion"
-      />
-
-      <section style={{ ...responsiveGrid(), marginBottom: 24 }}>
+    <MarketingPageShell
+      eyebrow="Why FCA"
+      title="Designed for contractors who need growth without operational chaos"
+      subtitle="Contractor Command combines SaaS delivery, Academy training, guided operations, and customer-facing continuity in one system."
+      primaryHref="/intake"
+      primaryLabel="Get started"
+      secondaryHref="/platform"
+      secondaryLabel="See the platform"
+    >
+      <section style={{ ...responsiveGrid(), marginBottom: 8 }}>
         {pillars.map((item) => (
           <article key={item.title} style={cardStyle}>
             <h3 style={{ marginTop: 0 }}>{item.title}</h3>
@@ -54,9 +47,6 @@ export default function Features() {
           </article>
         ))}
       </section>
-
-      <PublicCtaRow actions={homeCtaSets.productionClose} />
-      <ShellFooter />
-    </div>
+    </MarketingPageShell>
   );
 }

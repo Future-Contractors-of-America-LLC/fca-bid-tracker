@@ -1,6 +1,7 @@
 import { app } from "@azure/functions";
 import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
 import { getAcademySnapshot, mutateAcademy } from "./academy-store.js";
+import { getAcademyProgramDetail } from "./academy-program-modules.js";
 
 function resolveTenantId(request) {
   const cookieHeader = request.headers.get("cookie") || "";
@@ -17,6 +18,21 @@ app.http("academy-lms", {
     const tenantId = resolveTenantId(request);
 
     if (request.method === "GET") {
+      const programKey = new URL(request.url).searchParams.get("programKey");
+      if (programKey) {
+        const detail = getAcademyProgramDetail(programKey);
+        if (!detail) {
+          return {
+            status: 404,
+            jsonBody: { ok: false, error: `Program not found: ${programKey}` },
+          };
+        }
+        return {
+          status: 200,
+          jsonBody: { ok: true, ...detail, backingSource: "api-academy-program-modules" },
+        };
+      }
+
       const snapshot = getAcademySnapshot(tenantId);
       return {
         status: 200,

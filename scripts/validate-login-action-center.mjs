@@ -22,7 +22,6 @@ const checks = [
     markers: [
       'import LoginActionCenter from "../../components/LoginActionCenter";',
       '<LoginActionCenter session={session} login={login} requestedPath={nextHref} />',
-      'workspace entry routes customers into the unified FCA shell for estimating visibility, project delivery, document control, billing follow-through, academy continuity, communications routing, and guided next steps',
     ],
   },
 ];

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import useWorkspaceState from "../../hooks/useWorkspaceState";
+import usePortalProjectId from "../../hooks/usePortalProjectId";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useFinancialWorkspace from "../../hooks/useFinancialWorkspace";
 import { fetchPortalInvoices } from "../../api/portalClient";
 import FinanceSidebar from "../../components/finance/FinanceSidebar";
@@ -31,9 +32,10 @@ function readViewFromUrl() {
 
 export default function PortalFinance() {
   const deepLink = useMemo(() => readViewFromUrl(), []);
+  const { projectId: portalProjectId } = usePortalProjectId(deepLink.projectId);
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
-  const finance = useFinancialWorkspace(deepLink.view, deepLink.projectId || state?.project?.id || "A-117");
+  const finance = useFinancialWorkspace(deepLink.view, portalProjectId);
   const [portalInvoices, setPortalInvoices] = useState([]);
   const [actionError, setActionError] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
@@ -206,29 +208,21 @@ export default function PortalFinance() {
         return <FinanceMasterDataPanel customers={[]} vendors={[]} accounts={payload.items} />;
       case "journal":
         return (
-          <div style={{ display: "grid", gap: 16 }}>
-            <AuricruxInsightPanel
-              title="Auricrux Books Intelligence"
-              nextAction={payload.intelligence?.nextAction}
-              recommendations={payload.intelligence?.recommendations}
-              tone="green"
-            />
-            <FinanceJournalPanel
-              items={payload.items}
-              busy={busy}
-              onPost={async (body) => {
-                setBusy(true);
-                try {
-                  await finance.postJournalEntry(body);
-                  setStatusMessage("Journal entry posted to governed GL.");
-                } catch (error) {
-                  setActionError(error.message || "Unable to post journal entry.");
-                } finally {
-                  setBusy(false);
-                }
-              }}
-            />
-          </div>
+          <FinanceJournalPanel
+            items={payload.items}
+            busy={busy}
+            onPost={async (body) => {
+              setBusy(true);
+              try {
+                await finance.postJournalEntry(body);
+                setStatusMessage("Journal entry posted to governed GL.");
+              } catch (error) {
+                setActionError(error.message || "Unable to post journal entry.");
+              } finally {
+                setBusy(false);
+              }
+            }}
+          />
         );
       case "dashboard":
       default:
@@ -273,9 +267,9 @@ export default function PortalFinance() {
   return (
     <PortalShell
       title="Finance"
-      subtitle="FCA-native books — AR, AP, GL, job billing, pay apps, and governed payment recording without external dependencies."
+      subtitle="FCA-native books for AR, AP, GL, job billing, pay apps, and governed payment recording."
       activeHref="/portal/finance"
-      currentJourney="lead"
+      currentJourney="finance"
       routeOverlay={routeStateOverlays.billing}
       primaryHref="/portal/billing"
       primaryLabel="Create invoice"
@@ -283,7 +277,20 @@ export default function PortalFinance() {
       {actionError ? <div style={{ marginBottom: 16, padding: 14, borderRadius: 12, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b" }}>{actionError}</div> : null}
       {statusMessage ? <div style={{ marginBottom: 16, padding: 14, borderRadius: 12, background: "#ecfdf5", border: "1px solid #86efac", color: "#166534" }}>{statusMessage}</div> : null}
 
-      <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 18, alignItems: "start" }}>
+      {finance.projectId ? (
+        <AuricruxInsightPanel
+          title="Auricrux Books Intelligence"
+          targetObjectId={finance.projectId}
+          sourceRoute="/portal/finance"
+          rationale={finance.data?.intelligence?.nextAction || "Review books posture and advance the next governed finance move."}
+          nextAction={finance.data?.intelligence?.nextAction}
+          recommendations={finance.data?.intelligence?.recommendations}
+          tone="green"
+          liveRecommend
+        />
+      ) : null}
+
+      <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 18, alignItems: "start", marginTop: 16 }}>
         <FinanceSidebar activeView={finance.view} onNavigate={navigate} companyName={companyName} />
         <div>
           <div style={{ marginBottom: 14, display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>

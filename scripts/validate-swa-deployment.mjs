@@ -9,13 +9,11 @@ const checks = [
       "Azure/static-web-apps-deploy@v1",
       "AURICRUX_SWA_NAME: fca-frontend",
       "AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net",
-      "AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net",
+      "AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,app.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net",
       "Assert SWA deployment target configuration",
       "test -n \"$AZURE_STATIC_WEB_APPS_API_TOKEN\"",
       "skip_app_build: true",
-      "skip_api_build: false",
-      "app_location: dist",
-      "api_location: api",
+      "api_location: api_generated",
       "test -f dist/deployment-status.json",
       "test -f dist/domain-continuity.json",
       "test -f dist/runtime-fingerprint.txt",
@@ -29,8 +27,9 @@ const checks = [
       "AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}",
       "workspace/live_deployment_smoke_summary.json",
       "workspace/live_deployment_smoke_failures.txt",
-      "test -f api/customer-login.js",
-      "test -f api/auricrux.js"
+      "test -f api_generated/package.json",
+      "test -f api_generated/host.json",
+      "test -f api_generated/auricrux/index.js"
     ],
     oneOfMarkers: [
       ["actions/upload-artifact@v4", "actions/upload-artifact@v6"]

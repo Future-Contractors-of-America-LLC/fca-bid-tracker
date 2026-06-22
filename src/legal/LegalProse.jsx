@@ -1,4 +1,5 @@
 import { legalHeading, legalSubheading, legalLink, legalTable, legalTh, legalTd } from "./legalStyles";
+import { FCA_ENTITY, formatPrincipalOffice } from "./entityInfo";
 
 const LINK_RE = /\[([^\]]+)\]\(([^)]+)\)/g;
 
@@ -34,8 +35,8 @@ export function LegalNotice() {
   return (
     <p style={{ fontSize: 13, color: "#64748b", fontStyle: "italic", marginBottom: 20 }}>
       Prepared for legal review. Enterprise procurement templates are available in our legal corpus upon request at{" "}
-      <a href="mailto:legal@futurecontractorsofamerica.com" style={legalLink}>
-        legal@futurecontractorsofamerica.com
+      <a href={`mailto:${FCA_ENTITY.emails.legal}`} style={legalLink}>
+        {FCA_ENTITY.emails.legal}
       </a>
       .
     </p>
@@ -99,6 +100,18 @@ export function LegalContact({ email, label = "Contact" }) {
       <a href={`mailto:${email}`} style={legalLink}>
         {email}
       </a>
+    </LegalP>
+  );
+}
+
+export function LegalPostalAddress({ label = "Postal address" }) {
+  return (
+    <LegalP>
+      <strong>{label}:</strong>
+      <br />
+      {FCA_ENTITY.legalName}
+      <br />
+      {formatPrincipalOffice(false)}
     </LegalP>
   );
 }
