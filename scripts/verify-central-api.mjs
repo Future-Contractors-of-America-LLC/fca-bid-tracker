@@ -19,6 +19,12 @@ const checks = [
     validate: (data) => Array.isArray(data),
   },
   {
+    name: "bids_get_filtered",
+    url: `${CENTRAL_API}/bids?customerId=default-customer`,
+    expectOk: false,
+    note: "Partition filter may 500 until Central repair; frontend falls back client-side.",
+  },
+  {
     name: "leads_get",
     url: `${CENTRAL_API}/leads`,
     expectOk: true,
@@ -56,6 +62,11 @@ async function runCheck(check) {
     data = text ? JSON.parse(text) : null;
   } catch {
     data = text;
+  }
+
+  if (check.expectOk === false) {
+    if (check.note) console.log(`NOTE ${check.name}: ${check.note} (HTTP ${response.status})`);
+    return { name: check.name, status: response.status, optional: true };
   }
 
   if (check.expectOk && !response.ok) {

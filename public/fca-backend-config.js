@@ -18,6 +18,7 @@ window.FCA_BACKEND = {
   workflowAuditApi: "https://api.futurecontractorsofamerica.com/api/workflow-audit",
   stripeWebhookApi: "https://api.futurecontractorsofamerica.com/api/stripe/webhook",
   stripeCheckoutApi: "https://api.futurecontractorsofamerica.com/api/stripe-checkout",
+  stripePublishableKey: "",
   stripeWebhookSwaApi: "https://futurecontractorsofamerica.com/api/stripe-webhook",
   mobileRegisterApi: "https://api.futurecontractorsofamerica.com/api/mobile/register",
   portalMessagesApi: "https://api.futurecontractorsofamerica.com/api/portal-messages",

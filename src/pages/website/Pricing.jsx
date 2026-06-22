@@ -9,6 +9,7 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import PricingActionCenter from "../../components/PricingActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import { workspaceCheckoutHref } from "../../commerceCheckout";
 import { publicPackageRouteGroups } from "../../publicPackageRouteGroups";
 import { pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
@@ -23,6 +24,11 @@ const rolloutSteps = [
 
 export default function Pricing() {
   const { session, login } = useCustomerSession();
+
+  function tierCheckoutHref(tier) {
+    if (tier.planKey) return workspaceCheckoutHref(tier.planKey);
+    return null;
+  }
 
   return (
     <div style={pageShellStyle}>
@@ -70,7 +76,12 @@ export default function Pricing() {
       </div>
 
       <div style={responsiveGrid(260)}>
-        {pricingTiers.map((tier) => (
+        {pricingTiers.map((tier) => {
+          const checkoutHref = tierCheckoutHref(tier);
+          const ctaHref = checkoutHref || tier.ctaHref;
+          const ctaLabel = checkoutHref ? `Continue checkout — ${tier.price}` : tier.ctaLabel;
+
+          return (
           <div key={tier.name} style={cardStyle}>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>{tier.name}</div>
             <div style={{ fontSize: 30, fontWeight: 700, marginBottom: 12 }}>{tier.price}</div>
@@ -100,9 +111,10 @@ export default function Pricing() {
               {tier.includes.map((item) => <li key={item}>{item}</li>)}
             </ul>
 
-            <a href={tier.ctaHref} style={ctaPrimaryStyle} target={tier.checkoutUrl ? "_blank" : undefined} rel={tier.checkoutUrl ? "noopener noreferrer" : undefined}>{tier.ctaLabel}</a>
+            <a href={ctaHref} style={ctaPrimaryStyle}>{ctaLabel}</a>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div style={{ ...twoColumnGridStyle, marginTop: 24, marginBottom: 24 }}>

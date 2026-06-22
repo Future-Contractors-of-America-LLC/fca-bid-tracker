@@ -1,6 +1,6 @@
 import { resolvePlanPreset } from "../pricingPlans";
 import { navigateTo } from "../navigation";
-import { createPlanCheckout } from "../api/stripeClient";
+import { workspaceCheckoutHref } from "../commerceCheckout";
 
 const shellStyle = {
   border: "1px solid #dbe3ef",
@@ -55,19 +55,8 @@ export default function PricingActionCenter({ session, login }) {
     navigateTo(nextHref);
   }
 
-  async function payWithStripe(planKey) {
-    try {
-      const checkout = await createPlanCheckout(planKey, {
-        customerEmail: session?.email,
-        successUrl: typeof window !== "undefined" ? `${window.location.origin}/portal/billing?payment=success` : undefined,
-        cancelUrl: typeof window !== "undefined" ? `${window.location.origin}/pricing?payment=cancelled` : undefined,
-      });
-      if (checkout.checkoutUrl) {
-        window.location.href = checkout.checkoutUrl;
-      }
-    } catch {
-      // Checkout API unavailable — user can still activate workspace locally.
-    }
+  function payWithStripe(planKey) {
+    navigateTo(workspaceCheckoutHref(planKey, { email: session?.email }));
   }
 
   return (
@@ -100,11 +89,9 @@ export default function PricingActionCenter({ session, login }) {
               <button type="button" onClick={() => activatePlan(plan.key, plan.role, plan.nextHref)} style={actionButtonStyle(plan.key === "enterprise" ? "secondary" : "primary")}>
                 {plan.title}
               </button>
-              {plan.key === "startup" || plan.key === "pilot" ? (
-                <button type="button" onClick={() => payWithStripe(plan.key)} style={{ ...actionButtonStyle("secondary"), display: "inline-block", marginTop: 10, width: "100%" }}>
-                  Pay with Stripe — {preset.price}
-                </button>
-              ) : null}
+              <button type="button" onClick={() => payWithStripe(plan.key)} style={{ ...actionButtonStyle("secondary"), display: "inline-block", marginTop: 10, width: "100%" }}>
+                Continue checkout — {preset.price}
+              </button>
             </div>
           );
         })}

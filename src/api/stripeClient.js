@@ -1,4 +1,4 @@
-import { centralFetch } from "./backendBase";
+import { centralApi } from "./backendBase";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
@@ -15,17 +15,57 @@ function formatApiError(response, payload, fallbackMessage) {
   return payload?.error || `${fallbackMessage}${statusSuffix}.`;
 }
 
-export async function createStripeCheckout(body) {
-  const response = await centralFetch("/api/stripe-checkout", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to start Stripe checkout"));
+function commerceEndpoints(path) {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const urls = [];
+  if (typeof window !== "undefined") {
+    urls.push(`${window.location.origin}${normalized}`);
   }
-  return payload;
+  urls.push(centralApi(normalized));
+  return [...new Set(urls)];
+}
+
+async function postCommerce(path, body) {
+  let lastPayload = null;
+  let lastStatus = 0;
+
+  for (const url of commerceEndpoints(path)) {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        credentials: "omit",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const payload = await readJsonSafe(response);
+      lastPayload = payload;
+      lastStatus = response.status;
+
+      if (response.status === 404 || response.status === 502) {
+        continue;
+      }
+
+      if (!response.ok || !payload?.ok) {
+        throw new Error(formatApiError(response, payload, "Unable to start Stripe checkout"));
+      }
+
+      return payload;
+    } catch (error) {
+      if (error.message?.includes("Unable to start Stripe checkout")) {
+        throw error;
+      }
+      lastPayload = { error: error.message };
+    }
+  }
+
+  throw new Error(formatApiError({ status: lastStatus }, lastPayload, "Unable to start Stripe checkout"));
+}
+
+export async function createStripeCheckout(body) {
+  return postCommerce("/api/stripe-checkout", body);
 }
 
 export async function createInvoiceCheckout(invoiceId, options = {}) {
@@ -35,16 +75,27 @@ export async function createInvoiceCheckout(invoiceId, options = {}) {
     successUrl: options.successUrl,
     cancelUrl: options.cancelUrl,
     customerEmail: options.customerEmail,
+    uiMode: options.uiMode,
+    embedded: options.uiMode === "embedded",
+    returnUrl: options.returnUrl || options.successUrl,
   });
 }
 
 export async function createPlanCheckout(planKey, options = {}) {
+  const uiMode = options.uiMode || "embedded";
   return createStripeCheckout({
     action: "plan",
     planKey,
     successUrl: options.successUrl,
     cancelUrl: options.cancelUrl,
+    returnUrl: options.returnUrl || options.successUrl,
     customerEmail: options.customerEmail,
+    clientReferenceId: options.clientReferenceId,
+    company: options.company,
+    contactName: options.contactName,
+    metadata: options.metadata,
+    uiMode,
+    embedded: uiMode === "embedded",
   });
 }
 
@@ -67,5 +118,6 @@ export async function createPortalBillingPortal(options = {}) {
     customerEmail: options.customerEmail,
     successUrl: options.returnUrl,
     returnUrl: options.returnUrl,
+    uiMode: "redirect",
   });
 }

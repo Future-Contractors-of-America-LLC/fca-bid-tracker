@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Bid | FCA</title>
+  <link rel="stylesheet" href="/leads/leads.css" />
+</head>
+<body>
+  <main class="fca-shell">
+    <div id="topbar"></div>
+    <div id="content"></div>
+    <div class="fca-footer">FCA Bid Update — Auricrux Central (POST upsert)</div>
+  </main>
+
+  <script src="/config/auricrux-central.js"></script>
+  <script src="/bids/bid-checklist.js"></script>
+  <script src="/leads/leads.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const bidId = params.get("id");
+    const customerId = params.get("customerId") || "";
+    let currentBid = null;
+
+    function slugifyCustomerId(value) {
+      return String(value || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "default-customer";
+    }
+
+    async function fetchScopedBids(scopeId) {
+      const cfg = window.FCA_AURICRUX;
+      if (!scopeId) {
+        const all = await cfg.fetchBids();
+        return Array.isArray(all) ? all : [];
+      }
+      try {
+        const filtered = await cfg.fetchBids({ customerId: scopeId });
+        if (Array.isArray(filtered)) return filtered;
+      } catch { /* fallback below */ }
+      const all = await cfg.fetchBids();
+      const list = Array.isArray(all) ? all : [];
+      const normalized = scopeId.toLowerCase();
+      return list.filter(function (bid) {
+        if (String(bid.customerId || "").toLowerCase() === normalized) return true;
+        return slugifyCustomerId(bid.company || bid.customerName || "") === normalized;
+      });
+    }
+
+    function detailUrl() {
+      const qs = new URLSearchParams({ id: bidId });
+      if (customerId) qs.set("customerId", customerId);
+      return "/bids/detail.html?" + qs.toString();
+    }
+
+    function renderForm(bid) {
+      const checklist = bid.checklist || {};
+      content.innerHTML =
+        '<section class="fca-hero"><h2>Edit Bid</h2><p>' + (bid.projectName || bid.id) + '</p></section>' +
+        '<section class="fca-panel"><form class="fca-form" id="editForm">' +
+        '<div class="fca-grid-2">' +
+        field("company", "Company", bid.company || bid.customerName, true) +
+        field("projectName", "Project Name", bid.projectName, true) +
+        field("contactName", "Contact Name", bid.contactName) +
+        field("contactEmail", "Contact Email", bid.contactEmail) +
+        field("contactPhone", "Contact Phone", bid.contactPhone) +
+        field("trade", "Trade", bid.trade) +
+        field("location", "Location", bid.location) +
+        field("value", "Estimated Value (USD)", bid.value, true, "number") +
+        selectField("status", "Status", bid.status || "new", ["new", "under-review", "qualified", "proposal", "won", "lost"]) +
+        '</div>' +
+        '<div class="fca-full"><label class="fca-label" for="notes">Notes</label><textarea class="fca-input" id="notes" rows="4" style="resize:vertical">' + esc(bid.notes || "") + '</textarea></div>' +
+        '<section class="fca-panel" style="margin:0;padding:0;border:none;box-shadow:none">' +
+        '<div class="fca-panel-header" style="padding-left:0;padding-right:0"><h3>Proposal-Readiness Checklist</h3></div>' +
+        FCA_BID_CHECKLIST.renderChecklistEditor(checklist) +
+        '</section>' +
+        '<div class="fca-toolbar">' +
+        '<button class="fca-btn fca-btn-primary" type="submit">Save to Auricrux Central</button>' +
+        '<a class="fca-btn fca-btn-secondary" href="' + detailUrl() + '">Cancel</a>' +
+        '</div>' +
+        '<div class="fca-status" id="saveStatus"></div>' +
+        '</form></section>';
+    }
+
+    function field(id, label, value, required, type) {
+      type = type || "text";
+      return '<div><label class="fca-label" for="' + id + '">' + label + '</label><input class="fca-input" id="' + id + '" type="' + type + '" value="' + esc(value || "") + '"' + (required ? " required" : "") + ' /></div>';
+    }
+
+    function selectField(id, label, value, options) {
+      return '<div><label class="fca-label" for="' + id + '">' + label + '</label><select class="fca-select" id="' + id + '">' +
+        options.map(function (opt) {
+          return '<option value="' + opt + '"' + (value === opt ? " selected" : "") + '>' + opt + '</option>';
+        }).join("") + '</select></div>';
+    }
+
+    function checkField(id, label, checked) {
+      return '<div><label class="fca-label"><input type="checkbox" id="' + id + '"' + (checked ? " checked" : "") + ' /> ' + label + '</label></div>';
+    }
+
+    function esc(value) {
+      return String(value || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+    }
+
+    function readForm() {
+      return {
+        id: currentBid.id,
+        customerId: currentBid.customerId,
+        customerName: currentBid.customerName || document.getElementById("company").value,
+        company: document.getElementById("company").value,
+        projectName: document.getElementById("projectName").value,
+        contactName: document.getElementById("contactName").value,
+        contactEmail: document.getElementById("contactEmail").value,
+        contactPhone: document.getElementById("contactPhone").value,
+        trade: document.getElementById("trade").value,
+        location: document.getElementById("location").value,
+        value: Number(document.getElementById("value").value || 0),
+        status: document.getElementById("status").value,
+        notes: document.getElementById("notes").value,
+        checklist: FCA_BID_CHECKLIST.readChecklistFromForm(),
+      };
+    }
+
+    async function load() {
+      if (!bidId) {
+        content.innerHTML = '<div class="fca-empty">Missing bid ID. Use ?id=bid-123</div>';
+        return;
+      }
+      try {
+        const bids = await fetchScopedBids(customerId);
+        currentBid = bids.find(function (b) { return b.id === bidId; });
+        if (!currentBid) {
+          content.innerHTML = '<div class="fca-empty">Bid not found: ' + bidId + '</div>';
+          return;
+        }
+        topbar.innerHTML = FCALeads.renderTopbar("pipeline");
+        renderForm(currentBid);
+        document.getElementById("editForm").addEventListener("submit", onSave);
+      } catch (error) {
+        content.innerHTML = '<div class="fca-empty">Unable to load bid: ' + error.message + '</div>';
+      }
+    }
+
+    async function onSave(event) {
+      event.preventDefault();
+      const saveStatus = document.getElementById("saveStatus");
+      saveStatus.className = "fca-status show";
+      saveStatus.textContent = "Saving to Auricrux Central...";
+      try {
+        const payload = readForm();
+        const saved = await window.FCA_AURICRUX.postBid(payload);
+        saveStatus.className = "fca-status show success";
+        saveStatus.textContent = "Bid updated. Auricrux score: " + (saved.auricruxScore || "—") + "/100";
+        setTimeout(function () { location.href = detailUrl(); }, 900);
+      } catch (error) {
+        saveStatus.className = "fca-status show error";
+        saveStatus.textContent = error.message;
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

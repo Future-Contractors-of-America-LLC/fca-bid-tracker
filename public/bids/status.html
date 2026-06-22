@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Customer Bid Status | FCA</title>
+  <link rel="stylesheet" href="/leads/leads.css" />
+</head>
+<body>
+  <main class="fca-shell">
+    <div id="topbar"></div>
+
+    <section class="fca-hero">
+      <h2 id="pageTitle">Customer Bid Status</h2>
+      <p id="pageSubtitle">
+        Live bid records from Auricrux Central, scoped to your customer account.
+      </p>
+    </section>
+
+    <section class="fca-panel">
+      <div class="fca-panel-header">
+        <h3>Customer Scope</h3>
+      </div>
+      <form class="fca-toolbar" id="scopeForm" style="flex-wrap:wrap">
+        <input class="fca-input" id="customerInput" placeholder="Company name or customer ID" style="min-width:260px;flex:1" />
+        <button class="fca-btn fca-btn-primary" type="submit">Load Bids</button>
+        <a class="fca-btn fca-btn-secondary" href="/bid-entry">New Bid</a>
+      </form>
+      <div class="fca-status" id="scopeStatus"></div>
+    </section>
+
+    <section class="fca-metrics" id="metrics"></section>
+
+    <section class="fca-panel">
+      <div class="fca-panel-header"><h3>Bid Register</h3></div>
+      <div class="fca-table-wrap">
+        <table class="fca-table">
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Status</th>
+              <th>Value</th>
+              <th>Score</th>
+              <th>Readiness</th>
+              <th>Updated</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="bidRows">
+            <tr><td colspan="6"><div class="fca-empty">Enter a customer scope to load bids.</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/config/auricrux-central.js"></script>
+  <script src="/bids/bid-checklist.js"></script>
+  <script src="/leads/leads.js"></script>
+  <script>
+    function slugifyCustomerId(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "") || "default-customer";
+    }
+
+    function resolveCustomerId(params) {
+      const direct = params.get("customerId") || params.get("customer_id") || "";
+      if (direct) return direct.trim();
+      const slugSource =
+        params.get("customer") ||
+        params.get("company") ||
+        params.get("customerName") ||
+        "";
+      return slugSource ? slugifyCustomerId(slugSource) : "";
+    }
+
+    function buildStatusUrl(customerId, customerLabel) {
+      const qs = new URLSearchParams();
+      if (customerId) qs.set("customerId", customerId);
+      if (customerLabel) qs.set("customerName", customerLabel);
+      const query = qs.toString();
+      return "/bids/status.html" + (query ? "?" + query : "");
+    }
+
+    function buildDetailUrl(bid, customerId) {
+      const qs = new URLSearchParams({ id: bid.id });
+      if (customerId) qs.set("customerId", customerId);
+      return "/bids/detail.html?" + qs.toString();
+    }
+
+    function buildEditUrl(bid, customerId) {
+      const qs = new URLSearchParams({ id: bid.id });
+      if (customerId) qs.set("customerId", customerId);
+      return "/bids/edit.html?" + qs.toString();
+    }
+
+    async function fetchScopedBids(customerId) {
+      const cfg = window.FCA_AURICRUX;
+      if (!customerId) {
+        const all = await cfg.fetchBids();
+        return Array.isArray(all) ? all : [];
+      }
+
+      try {
+        const filtered = await cfg.fetchBids({ customerId: customerId });
+        if (Array.isArray(filtered)) return filtered;
+      } catch {
+        // Partition filter may be unavailable on Central; use client-side scope.
+      }
+
+      const all = await cfg.fetchBids();
+      const list = Array.isArray(all) ? all : [];
+      const normalized = customerId.toLowerCase();
+      return list.filter(function (bid) {
+        if (String(bid.customerId || "").toLowerCase() === normalized) return true;
+        return slugifyCustomerId(bid.company || bid.customerName || "") === normalized;
+      });
+    }
+
+    async function loadBids(customerId, customerLabel) {
+      scopeStatus.className = "fca-status show";
+      scopeStatus.textContent = "Loading bids from Auricrux Central...";
+        bidRows.innerHTML = '<tr><td colspan="7"><div class="fca-empty">Loading...</div></td></tr>';
+
+      try {
+        const cfg = window.FCA_AURICRUX;
+        const list = await fetchScopedBids(customerId);
+
+        pageTitle.textContent = customerLabel
+          ? customerLabel + " — Bid Status"
+          : customerId
+            ? "Bid Status — " + customerId
+            : "All Customer Bids";
+
+        pageSubtitle.textContent = customerId
+          ? "Partition: " + customerId + " · " + list.length + " bid(s)"
+          : list.length + " bid(s) across all customers";
+
+        metrics.innerHTML =
+          '<div class="fca-metric"><div class="fca-metric-label">Total Bids</div><div class="fca-metric-value">' + list.length + '</div></div>' +
+          '<div class="fca-metric"><div class="fca-metric-label">Avg Score</div><div class="fca-metric-value">' +
+          (list.length ? Math.round(list.reduce(function (s, b) { return s + Number(b.auricruxScore || 0); }, 0) / list.length) : 0) +
+          '</div></div>' +
+          '<div class="fca-metric"><div class="fca-metric-label">Open</div><div class="fca-metric-value">' +
+          list.filter(function (b) { return (b.status || "new") !== "won" && (b.status || "new") !== "lost"; }).length +
+          '</div></div>';
+
+        bidRows.innerHTML = list.length
+          ? list.map(function (bid) {
+              var readiness = FCA_BID_CHECKLIST.computeReadiness(bid.checklist || {});
+              return '<tr>' +
+                '<td><strong>' + (bid.projectName || "—") + '</strong><br><span style="color:#64748b;font-size:12px">' + (bid.company || bid.customerName || "") + '</span></td>' +
+                '<td><span class="' + FCALeads.stageBadgeClass(bid.status || "new") + '">' + (bid.status || "new") + '</span></td>' +
+                '<td>' + FCALeads.formatCurrency(bid.value || 0) + '</td>' +
+                '<td>' + (bid.auricruxScore || 0) + '</td>' +
+                '<td><span class="' + FCA_BID_CHECKLIST.statusBadgeClass(readiness.status) + '">' + readiness.percent + '%</span></td>' +
+                '<td>' + FCALeads.formatDate(bid.updatedAt) + '</td>' +
+                '<td><a href="' + buildDetailUrl(bid, customerId) + '">View</a> · <a href="' + buildEditUrl(bid, customerId) + '">Edit</a></td>' +
+                '</tr>';
+            }).join("")
+          : '<tr><td colspan="7"><div class="fca-empty">No bids found for this customer scope.</div></td></tr>';
+
+        scopeStatus.className = "fca-status show success";
+        scopeStatus.textContent = "Loaded from Auricrux Central.";
+
+        if (customerId || customerLabel) {
+          history.replaceState(null, "", buildStatusUrl(customerId, customerLabel));
+        }
+      } catch (error) {
+        scopeStatus.className = "fca-status show error";
+        scopeStatus.textContent = error.message;
+        bidRows.innerHTML = '<tr><td colspan="7"><div class="fca-empty">' + error.message + '</div></td></tr>';
+      }
+    }
+
+    topbar.innerHTML = FCALeads.renderTopbar("pipeline");
+
+    const params = new URLSearchParams(location.search);
+    let customerId = resolveCustomerId(params);
+    const customerLabel = params.get("customerName") || params.get("company") || "";
+
+    if (customerId) customerInput.value = customerId;
+    else if (customerLabel) customerInput.value = customerLabel;
+
+    scopeForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const raw = (customerInput.value || "").trim();
+      if (!raw) {
+        scopeStatus.className = "fca-status show error";
+        scopeStatus.textContent = "Enter a company name or customer ID.";
+        return;
+      }
+      const looksLikeId = raw.includes("-") && !raw.includes(" ");
+      customerId = looksLikeId ? raw : slugifyCustomerId(raw);
+      loadBids(customerId, looksLikeId ? "" : raw);
+    });
+
+    if (customerId || customerLabel) {
+      loadBids(customerId, customerLabel);
+    }
+  </script>
+</body>
+</html>

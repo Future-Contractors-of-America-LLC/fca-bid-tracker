@@ -1,4 +1,4 @@
-import { centralFetch } from "./backendBase";
+import { centralApi, centralFetch } from "./backendBase";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
@@ -13,6 +13,51 @@ async function readJsonSafe(response) {
 function formatApiError(response, payload, fallbackMessage) {
   const statusSuffix = response.status ? ` (status ${response.status})` : "";
   return payload?.error || `${fallbackMessage}${statusSuffix}.`;
+}
+
+function commerceEndpoints(path) {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  const urls = [];
+  if (typeof window !== "undefined") {
+    urls.push(`${window.location.origin}${normalized}`);
+  }
+  urls.push(centralApi(normalized));
+  return [...new Set(urls)];
+}
+
+async function postCommerce(path, body) {
+  let lastPayload = null;
+  let lastStatus = 0;
+
+  for (const url of commerceEndpoints(path)) {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        credentials: "omit",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const payload = await readJsonSafe(response);
+      lastPayload = payload;
+      lastStatus = response.status;
+
+      if (response.status === 404 || response.status === 502) {
+        continue;
+      }
+
+      if (response.ok && payload?.ok) {
+        return payload;
+      }
+    } catch (error) {
+      lastPayload = { error: error.message };
+    }
+  }
+
+  const message = lastPayload?.error || `Unable to start academy checkout (status ${lastStatus}).`;
+  throw new Error(message);
 }
 
 export async function fetchAcademyCommerceCatalog(options = {}) {
@@ -42,17 +87,33 @@ export async function fetchAcademyCommerceItem({ programKey, pathwayKey } = {}) 
   return payload;
 }
 
-export async function startAcademyCheckout(body) {
-  const response = await centralFetch("/api/academy-commerce", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "checkout", ...body }),
+export async function createAcademyCheckout({
+  programKey,
+  pathwayKey,
+  buyerEmail,
+  successUrl,
+  cancelUrl,
+  clientReferenceId,
+  uiMode = "embedded",
+} = {}) {
+  return postCommerce("/api/academy-commerce", {
+    action: "checkout",
+    programKey,
+    pathwayKey,
+    purchaseType: pathwayKey ? "pathway" : "course",
+    buyerEmail,
+    customerEmail: buyerEmail,
+    successUrl,
+    cancelUrl,
+    returnUrl: successUrl,
+    clientReferenceId,
+    uiMode,
+    embedded: uiMode === "embedded",
   });
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to start checkout"));
-  }
-  return payload;
+}
+
+export async function startAcademyCheckout(body) {
+  return createAcademyCheckout(body);
 }
 
 export async function submitAcademyContactSales(body) {
