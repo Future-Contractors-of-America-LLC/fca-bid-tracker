@@ -169,8 +169,7 @@ const NAV_MENUS = [
     label: "Commercial",
     items: [
       { label: "Pricing", href: "/pricing" },
-      { label: "Digital Products", href: "/products" },
-      { label: "Lead Pipeline", href: "/leads/" },
+      { label: "Job board", href: "/job-board" },
       { label: "Get Started", href: "/intake" },
     ],
   },

@@ -4,7 +4,6 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import ProductProofSection from "../../components/ProductProofSection";
 import {
   platformModules,
-  publicRouteCtas,
 } from "../../websiteShell";
 import { saasOperationalPathways } from "../../productBlueprint";
 import { cardStyle, responsiveGrid } from "../../publicShellStyles";
@@ -13,20 +12,20 @@ const platformConstructionProof = [
   {
     title: "Opportunity qualification",
     detail: "Qualification board, estimate routing, and award-to-project handoff.",
-    href: "/portal/bids",
-    label: "Open Qualification Board",
+    href: "/job-board",
+    label: "Open job board",
   },
   {
     title: "Estimate and proposal progression",
     detail: "Pricing workflow from estimate through customer-ready proposal.",
-    href: "/portal/estimates",
-    label: "Open Estimate Workflow",
+    href: "/features",
+    label: "See estimate workflow",
   },
   {
     title: "Project and document control",
     detail: "Projects, files, audit, and support in one operating spine.",
-    href: "/portal/projects",
-    label: "Open Project Command",
+    href: "/platform",
+    label: "See project command",
   },
   {
     title: "Academy depth",
@@ -42,10 +41,11 @@ export default function Platform() {
       eyebrow="FCA Platform"
       title="One contractor lifecycle operating system"
       subtitle="One operating system for the full contractor lifecycle - from first lead through closeout, billing, and workforce training."
-      primaryHref={publicRouteCtas.platform.primaryHref}
-      primaryLabel={publicRouteCtas.platform.primaryLabel}
-      secondaryHref={publicRouteCtas.platform.secondaryHref}
-      secondaryLabel={publicRouteCtas.platform.secondaryLabel}
+      primaryHref="/login"
+      primaryLabel="Sign in"
+      secondaryHref="/intake"
+      secondaryLabel="Get started"
+      illustrationKey="platform"
     >
       <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>

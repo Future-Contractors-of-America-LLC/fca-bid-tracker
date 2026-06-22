@@ -8,6 +8,7 @@ import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import ContactActionCenter from "../../components/ContactActionCenter";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
+import ProductIllustration from "../../components/ProductIllustration";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { contactPaths, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { publicContactMessaging } from "../../systemContinuity";
@@ -39,6 +40,10 @@ export default function Contact() {
       />
 
       <div style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}><FcaBrandMark compact /></div>
+
+      <div style={{ marginBottom: 24 }}>
+        <ProductIllustration variant="contact" />
+      </div>
 
       <div style={{ marginBottom: 24 }}>
         <ContactActionCenter session={session} login={login} />

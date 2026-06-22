@@ -1,5 +1,6 @@
 import PublicTopNav from "./PublicTopNav";
 import ShellFooter from "./ShellFooter";
+import ProductIllustration from "./ProductIllustration";
 import { ctaPrimaryStyle, ctaSecondaryStyle, pageShellStyle } from "../publicShellStyles";
 
 const heroCtaOnDark = {
@@ -25,6 +26,7 @@ export default function MarketingPageShell({
   secondaryHref = "/contact",
   secondaryLabel = "Talk to our team",
   showClosingCta = true,
+  illustrationKey = null,
   children,
 }) {
   return (
@@ -59,6 +61,11 @@ export default function MarketingPageShell({
       </section>
 
       <div style={{ padding: "clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px)", maxWidth: 1280, margin: "0 auto", boxSizing: "border-box" }}>
+        {illustrationKey ? (
+          <div style={{ marginBottom: 28 }}>
+            <ProductIllustration variant={illustrationKey} />
+          </div>
+        ) : null}
         {children}
 
         {showClosingCta ? (

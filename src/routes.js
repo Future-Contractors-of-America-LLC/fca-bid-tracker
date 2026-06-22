@@ -32,6 +32,7 @@ export const routes = {
   "/not-found": lazyPage(() => import("./pages/website/NotFound")),
   "/bid-entry": lazyPage(() => import("./pages/website/LegacyBidEntry")),
   "/bid-status": lazyPage(() => import("./pages/website/LegacyBidStatus")),
+  "/job-board": lazyPage(() => import("./pages/website/JobBoard")),
 
   "/portal": lazyPage(() => import("./pages/portal/PortalWorkspaceRedirect")),
   "/portal/legal": lazyPage(() => import("./pages/portal/PortalLegal")),

@@ -10,7 +10,7 @@ import useCustomerSession from "../hooks/useCustomerSession";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import { portalShellCtas } from "../websiteShell";
 import { portalHubModules, portalJourney, portalModules } from "../systemState";
-import { portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
+import { portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
 
 const shellStyle = {
   padding: "clamp(16px, 3vw, 28px) clamp(16px, 3vw, 24px) 48px",
@@ -80,6 +80,7 @@ export default function PortalShell({
   const isHubPage = activeHref === "/portal/platform";
   const sectionModules = showAllModules ? portalModules : portalHubModules;
   const showRouteOverlay = showRouteOverlayProp ?? Boolean(routeOverlay && !isHubPage);
+  const activeModule = portalModules.find((module) => module.href === activeHref) || null;
 
   return (
     <div style={shellStyle}>
@@ -168,6 +169,19 @@ export default function PortalShell({
               })}
             </div>
           </nav>
+        ) : null}
+
+        {!isHubPage && activeModule ? (
+          <div style={{ ...portalCardStyle, marginBottom: 16, display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+            <div>
+              <div style={portalEyebrowStyle}>Current module</div>
+              <div style={{ fontWeight: 800, fontSize: 18, marginTop: 4 }}>{activeModule.label}</div>
+              <p style={{ color: portalTokens.body, margin: "8px 0 0", lineHeight: 1.55, fontSize: 14, maxWidth: 720 }}>
+                {activeModule.description}
+              </p>
+            </div>
+            <a href="/portal/platform" style={portalButtonSecondary}>Back to workspace hub</a>
+          </div>
         ) : null}
 
         {children}

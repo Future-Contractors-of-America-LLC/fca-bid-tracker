@@ -12,6 +12,7 @@ const explicitRoutes = new Set([
   "/intake",
   "/checkout",
   "/pricing",
+  "/job-board",
   "/features",
   "/solutions",
   "/contact",

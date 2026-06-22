@@ -25,6 +25,7 @@ export default function AuricruxPage() {
       primaryLabel={publicRouteCtas.auricrux.primaryLabel}
       secondaryHref={publicRouteCtas.auricrux.secondaryHref}
       secondaryLabel={publicRouteCtas.auricrux.secondaryLabel}
+      illustrationKey="auricrux"
     >
       <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>

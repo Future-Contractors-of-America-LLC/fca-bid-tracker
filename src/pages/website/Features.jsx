@@ -38,6 +38,7 @@ export default function Features() {
       primaryLabel="Get started"
       secondaryHref="/platform"
       secondaryLabel="See the platform"
+      illustrationKey="features"
     >
       <section style={{ ...responsiveGrid(), marginBottom: 8 }}>
         {pillars.map((item) => (

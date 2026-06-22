@@ -461,6 +461,7 @@ export const auricruxCapabilities = [
 
 export const publicSurfaceLinks = [
   { key: "platform", title: "Platform Overview", detail: "How bids, projects, files, billing, and training connect in one system.", href: "/platform", ctaLabel: "Platform Overview" },
+  { key: "job-board", title: "Job & Contractor Board", detail: "Browse upcoming work and connect with qualified contractors in the FCA network.", href: "/job-board", ctaLabel: "Open job board" },
   { key: "auricrux", title: "Auricrux Intelligence", detail: "The embedded operating layer for next steps and execution continuity.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
   { key: "features", title: "Features", detail: "Structured onboarding, unified operations, field supervision, and Academy.", href: "/features", ctaLabel: "See Features" },
   { key: "solutions", title: "Solutions", detail: "Paths for electrical, GC, and specialty contractor teams.", href: "/solutions", ctaLabel: "View Solutions" },
@@ -516,11 +517,11 @@ export const shellCompatibilityRoutes = [
 export const shellProductionActions = [publicActionCatalog.workspace, publicActionCatalog.liveTestLogin, publicActionCatalog.platform, publicActionCatalog.walkthrough];
 
 export const publicRouteCtas = {
-  public: { primaryHref: publicActionCatalog.liveTestLogin.href, primaryLabel: publicActionCatalog.liveTestLogin.label, secondaryHref: publicActionCatalog.instantTestWorkspace.href, secondaryLabel: publicActionCatalog.instantTestWorkspace.label },
-  platform: { primaryHref: publicActionCatalog.liveTestLogin.href, primaryLabel: publicActionCatalog.liveTestLogin.label, secondaryHref: publicActionCatalog.instantTestWorkspace.href, secondaryLabel: publicActionCatalog.instantTestWorkspace.label },
-  auricrux: { primaryHref: publicActionCatalog.platform.href, primaryLabel: publicActionCatalog.platform.label, secondaryHref: publicActionCatalog.portal.href, secondaryLabel: publicActionCatalog.portal.label },
-  workspace: { primaryHref: publicActionCatalog.portal.href, primaryLabel: publicActionCatalog.portal.label, secondaryHref: publicActionCatalog.platform.href, secondaryLabel: publicActionCatalog.platform.label },
-  conversion: { primaryHref: publicActionCatalog.walkthrough.href, primaryLabel: publicActionCatalog.walkthrough.label, secondaryHref: publicActionCatalog.platform.href, secondaryLabel: publicActionCatalog.platform.label },
+  public: { primaryHref: "/intake", primaryLabel: "Get started", secondaryHref: "/login", secondaryLabel: "Sign in" },
+  platform: { primaryHref: "/login", primaryLabel: "Sign in", secondaryHref: "/intake", secondaryLabel: "Get started" },
+  auricrux: { primaryHref: "/auricrux", primaryLabel: "Meet Auricrux", secondaryHref: "/platform", secondaryLabel: "Platform overview" },
+  workspace: { primaryHref: "/login", primaryLabel: "Sign in", secondaryHref: "/platform", secondaryLabel: "Platform overview" },
+  conversion: { primaryHref: publicActionCatalog.walkthrough.href, primaryLabel: publicActionCatalog.walkthrough.label, secondaryHref: "/platform", secondaryLabel: "Platform overview" },
 };
 
 export const publicBodyCtaSets = {

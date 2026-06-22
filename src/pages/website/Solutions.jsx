@@ -48,8 +48,9 @@ export default function Solutions() {
       subtitle="Every program routes into the same FCA product surface on web and mobile - leads, jobs, plans, billing, and training in one place."
       primaryHref="/intake"
       primaryLabel="Get started"
-      secondaryHref="/contact"
-      secondaryLabel="Talk to our team"
+      secondaryHref="/platform"
+      secondaryLabel="Platform overview"
+      illustrationKey="solutions"
     >
       <section style={{ ...responsiveGrid(), marginBottom: 8 }}>
         {programs.map((item) => (

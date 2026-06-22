@@ -2,30 +2,30 @@ import { cardStyle, ctaPrimaryStyle, responsiveGrid } from "../publicShellStyles
 
 const defaultHighlights = [
   {
-    title: "Platform dashboard",
+    title: "Platform overview",
     detail:
-      "Show the live operating summary for tenant, project, blockers, academy continuity, and executive next actions.",
-    href: "/portal/platform",
-    label: "Open Platform Dashboard",
+      "See how bids, projects, billing, Academy, and Auricrux connect before you sign in.",
+    href: "/platform",
+    label: "Explore the platform",
   },
   {
-    title: "Portal workspace",
+    title: "Job and contractor board",
     detail:
-      "Move directly into projects, files, messages, bids, billing, support, and admin surfaces without leaving the FCA shell.",
-    href: "/portal",
-    label: "Open Portal Workspace",
+      "Browse upcoming work and qualified contractors on the public FCA network board.",
+    href: "/job-board",
+    label: "Open job board",
   },
   {
     title: "Bid continuity",
     detail:
-      "Use the canonical FCA bid entry and status routes so sales, intake, and follow-through remain product-visible.",
+      "Use canonical bid entry and status routes so sales and intake stay product-visible.",
     href: "/bid-entry",
-    label: "Open Bid Entry",
+    label: "Open bid entry",
   },
   {
     title: "Academy continuity",
     detail:
-      "Keep workforce readiness and customer delivery attached to the same operating story instead of splitting training off as a side tool.",
+      "Workforce readiness stays attached to the same operating story as project delivery.",
     href: "/academy",
     label: "Open Academy",
   },

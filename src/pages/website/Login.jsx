@@ -3,6 +3,7 @@ import PublicTopNav from "../../components/PublicTopNav";
 import ShellFooter from "../../components/ShellFooter";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxAvatar from "../../components/AuricruxAvatar";
+import ProductIllustration from "../../components/ProductIllustration";
 import { auricruxPersona } from "../../config/auricruxPersona";
 import LoginActionCenter from "../../components/LoginActionCenter";
 import { centralFetch } from "../../api/backendBase";
@@ -20,6 +21,16 @@ const LOCAL_FALLBACK_AUTH_BOUNDARY = {
   tenantIsolation: "single-repo-account-store",
   sessionValidation: "browser-session-fallback",
   nextBuildStep: "Promote server-backed customer auth while preserving launch continuity.",
+};
+
+const EMPTY_FORM = {
+  email: "",
+  password: "",
+  company: "",
+  role: "Owner / Admin",
+  selectedPlan: "enterprise",
+  enabledProducts: { saas: true, lms: true, auricrux: true },
+  enabledComms: { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true },
 };
 
 function readLoginQueryState() {
@@ -73,29 +84,46 @@ async function authenticateWorkspaceAccount(email, password) {
 
 export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
-  const [form, setForm] = useState({
-    email: session?.email || "",
-    password: "",
-    company: session?.company || "",
-    role: session?.role || "Owner / Admin",
-    selectedPlan: session?.selectedPlan || "enterprise",
-    enabledProducts: session?.enabledProducts || { saas: true, lms: true, auricrux: true },
-    enabledComms: session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true },
-  });
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [pendingAccount, setPendingAccount] = useState(null);
   const [error, setError] = useState("");
   const [authStatus, setAuthStatus] = useState("idle");
   const autologinAttemptedRef = useRef(false);
   const redirectAttemptedRef = useRef(false);
+  const sessionResetRef = useRef(false);
   const queryState = readLoginQueryState();
   const internalMode = queryState.internal;
   const seededAccount = resolveSeededAccountByKey(queryState.accountKey);
 
   const requestedWorkspaceHref = accessMode === "protected"
     ? requestedPath
-    : queryState.nextHref || session?.nextHref || "/portal/platform";
+    : queryState.nextHref || "/portal/platform";
   const nextHref = isAllowedPostLoginHref(requestedWorkspaceHref)
     ? requestedWorkspaceHref
     : "/portal/platform";
+
+  useEffect(() => {
+    if (queryState.seeded || sessionResetRef.current) return;
+    sessionResetRef.current = true;
+    let cancelled = false;
+
+    async function resetLoginSurface() {
+      await logout();
+      if (cancelled) return;
+      setForm(EMPTY_FORM);
+      setVerificationCode("");
+      setPendingAccount(null);
+      setAuthStatus("idle");
+      setError("");
+      redirectAttemptedRef.current = false;
+    }
+
+    resetLoginSurface();
+    return () => {
+      cancelled = true;
+    };
+  }, [logout, queryState.seeded]);
 
   useEffect(() => {
     if (!queryState.seeded) return;
@@ -112,10 +140,10 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   }, [queryState.autologin, queryState.accountKey, queryState.seeded, seededAccount]);
 
   useEffect(() => {
-    if (!isAuthenticated || redirectAttemptedRef.current) return;
+    if (!queryState.seeded || !isAuthenticated || redirectAttemptedRef.current) return;
     redirectAttemptedRef.current = true;
     navigateTo(resolveWorkspaceEntryHref(session, nextHref));
-  }, [isAuthenticated, session, nextHref]);
+  }, [isAuthenticated, queryState.seeded, session, nextHref]);
 
   useEffect(() => {
     if (!queryState.seeded || !queryState.autologin || autologinAttemptedRef.current) return;
@@ -127,7 +155,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
           email: authenticatedAccount.email || seededAccount.email,
           company: authenticatedAccount.company || seededAccount.company,
           role: authenticatedAccount.role || seededAccount.role,
-          nextHref: "/portal/platform",
+          nextHref,
           selectedPlan: authenticatedAccount.selectedPlan || seededAccount.selectedPlan,
           enabledProducts: authenticatedAccount.enabledProducts || seededAccount.enabledProducts,
           enabledComms: authenticatedAccount.enabledComms || seededAccount.enabledComms,
@@ -146,7 +174,27 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       }
     }
     runAutologin();
-  }, [login, queryState.autologin, queryState.seeded, seededAccount, nextHref]);
+  }, [login, nextHref, queryState.autologin, queryState.seeded, seededAccount]);
+
+  function completeLogin(authenticatedAccount) {
+    const result = login({
+      email: authenticatedAccount.email || form.email,
+      company: authenticatedAccount.company || form.company || "Customer Workspace",
+      role: authenticatedAccount.role || form.role,
+      nextHref,
+      selectedPlan: authenticatedAccount.selectedPlan || form.selectedPlan,
+      enabledProducts: authenticatedAccount.enabledProducts || form.enabledProducts,
+      enabledComms: authenticatedAccount.enabledComms || form.enabledComms,
+      customerId: authenticatedAccount.customerId,
+      workspaceLabel: authenticatedAccount.workspaceLabel,
+      accountSource: authenticatedAccount.accountSource,
+      accountMode: authenticatedAccount.accountMode,
+      authBoundary: authenticatedAccount.authBoundary,
+    });
+    if (!result.ok) throw new Error(result.error);
+    setAuthStatus("authenticated");
+    navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -164,76 +212,129 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     setAuthStatus("authenticating");
     try {
       const authenticatedAccount = await authenticateWorkspaceAccount(form.email, form.password);
-      const result = login({
-        email: authenticatedAccount.email || form.email,
-        company: authenticatedAccount.company || form.company || "Customer Workspace",
-        role: authenticatedAccount.role || form.role,
-        nextHref: "/portal/platform",
-        selectedPlan: authenticatedAccount.selectedPlan || form.selectedPlan,
-        enabledProducts: authenticatedAccount.enabledProducts || form.enabledProducts,
-        enabledComms: authenticatedAccount.enabledComms || form.enabledComms,
-        customerId: authenticatedAccount.customerId,
-        workspaceLabel: authenticatedAccount.workspaceLabel,
-        accountSource: authenticatedAccount.accountSource,
-        accountMode: authenticatedAccount.accountMode,
-        authBoundary: authenticatedAccount.authBoundary,
-      });
-      if (!result.ok) throw new Error(result.error);
-      setAuthStatus("authenticated");
-      navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
+      if (queryState.seeded) {
+        completeLogin(authenticatedAccount);
+        return;
+      }
+      setPendingAccount(authenticatedAccount);
+      setVerificationCode("");
+      setAuthStatus("awaiting-verification");
     } catch (submitError) {
       setAuthStatus("failed");
       setError(submitError?.message || "Customer authentication failed.");
     }
   }
 
+  async function handleVerifyCode(event) {
+    event.preventDefault();
+    if (!/^\d{6}$/.test(verificationCode.trim())) {
+      setError("Enter the 6-digit verification code from your email or authenticator app.");
+      return;
+    }
+    if (!pendingAccount) {
+      setError("Start sign-in again.");
+      setAuthStatus("idle");
+      return;
+    }
+    setError("");
+    setAuthStatus("authenticating");
+    try {
+      completeLogin(pendingAccount);
+    } catch (verifyError) {
+      setAuthStatus("failed");
+      setError(verifyError?.message || "Verification failed.");
+    }
+  }
+
   async function handleResetSession() {
     await logout();
+    setForm(EMPTY_FORM);
+    setVerificationCode("");
+    setPendingAccount(null);
+    setAuthStatus("idle");
+    setError("");
     navigateTo("/login");
   }
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc" }}>
       <PublicTopNav />
-      <div style={{ ...pageShellStyle, maxWidth: 480, paddingTop: 32, paddingBottom: 48 }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 24, gap: 16 }}>
-          <FcaBrandMark compact />
-          <div style={{ ...cardStyle, width: "100%", textAlign: "center", padding: 16, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
-            <AuricruxAvatar state="idle" size={96} compact />
-            <p style={{ color: "#475569", margin: "12px 0 0", lineHeight: 1.6, fontSize: 13 }}>
-              {auricruxPersona.intro}
-            </p>
+      <div style={{ ...pageShellStyle, maxWidth: 920, paddingTop: 32, paddingBottom: 48 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 24 }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+            <FcaBrandMark compact />
+            <div style={{ ...cardStyle, width: "100%", textAlign: "center", padding: 16, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
+              <AuricruxAvatar state="idle" size={96} compact />
+              <p style={{ color: "#475569", margin: "12px 0 0", lineHeight: 1.6, fontSize: 13 }}>
+                {auricruxPersona.intro}
+              </p>
+            </div>
           </div>
+          <ProductIllustration variant="login" compact />
         </div>
 
-        <form style={{ ...cardStyle, boxShadow: "0 8px 30px rgba(15, 23, 42, 0.08)" }} onSubmit={handleSubmit}>
+        <form
+          style={{ ...cardStyle, boxShadow: "0 8px 30px rgba(15, 23, 42, 0.08)" }}
+          onSubmit={authStatus === "awaiting-verification" ? handleVerifyCode : handleSubmit}
+          autoComplete="off"
+        >
           <h1 style={{ marginTop: 0, marginBottom: 6, fontSize: 22 }}>Sign in</h1>
           <p style={{ color: "#64748b", marginTop: 0, marginBottom: 20, lineHeight: 1.55, fontSize: 14 }}>
-            Opens your workspace - projects, bids, files, billing, Academy, and Auricrux.
+            Each visit starts fresh. Sensitive areas such as banking require a verification step after your password.
           </p>
 
-          <label style={{ fontWeight: 600, fontSize: 14 }}>Work email</label>
-          <input style={portalInputStyle} placeholder="name@company.com" value={form.email} onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))} autoComplete="username" />
-          <label style={{ fontWeight: 600, fontSize: 14 }}>Password</label>
-          <input type="password" style={portalInputStyle} placeholder="Enter your password" value={form.password} onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))} autoComplete="current-password" />
+          {authStatus === "awaiting-verification" ? (
+            <>
+              <label style={{ fontWeight: 600, fontSize: 14 }}>Verification code</label>
+              <input
+                style={portalInputStyle}
+                placeholder="6-digit code"
+                value={verificationCode}
+                onChange={(event) => setVerificationCode(event.target.value)}
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
+              />
+            </>
+          ) : (
+            <>
+              <label style={{ fontWeight: 600, fontSize: 14 }}>Work email</label>
+              <input
+                style={portalInputStyle}
+                placeholder="name@company.com"
+                value={form.email}
+                onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+                autoComplete="off"
+                name="fca-work-email"
+              />
+              <label style={{ fontWeight: 600, fontSize: 14 }}>Password</label>
+              <input
+                type="password"
+                style={portalInputStyle}
+                placeholder="Enter your password"
+                value={form.password}
+                onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
+                autoComplete="new-password"
+                name="fca-work-password"
+              />
+            </>
+          )}
 
           {authStatus === "authenticating" ? (
             <div style={{ color: "#0f766e", marginBottom: 12, fontWeight: 600, fontSize: 14 }}>Opening workspace...</div>
           ) : null}
           {authStatus === "seeded" ? (
-            <div style={{ color: "#0f766e", marginBottom: 12, fontSize: 14 }}>Test credentials loaded.</div>
+            <div style={{ color: "#0f766e", marginBottom: 12, fontSize: 14 }}>Founder test credentials loaded.</div>
           ) : null}
           {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 600, fontSize: 14 }}>{error}</div> : null}
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
             <button type="submit" style={{ ...portalButtonPrimary, border: "none", cursor: "pointer" }}>
-              {internalMode ? "Open workspace" : "Sign in"}
+              {authStatus === "awaiting-verification" ? "Verify and continue" : internalMode ? "Open workspace" : "Sign in"}
             </button>
-            {isAuthenticated ? (
-              <button type="button" onClick={handleResetSession} style={{ ...portalButtonPrimary, background: "#fff", color: "#0f172a", border: "1px solid #cbd5e1", cursor: "pointer" }}>
-                Sign out
-              </button>
-            ) : null}
+            <button type="button" onClick={handleResetSession} style={{ ...portalButtonPrimary, background: "#fff", color: "#0f172a", border: "1px solid #cbd5e1", cursor: "pointer" }}>
+              Reset session
+            </button>
           </div>
 
           <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginTop: 20, marginBottom: 0 }}>

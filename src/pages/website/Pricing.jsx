@@ -7,12 +7,11 @@ import CommercialReadinessPanel from "../../components/CommercialReadinessPanel"
 import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
-import PricingActionCenter from "../../components/PricingActionCenter";
-import useCustomerSession from "../../hooks/useCustomerSession";
+import ProductIllustration from "../../components/ProductIllustration";
 import { workspaceCheckoutHref } from "../../commerceCheckout";
-import { publicPackageRouteGroups } from "../../publicPackageRouteGroups";
-import { pricingTiers, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { publicActionCatalog } from "../../websiteShell";
 import { publicPricingMessaging } from "../../systemContinuity";
+import { pricingTiers, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { cardStyle, heroCardStyle, pageShellStyle, responsiveGrid, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
 const rolloutSteps = [
@@ -23,8 +22,6 @@ const rolloutSteps = [
 ];
 
 export default function Pricing() {
-  const { session, login } = useCustomerSession();
-
   function tierCheckoutHref(tier) {
     if (tier.planKey) return workspaceCheckoutHref(tier.planKey);
     return null;
@@ -59,7 +56,7 @@ export default function Pricing() {
       </div>
 
       <div style={{ marginBottom: 24 }}>
-        <PricingActionCenter session={session} login={login} />
+        <ProductIllustration variant="pricing" />
       </div>
 
       <div style={{ marginBottom: 24 }}>
@@ -128,28 +125,9 @@ export default function Pricing() {
         <WorkspaceSnapshotCard
           title={publicPricingMessaging.snapshot.title}
           detail={publicPricingMessaging.snapshot.detail}
-          ctaHref={publicActionCatalog.platform.href}
-          ctaLabel="Open Platform Dashboard"
+          ctaHref="/platform"
+          ctaLabel="Explore the platform"
         />
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Products included in every rollout</h2>
-        <div style={responsiveGrid(220)}>
-          {publicPackageRouteGroups.map((item) => (
-            <div key={item.title} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff" }}>
-              <div style={{ fontWeight: 700, marginBottom: 8 }}>{item.title}</div>
-              <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 12 }}>{item.detail}</div>
-              <div style={{ display: "grid", gap: 8 }}>
-                {item.routes.map((route) => (
-                  <a key={`${item.key}-${route.href}`} href={route.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
-                    {route.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       <CommercialReadinessPanel
@@ -157,8 +135,8 @@ export default function Pricing() {
         detail="Review live platform state, then schedule a walkthrough to match tier to your team."
         primaryHref="/contact"
         primaryLabel={publicActionCatalog.contact.label}
-        secondaryHref={publicActionCatalog.platform.href}
-        secondaryLabel="Open Platform Dashboard"
+        secondaryHref="/platform"
+        secondaryLabel="Explore the platform"
       />
 
       <PublicActionRail title={publicPricingMessaging.actionRail.title} detail={publicPricingMessaging.actionRail.detail} />

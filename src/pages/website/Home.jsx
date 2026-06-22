@@ -2,6 +2,7 @@ import PublicTopNav from "../../components/PublicTopNav";
 import ShellFooter from "../../components/ShellFooter";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import ProductIllustration from "../../components/ProductIllustration";
 import { filterVisibleActions } from "../../ctaBehavior";
 import { publicHomeMessaging } from "../../systemContinuity";
 import { websiteMarketReadiness } from "../../websiteMarketReadiness";
@@ -102,6 +103,10 @@ export default function Home() {
 
       <div style={{ padding: "clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px)", maxWidth: 1280, margin: "0 auto", boxSizing: "border-box" }}>
         <BrandArtBand />
+
+        <div style={{ marginBottom: 48 }}>
+          <ProductIllustration variant="home" />
+        </div>
 
         <section style={{ marginBottom: 48 }}>
           <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: "clamp(1.35rem, 2.5vw, 1.85rem)" }}>What FCA delivers</h2>

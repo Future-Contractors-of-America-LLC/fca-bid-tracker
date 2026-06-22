@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalWorkspaceGuide from "../../components/PortalWorkspaceGuide";
 import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
@@ -30,6 +31,8 @@ export default function PlatformDashboard() {
       navDensity="full"
       showRouteOverlay={false}
     >
+      <PortalWorkspaceGuide />
+
       <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${portalTokens.primary}`, background: portalTokens.primarySoft }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "flex-start" }}>
           <div style={{ flex: "1 1 240px" }}>
