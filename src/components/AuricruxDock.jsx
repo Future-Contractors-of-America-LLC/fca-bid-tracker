@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { brandIdentity } from "../brandIdentity";
+import { auricruxPersona } from "../config/auricruxPersona";
+import AuricruxAvatar from "./AuricruxAvatar";
+import useAuricruxVoice from "../hooks/useAuricruxVoice";
 import { sendAuricruxMessage } from "../api/auricruxClient";
 import { submitAuricruxAction } from "../api/auricruxActionsClient";
 import { readAcademyContext, subscribeAcademyContext } from "../academyContext";
@@ -59,11 +62,11 @@ function safeStorageSet(key, value) {
 function modeMeta(mode, poweredByLlm) {
   if (poweredByLlm || mode === "llm-assistant") {
     return {
-      label: "Powered by Auricrux",
+      label: "Executive operator mode",
       tone: "#166534",
       bg: "#dcfce7",
       border: "#86efac",
-      summary: "Live AI guidance for bids, billing, academy, and pipeline.",
+      summary: auricruxPersona.voiceSummary,
     };
   }
 
@@ -151,6 +154,10 @@ export default function AuricruxDock() {
   const [hydrated, setHydrated] = useState(false);
   const [academyContext, setAcademyContext] = useState(() => readAcademyContext());
   const [portalPageContext, setPortalPageContext] = useState(() => readPortalPageContext());
+  const [lastReply, setLastReply] = useState("");
+  const { supported: voiceSupported, speaking, speak, stop } = useAuricruxVoice();
+
+  const avatarState = loading ? "thinking" : speaking ? "speaking" : text.trim() ? "listening" : "idle";
 
   const meta = useMemo(() => modeMeta(mode, poweredByLlm), [mode, poweredByLlm]);
   const activeQuickPrompts = academyContext ? academyQuickPrompts : quickPrompts;
@@ -256,6 +263,7 @@ export default function AuricruxDock() {
       });
       setMode(data.mode === "llm-assistant" ? "live" : "live");
       setPoweredByLlm(Boolean(data.poweredByLlm || data.mode === "llm-assistant"));
+      setLastReply(data.reply || "");
 
       setLog((prev) => [
         {
@@ -264,6 +272,10 @@ export default function AuricruxDock() {
         },
         ...prev,
       ]);
+
+      if (data.reply) {
+        void speak(data.reply.replace(/^AURICRUX:\s*/i, ""));
+      }
 
       void submitAuricruxAction({
         mode: "recommend",
@@ -276,6 +288,7 @@ export default function AuricruxDock() {
       setMode("fallback");
       setPoweredByLlm(false);
       const continuityReply = routePromptReply(cmd);
+      setLastReply(continuityReply);
       setLog((prev) => [
         {
           t: new Date().toISOString(),
@@ -292,10 +305,8 @@ export default function AuricruxDock() {
     setLoading(false);
   }
 
-  function speak() {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    const u = new SpeechSynthesisUtterance("Auricrux is online.");
-    window.speechSynthesis.speak(u);
+  function speakLastReply() {
+    if (lastReply) void speak(lastReply);
   }
 
   async function video() {
@@ -361,10 +372,15 @@ export default function AuricruxDock() {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontWeight: 700, letterSpacing: 0.2 }}>Auricrux</div>
-            <div style={{ fontSize: 12, opacity: 0.9 }}>
-              Assistant · context-aware guidance
+          <div style={{ display: "flex", gap: 12, alignItems: "center", minWidth: 0 }}>
+            <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 14, padding: 4 }}>
+              <AuricruxAvatar state={avatarState} size={compact ? 72 : 84} showCaption={false} />
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontWeight: 700, letterSpacing: 0.2 }}>{auricruxPersona.name}</div>
+              <div style={{ fontSize: 12, opacity: 0.9 }}>
+                {auricruxPersona.title}
+              </div>
             </div>
           </div>
           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
@@ -399,7 +415,11 @@ export default function AuricruxDock() {
           </div>
 
           <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.5 }}>
-            Use Auricrux to narrate next actions, explain customer state, and preserve continuity across portal and academy routes.
+            {auricruxPersona.intro}
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "center", marginTop: 14 }}>
+            <AuricruxAvatar state={avatarState} size={compact ? 108 : 128} compact={compact} />
           </div>
 
           <div
@@ -436,7 +456,14 @@ export default function AuricruxDock() {
           </div>
 
           <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
-            <button onClick={speak} style={buttonStyle("secondary")}>Voice</button>
+            <button
+              onClick={speakLastReply}
+              disabled={!voiceSupported || !lastReply || speaking}
+              style={buttonStyle("secondary")}
+            >
+              {speaking ? "Speaking..." : "Hear reply"}
+            </button>
+            <button onClick={stop} disabled={!speaking} style={buttonStyle("secondary")}>Stop voice</button>
             <button onClick={video} style={buttonStyle("secondary")}>Video</button>
           </div>
 

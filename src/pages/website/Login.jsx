@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import PublicTopNav from "../../components/PublicTopNav";
 import ShellFooter from "../../components/ShellFooter";
 import FcaBrandMark from "../../components/FcaBrandMark";
+import AuricruxAvatar from "../../components/AuricruxAvatar";
+import { auricruxPersona } from "../../config/auricruxPersona";
 import LoginActionCenter from "../../components/LoginActionCenter";
 import { centralFetch } from "../../api/backendBase";
 import { isAllowedPostLoginHref, resolveWorkspaceEntryHref } from "../../customerSession";
@@ -194,8 +196,14 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     <div style={{ minHeight: "100vh", background: "#f8fafc" }}>
       <PublicTopNav />
       <div style={{ ...pageShellStyle, maxWidth: 480, paddingTop: 32, paddingBottom: 48 }}>
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 24, gap: 16 }}>
           <FcaBrandMark compact />
+          <div style={{ ...cardStyle, width: "100%", textAlign: "center", padding: 16, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
+            <AuricruxAvatar state="idle" size={96} compact />
+            <p style={{ color: "#475569", margin: "12px 0 0", lineHeight: 1.6, fontSize: 13 }}>
+              {auricruxPersona.intro}
+            </p>
+          </div>
         </div>
 
         <form style={{ ...cardStyle, boxShadow: "0 8px 30px rgba(15, 23, 42, 0.08)" }} onSubmit={handleSubmit}>
