@@ -3,7 +3,7 @@ import { brandIdentity } from "../brandIdentity";
 import { auricruxPersona } from "../config/auricruxPersona";
 import AuricruxAvatar from "./AuricruxAvatar";
 import useAuricruxVoice from "../hooks/useAuricruxVoice";
-import { sendAuricruxMessage } from "../api/auricruxClient";
+import { sendAuricruxMessage, sendAuricruxFeedback } from "../api/auricruxClient";
 import { submitAuricruxAction } from "../api/auricruxActionsClient";
 import { readAcademyContext, subscribeAcademyContext } from "../academyContext";
 import { readPortalPageContext, subscribePortalPageContext } from "../portalPageContext";
@@ -155,6 +155,8 @@ export default function AuricruxDock() {
   const [academyContext, setAcademyContext] = useState(() => readAcademyContext());
   const [portalPageContext, setPortalPageContext] = useState(() => readPortalPageContext());
   const [lastReply, setLastReply] = useState("");
+  const [lastPrompt, setLastPrompt] = useState("");
+  const [feedbackState, setFeedbackState] = useState("");
   const { supported: voiceSupported, speaking, speak, stop } = useAuricruxVoice();
 
   const avatarState = loading ? "thinking" : speaking ? "speaking" : text.trim() ? "listening" : "idle";
@@ -228,6 +230,7 @@ export default function AuricruxDock() {
     if (!cmd || loading) return;
 
     setLoading(true);
+    setFeedbackState("");
 
     setLog((prev) => [
       { t: new Date().toISOString(), m: `SENT: ${cmd}` },
@@ -264,6 +267,7 @@ export default function AuricruxDock() {
       setMode(data.mode === "llm-assistant" ? "live" : "live");
       setPoweredByLlm(Boolean(data.poweredByLlm || data.mode === "llm-assistant"));
       setLastReply(data.reply || "");
+      setLastPrompt(cmd);
 
       setLog((prev) => [
         {
@@ -289,6 +293,7 @@ export default function AuricruxDock() {
       setPoweredByLlm(false);
       const continuityReply = routePromptReply(cmd);
       setLastReply(continuityReply);
+      setLastPrompt(cmd);
       setLog((prev) => [
         {
           t: new Date().toISOString(),
@@ -307,6 +312,28 @@ export default function AuricruxDock() {
 
   function speakLastReply() {
     if (lastReply) void speak(lastReply);
+  }
+
+  async function submitFeedback(rating) {
+    if (!lastReply || !lastPrompt || feedbackState) return;
+    const route = typeof window !== "undefined" ? window.location.pathname : "/portal/platform";
+    try {
+      await sendAuricruxFeedback({
+        rating,
+        message: lastPrompt,
+        reply: lastReply,
+        route,
+        context: {
+          company: portalTenant.name,
+          nextAction: workspaceContext.currentNextAction,
+          blocker: auricruxRail.currentBlocker,
+          academyContext: academyContext || null,
+        },
+      });
+      setFeedbackState(rating);
+    } catch {
+      setFeedbackState("error");
+    }
   }
 
   async function video() {
@@ -464,6 +491,20 @@ export default function AuricruxDock() {
               {speaking ? "Speaking..." : "Hear reply"}
             </button>
             <button onClick={stop} disabled={!speaking} style={buttonStyle("secondary")}>Stop voice</button>
+            <button
+              onClick={() => submitFeedback("up")}
+              disabled={!lastReply || Boolean(feedbackState)}
+              style={buttonStyle(feedbackState === "up" ? "primary" : "secondary")}
+            >
+              {feedbackState === "up" ? "Thanks" : "Helpful"}
+            </button>
+            <button
+              onClick={() => submitFeedback("down")}
+              disabled={!lastReply || Boolean(feedbackState)}
+              style={buttonStyle(feedbackState === "down" ? "primary" : "secondary")}
+            >
+              {feedbackState === "down" ? "Noted" : "Improve"}
+            </button>
             <button onClick={video} style={buttonStyle("secondary")}>Video</button>
           </div>
 
