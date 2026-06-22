@@ -31,6 +31,10 @@ export default function PlatformDashboard() {
       navDensity="full"
       showRouteOverlay={false}
     >
+      <div style={{ marginBottom: 24 }}>
+        <a href="/portal/operations" style={portalButtonSecondary}>Open operations command</a>
+      </div>
+
       <PortalWorkspaceGuide />
 
       <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${portalTokens.primary}`, background: portalTokens.primarySoft }}>

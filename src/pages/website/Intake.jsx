@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import ProductIllustration from "../../components/ProductIllustration";
 import { shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { navigateTo } from "../../navigation";
 import {
@@ -102,6 +103,10 @@ export default function Intake() {
         currentJourney="conversion"
       />
 
+      <div style={{ maxWidth: 920, margin: "0 auto 24px" }}>
+        <ProductIllustration variant="intake" compact />
+      </div>
+
       <section style={{ ...cardStyle, maxWidth: 720, margin: "0 auto" }}>
         <form onSubmit={handleSubmit}>
           <label>
@@ -126,11 +131,11 @@ export default function Intake() {
           </label>
           <label>
             <strong>Password</strong>
-            <input required type="password" value={password} onChange={(event) => setPassword(event.target.value)} style={fieldStyle} />
+            <input required type="password" value={password} onChange={(event) => setPassword(event.target.value)} style={fieldStyle} autoComplete="new-password" />
           </label>
           <label>
             <strong>Confirm password</strong>
-            <input required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} style={fieldStyle} />
+            <input required type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} style={fieldStyle} autoComplete="new-password" />
           </label>
           <div
             style={{

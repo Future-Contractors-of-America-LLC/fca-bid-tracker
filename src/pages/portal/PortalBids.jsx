@@ -7,17 +7,18 @@ import useBidWorkspace from "../../hooks/useBidWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
 import { routeStateOverlays } from "../../systemState";
-import { portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
-
-const actionButtonStyle = {
-  borderRadius: 10,
-  border: "1px solid #cbd5e1",
-  background: "#ffffff",
-  color: "#0f172a",
-  fontWeight: 600,
-  padding: "10px 12px",
-  cursor: "pointer",
-};
+import {
+  PortalEntityTable,
+  PortalPageIntro,
+  PortalQuickStats,
+  PortalStatusBadge,
+} from "../../components/portal/PortalPrimitives";
+import {
+  portalButtonSecondary,
+  portalCardStyle,
+  portalEyebrowStyle,
+  portalTokens,
+} from "../../portalDesignTokens";
 
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
 
@@ -47,34 +48,51 @@ export default function PortalBids() {
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
   const activeEvidence = qualificationEvidencePackets.find((packet) => packet.bidId === activeBid?.id);
 
-  const brandedNarrative = useMemo(
+  const qualifiedCount = bids.filter((bid) => ["Qualified", "Ready for estimate", "Won"].includes(bid.status)).length;
+  const blockedCount = bids.filter((bid) => bid.blocker && bid.blocker !== "None").length;
+
+  const tableRows = useMemo(
     () =>
-      `${companyName} qualification board keeps every opportunity moving from intake to estimate readiness with Auricrux carrying scope, blockers, files, and customer promises forward.`,
-    [companyName]
+      bids.map((bid) => ({
+        id: bid.id,
+        active: bid.id === activeBidId,
+        bid,
+        package: bid.package,
+        value: bid.value,
+        status: bid.status,
+        score: bid.qualification?.score || "—",
+        gate: bid.qualification?.nextGate || "—",
+        blocker: bid.blocker || "None",
+      })),
+    [activeBidId, bids],
   );
 
   return (
     <PortalShell
-      title={`${companyName} Opportunity Qualification Board`}
-      subtitle="Qualify opportunities, build estimates, and route awards to live projects."
+      title="Opportunity qualification"
+      subtitle="Review every bid, advance qualification, and route winners into estimates or projects."
       activeHref="/portal/bids"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}
-      primaryHref="/portal/estimates"
-      primaryLabel="Open Estimate Workflow"
+      primaryHref="/portal/pipeline"
+      primaryLabel="Open commercial pipeline"
     >
-      <div style={{ ...portalCardStyle, marginBottom: 18, background: brandSkin.surface || portalTokens.primarySoft, borderLeft: `4px solid ${brandSkin.accent || portalTokens.primary}` }}>
-        <div style={{ ...portalEyebrowStyle, color: brandSkin.accent || portalTokens.primary }}>Qualification command surface</div>
-        <h2 style={{ marginTop: 6, marginBottom: 10 }}>{companyName}</h2>
-        <p style={{ color: portalTokens.body, lineHeight: 1.7, margin: 0 }}>{brandedNarrative}</p>
-        <div style={{ color: portalTokens.body, lineHeight: 1.7, marginTop: 12, fontSize: 14 }}>
-          <div><strong>Backing:</strong> {meta.persistenceState}</div>
-          <div><strong>Source:</strong> {meta.backingSource}</div>
-        </div>
-      </div>
+      <PortalPageIntro
+        eyebrow="Qualification board"
+        title={`${companyName} opportunities`}
+        detail="Work top-down: select a bid, review evidence, advance qualification, then route to estimate or award."
+      />
+
+      <PortalQuickStats
+        items={[
+          { label: "Open bids", value: bids.length, hint: "Visible in this workspace" },
+          { label: "Qualified", value: qualifiedCount, hint: "Ready for next gate" },
+          { label: "Blockers", value: blockedCount, hint: "Need attention" },
+        ]}
+      />
 
       {activeBid?.id ? (
-        <div style={{ marginBottom: 18 }}>
+        <div style={{ marginBottom: 16 }}>
           <AuricruxInsightPanel
             title="Auricrux Qualification Intelligence"
             targetObjectType="Bid"
@@ -90,39 +108,42 @@ export default function PortalBids() {
         </div>
       ) : null}
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, marginBottom: 18 }}>
-        {bids.map((bid) => {
-          const isActive = bid.id === activeBidId;
-          return (
-            <button
-              key={bid.id}
-              type="button"
-              onClick={() => setActiveBidId(bid.id)}
-              style={{
-                ...portalCardStyle,
-                textAlign: "left",
-                cursor: "pointer",
-                outline: isActive ? `2px solid ${brandSkin.accent || portalTokens.primary}` : "none",
-                font: "inherit",
-              }}
-            >
-              <div style={{ color: brandSkin.accent || portalTokens.primary, fontWeight: 700, marginBottom: 8 }}>{bid.status}</div>
-              <h3 style={{ marginTop: 0, marginBottom: 8, fontSize: "1.05rem" }}>{bid.package}</h3>
-              <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>{bid.value}</div>
-              <div style={{ color: portalTokens.body, lineHeight: 1.6, fontSize: 14 }}>
-                <div><strong>Score:</strong> {bid.qualification.score}</div>
-                <div><strong>Gate:</strong> {bid.qualification.nextGate}</div>
-                <div><strong>Blocker:</strong> {bid.blocker}</div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+      <PortalEntityTable
+        columns={[
+          {
+            key: "package",
+            label: "Opportunity",
+            render: (row) => (
+              <button
+                type="button"
+                onClick={() => setActiveBidId(row.id)}
+                style={{ border: "none", background: "transparent", padding: 0, textAlign: "left", cursor: "pointer", font: "inherit", color: portalTokens.primaryInk, fontWeight: 700 }}
+              >
+                {row.package}
+              </button>
+            ),
+          },
+          { key: "value", label: "Value" },
+          {
+            key: "status",
+            label: "Status",
+            render: (row) => <PortalStatusBadge status={row.status} active={row.active} />,
+          },
+          { key: "score", label: "Score" },
+          { key: "gate", label: "Next gate" },
+          { key: "blocker", label: "Blocker" },
+        ]}
+        rows={tableRows}
+        emptyTitle="No bids in your qualification board"
+        emptyDetail="Create your first opportunity from intake or the public job board, then return here to qualify and route work."
+        emptyPrimaryHref="/job-board"
+        emptyPrimaryLabel="Browse job board"
+      />
 
       {activeBid ? (
-        <div style={{ display: "grid", gap: 16, marginBottom: 18 }}>
+        <div style={{ display: "grid", gap: 16, marginTop: 16 }}>
           <div style={portalCardStyle}>
-            <div style={portalEyebrowStyle}>Qualification evidence packet</div>
+            <div style={portalEyebrowStyle}>Qualification evidence</div>
             {activeEvidence ? (
               <div style={{ color: portalTokens.body, lineHeight: 1.7, marginTop: 8 }}>
                 <div><strong>Readiness:</strong> {activeEvidence.readiness}</div>
@@ -131,13 +152,13 @@ export default function PortalBids() {
               </div>
             ) : (
               <p style={{ color: portalTokens.body, marginTop: 8, marginBottom: 0 }}>
-                Auricrux will assemble the evidence packet once scope, budget, and file posture are confirmed.
+                Auricrux assembles the evidence packet once scope, budget, and file posture are confirmed.
               </p>
             )}
             <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 14 }}>
               <button
                 type="button"
-                style={actionButtonStyle}
+                style={portalButtonSecondary}
                 onClick={() =>
                   updateBidQualification(
                     activeBid.id,
@@ -149,15 +170,15 @@ export default function PortalBids() {
                       evidence: "Scope files staged; budget confirmation pending",
                       nextGate: "Confirm budget fit",
                     },
-                    "Qualification command surface updated with budget-fit review."
+                    "Qualification advanced to budget-fit review.",
                   )
                 }
               >
-                Advance Qualification
+                Advance qualification
               </button>
               <button
                 type="button"
-                style={actionButtonStyle}
+                style={portalButtonSecondary}
                 onClick={() =>
                   updateBidQualification(
                     activeBid.id,
@@ -169,30 +190,38 @@ export default function PortalBids() {
                       evidence: "Customer scope, budget, and files confirmed",
                       nextGate: "Route to estimate",
                     },
-                    "Mark Budget Fit confirmed and cleared the estimate gate."
+                    "Budget fit confirmed and estimate gate opened.",
                   )
                 }
               >
-                Mark Budget Fit
+                Mark budget fit confirmed
               </button>
               <button
                 type="button"
-                style={actionButtonStyle}
+                style={portalButtonSecondary}
                 onClick={() => routeBidToEstimate(activeBid.id, "Qualified opportunity routed into estimate production.")}
               >
-                Route to Estimate
+                Route to estimate
               </button>
             </div>
           </div>
 
-          {(() => {
-            const bid = activeBid;
-            return <BidActionCenter bid={bid} updateBidStatus={updateBidStatus} clearBidBlocker={clearBidBlocker} markWonAndCreateProject={markWonAndCreateProject} />;
-          })()}
+          <BidActionCenter
+            bid={activeBid}
+            updateBidStatus={updateBidStatus}
+            clearBidBlocker={clearBidBlocker}
+            markWonAndCreateProject={markWonAndCreateProject}
+          />
         </div>
       ) : null}
 
-      <CommercialContinuityFeed title="Bid revenue continuity feed" detail="Recent qualification, approval, and award moves across the bid workspace." />
+      <div style={{ marginTop: 16, color: portalTokens.muted, fontSize: 12 }}>
+        Workspace sync: {meta.persistenceState}
+      </div>
+
+      <div style={{ marginTop: 16 }}>
+        <CommercialContinuityFeed title="Bid activity" detail="Recent qualification, approval, and award moves." />
+      </div>
     </PortalShell>
   );
 }

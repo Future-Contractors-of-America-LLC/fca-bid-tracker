@@ -19,6 +19,12 @@ import {
   FinanceReportsPanel,
 } from "../../components/finance/FinancePanels";
 import { routeStateOverlays } from "../../systemState";
+import {
+  PortalAlert,
+  PortalLoadingState,
+  formatFinanceViewTitle,
+} from "../../components/portal/PortalPrimitives";
+import { portalCardStyle, portalTokens } from "../../portalDesignTokens";
 
 function readViewFromUrl() {
   if (typeof window === "undefined") return { view: "dashboard", projectId: "", invoiceId: "" };
@@ -89,7 +95,7 @@ export default function PortalFinance() {
   }
 
   function renderContent() {
-    if (finance.loading && !finance.data) return <div style={{ padding: 24 }}>Loading books…</div>;
+    if (finance.loading && !finance.data) return <PortalLoadingState label="Loading FCA Books..." />;
     const payload = finance.data || {};
     switch (finance.view) {
       case "expenses":
@@ -274,8 +280,8 @@ export default function PortalFinance() {
       primaryHref="/portal/billing"
       primaryLabel="Create invoice"
     >
-      {actionError ? <div style={{ marginBottom: 16, padding: 14, borderRadius: 12, background: "#fef2f2", border: "1px solid #fecaca", color: "#991b1b" }}>{actionError}</div> : null}
-      {statusMessage ? <div style={{ marginBottom: 16, padding: 14, borderRadius: 12, background: "#ecfdf5", border: "1px solid #86efac", color: "#166534" }}>{statusMessage}</div> : null}
+      {actionError ? <PortalAlert tone="error">{actionError}</PortalAlert> : null}
+      {statusMessage ? <PortalAlert tone="success">{statusMessage}</PortalAlert> : null}
 
       {finance.projectId ? (
         <AuricruxInsightPanel
@@ -293,10 +299,12 @@ export default function PortalFinance() {
       <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 18, alignItems: "start", marginTop: 16 }}>
         <FinanceSidebar activeView={finance.view} onNavigate={navigate} companyName={companyName} />
         <div>
-          <div style={{ marginBottom: 14, display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+          <div style={{ marginBottom: 14, display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
             <div>
-              <div style={{ color: "#64748b", fontSize: 13 }}>Backing source: {finance.meta.backingSource}</div>
-              <h1 style={{ margin: "4px 0 0", fontSize: 28, textTransform: "capitalize" }}>{finance.view.replace(/_/g, " ")}</h1>
+              <h1 style={{ margin: 0, fontSize: 28 }}>{formatFinanceViewTitle(finance.view)}</h1>
+              <p style={{ color: portalTokens.muted, fontSize: 13, margin: "6px 0 0", lineHeight: 1.55 }}>
+                Use the left navigation to move between AR, AP, banking, job billing, and reports.
+              </p>
             </div>
             <button type="button" onClick={() => finance.refresh()} style={{ border: "1px solid #cbd5e1", background: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}>
               Refresh books

@@ -20,26 +20,21 @@ import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel
 import { routeStateOverlays } from "../../systemState";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import { publishPortalPageContext } from "../../portalPageContext";
+import {
+  PortalAlert,
+  PortalEmptyState,
+  PortalPageIntro,
+  PortalQuickStats,
+  PortalWorkflowStepper,
+} from "../../components/portal/PortalPrimitives";
+import {
+  portalButtonPrimary,
+  portalButtonSecondary,
+  portalCardStyle,
+  portalTokens,
+} from "../../portalDesignTokens";
 
 const PIPELINE_KEY = "fca_commercial_pipeline_v1";
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 16,
-  padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-};
-
-const actionButtonStyle = {
-  borderRadius: 10,
-  border: "1px solid #cbd5e1",
-  background: "#ffffff",
-  color: "#0f172a",
-  fontWeight: 600,
-  padding: "10px 12px",
-  cursor: "pointer",
-};
 
 const STEPS = [
   { key: "qualify", label: "Qualify bid", detail: "Score and qualify the opportunity." },
@@ -358,19 +353,21 @@ export default function PortalPipeline() {
 
   return (
     <PortalShell
-      title={`${companyName} Commercial Pipeline`}
-      subtitle="One guided flow from bid qualification through project award, billing, and payment."
+      title="Commercial pipeline"
+      subtitle="One guided flow from qualification through project award, billing, and payment."
       activeHref="/portal/pipeline"
       currentJourney="bid"
       routeOverlay={routeStateOverlays.bids}
       primaryHref="/portal/bids"
-      primaryLabel="Open Qualification Board"
+      primaryLabel="Open qualification board"
     >
-      {pipelineBanner ? (
-        <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fde68a", background: "#fffbeb", color: "#92400e" }}>
-          {pipelineBanner}
-        </div>
-      ) : null}
+      <PortalPageIntro
+        eyebrow="Pipeline wizard"
+        title={`${companyName} commercial flow`}
+        detail="Select a job, complete each step in order, and keep billing tied to the same opportunity."
+      />
+
+      {pipelineBanner ? <PortalAlert tone="warning">{pipelineBanner}</PortalAlert> : null}
 
       {activeBid?.id ? (
         <div style={{ marginBottom: 18 }}>
@@ -389,16 +386,18 @@ export default function PortalPipeline() {
         </div>
       ) : null}
 
-      {error ? (
-        <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>{error}</div>
-      ) : null}
+      {error ? <PortalAlert tone="error">{error}</PortalAlert> : null}
 
-      <div style={{ ...cardStyle, marginBottom: 18, background: "#f8fafc" }}>
-        <div style={{ color: "#475569", fontSize: 14 }}><strong>Pipeline data source:</strong> {pipelineSource}</div>
-      </div>
+      <PortalQuickStats
+        items={[
+          { label: "Active jobs", value: pipelineRows.length, hint: "In pipeline" },
+          { label: "Current step", value: activePipeline?.current === "done" ? "Complete" : STEPS.find((step) => step.key === activePipeline?.current)?.label || "—", hint: activeBid?.package || "Select a job" },
+          { label: "Completed steps", value: activePipeline ? `${Object.values(activePipeline.complete).filter(Boolean).length}/${STEPS.length}` : "0/5", hint: "For selected job" },
+        ]}
+      />
 
-      <div style={{ ...cardStyle, marginBottom: 18, background: "#eff6ff", borderColor: "#1d4ed8" }}>
-        <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Active jobs</div>
+      <div style={{ ...portalCardStyle, marginBottom: 16 }}>
+        <div style={{ color: portalTokens.primaryInk, fontWeight: 700, marginBottom: 8 }}>Select active job</div>
         <div style={{ display: "grid", gap: 10 }}>
           {pipelineRows.map(({ bid, complete, current }) => (
             <button
@@ -426,69 +425,47 @@ export default function PortalPipeline() {
       </div>
 
       {activeBid && activePipeline ? (
-        <div style={cardStyle}>
+        <div style={portalCardStyle}>
           <h2 style={{ marginTop: 0 }}>{activeBid.package}</h2>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
-            {STEPS.map((step, index) => {
-              const done = activePipeline.complete[step.key];
-              const active = stepIndex === index;
-              return (
-                <div
-                  key={step.key}
-                  style={{
-                    flex: "1 1 120px",
-                    borderRadius: 10,
-                    padding: "10px 12px",
-                    border: active ? "2px solid #1d4ed8" : "1px solid #e2e8f0",
-                    background: done ? "#ecfdf5" : active ? "#eff6ff" : "#f8fafc",
-                    fontSize: 13,
-                    fontWeight: active ? 700 : 500,
-                  }}
-                >
-                  {done ? "Done: " : `${index + 1}. `}{step.label}
-                </div>
-              );
-            })}
-          </div>
-
-          <p style={{ color: "#475569", lineHeight: 1.7 }}>{STEPS[Math.min(stepIndex, STEPS.length - 1)]?.detail}</p>
+          <PortalWorkflowStepper steps={STEPS} currentKey={activePipeline.current === "done" ? "payment" : activePipeline.current} completeMap={activePipeline.complete} />
+          <p style={{ color: portalTokens.body, lineHeight: 1.7 }}>{STEPS[Math.min(stepIndex, STEPS.length - 1)]?.detail}</p>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 14 }}>
             {activePipeline.current === "qualify" ? (
-              <button type="button" style={actionButtonStyle} disabled={busy === "qualify"} onClick={runQualify}>
-                {busy === "qualify" ? "Qualifying..." : "Qualify Opportunity"}
+              <button type="button" style={portalButtonSecondary} disabled={busy === "qualify"} onClick={runQualify}>
+                {busy === "qualify" ? "Qualifying..." : "Qualify opportunity"}
               </button>
             ) : null}
             {activePipeline.current === "project" ? (
-              <button type="button" style={actionButtonStyle} disabled={busy === "project"} onClick={runAward}>
-                {busy === "project" ? "Converting..." : "Award and Create Project"}
+              <button type="button" style={portalButtonSecondary} disabled={busy === "project"} onClick={runAward}>
+                {busy === "project" ? "Converting..." : "Award and create project"}
               </button>
             ) : null}
             {activePipeline.current === "estimate" ? (
               <>
-                <button type="button" style={actionButtonStyle} disabled={busy === "estimate"} onClick={runEstimate}>
-                  {busy === "estimate" ? "Routing..." : "Route to Estimate"}
+                <button type="button" style={portalButtonSecondary} disabled={busy === "estimate"} onClick={runEstimate}>
+                  {busy === "estimate" ? "Routing..." : "Route to estimate"}
                 </button>
-                <button type="button" style={actionButtonStyle} onClick={skipEstimate}>Skip estimate</button>
+                <button type="button" style={portalButtonSecondary} onClick={skipEstimate}>Skip estimate</button>
               </>
             ) : null}
             {activePipeline.current === "invoice" ? (
               <div style={{ width: "100%" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
-                  <input placeholder="Invoice name" value={invoiceDraft.invoiceName} onChange={(e) => setInvoiceDraft((c) => ({ ...c, invoiceName: e.target.value }))} style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }} />
-                  <input placeholder="Amount" value={invoiceDraft.amount} onChange={(e) => setInvoiceDraft((c) => ({ ...c, amount: e.target.value }))} style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }} />
+                  <input placeholder="Invoice name" value={invoiceDraft.invoiceName} onChange={(e) => setInvoiceDraft((c) => ({ ...c, invoiceName: e.target.value }))} style={{ padding: "10px 12px", borderRadius: 10, border: `1px solid ${portalTokens.borderStrong}` }} />
+                  <input placeholder="Amount" value={invoiceDraft.amount} onChange={(e) => setInvoiceDraft((c) => ({ ...c, amount: e.target.value }))} style={{ padding: "10px 12px", borderRadius: 10, border: `1px solid ${portalTokens.borderStrong}` }} />
                 </div>
-                <button type="button" style={actionButtonStyle} disabled={busy === "invoice"} onClick={runInvoice}>
-                  {busy === "invoice" ? "Issuing..." : "Create and Issue Invoice"}
+                <button type="button" style={portalButtonPrimary} disabled={busy === "invoice"} onClick={runInvoice}>
+                  {busy === "invoice" ? "Issuing..." : "Create and issue invoice"}
                 </button>
               </div>
             ) : null}
             {activePipeline.current === "payment" ? (
               <>
-                <button type="button" style={{ ...actionButtonStyle, borderColor: "#16a34a", background: "#16a34a", color: "#fff" }} onClick={runPayment}>
+                <button type="button" style={portalButtonPrimary} onClick={runPayment}>
                   Record payment in FCA Books
                 </button>
-                <a href={`/portal/billing/${activePipeline.linkedInvoice?.id || activePipeline.link?.invoiceId}`} style={{ ...actionButtonStyle, textDecoration: "none", display: "inline-block" }}>View invoice</a>
+                <a href={`/portal/billing/${activePipeline.linkedInvoice?.id || activePipeline.link?.invoiceId}`} style={portalButtonSecondary}>View invoice</a>
               </>
             ) : null}
             {activePipeline.current === "done" ? (
@@ -531,7 +508,7 @@ export default function PortalPipeline() {
               </select>
               <button
                 type="button"
-                style={actionButtonStyle}
+                style={portalButtonSecondary}
                 disabled={busy === "training" || !trainingProgramKey}
                 onClick={assignTrainingProgram}
               >
@@ -542,7 +519,12 @@ export default function PortalPipeline() {
           </div>
         </div>
       ) : (
-        <div style={cardStyle}>No bids available. Open the qualification board to seed opportunities.</div>
+        <PortalEmptyState
+          title="No pipeline jobs yet"
+          detail="Qualify your first opportunity on the bids board, then return here to run the commercial flow."
+          primaryHref="/portal/bids"
+          primaryLabel="Open qualification board"
+        />
       )}
     </PortalShell>
   );

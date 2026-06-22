@@ -1,29 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectActionCenter from "../../components/ProjectActionCenter";
-import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { routeStateOverlays } from "../../systemState";
-
-const cardStyle = {
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 18,
-  background: "#fff",
-  boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-};
-
-const actionButtonStyle = {
-  border: "1px solid #2563eb",
-  background: "#eff6ff",
-  color: "#1d4ed8",
-  borderRadius: 10,
-  padding: "10px 12px",
-  fontWeight: 700,
-  cursor: "pointer",
-};
+import {
+  PortalAlert,
+  PortalEntityTable,
+  PortalPageIntro,
+  PortalQuickStats,
+  PortalStatusBadge,
+} from "../../components/portal/PortalPrimitives";
+import {
+  portalButtonPrimary,
+  portalButtonSecondary,
+  portalCardStyle,
+  portalEyebrowStyle,
+  portalInputStyle,
+  portalTokens,
+} from "../../portalDesignTokens";
 
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
 const PROJECT_COMMAND_KEY = "fca_customer_project_command_v1";
@@ -57,17 +53,34 @@ export default function PortalProjects() {
   const { projects, activeProject, meta, selectActiveProject, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
   const [drafts, setDrafts] = useState(() => readLocalJson(PROJECT_COMMAND_KEY, {}));
+  const [selectedProjectId, setSelectedProjectId] = useState(() => activeProject?.id || projects[0]?.id || "");
 
   useEffect(() => {
-    refreshSyncStamp("Persisted project flow state active");
+    refreshSyncStamp("Project command active");
   }, [refreshSyncStamp]);
 
   useEffect(() => {
     writeLocalJson(PROJECT_COMMAND_KEY, drafts);
   }, [drafts]);
 
-  const visibleProject = activeProject || state.project;
+  const visibleProject = projects.find((project) => project.id === selectedProjectId) || activeProject || state.project;
   const apiBacked = meta.backingSource === "api-workflow-store";
+
+  const tableRows = useMemo(
+    () =>
+      projects.map((project) => ({
+        id: project.id,
+        active: visibleProject?.id === project.id,
+        project,
+        name: `${project.id} · ${project.customer}`,
+        stage: project.stage,
+        owner: project.owner,
+        due: project.due,
+        nextAction: project.nextAction,
+      })),
+    [projects, visibleProject?.id],
+  );
+
   function updateDraft(projectId, key, value) {
     setDrafts((current) => ({
       ...current,
@@ -78,17 +91,39 @@ export default function PortalProjects() {
     }));
   }
 
+  const draft = visibleProject ? (drafts[visibleProject.id] || defaultCommandDraft) : defaultCommandDraft;
+
   return (
     <PortalShell
       title="Projects"
-      subtitle="Track stages, mobilization, and delivery for every active job."
+      subtitle="Select a job, track stage progression, and keep delivery actions in one place."
       activeHref="/portal/projects"
       currentJourney="job"
       routeOverlay={routeStateOverlays.projects}
       primaryHref="/portal/files"
-      primaryLabel="Open Files"
+      primaryLabel="Open project files"
       workspaceState={state}
     >
+      <PortalPageIntro
+        eyebrow="Project command"
+        title="Deliver active jobs with a clear stage model"
+        detail="Pick one project at a time, set the owner note and customer milestone, then advance mobilization or closeout."
+      />
+
+      <PortalQuickStats
+        items={[
+          { label: "Active projects", value: projects.length, hint: "In this workspace" },
+          { label: "Selected project", value: visibleProject?.id || "—", hint: visibleProject?.stage || "No stage" },
+          { label: "Permit posture", value: visibleProject?.permitStatus || "—", hint: visibleProject?.siteStatus || "Site status" },
+        ]}
+      />
+
+      {!apiBacked ? (
+        <PortalAlert tone="warning" title="Limited API sync">
+          Project actions may save locally until workflow API sync is fully available. Your selections still drive the workspace shell.
+        </PortalAlert>
+      ) : null}
+
       {visibleProject?.id ? (
         <div style={{ marginBottom: 16 }}>
           <AuricruxInsightPanel
@@ -96,7 +131,7 @@ export default function PortalProjects() {
             targetObjectId={visibleProject.id}
             sourceRoute="/portal/projects"
             rationale={visibleProject.nextAction || "Advance the active project with governed field, finance, and closeout continuity."}
-            nextAction={visibleProject.nextAction || "Select the next governed project action and preserve cross-lane continuity."}
+            nextAction={visibleProject.nextAction || "Select the next governed project action."}
             actionHref={`/portal/projects/${encodeURIComponent(visibleProject.id)}`}
             actionLabel="Open project home"
             tone="blue"
@@ -105,107 +140,93 @@ export default function PortalProjects() {
         </div>
       ) : null}
 
-      {!apiBacked ? (
-        <div style={{ marginBottom: 16 }}>
-          <ExecutionTruthBanner
-            title="Project continuity shell is active"
-            status="Workspace active"
-            source={meta.backingSource}
-            tone="warning"
-            whatIsLive={[
-              "Active project selection inside the shared workspace shell.",
-              "Project continuity presentation tied to the current workspace context.",
-              "Project-to-files and project-to-audit routing posture.",
-            ]}
-            whatIsNotLiveYet={[
-              "This route is not currently using fully verified API-backed project workflow state for all actions.",
-              "Mutations can fall back to local continuity state when backend workflow calls are unavailable.",
-              "The governed project detail home at /portal/projects/:projectId is not live yet.",
-            ]}
+      <PortalEntityTable
+        columns={[
+          {
+            key: "name",
+            label: "Project",
+            render: (row) => (
+              <button
+                type="button"
+                onClick={() => setSelectedProjectId(row.id)}
+                style={{ border: "none", background: "transparent", padding: 0, textAlign: "left", cursor: "pointer", font: "inherit", color: portalTokens.primaryInk, fontWeight: 700 }}
+              >
+                {row.name}
+              </button>
+            ),
+          },
+          {
+            key: "stage",
+            label: "Stage",
+            render: (row) => <PortalStatusBadge status={row.stage} active={row.active} />,
+          },
+          { key: "owner", label: "Owner" },
+          { key: "due", label: "Due" },
+          { key: "nextAction", label: "Next action" },
+        ]}
+        rows={tableRows}
+        emptyTitle="No active projects yet"
+        emptyDetail="Award a qualified bid in the pipeline wizard to create your first live project."
+        emptyPrimaryHref="/portal/pipeline"
+        emptyPrimaryLabel="Open pipeline"
+      />
+
+      {visibleProject ? (
+        <div style={{ ...portalCardStyle, marginTop: 16 }}>
+          <div style={portalEyebrowStyle}>Selected project workspace</div>
+          <h2 style={{ margin: "6px 0 12px", fontSize: "1.15rem" }}>{visibleProject.id} · {visibleProject.customer}</h2>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginBottom: 14 }}>
+            <label>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>Owner note</div>
+              <input
+                value={draft.ownerNote}
+                onChange={(event) => updateDraft(visibleProject.id, "ownerNote", event.target.value)}
+                style={portalInputStyle}
+                placeholder="What the owner needs next"
+              />
+            </label>
+            <label>
+              <div style={{ fontWeight: 700, marginBottom: 6 }}>Customer milestone</div>
+              <input
+                value={draft.customerMilestone}
+                onChange={(event) => updateDraft(visibleProject.id, "customerMilestone", event.target.value)}
+                style={portalInputStyle}
+                placeholder="Kickoff scheduled"
+              />
+            </label>
+          </div>
+
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 14 }}>
+            <button
+              type="button"
+              style={portalButtonPrimary}
+              onClick={async () => {
+                const selected = await selectActiveProject(visibleProject.id, `${visibleProject.id} selected as active project.`);
+                syncActiveProject(selected || visibleProject, `Active project updated to ${visibleProject.id}`);
+                refreshSyncStamp(`Project root synchronized to ${visibleProject.id}`);
+              }}
+            >
+              Set as active project
+            </button>
+            <button type="button" style={portalButtonSecondary} onClick={() => advanceProjectStage(visibleProject.id, "Mobilization", `${draft.customerMilestone || "Mobilization"} confirmed.`)}>
+              Advance to mobilization
+            </button>
+            <button type="button" style={portalButtonSecondary} onClick={() => advanceProjectStage(visibleProject.id, "Closeout", `Closeout readiness confirmed.`)}>
+              Advance to closeout
+            </button>
+            <button type="button" style={portalButtonSecondary} onClick={() => clearPermitBlocker(visibleProject.id, `Permit blocker cleared for ${visibleProject.id}.`)}>
+              Clear permit blocker
+            </button>
+          </div>
+
+          <ProjectActionCenter
+            project={visibleProject}
+            advanceProjectStage={advanceProjectStage}
+            clearPermitBlocker={clearPermitBlocker}
           />
         </div>
       ) : null}
-
-      <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <h2 style={{ marginTop: 0 }}>Active project</h2>
-        <div style={{ color: "#4b5563", lineHeight: 1.8 }}>
-          <div><strong>Active project root:</strong> {visibleProject?.id || state.project.id}</div>
-          <div><strong>Current stage:</strong> {visibleProject?.stage || state.project.stage}</div>
-          <div><strong>Commercial focus:</strong> {visibleProject?.commercialFocus}</div>
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gap: 16 }}>
-        {projects.map((project) => {
-          const isActive = visibleProject?.id === project.id;
-          const draft = drafts[project.id] || defaultCommandDraft;
-          return (
-            <div key={project.id} style={{ ...cardStyle, border: isActive ? `1px solid ${brandSkin.accent || "#2563eb"}` : cardStyle.border, background: isActive ? brandSkin.surface || "#f8fbff" : cardStyle.background }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                <div>
-                  <h3 style={{ margin: "0 0 6px 0" }}>{project.id} · {project.customer}</h3>
-                  <div style={{ color: "#4b5563", lineHeight: 1.6 }}>
-                    Current stage: <strong>{project.stage}</strong><br />
-                    Next action: {project.nextAction}<br />
-                    Site status: {project.siteStatus}
-                  </div>
-                </div>
-                <div style={{ minWidth: 220, color: "#0f172a", lineHeight: 1.7 }}>
-                  <div><strong>Owner:</strong> {project.owner}</div>
-                  <div><strong>Due:</strong> {project.due}</div>
-                  <div><strong>Superintendent:</strong> {project.superintendent}</div>
-                  <div><strong>Permit status:</strong> {project.permitStatus}</div>
-                </div>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 14 }}>
-                <label>
-                  <div style={{ fontWeight: 700, marginBottom: 6 }}>Owner note</div>
-                  <input value={draft.ownerNote} onChange={(event) => updateDraft(project.id, "ownerNote", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Add the next branded owner note" />
-                </label>
-                <label>
-                  <div style={{ fontWeight: 700, marginBottom: 6 }}>Customer milestone</div>
-                  <input value={draft.customerMilestone} onChange={(event) => updateDraft(project.id, "customerMilestone", event.target.value)} style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }} placeholder="Kickoff scheduled" />
-                </label>
-              </div>
-
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginTop: 14 }}>
-                <div style={{ color: isActive ? brandSkin.accent || "#1d4ed8" : "#64748b", fontWeight: 700 }}>
-                  {isActive ? "Active workspace project" : "Available project root"}
-                </div>
-                <button
-                  type="button"
-                  style={actionButtonStyle}
-                  onClick={async () => {
-                    const selected = await selectActiveProject(project.id, `${project.id} selected as the active project root.`);
-                    syncActiveProject(selected || project, `Active project root updated to ${project.id}`);
-                    refreshSyncStamp(`Project root synchronized to ${project.id}`);
-                  }}
-                >
-                  {isActive ? "Active project selected" : "Set as active project"}
-                </button>
-              </div>
-
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
-                <button type="button" style={actionButtonStyle} onClick={() => advanceProjectStage(project.id, "Mobilization", `${draft.customerMilestone || "Mobilization milestone"} confirmed for ${project.id}. ${draft.ownerNote || "Auricrux advanced the project stage."}`)}>Advance to Mobilization</button>
-                <button type="button" style={actionButtonStyle} onClick={() => advanceProjectStage(project.id, "Closeout", `Closeout readiness confirmed for ${project.id}. ${draft.ownerNote || "Auricrux advanced the project to closeout planning."}`)}>Advance to Closeout</button>
-                <button type="button" style={actionButtonStyle} onClick={() => clearPermitBlocker(project.id, `${draft.customerMilestone || "Customer milestone"} active and permit blocker cleared for ${project.id}.`)}>Clear Permit Blocker</button>
-              </div>
-
-              <ProjectActionCenter project={project} advanceProjectStage={advanceProjectStage} clearPermitBlocker={clearPermitBlocker} />
-            </div>
-          );
-        })}
-      </div>
-
-      <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Project Command</h2>
-        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains active stage, blocker posture, and milestone readiness</li>
-          <li>Recommends next delivery and customer-communication actions</li>
-          <li>Executes project selection, stage advancement, and permit-path recovery</li>
-        </ul>
-      </div>
     </PortalShell>
   );
 }

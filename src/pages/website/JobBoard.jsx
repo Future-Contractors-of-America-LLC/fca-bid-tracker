@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MarketingPageShell from "../../components/MarketingPageShell";
 import { fetchJobBoardContractors, fetchJobBoardJobs } from "../../api/leadsBoardClient";
 import { cardStyle, ctaPrimaryStyle, ctaSecondaryStyle, responsiveGrid } from "../../publicShellStyles";
@@ -26,6 +26,8 @@ export default function JobBoard() {
   const [jobs, setJobs] = useState([]);
   const [contractors, setContractors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+  const [tradeFilter, setTradeFilter] = useState("all");
 
   useEffect(() => {
     let cancelled = false;
@@ -45,6 +47,30 @@ export default function JobBoard() {
       cancelled = true;
     };
   }, []);
+
+  const tradeOptions = useMemo(() => {
+    const values = new Set(jobs.map((job) => job.trade).filter(Boolean));
+    return ["all", ...values];
+  }, [jobs]);
+
+  const filteredJobs = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return jobs.filter((job) => {
+      const matchesTrade = tradeFilter === "all" || job.trade === tradeFilter;
+      if (!needle) return matchesTrade;
+      const haystack = `${job.title} ${job.trade} ${job.location} ${job.owner}`.toLowerCase();
+      return matchesTrade && haystack.includes(needle);
+    });
+  }, [jobs, query, tradeFilter]);
+
+  const filteredContractors = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return contractors;
+    return contractors.filter((contractor) => {
+      const haystack = `${contractor.name} ${contractor.trades.join(" ")} ${contractor.region}`.toLowerCase();
+      return haystack.includes(needle);
+    });
+  }, [contractors, query]);
 
   return (
     <MarketingPageShell
@@ -78,13 +104,39 @@ export default function JobBoard() {
         ))}
       </div>
 
+      <div style={{ ...cardStyle, marginBottom: 20, display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+        <label style={{ display: "block" }}>
+          <div style={{ fontWeight: 700, marginBottom: 6 }}>Search</div>
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Trade, city, owner, contractor..."
+            style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }}
+          />
+        </label>
+        {activeTab === "jobs" ? (
+          <label style={{ display: "block" }}>
+            <div style={{ fontWeight: 700, marginBottom: 6 }}>Trade</div>
+            <select
+              value={tradeFilter}
+              onChange={(event) => setTradeFilter(event.target.value)}
+              style={{ width: "100%", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1", boxSizing: "border-box" }}
+            >
+              {tradeOptions.map((trade) => (
+                <option key={trade} value={trade}>{trade === "all" ? "All trades" : trade}</option>
+              ))}
+            </select>
+          </label>
+        ) : null}
+      </div>
+
       {loading ? (
         <div style={cardStyle}>Loading board data…</div>
       ) : null}
 
       {!loading && activeTab === "jobs" ? (
         <section style={responsiveGrid(300)}>
-          {jobs.map((job) => (
+          {filteredJobs.map((job) => (
             <article key={job.id} style={cardStyle}>
               <div style={{ color: "#15803d", fontWeight: 800, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
                 {job.status}
@@ -107,7 +159,7 @@ export default function JobBoard() {
 
       {!loading && activeTab === "contractors" ? (
         <section style={responsiveGrid(280)}>
-          {contractors.map((contractor) => (
+          {filteredContractors.map((contractor) => (
             <article key={contractor.id} style={cardStyle}>
               <div style={{ color: "#1d4ed8", fontWeight: 800, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 8 }}>
                 {contractor.rating}
