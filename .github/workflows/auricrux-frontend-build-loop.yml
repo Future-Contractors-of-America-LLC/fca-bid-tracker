@@ -29,6 +29,7 @@ jobs:
         with:
           repository: Future-Contractors-of-America-LLC/auricrux-central
           path: auricrux-central-work
+          token: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v5
