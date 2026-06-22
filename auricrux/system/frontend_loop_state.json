@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "runCount": 6,
-  "lastRunUtc": "2026-06-20T01:15:49Z",
+  "runCount": 7,
+  "lastRunUtc": "2026-06-22T18:24:04Z",
   "lastOk": true,
   "validators": [
     {
@@ -10,6 +10,14 @@
     },
     {
       "script": "validate-finance-workspace.mjs",
+      "ok": true
+    },
+    {
+      "script": "validate-portal-ux-sweep.mjs",
+      "ok": true
+    },
+    {
+      "step": "build:spa",
       "ok": true
     }
   ]
