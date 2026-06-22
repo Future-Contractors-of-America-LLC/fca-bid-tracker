@@ -78,7 +78,7 @@ async function createEmbeddedCheckoutSession(stripe, options) {
   }
 
   const session = await stripe.checkout.sessions.create({
-    ui_mode: "embedded",
+    ui_mode: "embedded_page",
     mode,
     line_items: [{ price: priceId, quantity: 1 }],
     return_url: returnUrl,
