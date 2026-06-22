@@ -34,11 +34,29 @@ $planEnv = @{
   "enterprise" = "STRIPE_ENTERPRISE_PAYMENT_LINK"
 }
 
+$planPriceEnv = @{
+  "startup" = "STRIPE_STARTUP_PRICE_ID"
+  "starter-team" = "STRIPE_STARTER_TEAM_PRICE_ID"
+  "pilot" = "STRIPE_PILOT_PRICE_ID"
+  "team" = "STRIPE_TEAM_PRICE_ID"
+  "operations" = "STRIPE_OPERATIONS_PRICE_ID"
+  "growth" = "STRIPE_GROWTH_PRICE_ID"
+  "scale" = "STRIPE_SCALE_PRICE_ID"
+  "enterprise" = "STRIPE_ENTERPRISE_PRICE_ID"
+}
+
 $centralSettings = @()
 foreach ($entry in $planEnv.GetEnumerator()) {
   $url = $catalog.workspace.($entry.Key).paymentLinkUrl
   if ($url) {
     $centralSettings += "$($entry.Value)=$url"
+  }
+}
+
+foreach ($entry in $planPriceEnv.GetEnumerator()) {
+  $priceId = $catalog.workspace.($entry.Key).priceId
+  if ($priceId) {
+    $centralSettings += "$($entry.Value)=$priceId"
   }
 }
 
@@ -63,6 +81,9 @@ if ($FromStripeConfig) {
 
 if ($StripeSecretKey) {
   $centralSettings += "STRIPE_SECRET_KEY=$StripeSecretKey"
+}
+if ($StripePublishableKey) {
+  $centralSettings += "STRIPE_PUBLISHABLE_KEY=$StripePublishableKey"
 }
 
 if ($centralSettings.Count -eq 0) {
