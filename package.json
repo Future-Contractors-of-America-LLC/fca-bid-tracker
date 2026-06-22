@@ -22,6 +22,7 @@
     "qc:market": "node scripts/run-market-qc.mjs",
     "qc:saas": "node scripts/run-saas-qc.mjs",
     "smoke:central-spine": "node scripts/smoke-central-spine.mjs",
+    "train:auricrux-local": "node scripts/run-auricrux-local-training.mjs",
     "qc:lms": "node scripts/run-lms-qc.mjs",
     "qc:product": "node scripts/run-saas-qc.mjs && node scripts/run-lms-qc.mjs",
     "verify:live-deployment": "node scripts/verify-live-deployment.mjs",
