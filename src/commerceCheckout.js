@@ -1,5 +1,5 @@
-import { pricingTiers } from "./websiteShell";
-import { pricingPlanCatalog } from "./pricingPlans";
+import { pricingTiers } from "./websiteShell.js";
+import { pricingPlanCatalog } from "./pricingPlans.js";
 
 function humanizeKey(key = "") {
   return key

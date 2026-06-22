@@ -24,7 +24,13 @@ export const commercialOffers = {
   },
 };
 
-import { workspaceCheckoutHref } from "./commerceCheckout.js";
+function workspaceCheckoutPath(tierKey, options = {}) {
+  const params = new URLSearchParams({ plan: tierKey });
+  if (options.email) params.set("email", options.email);
+  if (options.ref) params.set("ref", options.ref);
+  if (options.cancelled) params.set("cancelled", "1");
+  return `/checkout?${params.toString()}`;
+}
 
 /** @deprecated Prefer workspaceCheckoutHref for integrated checkout flow. */
 export function checkoutUrlForTier(tierKey) {
@@ -35,5 +41,5 @@ export function checkoutUrlForTier(tierKey) {
 
 export function checkoutPathForTier(tierKey, options = {}) {
   if (!tierKey) return "/checkout";
-  return workspaceCheckoutHref(tierKey, options);
+  return workspaceCheckoutPath(tierKey, options);
 }

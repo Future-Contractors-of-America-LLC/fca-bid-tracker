@@ -100,7 +100,16 @@ function main() {
   writeJson(RECEIPT_FILE, receipt);
 
   console.log(receipt.summary);
-  if (!ok) process.exit(1);
+  if (!ok) {
+    for (const result of results) {
+      if (result.ok || result.skipped) continue;
+      const label = result.script || result.step || "validator";
+      console.error(`FAILED: ${label}`);
+      if (result.detail) console.error(result.detail);
+      else if (result.reason) console.error(result.reason);
+    }
+    process.exit(1);
+  }
 }
 
 main();
