@@ -80,6 +80,15 @@ const getChecks = [
   "/api/warranty-cases",
   "/api/field-photos",
   "/api/auricrux/actions",
+  "/api/customer-auth-state",
+  "/api/academy-commerce?limit=1",
+  "/api/commercial-pipeline",
+];
+
+const detailChecks = [
+  { route: "/api/projects/PRJ-SMOKE-001", allowStatuses: [200, 404] },
+  { route: "/api/opportunities/LEAD-SMOKE-001", allowStatuses: [200, 404] },
+  { route: "/api/portal-invoices/INV-SMOKE-001", allowStatuses: [200, 404] },
 ];
 
 for (const route of getChecks) {
@@ -87,6 +96,21 @@ for (const route of getChecks) {
     const { response } = await getJson(route);
     if (response.ok) pass(`GET ${route}`, `HTTP ${response.status}`);
     else fail(`GET ${route}`, `HTTP ${response.status}`);
+  } catch (error) {
+    fail(`GET ${route}`, error.message);
+  }
+}
+
+for (const { route, allowStatuses } of detailChecks) {
+  try {
+    const { response, body } = await getJson(route);
+    if (allowStatuses.includes(response.status) && response.status !== 500) {
+      pass(`GET ${route}`, `HTTP ${response.status}`);
+    } else if (response.status === 500 && body?.error?.includes("missing 1 required positional argument")) {
+      fail(`GET ${route}`, "route handler context dispatch bug (deploy v1_routes fix)");
+    } else {
+      fail(`GET ${route}`, `HTTP ${response.status}`);
+    }
   } catch (error) {
     fail(`GET ${route}`, error.message);
   }
