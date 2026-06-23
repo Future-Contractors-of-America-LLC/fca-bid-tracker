@@ -24,6 +24,11 @@ jobs:
       - name: Checkout frontend
         uses: actions/checkout@v6
 
+      - name: Verify AURICRUX_GITHUB_TOKEN
+        env:
+          AURICRUX_GITHUB_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+        run: bash scripts/ci/verify-auricrux-token.sh
+
       - name: Checkout auricrux-central (finance spine validation)
         uses: actions/checkout@v6
         with:
@@ -54,4 +59,7 @@ jobs:
             exit 0
           fi
           git commit -m "Auricrux frontend build loop $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          git push || true
+          if ! git push; then
+            echo "::error::Frontend build loop could not push to main. Ensure AURICRUX_GITHUB_TOKEN or GITHUB_TOKEN has contents: write on this repository."
+            exit 1
+          fi

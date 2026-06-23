@@ -7,6 +7,7 @@ import ProductIllustration from "../../components/ProductIllustration";
 import { auricruxPersona } from "../../config/auricruxPersona";
 import LoginActionCenter from "../../components/LoginActionCenter";
 import { centralFetch } from "../../api/backendBase";
+import { verifyCustomerLogin } from "../../api/authClient";
 import { isAllowedPostLoginHref, resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -67,6 +68,15 @@ async function authenticateWorkspaceAccount(email, password) {
       body: JSON.stringify({ email, password }),
     });
     const payload = await response.json();
+    if (response.ok && payload?.ok && payload?.requiresVerification) {
+      return {
+        requiresVerification: true,
+        challengeId: payload.challengeId,
+        maskedEmail: payload.maskedEmail,
+        devVerificationHint: payload.devVerificationHint,
+        deliveryChannel: payload.deliveryChannel,
+      };
+    }
     if (response.ok && payload?.ok && payload?.account) {
       return {
         ...payload.account,
@@ -86,7 +96,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const { session, isAuthenticated, login, logout } = useCustomerSession();
   const [form, setForm] = useState(EMPTY_FORM);
   const [verificationCode, setVerificationCode] = useState("");
-  const [pendingAccount, setPendingAccount] = useState(null);
+  const [pendingChallenge, setPendingChallenge] = useState(null);
   const [error, setError] = useState("");
   const [authStatus, setAuthStatus] = useState("idle");
   const autologinAttemptedRef = useRef(false);
@@ -113,7 +123,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       if (cancelled) return;
       setForm(EMPTY_FORM);
       setVerificationCode("");
-      setPendingAccount(null);
+      setPendingChallenge(null);
       setAuthStatus("idle");
       setError("");
       redirectAttemptedRef.current = false;
@@ -212,13 +222,17 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     setAuthStatus("authenticating");
     try {
       const authenticatedAccount = await authenticateWorkspaceAccount(form.email, form.password);
+      if (authenticatedAccount?.requiresVerification) {
+        setPendingChallenge(authenticatedAccount);
+        setVerificationCode("");
+        setAuthStatus("awaiting-verification");
+        return;
+      }
       if (queryState.seeded) {
         completeLogin(authenticatedAccount);
         return;
       }
-      setPendingAccount(authenticatedAccount);
-      setVerificationCode("");
-      setAuthStatus("awaiting-verification");
+      completeLogin(authenticatedAccount);
     } catch (submitError) {
       setAuthStatus("failed");
       setError(submitError?.message || "Customer authentication failed.");
@@ -231,7 +245,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       setError("Enter the 6-digit verification code from your email or authenticator app.");
       return;
     }
-    if (!pendingAccount) {
+    if (!pendingChallenge?.challengeId) {
       setError("Start sign-in again.");
       setAuthStatus("idle");
       return;
@@ -239,7 +253,16 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     setError("");
     setAuthStatus("authenticating");
     try {
-      completeLogin(pendingAccount);
+      const payload = await verifyCustomerLogin({
+        challengeId: pendingChallenge.challengeId,
+        code: verificationCode.trim(),
+      });
+      completeLogin({
+        ...payload.account,
+        authBoundary: payload.authBoundary,
+        accountSource: payload.authenticationMode || "api",
+      });
+      setPendingChallenge(null);
     } catch (verifyError) {
       setAuthStatus("failed");
       setError(verifyError?.message || "Verification failed.");
@@ -250,7 +273,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     await logout();
     setForm(EMPTY_FORM);
     setVerificationCode("");
-    setPendingAccount(null);
+    setPendingChallenge(null);
     setAuthStatus("idle");
     setError("");
     navigateTo("/login");
@@ -285,6 +308,9 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
           {authStatus === "awaiting-verification" ? (
             <>
+              <p style={{ color: "#64748b", fontSize: 13, marginTop: 0, marginBottom: 12, lineHeight: 1.55 }}>
+                Enter the 6-digit code sent to {pendingChallenge?.maskedEmail || "your email"}.
+              </p>
               <label style={{ fontWeight: 600, fontSize: 14 }}>Verification code</label>
               <input
                 style={portalInputStyle}

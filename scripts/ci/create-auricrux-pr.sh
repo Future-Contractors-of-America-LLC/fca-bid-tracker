@@ -103,5 +103,7 @@ fi
 
 echo "::error::Could not create pull request for ${HEAD}."
 echo "::error::Option A — Repo Settings → Actions → General → enable \"Allow GitHub Actions to create and approve pull requests\" (uses GITHUB_TOKEN)."
-echo "::error::Option B — Set AURICRUX_GITHUB_TOKEN to a classic PAT with repo scope, or a fine-grained PAT with Pull requests Read and write on ${REPO}. Authorize SSO for the org if required."
+echo "::error::Option B — Set AURICRUX_GITHUB_TOKEN as an org secret (recommended) with classic repo scope, or a fine-grained PAT with Pull requests Read and write on ${REPO}. Authorize SSO for the org if required."
+echo "::error::gh secret set AURICRUX_GITHUB_TOKEN --org Future-Contractors-of-America-LLC --visibility selected --repos auricrux-central,fca-bid-tracker"
+echo "::error::Option C — If PR creation succeeds but labels fail, grant Issues Read and write on ${REPO}."
 exit 1

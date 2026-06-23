@@ -22,7 +22,7 @@ function base64UrlDecode(value) {
 }
 
 function signPayload(payload) {
-  return crypto.createHmac("sha256", getSessionSecret()).update(payload).digest("base64url");
+  return crypto.createHmac("sha256", getSessionSecret()).update(payload).digest("hex");
 }
 
 export function buildAuthBoundary(overrides = {}) {

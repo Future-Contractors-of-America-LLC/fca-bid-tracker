@@ -19,3 +19,16 @@ export async function fetchCustomerAuthState() {
   }
   return payload;
 }
+
+export async function verifyCustomerLogin({ challengeId, code }) {
+  const response = await centralFetch("/api/customer-verify", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ challengeId, code }),
+  });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) {
+    throw new Error(payload?.error || "Invalid or expired verification code.");
+  }
+  return payload;
+}

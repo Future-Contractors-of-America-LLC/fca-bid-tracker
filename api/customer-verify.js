@@ -1,22 +1,13 @@
 import { app } from "@azure/functions";
-import { validateCustomerCredentials } from "./customer-account-store.js";
 import { buildAuthBoundary, buildServerSession, createSessionCookie } from "./auth-boundary.js";
-import { createLoginChallenge } from "./verification-challenges.js";
+import { verifyLoginChallenge } from "./verification-challenges.js";
 
-function login2faRequired(account) {
-  if (["1", "true", "yes"].includes(String(process.env.FCA_DISABLE_LOGIN_2FA || "").toLowerCase())) {
-    return false;
-  }
-  return account?.accountMode !== "seeded";
-}
-
-app.http("customer-login", {
+app.http("customer-verify", {
   methods: ["POST"],
   authLevel: "anonymous",
-  route: "customer-login",
+  route: "customer-verify",
   handler: async (request) => {
     let payload;
-
     try {
       payload = await request.json();
     } catch {
@@ -30,35 +21,32 @@ app.http("customer-login", {
       };
     }
 
-    const account = validateCustomerCredentials(payload?.email, payload?.password);
+    const challengeId = String(payload?.challengeId || "").trim();
+    const code = String(payload?.code || "").trim();
+    if (!challengeId || !code) {
+      return {
+        status: 400,
+        jsonBody: {
+          ok: false,
+          error: "challengeId and code are required.",
+          authBoundary: buildAuthBoundary(),
+        },
+      };
+    }
 
+    const account = verifyLoginChallenge(challengeId, code);
     if (!account) {
       return {
         status: 401,
         jsonBody: {
           ok: false,
-          error: "The customer email or password is invalid.",
+          error: "Invalid or expired verification code.",
           authBoundary: buildAuthBoundary(),
-        },
-      };
-    }
-
-    if (login2faRequired(account)) {
-      const challenge = createLoginChallenge(account);
-      return {
-        status: 200,
-        jsonBody: {
-          ok: true,
-          requiresVerification: true,
-          ...challenge,
-          authBoundary: buildAuthBoundary(),
-          timestamp: new Date().toISOString(),
         },
       };
     }
 
     const { cookie } = createSessionCookie(account);
-
     return {
       status: 200,
       headers: {

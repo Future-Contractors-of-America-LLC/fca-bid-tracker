@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import MarketingPageShell from "../../components/MarketingPageShell";
-import { fetchJobBoardContractors, fetchJobBoardJobs } from "../../api/leadsBoardClient";
+import { fetchJobBoardContractors, fetchJobBoardJobs, postJobBoardOpportunity } from "../../api/leadsBoardClient";
 import { cardStyle, ctaPrimaryStyle, ctaSecondaryStyle, responsiveGrid } from "../../publicShellStyles";
 
 const tabs = [
@@ -26,20 +26,27 @@ export default function JobBoard() {
   const [jobs, setJobs] = useState([]);
   const [contractors, setContractors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [boardSource, setBoardSource] = useState("");
+  const [boardError, setBoardError] = useState("");
   const [query, setQuery] = useState("");
   const [tradeFilter, setTradeFilter] = useState("all");
+  const [postDraft, setPostDraft] = useState({ title: "", trade: "", location: "", value: "", company: "", notes: "" });
+  const [postStatus, setPostStatus] = useState("idle");
+  const [postError, setPostError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
       setLoading(true);
-      const [jobRows, contractorRows] = await Promise.all([
+      const [jobResult, contractorResult] = await Promise.all([
         fetchJobBoardJobs(),
         fetchJobBoardContractors(),
       ]);
       if (cancelled) return;
-      setJobs(jobRows);
-      setContractors(contractorRows);
+      setJobs(jobResult.jobs || []);
+      setContractors(contractorResult.contractors || []);
+      setBoardSource(jobResult.source || contractorResult.source || "");
+      setBoardError(jobResult.error || contractorResult.error || "");
       setLoading(false);
     }
     load();
@@ -130,11 +137,24 @@ export default function JobBoard() {
         ) : null}
       </div>
 
+      {boardError ? (
+        <div style={{ ...cardStyle, marginBottom: 16, borderLeft: "4px solid #f59e0b", color: "#92400e" }}>{boardError}</div>
+      ) : null}
+      {boardSource === "live" ? (
+        <div style={{ ...cardStyle, marginBottom: 16, borderLeft: "4px solid #15803d", color: "#166534", fontSize: 13 }}>
+          Live FCA network data
+        </div>
+      ) : null}
+
       {loading ? (
         <div style={cardStyle}>Loading board data…</div>
       ) : null}
 
-      {!loading && activeTab === "jobs" ? (
+      {!loading && activeTab === "jobs" && !filteredJobs.length ? (
+        <div style={cardStyle}>No jobs match your filters yet.</div>
+      ) : null}
+
+      {!loading && activeTab === "jobs" && filteredJobs.length ? (
         <section style={responsiveGrid(300)}>
           {filteredJobs.map((job) => (
             <article key={job.id} style={cardStyle}>
@@ -157,7 +177,11 @@ export default function JobBoard() {
         </section>
       ) : null}
 
-      {!loading && activeTab === "contractors" ? (
+      {!loading && activeTab === "contractors" && !filteredContractors.length ? (
+        <div style={cardStyle}>No contractors match your search yet.</div>
+      ) : null}
+
+      {!loading && activeTab === "contractors" && filteredContractors.length ? (
         <section style={responsiveGrid(280)}>
           {filteredContractors.map((contractor) => (
             <article key={contractor.id} style={cardStyle}>
@@ -179,12 +203,45 @@ export default function JobBoard() {
         <section style={{ ...cardStyle, maxWidth: 720 }}>
           <h2 style={{ marginTop: 0 }}>Post an opportunity</h2>
           <p style={{ color: "#475569", lineHeight: 1.7 }}>
-            Owners and GCs can publish upcoming work to the FCA network. Contractors respond through authenticated workspace bids and pipeline lanes.
+            Publish upcoming work to the FCA network. Opportunities are stored in the governed leads spine and appear on the open jobs board.
           </p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <a href="/intake" style={ctaPrimaryStyle}>Start owner intake</a>
-            <a href="/login" style={ctaSecondaryStyle}>Sign in to publish</a>
-          </div>
+          <form
+            style={{ display: "grid", gap: 12, marginTop: 16 }}
+            onSubmit={async (event) => {
+              event.preventDefault();
+              setPostError("");
+              setPostStatus("submitting");
+              try {
+                await postJobBoardOpportunity(postDraft);
+                setPostStatus("success");
+                setPostDraft({ title: "", trade: "", location: "", value: "", company: "", notes: "" });
+                const jobResult = await fetchJobBoardJobs();
+                setJobs(jobResult.jobs || []);
+                setBoardSource(jobResult.source || "live");
+                setActiveTab("jobs");
+              } catch (error) {
+                setPostStatus("failed");
+                setPostError(error?.message || "Unable to publish opportunity.");
+              }
+            }}
+          >
+            <input value={postDraft.title} onChange={(event) => setPostDraft((current) => ({ ...current, title: event.target.value }))} placeholder="Project title" required style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }} />
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12 }}>
+              <input value={postDraft.trade} onChange={(event) => setPostDraft((current) => ({ ...current, trade: event.target.value }))} placeholder="Trade" required style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }} />
+              <input value={postDraft.location} onChange={(event) => setPostDraft((current) => ({ ...current, location: event.target.value }))} placeholder="City / region" required style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }} />
+              <input value={postDraft.value} onChange={(event) => setPostDraft((current) => ({ ...current, value: event.target.value }))} placeholder="Estimated value" type="number" min="0" style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }} />
+            </div>
+            <input value={postDraft.company} onChange={(event) => setPostDraft((current) => ({ ...current, company: event.target.value }))} placeholder="Owner / GC company" style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }} />
+            <textarea value={postDraft.notes} onChange={(event) => setPostDraft((current) => ({ ...current, notes: event.target.value }))} placeholder="Scope notes" rows={4} style={{ padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }} />
+            {postError ? <div style={{ color: "#b91c1c", fontWeight: 600 }}>{postError}</div> : null}
+            {postStatus === "success" ? <div style={{ color: "#15803d", fontWeight: 600 }}>Opportunity published to the job board.</div> : null}
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <button type="submit" style={ctaPrimaryStyle} disabled={postStatus === "submitting"}>
+                {postStatus === "submitting" ? "Publishing..." : "Publish to job board"}
+              </button>
+              <a href="/login" style={ctaSecondaryStyle}>Sign in for full pipeline</a>
+            </div>
+          </form>
         </section>
       ) : null}
     </MarketingPageShell>
