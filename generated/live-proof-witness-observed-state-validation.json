@@ -1,13 +1,13 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-23T01:31:56.033Z",
-  "observedCommitSha": "f24d1c9eb2d11935276bef765329ace7824c0122",
-  "observedCommitMessage": "Persist live deployment run witness for run 27994004376",
+  "generatedAt": "2026-06-23T01:36:06.326Z",
+  "observedCommitSha": "0815c5b09841c167e419ddfe96481f62ded5614e",
+  "observedCommitMessage": "Persist live deployment run witness for run 27995870885",
   "observedWitness": {
     "provenance": "github_actions_ci",
     "ciPersisted": true,
-    "ciRunId": "27995870900",
-    "ciCommitSha": "4e1ac1ec55481a8be0bff4f8480a0e0af34ac66c",
+    "ciRunId": "27996037350",
+    "ciCommitSha": "95f97d403970fa6d083e48026fc6cbf5146095a2",
     "workflow": "FCA Live Deployment Proof Stamp"
   },
   "success": false,
