@@ -97,13 +97,15 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
     publishAcademyContext({
       programKey: programId,
       programTitle: program.title,
+      programLevel: program.level || 1,
       moduleNumber,
       moduleTitle: module.title,
       lane: program.lane || program.pathwayKey || "",
       objective: module.objective || "",
+      completedModules: completedNumbers.length,
     });
     return () => publishAcademyContext(null);
-  }, [program, module, programId, moduleNumber]);
+  }, [program, module, programId, moduleNumber, completedNumbers.length]);
 
   async function handleQuizSubmit(score) {
     if (!enrollment?.enrollmentId) {

@@ -20,6 +20,18 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
 .player-time { margin-left: auto; color: #cbd5e1; }
 .transcript { padding: 18px 20px; line-height: 1.8; color: #cbd5e1; font-size: 15px; }
 .footer { margin-top: 24px; color: #64748b; font: 500 13px/1.6 system-ui; text-align: center; }
+
+.auricrux-presenter { display:flex; gap:18px; align-items:center; margin-top:18px; padding:16px; background:rgba(255,255,255,0.08); border-radius:14px; border:1px solid rgba(255,255,255,0.12); }
+.auricrux-presenter-copy { font:500 14px/1.65 system-ui,sans-serif; color:rgba(255,255,255,0.92); }
+.auricrux-presenter-copy strong { display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:4px; color:#fde68a; }
+.auricrux-avatar-static { width:88px; height:88px; flex-shrink:0; border-radius:50%; object-fit:contain; background:#0f172a; border:3px solid #D49A22; animation:auricrux-float 4.5s ease-in-out infinite; box-shadow:0 4px 18px rgba(0,0,0,0.35); }
+.auricrux-presenter[data-tier="1"] .auricrux-avatar-static { border-color:#94a3b8; }
+.auricrux-presenter[data-tier="2"] .auricrux-avatar-static { border-color:#60a5fa; }
+.auricrux-presenter[data-tier="3"] .auricrux-avatar-static { border-color:#D49A22; }
+.auricrux-presenter[data-tier="4"] .auricrux-avatar-static { border-color:#f59e0b; }
+.auricrux-presenter[data-tier="5"] .auricrux-avatar-static { border-color:#fde68a; box-shadow:0 4px 22px rgba(212,154,34,0.45); }
+@keyframes auricrux-float { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-3px);} }
+
 </style>
 </head>
 <body>
@@ -27,10 +39,19 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
 <div class="hero">
 <span class="badge">Auricrux Recorded Lecture · Professional Development Lecture</span>
 <h1>Module 4: Daily Operator Rhythm</h1>
-<div class="meta">FCA Contractor Command User Guide · fca-contractor-command-user-guide · Taught by Auricrux · Field-tested practitioner standard</div>
+<div class="meta">FCA Contractor Command User Guide · fca-contractor-command-user-guide · Taught by Auricrux · Curriculum alignment and exam preparation only</div>
+
+<div class="auricrux-presenter" data-tier="1" data-speech-tier="1">
+  <img class="auricrux-avatar-static" src="/brand/auricrux/auricrux-humanoid-mark.svg" alt="Auricrux humanoid operator sigil" width="88" height="88" loading="lazy" />
+  <div class="auricrux-presenter-copy">
+    <strong>Auricrux - Apprentice instructor</strong>
+    Plain jobsite language. I teach fundamentals the way I onboard a first-week apprentice - clear steps, no assumptions, and respect for the standard.
+  </div>
 </div>
 
-<section id="lesson-1" class="chapter">
+</div>
+
+<section id="lesson-1" class="chapter" data-speech-tier="1">
   <div class="chapter-head">
     <span class="chapter-num">Lesson 1 of 4</span>
     <h2>Operator walkthrough: Daily Operator Rhythm</h2>
@@ -38,17 +59,17 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
   <div class="player" role="region" aria-label="Auricrux recorded lecture lesson 1">
     <div class="player-bar">
       <span class="play-dot"></span>
-      <span class="player-label">Auricrux · Master practitioner lecture</span>
+      <span class="player-label">Auricrux - Apprentice lecture</span>
       <span class="player-time">~18 min</span>
     </div>
     <div class="transcript">
       <p><strong>Auricrux presents:</strong> Operator walkthrough: Daily Operator Rhythm</p>
-      <p>I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Operator walkthrough: Daily Operator Rhythm, I am teaching you the way I would onboard someone on my own payroll.</p><p>Module focus: Daily Operator Rhythm. Objective: Morning readiness, midday execution checks, and close-of-day reporting.</p><p>In Contractor Command, daily operator rhythm only creates value when the file spine, billing posture, and field record stay aligned. I will show the sequence I require before any client-visible action.</p><p>Pause the lecture, open your lab workbook, and replicate the procedure I demonstrate next. Photograph or log evidence the way FCA Contractor Command User Guide requires before you attempt the knowledge check.</p>
+      <p>I am Auricrux. In this segment on Operator intent: why Daily Operator Rhythm exists in FCA, I am teaching you the way I onboard a new apprentice on my crew - one clear step at a time.</p><p>Module focus: Daily Operator Rhythm. Objective: Morning readiness, midday execution checks, and close-of-day reporting. I built this workflow because contractors lose margin when daily operator rhythm is inconsistent. Learn the business outcome first, then the clicks.</p><p>In Contractor Command, daily operator rhythm only creates value when the file spine, billing posture, and field record stay aligned. I will show the sequence I require before any client-visible action.</p><p>Pause the lecture, open your lab workbook, and repeat each step I demonstrate. Log evidence the way FCA Contractor Command User Guide requires before the knowledge check.</p>
     </div>
   </div>
 </section>
 
-<section id="lesson-2" class="chapter">
+<section id="lesson-2" class="chapter" data-speech-tier="1">
   <div class="chapter-head">
     <span class="chapter-num">Lesson 2 of 4</span>
     <h2>Live portal lab steps for daily operator rhythm</h2>
@@ -56,17 +77,17 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
   <div class="player" role="region" aria-label="Auricrux recorded lecture lesson 2">
     <div class="player-bar">
       <span class="play-dot"></span>
-      <span class="player-label">Auricrux · Master practitioner lecture</span>
+      <span class="player-label">Auricrux - Apprentice lecture</span>
       <span class="player-time">~18 min</span>
     </div>
     <div class="transcript">
       <p><strong>Auricrux presents:</strong> Live portal lab steps for daily operator rhythm</p>
-      <p>I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Live portal lab steps for daily operator rhythm, I am teaching you the way I would onboard someone on my own payroll.</p><p>Module focus: Daily Operator Rhythm. Objective: Morning readiness, midday execution checks, and close-of-day reporting.</p><p>In Contractor Command, daily operator rhythm only creates value when the file spine, billing posture, and field record stay aligned. I will show the sequence I require before any client-visible action.</p><p>Pause the lecture, open your lab workbook, and replicate the procedure I demonstrate next. Photograph or log evidence the way FCA Contractor Command User Guide requires before you attempt the knowledge check.</p>
+      <p>I am Auricrux. In this segment on Step-by-step in Contractor Command, I am teaching you the way I onboard a new apprentice on my crew - one clear step at a time.</p><p>Module focus: Daily Operator Rhythm. Objective: Morning readiness, midday execution checks, and close-of-day reporting. Follow my exact sequence in the FCA portal for daily operator rhythm - with the governance fields I require before any client-facing action.</p><p>In Contractor Command, daily operator rhythm only creates value when the file spine, billing posture, and field record stay aligned. I will show the sequence I require before any client-visible action.</p><p>Pause the lecture, open your lab workbook, and repeat each step I demonstrate. Log evidence the way FCA Contractor Command User Guide requires before the knowledge check.</p>
     </div>
   </div>
 </section>
 
-<section id="lesson-3" class="chapter">
+<section id="lesson-3" class="chapter" data-speech-tier="1">
   <div class="chapter-head">
     <span class="chapter-num">Lesson 3 of 4</span>
     <h2>Common operator mistakes I correct around daily operator rhythm</h2>
@@ -74,17 +95,17 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
   <div class="player" role="region" aria-label="Auricrux recorded lecture lesson 3">
     <div class="player-bar">
       <span class="play-dot"></span>
-      <span class="player-label">Auricrux · Master practitioner lecture</span>
+      <span class="player-label">Auricrux - Apprentice lecture</span>
       <span class="player-time">~18 min</span>
     </div>
     <div class="transcript">
       <p><strong>Auricrux presents:</strong> Common operator mistakes I correct around daily operator rhythm</p>
-      <p>I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Common operator mistakes I correct around daily operator rhythm, I am teaching you the way I would onboard someone on my own payroll.</p><p>Module focus: Daily Operator Rhythm. Objective: Morning readiness, midday execution checks, and close-of-day reporting.</p><p>In Contractor Command, daily operator rhythm only creates value when the file spine, billing posture, and field record stay aligned. I will show the sequence I require before any client-visible action.</p><p>Pause the lecture, open your lab workbook, and replicate the procedure I demonstrate next. Photograph or log evidence the way FCA Contractor Command User Guide requires before you attempt the knowledge check.</p>
+      <p>I am Auricrux. In this segment on Auricrux explain, recommend, execute, I am teaching you the way I onboard a new apprentice on my crew - one clear step at a time.</p><p>Module focus: Daily Operator Rhythm. Objective: Morning readiness, midday execution checks, and close-of-day reporting. See how I use explain to teach the operator, recommend to surface the next best action, and execute to move the project spine forward on daily operator rhythm.</p><p>In Contractor Command, daily operator rhythm only creates value when the file spine, billing posture, and field record stay aligned. I will show the sequence I require before any client-visible action.</p><p>Pause the lecture, open your lab workbook, and repeat each step I demonstrate. Log evidence the way FCA Contractor Command User Guide requires before the knowledge check.</p>
     </div>
   </div>
 </section>
 
-<section id="lesson-4" class="chapter">
+<section id="lesson-4" class="chapter" data-speech-tier="1">
   <div class="chapter-head">
     <span class="chapter-num">Lesson 4 of 4</span>
     <h2>Verification checklist for daily operator rhythm</h2>
@@ -92,12 +113,12 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
   <div class="player" role="region" aria-label="Auricrux recorded lecture lesson 4">
     <div class="player-bar">
       <span class="play-dot"></span>
-      <span class="player-label">Auricrux · Master practitioner lecture</span>
+      <span class="player-label">Auricrux - Apprentice lecture</span>
       <span class="player-time">~18 min</span>
     </div>
     <div class="transcript">
       <p><strong>Auricrux presents:</strong> Verification checklist for daily operator rhythm</p>
-      <p>I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Verification checklist for daily operator rhythm, I am teaching you the way I would onboard someone on my own payroll.</p><p>Module focus: Daily Operator Rhythm. Objective: Morning readiness, midday execution checks, and close-of-day reporting.</p><p>In Contractor Command, daily operator rhythm only creates value when the file spine, billing posture, and field record stay aligned. I will show the sequence I require before any client-visible action.</p><p>Pause the lecture, open your lab workbook, and replicate the procedure I demonstrate next. Photograph or log evidence the way FCA Contractor Command User Guide requires before you attempt the knowledge check.</p>
+      <p>I am Auricrux. In this segment on Quality gate and audit trail, I am teaching you the way I onboard a new apprentice on my crew - one clear step at a time.</p><p>Module focus: Daily Operator Rhythm. Objective: Morning readiness, midday execution checks, and close-of-day reporting. Document daily operator rhythm so billing, legal, and field teams trust the record - no orphan data, no silent failures.</p><p>In Contractor Command, daily operator rhythm only creates value when the file spine, billing posture, and field record stay aligned. I will show the sequence I require before any client-visible action.</p><p>Pause the lecture, open your lab workbook, and repeat each step I demonstrate. Log evidence the way FCA Contractor Command User Guide requires before the knowledge check.</p>
     </div>
   </div>
 </section>

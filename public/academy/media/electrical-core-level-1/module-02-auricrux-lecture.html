@@ -20,6 +20,18 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
 .player-time { margin-left: auto; color: #cbd5e1; }
 .transcript { padding: 18px 20px; line-height: 1.8; color: #cbd5e1; font-size: 15px; }
 .footer { margin-top: 24px; color: #64748b; font: 500 13px/1.6 system-ui; text-align: center; }
+
+.auricrux-presenter { display:flex; gap:18px; align-items:center; margin-top:18px; padding:16px; background:rgba(255,255,255,0.08); border-radius:14px; border:1px solid rgba(255,255,255,0.12); }
+.auricrux-presenter-copy { font:500 14px/1.65 system-ui,sans-serif; color:rgba(255,255,255,0.92); }
+.auricrux-presenter-copy strong { display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:4px; color:#fde68a; }
+.auricrux-avatar-static { width:88px; height:88px; flex-shrink:0; border-radius:50%; object-fit:contain; background:#0f172a; border:3px solid #D49A22; animation:auricrux-float 4.5s ease-in-out infinite; box-shadow:0 4px 18px rgba(0,0,0,0.35); }
+.auricrux-presenter[data-tier="1"] .auricrux-avatar-static { border-color:#94a3b8; }
+.auricrux-presenter[data-tier="2"] .auricrux-avatar-static { border-color:#60a5fa; }
+.auricrux-presenter[data-tier="3"] .auricrux-avatar-static { border-color:#D49A22; }
+.auricrux-presenter[data-tier="4"] .auricrux-avatar-static { border-color:#f59e0b; }
+.auricrux-presenter[data-tier="5"] .auricrux-avatar-static { border-color:#fde68a; box-shadow:0 4px 22px rgba(212,154,34,0.45); }
+@keyframes auricrux-float { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-3px);} }
+
 </style>
 </head>
 <body>
@@ -27,10 +39,19 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
 <div class="hero">
 <span class="badge">Auricrux Recorded Lecture · Apprenticeship Lecture</span>
 <h1>Module 2: Safety Fundamentals and Jobsite Readiness</h1>
-<div class="meta">Electrical Apprenticeship — Core / Level 1 · electrical-core-level-1 · Taught by Auricrux · Field-tested practitioner standard</div>
+<div class="meta">Electrical Apprenticeship — Core / Level 1 · electrical-core-level-1 · Taught by Auricrux · Curriculum alignment and exam preparation only</div>
+
+<div class="auricrux-presenter" data-tier="1" data-speech-tier="1">
+  <img class="auricrux-avatar-static" src="/brand/auricrux/auricrux-humanoid-mark.svg" alt="Auricrux humanoid operator sigil" width="88" height="88" loading="lazy" />
+  <div class="auricrux-presenter-copy">
+    <strong>Auricrux - Apprentice instructor</strong>
+    Plain jobsite language. I teach fundamentals the way I onboard a first-week apprentice - clear steps, no assumptions, and respect for the standard.
+  </div>
 </div>
 
-<section id="lesson-1" class="chapter">
+</div>
+
+<section id="lesson-1" class="chapter" data-speech-tier="1">
   <div class="chapter-head">
     <span class="chapter-num">Lesson 1 of 4</span>
     <h2>Hazard recognition and stop-work expectations</h2>
@@ -38,17 +59,17 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
   <div class="player" role="region" aria-label="Auricrux recorded lecture lesson 1">
     <div class="player-bar">
       <span class="play-dot"></span>
-      <span class="player-label">Auricrux · Master practitioner lecture</span>
+      <span class="player-label">Auricrux - Apprentice lecture</span>
       <span class="player-time">~18 min</span>
     </div>
     <div class="transcript">
       <p><strong>Auricrux presents:</strong> Hazard recognition and stop-work expectations</p>
-      <p>I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Hazard recognition and stop-work expectations, I am teaching you the way I would onboard someone on my own payroll.</p><p>Module focus: Safety Fundamentals and Jobsite Readiness. Objective: Build safe work habits before any installation activity begins.</p><p>Before any tool leaves the bag, verify you are working on the correct drawing revision and that power distribution, grounding, and branch circuits are isolated or staged safely. Inspectors and superintendents forgive questions; they do not forgive undocumented violations of NEC.</p><p>Pause the lecture, open your lab workbook, and replicate the procedure I demonstrate next. Photograph or log evidence the way Electrical Apprenticeship — Core / Level 1 requires before you attempt the knowledge check.</p>
+      <p>I am Auricrux. In this segment on Jobsite reality: what a electrician actually does on safety fundamentals and jobsite readiness, I am teaching you the way I onboard a new apprentice on my crew - one clear step at a time.</p><p>Module focus: Safety Fundamentals and Jobsite Readiness. Objective: Build safe work habits before any installation activity begins. I have supervised crews through safety fundamentals and jobsite readiness on commercial and service work. You will learn how a competent electrician reads the drawing, stages material, and executes without rework - the same standard I hold on every FCA-governed project file.</p><p>Before any tool leaves the bag, verify you are working on the correct drawing revision and that power distribution, grounding, and branch circuits are isolated or staged safely. Inspectors and superintendents forgive questions; they do not forgive undocumented violations of NEC.</p><p>Pause the lecture, open your lab workbook, and repeat each step I demonstrate. Log evidence the way Electrical Apprenticeship — Core / Level 1 requires before the knowledge check.</p>
     </div>
   </div>
 </section>
 
-<section id="lesson-2" class="chapter">
+<section id="lesson-2" class="chapter" data-speech-tier="1">
   <div class="chapter-head">
     <span class="chapter-num">Lesson 2 of 4</span>
     <h2>PPE selection, care, and daily inspection</h2>
@@ -56,17 +77,17 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
   <div class="player" role="region" aria-label="Auricrux recorded lecture lesson 2">
     <div class="player-bar">
       <span class="play-dot"></span>
-      <span class="player-label">Auricrux · Master practitioner lecture</span>
+      <span class="player-label">Auricrux - Apprentice lecture</span>
       <span class="player-time">~18 min</span>
     </div>
     <div class="transcript">
       <p><strong>Auricrux presents:</strong> PPE selection, care, and daily inspection</p>
-      <p>I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on PPE selection, care, and daily inspection, I am teaching you the way I would onboard someone on my own payroll.</p><p>Module focus: Safety Fundamentals and Jobsite Readiness. Objective: Build safe work habits before any installation activity begins.</p><p>Before any tool leaves the bag, verify you are working on the correct drawing revision and that power distribution, grounding, and branch circuits are isolated or staged safely. Inspectors and superintendents forgive questions; they do not forgive undocumented violations of NEC.</p><p>Pause the lecture, open your lab workbook, and replicate the procedure I demonstrate next. Photograph or log evidence the way Electrical Apprenticeship — Core / Level 1 requires before you attempt the knowledge check.</p>
+      <p>I am Auricrux. In this segment on Code and standard: NEC requirements you must know cold, I am teaching you the way I onboard a new apprentice on my crew - one clear step at a time.</p><p>Module focus: Safety Fundamentals and Jobsite Readiness. Objective: Build safe work habits before any installation activity begins. Pull the governing section before you cut, drill, or energize anything related to safety fundamentals and jobsite readiness. I walk through the NEC articles that inspectors cite most often and show you how to document compliance on the project spine.</p><p>Before any tool leaves the bag, verify you are working on the correct drawing revision and that power distribution, grounding, and branch circuits are isolated or staged safely. Inspectors and superintendents forgive questions; they do not forgive undocumented violations of NEC.</p><p>Pause the lecture, open your lab workbook, and repeat each step I demonstrate. Log evidence the way Electrical Apprenticeship — Core / Level 1 requires before the knowledge check.</p>
     </div>
   </div>
 </section>
 
-<section id="lesson-3" class="chapter">
+<section id="lesson-3" class="chapter" data-speech-tier="1">
   <div class="chapter-head">
     <span class="chapter-num">Lesson 3 of 4</span>
     <h2>Ladder awareness, housekeeping, and work area control</h2>
@@ -74,17 +95,17 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
   <div class="player" role="region" aria-label="Auricrux recorded lecture lesson 3">
     <div class="player-bar">
       <span class="play-dot"></span>
-      <span class="player-label">Auricrux · Master practitioner lecture</span>
+      <span class="player-label">Auricrux - Apprentice lecture</span>
       <span class="player-time">~18 min</span>
     </div>
     <div class="transcript">
       <p><strong>Auricrux presents:</strong> Ladder awareness, housekeeping, and work area control</p>
-      <p>I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Ladder awareness, housekeeping, and work area control, I am teaching you the way I would onboard someone on my own payroll.</p><p>Module focus: Safety Fundamentals and Jobsite Readiness. Objective: Build safe work habits before any installation activity begins.</p><p>Before any tool leaves the bag, verify you are working on the correct drawing revision and that power distribution, grounding, and branch circuits are isolated or staged safely. Inspectors and superintendents forgive questions; they do not forgive undocumented violations of NEC.</p><p>Pause the lecture, open your lab workbook, and replicate the procedure I demonstrate next. Photograph or log evidence the way Electrical Apprenticeship — Core / Level 1 requires before you attempt the knowledge check.</p>
+      <p>I am Auricrux. In this segment on Hands-on procedure: power distribution, grounding, and branch circuits, I am teaching you the way I onboard a new apprentice on my crew - one clear step at a time.</p><p>Module focus: Safety Fundamentals and Jobsite Readiness. Objective: Build safe work habits before any installation activity begins. This is the sequence I teach apprentices before they are allowed to work unsupervised on safety fundamentals and jobsite readiness. Measure twice, verify isolation or shutoff, execute the install or repair, then photograph and log evidence for the superintendent.</p><p>Before any tool leaves the bag, verify you are working on the correct drawing revision and that power distribution, grounding, and branch circuits are isolated or staged safely. Inspectors and superintendents forgive questions; they do not forgive undocumented violations of NEC.</p><p>Pause the lecture, open your lab workbook, and repeat each step I demonstrate. Log evidence the way Electrical Apprenticeship — Core / Level 1 requires before the knowledge check.</p>
     </div>
   </div>
 </section>
 
-<section id="lesson-4" class="chapter">
+<section id="lesson-4" class="chapter" data-speech-tier="1">
   <div class="chapter-head">
     <span class="chapter-num">Lesson 4 of 4</span>
     <h2>Lockout, energized-work awareness, and incident escalation basics</h2>
@@ -92,12 +113,12 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
   <div class="player" role="region" aria-label="Auricrux recorded lecture lesson 4">
     <div class="player-bar">
       <span class="play-dot"></span>
-      <span class="player-label">Auricrux · Master practitioner lecture</span>
+      <span class="player-label">Auricrux - Apprentice lecture</span>
       <span class="player-time">~18 min</span>
     </div>
     <div class="transcript">
       <p><strong>Auricrux presents:</strong> Lockout, energized-work awareness, and incident escalation basics</p>
-      <p>I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Lockout, energized-work awareness, and incident escalation basics, I am teaching you the way I would onboard someone on my own payroll.</p><p>Module focus: Safety Fundamentals and Jobsite Readiness. Objective: Build safe work habits before any installation activity begins.</p><p>Before any tool leaves the bag, verify you are working on the correct drawing revision and that power distribution, grounding, and branch circuits are isolated or staged safely. Inspectors and superintendents forgive questions; they do not forgive undocumented violations of NEC.</p><p>Pause the lecture, open your lab workbook, and replicate the procedure I demonstrate next. Photograph or log evidence the way Electrical Apprenticeship — Core / Level 1 requires before you attempt the knowledge check.</p>
+      <p>I am Auricrux. In this segment on Field verification, QA, and supervisor sign-off, I am teaching you the way I onboard a new apprentice on my crew - one clear step at a time.</p><p>Module focus: Safety Fundamentals and Jobsite Readiness. Objective: Build safe work habits before any installation activity begins. Before you call this module done, run the same checklist I use for turnover-ready work: spec alignment, torque or pressure tests where required, labeling, and a clean jobsite handoff.</p><p>Before any tool leaves the bag, verify you are working on the correct drawing revision and that power distribution, grounding, and branch circuits are isolated or staged safely. Inspectors and superintendents forgive questions; they do not forgive undocumented violations of NEC.</p><p>Pause the lecture, open your lab workbook, and repeat each step I demonstrate. Log evidence the way Electrical Apprenticeship — Core / Level 1 requires before the knowledge check.</p>
     </div>
   </div>
 </section>
