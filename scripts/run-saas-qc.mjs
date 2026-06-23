@@ -123,6 +123,10 @@ const SCRIPT_CHECKS = [
   "smoke-central-spine.mjs",
 ];
 
+if (process.env.FCA_RUN_MANAGED_AUTH_SMOKE === "1") {
+  SCRIPT_CHECKS.push("smoke-managed-customer-auth.mjs");
+}
+
 const API_BASE = process.env.FCA_API_BASE || "https://auricrux-central.azurewebsites.net";
 
 const findings = [];
