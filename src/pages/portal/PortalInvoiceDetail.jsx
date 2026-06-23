@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
+import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { deliverPortalInvoice, fetchInvoiceSummary } from "../../api/portalClient";
@@ -76,6 +77,23 @@ export default function PortalInvoiceDetail({ routeParams = {} }) {
       primaryHref="/portal/billing"
       primaryLabel="Back to Billing"
     >
+      <div style={{ marginBottom: 16 }}>
+        <ExecutionTruthBanner
+          title="Invoice detail delivery posture"
+          status={summary ? "Invoice loaded from portal store" : loadError ? "Load failed" : "Loading"}
+          source="portal-invoices API · Graph mail when configured"
+          tone={loadError ? "warning" : "info"}
+          whatIsLive={[
+            "Printable invoice HTML preview and issue/deliver actions from the billing detail route.",
+            "Portal message fallback when transactional email is not yet configured.",
+          ]}
+          whatIsNotLiveYet={[
+            "Online card payment and GL posting are not initiated from this detail view yet.",
+            "Stripe checkout for subscription plans remains on the website checkout route.",
+          ]}
+        />
+      </div>
+
       {loadError ? (
         <div style={{ ...cardStyle, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>{loadError}</div>
       ) : null}

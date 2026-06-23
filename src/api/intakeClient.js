@@ -33,32 +33,85 @@ export async function submitIntakeBid(record) {
     throw new Error(payload?.error || "Unable to save intake to backend.");
   }
 
+  const leadResponse = await centralFetch("/api/leads", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sourceChannel: "fca-web-intake",
+      serviceLine: "general-construction",
+      projectIntent: record.plan || "commercial",
+      sourceRoute: "/intake",
+      createdBy: "fca-web-intake",
+      client: {
+        name: record.company,
+        contactName: record.name,
+        contactEmail: record.email,
+      },
+      site: {
+        name: `${record.company} - ${record.plan}`,
+        estimatedValue: planValue(record.plan),
+      },
+      notes: `Web intake plan: ${record.plan}`,
+    }),
+  });
+  const leadPayload = await leadResponse.json().catch(() => ({}));
+  if (!leadResponse.ok || leadPayload?.ok === false) {
+    throw new Error(leadPayload?.error || "Unable to create governed lead for intake.");
+  }
+
+  return payload;
+}
+
+export async function submitGovernedIntake(record) {
+  const bidResult = await submitIntakeBid(record);
+
   try {
-    await centralFetch("/api/leads", {
+    await centralFetch("/api/onboarding", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        sourceChannel: "fca-web-intake",
-        serviceLine: "general-construction",
-        projectIntent: record.plan || "commercial",
-        sourceRoute: "/intake",
-        createdBy: "fca-web-intake",
-        client: {
-          name: record.company,
-          contactName: record.name,
-          contactEmail: record.email,
-        },
-        site: {
-          name: `${record.company} - ${record.plan}`,
-          estimatedValue: planValue(record.plan),
-        },
-        notes: `Web intake plan: ${record.plan}`,
+        companyName: record.company,
+        primaryTrade: record.plan,
+        serviceArea: "Pending qualification",
+        contactName: record.name,
+        contactEmail: record.email,
       }),
     });
   } catch {
-    // Lead mirror is best-effort; bid record remains source of truth for intake.
+    // Onboarding prompt is best-effort; bid + lead remain source of truth.
   }
 
+  return bidResult;
+}
+
+export async function submitWalkthroughLead({ planKey, role, email }) {
+  const planPreset = planKey || "startup";
+  const contactEmail = email || `${planPreset}-walkthrough@futurecontractorsofamerica.com`;
+  const response = await centralFetch("/api/leads", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sourceChannel: "fca-contact-walkthrough",
+      serviceLine: "walkthrough",
+      projectIntent: planPreset,
+      sourceRoute: "/contact",
+      createdBy: "fca-contact-walkthrough",
+      client: {
+        name: `FCA ${planPreset} Walkthrough`,
+        contactName: role || "Walkthrough prospect",
+        contactEmail,
+      },
+      site: {
+        name: `Walkthrough · ${planPreset}`,
+        estimatedValue: 0,
+      },
+      notes: `Contact walkthrough activation for plan ${planPreset}.`,
+    }),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || payload?.ok === false) {
+    throw new Error(payload?.error || "Unable to create walkthrough lead.");
+  }
   return payload;
 }
 

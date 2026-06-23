@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { fetchOpportunityWorkspace } from "../api/workflowClient";
 
 export default function useOpportunityWorkspaceDetail(opportunityId, fallbackBid) {
@@ -8,6 +8,11 @@ export default function useOpportunityWorkspaceDetail(opportunityId, fallbackBid
     persistenceState: "Fallback opportunity shell active",
     lastSyncedAt: null,
   });
+  const [reloadKey, setReloadKey] = useState(0);
+
+  const refresh = useCallback(() => {
+    setReloadKey((current) => current + 1);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -48,7 +53,7 @@ export default function useOpportunityWorkspaceDetail(opportunityId, fallbackBid
     return () => {
       active = false;
     };
-  }, [opportunityId, fallbackBid]);
+  }, [opportunityId, fallbackBid, reloadKey]);
 
-  return useMemo(() => ({ item, meta }), [item, meta]);
+  return useMemo(() => ({ item, meta, refresh }), [item, meta, refresh]);
 }

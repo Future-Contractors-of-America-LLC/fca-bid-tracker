@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { resolvePlanPreset } from "../pricingPlans";
 import { navigateTo } from "../navigation";
+import { submitWalkthroughLead } from "../api/intakeClient";
 
 const shellStyle = {
   border: "1px solid #dbe3ef",
@@ -36,12 +38,22 @@ const walkthroughActions = [
 
 export default function ContactActionCenter({ session, login }) {
   const activePlan = resolvePlanPreset(session?.selectedPlan || "startup");
+  const [status, setStatus] = useState("");
 
-  function launchWalkthrough(planKey, role, nextHref) {
+  async function launchWalkthrough(planKey, role, nextHref) {
     const planPreset = resolvePlanPreset(planKey);
     const company = `FCA ${planPreset.name} Walkthrough`;
+    const email = `${planKey}-walkthrough@futurecontractorsofamerica.com`;
+    setStatus("Creating governed walkthrough lead...");
+    try {
+      await submitWalkthroughLead({ planKey, role, email });
+    } catch (error) {
+      setStatus(error.message || "Walkthrough lead could not be created.");
+      return;
+    }
+
     const result = login({
-      email: `${planKey}-walkthrough@futurecontractorsofamerica.com`,
+      email,
       company,
       role,
       nextHref,
@@ -50,7 +62,11 @@ export default function ContactActionCenter({ session, login }) {
       enabledComms: planPreset.enabledComms,
     });
 
-    if (!result.ok) return;
+    if (!result.ok) {
+      setStatus(result.error || "Unable to start walkthrough session.");
+      return;
+    }
+    setStatus("");
     navigateTo(nextHref);
   }
 
@@ -61,7 +77,7 @@ export default function ContactActionCenter({ session, login }) {
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live contact conversion action center</div>
           <h2 style={{ marginTop: 0, marginBottom: 8 }}>Activate a real authenticated walkthrough from contact instead of stopping at outreach options</h2>
           <div style={{ color: "#475569", lineHeight: 1.7, maxWidth: 920 }}>
-            These controls provision real authenticated customer sessions directly from the contact route so a walkthrough can start immediately inside platform, billing, messaging, or admin surfaces with the correct plan, products, and communications lanes already active.
+            These controls create a governed lead record, then provision an authenticated customer session so a walkthrough can start immediately inside platform, billing, messaging, or admin surfaces.
           </div>
         </div>
         <div style={{ ...cardStyle, minWidth: 240 }}>
@@ -70,6 +86,10 @@ export default function ContactActionCenter({ session, login }) {
           <div style={{ color: "#475569", lineHeight: 1.6 }}>{activePlan.price} · {activePlan.billingModel}</div>
         </div>
       </div>
+
+      {status ? (
+        <div style={{ marginBottom: 12, color: status.includes("could not") || status.includes("Unable") ? "#b45309" : "#1d4ed8", fontWeight: 600 }}>{status}</div>
+      ) : null}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
         {walkthroughActions.map((action) => {

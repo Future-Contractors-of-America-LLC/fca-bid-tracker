@@ -8,7 +8,7 @@ import {
   checkoutUrlForPlan,
   readCustomerRecord,
   saveCustomerRecord,
-  submitIntakeBid,
+  submitGovernedIntake,
 } from "../../api/intakeClient";
 import { pageShellStyle, cardStyle } from "../../publicShellStyles";
 
@@ -74,19 +74,18 @@ export default function Intake() {
     };
 
     setStatusTone("info");
-    setStatus("Saving your company profile...");
-    saveCustomerRecord(record);
+    setStatus("Saving your company profile and creating governed intake records...");
 
     try {
-      await submitIntakeBid(record);
+      await submitGovernedIntake(record);
+      saveCustomerRecord(record);
       setStatusTone("success");
       setStatus("Profile saved. Continuing to activation...");
-    } catch {
+      navigateTo(checkoutUrlForPlan(plan, record.intakeId, record.email));
+    } catch (error) {
       setStatusTone("warn");
-      setStatus("Profile saved on this device. We will sync when you return.");
+      setStatus(error.message || "Unable to complete intake. Fix the fields above and try again.");
     }
-
-    navigateTo(checkoutUrlForPlan(plan, record.intakeId, record.email));
   }
 
   return (

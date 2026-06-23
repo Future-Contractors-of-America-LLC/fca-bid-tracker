@@ -1,8 +1,12 @@
+import { useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import useOpportunityWorkspaceDetail from "../../hooks/useOpportunityWorkspaceDetail";
+import { convertOpportunityToProject } from "../../api/workflowClient";
+import { portalButtonPrimary, portalButtonSecondary } from "../../portalDesignTokens";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -30,11 +34,27 @@ function resolveOpportunityIdentity(requestedPath, routeParams, bids) {
   };
 }
 
+function deriveConversionReadiness(bid) {
+  if (!bid) {
+    return { canConvertToProject: false, blockingReason: "Opportunity not found" };
+  }
+  if (bid.linkedProjectId) {
+    return { canConvertToProject: false, blockingReason: "Already linked to a project" };
+  }
+  const ready = bid.status === "Won" || bid.status === "Qualified";
+  return {
+    canConvertToProject: ready,
+    blockingReason: ready ? null : bid.blocker || "Qualify or win the opportunity first",
+  };
+}
+
 export default function PortalOpportunityDetail({ requestedPath, routeParams = {} }) {
   const { state } = useWorkspaceState();
-  const { bids, meta: bidMeta } = useBidWorkspace();
+  const { bids, meta: bidMeta, markWonAndCreateProject } = useBidWorkspace();
   const { opportunityId, bid } = resolveOpportunityIdentity(requestedPath, routeParams, bids);
-  const { item, meta } = useOpportunityWorkspaceDetail(opportunityId, bid);
+  const { item, meta, refresh } = useOpportunityWorkspaceDetail(opportunityId, bid);
+  const [actionMessage, setActionMessage] = useState("");
+  const [busy, setBusy] = useState(false);
   const apiBacked = meta.backingSource === "api-workflow-store";
 
   const visible = item || (bid
@@ -52,10 +72,7 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
           linked: 0,
           unlinked: 0,
         },
-        conversionReadiness: {
-          canConvertToProject: Boolean(bid.linkedProjectId),
-          blockingReason: bid.linkedProjectId ? null : bid.blocker,
-        },
+        conversionReadiness: deriveConversionReadiness(bid),
         auricruxSummary: {
           nextAction: bid.qualification?.nextGate || bid.nextCommercialMove,
         },
@@ -63,6 +80,28 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
         projectIntent: bid.scopePackage,
       }
     : null);
+
+  const canConvert = visible?.conversionReadiness?.canConvertToProject;
+
+  async function handleConvertToProject() {
+    if (!opportunityId || !canConvert) return;
+    setBusy(true);
+    setActionMessage("");
+    try {
+      try {
+        await convertOpportunityToProject(opportunityId, { detail: "Converted from opportunity detail route." });
+        setActionMessage("Opportunity converted to project via Auricrux-Central.");
+      } catch {
+        await markWonAndCreateProject(opportunityId, "Converted from opportunity detail route.");
+        setActionMessage("Opportunity awarded and project created in workspace.");
+      }
+      refresh();
+    } catch (error) {
+      setActionMessage(error.message || "Conversion failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <PortalShell
@@ -82,13 +121,12 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
           tone={apiBacked ? "info" : "warning"}
           whatIsLive={[
             "A dynamic routed opportunity workspace exists at /portal/opportunities/:opportunityId.",
-            "The route now prefers a canonical backend workspace read for opportunity detail.",
-            "Estimate readiness, file summary posture, and conversion readiness are grouped into one opportunity surface.",
+            "The route prefers a canonical backend workspace read for opportunity detail.",
+            "Governed project conversion can be triggered from this route when readiness allows.",
           ]}
           whatIsNotLiveYet={[
             "When backend truth is unavailable, the route still falls back to shell continuity derived from the bid spine.",
-            "Direct opportunity-specific file actions and estimate mutations are not yet fully implemented on this route.",
-            "This route should not be treated as proof that governed project conversion is fully live end to end.",
+            "Direct opportunity-specific file uploads and estimate line mutations remain on dedicated workspace routes.",
           ]}
         />
       </div>
@@ -111,6 +149,16 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
                 <div><strong>Next action:</strong> {visible.auricruxSummary?.nextAction || state.workspace.currentNextAction}</div>
               </div>
             </div>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 16 }}>
+              <a href="/portal/estimates" style={portalButtonSecondary}>Open Estimate Workspace</a>
+              <a href="/portal/files" style={portalButtonSecondary}>Open Files</a>
+              {canConvert ? (
+                <button type="button" onClick={handleConvertToProject} disabled={busy} style={portalButtonPrimary}>
+                  {busy ? "Converting..." : "Convert to project"}
+                </button>
+              ) : null}
+            </div>
+            {actionMessage ? <div style={{ marginTop: 12, color: actionMessage.includes("failed") ? "#b45309" : "#15803d" }}>{actionMessage}</div> : null}
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginBottom: 16 }}>
@@ -125,10 +173,18 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
             <div style={statCardStyle}>
               <div style={{ fontSize: 12, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>Conversion readiness</div>
               <div style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginTop: 6 }}>
-                {visible.conversionReadiness?.canConvertToProject ? "Project-capable" : visible.conversionReadiness?.blockingReason || "Blocked"}
+                {visible.conversionReadiness?.canConvertToProject ? "Ready to convert" : visible.conversionReadiness?.blockingReason || "Blocked"}
               </div>
             </div>
           </div>
+
+          <AuricruxInsightPanel
+            title="Opportunity next move"
+            nextAction={visible.auricruxSummary?.nextAction || "Review qualification posture and route the next commercial action."}
+            targetObjectType="Opportunity"
+            targetObjectId={visible.opportunityId}
+            rationale="Explain estimate readiness, recommend conversion or file actions, and execute the next pipeline step."
+          />
         </>
       ) : (
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #fffbeb 0%, #ffffff 100%)", border: "1px solid #fcd34d" }}>

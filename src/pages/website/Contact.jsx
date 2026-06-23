@@ -50,19 +50,18 @@ export default function Contact() {
       </div>
 
       <ExecutionTruthBanner
-        title="Walkthrough activation is not yet governed lead intake"
-        status="Demo access path only"
-        source="Local authenticated walkthrough session activation"
-        tone="warning"
+        title="Walkthrough activation now creates a governed lead"
+        status="Lead intake wired · session still client-provisioned"
+        source="POST /api/leads · fca-contact-walkthrough"
+        tone="info"
         whatIsLive={[
-          "Guided workspace preview activation for planning and demonstration.",
+          "Walkthrough CTAs create a governed lead record before session activation.",
           "Plan-matched session posture across portal surfaces.",
           "Conversion routing into portal, billing, messaging, and admin demo paths.",
         ]}
         whatIsNotLiveYet={[
-          "This route does not yet create a governed Lead record.",
-          "No qualification decision or tracked intake object is created here yet.",
-          "No lead-created audit event is emitted from this walkthrough activation path.",
+          "Managed customer accounts are not auto-provisioned from walkthrough leads yet.",
+          "Production auth still requires FCA_CUSTOMER_ACCOUNTS_JSON on Auricrux-Central.",
         ]}
       />
 

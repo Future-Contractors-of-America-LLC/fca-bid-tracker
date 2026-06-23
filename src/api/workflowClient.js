@@ -105,6 +105,31 @@ export async function fetchOpportunityWorkspace(opportunityId) {
   return payload;
 }
 
+export async function convertOpportunityToProject(opportunityId, body = {}) {
+  const response = await centralFetch(
+    `/api/opportunities/${encodeURIComponent(opportunityId)}/convert-to-project`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }
+  );
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok) {
+    throw new Error(payload?.error || "Unable to convert opportunity to project.");
+  }
+  return payload;
+}
+
+export async function fetchProjectDetail(projectId) {
+  const response = await centralFetch(`/api/projects/${encodeURIComponent(projectId)}`, { method: "GET" });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok || !payload?.item) {
+    throw new Error(payload?.error || "Unable to load project detail.");
+  }
+  return payload;
+}
+
 export async function fetchProjectWorkspace(projectId) {
   const response = await centralFetch(
     `/api/projects/${encodeURIComponent(projectId)}/workspace`,

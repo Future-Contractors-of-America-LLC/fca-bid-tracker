@@ -73,9 +73,15 @@ export async function issuePortalInvoice(invoiceId) {
 }
 
 export async function fetchInvoiceSummary(invoiceId, options = {}) {
-  const params = new URLSearchParams({ invoiceId });
+  const params = new URLSearchParams();
   if (options.companyName) params.set("companyName", options.companyName);
-  const response = await centralFetch(`/api/portal-invoices?${params.toString()}`, { method: "GET" });
+  const query = params.toString() ? `?${params.toString()}` : "";
+  let response = await centralFetch(`/api/portal-invoices/${encodeURIComponent(invoiceId)}${query}`, { method: "GET" });
+  if (response.status === 404) {
+    const fallbackParams = new URLSearchParams({ invoiceId });
+    if (options.companyName) fallbackParams.set("companyName", options.companyName);
+    response = await centralFetch(`/api/portal-invoices?${fallbackParams.toString()}`, { method: "GET" });
+  }
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
     throw new Error(formatApiError(response, payload, "Unable to load invoice summary"));
