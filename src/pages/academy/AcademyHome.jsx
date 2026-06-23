@@ -15,6 +15,7 @@ import useAcademyLms from "../../hooks/useAcademyLms";
 import { flattenCatalogLessons, getProgramsByLane, OFFERING_LANES } from "../../academyOfferings";
 import { filterVisibleLanes, hasAcademySubscription } from "../../academySubscriptionAccess";
 import { academyCatalog } from "../../academyCatalog";
+import { academyClassrooms } from "../../productBlueprint";
 import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
 import { academyPageStyle } from "../../academyDesignSystem";
 import { pageShellStyle } from "../../publicShellStyles";
@@ -326,6 +327,21 @@ export default function AcademyHome() {
                 </span>
               </label>
             </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Product-linked classrooms</h2>
+        <p style={{ color: "#64748b", lineHeight: 1.65, marginTop: 0 }}>Each classroom ties curriculum to a live Contractor Command surface.</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 }}>
+          {academyClassrooms.map((classroom) => (
+            <article key={classroom.title} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
+              <div style={{ color: "#2563eb", fontWeight: 700, fontSize: 13, marginBottom: 6 }}>{classroom.credential}</div>
+              <h3 style={{ marginTop: 0, fontSize: 16 }}>{classroom.title}</h3>
+              <p style={{ color: "#475569", lineHeight: 1.6, fontSize: 14, marginBottom: 10 }}>{classroom.cadence} · {classroom.delivery}</p>
+              <a href={classroom.linkedSurface} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>{classroom.linkedLabel}</a>
+            </article>
           ))}
         </div>
       </div>

@@ -7,6 +7,7 @@ import {
   fetchPortalMessages,
   sendPortalMessage,
 } from "../../api/portalClient";
+import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import { auricruxCommsChannels, portalMessages, routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -168,6 +169,11 @@ export default function PortalMessages() {
       primaryHref="/portal/billing"
       primaryLabel="Open Billing"
     >
+      {apiBacking === "local-fallback" ? (
+        <PortalAlert tone="warning">
+          Messages API unreachable. Drafts are stored locally until Auricrux-Central sync recovers.
+        </PortalAlert>
+      ) : null}
       <CustomerCommsLaunchpad session={session} title="Launch customer-enabled communications lanes" />
 
       <div style={{ ...cardStyle, marginBottom: 24, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>

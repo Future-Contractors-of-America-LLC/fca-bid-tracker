@@ -76,6 +76,11 @@ export const routeMetadata = {
     description:
       "Access the FCA workspace, customer portal, academy continuity, and Auricrux-supported operations.",
   },
+  "/job-board": {
+    title: "Job Board | Future Contractors of America",
+    description:
+      "Discover open jobs, connect with qualified contractors, and publish opportunities on the FCA network.",
+  },
   "/bid-entry": {
     title: "Bid Entry | Future Contractors of America",
     description:
@@ -170,6 +175,21 @@ export const routeMetadata = {
     title: "Academy Course Catalog | Future Contractors of America",
     description:
       "Browse FCA Academy by pathway, topic, and course. Syllabi are public; enrollment follows subscription, add-on, and prerequisite rules.",
+  },
+  "/academy/pathway": {
+    title: "Academy Pathway | Future Contractors of America",
+    description:
+      "Follow a structured FCA Academy pathway from trade fundamentals through licensure, management, and platform operations.",
+  },
+  "/academy/store": {
+    title: "Academy Store | Future Contractors of America",
+    description:
+      "Purchase Academy courses, pathways, and credentials connected to your FCA workspace and workforce readiness goals.",
+  },
+  "/academy/store/success": {
+    title: "Academy Purchase Confirmed | Future Contractors of America",
+    description:
+      "Your Academy purchase is confirmed. Continue into enrollment and credential tracking inside FCA.",
   },
   "/terms": {
     title: "Terms of Service | Future Contractors of America",

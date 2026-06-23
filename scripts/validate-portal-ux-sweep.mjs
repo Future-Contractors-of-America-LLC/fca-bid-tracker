@@ -54,6 +54,17 @@ const operationalToolPage = read("src/components/OperationalToolPage.jsx");
 if (!designTokens.includes("portalButtonPrimary")) fail("portalDesignTokens must export shared button styles");
 if (!operationalToolPage.includes("portalDesignTokens")) fail("OperationalToolPage must use portalDesignTokens");
 
+const fallbackAwarePages = [
+  { file: "src/pages/portal/PortalMessages.jsx", marker: 'apiBacking === "local-fallback"' },
+  { file: "src/pages/portal/PortalSupport.jsx", marker: 'apiBacking === "local-fallback"' },
+  { file: "src/pages/portal/PortalNotifications.jsx", marker: 'accountSource === "local-fallback"' },
+];
+for (const { file, marker } of fallbackAwarePages) {
+  const source = read(file);
+  if (!source.includes("PortalAlert")) fail(`${file} must surface PortalAlert for degraded API posture`);
+  if (!source.includes(marker)) fail(`${file} must detect local-fallback workspace posture`);
+}
+
 for (const page of fs.readdirSync(portalDir).filter((name) => name.endsWith(".jsx"))) {
   const source = fs.readFileSync(path.join(portalDir, page), "utf8");
   if (source.includes('currentJourney="project"')) {

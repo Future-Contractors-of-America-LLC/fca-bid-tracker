@@ -1,4 +1,7 @@
 /** Single source of truth for FCA public hostnames and API origins. */
+const viteEnv =
+  typeof import.meta !== "undefined" && import.meta.env ? import.meta.env : {};
+
 export const FCA_PRIMARY_DOMAIN = "futurecontractorsofamerica.com";
 export const FCA_MARKETING_HOST = FCA_PRIMARY_DOMAIN;
 export const FCA_WWW_HOST = `www.${FCA_PRIMARY_DOMAIN}`;
@@ -11,7 +14,7 @@ export const FCA_APP_ORIGIN = `https://${FCA_APP_HOST}`;
 export const FCA_API_ORIGIN = `https://${FCA_API_HOST}`;
 
 export const FCA_SWA_DEFAULT_HOST =
-  import.meta.env.VITE_FCA_SWA_DEFAULT_HOST ||
+  viteEnv.VITE_FCA_SWA_DEFAULT_HOST ||
   "delightful-mushroom-0de67860f.7.azurestaticapps.net";
 
 /** Azure Function App default host — fallback until api.* DNS is live. */
@@ -20,7 +23,7 @@ export const FCA_AZURE_API_FALLBACK_ORIGIN = `https://${FCA_AZURE_API_FALLBACK_H
 export const FCA_AZURE_API_FALLBACK = `${FCA_AZURE_API_FALLBACK_ORIGIN}/api`;
 
 export const FCA_API_BASE =
-  import.meta.env.VITE_AURICRUX_CENTRAL_API?.replace(/\/api\/?$/, "") ||
+  viteEnv.VITE_AURICRUX_CENTRAL_API?.replace(/\/api\/?$/, "") ||
   FCA_API_ORIGIN;
 
 export const FCA_CENTRAL_API = `${FCA_API_BASE.replace(/\/$/, "")}/api`;

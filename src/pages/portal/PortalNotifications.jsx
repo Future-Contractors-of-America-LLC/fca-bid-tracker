@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
 import AuditEventCard from "../../components/AuditEventCard";
+import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { portalMessages, projectAuditEvents, routeStateOverlays } from "../../systemState";
@@ -90,6 +91,11 @@ export default function PortalNotifications() {
       primaryLabel="Open Messages"
       workspaceState={state}
     >
+      {accountSource === "local-fallback" ? (
+        <PortalAlert tone="warning">
+          Demo workspace active. Notification feed uses seeded continuity until production customer auth is configured.
+        </PortalAlert>
+      ) : null}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
         <div style={cardStyle}>
           <h2 style={{ marginTop: 0 }}>Active notifications</h2>

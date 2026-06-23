@@ -7,6 +7,7 @@ import { filterVisibleActions } from "../../ctaBehavior";
 import { publicHomeMessaging } from "../../systemContinuity";
 import { websiteMarketReadiness } from "../../websiteMarketReadiness";
 import { publicSurfaceLinks } from "../../websiteShell";
+import { academyClassrooms, websiteEnterpriseProof } from "../../productBlueprint";
 import { brandIdentity } from "../../brandIdentity";
 import {
   cardStyle,
@@ -155,6 +156,32 @@ export default function Home() {
               <article key={signal.title} style={{ ...cardStyle, padding: 16 }}>
                 <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: 6, fontSize: 15 }}>{signal.title}</div>
                 <p style={{ color: "#64748b", lineHeight: 1.6, margin: 0, fontSize: 14 }}>{signal.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ marginBottom: 48 }}>
+          <h2 style={{ marginBottom: 20, fontSize: "clamp(1.25rem, 2.5vw, 1.65rem)" }}>Enterprise proof</h2>
+          <div style={responsiveGrid(280)}>
+            {websiteEnterpriseProof.map((item) => (
+              <article key={item.title} style={cardStyle}>
+                <h3 style={{ marginTop: 0, fontSize: 17 }}>{item.title}</h3>
+                <p style={{ color: "#475569", lineHeight: 1.65, fontSize: 14, marginBottom: 0 }}>{item.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ marginBottom: 48 }}>
+          <h2 style={{ marginBottom: 20, fontSize: "clamp(1.25rem, 2.5vw, 1.65rem)" }}>Academy classrooms</h2>
+          <div style={responsiveGrid(280)}>
+            {academyClassrooms.map((classroom) => (
+              <article key={classroom.title} style={cardStyle}>
+                <div style={{ color: brandIdentity.fca.colors.primaryDark, fontWeight: 800, fontSize: 12, marginBottom: 8 }}>{classroom.credential}</div>
+                <h3 style={{ marginTop: 0, fontSize: 17 }}>{classroom.title}</h3>
+                <p style={{ color: "#475569", lineHeight: 1.65, fontSize: 14, marginBottom: 12 }}>{classroom.cadence} · {classroom.delivery}</p>
+                <a href={classroom.linkedSurface} style={{ ...ctaSecondaryStyle, display: "inline-block", fontSize: 14 }}>{classroom.linkedLabel}</a>
               </article>
             ))}
           </div>

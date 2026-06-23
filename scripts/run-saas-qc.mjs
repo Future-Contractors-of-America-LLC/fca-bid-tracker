@@ -39,6 +39,7 @@ const SAAS_PORTAL_ROUTES = [
   "/portal/field-supervision",
   "/portal/warranty",
   "/portal/legal",
+  "/portal/notifications",
 ];
 
 const SAAS_API_ENDPOINTS = [
@@ -55,6 +56,8 @@ const SAAS_API_ENDPOINTS = [
   "/api/workflow-audit",
   "/api/academy-lms",
   "/api/customer-login",
+  "/api/customer-verify",
+  "/api/leads",
   "/api/change-orders",
   "/api/job-cost",
   "/api/closeout-packages",
@@ -100,9 +103,11 @@ const SCRIPT_CHECKS = [
   "validate-academy-media.mjs",
   "validate-file-governance.mjs",
   "validate-finance-workspace.mjs",
-  "validate-design-workspace.cjs",
+  "validate-design-workspace.mjs",
   "validate-portal-auricrux-wiring.mjs",
   "validate-portal-ux-sweep.mjs",
+  "validate-product-readiness-surfaces.mjs",
+  "validate-operations-pipeline.mjs",
   "validate-site-metadata.mjs",
   "smoke-central-spine.mjs",
 ];

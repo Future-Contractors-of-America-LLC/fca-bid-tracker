@@ -7,6 +7,7 @@ import {
   fetchSupportTickets,
   resolveSupportTicket,
 } from "../../api/portalClient";
+import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -160,6 +161,11 @@ export default function PortalSupport() {
       primaryHref="/portal/messages"
       primaryLabel="Open Messages"
     >
+      {apiBacking === "local-fallback" ? (
+        <PortalAlert tone="warning">
+          Support API unreachable. Tickets are stored locally until Auricrux-Central sync recovers.
+        </PortalAlert>
+      ) : null}
       <div style={{ ...cardStyle, marginBottom: 24, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
         <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded support experience</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>

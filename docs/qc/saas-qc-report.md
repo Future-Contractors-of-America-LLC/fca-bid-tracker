@@ -1,12 +1,13 @@
 # SaaS Quality Control Report
 
-- Generated: 2026-06-19T14:25:14.306Z
-- API base: https://auricrux-central.azurewebsites.net
-- Passed: 79
+- Generated: 2026-06-23T01:49:30.462Z
+- API base: https://api.futurecontractorsofamerica.com
+- Passed: 167
 - Failed: 0
 - Warnings: 0
 
 ## Portal routes checked
+- /portal
 - /portal/platform
 - /portal/bids
 - /portal/estimates
@@ -20,14 +21,40 @@
 - /portal/auricrux
 - /portal/academy
 - /portal/operations
+- /portal/pipeline
 - /portal/audit
 - /portal/profile
+- /portal/plans
+- /portal/finance
+- /portal/design
+- /portal/rfis
+- /portal/change-orders
+- /portal/closeout
+- /portal/scheduling
+- /portal/field-tasks
+- /portal/field-supervision
+- /portal/warranty
+- /portal/legal
+- /portal/notifications
 
 ## Findings
 - **PASS** script:validate-routes.mjs
 - **PASS** script:validate-critical-routes.mjs
 - **PASS** script:validate-public-package-route-groups.mjs
 - **PASS** script:validate-academy-ctas.mjs
+- **PASS** script:validate-academy-catalog.mjs
+- **PASS** script:validate-catalog-balance.mjs
+- **PASS** script:validate-academy-media.mjs
+- **PASS** script:validate-file-governance.mjs
+- **PASS** script:validate-finance-workspace.mjs
+- **PASS** script:validate-design-workspace.mjs
+- **PASS** script:validate-portal-auricrux-wiring.mjs
+- **PASS** script:validate-portal-ux-sweep.mjs
+- **PASS** script:validate-product-readiness-surfaces.mjs
+- **PASS** script:validate-operations-pipeline.mjs
+- **PASS** script:validate-site-metadata.mjs
+- **PASS** script:smoke-central-spine.mjs
+- **PASS** route:/portal
 - **PASS** route:/portal/platform
 - **PASS** route:/portal/bids
 - **PASS** route:/portal/estimates
@@ -41,17 +68,50 @@
 - **PASS** route:/portal/auricrux
 - **PASS** route:/portal/academy
 - **PASS** route:/portal/operations
+- **PASS** route:/portal/pipeline
 - **PASS** route:/portal/audit
 - **PASS** route:/portal/profile
+- **PASS** route:/portal/plans
+- **PASS** route:/portal/finance
+- **PASS** route:/portal/design
+- **PASS** route:/portal/rfis
+- **PASS** route:/portal/change-orders
+- **PASS** route:/portal/closeout
+- **PASS** route:/portal/scheduling
+- **PASS** route:/portal/field-tasks
+- **PASS** route:/portal/field-supervision
+- **PASS** route:/portal/warranty
+- **PASS** route:/portal/legal
+- **PASS** route:/portal/notifications
 - **PASS** client:src/api/workflowClient.js
 - **PASS** client:src/api/portalClient.js
 - **PASS** client:src/api/intakeClient.js
+- **PASS** client:src/api/constructionClient.js
+- **PASS** client:src/api/auricruxActionsClient.js
+- **PASS** client:src/api/designWorkspaceClient.js
 - **PASS** client:src/hooks/useWorkspaceState.js
+- **PASS** client:src/hooks/usePortalProjectId.js
+- **PASS** client:src/hooks/useAuricruxLiveInsight.js
+- **PASS** legal:src/pages/portal/PortalLegal.jsx
+- **PASS** legal:src/pages/portal/PortalFiles.jsx
+- **PASS** legal:src/pages/website/ContractorLegalResources.jsx
+- **PASS** legal:src/legal/content/ContractorLegalResourcesContent.jsx
+- **PASS** legal:src/contractorLegal/contractorLegalCatalog.js
+- **PASS** legal:src/contractorLegal/contractorLegalStorage.js
+- **PASS** legal:src/legal/entityInfo.js
+- **PASS** legal:src/fileGovernance.js
+- **PASS** legal:api/academy-program-modules.js
+- **PASS** legal:api/_lib/entityInfo.js
+- **PASS** legal:docs/legal/contractor/CONTRACTOR_LEGAL_INDEX.md
+- **PASS** legal:academy-slug-parity: catalog keys align with contractor legal CTAs
+- **PASS** legal:principal-office:src/legal/entityInfo.js
+- **PASS** legal:principal-office:api/_lib/entityInfo.js
 - **PASS** page:website/Home
 - **PASS** page:website/Platform
 - **PASS** page:website/Login
 - **PASS** page:website/Intake
 - **PASS** page:website/Checkout
+- **PASS** page:website/CheckoutSuccess
 - **PASS** page:website/Pricing
 - **PASS** page:website/Features
 - **PASS** page:website/Solutions
@@ -61,14 +121,26 @@
 - **PASS** page:website/Referrals
 - **PASS** page:website/Terms
 - **PASS** page:website/Privacy
+- **PASS** page:website/LegalHub
+- **PASS** page:website/ContractorLegalResources
+- **PASS** page:website/Cookies
+- **PASS** page:website/AcceptableUse
+- **PASS** page:website/Security
+- **PASS** page:website/Subprocessors
+- **PASS** page:website/AiPolicy
+- **PASS** page:website/Accessibility
+- **PASS** page:website/Dmca
 - **PASS** page:website/Refunds
 - **PASS** page:website/IpNotice
 - **PASS** page:website/NotFound
 - **PASS** page:website/LegacyBidEntry
 - **PASS** page:website/LegacyBidStatus
-- **PASS** page:portal/PortalHome
+- **PASS** page:website/JobBoard
+- **PASS** page:portal/PortalWorkspaceRedirect
+- **PASS** page:portal/PortalLegal
 - **PASS** page:portal/PlatformDashboard
 - **PASS** page:portal/PortalOperations
+- **PASS** page:portal/PortalPipeline
 - **PASS** page:portal/PortalProjects
 - **PASS** page:portal/PortalFiles
 - **PASS** page:portal/PortalAudit
@@ -83,10 +155,30 @@
 - **PASS** page:portal/PortalProfile
 - **PASS** page:portal/PortalAuricrux
 - **PASS** page:academy/AcademyHome
+- **PASS** page:portal/PortalPlans
+- **PASS** page:portal/PortalFinance
+- **PASS** page:portal/PortalDesignWorkspace
+- **PASS** page:portal/PortalRfis
+- **PASS** page:portal/PortalChangeOrders
+- **PASS** page:portal/PortalCloseout
+- **PASS** page:portal/PortalScheduling
+- **PASS** page:portal/PortalFieldTasks
+- **PASS** page:portal/PortalFieldSupervision
+- **PASS** page:portal/PortalWarranty
 - **PASS** page:academy/AcademyHome
 - **PASS** page:academy/AcademyCatalog
+- **PASS** page:academy/AcademyPathwayHub
+- **PASS** page:academy/AcademyDashboard
+- **PASS** page:academy/AcademyCredentials
+- **PASS** page:academy/store/AcademyStore
+- **PASS** page:academy/store/AcademyStoreSuccess
 - **PASS** page:portal/PortalOpportunityDetail
 - **PASS** page:portal/PortalProjectDetail
+- **PASS** page:portal/PortalInvoiceDetail
+- **PASS** page:academy/AcademyProgramDetail
+- **PASS** page:academy/AcademyModuleLesson
+- **PASS** page:academy/store/AcademyStoreCourse
+- **PASS** page:academy/store/AcademyStorePathway
 - **PASS** api:/api/health: HTTP 200
 - **PASS** api:/api/bids: HTTP 200
 - **PASS** api:/api/projects: HTTP 200
@@ -98,7 +190,17 @@
 - **PASS** api:/api/billing-summary: HTTP 200
 - **PASS** api:/api/support-tickets: HTTP 200
 - **PASS** api:/api/workflow-audit: HTTP 200
+- **PASS** api:/api/academy-lms: HTTP 200
 - **PASS** api:/api/customer-login: HTTP 200
+- **PASS** api:/api/customer-verify: HTTP 200
+- **PASS** api:/api/leads: HTTP 200
+- **PASS** api:/api/change-orders: HTTP 200
+- **PASS** api:/api/job-cost: HTTP 200
+- **PASS** api:/api/closeout-packages: HTTP 200
+- **PASS** api:/api/warranty-cases: HTTP 200
+- **PASS** api:/api/field-photos: HTTP 200
+- **PASS** api:/api/auricrux/actions: HTTP 200
+- **PASS** api:/api/auricrux-comms: HTTP 200
 - **PASS** blueprint:/portal/bids
 - **PASS** blueprint:/portal/projects
 - **PASS** blueprint:/portal/files

@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-06-19T14:25:14.306Z",
+  "generatedAt": "2026-06-23T01:49:30.462Z",
   "scope": "SaaS QC",
-  "apiBase": "https://auricrux-central.azurewebsites.net",
+  "apiBase": "https://api.futurecontractorsofamerica.com",
   "summary": {
-    "passed": 79,
+    "passed": 167,
     "failed": 0,
     "warnings": 0
   },
-  "portalRouteCount": 15,
-  "apiEndpointCount": 12,
+  "portalRouteCount": 29,
+  "apiEndpointCount": 22,
   "findings": [
     {
       "status": "pass",
@@ -28,6 +28,71 @@
     {
       "status": "pass",
       "label": "script:validate-academy-ctas.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-catalog.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-catalog-balance.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-media.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-file-governance.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-finance-workspace.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-design-workspace.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-portal-auricrux-wiring.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-portal-ux-sweep.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-product-readiness-surfaces.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-operations-pipeline.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-site-metadata.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:smoke-central-spine.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal",
       "detail": ""
     },
     {
@@ -97,12 +162,77 @@
     },
     {
       "status": "pass",
+      "label": "route:/portal/pipeline",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "route:/portal/audit",
       "detail": ""
     },
     {
       "status": "pass",
       "label": "route:/portal/profile",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/plans",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/finance",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/design",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/rfis",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/change-orders",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/closeout",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/scheduling",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/field-tasks",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/field-supervision",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/warranty",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/legal",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/notifications",
       "detail": ""
     },
     {
@@ -122,7 +252,102 @@
     },
     {
       "status": "pass",
+      "label": "client:src/api/constructionClient.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/api/auricruxActionsClient.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/api/designWorkspaceClient.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "client:src/hooks/useWorkspaceState.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/hooks/usePortalProjectId.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/hooks/useAuricruxLiveInsight.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:src/pages/portal/PortalLegal.jsx",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:src/pages/portal/PortalFiles.jsx",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:src/pages/website/ContractorLegalResources.jsx",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:src/legal/content/ContractorLegalResourcesContent.jsx",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:src/contractorLegal/contractorLegalCatalog.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:src/contractorLegal/contractorLegalStorage.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:src/legal/entityInfo.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:src/fileGovernance.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:api/academy-program-modules.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:api/_lib/entityInfo.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:docs/legal/contractor/CONTRACTOR_LEGAL_INDEX.md",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:academy-slug-parity",
+      "detail": "catalog keys align with contractor legal CTAs"
+    },
+    {
+      "status": "pass",
+      "label": "legal:principal-office:src/legal/entityInfo.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "legal:principal-office:api/_lib/entityInfo.js",
       "detail": ""
     },
     {
@@ -148,6 +373,11 @@
     {
       "status": "pass",
       "label": "page:website/Checkout",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/CheckoutSuccess",
       "detail": ""
     },
     {
@@ -197,6 +427,51 @@
     },
     {
       "status": "pass",
+      "label": "page:website/LegalHub",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/ContractorLegalResources",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Cookies",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/AcceptableUse",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Security",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Subprocessors",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/AiPolicy",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Accessibility",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Dmca",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:website/Refunds",
       "detail": ""
     },
@@ -222,7 +497,17 @@
     },
     {
       "status": "pass",
-      "label": "page:portal/PortalHome",
+      "label": "page:website/JobBoard",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalWorkspaceRedirect",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalLegal",
       "detail": ""
     },
     {
@@ -233,6 +518,11 @@
     {
       "status": "pass",
       "label": "page:portal/PortalOperations",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalPipeline",
       "detail": ""
     },
     {
@@ -307,6 +597,56 @@
     },
     {
       "status": "pass",
+      "label": "page:portal/PortalPlans",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalFinance",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalDesignWorkspace",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalRfis",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalChangeOrders",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalCloseout",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalScheduling",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalFieldTasks",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalFieldSupervision",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalWarranty",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:academy/AcademyHome",
       "detail": ""
     },
@@ -317,12 +657,62 @@
     },
     {
       "status": "pass",
+      "label": "page:academy/AcademyPathwayHub",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyDashboard",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyCredentials",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/store/AcademyStore",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/store/AcademyStoreSuccess",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PortalOpportunityDetail",
       "detail": ""
     },
     {
       "status": "pass",
       "label": "page:portal/PortalProjectDetail",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalInvoiceDetail",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyProgramDetail",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyModuleLesson",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/store/AcademyStoreCourse",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/store/AcademyStorePathway",
       "detail": ""
     },
     {
@@ -382,7 +772,57 @@
     },
     {
       "status": "pass",
+      "label": "api:/api/academy-lms",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
       "label": "api:/api/customer-login",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/customer-verify",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/leads",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/change-orders",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/job-cost",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/closeout-packages",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/warranty-cases",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/field-photos",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/auricrux/actions",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/auricrux-comms",
       "detail": "HTTP 200"
     },
     {
