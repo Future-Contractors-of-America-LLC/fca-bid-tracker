@@ -4,7 +4,7 @@ import { fileURLToPath, pathToFileURL } from "url";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDir, "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work", "core");
+const centralRoot = path.resolve(process.env.FCA_CENTRAL_ROOT || path.join(root, "..", "auricrux-central-work"), "core");
 
 async function extractProgramKeys(fileName) {
   const source = await fs.readFile(path.join(centralRoot, fileName), "utf8");

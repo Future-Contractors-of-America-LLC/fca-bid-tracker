@@ -1,21 +1,46 @@
 {
-  "generatedAt": "2026-06-19T14:25:01.707Z",
+  "generatedAt": "2026-06-23T02:06:47.123Z",
   "scope": "LMS depth + content QC",
   "apiBase": "https://auricrux-central.azurewebsites.net",
-  "programCount": 6,
-  "totalLessons": 34,
+  "programCount": 15,
+  "totalLessons": 71,
   "lessonsWithMedia": 0,
-  "lessonsMissingMedia": 34,
+  "lessonsMissingMedia": 71,
   "mediaCoveragePct": 0,
   "summary": {
-    "passed": 33,
+    "passed": 80,
     "failed": 0,
-    "warnings": 34
+    "warnings": 71
   },
   "findings": [
     {
       "status": "pass",
       "label": "script:validate-academy-ctas.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-catalog.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-catalog-balance.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-media.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-readiness-overlay.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-live-api.mjs",
       "detail": ""
     },
     {
@@ -41,22 +66,22 @@
     {
       "status": "warn",
       "label": "lesson-media:ONB-001:1",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:ONB-001:2",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:ONB-001:3",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:ONB-001:4",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "pass",
@@ -81,32 +106,32 @@
     {
       "status": "warn",
       "label": "lesson-media:APP-ELEC-101:1",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:APP-ELEC-101:2",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:APP-ELEC-101:3",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:APP-ELEC-101:4",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:APP-ELEC-101:5",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:APP-ELEC-101:6",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "pass",
@@ -131,32 +156,32 @@
     {
       "status": "warn",
       "label": "lesson-media:CERT-OSHA30-201:1",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:CERT-OSHA30-201:2",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:CERT-OSHA30-201:3",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:CERT-OSHA30-201:4",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:CERT-OSHA30-201:5",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:CERT-OSHA30-201:6",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "pass",
@@ -181,32 +206,32 @@
     {
       "status": "warn",
       "label": "lesson-media:DEG-AAS-110:1",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:DEG-AAS-110:2",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:DEG-AAS-110:3",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:DEG-AAS-110:4",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:DEG-AAS-110:5",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:DEG-AAS-110:6",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "pass",
@@ -231,32 +256,32 @@
     {
       "status": "warn",
       "label": "lesson-media:LIC-DPOR-301:1",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:LIC-DPOR-301:2",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:LIC-DPOR-301:3",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:LIC-DPOR-301:4",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:LIC-DPOR-301:5",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:LIC-DPOR-301:6",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "pass",
@@ -281,32 +306,397 @@
     {
       "status": "warn",
       "label": "lesson-media:GUIDE-FCA-001:1",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:GUIDE-FCA-001:2",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:GUIDE-FCA-001:3",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:GUIDE-FCA-001:4",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:GUIDE-FCA-001:5",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "warn",
       "label": "lesson-media:GUIDE-FCA-001:6",
-      "detail": "lecture=false labDemo=false eval=false � media pending production"
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:fca-bids-qualification-estimates",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:fca-bids-qualification-estimates",
+      "detail": "/portal/bids"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:FCA-BIDS-101",
+      "detail": "5 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:FCA-BIDS-101",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-BIDS-101:1",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-BIDS-101:2",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-BIDS-101:3",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-BIDS-101:4",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-BIDS-101:5",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:fca-projects-stage-control",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:fca-projects-stage-control",
+      "detail": "/portal/projects"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:FCA-PROJ-201",
+      "detail": "5 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:FCA-PROJ-201",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-PROJ-201:1",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-PROJ-201:2",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-PROJ-201:3",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-PROJ-201:4",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-PROJ-201:5",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:fca-files-audit-governance",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:fca-files-audit-governance",
+      "detail": "/portal/files"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:FCA-FILE-301",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:FCA-FILE-301",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-FILE-301:1",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-FILE-301:2",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-FILE-301:3",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-FILE-301:4",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:fca-billing-invoicing",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:fca-billing-invoicing",
+      "detail": "/portal/billing"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:FCA-BILL-401",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:FCA-BILL-401",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-BILL-401:1",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-BILL-401:2",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-BILL-401:3",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-BILL-401:4",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:fca-legal-command-workspace",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:fca-legal-command-workspace",
+      "detail": "/portal/legal"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:FCA-LEGAL-501",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:FCA-LEGAL-501",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-LEGAL-501:1",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-LEGAL-501:2",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-LEGAL-501:3",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-LEGAL-501:4",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:fca-support-auricrux-operator",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:fca-support-auricrux-operator",
+      "detail": "/portal/support"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:FCA-SUP-601",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:FCA-SUP-601",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-SUP-601:1",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-SUP-601:2",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-SUP-601:3",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-SUP-601:4",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:fca-academy-progress-tracking",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:fca-academy-progress-tracking",
+      "detail": "/academy/dashboard"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:FCA-ACAD-701",
+      "detail": "3 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:FCA-ACAD-701",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-ACAD-701:1",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-ACAD-701:2",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:FCA-ACAD-701:3",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:contractor-business-formation-legal",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:contractor-business-formation-legal",
+      "detail": "/portal/legal"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:LEGAL-FORM-201",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:LEGAL-FORM-201",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LEGAL-FORM-201:1",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LEGAL-FORM-201:2",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LEGAL-FORM-201:3",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LEGAL-FORM-201:4",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:contractor-construction-law-essentials",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:contractor-construction-law-essentials",
+      "detail": "/portal/legal"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:LEGAL-CONST-301",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:LEGAL-CONST-301",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LEGAL-CONST-301:1",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LEGAL-CONST-301:2",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LEGAL-CONST-301:3",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
+    },
+    {
+      "status": "warn",
+      "label": "lesson-media:LEGAL-CONST-301:4",
+      "detail": "lecture=false labDemo=false eval=false � static slice pending production URLs"
     },
     {
       "status": "pass",
@@ -315,8 +705,28 @@
     },
     {
       "status": "pass",
+      "label": "legal-program:contractor-business-formation-legal",
+      "detail": "Contractor Business Formation & Legal Setup"
+    },
+    {
+      "status": "pass",
+      "label": "legal-program:contractor-construction-law-essentials",
+      "detail": "Construction Law Essentials for Contractors"
+    },
+    {
+      "status": "pass",
+      "label": "legal-api:academy-program-modules",
+      "detail": "program detail builder present"
+    },
+    {
+      "status": "pass",
       "label": "api:academy-lms",
-      "detail": "programs in API: 16"
+      "detail": "programs in API: 1212"
+    },
+    {
+      "status": "pass",
+      "label": "api:catalog-integrity",
+      "detail": "aligned"
     },
     {
       "status": "pass",
@@ -326,7 +736,7 @@
     {
       "status": "pass",
       "label": "api:academy-enrollments",
-      "detail": "4 enrollments"
+      "detail": "9 enrollments"
     },
     {
       "status": "pass",
@@ -336,6 +746,16 @@
     {
       "status": "pass",
       "label": "lms-surface:src/pages/academy/AcademyCatalog.jsx",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lms-surface:src/pages/academy/AcademyModuleLesson.jsx",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lms-surface:src/pages/academy/AcademyProgramDetail.jsx",
       "detail": ""
     },
     {

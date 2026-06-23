@@ -257,6 +257,61 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
     return <p style={{ color: "#64748b", lineHeight: 1.65 }}>No lab workbook is linked for this module yet.</p>;
   }
 
+  function renderAssignmentsPanel() {
+    if (!module) return null;
+    const knowledgeCheck = module.knowledgeCheck || (module.knowledgeCheckPassingScore ? { passingScore: module.knowledgeCheckPassingScore } : null);
+    const performanceLessons = (module.lessonMedia || []).filter((item) => item.performanceEvalUrl || item.performanceEvalVideoUrl);
+
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        {Array.isArray(module.lessons) && module.lessons.length > 0 ? (
+          <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+            <strong style={{ color: "#0f172a" }}>Reading sequence</strong>
+            <ol style={{ paddingLeft: 20, lineHeight: 1.85, color: "#475569", marginBottom: 0, marginTop: 10 }}>
+              {module.lessons.map((lesson) => (
+                <li key={typeof lesson === "string" ? lesson : lesson.title}>
+                  {typeof lesson === "string" ? lesson : lesson.title}
+                </li>
+              ))}
+            </ol>
+          </div>
+        ) : null}
+        {module.practicalLab || module.lab ? (
+          <div style={{ padding: 14, borderRadius: 12, background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
+            <strong style={{ color: "#15803d" }}>Field assignment / lab</strong>
+            <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>{module.practicalLab || module.lab}</p>
+          </div>
+        ) : null}
+        {module.deliverable ? (
+          <div style={{ padding: 14, borderRadius: 12, background: "#fffbeb", border: "1px solid #fde68a" }}>
+            <strong style={{ color: "#b45309" }}>Deliverable</strong>
+            <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>{module.deliverable}</p>
+          </div>
+        ) : null}
+        {knowledgeCheck ? (
+          <div style={{ padding: 14, borderRadius: 12, background: "#eff6ff", border: "1px solid #bfdbfe" }}>
+            <strong style={{ color: "#1d4ed8" }}>Knowledge check / exam prep</strong>
+            <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
+              Passing score: {knowledgeCheck.passingScore || 80}%
+              {knowledgeCheck.questionCount ? ` · ${knowledgeCheck.questionCount} questions` : ""}
+              {knowledgeCheck.description ? ` · ${knowledgeCheck.description}` : ""}
+            </p>
+          </div>
+        ) : null}
+        {performanceLessons.length > 0 ? (
+          <div style={{ padding: 14, borderRadius: 12, background: "#faf5ff", border: "1px solid #e9d5ff" }}>
+            <strong style={{ color: "#7c3aed" }}>Performance evaluation</strong>
+            <ul style={{ paddingLeft: 20, lineHeight: 1.85, color: "#475569", marginBottom: 0, marginTop: 10 }}>
+              {performanceLessons.map((item) => (
+                <li key={item.lessonKey || item.title}>{item.title}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div style={{ ...pageShellStyle, ...academyPageStyle() }}>
       <ShellHeader
@@ -359,6 +414,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
                 <button type="button" style={tabStyle(activeTab === "lecture")} onClick={() => setActiveTab("lecture")}>Auricrux lecture</button>
                 <button type="button" style={tabStyle(activeTab === "skills")} onClick={() => setActiveTab("skills")}>Skills demo</button>
                 <button type="button" style={tabStyle(activeTab === "lab")} onClick={() => setActiveTab("lab")}>Lab workbook</button>
+                <button type="button" style={tabStyle(activeTab === "assignments")} onClick={() => setActiveTab("assignments")}>Assignments</button>
                 {!isLocked && !isModuleComplete ? (
                   <button type="button" style={tabStyle(activeTab === "quiz")} onClick={() => setActiveTab("quiz")}>Knowledge check</button>
                 ) : null}
@@ -367,6 +423,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
               {activeTab === "lecture" ? renderLecturePanel() : null}
               {activeTab === "skills" ? renderSkillsDemoPanel() : null}
               {activeTab === "lab" ? renderLabPanel() : null}
+              {activeTab === "assignments" ? renderAssignmentsPanel() : null}
               {Array.isArray(module.lessonMedia) && module.lessonMedia.length > 0 && activeTab === "lecture" ? (
                 <div style={{ marginTop: 16, padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
                   <strong style={{ color: "#0f172a" }}>Lesson sequence</strong>

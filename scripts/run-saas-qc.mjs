@@ -42,6 +42,12 @@ const SAAS_PORTAL_ROUTES = [
   "/portal/notifications",
 ];
 
+const SAAS_DETAIL_ROUTE_PATTERNS = [
+  "/portal/opportunities/:opportunityId",
+  "/portal/projects/:projectId",
+  "/portal/billing/:invoiceId",
+];
+
 const SAAS_API_ENDPOINTS = [
   "/api/health",
   "/api/bids",
@@ -65,6 +71,9 @@ const SAAS_API_ENDPOINTS = [
   "/api/field-photos",
   "/api/auricrux/actions",
   "/api/auricrux-comms",
+  "/api/academy-commerce",
+  "/api/commercial-pipeline",
+  "/api/customer-auth-state",
 ];
 
 const SAAS_CLIENT_MODULES = [
@@ -101,6 +110,8 @@ const SCRIPT_CHECKS = [
   "validate-academy-catalog.mjs",
   "validate-catalog-balance.mjs",
   "validate-academy-media.mjs",
+  "validate-academy-readiness-overlay.mjs",
+  "validate-academy-live-api.mjs",
   "validate-file-governance.mjs",
   "validate-finance-workspace.mjs",
   "validate-design-workspace.mjs",
@@ -150,6 +161,12 @@ const routeKeys = routeMatch
 for (const portalRoute of SAAS_PORTAL_ROUTES) {
   if (routeKeys.includes(portalRoute)) pass(`route:${portalRoute}`);
   else fail(`route:${portalRoute}`, "missing from routes.js");
+}
+
+for (const pattern of SAAS_DETAIL_ROUTE_PATTERNS) {
+  const hasPattern = routesSource.includes(`pattern: "${pattern}"`) || routesSource.includes(`pattern: '${pattern}'`);
+  if (hasPattern) pass(`route-pattern:${pattern}`);
+  else fail(`route-pattern:${pattern}`, "missing dynamic detail route");
 }
 
 for (const clientPath of SAAS_CLIENT_MODULES) {

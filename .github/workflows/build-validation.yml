@@ -37,10 +37,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Checkout auricrux-central (academy catalog balance)
+        uses: actions/checkout@v6
+        with:
+          repository: Future-Contractors-of-America-LLC/auricrux-central
+          path: auricrux-central-work
+          token: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+
       - name: Run SaaS quality control
         env:
           FCA_API_BASE: https://api.futurecontractorsofamerica.com
+          FCA_CENTRAL_ROOT: ${{ github.workspace }}/auricrux-central-work
         run: npm run qc:saas
+
+      - name: Run LMS depth quality control
+        env:
+          FCA_API_BASE: https://auricrux-central.azurewebsites.net
+          FCA_CENTRAL_ROOT: ${{ github.workspace }}/auricrux-central-work
+        run: npm run qc:lms
 
       - name: Run governed build validation
         run: npm run build:system

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
@@ -188,6 +188,53 @@ function TopicCard({ topic, pathwayKey, href }) {
   );
 }
 
+function matchesSearch(program, query) {
+  if (!query) return true;
+  const haystack = [
+    program.title,
+    program.key,
+    program.credential,
+    program.credentialTitle,
+    program.issuingAgency,
+    program.licensureBoard,
+    program.accreditationBody,
+    program.apprenticeshipSponsor,
+    program.stateCode,
+    ...(program.governingBodies || []),
+    ...(program.moduleTitles || []),
+  ].filter(Boolean).join(" ").toLowerCase();
+  return haystack.includes(query.toLowerCase());
+}
+
+function CatalogSearchBar({ value, onChange, resultCount, placeholder }) {
+  return (
+    <div style={{ ...cardStyle, marginBottom: 24, padding: 14 }}>
+      <label style={{ display: "block", fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>
+        Search catalog
+      </label>
+      <input
+        type="search"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder || "Course title, agency, state, trade, or keyword"}
+        style={{
+          width: "100%",
+          maxWidth: 520,
+          border: "1px solid #cbd5e1",
+          borderRadius: 10,
+          padding: "10px 14px",
+          font: "inherit",
+        }}
+      />
+      {value ? (
+        <div style={{ color: "#64748b", fontSize: 14, marginTop: 8 }}>
+          {resultCount} match{resultCount === 1 ? "" : "es"}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function Breadcrumb({ pathway, topic }) {
   return (
     <nav style={{ marginBottom: 20, fontSize: 14, color: "#64748b" }} aria-label="Catalog navigation">
@@ -211,6 +258,7 @@ function Breadcrumb({ pathway, topic }) {
 export default function AcademyCatalog() {
   const { session } = useCustomerSession();
   const { academyState, meta } = useAcademyLms();
+  const [searchQuery, setSearchQuery] = useState("");
   const apiPrograms = academyState?.catalog?.programs || [];
   const { pathwayKey, topicKey } = readCatalogParams();
   const includeOperatorGuides = hasAcademySubscription(session);
@@ -226,6 +274,28 @@ export default function AcademyCatalog() {
   const placement = findCatalogPlacement(pathwayKey, topicKey);
   const pathwayLms = getPathwayLmsConfig(pathwayKey);
   const memberOnlyBlocked = pathwayKey && !shouldShowMemberOnlyPathway(pathwayKey, session);
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+
+  const globalSearchResults = useMemo(() => {
+    if (!normalizedQuery) return [];
+    const results = [];
+    for (const pathway of hierarchy) {
+      for (const topic of pathway.topics) {
+        for (const course of topic.courses) {
+          if (matchesSearch(course, normalizedQuery)) {
+            results.push({ pathway, topic, course });
+          }
+        }
+      }
+    }
+    return results;
+  }, [hierarchy, normalizedQuery]);
+
+  const filteredTopicCourses = useMemo(() => {
+    if (!selectedTopic) return [];
+    if (!normalizedQuery) return selectedTopic.courses;
+    return selectedTopic.courses.filter((course) => matchesSearch(course, normalizedQuery));
+  }, [selectedTopic, normalizedQuery]);
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -301,6 +371,37 @@ export default function AcademyCatalog() {
           </ol>
         </div>
 
+        <CatalogSearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          resultCount={selectedTopic ? filteredTopicCourses.length : globalSearchResults.length}
+        />
+
+        {normalizedQuery && !selectedTopic ? (
+          <section style={{ marginBottom: 28 }}>
+            <h2 style={{ marginTop: 0, marginBottom: 16 }}>Search results</h2>
+            {globalSearchResults.length === 0 ? (
+              <div style={{ ...cardStyle, color: "#64748b" }}>No courses match your search.</div>
+            ) : (
+              <div style={{ display: "grid", gap: 16 }}>
+                {globalSearchResults.slice(0, 48).map(({ pathway, topic, course }) => (
+                  <div key={course.key}>
+                    <div style={{ color: "#64748b", fontSize: 13, marginBottom: 6 }}>
+                      <a href={catalogHref(pathway.key, topic.key)} style={{ color: "#2563eb", textDecoration: "none" }}>
+                        {pathway.label} / {topic.label}
+                      </a>
+                    </div>
+                    <CourseCard program={course} topicKey={topic.key} pathwayKey={pathway.key} />
+                  </div>
+                ))}
+                {globalSearchResults.length > 48 ? (
+                  <div style={{ color: "#64748b", fontSize: 14 }}>Showing first 48 of {globalSearchResults.length} matches — narrow your search or pick a pathway.</div>
+                ) : null}
+              </div>
+            )}
+          </section>
+        ) : null}
+
         {memberOnlyBlocked ? (
           <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #fecaca", background: "#fef2f2" }}>
             <strong style={{ color: "#b91c1c" }}>Contractor Command subscription required</strong>
@@ -313,7 +414,7 @@ export default function AcademyCatalog() {
           </div>
         ) : null}
 
-        {!selectedPathway && !memberOnlyBlocked ? (
+        {!selectedPathway && !memberOnlyBlocked && !normalizedQuery ? (
           <section>
             <h2 style={{ marginTop: 0, marginBottom: 16 }}>1. Choose a pathway</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
@@ -385,12 +486,12 @@ export default function AcademyCatalog() {
               <p style={{ color: "#1d4ed8", fontWeight: 700, marginTop: 0, marginBottom: 8 }}>{topicMetaLine(selectedTopic, selectedPathway.key)}</p>
             ) : null}
             <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0, marginBottom: 20 }}>
-              {selectedTopic.courses.length === 0
-                ? "State-specific prep for this jurisdiction is launching soon. Universal and trade prep courses are available in other licensure topics."
+              {filteredTopicCourses.length === 0
+                ? (normalizedQuery ? "No courses match your search in this topic." : "State-specific prep for this jurisdiction is launching soon. Universal and trade prep courses are available in other licensure topics.")
                 : "All syllabi and curriculum outlines are visible. Enrollment requires an eligible subscription, add-on, and any listed prerequisites."}
             </p>
             <div style={{ display: "grid", gap: 18 }}>
-              {selectedTopic.courses.map((program) => (
+              {filteredTopicCourses.map((program) => (
                 <CourseCard key={program.key} program={program} pathwayKey={selectedPathway.key} topicKey={selectedTopic.key} />
               ))}
             </div>

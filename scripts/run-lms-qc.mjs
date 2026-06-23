@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /**
- * LMS depth + content quality control — catalog, media slots, API, CTAs.
+ * LMS depth + content quality control — catalog, media, live API, CTAs, compliance maps.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 import { academyCatalog } from "../src/academyCatalog.js";
 
-const root = process.cwd();
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputDir = path.join(root, "docs", "qc");
 fs.mkdirSync(outputDir, { recursive: true });
 
@@ -17,6 +17,15 @@ const findings = [];
 let passed = 0;
 let failed = 0;
 let warnings = 0;
+
+const ACADEMY_SCRIPTS = [
+  "validate-academy-ctas.mjs",
+  "validate-academy-catalog.mjs",
+  "validate-catalog-balance.mjs",
+  "validate-academy-media.mjs",
+  "validate-academy-readiness-overlay.mjs",
+  "validate-academy-live-api.mjs",
+];
 
 function pass(label, detail = "") {
   passed += 1;
@@ -36,12 +45,14 @@ function warn(label, detail = "") {
   console.warn(`WARN: ${label}${detail ? ` — ${detail}` : ""}`);
 }
 
-const ctaResult = spawnSync("node", ["scripts/validate-academy-ctas.mjs"], {
-  stdio: "inherit",
-  shell: process.platform === "win32",
-});
-if (ctaResult.status === 0) pass("script:validate-academy-ctas.mjs");
-else fail("script:validate-academy-ctas.mjs");
+for (const script of ACADEMY_SCRIPTS) {
+  const result = spawnSync(process.execPath, [path.join(root, "scripts", script)], {
+    stdio: "inherit",
+    cwd: root,
+  });
+  if (result.status === 0) pass(`script:${script}`);
+  else fail(`script:${script}`);
+}
 
 const routesSource = fs.readFileSync(path.join(root, "src", "routes.js"), "utf8");
 const routeKeys = [...routesSource.matchAll(/(["'])(\/[^"']*)\1\s*:/g)].map((m) => m[2]);
@@ -93,7 +104,7 @@ for (const program of academyCatalog.programs) {
         pass(`lesson-media:${course.code}:${i + 1}`);
       } else {
         lessonsMissingMedia += 1;
-        warn(`lesson-media:${course.code}:${i + 1}`, `lecture=${hasLecture} labDemo=${hasLabDemo} eval=${hasEval} — media pending production`);
+        warn(`lesson-media:${course.code}:${i + 1}`, `lecture=${hasLecture} labDemo=${hasLabDemo} eval=${hasEval} — static slice pending production URLs`);
       }
     }
 
@@ -125,10 +136,13 @@ if (fs.existsSync(path.join(root, "api/academy-program-modules.js"))) {
 }
 
 try {
-  const response = await fetch(`${API_BASE}/api/academy-lms`, { headers: { Accept: "application/json" } });
+  const response = await fetch(`${API_BASE}/api/academy-lms?view=summary`, { headers: { Accept: "application/json" } });
   const payload = await response.json();
   if (response.ok && payload?.ok) {
-    pass("api:academy-lms", `programs in API: ${payload.programs?.length ?? payload.catalog?.programs?.length ?? "unknown"}`);
+    const count = payload.catalog?.totalPrograms ?? payload.catalog?.programs?.length ?? "unknown";
+    pass("api:academy-lms", `programs in API: ${count}`);
+    if (payload.catalogIntegrity?.aligned) pass("api:catalog-integrity", "aligned");
+    else warn("api:catalog-integrity", "not aligned or missing");
     if (payload.learners !== undefined) pass("api:academy-learners", `${payload.learners?.length ?? 0} learners`);
     if (payload.enrollments !== undefined) pass("api:academy-enrollments", `${payload.enrollments?.length ?? 0} enrollments`);
   } else {
@@ -141,6 +155,8 @@ try {
 const lmsPages = [
   "src/pages/academy/AcademyHome.jsx",
   "src/pages/academy/AcademyCatalog.jsx",
+  "src/pages/academy/AcademyModuleLesson.jsx",
+  "src/pages/academy/AcademyProgramDetail.jsx",
   "src/hooks/useAcademyLms.js",
   "src/api/academyClient.js",
 ];
@@ -165,17 +181,12 @@ const report = {
 const md = `# LMS Depth & Content QC Report
 
 - Generated: ${report.generatedAt}
-- Programs: ${report.programCount}
+- Programs (static slice): ${report.programCount}
 - Total lessons: ${totalLessons}
 - Lessons with full media: ${lessonsWithMedia}
 - Lessons pending media: ${lessonsMissingMedia}
 - Media coverage: ${report.mediaCoveragePct}%
 - Passed: ${passed} | Failed: ${failed} | Warnings: ${warnings}
-
-## Content depth notes
-- Every program must have courses, lesson counts matching titles, and a valid linked portal surface.
-- Prerecorded lecture + lab demo + performance eval videos are tracked per lesson via \`course.lessonMedia[]\`.
-- Warnings for missing media are expected until Foundry production pipeline fills slots.
 
 ## Findings
 ${findings.map((f) => `- **${f.status.toUpperCase()}** ${f.label}${f.detail ? `: ${f.detail}` : ""}`).join("\n")}

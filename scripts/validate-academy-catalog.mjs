@@ -1,8 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
-import { pathToFileURL } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
-const root = process.cwd();
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const catalogSource = await fs.readFile(path.join(root, "src", "pages", "academy", "AcademyCatalog.jsx"), "utf8");
 const taxonomyModule = await import(pathToFileURL(path.join(root, "src", "academyCatalogTaxonomy.js")).href);
 const offeringsModule = await import(pathToFileURL(path.join(root, "src", "academyOfferings.js")).href);
