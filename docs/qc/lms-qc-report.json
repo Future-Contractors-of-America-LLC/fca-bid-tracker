@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-23T09:14:22.026Z",
+  "generatedAt": "2026-06-23T16:37:17.457Z",
   "scope": "LMS depth + content QC",
-  "apiBase": "https://auricrux-central.azurewebsites.net",
+  "apiBase": "https://api.futurecontractorsofamerica.com",
   "programCount": 15,
   "totalLessons": 71,
   "lessonsWithMedia": 0,

@@ -1,9 +1,9 @@
 # SaaS Quality Control Report
 
-- Generated: 2026-06-23T16:24:58.909Z
+- Generated: 2026-06-23T16:37:07.984Z
 - API base: https://api.futurecontractorsofamerica.com
-- Passed: 174
-- Failed: 1
+- Passed: 175
+- Failed: 0
 - Warnings: 0
 
 ## Portal routes checked
@@ -55,7 +55,7 @@
 - **PASS** script:validate-product-readiness-surfaces.mjs
 - **PASS** script:validate-operations-pipeline.mjs
 - **PASS** script:validate-site-metadata.mjs
-- **FAIL** script:smoke-central-spine.mjs
+- **PASS** script:smoke-central-spine.mjs
 - **PASS** route:/portal
 - **PASS** route:/portal/platform
 - **PASS** route:/portal/bids

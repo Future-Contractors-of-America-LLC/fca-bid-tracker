@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-23T16:24:51.417Z",
+  "generatedAt": "2026-06-23T16:36:50.633Z",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "summary": {
-    "passed": 13,
-    "failed": 3
+    "passed": 16,
+    "failed": 0
   },
   "findings": [
     {
@@ -57,19 +57,19 @@
       "detail": "HTTP 200"
     },
     {
-      "status": "fail",
+      "status": "pass",
       "label": "GET /api/projects/PRJ-SMOKE-001",
-      "detail": "route handler context dispatch bug (deploy v1_routes fix)"
+      "detail": "HTTP 404"
     },
     {
-      "status": "fail",
+      "status": "pass",
       "label": "GET /api/opportunities/LEAD-SMOKE-001",
-      "detail": "route handler context dispatch bug (deploy v1_routes fix)"
+      "detail": "HTTP 404"
     },
     {
-      "status": "fail",
+      "status": "pass",
       "label": "GET /api/portal-invoices/INV-SMOKE-001",
-      "detail": "route handler context dispatch bug (deploy v1_routes fix)"
+      "detail": "HTTP 404"
     },
     {
       "status": "pass",

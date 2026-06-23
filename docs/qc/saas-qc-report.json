@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-06-23T16:24:58.909Z",
+  "generatedAt": "2026-06-23T16:37:07.984Z",
   "scope": "SaaS QC",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "summary": {
-    "passed": 174,
-    "failed": 1,
+    "passed": 175,
+    "failed": 0,
     "warnings": 0
   },
   "portalRouteCount": 29,
@@ -96,7 +96,7 @@
       "detail": ""
     },
     {
-      "status": "fail",
+      "status": "pass",
       "label": "script:smoke-central-spine.mjs",
       "detail": ""
     },
