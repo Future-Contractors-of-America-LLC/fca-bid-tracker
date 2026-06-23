@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-06-23T01:49:30.462Z",
+  "generatedAt": "2026-06-23T16:24:58.909Z",
   "scope": "SaaS QC",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "summary": {
-    "passed": 167,
-    "failed": 0,
+    "passed": 174,
+    "failed": 1,
     "warnings": 0
   },
   "portalRouteCount": 29,
-  "apiEndpointCount": 22,
+  "apiEndpointCount": 25,
   "findings": [
     {
       "status": "pass",
@@ -43,6 +43,16 @@
     {
       "status": "pass",
       "label": "script:validate-academy-media.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-readiness-overlay.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-live-api.mjs",
       "detail": ""
     },
     {
@@ -86,7 +96,7 @@
       "detail": ""
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "script:smoke-central-spine.mjs",
       "detail": ""
     },
@@ -233,6 +243,21 @@
     {
       "status": "pass",
       "label": "route:/portal/notifications",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route-pattern:/portal/opportunities/:opportunityId",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route-pattern:/portal/projects/:projectId",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route-pattern:/portal/billing/:invoiceId",
       "detail": ""
     },
     {
@@ -823,6 +848,21 @@
     {
       "status": "pass",
       "label": "api:/api/auricrux-comms",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/academy-commerce",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/commercial-pipeline",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/customer-auth-state",
       "detail": "HTTP 200"
     },
     {

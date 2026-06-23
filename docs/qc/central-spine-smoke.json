@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-23T01:49:22.589Z",
+  "generatedAt": "2026-06-23T16:24:51.417Z",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "summary": {
-    "passed": 10,
-    "failed": 0
+    "passed": 13,
+    "failed": 3
   },
   "findings": [
     {
@@ -40,6 +40,36 @@
       "status": "pass",
       "label": "GET /api/auricrux/actions",
       "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/customer-auth-state",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/academy-commerce?limit=1",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "GET /api/commercial-pipeline",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "fail",
+      "label": "GET /api/projects/PRJ-SMOKE-001",
+      "detail": "route handler context dispatch bug (deploy v1_routes fix)"
+    },
+    {
+      "status": "fail",
+      "label": "GET /api/opportunities/LEAD-SMOKE-001",
+      "detail": "route handler context dispatch bug (deploy v1_routes fix)"
+    },
+    {
+      "status": "fail",
+      "label": "GET /api/portal-invoices/INV-SMOKE-001",
+      "detail": "route handler context dispatch bug (deploy v1_routes fix)"
     },
     {
       "status": "pass",

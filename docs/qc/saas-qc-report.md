@@ -1,9 +1,9 @@
 # SaaS Quality Control Report
 
-- Generated: 2026-06-23T01:49:30.462Z
+- Generated: 2026-06-23T16:24:58.909Z
 - API base: https://api.futurecontractorsofamerica.com
-- Passed: 167
-- Failed: 0
+- Passed: 174
+- Failed: 1
 - Warnings: 0
 
 ## Portal routes checked
@@ -45,6 +45,8 @@
 - **PASS** script:validate-academy-catalog.mjs
 - **PASS** script:validate-catalog-balance.mjs
 - **PASS** script:validate-academy-media.mjs
+- **PASS** script:validate-academy-readiness-overlay.mjs
+- **PASS** script:validate-academy-live-api.mjs
 - **PASS** script:validate-file-governance.mjs
 - **PASS** script:validate-finance-workspace.mjs
 - **PASS** script:validate-design-workspace.mjs
@@ -53,7 +55,7 @@
 - **PASS** script:validate-product-readiness-surfaces.mjs
 - **PASS** script:validate-operations-pipeline.mjs
 - **PASS** script:validate-site-metadata.mjs
-- **PASS** script:smoke-central-spine.mjs
+- **FAIL** script:smoke-central-spine.mjs
 - **PASS** route:/portal
 - **PASS** route:/portal/platform
 - **PASS** route:/portal/bids
@@ -83,6 +85,9 @@
 - **PASS** route:/portal/warranty
 - **PASS** route:/portal/legal
 - **PASS** route:/portal/notifications
+- **PASS** route-pattern:/portal/opportunities/:opportunityId
+- **PASS** route-pattern:/portal/projects/:projectId
+- **PASS** route-pattern:/portal/billing/:invoiceId
 - **PASS** client:src/api/workflowClient.js
 - **PASS** client:src/api/portalClient.js
 - **PASS** client:src/api/intakeClient.js
@@ -201,6 +206,9 @@
 - **PASS** api:/api/field-photos: HTTP 200
 - **PASS** api:/api/auricrux/actions: HTTP 200
 - **PASS** api:/api/auricrux-comms: HTTP 200
+- **PASS** api:/api/academy-commerce: HTTP 200
+- **PASS** api:/api/commercial-pipeline: HTTP 200
+- **PASS** api:/api/customer-auth-state: HTTP 200
 - **PASS** blueprint:/portal/bids
 - **PASS** blueprint:/portal/projects
 - **PASS** blueprint:/portal/files
