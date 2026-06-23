@@ -8,6 +8,7 @@ import { organizeCatalogHierarchy } from "../../academyOfferings";
 import { hasAcademySubscription, shouldShowMemberOnlyPathway } from "../../academySubscriptionAccess";
 import { getCertificationAgencyAlignment } from "../../academyCatalogTaxonomy";
 import { getPathwayLmsConfig, listPathwayLmsConfigs } from "../../academyPathwayLms";
+import AcademyPathwaySequenceWizard from "../../components/academy/AcademyPathwaySequenceWizard";
 import { shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -106,6 +107,12 @@ function TopicRow({ topic, pathwayKey, config }) {
   );
 }
 
+const PATHWAY_DEFAULT_SEQUENCE_TOPIC = {
+  certification: "safety-osha",
+  licensure: "electrical-licensure",
+  degree: "aas-construction-management",
+};
+
 export default function AcademyPathwayHub() {
   const pathwayKey = readPathwayKey();
   const { session } = useCustomerSession();
@@ -118,6 +125,7 @@ export default function AcademyPathwayHub() {
     [apiPrograms, includeOperatorGuides],
   );
   const pathway = hierarchy.find((entry) => entry.key === pathwayKey) || null;
+  const enrollments = academyState?.enrollments || [];
   const memberOnlyBlocked = pathwayKey && !shouldShowMemberOnlyPathway(pathwayKey, session);
   const visiblePathwayConfigs = useMemo(
     () => listPathwayLmsConfigs().filter((entry) => shouldShowMemberOnlyPathway(entry.key, session)),
@@ -219,6 +227,14 @@ export default function AcademyPathwayHub() {
             Learner dashboard
           </a>
         </div>
+
+        <AcademyPathwaySequenceWizard
+          pathwayKey={pathwayKey}
+          topicKey={PATHWAY_DEFAULT_SEQUENCE_TOPIC[pathwayKey]}
+          enrollments={enrollments}
+          accent={config.accent}
+          subtitle={`Auricrux-recommended progression across ${config.heroTitle} — from foundations to credential and licensure readiness.`}
+        />
 
         <h2 style={{ marginTop: 0, marginBottom: 16 }}>Topics in this pathway</h2>
         <div style={{ display: "grid", gap: 14 }}>

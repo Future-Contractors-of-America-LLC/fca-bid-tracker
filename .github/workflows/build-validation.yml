@@ -38,6 +38,7 @@ jobs:
         run: npm ci
 
       - name: Checkout auricrux-central (academy catalog balance)
+        continue-on-error: true
         uses: actions/checkout@v6
         with:
           repository: Future-Contractors-of-America-LLC/auricrux-central

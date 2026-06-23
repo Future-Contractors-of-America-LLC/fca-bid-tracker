@@ -8,6 +8,8 @@ import { listPathwayLmsConfigs } from "../../academyPathwayLms";
 import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
 import { hasAcademySubscription, shouldShowMemberOnlyPathway } from "../../academySubscriptionAccess";
 import { academyPageStyle } from "../../academyDesignSystem";
+import { TRANSCRIPT_COMPLIANCE_DISCLAIMER, buildTranscriptComplianceFootnotes, triggerTranscriptPdfPrint } from "../../academyTranscriptExport";
+import AcademyPathwaySequenceWizard from "../../components/academy/AcademyPathwaySequenceWizard";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -33,6 +35,7 @@ export default function AcademyDashboard() {
   const [transcriptBusy, setTranscriptBusy] = useState(false);
   const [transcriptMessage, setTranscriptMessage] = useState("");
   const [showPrintTranscript, setShowPrintTranscript] = useState(false);
+  const [exportedTranscript, setExportedTranscript] = useState(null);
   const learnerId = session?.email || session?.customerId;
   const learnerName = session?.displayName || session?.company || session?.email || "Learner";
 
@@ -128,6 +131,7 @@ export default function AcademyDashboard() {
     setTranscriptMessage("");
     try {
       const payload = await exportTranscript(learnerId);
+      setExportedTranscript(payload.transcript || payload);
       const blob = new Blob([JSON.stringify(payload.transcript || payload, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
@@ -143,6 +147,24 @@ export default function AcademyDashboard() {
     }
   }
 
+  async function handleSaveTranscriptPdf() {
+    if (!learnerId) {
+      setTranscriptMessage("Sign in to save your transcript as PDF.");
+      return;
+    }
+    setShowPrintTranscript(true);
+    setTranscriptMessage("");
+    if (!exportedTranscript) {
+      try {
+        const payload = await exportTranscript(learnerId);
+        setExportedTranscript(payload.transcript || payload);
+      } catch {
+        // print view still works from enrollments
+      }
+    }
+    requestAnimationFrame(() => triggerTranscriptPdfPrint());
+  }
+
   async function handlePrintTranscript() {
     if (!learnerId) {
       setTranscriptMessage("Sign in to print your transcript.");
@@ -150,10 +172,15 @@ export default function AcademyDashboard() {
     }
     setShowPrintTranscript(true);
     setTranscriptMessage("");
-    requestAnimationFrame(() => {
-      window.print();
-      setTimeout(() => setShowPrintTranscript(false), 500);
-    });
+    if (!exportedTranscript) {
+      try {
+        const payload = await exportTranscript(learnerId);
+        setExportedTranscript(payload.transcript || payload);
+      } catch {
+        // print view still works from enrollments
+      }
+    }
+    requestAnimationFrame(() => triggerTranscriptPdfPrint());
   }
 
   return (
@@ -161,7 +188,10 @@ export default function AcademyDashboard() {
       <style>{`
         @media print {
           body * { visibility: hidden !important; }
+          body.fca-print-transcript #fca-transcript-print,
+          body.fca-print-transcript #fca-transcript-print *,
           #fca-transcript-print, #fca-transcript-print * { visibility: visible !important; }
+          body.fca-print-transcript #fca-transcript-print,
           #fca-transcript-print {
             position: absolute;
             left: 0;
@@ -656,6 +686,14 @@ export default function AcademyDashboard() {
             </button>
             <button
               type="button"
+              onClick={handleSaveTranscriptPdf}
+              disabled={!learnerId}
+              style={{ border: "1px solid #0c2340", background: "#0c2340", color: "#fff", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
+            >
+              Save as PDF
+            </button>
+            <button
+              type="button"
               onClick={handlePrintTranscript}
               disabled={!learnerId}
               style={{ border: "1px solid #16a34a", background: "#fff", color: "#15803d", borderRadius: 10, padding: "10px 14px", fontWeight: 700, cursor: "pointer" }}
@@ -692,6 +730,14 @@ export default function AcademyDashboard() {
             </table>
           ) : null}
         </section>
+
+        <AcademyPathwaySequenceWizard
+          pathwayKey="apprenticeship"
+          enrollments={enrollments}
+          accent="#0369a1"
+          title="Career pathway wizard"
+          subtitle="Apprenticeship core levels through journeyman certification and licensure exam prep."
+        />
       </main>
 
       {showPrintTranscript ? (
@@ -746,6 +792,20 @@ export default function AcademyDashboard() {
               ))}
             </div>
           ) : null}
+          <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid #cbd5e1" }}>
+            <h2 style={{ fontSize: 14, marginBottom: 8 }}>Compliance and alignment</h2>
+            {buildTranscriptComplianceFootnotes(exportedTranscript || { programs: enrollments.map((e) => ({ programKey: e.programKey, programTitle: e.programTitle, lane: apiPrograms.find((p) => p.key === e.programKey)?.lane })) }, apiPrograms).map((entry) => (
+              <div key={entry.programKey} style={{ marginBottom: 10, fontSize: 12, lineHeight: 1.6 }}>
+                <strong>{entry.programTitle}</strong>
+                <ul style={{ margin: "4px 0 0", paddingLeft: 18 }}>
+                  {entry.lines.map((line) => (
+                    <li key={line}>{typeof line === "string" ? line : `${line}`}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <p style={{ fontSize: 11, color: "#64748b", lineHeight: 1.6, marginBottom: 0 }}>{TRANSCRIPT_COMPLIANCE_DISCLAIMER}</p>
+          </div>
         </div>
       ) : null}
 

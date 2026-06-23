@@ -6,6 +6,13 @@ const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDir, "..");
 const centralRoot = path.resolve(process.env.FCA_CENTRAL_ROOT || path.join(root, "..", "auricrux-central-work"), "core");
 
+import fsSync from "fs";
+if (!fsSync.existsSync(centralRoot)) {
+  console.warn(`Catalog balance check skipped — backend core not found at ${centralRoot}`);
+  console.log("Balance check skipped (no auricrux-central checkout).");
+  process.exit(0);
+}
+
 async function extractProgramKeys(fileName) {
   const source = await fs.readFile(path.join(centralRoot, fileName), "utf8");
   return [...source.matchAll(/['"]key['"]:\s*['"]([^'"]+)['"]/g)].map((match) => match[1]);

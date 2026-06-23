@@ -3,6 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import { certificateComplianceFootnote } from "../../academyTranscriptExport";
 import { academyCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -63,6 +64,7 @@ export default function AcademyCredentials() {
   const { session } = useCustomerSession();
   const { academyState } = useAcademyLms();
   const [printId, setPrintId] = useState("");
+  const apiPrograms = academyState?.catalog?.programs || [];
   const learnerId = session?.email || session?.customerId;
   const learnerName = session?.displayName || session?.email || "Learner";
 
@@ -169,6 +171,9 @@ export default function AcademyCredentials() {
                   </div>
                   {isPrintTarget ? (
                     <div style={{ marginTop: 24, textAlign: "center", color: "#64748b", fontSize: 12, lineHeight: 1.6 }}>
+                      <div style={{ marginBottom: 12, textAlign: "left", padding: "0 12px" }}>
+                        {certificateComplianceFootnote(cert.programKey, apiPrograms)}
+                      </div>
                       Future Contractors of America Academy · futurecontractorsofamerica.com/academy
                     </div>
                   ) : (
