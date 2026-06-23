@@ -17,8 +17,8 @@ env:
   AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,app.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
 
 concurrency:
-  group: swa-deploy-main
-  cancel-in-progress: true
+  group: swa-deploy-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   build_and_deploy_job:

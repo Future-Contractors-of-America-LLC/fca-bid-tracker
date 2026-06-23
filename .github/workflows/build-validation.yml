@@ -14,8 +14,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: fca-build-validation-${{ github.ref }}
-  cancel-in-progress: true
+  group: fca-build-validation-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   validate:

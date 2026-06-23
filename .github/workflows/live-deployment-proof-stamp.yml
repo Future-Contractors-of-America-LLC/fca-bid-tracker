@@ -13,8 +13,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: fca-live-deployment-proof-${{ github.ref }}
-  cancel-in-progress: true
+  group: fca-live-deployment-proof-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
 
 jobs:
   stamp-live-deployment-proof:
