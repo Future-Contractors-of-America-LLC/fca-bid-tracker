@@ -4,6 +4,7 @@ import ShellFooter from "../../components/ShellFooter";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
+import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import PublicCtaRow from "../../components/PublicCtaRow";
@@ -176,7 +177,7 @@ function writeCourseProgress(progress) {
 }
 
 export default function AcademyHome() {
-  const { session } = useCustomerSession();
+  const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { refreshSyncStamp } = useWorkspaceState();
   const { academyState, meta } = useAcademyLms();
   const [progress, setProgress] = useState(() => readCourseProgress());
@@ -235,6 +236,13 @@ export default function AcademyHome() {
       </div>
 
       <ProductAccessStatusPanel session={session} />
+      <AcademyReadinessOverlay
+        session={session}
+        setProductAccess={setProductAccess}
+        setCommsAccess={setCommsAccess}
+        applyPlanPreset={applyPlanPreset}
+        refreshSyncStamp={refreshSyncStamp}
+      />
       <CustomerCommsLaunchpad session={session} title="Launch training and communications from one branded customer experience" />
       <AcademyLmsControlPanel />
 
