@@ -44,7 +44,7 @@ async function postCommerce(path, body) {
       lastPayload = payload;
       lastStatus = response.status;
 
-      if (response.status === 404 || response.status === 502) {
+      if (response.status === 404 || response.status === 405 || response.status === 502) {
         continue;
       }
 
