@@ -12,6 +12,7 @@ window.FCA_BACKEND = {
   academyLmsApi: "https://api.futurecontractorsofamerica.com/api/academy-lms",
   academyRemediationApi: "https://api.futurecontractorsofamerica.com/api/academy-remediation-summary",
   customerLoginApi: "https://api.futurecontractorsofamerica.com/api/customer-login",
+  customerVerifyApi: "https://api.futurecontractorsofamerica.com/api/customer-verify",
   customerSessionApi: "https://api.futurecontractorsofamerica.com/api/customer-session",
   customerLogoutApi: "https://api.futurecontractorsofamerica.com/api/customer-logout",
   customerAuthStateApi: "https://api.futurecontractorsofamerica.com/api/customer-auth-state",

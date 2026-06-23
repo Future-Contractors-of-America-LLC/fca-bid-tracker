@@ -8,6 +8,27 @@ const CENTRAL_API =
 
 const checks = [
   {
+    name: "customer_verify_route",
+    url: `${CENTRAL_API}/customer-verify`,
+    method: "POST",
+    body: { challengeId: "smoke", code: "000000" },
+    expectOk: false,
+    validate: (data) => data && data.route === "customer-verify",
+    note: "Route must exist; invalid code should return 401.",
+  },
+  {
+    name: "job_board_view",
+    url: `${CENTRAL_API}/leads?view=job-board`,
+    expectOk: true,
+    validate: (data) => data && data.view === "job-board" && Array.isArray(data.items),
+  },
+  {
+    name: "contractors_view",
+    url: `${CENTRAL_API}/leads?view=contractors`,
+    expectOk: true,
+    validate: (data) => data && data.view === "contractors" && Array.isArray(data.items),
+  },
+  {
     name: "health",
     url: `${CENTRAL_API}/health`,
     expectOk: true,
@@ -66,6 +87,9 @@ async function runCheck(check) {
 
   if (check.expectOk === false) {
     if (check.note) console.log(`NOTE ${check.name}: ${check.note} (HTTP ${response.status})`);
+    if (check.validate && !check.validate(data)) {
+      throw new Error(`${check.name}: response shape invalid`);
+    }
     return { name: check.name, status: response.status, optional: true };
   }
 
