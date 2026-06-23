@@ -1,6 +1,6 @@
 # LMS Depth & Content QC Report
 
-- Generated: 2026-06-23T16:37:17.457Z
+- Generated: 2026-06-23T16:45:02.883Z
 - Programs (static slice): 15
 - Total lessons: 71
 - Lessons with full media: 0

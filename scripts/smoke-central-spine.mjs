@@ -92,6 +92,7 @@ const detailChecks = [
 ];
 
 for (const route of getChecks) {
+  if (route === "/api/customer-auth-state") continue;
   try {
     const { response } = await getJson(route);
     if (response.ok) pass(`GET ${route}`, `HTTP ${response.status}`);
@@ -99,6 +100,23 @@ for (const route of getChecks) {
   } catch (error) {
     fail(`GET ${route}`, error.message);
   }
+}
+
+try {
+  const { response, body } = await getJson("/api/customer-auth-state");
+  const boundary = body?.authBoundary;
+  if (!response.ok) {
+    fail("GET /api/customer-auth-state", `HTTP ${response.status}`);
+  } else if (boundary?.productionAuthReady && boundary?.activeMode === "managed-server-session") {
+    pass("GET /api/customer-auth-state", "productionAuthReady=true");
+  } else {
+    fail(
+      "GET /api/customer-auth-state",
+      `expected productionAuthReady=true, got productionAuthReady=${boundary?.productionAuthReady}, activeMode=${boundary?.activeMode}`,
+    );
+  }
+} catch (error) {
+  fail("GET /api/customer-auth-state", error.message);
 }
 
 for (const { route, allowStatuses } of detailChecks) {
