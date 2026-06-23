@@ -9,6 +9,8 @@ import { findCatalogPlacement } from "../../academyOfferings";
 import { resolveProgramCatalogMeta, formatAddonLabel, formatPlanLabel, getPathwayByKey, getTopicByKey, getCertificationAgencyAlignment, getApprenticeshipCompliance, getDegreeAccreditationFootnote } from "../../academyCatalogTaxonomy";
 import AcademyCourseChrome from "../../components/academy/AcademyCourseChrome";
 import { academyPageStyle } from "../../academyDesignSystem";
+import { academyCheckoutHref } from "../../commerceCheckout";
+import AcademyBuyButton from "../../components/AcademyBuyButton";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
 
@@ -236,9 +238,9 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
                 )}
               </div>
             ) : (
-              <div style={{ marginTop: 12 }}>
+              <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 10, alignItems: "flex-start" }}>
                 {access.blockers.length > 0 ? (
-                  <div style={{ marginBottom: 12, padding: 12, borderRadius: 10, background: "#fffbeb", border: "1px solid #fde68a" }}>
+                  <div style={{ marginBottom: 12, padding: 12, borderRadius: 10, background: "#fffbeb", border: "1px solid #fde68a", width: "100%" }}>
                     <div style={{ fontWeight: 700, color: "#92400e", marginBottom: 8 }}>Enrollment requirements</div>
                     <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#78350f", margin: 0 }}>
                       {access.blockers.map((blocker) => (
@@ -252,26 +254,34 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
                     </ul>
                   </div>
                 ) : (
-                  <div style={{ color: "#64748b", marginBottom: 10 }}>Enroll to access knowledge checks, progress tracking, and credential completion.</div>
+                  <div style={{ color: "#64748b", marginBottom: 4, width: "100%" }}>
+                    Purchase to unlock full access, or enroll when your workspace already includes this program.
+                  </div>
                 )}
+                <AcademyBuyButton
+                  programKey={programId}
+                  retailPrice={program.retailPrice}
+                  lane={program.lane || catalogMeta?.pathwayKey}
+                  buyerEmail={session?.email}
+                />
                 <button
                   type="button"
                   disabled={enrollBusy || !access.canEnroll}
                   onClick={enrollNow}
                   style={{
                     border: "1px solid #2563eb",
-                    background: access.canEnroll ? "#2563eb" : "#94a3b8",
-                    color: "#fff",
+                    background: access.canEnroll ? "#fff" : "#f8fafc",
+                    color: access.canEnroll ? "#2563eb" : "#94a3b8",
                     borderRadius: 10,
                     padding: "10px 14px",
                     fontWeight: 700,
                     cursor: access.canEnroll ? "pointer" : "not-allowed",
                   }}
                 >
-                  {enrollBusy ? "Enrolling..." : access.canEnroll ? "Enroll in course" : "Enrollment locked"}
+                  {enrollBusy ? "Enrolling..." : access.canEnroll ? "Enroll (included access)" : "Enrollment locked"}
                 </button>
                 {catalogMeta?.enrollment?.minimumPlan ? (
-                  <div style={{ fontSize: 13, color: "#64748b", marginTop: 8 }}>
+                  <div style={{ fontSize: 13, color: "#64748b", width: "100%" }}>
                     Minimum plan: {formatPlanLabel(catalogMeta.enrollment.minimumPlan)}
                     {catalogMeta.enrollment.addonKey ? ` · ${formatAddonLabel(catalogMeta.enrollment.addonKey)}` : ""}
                   </div>

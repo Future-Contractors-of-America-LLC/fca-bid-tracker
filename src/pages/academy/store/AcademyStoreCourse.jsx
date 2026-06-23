@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import ShellHeader from "../../../components/ShellHeader";
 import ShellFooter from "../../../components/ShellFooter";
+import { academyCheckoutHref } from "../../../commerceCheckout";
 import {
   fetchAcademyCommerceItem,
   formatUsd,
-  startAcademyCheckout,
-  submitAcademyContactSales,
 } from "../../../api/academyCommerceClient";
 import { shellHeaderCtaSets, shellJourney } from "../../../websiteShell";
 import { pageShellStyle } from "../../../publicShellStyles";
@@ -35,7 +34,6 @@ export default function AcademyStoreCourse() {
   const [buyerName, setBuyerName] = useState("");
   const [notes, setNotes] = useState("");
   const [status, setStatus] = useState("");
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -59,42 +57,12 @@ export default function AcademyStoreCourse() {
     return () => { active = false; };
   }, [programKey]);
 
-  async function handleBuy() {
+  function handleBuy() {
     if (!buyerEmail.trim()) {
       setStatus("Enter your email to continue.");
       return;
     }
-    setSubmitting(true);
-    setStatus("");
-    const successUrl = `${window.location.origin}/academy/store/success?programKey=${encodeURIComponent(programKey)}`;
-    const cancelUrl = `${window.location.origin}/academy/store/course/${encodeURIComponent(programKey)}`;
-    try {
-      const checkout = await startAcademyCheckout({
-        purchaseType: "course",
-        programKey,
-        buyerEmail: buyerEmail.trim(),
-        buyerName: buyerName.trim(),
-        successUrl,
-        cancelUrl,
-      });
-      if (checkout.mode === "contact-sales" || !checkout.checkoutUrl) {
-        await submitAcademyContactSales({
-          purchaseType: "course",
-          programKey,
-          buyerEmail: buyerEmail.trim(),
-          buyerName: buyerName.trim(),
-          notes,
-          retailPrice: item?.retailPrice,
-        });
-        window.location.assign(`${successUrl}&mode=contact-sales`);
-        return;
-      }
-      window.location.assign(checkout.checkoutUrl);
-    } catch (buyError) {
-      setStatus(buyError.message || "Checkout failed.");
-    } finally {
-      setSubmitting(false);
-    }
+    window.location.assign(academyCheckoutHref({ programKey, email: buyerEmail.trim() }));
   }
 
   return (
@@ -160,7 +128,6 @@ export default function AcademyStoreCourse() {
               <button
                 type="button"
                 onClick={handleBuy}
-                disabled={submitting}
                 style={{
                   border: "none",
                   background: "#2563eb",
@@ -168,10 +135,10 @@ export default function AcademyStoreCourse() {
                   borderRadius: 10,
                   padding: "12px 18px",
                   fontWeight: 700,
-                  cursor: submitting ? "wait" : "pointer",
+                  cursor: "pointer",
                 }}
               >
-                {submitting ? "Processing..." : stripeConfigured ? "Buy now with Stripe" : "Request purchase"}
+                Continue to secure checkout
               </button>
               {status ? <p style={{ color: "#b45309", marginTop: 12 }}>{status}</p> : null}
             </div>

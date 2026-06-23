@@ -1,4 +1,9 @@
 import { centralApi, centralFetch } from "./backendBase";
+import {
+  academyCourseCheckoutFromCatalog,
+  academyPathwayCheckoutFromCatalog,
+  loadStripeCatalog,
+} from "../stripeCatalog.js";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
@@ -96,20 +101,37 @@ export async function createAcademyCheckout({
   clientReferenceId,
   uiMode = "embedded",
 } = {}) {
-  return postCommerce("/api/academy-commerce", {
-    action: "checkout",
-    programKey,
-    pathwayKey,
-    purchaseType: pathwayKey ? "pathway" : "course",
-    buyerEmail,
-    customerEmail: buyerEmail,
-    successUrl,
-    cancelUrl,
-    returnUrl: successUrl,
-    clientReferenceId,
-    uiMode,
-    embedded: uiMode === "embedded",
-  });
+  try {
+    const payload = await postCommerce("/api/academy-commerce", {
+      action: "checkout",
+      programKey,
+      pathwayKey,
+      purchaseType: pathwayKey ? "pathway" : "course",
+      buyerEmail,
+      customerEmail: buyerEmail,
+      successUrl,
+      cancelUrl,
+      returnUrl: successUrl,
+      clientReferenceId,
+      uiMode,
+      embedded: uiMode === "embedded",
+    });
+    if (payload?.clientSecret || payload?.checkoutUrl) {
+      return payload;
+    }
+  } catch {
+    // Fall through to catalog payment links.
+  }
+
+  const catalog = await loadStripeCatalog();
+  const catalogUrl = programKey
+    ? academyCourseCheckoutFromCatalog(catalog, programKey)
+    : academyPathwayCheckoutFromCatalog(catalog, pathwayKey);
+  if (catalogUrl) {
+    return { ok: true, checkoutUrl: catalogUrl, fallbackLink: true, programKey, pathwayKey };
+  }
+
+  throw new Error("No Stripe checkout is configured for this academy offering.");
 }
 
 export async function startAcademyCheckout(body) {

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
+import AcademyBuyButton from "../../components/AcademyBuyButton";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { findCatalogPlacement, organizeCatalogHierarchy } from "../../academyOfferings";
@@ -112,6 +113,15 @@ function CourseCard({ program, topicKey, pathwayKey }) {
         >
           View syllabus
         </a>
+      </div>
+
+      <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center" }}>
+        <AcademyBuyButton
+          programKey={program.key}
+          retailPrice={program.retailPrice}
+          lane={program.lane || pathwayKey}
+          variant="secondary"
+        />
       </div>
 
       {program.goal ? <p style={{ color: "#334155", lineHeight: 1.65 }}>{program.goal}</p> : null}

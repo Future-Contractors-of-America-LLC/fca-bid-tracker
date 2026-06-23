@@ -3,6 +3,7 @@ import ShellHeader from "../../../components/ShellHeader";
 import ShellFooter from "../../../components/ShellFooter";
 import PublicCtaRow from "../../../components/PublicCtaRow";
 import { fetchAcademyCommerceCatalog, formatUsd } from "../../../api/academyCommerceClient";
+import { academyCheckoutHref } from "../../../commerceCheckout";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../../websiteShell";
 import { pageShellStyle } from "../../../publicShellStyles";
 
@@ -66,7 +67,7 @@ function CourseCard({ course }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
         <strong style={{ fontSize: 20, color: "#0f172a" }}>{formatUsd(course.retailPrice)}</strong>
         <a
-          href={`/academy/store/course/${course.programKey}`}
+          href={academyCheckoutHref({ programKey: course.programKey })}
           style={{
             border: "1px solid #2563eb",
             background: "#2563eb",
@@ -105,7 +106,7 @@ function PathwayCard({ pathway }) {
           <strong style={{ fontSize: 20, color: "#0f172a" }}>{formatUsd(pathway.retailPrice)}</strong>
         </div>
         <a
-          href={`/academy/store/pathway/${pathway.pathwayKey}`}
+          href={academyCheckoutHref({ pathwayKey: pathway.pathwayKey })}
           style={{
             border: "1px solid #7c3aed",
             background: "#7c3aed",
@@ -194,7 +195,9 @@ export default function AcademyStore() {
           </div>
           {!stripeConfigured ? (
             <div style={{ marginTop: 10, color: "#b45309", fontWeight: 600 }}>
-              Online checkout uses contact-sales fallback until Stripe keys are configured on Auricrux Central.
+              {stripeConfigured
+                ? "Checkout routes through the shared FCA secure payment flow."
+                : "Online checkout uses contact-sales fallback until Stripe keys are configured on Auricrux Central."}
             </div>
           ) : null}
         </div>

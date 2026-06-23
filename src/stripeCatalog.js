@@ -45,3 +45,16 @@ export function academyPathwayEntryFromCatalog(catalog, pathwayKey) {
 export function academyPathwayCheckoutFromCatalog(catalog, pathwayKey) {
   return academyPathwayEntryFromCatalog(catalog, pathwayKey)?.paymentLinkUrl || null;
 }
+
+export function checkoutUrlFromCatalogOffer(catalog, offer) {
+  if (!catalog || !offer) return null;
+  if (offer.kind === "workspace") return workspaceCheckoutFromCatalog(catalog, offer.key);
+  if (offer.kind === "academy-course") return academyCourseCheckoutFromCatalog(catalog, offer.key);
+  if (offer.kind === "academy-pathway") return academyPathwayCheckoutFromCatalog(catalog, offer.key);
+  return null;
+}
+
+export async function resolveCatalogCheckoutUrl(offer) {
+  const catalog = await loadStripeCatalog();
+  return checkoutUrlFromCatalogOffer(catalog, offer);
+}

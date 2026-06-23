@@ -13,6 +13,7 @@ import {
   checkoutSuccessHref,
   resolveCheckoutOffer,
 } from "../../commerceCheckout";
+import { resolveCatalogCheckoutUrl } from "../../stripeCatalog";
 import { pageShellStyle, cardStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
 const fieldStyle = {
@@ -132,6 +133,11 @@ export default function Checkout() {
 
       throw new Error("Checkout session could not be created.");
     } catch (checkoutError) {
+      const catalogUrl = await resolveCatalogCheckoutUrl(offer);
+      if (catalogUrl) {
+        window.location.href = catalogUrl;
+        return;
+      }
       setStatus("");
       setError(checkoutError.message || "Unable to start secure checkout. Contact rollout if this continues.");
     } finally {
