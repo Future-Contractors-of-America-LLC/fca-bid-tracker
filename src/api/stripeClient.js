@@ -1,4 +1,5 @@
 import { centralApi } from "./backendBase";
+import { loadStripeCatalog, workspaceCheckoutFromCatalog } from "../stripeCatalog.js";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
@@ -83,20 +84,35 @@ export async function createInvoiceCheckout(invoiceId, options = {}) {
 
 export async function createPlanCheckout(planKey, options = {}) {
   const uiMode = options.uiMode || "embedded";
-  return createStripeCheckout({
-    action: "plan",
-    planKey,
-    successUrl: options.successUrl,
-    cancelUrl: options.cancelUrl,
-    returnUrl: options.returnUrl || options.successUrl,
-    customerEmail: options.customerEmail,
-    clientReferenceId: options.clientReferenceId,
-    company: options.company,
-    contactName: options.contactName,
-    metadata: options.metadata,
-    uiMode,
-    embedded: uiMode === "embedded",
-  });
+  try {
+    const payload = await createStripeCheckout({
+      action: "plan",
+      planKey,
+      successUrl: options.successUrl,
+      cancelUrl: options.cancelUrl,
+      returnUrl: options.returnUrl || options.successUrl,
+      customerEmail: options.customerEmail,
+      clientReferenceId: options.clientReferenceId,
+      company: options.company,
+      contactName: options.contactName,
+      metadata: options.metadata,
+      uiMode,
+      embedded: uiMode === "embedded",
+    });
+    if (payload?.clientSecret || payload?.checkoutUrl) {
+      return payload;
+    }
+  } catch {
+    // Fall through to catalog payment links when checkout APIs are unavailable.
+  }
+
+  const catalog = await loadStripeCatalog();
+  const catalogUrl = workspaceCheckoutFromCatalog(catalog, planKey);
+  if (catalogUrl) {
+    return { ok: true, checkoutUrl: catalogUrl, fallbackLink: true, planKey };
+  }
+
+  throw new Error(`No Stripe checkout is configured for plan: ${planKey}`);
 }
 
 export async function createAcademyCheckout(options = {}) {
