@@ -28,6 +28,7 @@
     "train:auricrux-growth": "node scripts/run-auricrux-growth-loop.mjs",
     "train:auricrux-deploy-loop": "node scripts/run-auricrux-deployment-loop.mjs",
     "qc:lms": "node scripts/run-lms-qc.mjs",
+    "seed:academy-static-media": "node scripts/seed-academy-static-slice-media.mjs",
     "qc:product": "node scripts/run-saas-qc.mjs && node scripts/run-lms-qc.mjs",
     "verify:live-deployment": "node scripts/verify-live-deployment.mjs",
     "validate:swa-deployment": "node scripts/validate-swa-deployment.mjs",

@@ -57,6 +57,32 @@ for (const script of ACADEMY_SCRIPTS) {
 const routesSource = fs.readFileSync(path.join(root, "src", "routes.js"), "utf8");
 const routeKeys = [...routesSource.matchAll(/(["'])(\/[^"']*)\1\s*:/g)].map((m) => m[2]);
 
+function resolvePublicMediaPath(url = "") {
+  if (!url || typeof url !== "string") return null;
+  const bare = url.split("#")[0].split("?")[0];
+  if (!bare.startsWith("/academy/media/")) return null;
+  return path.join(root, "public", bare.replace(/^\//, ""));
+}
+
+function mediaUrlReady(url = "") {
+  if (!url) return false;
+  const filePath = resolvePublicMediaPath(url);
+  if (!filePath) return true;
+  return fs.existsSync(filePath);
+}
+
+function slotLectureUrl(slot = {}) {
+  return slot.auricruxLectureUrl || slot.lectureVideoUrl || slot.lectureAudioUrl || slot.lectureUrl || "";
+}
+
+function slotLabDemoUrl(slot = {}) {
+  return slot.labDemoUrl || slot.skillsDemoUrl || slot.labDemoVideoUrl || "";
+}
+
+function slotEvalUrl(slot = {}) {
+  return slot.performanceEvalVideoUrl || "";
+}
+
 let totalLessons = 0;
 let lessonsWithMedia = 0;
 let lessonsMissingMedia = 0;
@@ -95,16 +121,25 @@ for (const program of academyCatalog.programs) {
     for (let i = 0; i < lessonCount; i += 1) {
       totalLessons += 1;
       const slot = media[i] || {};
-      const hasLecture = Boolean(slot.lectureVideoUrl || slot.lectureAudioUrl);
-      const hasLabDemo = Boolean(slot.labDemoVideoUrl);
-      const hasEval = Boolean(slot.performanceEvalVideoUrl);
+      const lectureUrl = slotLectureUrl(slot);
+      const labDemoUrl = slotLabDemoUrl(slot);
+      const evalUrl = slotEvalUrl(slot);
+      const hasLecture = mediaUrlReady(lectureUrl);
+      const hasLabDemo = mediaUrlReady(labDemoUrl);
+      const hasEval = Boolean(evalUrl) && mediaUrlReady(evalUrl);
 
       if (hasLecture && hasLabDemo) {
         lessonsWithMedia += 1;
-        pass(`lesson-media:${course.code}:${i + 1}`);
+        pass(`lesson-media:${course.code}:${i + 1}`, hasEval ? "lecture+lab+eval" : "lecture+lab");
       } else {
         lessonsMissingMedia += 1;
-        warn(`lesson-media:${course.code}:${i + 1}`, `lecture=${hasLecture} labDemo=${hasLabDemo} eval=${hasEval} — static slice pending production URLs`);
+        const missing = [];
+        if (!hasLecture) missing.push("lecture");
+        if (!hasLabDemo) missing.push("labDemo");
+        fail(
+          `lesson-media:${course.code}:${i + 1}`,
+          `missing ${missing.join(", ")}${evalUrl && !hasEval ? " (eval pending)" : ""}`,
+        );
       }
     }
 
