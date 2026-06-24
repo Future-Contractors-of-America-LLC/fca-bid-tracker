@@ -8,6 +8,6 @@
     "build-validation CI provenance remains unconfirmed",
     "runtime-smoke remains the only directly confirmed passing proof lane"
   ],
-  "ciRunId": "28135956724",
-  "ciCommitSha": "ffc13bac0efab145c3f21ad5e1905a8cdd1f6a74"
+  "ciRunId": "28136081658",
+  "ciCommitSha": "30caacb9abe9de798d0d7edcf402989f36bcbd25"
 }
