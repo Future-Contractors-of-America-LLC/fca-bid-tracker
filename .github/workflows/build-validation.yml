@@ -49,6 +49,7 @@ jobs:
         env:
           FCA_API_BASE: https://api.futurecontractorsofamerica.com
           FCA_CENTRAL_ROOT: ${{ github.workspace }}/auricrux-central-work
+          FCA_SKIP_REDUNDANT_BUILD: "1"
         run: npm run qc:saas
 
       - name: Run LMS depth quality control

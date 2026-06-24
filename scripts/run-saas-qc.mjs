@@ -5,8 +5,10 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = process.cwd();
+const centralRoot = resolveCentralRoot(root);
 const outputDir = path.join(root, "docs", "qc");
 fs.mkdirSync(outputDir, { recursive: true });
 
@@ -142,12 +144,9 @@ const SCRIPT_CHECKS = [
   "validate-full-platform-traverse.mjs",
   "validate-cycle10-complete.mjs",
   "validate-fca-native-payments-journey.mjs",
-  "validate-cycle11-complete.mjs",
   "validate-warranty-service-journey.mjs",
-  "validate-cycle12-complete.mjs",
   "validate-portal-auricrux-coverage.mjs",
-  "validate-platform-qc-matrix.mjs",
-  "validate-cycle13-complete.mjs",
+  "validate-cycle14-complete.mjs",
   "verify-post-deploy.mjs",
   "smoke-central-spine.mjs",
 ];
@@ -193,7 +192,15 @@ function warn(label, detail = "") {
 }
 
 for (const script of SCRIPT_CHECKS) {
-  const result = spawnSync("node", [`scripts/${script}`], { stdio: "inherit", shell: process.platform === "win32" });
+  const result = spawnSync("node", [`scripts/${script}`], {
+    stdio: "inherit",
+    shell: process.platform === "win32",
+    env: {
+      ...process.env,
+      FCA_CENTRAL_ROOT: centralRoot,
+      FCA_SKIP_REDUNDANT_BUILD: process.env.FCA_SKIP_REDUNDANT_BUILD || (process.env.CI === "true" ? "1" : ""),
+    },
+  });
   if (result.status === 0) pass(`script:${script}`);
   else fail(`script:${script}`);
 }

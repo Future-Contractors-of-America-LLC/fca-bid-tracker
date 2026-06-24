@@ -3,9 +3,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
+const centralRoot = resolveCentralRoot(root);
 let failed = 0;
 
 function read(relativePath, base = root) {
@@ -75,6 +76,9 @@ if (centralPilot.includes('checkout?plan=pilot') && !centralPilot.match(/PILOT_P
   fail("central pilot payment link sovereignty");
 }
 
+requireIncludes("src/api/academyCommerceClient.js", "createFcaPaymentIntake", "academy commerce client native intake");
+requireIncludes("src/components/PricingActionCenter.jsx", "startNativeCheckout", "pricing action center native checkout");
+
 const commercial = read("src/commercialOffers.js");
 if (commercial.includes("/checkout?plan=pilot") && commercial.includes("checkoutUrl: PILOT_CHECKOUT_URL")) {
   pass("commercial offers use FCA native checkout paths");
@@ -96,7 +100,7 @@ const outputDir = path.join(root, "docs", "qc");
 fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(
   path.join(outputDir, "fca-sovereignty-report.json"),
-  JSON.stringify({ generatedAt: new Date().toISOString(), cycle: 13, complete: failed === 0, failed }, null, 2),
+  JSON.stringify({ generatedAt: new Date().toISOString(), cycle: 14, complete: failed === 0, failed }, null, 2),
 );
 
 if (failed > 0) process.exit(1);

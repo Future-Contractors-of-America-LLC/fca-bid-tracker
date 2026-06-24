@@ -409,7 +409,7 @@ Start-Process "https://futurecontractorsofamerica.com/intake?plan=startup"
 **Customer journey test:**
 
 1. Visit `/intake?plan=startup` ? submit company profile
-2. Complete Stripe checkout (live or test)
+2. Complete FCA native checkout at `/checkout?plan=startup` (no Stripe required)
 3. Sign in at `/login`
 4. Open portal billing, messages, support
 5. Install mobile app (TestFlight / internal track) ? same account ? see leads/jobs
@@ -418,7 +418,7 @@ Start-Process "https://futurecontractorsofamerica.com/intake?plan=startup"
 
 ## Priority order (recommended)
 
-1. **Stripe live + Startup Payment Link** (revenue today)
+1. **FCA native checkout live** (revenue today — `/checkout?plan=startup` or `pilot`)
 2. **Push `fca-mobile-maui` + green CI** (mobile credibility)
 3. **Android keystore + Play Console app** (Android first � faster review)
 4. **Apple Developer + TestFlight** (iOS)
@@ -434,7 +434,8 @@ Start-Process "https://futurecontractorsofamerica.com/intake?plan=startup"
 |----------|-----|
 | Live website | https://futurecontractorsofamerica.com |
 | Live API | https://auricrux-central.azurewebsites.net |
-| Pilot checkout | https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01 |
+| Pilot checkout | https://futurecontractorsofamerica.com/checkout?plan=pilot |
+| Startup checkout | https://futurecontractorsofamerica.com/checkout?plan=startup |
 | Mobile repo | https://github.com/Future-Contractors-of-America-LLC/fca-mobile-maui |
 | Legacy mobile (deprecated) | https://github.com/Future-Contractors-of-America-LLC/fca-mobile |
 

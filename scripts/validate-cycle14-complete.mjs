@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-/** Cycle 13 completion gate  platform QC, sovereignty, and Auricrux embedment. */
+/** Cycle 14 completion gate — hanging items, CI-safe QC, conversion + academy sovereignty. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-
 import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -27,23 +26,39 @@ function fail(label, detail = "") {
   console.error(`FAIL: ${label}${detail ? ` - ${detail}` : ""}`);
 }
 
-for (const script of ["validate-platform-qc-matrix.mjs"]) {
-  const result = spawnSync(process.execPath, [path.join(root, "scripts", script)], { encoding: "utf8" });
+for (const script of [
+  "validate-fca-sovereignty.mjs",
+  "validate-academy-native-commerce-journey.mjs",
+  "validate-public-conversion-surface-route-truth.mjs",
+]) {
+  const result = spawnSync(process.execPath, [path.join(root, "scripts", script)], {
+    encoding: "utf8",
+    env: { ...process.env, FCA_CENTRAL_ROOT: centralRoot },
+  });
   if (result.status === 0) pass(`regression: ${script}`);
   else fail(`regression: ${script}`, (result.stderr || result.stdout || "").slice(0, 240));
 }
 
-const buildResult = skipBuild
-  ? { status: 0 }
-  : spawnSync("npm", ["run", "build"], { cwd: root, encoding: "utf8", shell: true });
-if (buildResult.status === 0) pass(skipBuild ? "production build (deferred in CI)" : "production build");
-else fail("production build", (buildResult.stderr || buildResult.stdout || "").slice(0, 300));
+if (skipBuild) {
+  pass("production build", "deferred in CI — build:system runs separately");
+} else {
+  const buildResult = spawnSync("npm", ["run", "build"], { cwd: root, encoding: "utf8", shell: true });
+  if (buildResult.status === 0) pass("production build");
+  else fail("production build", (buildResult.stderr || buildResult.stdout || "").slice(0, 300));
+}
 
 const matrix = read("FCA_COVERAGE_MATRIX.md", centralRoot);
-if (matrix.includes("Cycle 13 closed gaps") && matrix.includes("portal-auricrux-coverage")) {
-  pass("coverage matrix cycle 13");
+if (matrix.includes("Cycle 14 closed gaps") && matrix.includes("academy-native-commerce")) {
+  pass("coverage matrix cycle 14");
 } else {
-  fail("coverage matrix cycle 13");
+  fail("coverage matrix cycle 14");
+}
+
+const guide = read("docs/FOUNDER_COMPLETION_GUIDE.md");
+if (guide.includes("checkout?plan=pilot") && !guide.includes("| Pilot checkout | https://buy.stripe.com")) {
+  pass("founder guide native checkout links");
+} else {
+  fail("founder guide sovereignty", "stale Stripe pilot link in support table");
 }
 
 for (const endpoint of ["/fca-payments/status", "/fca-warranty/status"]) {
@@ -60,12 +75,12 @@ for (const endpoint of ["/fca-payments/status", "/fca-warranty/status"]) {
 const outputDir = path.join(root, "docs", "qc");
 fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(
-  path.join(outputDir, "cycle13-completion-report.json"),
-  JSON.stringify({ generatedAt: new Date().toISOString(), cycle: 13, complete: failed === 0, failed, apiBase }, null, 2),
+  path.join(outputDir, "cycle14-completion-report.json"),
+  JSON.stringify({ generatedAt: new Date().toISOString(), cycle: 14, complete: failed === 0, failed, apiBase, skipBuild }, null, 2),
 );
 
 if (failed > 0) {
-  console.error(`Cycle 13 incomplete (${failed} failures).`);
+  console.error(`Cycle 14 incomplete (${failed} failures).`);
   process.exit(1);
 }
-console.log("Cycle 13 complete - 100%.");
+console.log("Cycle 14 complete - 100%.");

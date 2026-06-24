@@ -55,7 +55,7 @@ export default function PricingActionCenter({ session, login }) {
     navigateTo(nextHref);
   }
 
-  function payWithStripe(planKey) {
+  function startNativeCheckout(planKey) {
     navigateTo(workspaceCheckoutHref(planKey, { email: session?.email }));
   }
 
@@ -89,8 +89,8 @@ export default function PricingActionCenter({ session, login }) {
               <button type="button" onClick={() => activatePlan(plan.key, plan.role, plan.nextHref)} style={actionButtonStyle(plan.key === "enterprise" ? "secondary" : "primary")}>
                 {plan.title}
               </button>
-              <button type="button" onClick={() => payWithStripe(plan.key)} style={{ ...actionButtonStyle("secondary"), display: "inline-block", marginTop: 10, width: "100%" }}>
-                Continue checkout — {preset.price}
+              <button type="button" onClick={() => startNativeCheckout(plan.key)} style={{ ...actionButtonStyle("secondary"), display: "inline-block", marginTop: 10, width: "100%" }}>
+                Continue FCA checkout — {preset.price}
               </button>
             </div>
           );

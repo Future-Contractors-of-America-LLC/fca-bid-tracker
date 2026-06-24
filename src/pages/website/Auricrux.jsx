@@ -1,6 +1,7 @@
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import MarketingPageShell from "../../components/MarketingPageShell";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import {
   auricruxCapabilities,
   auricruxWalkthroughPath,
@@ -107,6 +108,12 @@ export default function AuricruxPage() {
           </div>
         </div>
       </div>
+
+      <PublicPackageRouteGroupsPanel
+        eyebrow="Intelligence coverage"
+        title="Auricrux reads every governed route group"
+        detail="Insight panels attach to projects, files, finance, field, academy, and admin surfaces across the FCA portal."
+      />
     </MarketingPageShell>
   );
 }

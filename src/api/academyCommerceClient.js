@@ -1,4 +1,5 @@
 import { centralApi, centralFetch } from "./backendBase";
+import { createFcaPaymentIntake, stripeFallbackEnabled } from "./fcaPaymentClient";
 import {
   academyCourseCheckoutFromCatalog,
   academyPathwayCheckoutFromCatalog,
@@ -102,6 +103,36 @@ export async function createAcademyCheckout({
   uiMode = "embedded",
 } = {}) {
   try {
+    const native = await createFcaPaymentIntake({
+      offerKind: pathwayKey ? "academy-pathway" : "academy-course",
+      programKey,
+      pathwayKey,
+      email: buyerEmail,
+      clientReferenceId,
+    });
+    if (native?.intake?.intakeId) {
+      return {
+        ok: true,
+        mode: "fca-native",
+        intake: native.intake,
+        invoiceId: native.invoiceId,
+        methods: native.methods,
+        instructions: native.instructions,
+        programKey,
+        pathwayKey,
+      };
+    }
+  } catch (error) {
+    if (!stripeFallbackEnabled()) {
+      throw error;
+    }
+  }
+
+  if (!stripeFallbackEnabled()) {
+    throw new Error("FCA native academy checkout is required.");
+  }
+
+  try {
     const payload = await postCommerce("/api/academy-commerce", {
       action: "checkout",
       programKey,
@@ -116,11 +147,11 @@ export async function createAcademyCheckout({
       uiMode,
       embedded: uiMode === "embedded",
     });
-    if (payload?.clientSecret || payload?.checkoutUrl) {
+    if (payload?.clientSecret || payload?.checkoutUrl || payload?.mode === "fca-native" || payload?.intake) {
       return payload;
     }
-  } catch {
-    // Fall through to catalog payment links.
+  } catch (error) {
+    // Stripe acceleration path only below.
   }
 
   const catalog = await loadStripeCatalog();

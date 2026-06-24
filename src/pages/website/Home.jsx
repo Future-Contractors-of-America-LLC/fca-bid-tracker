@@ -1,4 +1,5 @@
 import PublicTopNav from "../../components/PublicTopNav";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import ShellFooter from "../../components/ShellFooter";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
@@ -186,6 +187,12 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <PublicPackageRouteGroupsPanel
+          eyebrow="Platform depth"
+          title="Every module on one governed spine"
+          detail="Route groups behind bids, projects, field execution, finance, academy, and Auricrux intelligence."
+        />
 
         <ShellFooter />
       </div>

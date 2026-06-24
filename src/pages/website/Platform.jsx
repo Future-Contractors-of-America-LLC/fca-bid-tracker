@@ -1,6 +1,7 @@
 import FcaBrandMark from "../../components/FcaBrandMark";
 import MarketingPageShell from "../../components/MarketingPageShell";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
+import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import ProductProofSection from "../../components/ProductProofSection";
 import {
   platformModules,
@@ -109,6 +110,12 @@ export default function Platform() {
           </div>
         ))}
       </div>
+
+      <PublicPackageRouteGroupsPanel
+        eyebrow="SaaS route groups"
+        title="Portal modules buyers activate after checkout"
+        detail="Authenticated workspace routes for pipeline, projects, field, finance, academy, and admin control."
+      />
     </MarketingPageShell>
   );
 }
