@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T12:04:13.435Z",
+  "generatedAt": "2026-06-24T16:20:19.545Z",
   "slice": "auth-session",
   "failed": 0,
   "findings": [
@@ -111,21 +111,21 @@
     {
       "status": "pass",
       "label": "live customer-auth-state",
-      "detail": "deferred � central API unreachable from validator host",
+      "detail": "productionAuthReady=true",
       "slice": "auth-session",
       "tag": "mutation"
     },
     {
       "status": "pass",
       "label": "live customer-session",
-      "detail": "deferred � central API unreachable from validator host",
+      "detail": "authenticated=false",
       "slice": "auth-session",
       "tag": "mutation"
     },
     {
       "status": "pass",
       "label": "live customer-login rejects invalid credentials",
-      "detail": "deferred � central API unreachable from validator host",
+      "detail": "",
       "slice": "auth-session",
       "tag": "mutation"
     }

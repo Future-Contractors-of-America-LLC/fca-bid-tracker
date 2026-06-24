@@ -268,6 +268,37 @@ export async function saveBimModel(projectId, body = {}) {
   return unwrap(payload);
 }
 
+export async function exportFcaNativePackage(projectId, body = {}) {
+  const response = await centralFetch(`/api/projects/${encodeURIComponent(projectId)}/fca-export`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(payload?.error || "Unable to export FCA native package.");
+  }
+  return unwrap(payload);
+}
+
+export async function fetchFcamStream(fileId) {
+  const response = await centralFetch(`/api/files/${encodeURIComponent(fileId)}/fcam-stream`, { method: "GET" });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(payload?.error || "Unable to load FCAM stream.");
+  }
+  return unwrap(payload);
+}
+
+export async function fetchFcasStream(fileId) {
+  const response = await centralFetch(`/api/files/${encodeURIComponent(fileId)}/fcas-stream`, { method: "GET" });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(payload?.error || "Unable to load FCAS stream.");
+  }
+  return unwrap(payload);
+}
+
 export async function runBimClashDetection(projectId, fileId) {
   const response = await centralFetch(
     `/api/projects/${encodeURIComponent(projectId)}/design/bim?fileId=${encodeURIComponent(fileId)}&action=clash`,

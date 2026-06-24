@@ -1,0 +1,9 @@
+{
+  "generatedAt": "2026-06-24T16:20:33.000Z",
+  "cycle": 9,
+  "complete": false,
+  "failed": 3,
+  "apiBase": "https://api.futurecontractorsofamerica.com/api",
+  "demoProjectId": "A-117",
+  "demoFileId": "FILE-1"
+}

@@ -36,6 +36,7 @@ const journey = [
   { step: "pipeline", href: "/portal/pipeline", files: ["src/pages/portal/PortalPipeline.jsx"] },
   { step: "bids", href: "/portal/bids", files: ["src/pages/portal/PortalBids.jsx"] },
   { step: "estimates", href: "/portal/estimates", files: ["src/pages/portal/PortalEstimates.jsx"] },
+  { step: "proposals", href: "/portal/proposals", files: ["src/pages/portal/PortalProposals.jsx"] },
   { step: "projects", href: "/portal/projects", files: ["src/pages/portal/PortalProjects.jsx"] },
   { step: "files", href: "/portal/files", files: ["src/pages/portal/PortalFiles.jsx"] },
   { step: "rfis", href: "/portal/rfis", files: ["src/pages/portal/PortalRfis.jsx"] },
@@ -61,6 +62,11 @@ for (const stop of journey) {
 
 requireIncludes("src/productBlueprint.js", "qualification pipeline", "blueprint includes pipeline");
 requireIncludes("src/components/PortalWorkspaceGuide.jsx", "pipeline", "workspace guide references pipeline");
+requireIncludes("src/pages/portal/PortalEstimates.jsx", "advanceEstimate", "estimate advance in lifecycle");
+requireIncludes("src/pages/portal/PortalProposals.jsx", "advanceProposal", "proposal advance in lifecycle");
+requireIncludes("src/pages/portal/PortalPipeline.jsx", "markWonAndCreateProject", "award conversion in lifecycle");
+requireIncludes("src/pages/portal/PortalFiles.jsx", "create-briefing", "briefing mutation in lifecycle");
+requireIncludes("src/pages/website/Intake.jsx", "submitGovernedIntake", "lead intake in lifecycle");
 requireIncludes("src/pages/portal/PortalBilling.jsx", "createInvoiceCheckout", "billing supports in-house checkout");
 requireIncludes("src/pages/portal/PortalRfis.jsx", "respondProjectRfi", "RFI respond in lifecycle");
 requireIncludes("src/pages/portal/PortalChangeOrders.jsx", "advanceChangeOrder", "change order advance in lifecycle");

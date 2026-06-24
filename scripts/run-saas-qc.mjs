@@ -132,6 +132,9 @@ const SCRIPT_CHECKS = [
   "validate-cycle7-complete.mjs",
   "validate-immersive-vr-journey.mjs",
   "validate-cycle8-complete.mjs",
+  "validate-fca-sovereignty.mjs",
+  "validate-precon-sovereignty-journey.mjs",
+  "validate-cycle9-complete.mjs",
   "verify-post-deploy.mjs",
   "smoke-central-spine.mjs",
 ];

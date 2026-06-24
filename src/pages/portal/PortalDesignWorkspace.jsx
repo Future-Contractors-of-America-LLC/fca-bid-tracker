@@ -20,6 +20,7 @@ import { sendAuricruxMessage } from "../../api/auricruxClient";
 import {
   compareRevisions,
   exportDesignPackage,
+  exportFcaNativePackage,
   linkMarkupToRfi,
   runBimClashDetection,
   saveBimModel,
@@ -229,9 +230,22 @@ export default function PortalDesignWorkspace() {
     setBusy(true);
     try {
       await exportDesignPackage(projectId, { fileId: selectedFileId });
-      setStatusMessage("Export package prepared with burn-in markups.");
+      await exportFcaNativePackage(projectId, { fileId: selectedFileId });
+      setStatusMessage("FCAP native export and markup package prepared on the governed spine.");
     } catch (exportError) {
       setStatusMessage(exportError.message || "Export failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleExportNative() {
+    setBusy(true);
+    try {
+      await exportFcaNativePackage(projectId, { fileId: selectedFileId });
+      setStatusMessage("FCAP package exported through fca-export — FCAM and FCAS streams included.");
+    } catch (exportError) {
+      setStatusMessage(exportError.message || "FCAP export failed.");
     } finally {
       setBusy(false);
     }
@@ -436,7 +450,12 @@ export default function PortalDesignWorkspace() {
               />
             </div>
             <div style={panelStyle}>
-              <FcaNativeViewerPanel viewerSession={workspace.viewerSession} fileFormat={fileFormat} />
+              <FcaNativeViewerPanel
+                viewerSession={workspace.viewerSession}
+                fileFormat={fileFormat}
+                fileId={selectedFileId}
+                onExportNative={handleExportNative}
+              />
             </div>
             <div style={panelStyle}>
               <AuricruxDesignInsight intelligence={workspace.intelligence} onAskAuricrux={handleAskAuricrux} projectId={projectId} fileId={workspace.activeFile?.id} />
