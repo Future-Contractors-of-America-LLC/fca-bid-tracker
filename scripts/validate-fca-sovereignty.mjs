@@ -44,11 +44,20 @@ requireIncludes("src/pages/portal/PortalDesignWorkspace.jsx", "exportFcaNativePa
 requireIncludes("docs/FCA_RESEARCH_EXTENSIONS.md", "FCA_SOVEREIGNTY_LAW", "research doc links sovereignty law");
 
 const checkout = read("src/pages/website/Checkout.jsx");
-if (checkout.includes("Stripe Embedded Checkout") || checkout.includes("createInvoiceCheckout")) {
-  pass("checkout uses in-house embedded path");
+if (
+  checkout.includes("createFcaPaymentIntake")
+  && checkout.includes("FcaNativeCheckoutPanel")
+  && checkout.includes("FCA is the product and the payment rail")
+) {
+  pass("checkout uses FCA native payment rail");
 } else {
-  fail("checkout sovereignty", "expected embedded/in-house checkout");
+  fail("checkout sovereignty", "expected FCA native payment intake");
 }
+
+requireIncludes("core/fca_payment_intake.py", "get_payment_rail_status", "central fca payment intake", centralRoot);
+requireIncludes("core/fca_payment_http.py", "fca-payments/checkout", "central fca payments routes", centralRoot);
+requireIncludes("src/api/fcaPaymentClient.js", "submitFcaNativeCheckout", "web fca payment client");
+requireIncludes("src/pages/portal/PortalBilling.jsx", "createFcaPaymentIntake", "portal billing native pay");
 
 const backendBase = read("src/config/domainHosts.js");
 if (
@@ -64,7 +73,7 @@ const outputDir = path.join(root, "docs", "qc");
 fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(
   path.join(outputDir, "fca-sovereignty-report.json"),
-  JSON.stringify({ generatedAt: new Date().toISOString(), cycle: 9, complete: failed === 0, failed }, null, 2),
+  JSON.stringify({ generatedAt: new Date().toISOString(), cycle: 11, complete: failed === 0, failed }, null, 2),
 );
 
 if (failed > 0) process.exit(1);

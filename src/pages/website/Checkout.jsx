@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import FcaNativeCheckoutPanel from "../../components/FcaNativeCheckoutPanel";
 import EmbeddedStripeCheckout from "../../components/EmbeddedStripeCheckout";
 import { shellJourney } from "../../websiteShell";
 import { navigateTo } from "../../navigation";
@@ -9,11 +10,16 @@ import { readCustomerRecord } from "../../api/intakeClient";
 import { createPlanCheckout } from "../../api/stripeClient";
 import { createAcademyCheckout } from "../../api/academyCommerceClient";
 import {
+  createFcaPaymentIntake,
+  fetchFcaPaymentRailStatus,
+  stripeFallbackEnabled,
+  submitFcaNativeCheckout,
+} from "../../api/fcaPaymentClient";
+import {
   checkoutCancelHref,
   checkoutSuccessHref,
   resolveCheckoutOffer,
 } from "../../commerceCheckout";
-import { resolveCatalogCheckoutUrl } from "../../stripeCatalog";
 import { pageShellStyle, cardStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
 const fieldStyle = {
@@ -27,12 +33,12 @@ const fieldStyle = {
 };
 
 const trustItems = [
-  "Card entry stays inside the FCA checkout experience via Stripe Embedded Checkout",
-  "PCI-compliant payment handling with enterprise-grade Stripe infrastructure",
-  "Workspace or academy activation continues immediately after payment confirmation",
+  "Payment intake, invoice issuance, and books posting run on FCA-owned Central surfaces",
+  "ACH, wire, check, and card-on-file paths post directly to FCA Books — no Stripe required",
+  "Workspace or academy activation continues immediately after FCA confirms payment",
 ];
 
-const steps = ["Review package", "Confirm buyer", "Secure payment"];
+const steps = ["Review package", "Confirm buyer", "FCA payment"];
 
 export default function Checkout() {
   const searchParams = useMemo(() => {
@@ -51,7 +57,10 @@ export default function Checkout() {
   const [error, setError] = useState("");
   const [status, setStatus] = useState(cancelled ? "Payment was cancelled. Review your package and try again when ready." : "");
   const [paymentStep, setPaymentStep] = useState("review");
+  const [paymentRail, setPaymentRail] = useState(null);
+  const [nativeIntake, setNativeIntake] = useState(null);
   const [embeddedSession, setEmbeddedSession] = useState(null);
+  const [useStripeFallback, setUseStripeFallback] = useState(false);
 
   useEffect(() => {
     if (!offer) {
@@ -59,12 +68,94 @@ export default function Checkout() {
     }
   }, [offer]);
 
+  useEffect(() => {
+    let active = true;
+    fetchFcaPaymentRailStatus()
+      .then((payload) => {
+        if (!active) return;
+        setPaymentRail(payload?.rail || payload);
+        setUseStripeFallback(Boolean(payload?.rail?.stripeFallback && stripeFallbackEnabled()));
+      })
+      .catch(() => {
+        if (!active) return;
+        setPaymentRail({ primaryRail: "fca-native", nativeEnabled: true, stripeFallback: false });
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   function activeStepIndex() {
     if (paymentStep === "pay") return 2;
     return 0;
   }
 
-  async function startEmbeddedPayment(event) {
+  function offerPayload() {
+    if (!offer) return {};
+    if (offer.kind === "workspace") {
+      return { offerKind: "workspace", planKey: offer.key };
+    }
+    if (offer.kind === "academy-course") {
+      return { offerKind: "academy-course", programKey: offer.key };
+    }
+    return { offerKind: "academy-pathway", pathwayKey: offer.key };
+  }
+
+  async function startStripeFallback() {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const clientReferenceId = searchParams.get("ref") || intakeRecord?.intakeId || intakeRecord?.email || email.trim();
+    const successPath = checkoutSuccessHref(offer);
+    const returnUrl = origin
+      ? `${origin}${successPath}${successPath.includes("?") ? "&" : "?"}session_id={CHECKOUT_SESSION_ID}`
+      : undefined;
+
+    let checkout;
+    if (offer.kind === "workspace") {
+      checkout = await createPlanCheckout(offer.key, {
+        customerEmail: email.trim(),
+        returnUrl,
+        successUrl: returnUrl,
+        cancelUrl: origin ? `${origin}${checkoutCancelHref(offer)}` : undefined,
+        clientReferenceId,
+        company: company.trim(),
+        contactName: name.trim(),
+        uiMode: "embedded",
+      });
+    } else {
+      checkout = await createAcademyCheckout({
+        programKey: offer.kind === "academy-course" ? offer.key : undefined,
+        pathwayKey: offer.kind === "academy-pathway" ? offer.key : undefined,
+        buyerEmail: email.trim(),
+        returnUrl,
+        successUrl: returnUrl,
+        cancelUrl: origin ? `${origin}${checkoutCancelHref(offer)}` : undefined,
+        clientReferenceId,
+        uiMode: "embedded",
+      });
+    }
+
+    if (checkout?.clientSecret) {
+      setEmbeddedSession({
+        clientSecret: checkout.clientSecret,
+        publishableKey: checkout.publishableKey,
+      });
+      setPaymentStep("pay");
+      setUseStripeFallback(true);
+      setStatus("");
+      return;
+    }
+    if (checkout?.checkoutUrl) {
+      window.location.href = checkout.checkoutUrl;
+      return;
+    }
+    if (checkout?.mode === "contact-sales") {
+      navigateTo("/contact");
+      return;
+    }
+    throw new Error("Stripe fallback checkout could not be created.");
+  }
+
+  async function startFcaPayment(event) {
     event.preventDefault();
     if (!offer) return;
 
@@ -75,71 +166,55 @@ export default function Checkout() {
 
     setBusy(true);
     setError("");
-    setStatus("Preparing secure in-page payment...");
+    setStatus("Creating FCA payment intake and governed invoice...");
 
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
     const clientReferenceId = searchParams.get("ref") || intakeRecord?.intakeId || intakeRecord?.email || email.trim();
-    const successPath = checkoutSuccessHref(offer);
-    const returnUrl = origin
-      ? `${origin}${successPath}${successPath.includes("?") ? "&" : "?"}session_id={CHECKOUT_SESSION_ID}`
-      : undefined;
 
     try {
-      let checkout;
-
-      if (offer.kind === "workspace") {
-        checkout = await createPlanCheckout(offer.key, {
-          customerEmail: email.trim(),
-          returnUrl,
-          successUrl: returnUrl,
-          cancelUrl: origin ? `${origin}${checkoutCancelHref(offer)}` : undefined,
-          clientReferenceId,
-          company: company.trim(),
-          contactName: name.trim(),
-          uiMode: "embedded",
-        });
-      } else {
-        checkout = await createAcademyCheckout({
-          programKey: offer.kind === "academy-course" ? offer.key : undefined,
-          pathwayKey: offer.kind === "academy-pathway" ? offer.key : undefined,
-          buyerEmail: email.trim(),
-          returnUrl,
-          successUrl: returnUrl,
-          cancelUrl: origin ? `${origin}${checkoutCancelHref(offer)}` : undefined,
-          clientReferenceId,
-          uiMode: "embedded",
-        });
-      }
-
-      if (checkout?.clientSecret) {
-        setEmbeddedSession({
-          clientSecret: checkout.clientSecret,
-          publishableKey: checkout.publishableKey,
-        });
-        setPaymentStep("pay");
-        setStatus("");
+      if (useStripeFallback && paymentRail?.stripeFallback) {
+        await startStripeFallback();
         return;
       }
 
-      if (checkout?.checkoutUrl) {
-        window.location.href = checkout.checkoutUrl;
-        return;
-      }
-
-      if (checkout?.mode === "contact-sales") {
-        navigateTo("/contact");
-        return;
-      }
-
-      throw new Error("Checkout session could not be created.");
+      const intakePayload = await createFcaPaymentIntake({
+        ...offerPayload(),
+        email: email.trim(),
+        company: company.trim(),
+        contactName: name.trim(),
+        clientReferenceId,
+      });
+      setNativeIntake(intakePayload);
+      setPaymentStep("pay");
+      setStatus("");
     } catch (checkoutError) {
-      const catalogUrl = await resolveCatalogCheckoutUrl(offer);
-      if (catalogUrl) {
-        window.location.href = catalogUrl;
-        return;
+      if (paymentRail?.stripeFallback && stripeFallbackEnabled()) {
+        try {
+          setStatus("FCA native intake unavailable — trying optional Stripe fallback...");
+          await startStripeFallback();
+          return;
+        } catch (fallbackError) {
+          setError(fallbackError.message || checkoutError.message || "Unable to start checkout.");
+        }
+      } else {
+        setError(checkoutError.message || "Unable to start FCA native checkout. Contact rollout if this continues.");
       }
       setStatus("");
-      setError(checkoutError.message || "Unable to start secure checkout. Contact rollout if this continues.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function completeNativeCheckout(body) {
+    setBusy(true);
+    setError("");
+    setStatus("Recording payment in FCA Books and preparing activation...");
+    try {
+      const result = await submitFcaNativeCheckout(body);
+      const sessionId = result?.intake?.intakeId || result?.payment?.paymentId || "";
+      navigateTo(checkoutSuccessHref(offer, sessionId));
+    } catch (submitError) {
+      setError(submitError.message || "Unable to record payment in FCA Books.");
+      setStatus("");
     } finally {
       setBusy(false);
     }
@@ -148,17 +223,20 @@ export default function Checkout() {
   function backToReview() {
     setPaymentStep("review");
     setEmbeddedSession(null);
+    setNativeIntake(null);
     setStatus("");
   }
 
   const stepIndex = activeStepIndex();
+  const showStripePanel = paymentStep === "pay" && useStripeFallback && embeddedSession;
+  const showNativePanel = paymentStep === "pay" && nativeIntake && !showStripePanel;
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
         eyebrow="Secure checkout"
         title="Complete your FCA purchase"
-        subtitle="Review your package, confirm buyer details, and complete payment inside the FCA checkout experience."
+        subtitle="Review your package, confirm buyer details, and complete payment on FCA-owned intake and books surfaces."
         primaryHref="/pricing"
         primaryLabel="Back to pricing"
         secondaryHref="/contact"
@@ -197,7 +275,7 @@ export default function Checkout() {
           </p>
           <a href="/pricing" style={ctaPrimaryStyle}>Open pricing</a>
         </section>
-      ) : paymentStep === "pay" && embeddedSession ? (
+      ) : showStripePanel ? (
         <div style={twoColumnGridStyle}>
           <section style={{ ...cardStyle, background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", color: "#f8fafc", border: "none" }}>
             <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em", color: "#93c5fd", fontWeight: 800, marginBottom: 8 }}>
@@ -210,9 +288,9 @@ export default function Checkout() {
           </section>
 
           <section style={cardStyle}>
-            <h2 style={{ marginTop: 0 }}>Secure payment</h2>
+            <h2 style={{ marginTop: 0 }}>Optional Stripe fallback</h2>
             <p style={{ color: "#475569", lineHeight: 1.7 }}>
-              Enter payment details below. You will remain inside FCA while Stripe processes the transaction.
+              Stripe is optional acceleration only. FCA native checkout is the primary payment rail.
             </p>
             <EmbeddedStripeCheckout
               clientSecret={embeddedSession.clientSecret}
@@ -221,8 +299,33 @@ export default function Checkout() {
             />
           </section>
         </div>
+      ) : showNativePanel ? (
+        <div style={twoColumnGridStyle}>
+          <section style={{ ...cardStyle, background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", color: "#f8fafc", border: "none" }}>
+            <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em", color: "#93c5fd", fontWeight: 800, marginBottom: 8 }}>
+              Order summary
+            </div>
+            <h2 style={{ marginTop: 0, marginBottom: 8 }}>{offer.name}</h2>
+            <div style={{ fontSize: 32, fontWeight: 800, marginBottom: 16 }}>{offer.priceLabel}</div>
+            <p style={{ lineHeight: 1.7, color: "#cbd5e1", marginTop: 0 }}>{offer.summary}</p>
+            <div style={{ color: "#93c5fd", fontSize: 14, marginTop: 12 }}>{company || "Your company"} · {email}</div>
+          </section>
+
+          <section style={cardStyle}>
+            <FcaNativeCheckoutPanel
+              intake={nativeIntake?.intake}
+              instructions={nativeIntake?.instructions}
+              methods={nativeIntake?.methods}
+              busy={busy}
+              error={error}
+              status={status}
+              onBack={backToReview}
+              onSubmit={completeNativeCheckout}
+            />
+          </section>
+        </div>
       ) : (
-        <form onSubmit={startEmbeddedPayment}>
+        <form onSubmit={startFcaPayment}>
           <div style={twoColumnGridStyle}>
             <section style={{ ...cardStyle, background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", color: "#f8fafc", border: "none" }}>
               <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.06em", color: "#93c5fd", fontWeight: 800, marginBottom: 8 }}>
@@ -277,7 +380,7 @@ export default function Checkout() {
             <section style={cardStyle}>
               <h2 style={{ marginTop: 0 }}>Buyer and billing contact</h2>
               <p style={{ color: "#475569", lineHeight: 1.7 }}>
-                These details attach the purchase to your FCA rollout record and prefill the secure payment step.
+                These details attach the purchase to your FCA rollout record and create a governed payment intake.
               </p>
 
               <label>
@@ -308,17 +411,17 @@ export default function Checkout() {
               ) : null}
 
               <button type="submit" disabled={busy} style={{ ...ctaPrimaryStyle, width: "100%", border: "none", cursor: busy ? "wait" : "pointer", opacity: busy ? 0.8 : 1 }}>
-                {busy ? "Preparing secure payment..." : "Continue to secure payment"}
+                {busy ? "Creating FCA payment intake..." : "Continue to FCA payment"}
               </button>
 
               <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginBottom: 0, marginTop: 14 }}>
-                Payment opens on this page using Stripe Embedded Checkout. You will not be sent to a generic external payment link.
+                FCA is the product and the payment rail. Checkout issues invoices and records payment in FCA Books without requiring Stripe.
               </p>
             </section>
           </div>
 
           <section style={{ ...cardStyle, marginTop: 16 }}>
-            <div style={{ fontWeight: 700, marginBottom: 10 }}>Enterprise checkout assurance</div>
+            <div style={{ fontWeight: 700, marginBottom: 10 }}>FCA native checkout assurance</div>
             <div style={{ display: "grid", gap: 10 }}>
               {trustItems.map((item) => (
                 <div key={item} style={{ color: "#475569", lineHeight: 1.65, paddingLeft: 18, position: "relative" }}>

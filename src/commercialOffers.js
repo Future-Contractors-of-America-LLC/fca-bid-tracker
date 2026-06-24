@@ -1,11 +1,15 @@
-/** Canonical commercial checkout URLs for self-serve revenue lanes. */
-export const PILOT_CHECKOUT_URL =
-  "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01";
+/** Canonical commercial checkout paths for self-serve revenue lanes. */
+const PORTAL_ORIGIN =
+  typeof import.meta !== "undefined" && import.meta.env?.VITE_FCA_PORTAL_ORIGIN
+    ? import.meta.env.VITE_FCA_PORTAL_ORIGIN.replace(/\/$/, "")
+    : "https://futurecontractorsofamerica.com";
 
-export const STARTUP_CHECKOUT_URL =
-  typeof import.meta !== "undefined" && import.meta.env?.VITE_STRIPE_STARTUP_CHECKOUT_URL
-    ? import.meta.env.VITE_STRIPE_STARTUP_CHECKOUT_URL
-    : "";
+export const PILOT_CHECKOUT_URL = `${PORTAL_ORIGIN}/checkout?plan=pilot`;
+
+export const STARTUP_CHECKOUT_URL = `${PORTAL_ORIGIN}/checkout?plan=startup`;
+
+/** @deprecated Stripe buy links — use FCA native checkout paths instead. */
+export const LEGACY_STRIPE_PILOT_URL = "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01";
 
 export const commercialOffers = {
   pilot: {
@@ -20,7 +24,7 @@ export const commercialOffers = {
     name: "FCA Startup Workspace",
     priceLabel: "$99/mo",
     checkoutUrl: STARTUP_CHECKOUT_URL,
-    status: STARTUP_CHECKOUT_URL ? "active" : "pending_link",
+    status: "active",
   },
 };
 
@@ -32,11 +36,10 @@ function workspaceCheckoutPath(tierKey, options = {}) {
   return `/checkout?${params.toString()}`;
 }
 
-/** @deprecated Prefer workspaceCheckoutHref for integrated checkout flow. */
+/** Prefer workspaceCheckoutHref — FCA native checkout is the primary payment rail. */
 export function checkoutUrlForTier(tierKey) {
-  if (tierKey === "pilot") return PILOT_CHECKOUT_URL;
-  if (tierKey === "startup") return STARTUP_CHECKOUT_URL || null;
-  return null;
+  if (!tierKey) return "/checkout";
+  return workspaceCheckoutPath(tierKey);
 }
 
 export function checkoutPathForTier(tierKey, options = {}) {

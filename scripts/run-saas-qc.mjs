@@ -138,6 +138,8 @@ const SCRIPT_CHECKS = [
   "validate-research-extensions-journey.mjs",
   "validate-full-platform-traverse.mjs",
   "validate-cycle10-complete.mjs",
+  "validate-fca-native-payments-journey.mjs",
+  "validate-cycle11-complete.mjs",
   "verify-post-deploy.mjs",
   "smoke-central-spine.mjs",
 ];

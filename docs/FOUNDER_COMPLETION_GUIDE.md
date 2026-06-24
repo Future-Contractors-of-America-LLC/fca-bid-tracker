@@ -24,79 +24,70 @@ Everything below requires **your** accounts, credentials, legal approval, or sto
 
 ## Section 1 � Revenue (highest priority)
 
-### 1.1 Stripe live keys (in-house via Auricrux-Central)
+### 1.1 FCA native payment rail (primary - no Stripe required)
 
-**Why:** FCA checkout, invoice payment, and subscription billing run through **Stripe on Auricrux-Central** — not external checkout silos. Portal billing and website checkout call `POST /api/stripe-checkout`; webhooks land on Central at `/api/stripe/webhook`.
+**Why:** FCA is the product and the payment rail. Checkout, invoice payment, and subscription intake run through **FCA native payment surfaces on Auricrux-Central** - not external checkout silos. Website checkout and portal billing call POST /api/fca-payments/intake and POST /api/fca-payments/checkout; payments post to FCA Books via 
+ecord-native-payment.
 
-**Status:** Integration code is complete. Verify live keys are present in Azure:
+**Status:** Integration code is complete. No third-party processor is required for revenue completeness.
 
-1. Sign in to [Stripe Dashboard](https://dashboard.stripe.com).
-2. Switch to **Live** mode (toggle top-right).
-3. Go to **Developers ? API keys**.
-4. Copy:
-   - **Secret key** (`sk_live_...`)
-   - (Optional) **Publishable key** (`pk_live_...`) if used on web
+**Verify (no Stripe needed):**
 
-5. Add to **Azure Portal ? Auricrux-Central ? Configuration ? Application settings:**
+1. Open https://futurecontractorsofamerica.com/checkout?plan=startup
+2. Complete buyer details and continue to **FCA native payment**
+3. Confirm payment intake ID and governed invoice are created
+4. Record a test payment (ACH reference is fine for QC)
+5. Confirm success page and portal billing show invoice **Paid**
 
-   | Name | Value |
-   |------|-------|
-   | `STRIPE_SECRET_KEY` | `sk_live_...` |
-   | `STRIPE_WEBHOOK_SECRET` | (from step 1.2) |
+**Optional Stripe acceleration (off by default):** Only enable if you explicitly want card processing via Stripe:
 
-6. Add to **Azure Static Web Apps** (fca-bid-tracker) if using client-side Stripe:
-   - `VITE_STRIPE_STARTUP_CHECKOUT_URL` � Payment Link URL from step 1.3
+| Name | Value |
+|------|-------|
+| FCA_STRIPE_FALLBACK | 1 |
+| STRIPE_SECRET_KEY | sk_live_... |
+| VITE_FCA_STRIPE_FALLBACK | 1 on Static Web Apps (web only) |
 
-**Script helper:** `fca-bid-tracker-work/scripts/configure-stripe-azure.ps1` (run after keys exist).
-
-**Verify:** Complete a $0.50 test charge on live mode, then refund it.
+When both server and web flags are set, checkout may fall back to Stripe Embedded Checkout. FCA native checkout remains the default path.
 
 ---
 
-### 1.2 Stripe webhook
+### 1.2 Stripe webhook (optional - only if optional Stripe path enabled)
 
-**Why:** Confirms payment ? activates workspace / sends receipt.
+**Why:** Confirms Stripe card payments when FCA_STRIPE_FALLBACK=1 is enabled.
+
+**Skip this section** if you are running FCA native payments only (recommended default).
 
 **Steps:**
 
-1. Stripe Dashboard ? **Developers ? Webhooks ? Add endpoint**
+1. Stripe Dashboard -> **Developers -> Webhooks -> Add endpoint**
 2. **Endpoint URL:**  
-   `https://auricrux-central.azurewebsites.net/api/stripe/webhook`
+   https://auricrux-central.azurewebsites.net/api/stripe/webhook
 3. Select events (minimum):
-   - `checkout.session.completed`
-   - `invoice.paid`
-   - `customer.subscription.created`
-   - `customer.subscription.updated`
-4. After creation, open the webhook ? **Signing secret** ? copy `whsec_...`
-5. Set `STRIPE_WEBHOOK_SECRET` in Auricrux-Central app settings (Section 1.1)
-6. Click **Send test webhook** ? confirm HTTP 200 in Azure logs
+   - checkout.session.completed
+   - invoice.paid
+   - customer.subscription.created
+   - customer.subscription.updated
+4. After creation, open the webhook -> **Signing secret** -> copy whsec_...
+5. Set STRIPE_WEBHOOK_SECRET in Auricrux-Central app settings
+6. Click **Send test webhook** -> confirm HTTP 200 in Azure logs
 
 ---
 
-### 1.3 $99/mo Startup Payment Link
+### 1.3 FCA native checkout paths (replaces Stripe Payment Links)
 
-**Why:** Startup plan self-serve checkout from web + mobile.
+**Why:** Startup and pilot self-serve checkout use FCA native /checkout paths - not uy.stripe.com links.
 
-**Steps:**
+**No Stripe Payment Link required.** Use:
 
-1. Stripe Dashboard ? **Product catalog ? Add product**
-   - Name: `FCA Startup Workspace`
-   - Price: `$99.00` / month, recurring
-2. **Payment Links ? Create payment link** for that price
-3. Copy URL (e.g. `https://buy.stripe.com/...`)
-4. Set environment variables:
+| Plan | URL |
+|------|-----|
+| Pilot | https://futurecontractorsofamerica.com/checkout?plan=pilot |
+| Startup | https://futurecontractorsofamerica.com/checkout?plan=startup |
 
-   | Location | Variable | Value |
-   |----------|----------|-------|
-   | SWA (fca-bid-tracker) | `VITE_STRIPE_STARTUP_CHECKOUT_URL` | Payment link URL |
-   | Auricrux-Central (optional) | `STRIPE_STARTUP_CHECKOUT_URL` | Same URL |
+**Verify:** From https://futurecontractorsofamerica.com/intake?plan=startup -> complete intake -> lands on FCA native checkout (not external Stripe).
 
-5. Redeploy web app (push to `main` or manual SWA redeploy)
-
-**Verify:** From https://futurecontractorsofamerica.com/intake?plan=startup ? complete intake ? lands on live Stripe checkout.
-
-**Existing pilot link (already configured):**  
-`https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01`
+**Legacy pilot Stripe link (deprecated):**  
+https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01
 
 ---
 

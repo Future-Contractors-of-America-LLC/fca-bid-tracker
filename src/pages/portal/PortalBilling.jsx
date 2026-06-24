@@ -13,7 +13,11 @@ import {
   fetchPortalInvoices,
   issuePortalInvoice,
 } from "../../api/portalClient";
-import { createInvoiceCheckout, createPortalBillingPortal } from "../../api/stripeClient";
+import {
+  createFcaPaymentIntake,
+  submitFcaNativeCheckout,
+} from "../../api/fcaPaymentClient";
+import FcaNativeCheckoutPanel from "../../components/FcaNativeCheckoutPanel";
 import { routeStateOverlays } from "../../systemState";
 import {
   PortalAlert,
@@ -45,6 +49,8 @@ export default function PortalBilling() {
   const [deliveryNotice, setDeliveryNotice] = useState("");
   const [busyId, setBusyId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [paymentIntake, setPaymentIntake] = useState(null);
+  const [paymentStatus, setPaymentStatus] = useState("");
 
   async function reloadInvoices() {
     const [invoicesPayload, summaryPayload] = await Promise.all([
@@ -134,51 +140,43 @@ export default function PortalBilling() {
 
   async function payInvoice(invoiceId) {
     setActionError("");
+    setPaymentStatus("");
     setBusyId(`pay-${invoiceId}`);
     try {
-      const origin = typeof window !== "undefined" ? window.location.origin : "";
-      const payload = await createInvoiceCheckout(invoiceId, {
-        customerEmail: session?.email,
-        successUrl: `${origin}/portal/billing?payment=success`,
-        cancelUrl: `${origin}/portal/billing?payment=cancelled`,
-        returnUrl: `${origin}/portal/billing?payment=success`,
-        uiMode: "embedded",
+      const payload = await createFcaPaymentIntake({
+        invoiceId,
+        email: session?.email,
+        company: companyName,
       });
-      if (payload?.checkoutUrl) {
-        window.location.assign(payload.checkoutUrl);
-        return;
-      }
-      if (payload?.clientSecret) {
-        window.location.assign(`/portal/billing/${encodeURIComponent(invoiceId)}`);
-        return;
-      }
-      throw new Error("Stripe checkout is not available for this invoice.");
+      setPaymentIntake(payload);
     } catch (error) {
-      setActionError(error.message || "Unable to start payment.");
+      setActionError(error.message || "Unable to start FCA native payment.");
     } finally {
       setBusyId("");
     }
   }
 
-  async function openBillingPortal() {
+  async function completeInvoicePayment(body) {
+    setBusyId("pay-submit");
     setActionError("");
-    setBusyId("portal");
+    setPaymentStatus("Recording payment in FCA Books...");
     try {
-      const origin = typeof window !== "undefined" ? window.location.origin : "";
-      const payload = await createPortalBillingPortal({
-        customerEmail: session?.email,
-        returnUrl: `${origin}/portal/billing`,
-      });
-      const portalUrl = payload?.checkoutUrl || payload?.portalUrl || payload?.url;
-      if (!portalUrl) {
-        throw new Error("Billing portal is not available.");
-      }
-      window.location.assign(portalUrl);
+      await submitFcaNativeCheckout(body);
+      setPaymentIntake(null);
+      setPaymentStatus("");
+      await reloadInvoices();
+      refreshSyncStamp("Payment recorded in FCA Books");
+      setDeliveryNotice("Payment recorded in FCA Books — invoice closed.");
     } catch (error) {
-      setActionError(error.message || "Unable to open billing portal.");
+      setActionError(error.message || "Unable to record payment.");
+      setPaymentStatus("");
     } finally {
       setBusyId("");
     }
+  }
+
+  function openBillingPortal() {
+    window.location.assign("/portal/finance?view=recurring");
   }
 
   async function deliverInvoice(invoiceId) {
@@ -239,8 +237,8 @@ export default function PortalBilling() {
         detail="Create a draft, issue to the customer, collect payment in FCA Checkout, and record payment in finance without leaving FCA."
         actions={(
           <>
-            <button type="button" onClick={openBillingPortal} disabled={busyId === "portal"} style={{ ...portalButtonSecondary, cursor: "pointer" }}>
-              {busyId === "portal" ? "Opening..." : "Manage subscription"}
+            <button type="button" onClick={openBillingPortal} style={{ ...portalButtonSecondary, cursor: "pointer" }}>
+              Manage recurring billing
             </button>
             <a href="/portal/finance" style={portalButtonSecondary}>Open FCA Books</a>
           </>
@@ -346,6 +344,27 @@ export default function PortalBilling() {
       <div style={{ marginTop: 16 }}>
         <CommercialContinuityFeed title="Billing activity" detail="Recent billing and commercial events for this account." />
       </div>
+
+      {paymentIntake ? (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(15, 23, 42, 0.55)", display: "grid", placeItems: "center", padding: 24, zIndex: 40 }}>
+          <div style={{ ...portalCardStyle, width: "min(640px, 100%)", maxHeight: "90vh", overflow: "auto" }}>
+            <FcaNativeCheckoutPanel
+              intake={paymentIntake.intake}
+              instructions={paymentIntake.instructions}
+              methods={paymentIntake.methods}
+              busy={busyId === "pay-submit"}
+              error={actionError}
+              status={paymentStatus}
+              onBack={() => {
+                setPaymentIntake(null);
+                setActionError("");
+                setPaymentStatus("");
+              }}
+              onSubmit={completeInvoicePayment}
+            />
+          </div>
+        </div>
+      ) : null}
     </PortalShell>
   );
 }
