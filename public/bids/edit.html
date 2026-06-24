@@ -15,6 +15,7 @@
 
   <script src="/config/auricrux-central.js"></script>
   <script src="/bids/bid-checklist.js"></script>
+  <script src="/bids/bid-history.js"></script>
   <script src="/leads/leads.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
@@ -146,6 +147,17 @@
       saveStatus.textContent = "Saving to Auricrux Central...";
       try {
         const payload = readForm();
+
+        // Build action history entry
+        const changes = FCA_BID_HISTORY.detectChanges(currentBid, payload);
+        const hasChecklistChange = changes.some(function (c) { return c.startsWith("Checklist:"); });
+        const hasStatusChange    = changes.some(function (c) { return c.startsWith("Status:"); });
+        const entryType = hasStatusChange    ? "status_changed"
+                        : hasChecklistChange ? "checklist_updated"
+                        :                     "edited";
+        const entry = FCA_BID_HISTORY.buildEntry(entryType, null, changes);
+        payload.actionHistory = FCA_BID_HISTORY.prependEntry(currentBid.actionHistory, entry);
+
         const saved = await window.FCA_AURICRUX.postBid(payload);
         saveStatus.className = "fca-status show success";
         saveStatus.textContent = "Bid updated. Auricrux score: " + (saved.auricruxScore || "—") + "/100";

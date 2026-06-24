@@ -15,6 +15,7 @@
 
   <script src="/config/auricrux-central.js"></script>
   <script src="/bids/bid-checklist.js"></script>
+  <script src="/bids/bid-history.js"></script>
   <script src="/leads/leads.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
@@ -80,6 +81,7 @@
         '<p><strong style="color:white">Next Action:</strong> ' + (bid.nextAction || bid.auricruxRecommendation || "Review bid checklist.") + '</p>' +
         '</section></div>' +
         FCA_BID_CHECKLIST.renderReadinessSummary(bid.checklist || {}) +
+        FCA_BID_HISTORY.renderHistory(bid.actionHistory) +
         '<section class="fca-panel">' +
         '<div class="fca-toolbar">' +
         '<a class="fca-btn fca-btn-secondary" href="/bids/status.html' + (customerId ? ("?customerId=" + encodeURIComponent(customerId)) : "") + '">Customer Status</a>' +
