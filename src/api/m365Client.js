@@ -39,6 +39,19 @@ export async function listSharePointFolderItems(folderPath = "") {
   return payload;
 }
 
+export async function uploadSharePointFile({ fileName, contentBase64, folderPath = "" }) {
+  const response = await centralFetch("/api/m365/sharepoint/upload", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ fileName, contentBase64, folderPath }),
+  });
+  const payload = await readJson(response);
+  if (!response.ok || !payload?.ok) {
+    throw new Error(payload?.error || "Unable to upload file to SharePoint.");
+  }
+  return payload;
+}
+
 export function sharePointItemHref(item) {
   if (!item) return "";
   return item.webUrl || item.downloadUrl || "";

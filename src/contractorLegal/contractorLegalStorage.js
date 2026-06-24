@@ -1,5 +1,11 @@
 import { CONTRACTOR_LEGAL_STORAGE_KEY, defaultContractorLegalState } from "./contractorLegalCatalog";
 
+let serverSyncEnabled = true;
+
+export function setContractorLegalServerSync(enabled) {
+  serverSyncEnabled = enabled;
+}
+
 export function readContractorLegalState() {
   if (typeof window === "undefined") return defaultContractorLegalState;
   try {
@@ -30,6 +36,37 @@ export function writeContractorLegalState(state) {
     window.localStorage.setItem(CONTRACTOR_LEGAL_STORAGE_KEY, JSON.stringify(state));
   } catch {
     // best effort
+  }
+  if (serverSyncEnabled) {
+    import("../api/legalClient.js")
+      .then(({ saveLegalWorkspace }) => saveLegalWorkspace(state))
+      .catch(() => {
+        // local continuity remains available when API sync is unavailable
+      });
+  }
+}
+
+export async function hydrateContractorLegalState() {
+  const local = readContractorLegalState();
+  if (!serverSyncEnabled || typeof window === "undefined") return local;
+  try {
+    const { fetchLegalWorkspace } = await import("../api/legalClient.js");
+    const remote = await fetchLegalWorkspace();
+    if (!remote?.checklist?.length && !remote?.licenses?.length) return local;
+    const merged = {
+      ...local,
+      ...remote,
+      checklist: mergeChecklist(remote.checklist?.length ? remote.checklist : local.checklist),
+      backingSource: remote.backingSource,
+    };
+    try {
+      window.localStorage.setItem(CONTRACTOR_LEGAL_STORAGE_KEY, JSON.stringify(merged));
+    } catch {
+      // best effort
+    }
+    return merged;
+  } catch {
+    return local;
   }
 }
 

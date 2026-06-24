@@ -11,6 +11,7 @@ import {
 import {
   daysUntilExpiry,
   expiryTone,
+  hydrateContractorLegalState,
   readContractorLegalState,
   writeContractorLegalState,
 } from "../../contractorLegal/contractorLegalStorage";
@@ -51,6 +52,23 @@ const sectionTitle = { marginTop: 0, color: "#0f172a" };
 
 export default function PortalLegal() {
   const [state, setState] = useState(() => readContractorLegalState());
+  const [apiBacked, setApiBacked] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    hydrateContractorLegalState()
+      .then((workspace) => {
+        if (!active) return;
+        setState(workspace);
+        setApiBacked(Boolean(workspace?.backingSource));
+      })
+      .catch(() => {
+        if (active) setApiBacked(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     writeContractorLegalState(state);

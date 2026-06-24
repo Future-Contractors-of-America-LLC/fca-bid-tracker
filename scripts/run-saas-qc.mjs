@@ -124,6 +124,9 @@ const SCRIPT_CHECKS = [
   "validate-platform-slices.mjs",
   "validate-cycle2-complete.mjs",
   "validate-cycle3-complete.mjs",
+  "validate-lifecycle-journey.mjs",
+  "validate-cycle4-complete.mjs",
+  "verify-post-deploy.mjs",
   "smoke-central-spine.mjs",
 ];
 
