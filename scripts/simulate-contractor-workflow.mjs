@@ -161,7 +161,10 @@ if (leadId) {
 // --- 3. Advance seeded bid (POST /bids does not exist; use PATCH mutate) ---
 try {
   const bidsList = await requestJson(apiBase, "/api/bids", { cookie: sessionCookie });
-  const bids = bidsList.payload?.data?.items || bidsList.payload?.items || bidsList.payload || [];
+  const bids =
+    bidsList.payload?.data?.items ||
+    bidsList.payload?.items ||
+    (Array.isArray(bidsList.payload) ? bidsList.payload : []);
   const firstBid = Array.isArray(bids) ? bids[0] : null;
   bidId = firstBid?.id || firstBid?.bidId || bidId;
 
