@@ -1,11 +1,19 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 set -euo pipefail
 
 # Verify AURICRUX_GITHUB_TOKEN can reach required cross-repo surfaces.
 # Usage: verify-auricrux-token.sh [repo1 repo2 ...]
 
 TOKEN="${AURICRUX_GITHUB_TOKEN:-${GITHUB_TOKEN:-}}"
-REPOS=("${@:-Future-Contractors-of-America-LLC/auricrux-central Future-Contractors-of-America-LLC/fca-bid-tracker}")
+
+if [ "$#" -gt 0 ]; then
+  REPOS=("$@")
+else
+  REPOS=(
+    "Future-Contractors-of-America-LLC/auricrux-central"
+    "Future-Contractors-of-America-LLC/fca-bid-tracker"
+  )
+fi
 
 if [ -z "${TOKEN}" ]; then
   echo "::error::AURICRUX_GITHUB_TOKEN is not set."
