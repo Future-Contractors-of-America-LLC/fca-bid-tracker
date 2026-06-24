@@ -310,7 +310,7 @@ export default function PortalFiles() {
       {targetedFile ? (
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: `1px solid ${brandSkin.accent || "#2563eb"}` }}>
           <div style={{ color: brandSkin.accent || "#2563eb", fontWeight: 700, marginBottom: 8 }}>Targeted file briefing focus</div>
-          <AuricruxBriefingCard file={targetedFile} project={visibleProject} />
+          <AuricruxBriefingCard file={targetedFile} project={visibleProject} projectFiles={files} />
         </div>
       ) : null}
 
@@ -384,7 +384,7 @@ export default function PortalFiles() {
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Auricrux briefing surface</div>
           <h2 style={{ marginTop: 0, marginBottom: 10 }}>Governed briefing artifacts ready for action</h2>
           <div style={{ display: "grid", gap: 12 }}>
-            {briefingFiles.map((file) => <AuricruxBriefingCard key={`briefing-${file.fileId}`} file={file} project={visibleProject} />)}
+            {briefingFiles.map((file) => <AuricruxBriefingCard key={`briefing-${file.fileId}`} file={file} project={visibleProject} projectFiles={files} />)}
           </div>
         </div>
       ) : null}

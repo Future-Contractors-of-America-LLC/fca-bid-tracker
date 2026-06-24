@@ -33,6 +33,7 @@ import {
   portalCardStyle,
   portalTokens,
 } from "../../portalDesignTokens";
+import { detectPipelineStagnation, scoreBidQualification } from "../../utils/goNoGoScoring";
 
 const PIPELINE_KEY = "fca_commercial_pipeline_v1";
 
@@ -128,6 +129,8 @@ export default function PortalPipeline() {
 
   const companyName = state?.tenant?.name || session?.company || "Customer Workspace";
   const activeBid = bids.find((bid) => bid.id === activeBidId) || bids[0] || null;
+  const goNoGoScore = useMemo(() => (activeBid ? scoreBidQualification(activeBid) : null), [activeBid]);
+  const stagnationAlert = useMemo(() => (activeBid ? detectPipelineStagnation(activeBid) : null), [activeBid]);
 
   useEffect(() => {
     if (!activeBidId && bids[0]?.id) setActiveBidId(bids[0].id);
@@ -427,6 +430,21 @@ export default function PortalPipeline() {
       {activeBid && activePipeline ? (
         <div style={portalCardStyle}>
           <h2 style={{ marginTop: 0 }}>{activeBid.package}</h2>
+          {goNoGoScore ? (
+            <div style={{ marginBottom: 14, padding: 14, borderRadius: 12, border: "1px solid #dbeafe", background: "#f8fafc" }}>
+              <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: 6 }}>Go / No-Go score</div>
+              <div style={{ color: "#334155", lineHeight: 1.7 }}>
+                <div><strong>Score:</strong> {goNoGoScore.numericScore}/100</div>
+                <div><strong>Recommendation:</strong> {goNoGoScore.recommendation.toUpperCase()}</div>
+                <div style={{ marginTop: 6 }}>{goNoGoScore.summary}</div>
+              </div>
+            </div>
+          ) : null}
+          {stagnationAlert ? (
+            <div style={{ marginBottom: 14, padding: 12, borderRadius: 12, border: "1px solid #fde68a", background: "#fffbeb", color: "#92400e" }}>
+              <strong>Pipeline stagnation alert:</strong> {stagnationAlert.message}
+            </div>
+          ) : null}
           <PortalWorkflowStepper steps={STEPS} currentKey={activePipeline.current === "done" ? "payment" : activePipeline.current} completeMap={activePipeline.complete} />
           <p style={{ color: portalTokens.body, lineHeight: 1.7 }}>{STEPS[Math.min(stepIndex, STEPS.length - 1)]?.detail}</p>
 

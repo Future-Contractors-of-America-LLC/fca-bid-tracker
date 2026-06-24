@@ -63,12 +63,12 @@ Web research informing FCA/Auricrux slices beyond the current coverage matrix. T
 - `BuildPortalHandoffUrl` for immersive, punch, job-cost, pipeline surfaces on `futurecontractorsofamerica.com`
 - Central-backed mutations: intake POST, qualify PATCH, session Bearer auth
 
-## Future extensions (research-backed, not yet built)
+## Future extensions (research-backed)
 
-| Extension | Research basis | Target slice |
+| Extension | Status | Target slice |
 |---|---|---|
-| Go/No-Go weighted scoring | iRecruit 80/60 threshold model | 01 Lead |
-| Stage stagnation automations | ConstructionBids.ai 7d/14d triggers | 01, 03 |
-| Cross-doc conflict matrix | Helonic cross-document review | 08 Briefing |
-| Agentic submittal routing | Zacua agentic AI report | 07 Documents |
-| SMS nurture on intake | Ringy native SMS CRM | 01, Comms |
+| Go/No-Go weighted scoring | `product-complete` (Cycle 10) | 01 Lead |
+| Stage stagnation automations | `product-complete` (Cycle 10) | 01, 03 |
+| Cross-doc conflict matrix | `product-complete` (Cycle 10) | 08 Briefing |
+| Agentic submittal routing | planned | 07 Documents |
+| SMS nurture on intake | planned | 01, Comms |

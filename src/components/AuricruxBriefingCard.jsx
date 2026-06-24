@@ -1,3 +1,5 @@
+import { buildBriefingConflictHints } from "../utils/briefingConflictHints";
+
 const cardStyle = {
   border: "1px solid #dbe3ef",
   borderRadius: 12,
@@ -60,7 +62,7 @@ function fallbackBriefing(file = {}, project = {}) {
   }
 
   return {
-    title: file.briefingTitle || `Auricrux Briefing — ${file.name || "Governed file"}`,
+    title: file.briefingTitle || `Auricrux Briefing - ${file.name || "Governed file"}`,
     summary:
       file.briefingSummary ||
       file.note ||
@@ -82,10 +84,11 @@ function fallbackBriefing(file = {}, project = {}) {
   };
 }
 
-export default function AuricruxBriefingCard({ file, project }) {
+export default function AuricruxBriefingCard({ file, project, projectFiles = [] }) {
   if (!hasBriefing(file)) return null;
 
   const briefing = file.briefing || fallbackBriefing(file, project);
+  const conflictHints = buildBriefingConflictHints(file, projectFiles);
   const targetProjectId = project.id || file.ownerObjectId || "active-project";
 
   return (
@@ -140,6 +143,17 @@ export default function AuricruxBriefingCard({ file, project }) {
           </ul>
         </div>
       </div>
+
+      {conflictHints.length ? (
+        <div style={{ marginTop: 12, padding: 12, borderRadius: 10, border: "1px solid #fecaca", background: "#fff7ed" }}>
+          <div style={{ color: "#9a3412", fontWeight: 800, marginBottom: 6 }}>Cross-document conflict matrix</div>
+          <ul style={{ margin: 0, paddingLeft: 18, color: "#7c2d12", lineHeight: 1.7 }}>
+            {conflictHints.map((hint) => (
+              <li key={hint.id}>{hint.message}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
         <a href="/portal/projects" style={actionLinkStyle}>Open Project Spine</a>

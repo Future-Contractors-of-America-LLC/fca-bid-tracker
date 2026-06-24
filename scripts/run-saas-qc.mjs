@@ -135,6 +135,9 @@ const SCRIPT_CHECKS = [
   "validate-fca-sovereignty.mjs",
   "validate-precon-sovereignty-journey.mjs",
   "validate-cycle9-complete.mjs",
+  "validate-research-extensions-journey.mjs",
+  "validate-full-platform-traverse.mjs",
+  "validate-cycle10-complete.mjs",
   "verify-post-deploy.mjs",
   "smoke-central-spine.mjs",
 ];
