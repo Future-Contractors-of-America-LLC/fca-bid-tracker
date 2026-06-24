@@ -22,6 +22,29 @@ const REQUIRED_INSIGHT_PAGES = [
   "PortalProposals.jsx",
   "PortalFieldSupervision.jsx",
   "PortalFieldTasks.jsx",
+  "PortalScheduling.jsx",
+  "PortalPunch.jsx",
+  "PortalJobCost.jsx",
+  "PortalImmersive.jsx",
+  "PortalOpportunityDetail.jsx",
+  "PortalInvoiceDetail.jsx",
+  "PortalLegal.jsx",
+  "PortalSupport.jsx",
+  "PortalAdmin.jsx",
+  "PortalAudit.jsx",
+  "PortalMessages.jsx",
+  "PortalNotifications.jsx",
+  "PortalOperations.jsx",
+  "PortalProfile.jsx",
+  "PortalDesignWorkspace.jsx",
+  "PlatformDashboard.jsx",
+];
+
+const AURICRUX_MARKERS = [
+  "AuricruxInsightPanel",
+  "PortalSliceAuricrux",
+  "AuricruxDesignInsight",
+  "AuricruxBriefingCard",
 ];
 
 function fail(message) {
@@ -33,13 +56,24 @@ function read(filePath) {
   return fs.readFileSync(path.join(root, filePath), "utf8");
 }
 
+function hasAuricrux(source) {
+  return AURICRUX_MARKERS.some((marker) => source.includes(marker));
+}
+
 for (const page of REQUIRED_INSIGHT_PAGES) {
   const source = fs.readFileSync(path.join(portalDir, page), "utf8");
-  if (!source.includes("AuricruxInsightPanel")) {
-    fail(`${page} must import AuricruxInsightPanel`);
+  if (!hasAuricrux(source)) {
+    fail(`${page} must embed Auricrux (panel, slice wrapper, or design insight)`);
   }
-  if (!source.includes("targetObjectId")) {
-    fail(`${page} must pass targetObjectId to AuricruxInsightPanel`);
+  const hasContext =
+    source.includes("targetObjectId") ||
+    source.includes("AuricruxDesignInsight") ||
+    source.includes("usingLiveActions") ||
+    source.includes("projectId") ||
+    source.includes("invoiceId") ||
+    source.includes("opportunityId");
+  if (!hasContext) {
+    fail(`${page} must pass object context to Auricrux`);
   }
 }
 
@@ -65,5 +99,6 @@ requireIncludes("src/api/fieldPhotosClient.js", ["uploadFieldPhoto", "compareFie
 requireIncludes("src/components/field/FieldPhotoCapture.jsx", ["getUserMedia"]);
 requireIncludes("src/pages/portal/PortalFieldSupervision.jsx", ["FieldPhotoCapture", "PlanComparePanel"]);
 requireIncludes("src/pages/portal/PortalFieldTasks.jsx", ["Field Supervision", "AuricruxInsightPanel"]);
+requireIncludes("src/components/portal/PortalSliceAuricrux.jsx", ["AuricruxInsightPanel", "targetObjectId"]);
 
 console.log("Portal Auricrux wiring validation passed.");

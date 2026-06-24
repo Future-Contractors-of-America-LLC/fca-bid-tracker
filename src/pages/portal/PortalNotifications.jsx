@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import AuditEventCard from "../../components/AuditEventCard";
 import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -91,6 +92,15 @@ export default function PortalNotifications() {
       primaryLabel="Open Messages"
       workspaceState={state}
     >
+      <PortalSliceAuricrux
+        title="Auricrux Notification Intelligence"
+        targetObjectId={state.project?.id || session?.email || "NOTIFY"}
+        sourceRoute="/portal/notifications"
+        rationale="Approvals and field signals must route through governed notification continuity."
+        nextAction="Act on the highest-priority notification in the feed."
+        actionHref="/portal/audit"
+        actionLabel="Open audit"
+      />
       {accountSource === "local-fallback" ? (
         <PortalAlert tone="warning">
           Demo workspace active. Notification feed uses seeded continuity until production customer auth is configured.

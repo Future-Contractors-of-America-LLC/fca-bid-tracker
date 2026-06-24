@@ -88,6 +88,10 @@ requireIncludes("12-warranty", "src/pages/portal/PortalWarranty.jsx", "/portal/s
 
 // Slice 13 ù Admin / audit / legal
 rejectIncludes("13-admin", "src/pages/portal/PortalProfile.jsx", "Why this route matters", "profile removes commentary shell");
+requireIncludes("13-admin", "src/pages/portal/PortalAdmin.jsx", "PortalSliceAuricrux", "admin embeds Auricrux");
+requireIncludes("13-admin", "src/pages/portal/PortalAudit.jsx", "PortalSliceAuricrux", "audit embeds Auricrux");
+requireIncludes("13-admin", "src/pages/portal/PortalLegal.jsx", "PortalSliceAuricrux", "legal embeds Auricrux");
+requireIncludes("13-admin", "src/pages/portal/PortalInvoiceDetail.jsx", "createFcaPaymentIntake", "invoice detail native pay");
 
 // Slice 14 ù Auricrux
 requireIncludes("14-auricrux", "src/pages/portal/PortalAuricrux.jsx", "usingLiveActions", "auricrux shows live vs guidance mode");

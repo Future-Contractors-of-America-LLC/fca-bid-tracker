@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import {
   complianceChecklist,
   documentTemplates,
@@ -51,6 +53,7 @@ const btnSecondary = { ...btn, background: "#eff6ff", color: "#1d4ed8" };
 const sectionTitle = { marginTop: 0, color: "#0f172a" };
 
 export default function PortalLegal() {
+  const { state: workspaceState } = useWorkspaceState();
   const [state, setState] = useState(() => readContractorLegalState());
   const [apiBacked, setApiBacked] = useState(false);
 
@@ -103,6 +106,17 @@ export default function PortalLegal() {
       primaryHref="/portal/files"
       primaryLabel="Open Files"
     >
+      <PortalSliceAuricrux
+        title="Auricrux Legal Intelligence"
+        targetObjectType="LegalWorkspace"
+        targetObjectId={workspaceState?.project?.id || workspaceState?.tenant?.name || "LEGAL"}
+        sourceRoute="/portal/legal"
+        rationale="Licenses, agreements, and compliance must stay governed on FCA legal surfaces."
+        nextAction="Complete the next compliance checklist item before mobilization."
+        actionHref="/portal/files"
+        actionLabel="Open files"
+        tone="blue"
+      />
       <div style={{ display: "grid", gap: 20 }}>
         <div style={{ ...card, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
           <h2 style={sectionTitle}>Legal readiness overview</h2>

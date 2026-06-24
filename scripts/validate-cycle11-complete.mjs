@@ -25,7 +25,7 @@ function fail(label, detail = "") {
 }
 
 for (const script of [
-  "validate-cycle10-complete.mjs",
+  "validate-fca-sovereignty.mjs",
   "validate-fca-native-payments-journey.mjs",
 ]) {
   const result = spawnSync(process.execPath, [path.join(root, "scripts", script)], { encoding: "utf8" });

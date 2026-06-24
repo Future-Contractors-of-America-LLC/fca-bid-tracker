@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-06-24T18:06:29.403Z",
+  "cycle": 13,
+  "complete": true,
+  "failed": 0,
+  "findings": [
+    {
+      "slice": "02-16-slices",
+      "status": "pass",
+      "label": "validate-platform-slices.mjs"
+    },
+    {
+      "slice": "08-design",
+      "status": "pass",
+      "label": "validate-design-workspace.mjs"
+    },
+    {
+      "slice": "09-rfi-closeout",
+      "status": "pass",
+      "label": "validate-precon-sovereignty-journey.mjs"
+    },
+    {
+      "slice": "10-field",
+      "status": "pass",
+      "label": "validate-field-execution-journey.mjs"
+    },
+    {
+      "slice": "11-finance",
+      "status": "pass",
+      "label": "validate-finance-workspace.mjs"
+    },
+    {
+      "slice": "11-finance",
+      "status": "pass",
+      "label": "validate-fca-native-payments-journey.mjs"
+    },
+    {
+      "slice": "12-warranty",
+      "status": "pass",
+      "label": "validate-warranty-service-journey.mjs"
+    },
+    {
+      "slice": "13-platform",
+      "status": "pass",
+      "label": "validate-portal-auricrux-coverage.mjs"
+    },
+    {
+      "slice": "13-platform",
+      "status": "pass",
+      "label": "validate-fca-sovereignty.mjs"
+    },
+    {
+      "slice": "14-auricrux",
+      "status": "pass",
+      "label": "validate-portal-auricrux-wiring.mjs"
+    },
+    {
+      "slice": "15-mobile",
+      "status": "pass",
+      "label": "../fca-mobile-maui-work/src/FcaMobile/Services/FcaConfig.cs"
+    },
+    {
+      "slice": "traverse",
+      "status": "pass",
+      "label": "validate-full-platform-traverse.mjs"
+    }
+  ]
+}

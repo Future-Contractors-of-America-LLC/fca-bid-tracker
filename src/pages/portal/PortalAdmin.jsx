@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import AdminActionCenter from "../../components/AdminActionCenter";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -26,6 +27,17 @@ export default function PortalAdmin() {
       primaryHref="/pricing"
       primaryLabel="Plans & Rollout"
     >
+      <PortalSliceAuricrux
+        title="Auricrux Admin Intelligence"
+        targetObjectType="Tenant"
+        targetObjectId={state?.tenant?.name || session?.email || "TENANT"}
+        sourceRoute="/portal/admin"
+        rationale="Tenant governance, entitlements, and rollout controls require Auricrux review."
+        nextAction="Confirm plan entitlements match active commercial posture."
+        actionHref="/portal/platform"
+        actionLabel="Open workspace"
+        tone="green"
+      />
       <div style={{ marginBottom: 20 }}>
         <CustomerPlanSummaryPanel session={session} title="Plan and account" />
       </div>

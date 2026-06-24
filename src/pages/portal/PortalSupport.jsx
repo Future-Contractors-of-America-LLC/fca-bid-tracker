@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import {
@@ -161,6 +162,16 @@ export default function PortalSupport() {
       primaryHref="/portal/messages"
       primaryLabel="Open Messages"
     >
+      <PortalSliceAuricrux
+        title="Auricrux Support Intelligence"
+        targetObjectType="SupportTicket"
+        targetObjectId={supportState.tickets[0]?.id || state?.project?.id || "SUPPORT"}
+        sourceRoute="/portal/support"
+        rationale="Service requests must escalate on governed FCA support surfaces with project context."
+        nextAction="Open or resolve the highest-priority support ticket."
+        actionHref="/portal/warranty"
+        actionLabel="Open warranty"
+      />
       {apiBacking === "local-fallback" ? (
         <PortalAlert tone="warning">
           Support is temporarily offline. Tickets are saved on this device until sync returns.

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import DesignCanvas from "../../components/design/DesignCanvas";
 import SheetNavigator from "../../components/design/SheetNavigator";
 import MarkupToolbar from "../../components/design/MarkupToolbar";
@@ -345,6 +346,17 @@ export default function PortalDesignWorkspace() {
       currentJourney="coordination"
       routeOverlay={routeStateOverlays.design}
     >
+      <PortalSliceAuricrux
+        title="Auricrux Design Intelligence"
+        targetObjectType="File"
+        targetObjectId={selectedFileId || projectId}
+        sourceRoute="/portal/design"
+        rationale="Plan room work must stay on FCA native design surfaces with governed extraction and markup."
+        nextAction="Run extraction or markup on the active sheet."
+        actionHref="/portal/files"
+        actionLabel="Open files"
+        liveRecommend
+      />
       <div style={{ display: "grid", gap: 16 }}>
         <div style={panelStyle}>
           <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center" }}>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -195,6 +196,16 @@ export default function PortalMessages() {
       primaryHref="/portal/billing"
       primaryLabel="Open Billing"
     >
+      <PortalSliceAuricrux
+        title="Auricrux Communications Intelligence"
+        targetObjectType="MessageThread"
+        targetObjectId={state?.project?.id || session?.email || "COMMS"}
+        sourceRoute="/portal/messages"
+        rationale="Customer and team communications must stay on governed FCA comms surfaces."
+        nextAction="Send the next customer update on the active channel."
+        actionHref="/portal/notifications"
+        actionLabel="Open notifications"
+      />
       {apiBacking === "local-fallback" ? (
         <PortalAlert tone="warning">
           Messages are temporarily offline. Drafts are saved on this device until sync returns.

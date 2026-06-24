@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -136,6 +137,16 @@ export default function PortalProfile() {
       primaryHref="/portal/platform"
       primaryLabel="Open Platform Dashboard"
     >
+      <PortalSliceAuricrux
+        title="Auricrux Profile Intelligence"
+        targetObjectType="User"
+        targetObjectId={session?.email || state?.project?.id || "PROFILE"}
+        sourceRoute="/portal/profile"
+        rationale="Account identity and entitlements must align with governed workspace posture."
+        nextAction="Confirm plan access matches active rollout requirements."
+        actionHref="/portal/admin"
+        actionLabel="Open admin"
+      />
       <CustomerProductLaunchpad session={session} title="Product access" />
       <CustomerCommsLaunchpad session={session} title="Communications access" />
 

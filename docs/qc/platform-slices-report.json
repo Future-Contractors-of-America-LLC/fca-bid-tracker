@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:34:07.098Z",
+  "generatedAt": "2026-06-24T18:06:26.492Z",
   "failed": 0,
   "sliceCount": 15,
   "findings": [
@@ -127,6 +127,34 @@
       "status": "pass",
       "label": "profile removes commentary shell",
       "detail": "src/pages/portal/PortalProfile.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "13-admin",
+      "status": "pass",
+      "label": "admin embeds Auricrux",
+      "detail": "src/pages/portal/PortalAdmin.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "13-admin",
+      "status": "pass",
+      "label": "audit embeds Auricrux",
+      "detail": "src/pages/portal/PortalAudit.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "13-admin",
+      "status": "pass",
+      "label": "legal embeds Auricrux",
+      "detail": "src/pages/portal/PortalLegal.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "13-admin",
+      "status": "pass",
+      "label": "invoice detail native pay",
+      "detail": "src/pages/portal/PortalInvoiceDetail.jsx",
       "tag": "mutation"
     },
     {

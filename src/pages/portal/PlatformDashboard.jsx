@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import PortalWorkspaceGuide from "../../components/PortalWorkspaceGuide";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
@@ -33,6 +34,16 @@ export default function PlatformDashboard() {
       navDensity="full"
       showRouteOverlay={false}
     >
+      <PortalSliceAuricrux
+        title="Auricrux Workspace Intelligence"
+        targetObjectId={state?.project?.id || session?.email || "WORKSPACE"}
+        sourceRoute="/portal/platform"
+        rationale="Workspace dashboard must keep every product lane visible and actionable under Auricrux guidance."
+        nextAction={state.workspace?.currentNextAction || "Open the next lifecycle lane."}
+        actionHref="/portal/auricrux"
+        actionLabel="Ask Auricrux"
+        liveRecommend
+      />
       <CustomerProductLaunchpad session={session} />
 
       <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid #d4a32a`, background: "linear-gradient(135deg, #fffbeb 0%, #fff 100%)" }}>

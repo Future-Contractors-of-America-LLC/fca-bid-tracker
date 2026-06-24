@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
@@ -74,6 +75,16 @@ export default function PortalAudit() {
       primaryLabel="Open Project Flow"
       workspaceState={state}
     >
+      <PortalSliceAuricrux
+        title="Auricrux Audit Intelligence"
+        targetObjectId={visibleProject.id}
+        sourceRoute="/portal/audit"
+        rationale="Audit records must explain what changed, why, and what happens next on governed surfaces."
+        nextAction="Review the latest accountable workflow event for this project."
+        actionHref="/portal/files"
+        actionLabel="Open files"
+        liveRecommend
+      />
       {!apiBacked ? (
         <PortalAlert tone="warning" title="Limited audit sync">
           Showing workspace continuity history. Full governed audit records appear when the workflow API is connected.

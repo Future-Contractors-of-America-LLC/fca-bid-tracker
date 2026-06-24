@@ -40,6 +40,9 @@ const SAAS_PORTAL_ROUTES = [
   "/portal/warranty",
   "/portal/legal",
   "/portal/notifications",
+  "/portal/punch",
+  "/portal/job-cost",
+  "/portal/immersive",
 ];
 
 const SAAS_DETAIL_ROUTE_PATTERNS = [
@@ -142,6 +145,9 @@ const SCRIPT_CHECKS = [
   "validate-cycle11-complete.mjs",
   "validate-warranty-service-journey.mjs",
   "validate-cycle12-complete.mjs",
+  "validate-portal-auricrux-coverage.mjs",
+  "validate-platform-qc-matrix.mjs",
+  "validate-cycle13-complete.mjs",
   "verify-post-deploy.mjs",
   "smoke-central-spine.mjs",
 ];

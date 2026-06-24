@@ -58,6 +58,29 @@ requireIncludes("core/fca_payment_intake.py", "get_payment_rail_status", "centra
 requireIncludes("core/fca_payment_http.py", "fca-payments/checkout", "central fca payments routes", centralRoot);
 requireIncludes("src/api/fcaPaymentClient.js", "submitFcaNativeCheckout", "web fca payment client");
 requireIncludes("src/pages/portal/PortalBilling.jsx", "createFcaPaymentIntake", "portal billing native pay");
+requireIncludes("src/pages/portal/PortalInvoiceDetail.jsx", "createFcaPaymentIntake", "invoice detail native pay");
+requireIncludes("src/pages/portal/PortalInvoiceDetail.jsx", "FcaNativeCheckoutPanel", "invoice detail native checkout panel");
+
+const pilotLink = read("src/config/auricruxCentral.js");
+if (pilotLink.includes('checkout?plan=pilot') && !pilotLink.match(/PILOT_PAYMENT_LINK[^;]*buy\.stripe\.com/)) {
+  pass("pilot payment link targets FCA native checkout");
+} else {
+  fail("pilot payment link sovereignty", "PILOT_PAYMENT_LINK must default to FCA checkout");
+}
+
+const centralPilot = read("core/stripe_billing.py", centralRoot);
+if (centralPilot.includes('checkout?plan=pilot') && !centralPilot.match(/PILOT_PAYMENT_LINK = "https:\/\/buy\.stripe\.com/)) {
+  pass("central pilot payment link targets FCA native checkout");
+} else {
+  fail("central pilot payment link sovereignty");
+}
+
+const commercial = read("src/commercialOffers.js");
+if (commercial.includes("/checkout?plan=pilot") && commercial.includes("checkoutUrl: PILOT_CHECKOUT_URL")) {
+  pass("commercial offers use FCA native checkout paths");
+} else {
+  fail("commercial offers sovereignty");
+}
 
 const backendBase = read("src/config/domainHosts.js");
 if (
@@ -73,7 +96,7 @@ const outputDir = path.join(root, "docs", "qc");
 fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(
   path.join(outputDir, "fca-sovereignty-report.json"),
-  JSON.stringify({ generatedAt: new Date().toISOString(), cycle: 11, complete: failed === 0, failed }, null, 2),
+  JSON.stringify({ generatedAt: new Date().toISOString(), cycle: 13, complete: failed === 0, failed }, null, 2),
 );
 
 if (failed > 0) process.exit(1);

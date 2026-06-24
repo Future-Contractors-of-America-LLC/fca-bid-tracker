@@ -5,7 +5,10 @@ export const CENTRAL_API =
 
 export const PILOT_PAYMENT_LINK =
   import.meta.env.VITE_FCA_PILOT_PAYMENT_LINK ||
-  "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01";
+  "https://futurecontractorsofamerica.com/checkout?plan=pilot";
+
+/** @deprecated Legacy Stripe buy link — use FCA native checkout instead. */
+export const LEGACY_STRIPE_PILOT_LINK = "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01";
 
 export const bidsUrl = `${CENTRAL_API}/bids`;
 export const leadsUrl = `${CENTRAL_API}/leads`;

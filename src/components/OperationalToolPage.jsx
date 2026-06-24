@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PortalShell from "./PortalShell";
+import PortalSliceAuricrux from "./portal/PortalSliceAuricrux";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import useCustomerSession from "../hooks/useCustomerSession";
 import useProjectWorkspace from "../hooks/useProjectWorkspace";
@@ -197,6 +198,15 @@ export function createOperationalPortalPage({
         navDensity="compact"
       >
         {beforeContent}
+        <PortalSliceAuricrux
+          title={`Auricrux ${title}`}
+          targetObjectId={selectedProjectId || state?.project?.id || state?.tenant?.name}
+          sourceRoute={activeHref}
+          rationale={`Governed operations on ${activeHref} stay on FCA-owned surfaces with Auricrux review.`}
+          nextAction={`Update the next ${itemLabel.toLowerCase()} for ${companyName}.`}
+          actionHref={primaryHref}
+          actionLabel={primaryLabel}
+        />
         {apiHandlers ? (
           <div style={{ marginBottom: 14, fontSize: 12, color: "#64748b" }}>
             Source: {backingSource}

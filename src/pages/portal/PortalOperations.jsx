@@ -1,7 +1,9 @@
 import PortalShell from "../../components/PortalShell";
+import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import PortalWorkspaceGuide from "../../components/PortalWorkspaceGuide";
 import { PortalPageIntro, PortalQuickStats } from "../../components/portal/PortalPrimitives";
 import { portalHubModules } from "../../systemState";
+import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { portalButtonPrimary, portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
 
 const opsLanes = [
@@ -32,6 +34,7 @@ const opsLanes = [
 ];
 
 export default function PortalOperations() {
+  const { state } = useWorkspaceState();
   const moduleCount = portalHubModules.length;
 
   return (
@@ -44,6 +47,15 @@ export default function PortalOperations() {
       primaryLabel="Open pipeline"
       showRouteOverlay={false}
     >
+      <PortalSliceAuricrux
+        title="Auricrux Operations Intelligence"
+        targetObjectId={state?.project?.id || "OPERATIONS"}
+        sourceRoute="/portal/operations"
+        rationale="Operations command must route teams through sovereign FCA lanes from opportunity to cash."
+        nextAction="Open the pipeline wizard for the next commercial action."
+        actionHref="/portal/pipeline"
+        actionLabel="Open pipeline"
+      />
       <PortalPageIntro
         eyebrow="Operations hub"
         title="Use FCA like an enterprise system — pick a lane and execute"
