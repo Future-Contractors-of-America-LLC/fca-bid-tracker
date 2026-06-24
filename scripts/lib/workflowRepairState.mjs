@@ -102,7 +102,7 @@ ${finalSummary}
 
 ## For the founder
 
-- This loop runs automatically with workflow simulations every 6 hours.
+- This loop runs automatically with workflow simulations every hour.
 - Green end state = product workflows worked without you testing manually.
 - Red end state = repair items were queued; check \`auricrux/system/work_queue.json\`.
 `;

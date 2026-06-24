@@ -50,7 +50,7 @@ npm run sim:workflow:loop     # full Observe -> Act -> Review loop
 
 ## Schedule
 
-Runs with **FCA Workflow Simulations** every 6 hours and on push to `main`.
+Runs with **FCA Workflow Simulations** every hour and on push to `main`.
 
 ## Validation
 

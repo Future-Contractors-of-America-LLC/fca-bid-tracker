@@ -408,7 +408,7 @@ ${steps.map((s) => `- **${s.status.toUpperCase()}** ${s.name}${s.detail ? `: ${s
 - Green = that part of the product worked on the live API when this ran.
 - Red = something broke; engineering should fix before claiming that workflow works.
 - Re-run anytime: \`npm run sim:workflow\`
-- GitHub Actions runs this every 6 hours on \`main\` (requires \`FCA_SIM_LOGIN_EMAIL\` / \`FCA_SIM_LOGIN_PASSWORD\` secrets).
+- GitHub Actions runs this every hour on \`main\` (requires \`FCA_SIM_LOGIN_EMAIL\` / \`FCA_SIM_LOGIN_PASSWORD\` secrets).
 `;
   fs.writeFileSync(path.join(outputDir, "workflow-simulation-latest.md"), md);
   if (failed === 0) console.log(`\nWorkflow simulation complete - ${passed}/${steps.length} steps passed.`);

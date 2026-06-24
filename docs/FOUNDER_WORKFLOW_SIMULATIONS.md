@@ -1,6 +1,6 @@
 # Founder Workflow Simulations
 
-You do not need construction field experience to know whether FCA works. A **workflow robot** exercises the live product every 6 hours the same way an operator would - creating leads, qualifying, bidding, opening projects, RFIs, change orders, field tasks, payments, warranty cases, and Auricrux guidance.
+You do not need construction field experience to know whether FCA works. A **workflow robot** exercises the live product every hour the same way an operator would - creating leads, qualifying, bidding, opening projects, RFIs, change orders, field tasks, payments, warranty cases, and Auricrux guidance.
 
 ## Read the latest result
 
@@ -52,7 +52,7 @@ Cycle validators mostly check **code wiring** (files exist, strings match). Work
 
 ## Schedule
 
-- Every **6 hours** on `main`
+- Every **hour** on `main`
 - On every **push to main**
 - Manual: **Actions -> FCA Workflow Simulations -> Run workflow**
 
