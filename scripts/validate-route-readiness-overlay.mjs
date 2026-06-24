@@ -7,11 +7,10 @@ const checks = [
   {
     file: path.join(root, "src", "components", "RouteReadinessOverlay.jsx"),
     markers: [
-      'setProductAccess(product, true)',
-      'setCommsAccess(channel, true)',
-      'applyPlanPreset("enterprise")',
-      'Repair Route Dependencies',
-      'Activate Enterprise Readiness',
+      'Design & immersive readiness',
+      'Review plans & upgrade',
+      'server-managed',
+      'Admin entitlement controls',
       'The platform dashboard should proactively expose missing workspace dependencies before users hit blocked routes downstream.',
     ],
   },

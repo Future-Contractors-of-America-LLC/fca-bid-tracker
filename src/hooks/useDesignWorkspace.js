@@ -110,7 +110,7 @@ export default function useDesignWorkspace(projectId, fileId, sheetId = "") {
         ...markupPayload,
       });
       await refresh();
-      return result?.item;
+      return result?.markup || result?.item || result;
     },
     [projectId, fileId, activeSheetId, refresh],
   );

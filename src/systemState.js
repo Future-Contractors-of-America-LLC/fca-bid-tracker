@@ -159,7 +159,7 @@ export const routeStateOverlays = {
   },
   design: {
     title: "Design Workspace route state",
-    summary: "Design Workspace unifies PDF, DWG, and RVT viewing with shared markup, takeoff, and coordination continuity.",
+    summary: "Design Workspace unifies PDF, IFC, and glTF viewing with FCA Native 3D, shared markup, takeoff, and coordination continuity.",
     status: "Design session active",
     primaryFocus: "Plan review and markup",
     primaryDetail: "This route anchors governed plan sets, sheet navigation, markup layers, and takeoff linkage in one enterprise workspace.",
@@ -167,6 +167,28 @@ export const routeStateOverlays = {
     dependencyDetail: "Design Workspace depends on blob-backed file artifacts, extraction manifests, and project linkage.",
     auricruxRole: "Explain, recommend, and act",
     auricruxDetail: "Auricrux reads active sheets and markups, explains revision changes, recommends takeoff gaps, and can spawn RFIs or takeoffs.",
+  },
+  immersive: {
+    title: "Immersive Experiences route state",
+    summary: "FCA-native 3D viewing, Academy simulations, and field plan overlays — fully sovereign, no third-party runtime.",
+    status: "Immersive spine active",
+    primaryFocus: "Training and spatial review",
+    primaryDetail: "Browser-based FCA simulations and 3D models attach to project, session, and audit spine.",
+    dependency: "Immersive session API and file spine",
+    dependencyDetail: "Experiences consume governed project files or procedurally generated FCA scenes.",
+    auricruxRole: "Guide and review",
+    auricruxDetail: "Auricrux reads session scores, recommends retakes, and links labs to project context.",
+  },
+  leads: {
+    title: "Lead Intelligence route state",
+    summary: "Governed lead intake, qualification checklists, scoring, and opportunity creation on the CRM spine.",
+    status: "Lead pipeline active",
+    primaryFocus: "Intake and qualification",
+    primaryDetail: "This route captures inbound demand, enforces qualification readiness, and creates governed opportunities.",
+    dependency: "Central lead API and SaaS entitlements",
+    dependencyDetail: "Lead mutations require authenticated SaaS access; public intake channels mirror website submissions.",
+    auricruxRole: "Score, qualify, and route",
+    auricruxDetail: "Auricrux recommends next qualification steps and links qualified leads to bids and estimates.",
   },
   messages: {
     title: "Message route state",
@@ -520,10 +542,10 @@ export const portalBilling = [
 ];
 
 export const auricruxActions = [
-  "Review pending customer approval for Bid Package A-117.",
-  "Send onboarding packet to 2 newly assigned field users.",
-  "Confirm safety certification progress before project mobilization.",
-  "Follow up on one open RFI blocking subcontractor pricing.",
+  "Execute Package A-117 bid intake — link PRJ-BID-1 and route to J. Benton estimator.",
+  "Run Auricrux plan/spec briefing — reconcile MEP plenum and finish schedule gaps before EST-1.",
+  "Teach cert-quantity-takeoff scope review after briefing on Package A-117.",
+  "Draft owner scope clarification on portal messages — no internal control-plane language.",
 ];
 
 export const portalModules = [
@@ -551,6 +573,11 @@ export const portalModules = [
     href: "/portal/pipeline",
     label: "Commercial Pipeline",
     description: "Guided bid-to-billing workflow in one place",
+  },
+  {
+    href: "/portal/leads",
+    label: "Lead Intelligence",
+    description: "Governed intake, qualification, and opportunity creation",
   },
   {
     href: "/portal/files",
@@ -631,6 +658,11 @@ export const portalModules = [
     href: "/portal/change-orders",
     label: "Change orders",
     description: "Scope changes, pricing, and approval workflow",
+  },
+  {
+    href: "/portal/immersive",
+    label: "Immersive",
+    description: "FCA-native 3D, simulations, and field overlays",
   },
   {
     href: "/portal/warranty",

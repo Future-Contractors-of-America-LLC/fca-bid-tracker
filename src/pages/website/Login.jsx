@@ -1,17 +1,34 @@
 import { useEffect, useRef, useState } from "react";
-import PublicTopNav from "../../components/PublicTopNav";
+import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
-import FcaBrandMark from "../../components/FcaBrandMark";
-import AuricruxAvatar from "../../components/AuricruxAvatar";
-import { auricruxPersona } from "../../config/auricruxPersona";
-import LoginActionCenter from "../../components/LoginActionCenter";
 import { centralFetch } from "../../api/backendBase";
-import { isAllowedPostLoginHref, resolveWorkspaceEntryHref } from "../../customerSession";
+import { resolveWorkspaceEntryHref, writeSessionToken } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { resolveSeededCustomerAccount, resolveSeededAccountByKey } from "../../customerAccounts";
-import { pageShellStyle, cardStyle } from "../../publicShellStyles";
-import { portalButtonPrimary, portalInputStyle } from "../../portalDesignTokens";
+import { pageShellStyle, cardStyle, twoColumnGridStyle } from "../../publicShellStyles";
+
+const fieldStyle = {
+  width: "100%",
+  padding: "12px 14px",
+  borderRadius: 8,
+  border: "1px solid #cbd5e1",
+  marginTop: 6,
+  marginBottom: 14,
+  boxSizing: "border-box",
+  fontSize: 15,
+};
+
+const submitButtonStyle = {
+  background: "linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%)",
+  color: "#fff",
+  padding: "12px 20px",
+  borderRadius: 8,
+  fontWeight: 700,
+  border: "none",
+  cursor: "pointer",
+  fontSize: 15,
+};
 
 const LOCAL_FALLBACK_AUTH_BOUNDARY = {
   productionAuthReady: false,
@@ -57,10 +74,12 @@ async function authenticateWorkspaceAccount(email, password) {
     });
     const payload = await response.json();
     if (response.ok && payload?.ok && payload?.account) {
+      if (payload.sessionToken) writeSessionToken(payload.sessionToken);
       return {
         ...payload.account,
         authBoundary: payload.authBoundary,
         accountSource: payload.authenticationMode || "api",
+        serverValidatedAt: new Date().toISOString(),
       };
     }
     if (localFallback) return localFallback;
@@ -71,7 +90,7 @@ async function authenticateWorkspaceAccount(email, password) {
   }
 }
 
-export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
+export default function Login({ requestedPath = "/portal", accessMode = "direct" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
   const [form, setForm] = useState({
     email: session?.email || "",
@@ -85,17 +104,9 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const [error, setError] = useState("");
   const [authStatus, setAuthStatus] = useState("idle");
   const autologinAttemptedRef = useRef(false);
-  const redirectAttemptedRef = useRef(false);
   const queryState = readLoginQueryState();
   const internalMode = queryState.internal;
   const seededAccount = resolveSeededAccountByKey(queryState.accountKey);
-
-  const requestedWorkspaceHref = accessMode === "protected"
-    ? requestedPath
-    : queryState.nextHref || session?.nextHref || "/portal/platform";
-  const nextHref = isAllowedPostLoginHref(requestedWorkspaceHref)
-    ? requestedWorkspaceHref
-    : "/portal/platform";
 
   useEffect(() => {
     if (!queryState.seeded) return;
@@ -111,11 +122,12 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     setAuthStatus(queryState.autologin ? "authenticating" : "seeded");
   }, [queryState.autologin, queryState.accountKey, queryState.seeded, seededAccount]);
 
-  useEffect(() => {
-    if (!isAuthenticated || redirectAttemptedRef.current) return;
-    redirectAttemptedRef.current = true;
-    navigateTo(resolveWorkspaceEntryHref(session, nextHref));
-  }, [isAuthenticated, session, nextHref]);
+  const requestedWorkspaceHref = accessMode === "protected"
+    ? requestedPath
+    : queryState.nextHref || session?.nextHref || "/portal";
+  const nextHref = requestedWorkspaceHref?.startsWith("/portal") || requestedWorkspaceHref === "/academy"
+    ? requestedWorkspaceHref
+    : "/portal";
 
   useEffect(() => {
     if (!queryState.seeded || !queryState.autologin || autologinAttemptedRef.current) return;
@@ -127,7 +139,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
           email: authenticatedAccount.email || seededAccount.email,
           company: authenticatedAccount.company || seededAccount.company,
           role: authenticatedAccount.role || seededAccount.role,
-          nextHref: "/portal/platform",
+          nextHref,
           selectedPlan: authenticatedAccount.selectedPlan || seededAccount.selectedPlan,
           enabledProducts: authenticatedAccount.enabledProducts || seededAccount.enabledProducts,
           enabledComms: authenticatedAccount.enabledComms || seededAccount.enabledComms,
@@ -139,14 +151,15 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         });
         if (!result.ok) throw new Error(result.error);
         setAuthStatus("authenticated");
-        navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
+        const destination = resolveWorkspaceEntryHref(result.session, nextHref);
+        window.location.assign(destination);
       } catch (autologinError) {
         setAuthStatus("failed");
         setError(autologinError?.message || "Customer authentication failed.");
       }
     }
     runAutologin();
-  }, [login, queryState.autologin, queryState.seeded, seededAccount, nextHref]);
+  }, [login, nextHref, queryState.autologin, queryState.seeded, seededAccount]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -168,7 +181,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         email: authenticatedAccount.email || form.email,
         company: authenticatedAccount.company || form.company || "Customer Workspace",
         role: authenticatedAccount.role || form.role,
-        nextHref: "/portal/platform",
+        nextHref,
         selectedPlan: authenticatedAccount.selectedPlan || form.selectedPlan,
         enabledProducts: authenticatedAccount.enabledProducts || form.enabledProducts,
         enabledComms: authenticatedAccount.enabledComms || form.enabledComms,
@@ -180,7 +193,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       });
       if (!result.ok) throw new Error(result.error);
       setAuthStatus("authenticated");
-      navigateTo(resolveWorkspaceEntryHref(result.session, nextHref));
+      const destination = resolveWorkspaceEntryHref(result.session, nextHref);
+      window.location.assign(destination);
     } catch (submitError) {
       setAuthStatus("failed");
       setError(submitError?.message || "Customer authentication failed.");
@@ -194,60 +208,54 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc" }}>
-      <PublicTopNav />
-      <div style={{ ...pageShellStyle, maxWidth: 480, paddingTop: 32, paddingBottom: 48 }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 24, gap: 16 }}>
-          <FcaBrandMark compact />
-          <div style={{ ...cardStyle, width: "100%", textAlign: "center", padding: 16, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
-            <AuricruxAvatar state="idle" size={96} compact />
-            <p style={{ color: "#475569", margin: "12px 0 0", lineHeight: 1.6, fontSize: 13 }}>
-              {auricruxPersona.intro}
+      <div style={pageShellStyle}>
+        <ShellHeader
+          compact
+          eyebrow="Sign in"
+          title="Access your FCA workspace"
+          subtitle="Sign in to reach SaaS operations, customer portal, Academy, and Auricrux from one account."
+        />
+
+        <div style={twoColumnGridStyle}>
+          <form style={{ ...cardStyle, boxShadow: "0 4px 24px rgba(15, 23, 42, 0.06)" }} onSubmit={handleSubmit}>
+            <label style={{ fontWeight: 600, fontSize: 14 }}>Work email</label>
+            <input style={fieldStyle} placeholder="name@company.com" value={form.email} onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))} autoComplete="username" />
+            <label style={{ fontWeight: 600, fontSize: 14 }}>Password</label>
+            <input type="password" style={fieldStyle} placeholder="Enter your password" value={form.password} onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))} autoComplete="current-password" />
+
+            <div style={{ color: authStatus === "failed" ? "#b91c1c" : "#0f766e", marginBottom: 12, fontWeight: 600, fontSize: 14 }}>
+              {authStatus === "authenticating" ? "Signing in…" : null}
+              {authStatus === "authenticated" ? "Success. Opening workspace…" : null}
+              {authStatus === "seeded" ? "Test credentials loaded." : null}
+            </div>
+            {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 600 }}>{error}</div> : null}
+
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+              <button type="submit" style={submitButtonStyle}>{internalMode ? "Open validation workspace" : "Sign in"}</button>
+              {isAuthenticated ? (
+                <>
+                  <a href={nextHref} style={{ ...submitButtonStyle, textDecoration: "none", display: "inline-block" }}>Open workspace</a>
+                  <button type="button" onClick={handleResetSession} style={{ ...submitButtonStyle, background: "#fff", color: "#0f172a", border: "1px solid #cbd5e1" }}>Sign out</button>
+                </>
+              ) : null}
+            </div>
+
+            <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginTop: 20, marginBottom: 0 }}>
+              Need access? Use the header to request onboarding or contact{" "}
+              <a href="mailto:support@futurecontractorsofamerica.com" style={{ color: "#1d4ed8" }}>support@futurecontractorsofamerica.com</a>.
             </p>
+          </form>
+
+          <div style={cardStyle}>
+            <h2 style={{ marginTop: 0, fontSize: 18 }}>What opens after sign-in</h2>
+            <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
+              <li>SaaS workspace — bids, estimates, projects, files, billing</li>
+              <li>Customer portal — messages, support, and account controls</li>
+              <li>Academy — apprenticeship, certification, and field training</li>
+              <li>Auricrux — guided next actions across every lane</li>
+            </ul>
           </div>
         </div>
-
-        <form style={{ ...cardStyle, boxShadow: "0 8px 30px rgba(15, 23, 42, 0.08)" }} onSubmit={handleSubmit}>
-          <h1 style={{ marginTop: 0, marginBottom: 6, fontSize: 22 }}>Sign in</h1>
-          <p style={{ color: "#64748b", marginTop: 0, marginBottom: 20, lineHeight: 1.55, fontSize: 14 }}>
-            Opens your workspace - projects, bids, files, billing, Academy, and Auricrux.
-          </p>
-
-          <label style={{ fontWeight: 600, fontSize: 14 }}>Work email</label>
-          <input style={portalInputStyle} placeholder="name@company.com" value={form.email} onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))} autoComplete="username" />
-          <label style={{ fontWeight: 600, fontSize: 14 }}>Password</label>
-          <input type="password" style={portalInputStyle} placeholder="Enter your password" value={form.password} onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))} autoComplete="current-password" />
-
-          {authStatus === "authenticating" ? (
-            <div style={{ color: "#0f766e", marginBottom: 12, fontWeight: 600, fontSize: 14 }}>Opening workspace...</div>
-          ) : null}
-          {authStatus === "seeded" ? (
-            <div style={{ color: "#0f766e", marginBottom: 12, fontSize: 14 }}>Test credentials loaded.</div>
-          ) : null}
-          {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 600, fontSize: 14 }}>{error}</div> : null}
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-            <button type="submit" style={{ ...portalButtonPrimary, border: "none", cursor: "pointer" }}>
-              {internalMode ? "Open workspace" : "Sign in"}
-            </button>
-            {isAuthenticated ? (
-              <button type="button" onClick={handleResetSession} style={{ ...portalButtonPrimary, background: "#fff", color: "#0f172a", border: "1px solid #cbd5e1", cursor: "pointer" }}>
-                Sign out
-              </button>
-            ) : null}
-          </div>
-
-          <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginTop: 20, marginBottom: 0 }}>
-            New to FCA? <a href="/intake" style={{ color: "#1d4ed8", fontWeight: 600 }}>Get started</a>
-            {" | "}
-            <a href="mailto:support@futurecontractorsofamerica.com" style={{ color: "#1d4ed8" }}>Support</a>
-          </p>
-        </form>
-
-        {queryState.seeded ? (
-          <div style={{ marginTop: 20 }}>
-            <LoginActionCenter session={session} login={login} requestedPath={nextHref} />
-          </div>
-        ) : null}
 
         <ShellFooter />
       </div>

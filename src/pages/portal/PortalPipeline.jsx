@@ -16,10 +16,15 @@ import {
   upsertPipelineLink,
 } from "../../api/pipelineClient";
 import { createInvoiceFromEstimate } from "../../api/financialClient";
-import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { routeStateOverlays } from "../../systemState";
-import useAcademyLms from "../../hooks/useAcademyLms";
-import { publishPortalPageContext } from "../../portalPageContext";
+import BidsEcosystemHub from "../../components/bids/BidsEcosystemHub";
+import BidQualificationChecklist from "../../components/bids/BidQualificationChecklist";
+import useBidsNextActions from "../../hooks/useBidsNextActions";
+import {
+  buildQualifyPayload,
+  getBidChecklist,
+  isQualificationReady,
+} from "../../utils/bidsModel";
 
 const PIPELINE_KEY = "fca_commercial_pipeline_v1";
 
@@ -79,9 +84,6 @@ function normalizeLink(link = {}) {
     invoiceId: link.invoiceId,
     estimateSkipped: Boolean(link.estimateSkipped),
     currentStep: link.currentStep,
-    assignedProgramKey: link.assignedProgramKey || "",
-    assignedProgramTitle: link.assignedProgramTitle || "",
-    trainingAssignedAt: link.trainingAssignedAt || "",
   };
 }
 
@@ -116,9 +118,9 @@ function deriveStepStatus(bid, projects, invoices, links) {
 export default function PortalPipeline() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
-  const { academyState, assignProgram } = useAcademyLms();
+  const bidsActions = useBidsNextActions();
   const { bids, updateBidQualification, routeBidToEstimate, markWonAndCreateProject } = useBidWorkspace();
-  const { projects, activeProject } = useProjectWorkspace();
+  const { projects } = useProjectWorkspace();
 
   const [activeBidId, setActiveBidId] = useState(() => bids[0]?.id || "");
   const [invoices, setInvoices] = useState([]);
@@ -126,10 +128,11 @@ export default function PortalPipeline() {
   const [pipelineSource, setPipelineSource] = useState("loading");
   const [pipelineBanner, setPipelineBanner] = useState("");
   const [invoiceDraft, setInvoiceDraft] = useState({ invoiceName: "", amount: "", note: "" });
+  const [checklists, setChecklists] = useState(() =>
+    Object.fromEntries(bids.map((bid) => [bid.id, getBidChecklist(bid)])),
+  );
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
-  const [trainingProgramKey, setTrainingProgramKey] = useState("");
-  const [trainingMessage, setTrainingMessage] = useState("");
 
   const companyName = state?.tenant?.name || session?.company || "Customer Workspace";
   const activeBid = bids.find((bid) => bid.id === activeBidId) || bids[0] || null;
@@ -179,9 +182,6 @@ export default function PortalPipeline() {
       invoiceId: merged.invoiceId,
       estimateSkipped: merged.estimateSkipped,
       currentStep: pipeline.current,
-      assignedProgramKey: merged.assignedProgramKey,
-      assignedProgramTitle: merged.assignedProgramTitle,
-      trainingAssignedAt: merged.trainingAssignedAt,
     };
     try {
       const payload = await upsertPipelineLink(body);
@@ -207,66 +207,19 @@ export default function PortalPipeline() {
 
   const activePipeline = activeBid ? deriveStepStatus(activeBid, projects, invoices, links) : null;
   const stepIndex = activePipeline?.current === "done" ? STEPS.length : STEPS.findIndex((s) => s.key === activePipeline?.current);
-  const learnerId = session?.email || session?.customerId;
-  const lanePrograms = useMemo(
-    () => (academyState?.catalog?.programs || []).filter((item) => ["licensure", "certification", "apprenticeship"].includes(item.lane)),
-    [academyState?.catalog?.programs],
-  );
-  const activeProjectId = activePipeline?.link?.projectId || activeProject?.id || "";
-
-  useEffect(() => {
-    publishPortalPageContext({
-      surface: "pipeline",
-      projectId: activeProjectId || activeProject?.id || "",
-      bidId: activeBid?.id || "",
-      pipelineStep: activePipeline?.current || "qualify",
-    });
-    return () => publishPortalPageContext(null);
-  }, [activeBid?.id, activePipeline?.current, activeProject?.id, activeProjectId]);
-
-  async function assignTrainingProgram() {
-    if (!activeBid || !trainingProgramKey || !learnerId) {
-      setTrainingMessage("Select a program and sign in to assign training.");
-      return;
-    }
-    const program = lanePrograms.find((item) => item.key === trainingProgramKey);
-    if (!program) {
-      setTrainingMessage("Program not found.");
-      return;
-    }
-    setBusy("training");
-    setTrainingMessage("");
-    try {
-      const projectId = activeProjectId || activeProject?.id || "";
-      await assignProgram(learnerId, program.key, "Pipeline assignment", projectId);
-      await savePipelineLink(activeBid.id, {
-        assignedProgramKey: program.key,
-        assignedProgramTitle: program.title,
-        trainingAssignedAt: new Date().toISOString(),
-        projectId: projectId || undefined,
-      });
-      setTrainingMessage(`Assigned ${program.title} to this pipeline job.`);
-      refreshSyncStamp("Pipeline training program assigned");
-    } catch (err) {
-      setTrainingMessage(err.message || "Unable to assign training program.");
-    } finally {
-      setBusy("");
-    }
-  }
 
   async function runQualify() {
     if (!activeBid) return;
+    const checklist = checklists[activeBid.id] || getBidChecklist(activeBid);
+    if (!isQualificationReady(activeBid, checklist)) {
+      setError("Complete the qualification checklist on the bid board before pipeline qualification.");
+      return;
+    }
     setBusy("qualify");
     setError("");
     try {
-      await updateBidQualification(activeBid.id, {
-        score: "88/100",
-        status: "Qualified",
-        budgetFit: "Confirmed",
-        scopeFit: "Confirmed",
-        evidence: "Pipeline qualification complete",
-        nextGate: "Award and project conversion",
-      }, "Pipeline wizard qualified the opportunity.");
+      const payload = buildQualifyPayload(activeBid, checklist, "Pipeline wizard qualified the opportunity.");
+      await updateBidQualification(activeBid.id, payload, payload.detail);
       await savePipelineLink(activeBid.id, {});
       refreshSyncStamp("Pipeline qualification complete");
     } catch (err) {
@@ -314,8 +267,12 @@ export default function PortalPipeline() {
 
   async function runInvoice() {
     if (!activeBid) return;
-    const projectId = activePipeline?.link?.projectId || activeProject?.id || "";
+    const projectId = activePipeline?.link?.projectId || projects.find((p) => p.sourceBidId === activeBid.id)?.id;
     const estimateId = activePipeline?.link?.estimateId || "EST-1";
+    if (!projectId) {
+      setError("Award the project before issuing an invoice from the pipeline wizard.");
+      return;
+    }
     setBusy("invoice");
     setError("");
     try {
@@ -372,22 +329,22 @@ export default function PortalPipeline() {
         </div>
       ) : null}
 
-      {activeBid?.id ? (
-        <div style={{ marginBottom: 18 }}>
-          <AuricruxInsightPanel
-            title="Auricrux Pipeline Intelligence"
-            targetObjectType="Bid"
-            targetObjectId={activeBid.id}
-            sourceRoute="/portal/pipeline"
-            rationale={`Advance ${activeBid.package || activeBid.id} through the governed commercial pipeline.`}
-            nextAction={STEPS[Math.max(0, stepIndex)]?.detail || "Continue the active pipeline step with governed billing continuity."}
-            actionHref="/portal/bids"
-            actionLabel="Open qualification board"
-            tone="blue"
-            liveRecommend
-          />
-        </div>
-      ) : null}
+      <div style={{ ...cardStyle, marginBottom: 18, background: "#eff6ff", borderColor: "#93c5fd" }}>
+        <div style={{ fontWeight: 700, color: "#1d4ed8", marginBottom: 6 }}>CRM spine</div>
+        <p style={{ margin: 0, color: "#475569", lineHeight: 1.65 }}>
+          Qualified opportunities begin in Lead Intelligence. Complete bid checklists on the qualification board, then return here for bid-to-billing handoff.
+        </p>
+        <a href="/portal/leads" style={{ display: "inline-block", marginTop: 10, color: "#2563eb", fontWeight: 700 }}>
+          Open Lead Intelligence
+        </a>
+        <a href="/portal/bids" style={{ display: "inline-block", marginTop: 10, marginLeft: 12, color: "#2563eb", fontWeight: 700 }}>
+          Open Qualification Board
+        </a>
+      </div>
+
+      <div style={{ marginBottom: 18 }}>
+        <BidsEcosystemHub bidsActions={bidsActions.items} selectedBid={activeBid} />
+      </div>
 
       {error ? (
         <div style={{ ...cardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>{error}</div>
@@ -453,9 +410,24 @@ export default function PortalPipeline() {
 
           <p style={{ color: "#475569", lineHeight: 1.7 }}>{STEPS[Math.min(stepIndex, STEPS.length - 1)]?.detail}</p>
 
+          {activePipeline.current === "qualify" ? (
+            <div style={{ marginBottom: 16 }}>
+              <BidQualificationChecklist
+                bid={activeBid}
+                checklist={checklists[activeBid.id] || getBidChecklist(activeBid)}
+                onChange={(next) => setChecklists((current) => ({ ...current, [activeBid.id]: next }))}
+              />
+            </div>
+          ) : null}
+
           <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 14 }}>
             {activePipeline.current === "qualify" ? (
-              <button type="button" style={actionButtonStyle} disabled={busy === "qualify"} onClick={runQualify}>
+              <button
+                type="button"
+                style={actionButtonStyle}
+                disabled={busy === "qualify" || !isQualificationReady(activeBid, checklists[activeBid.id] || getBidChecklist(activeBid))}
+                onClick={runQualify}
+              >
                 {busy === "qualify" ? "Qualifying..." : "Qualify Opportunity"}
               </button>
             ) : null}
@@ -494,51 +466,6 @@ export default function PortalPipeline() {
             {activePipeline.current === "done" ? (
               <div style={{ color: "#15803d", fontWeight: 700 }}>Pipeline complete for this job.</div>
             ) : null}
-          </div>
-
-          <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid #e2e8f0" }}>
-            <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Academy training assignment</div>
-            <p style={{ color: "#475569", lineHeight: 1.6, marginTop: 0 }}>
-              Link a licensure, certification, or apprenticeship program to this pipeline job for project-scoped crew readiness.
-            </p>
-            {activePipeline.link?.assignedProgramTitle ? (
-              <div style={{ padding: 12, borderRadius: 10, border: "1px solid #bfdbfe", background: "#eff6ff", marginBottom: 12 }}>
-                <strong>{activePipeline.link.assignedProgramTitle}</strong>
-                <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
-                  Assigned {activePipeline.link.trainingAssignedAt ? new Date(activePipeline.link.trainingAssignedAt).toLocaleDateString() : "recently"}
-                  {activeProjectId ? ` · Project ${activeProjectId}` : ""}
-                </div>
-                <a
-                  href={`/academy/programs/${activePipeline.link.assignedProgramKey}`}
-                  style={{ display: "inline-block", marginTop: 8, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}
-                >
-                  Open assigned program
-                </a>
-              </div>
-            ) : null}
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-              <select
-                value={trainingProgramKey}
-                onChange={(e) => setTrainingProgramKey(e.target.value)}
-                style={{ flex: "1 1 240px", padding: "10px 12px", borderRadius: 10, border: "1px solid #cbd5e1" }}
-              >
-                <option value="">Select academy program...</option>
-                {lanePrograms.map((program) => (
-                  <option key={program.key} value={program.key}>
-                    [{program.lane}] {program.title}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                style={actionButtonStyle}
-                disabled={busy === "training" || !trainingProgramKey}
-                onClick={assignTrainingProgram}
-              >
-                {busy === "training" ? "Assigning..." : "Assign to job"}
-              </button>
-            </div>
-            {trainingMessage ? <div style={{ color: "#475569", marginTop: 10 }}>{trainingMessage}</div> : null}
           </div>
         </div>
       ) : (

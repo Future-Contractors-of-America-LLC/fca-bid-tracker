@@ -33,12 +33,15 @@ export async function submitIntakeBid(record) {
     throw new Error(payload?.error || "Unable to save intake to backend.");
   }
 
+  const leadId = record.intakeId ? `lead_${record.intakeId}` : undefined;
   try {
-    await centralFetch("/api/leads", {
+    const leadResponse = await centralFetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        leadId,
         sourceChannel: "fca-web-intake",
+        sourceBidId: record.intakeId,
         serviceLine: "general-construction",
         projectIntent: record.plan || "commercial",
         sourceRoute: "/intake",
@@ -55,8 +58,14 @@ export async function submitIntakeBid(record) {
         notes: `Web intake plan: ${record.plan}`,
       }),
     });
-  } catch {
-    // Lead mirror is best-effort; bid record remains source of truth for intake.
+    const leadPayload = await leadResponse.json().catch(() => ({}));
+    if (!leadResponse.ok || leadPayload?.ok === false) {
+      throw new Error(leadPayload?.error || "Lead mirror failed after bid intake saved.");
+    }
+  } catch (leadError) {
+    throw new Error(
+      leadError?.message || "Bid saved but governed lead mirror failed. Review Lead Intelligence.",
+    );
   }
 
   return payload;

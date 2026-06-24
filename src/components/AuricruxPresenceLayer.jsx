@@ -1,5 +1,7 @@
 import AuricruxBrandMark from "./AuricruxBrandMark";
+import AuricruxDoTeachBar from "./AuricruxDoTeachBar";
 import { resolveActionPair } from "../ctaBehavior";
+import { getSurfaceConfig } from "../config/auricruxSurfaceConfig";
 import { auricruxRail, currentProject, workspaceContext } from "../workspaceState";
 
 const shellStyle = {
@@ -22,19 +24,29 @@ const linkStyle = {
 };
 
 export default function AuricruxPresenceLayer({
-  surfaceLabel = "Embedded Auricrux",
-  title = "Auricrux remains active inside this layer",
-  detail = "Auricrux is carrying next-action, blocker, and continuity state through this shell surface so the user never falls into a dead page.",
-  primaryHref = "/portal/platform",
-  primaryLabel = "Open Platform Dashboard",
-  secondaryHref = "/portal/messages",
-  secondaryLabel = "Open Messages",
+  surfaceKey,
+  surfaceLabel,
+  title,
+  detail,
+  primaryHref,
+  primaryLabel,
+  secondaryHref,
+  secondaryLabel,
   compact = false,
+  showDoTeach = true,
 }) {
   const currentPath = typeof window === "undefined" ? "/" : window.location.pathname;
+  const surface = getSurfaceConfig(surfaceKey, currentPath);
+  const resolvedLabel = surfaceLabel || surface.surfaceLabel;
+  const resolvedTitle = title || surface.title;
+  const resolvedDetail = detail || surface.detail;
+  const resolvedPrimaryHref = primaryHref || surface.primaryHref;
+  const resolvedPrimaryLabel = primaryLabel || surface.primaryLabel;
+  const resolvedSecondaryHref = secondaryHref || surface.secondaryHref;
+  const resolvedSecondaryLabel = secondaryLabel || surface.secondaryLabel;
   const { primary, secondary } = resolveActionPair(
-    { href: primaryHref, label: primaryLabel },
-    { href: secondaryHref, label: secondaryLabel },
+    { href: resolvedPrimaryHref, label: resolvedPrimaryLabel },
+    { href: resolvedSecondaryHref, label: resolvedSecondaryLabel },
     currentPath
   );
 
@@ -42,9 +54,9 @@ export default function AuricruxPresenceLayer({
     <div style={shellStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: compact ? "flex-start" : "center", flexWrap: "wrap", marginBottom: 12 }}>
         <div style={{ minWidth: 0, flex: "1 1 420px" }}>
-          <div style={{ color: "#8a6a14", fontWeight: 800, marginBottom: 8 }}>{surfaceLabel}</div>
-          <h2 style={{ marginTop: 0, marginBottom: 10, fontSize: compact ? 18 : 22 }}>{title}</h2>
-          <div style={{ color: "#475569", lineHeight: 1.7 }}>{detail}</div>
+          <div style={{ color: "#8a6a14", fontWeight: 800, marginBottom: 8 }}>{resolvedLabel}</div>
+          <h2 style={{ marginTop: 0, marginBottom: 10, fontSize: compact ? 18 : 22 }}>{resolvedTitle}</h2>
+          <div style={{ color: "#475569", lineHeight: 1.7 }}>{resolvedDetail}</div>
         </div>
         <AuricruxBrandMark compact />
       </div>
@@ -72,6 +84,17 @@ export default function AuricruxPresenceLayer({
           {primary ? <a href={primary.href} style={linkStyle}>{primary.label}</a> : null}
           {secondary ? <a href={secondary.href} style={linkStyle}>{secondary.label}</a> : null}
         </div>
+      ) : null}
+
+      {showDoTeach ? (
+        <AuricruxDoTeachBar
+          targetObjectType={surface.targetObjectType}
+          targetObjectId={surface.targetObjectId || currentProject.id}
+          capabilityId={surface.capabilityId}
+          executeLabel={surface.executeLabel}
+          teachLabel={surface.teachLabel}
+          workflowLabel="Run Bid→File→Briefing→Execute→Teach"
+        />
       ) : null}
     </div>
   );

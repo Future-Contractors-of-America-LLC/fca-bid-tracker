@@ -1,96 +1,11 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FCA Auricrux Pipeline Sync</title>
-  <link rel="stylesheet" href="/leads/leads.css" />
-</head>
-<body>
-  <main class="fca-shell">
-    <div id="topbar"></div>
-
-    <section class="fca-hero">
-      <h2>Auricrux Pipeline Sync</h2>
-      <p>
-        Live view of leads from Auricrux Central plus commercial pipeline links and local execution artifacts.
-      </p>
-    </section>
-
-    <section class="fca-metrics" id="metrics"></section>
-
-    <section class="fca-panel">
-      <div class="fca-panel-header">
-        <h3>Central Leads</h3>
-        <a class="fca-btn fca-btn-primary" href="/leads/">Open Lead Intelligence</a>
-      </div>
-      <div class="fca-table-wrap">
-        <table class="fca-table">
-          <thead>
-            <tr>
-              <th>Company</th>
-              <th>Project</th>
-              <th>Stage</th>
-              <th>Value</th>
-              <th>Score</th>
-              <th>Next Action</th>
-            </tr>
-          </thead>
-          <tbody id="leadRows"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="fca-panel">
-      <div class="fca-panel-header"><h3>Commercial Pipeline (Central)</h3></div>
-      <div class="fca-table-wrap">
-        <table class="fca-table">
-          <thead>
-            <tr><th>Bid ID</th><th>Project</th><th>Invoice</th><th>Step</th><th>Updated</th></tr>
-          </thead>
-          <tbody id="commercialRows"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="fca-panel">
-      <div class="fca-panel-header"><h3>Local Pipeline Artifact</h3></div>
-      <pre id="raw" style="margin:0;padding:18px;background:#0f172a;color:#e2e8f0;overflow:auto;font-size:13px">Loading...</pre>
-    </section>
-  </main>
-
-  <script src="/config/auricrux-central.js"></script>
-  <script src="/leads/leads.js"></script>
-  <script>
-    topbar.innerHTML = FCALeads.renderTopbar("pipeline");
-
-    Promise.all([
-      FCALeads.fetchLeads(),
-      FCALeads.fetchCommercialPipeline().catch(function () { return []; }),
-      fetch("/auricrux/pipeline/pipeline.json", { cache: "no-store" }).then(function (r) { return r.json(); }).catch(function () { return {}; })
-    ]).then(function ([leads, commercial, pipeline]) {
-      raw.textContent = JSON.stringify(pipeline, null, 2);
-
-      metrics.innerHTML =
-        '<div class="fca-metric"><div class="fca-metric-label">Central Leads</div><div class="fca-metric-value">' + leads.length + '</div></div>' +
-        '<div class="fca-metric"><div class="fca-metric-label">Commercial Links</div><div class="fca-metric-value">' + commercial.length + '</div></div>' +
-        '<div class="fca-metric"><div class="fca-metric-label">Local Sync Leads</div><div class="fca-metric-value">' + ((pipeline.leads || []).length) + '</div></div>' +
-        '<div class="fca-metric"><div class="fca-metric-label">Payments</div><div class="fca-metric-value">' + ((pipeline.payments || []).length) + '</div></div>';
-
-      leadRows.innerHTML = leads.length
-        ? leads.map(function (lead) {
-            return '<tr><td>' + lead.company + '</td><td>' + lead.projectName + '</td><td><span class="' + FCALeads.stageBadgeClass(lead.pipelineStage) + '">' + lead.pipelineStage + '</span></td><td>' + FCALeads.formatCurrency(lead.value) + '</td><td>' + lead.auricruxScore + '</td><td>' + lead.nextAction + '</td></tr>';
-          }).join("")
-        : '<tr><td colspan="6"><div class="fca-empty">No central leads yet. <a href="/leads/new.html">Capture a lead</a>.</div></td></tr>';
-
-      commercialRows.innerHTML = commercial.length
-        ? commercial.map(function (item) {
-            return '<tr><td>' + (item.bidId || "—") + '</td><td>' + (item.projectId || "—") + '</td><td>' + (item.invoiceId || "—") + '</td><td>' + (item.currentStep || "—") + '</td><td>' + FCALeads.formatDate(item.updatedAt) + '</td></tr>';
-          }).join("")
-        : '<tr><td colspan="5"><div class="fca-empty">No commercial pipeline links yet.</div></td></tr>';
-    }).catch(function (error) {
-      raw.textContent = "Unable to load pipeline: " + error.message;
-    });
-  </script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0; url=/portal/pipeline" />
+    <title>Redirecting to Commercial Pipeline</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href="/portal/pipeline">FCA Commercial Pipeline</a>.</p>
+  </body>
 </html>

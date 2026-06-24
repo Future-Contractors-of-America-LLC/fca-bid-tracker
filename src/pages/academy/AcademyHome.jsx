@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
+import AuricruxPresenceLayer from "../../components/AuricruxPresenceLayer";
 import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
@@ -232,6 +233,10 @@ export default function AcademyHome() {
       <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 18, padding: "14px 16px", border: "1px solid #dbe3ef", borderRadius: 18, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
         <FcaBrandMark compact />
         <AuricruxBrandMark compact />
+      </div>
+
+      <div style={{ marginBottom: 20 }}>
+        <AuricruxPresenceLayer surfaceKey="academy" />
       </div>
 
       <ProductAccessStatusPanel session={session} />

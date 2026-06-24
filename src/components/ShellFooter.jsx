@@ -1,6 +1,7 @@
-import { LEGAL_FOOTER_PAGES } from "../legal/legalNav";
-import { FCA_ENTITY, formatPrincipalOffice } from "../legal/entityInfo";
+import DeploymentStatusBeacon from "./DeploymentStatusBeacon";
 import FcaBrandMark from "./FcaBrandMark";
+import AuricruxPresenceLayer from "./AuricruxPresenceLayer";
+import { LEGAL_FOOTER_PAGES } from "../legal/legalNav";
 
 export default function ShellFooter() {
   return (
@@ -23,7 +24,7 @@ export default function ShellFooter() {
         <div style={{ minWidth: 200 }}>
           <FcaBrandMark compact />
           <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginTop: 12, maxWidth: 320 }}>
-            Future Contractors of America - commercial contractor operating system for lead flow, job control, and workforce readiness.
+            Future Contractors of America — commercial contractor operating system for lead flow, job control, and workforce readiness.
           </p>
         </div>
 
@@ -44,17 +45,19 @@ export default function ShellFooter() {
           <a href="mailto:support@futurecontractorsofamerica.com" style={{ color: "#1d4ed8", textDecoration: "none", fontSize: 14 }}>
             support@futurecontractorsofamerica.com
           </a>
-          <p style={{ color: "#64748b", fontSize: 12, lineHeight: 1.6, marginTop: 10, marginBottom: 0 }}>
-            {FCA_ENTITY.legalName}
-            <br />
-            {formatPrincipalOffice(false)}
-          </p>
         </div>
+
+        <DeploymentStatusBeacon />
       </div>
 
       <p style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.6, marginTop: 24, marginBottom: 0 }}>
         Copyright (c) 2026 Future Contractors of America LLC. FCA and Auricrux are trademarks of Future Contractors of America LLC.
       </p>
+
+      <div style={{ marginTop: 20 }}>
+        {/* Auricrux embedded in footer */}
+        <AuricruxPresenceLayer surfaceKey="landing" compact showDoTeach={false} />
+      </div>
     </footer>
   );
 }

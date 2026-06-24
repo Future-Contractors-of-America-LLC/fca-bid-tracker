@@ -1,4 +1,5 @@
 export const CUSTOMER_SESSION_KEY = "fca_customer_session_v1";
+export const CUSTOMER_SESSION_TOKEN_KEY = "fca_session_token_v1";
 export const CUSTOMER_SESSION_EVENT = "fca-customer-session-updated";
 
 const DEFAULT_AUTH_BOUNDARY = {
@@ -110,6 +111,43 @@ export function writeCustomerSession(session) {
   return payload;
 }
 
+export function readSessionToken() {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem(CUSTOMER_SESSION_TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function writeSessionToken(token) {
+  if (typeof window === "undefined" || !token) return null;
+  try {
+    window.localStorage.setItem(CUSTOMER_SESSION_TOKEN_KEY, token);
+    return token;
+  } catch {
+    return null;
+  }
+}
+
+export function clearSessionToken() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(CUSTOMER_SESSION_TOKEN_KEY);
+  } catch {
+    // best-effort only
+  }
+}
+
+export function isSessionTrustedForMutation(session = readCustomerSession()) {
+  if (!session?.authenticated) return false;
+  const boundary = normalizeAuthBoundary(session.authBoundary);
+  if (!boundary.productionAuthReady && boundary.seededFallbackEnabled !== false) {
+    return true;
+  }
+  return Boolean(session.serverValidatedAt);
+}
+
 export async function syncCustomerSessionFromServer() {
   if (typeof window === "undefined") return null;
 
@@ -129,6 +167,7 @@ export async function syncCustomerSessionFromServer() {
         accountSource: payload.session?.sessionSource || payload.authenticationMode || "server-session",
         accountMode: payload.account?.accountMode || "seeded",
         authBoundary: payload.authBoundary,
+        serverValidatedAt: new Date().toISOString(),
         lastLoginAt: new Date().toISOString(),
         nextHref: localSession?.nextHref || payload.account?.nextHref || "/portal/platform",
       });
@@ -167,6 +206,7 @@ export async function clearCustomerSession({ server = false } = {}) {
   if (typeof window !== "undefined") {
     try {
       window.localStorage.removeItem(CUSTOMER_SESSION_KEY);
+      clearSessionToken();
       broadcastCustomerSessionUpdate();
     } catch {
       // best-effort logout only

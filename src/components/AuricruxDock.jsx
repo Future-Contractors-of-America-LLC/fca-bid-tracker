@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { brandIdentity } from "../brandIdentity";
-import { auricruxPersona } from "../config/auricruxPersona";
-import AuricruxAvatar from "./AuricruxAvatar";
-import useAuricruxVoice from "../hooks/useAuricruxVoice";
 import { sendAuricruxMessage, sendAuricruxFeedback } from "../api/auricruxClient";
-import { submitAuricruxAction } from "../api/auricruxActionsClient";
-import { readAcademyContext, subscribeAcademyContext } from "../academyContext";
-import { readPortalPageContext, subscribePortalPageContext } from "../portalPageContext";
+import AuricruxDoTeachBar from "./AuricruxDoTeachBar";
+import useImmersiveNextActions from "../hooks/useImmersiveNextActions";
+import useLeadsNextActions from "../hooks/useLeadsNextActions";
+import useBidsNextActions from "../hooks/useBidsNextActions";
+import useCustomerSession from "../hooks/useCustomerSession";
 import {
   auricruxRail,
   currentProject,
@@ -15,23 +14,13 @@ import {
   workspaceContext,
 } from "../workspaceState";
 
-import {
-  AURICRUX_ASSISTANT_CLOSE,
-  AURICRUX_ASSISTANT_OPEN,
-  AURICRUX_ASSISTANT_TOGGLE,
-} from "../auricruxAssistant";
-import { portalTokens } from "../portalDesignTokens";
-
 const quickPrompts = [
   "What is the next customer action?",
+  "Which leads need qualification?",
+  "Which bids need checklist completion?",
   "Show training continuity.",
+  "What immersive labs should I complete?",
   "What is blocking revenue right now?",
-];
-
-const academyQuickPrompts = [
-  "Explain this module objective.",
-  "What should I focus on in the lab?",
-  "How do I pass the knowledge check?",
 ];
 
 const auricruxColors = brandIdentity.auricrux.colors;
@@ -62,11 +51,11 @@ function safeStorageSet(key, value) {
 function modeMeta(mode, poweredByLlm) {
   if (poweredByLlm || mode === "llm-assistant") {
     return {
-      label: "Executive operator mode",
+      label: "Powered by Auricrux",
       tone: "#166534",
       bg: "#dcfce7",
       border: "#86efac",
-      summary: auricruxPersona.voiceSummary,
+      summary: "Live AI guidance for bids, billing, academy, and pipeline.",
     };
   }
 
@@ -100,15 +89,34 @@ function modeMeta(mode, poweredByLlm) {
   };
 }
 
-function routePromptReply(command) {
+function routePromptReply(command, immersiveTopAction, leadsTopAction) {
   const normalized = command.toLowerCase();
 
   if (normalized.includes("next customer action")) {
-    return `Next step: ${workspaceContext.currentNextAction.toLowerCase()}. Owner: ${workspaceContext.nextActionOwner}. Open Messages or Billing to continue.`;
+    const nextLine = leadsTopAction?.title || immersiveTopAction?.title || workspaceContext.currentNextAction;
+    return `Next step: ${nextLine.toLowerCase()}. Owner: ${workspaceContext.nextActionOwner}. Open Messages or Billing to continue.`;
+  }
+
+  if (normalized.includes("qualification") || normalized.includes("which leads")) {
+    if (leadsTopAction) {
+      return `Leads: ${leadsTopAction.title}. ${leadsTopAction.detail} Open ${leadsTopAction.href}.`;
+    }
+    return `Leads: ${routeStateOverlays.leads.primaryDetail} Open /portal/leads to review the pipeline.`;
+  }
+
+  if (normalized.includes("immersive labs") || normalized.includes("what immersive")) {
+    if (immersiveTopAction) {
+      return `Immersive: ${immersiveTopAction.title}. ${immersiveTopAction.detail} Open ${immersiveTopAction.href}.`;
+    }
+    return `Immersive: ${routeStateOverlays.immersive.primaryDetail} Start at /portal/immersive or CTIN 410 Module 1.`;
   }
 
   if (normalized.includes("training continuity")) {
     return `Training: ${routeStateOverlays.academy.primaryDetail} Assign pending learners from Academy.`;
+  }
+
+  if (normalized.includes("immersive") || normalized.includes("simulation") || normalized.includes("vr")) {
+    return `Immersive: ${routeStateOverlays.immersive.primaryDetail} Open /portal/immersive or CTIN 410 Module 1 for FCA-native labs.`;
   }
 
   if (normalized.includes("blocking revenue")) {
@@ -136,14 +144,21 @@ function connectivityLabel(message) {
 
 const continuityActions = [
   { href: "/portal/platform", label: "Platform state" },
-  { href: "/portal/auricrux", label: "Auricrux hub" },
+  { href: "/portal/leads", label: "Lead Intelligence" },
+  { href: "/portal/bids", label: "Qualification board" },
+  { href: "/portal/pipeline", label: "Commercial pipeline" },
   { href: "/portal/messages", label: "Messages" },
   { href: "/portal/billing", label: "Billing" },
+  { href: "/portal/immersive", label: "Immersive" },
   { href: "/academy", label: "Academy" },
   { href: "/portal/support", label: "Support" },
 ];
 
 export default function AuricruxDock() {
+  const { session } = useCustomerSession();
+  const immersiveActions = useImmersiveNextActions();
+  const leadsActions = useLeadsNextActions();
+  const bidsActions = useBidsNextActions();
   const [text, setText] = useState("");
   const [log, setLog] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -152,54 +167,35 @@ export default function AuricruxDock() {
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(true);
   const [hydrated, setHydrated] = useState(false);
-  const [academyContext, setAcademyContext] = useState(() => readAcademyContext());
-  const [portalPageContext, setPortalPageContext] = useState(() => readPortalPageContext());
-  const [lastReply, setLastReply] = useState("");
-  const [lastPrompt, setLastPrompt] = useState("");
-  const [feedbackState, setFeedbackState] = useState("");
-  const { supported: voiceSupported, speaking, speak, stop } = useAuricruxVoice();
-
-  const avatarState = loading ? "thinking" : speaking ? "speaking" : text.trim() ? "listening" : "idle";
+  const [lastExchange, setLastExchange] = useState(null);
+  const [feedbackStatus, setFeedbackStatus] = useState("");
 
   const meta = useMemo(() => modeMeta(mode, poweredByLlm), [mode, poweredByLlm]);
-  const activeQuickPrompts = academyContext ? academyQuickPrompts : quickPrompts;
-
-  useEffect(() => subscribeAcademyContext(setAcademyContext), []);
-  useEffect(() => subscribePortalPageContext(setPortalPageContext), []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return undefined;
+    if (typeof window === "undefined") return;
 
-    function onToggle() {
-      setOpen((value) => !value);
+    const storedOpen = safeStorageGet(OPEN_STORAGE_KEY);
+    const storedCompact = safeStorageGet(COMPACT_STORAGE_KEY);
+
+    if (storedOpen === null) {
+      setOpen(window.innerWidth >= 1440);
+    } else {
+      setOpen(storedOpen === "true");
     }
-    function onOpen() {
-      setOpen(true);
+
+    if (storedCompact === null) {
+      setCompact(window.innerWidth < 1600);
+    } else {
+      setCompact(storedCompact === "true");
     }
-    function onClose() {
-      setOpen(false);
-    }
-
-    window.addEventListener(AURICRUX_ASSISTANT_TOGGLE, onToggle);
-    window.addEventListener(AURICRUX_ASSISTANT_OPEN, onOpen);
-    window.addEventListener(AURICRUX_ASSISTANT_CLOSE, onClose);
-
-    return () => {
-      window.removeEventListener(AURICRUX_ASSISTANT_TOGGLE, onToggle);
-      window.removeEventListener(AURICRUX_ASSISTANT_OPEN, onOpen);
-      window.removeEventListener(AURICRUX_ASSISTANT_CLOSE, onClose);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return undefined;
 
     setHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (!hydrated || !open) return;
-    safeStorageSet(OPEN_STORAGE_KEY, "true");
+    if (!hydrated) return;
+    safeStorageSet(OPEN_STORAGE_KEY, String(open));
   }, [open, hydrated]);
 
   useEffect(() => {
@@ -207,30 +203,11 @@ export default function AuricruxDock() {
     safeStorageSet(COMPACT_STORAGE_KEY, String(compact));
   }, [compact, hydrated]);
 
-  useEffect(() => {
-    if (!open || typeof window === "undefined") return undefined;
-    function onKeyDown(event) {
-      if (event.key === "Escape") setOpen(false);
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open || typeof document === "undefined") return undefined;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [open]);
-
   async function send(customText) {
     const cmd = (customText ?? text).trim();
     if (!cmd || loading) return;
 
     setLoading(true);
-    setFeedbackState("");
 
     setLog((prev) => [
       { t: new Date().toISOString(), m: `SENT: ${cmd}` },
@@ -242,19 +219,18 @@ export default function AuricruxDock() {
     try {
       const route = typeof window !== "undefined" ? window.location.pathname : "/portal/platform";
       const designParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
-      const pageProjectId = portalPageContext?.projectId || currentProject.id;
       const data = await sendAuricruxMessage({
         message: cmd,
         route,
         context: {
           company: portalTenant.name,
-          nextAction: workspaceContext.currentNextAction,
+          nextAction: leadsActions.topAction?.title || bidsActions.topAction?.title || immersiveActions.topAction?.title || workspaceContext.currentNextAction,
           blocker: auricruxRail.currentBlocker,
-          projectId: pageProjectId,
-          pipelineStep: portalPageContext?.pipelineStep || null,
-          bidId: portalPageContext?.bidId || null,
-          pageSurface: portalPageContext?.surface || null,
-          academyContext: academyContext || null,
+          projectId: currentProject.id,
+          userId: session?.email || session?.customerId,
+          immersiveNextActions: immersiveActions.items,
+          leadsNextActions: leadsActions.items,
+          bidsNextActions: bidsActions.items,
           designContext: route.includes("/portal/design")
             ? {
                 fileId: designParams.get("fileId") || "",
@@ -266,8 +242,8 @@ export default function AuricruxDock() {
       });
       setMode(data.mode === "llm-assistant" ? "live" : "live");
       setPoweredByLlm(Boolean(data.poweredByLlm || data.mode === "llm-assistant"));
-      setLastReply(data.reply || "");
-      setLastPrompt(cmd);
+      setLastExchange({ message: cmd, reply: data.reply, route });
+      setFeedbackStatus("");
 
       setLog((prev) => [
         {
@@ -276,24 +252,10 @@ export default function AuricruxDock() {
         },
         ...prev,
       ]);
-
-      if (data.reply) {
-        void speak(data.reply.replace(/^AURICRUX:\s*/i, ""));
-      }
-
-      void submitAuricruxAction({
-        mode: "recommend",
-        targetObjectType: "Project",
-        targetObjectId: pageProjectId,
-        rationale: cmd,
-        sourceRoute: route,
-      }).catch(() => {});
     } catch (err) {
       setMode("fallback");
       setPoweredByLlm(false);
-      const continuityReply = routePromptReply(cmd);
-      setLastReply(continuityReply);
-      setLastPrompt(cmd);
+      const continuityReply = routePromptReply(cmd, immersiveActions.topAction, leadsActions.topAction);
       setLog((prev) => [
         {
           t: new Date().toISOString(),
@@ -310,30 +272,40 @@ export default function AuricruxDock() {
     setLoading(false);
   }
 
-  function speakLastReply() {
-    if (lastReply) void speak(lastReply);
-  }
-
   async function submitFeedback(rating) {
-    if (!lastReply || !lastPrompt || feedbackState) return;
-    const route = typeof window !== "undefined" ? window.location.pathname : "/portal/platform";
+    if (!lastExchange || feedbackStatus) return;
+    setFeedbackStatus("saving");
     try {
+      const route = typeof window !== "undefined" ? window.location.pathname : "/portal/platform";
       await sendAuricruxFeedback({
         rating,
-        message: lastPrompt,
-        reply: lastReply,
-        route,
+        message: lastExchange.message,
+        reply: lastExchange.reply,
+        route: lastExchange.route || route,
         context: {
           company: portalTenant.name,
-          nextAction: workspaceContext.currentNextAction,
-          blocker: auricruxRail.currentBlocker,
-          academyContext: academyContext || null,
+          projectId: currentProject.id,
+          userId: session?.email || session?.customerId,
         },
       });
-      setFeedbackState(rating);
-    } catch {
-      setFeedbackState("error");
+      setFeedbackStatus(rating);
+      setLog((prev) => [
+        { t: new Date().toISOString(), m: `FEEDBACK: ${rating === "up" ? "Helpful" : "Needs improvement"} recorded for training.` },
+        ...prev,
+      ]);
+    } catch (err) {
+      setFeedbackStatus("");
+      setLog((prev) => [
+        { t: new Date().toISOString(), m: `FEEDBACK: ${err.message}` },
+        ...prev,
+      ]);
     }
+  }
+
+  function speak() {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance("Auricrux is online.");
+    window.speechSynthesis.speak(u);
   }
 
   async function video() {
@@ -354,43 +326,28 @@ export default function AuricruxDock() {
     }
   }
 
-  if (!open) return null;
-
-  const panelWidth = compact ? "min(360px, 100vw)" : "min(420px, 100vw)";
+  const dockWidth = open ? (compact ? "min(320px, calc(100vw - 24px))" : "min(392px, calc(100vw - 24px))") : 76;
 
   return (
-    <>
-      <button
-        type="button"
-        aria-label="Close Auricrux assistant"
-        onClick={() => setOpen(false)}
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 9998,
-          border: "none",
-          padding: 0,
-          background: "rgba(15, 23, 42, 0.35)",
-          cursor: "pointer",
-        }}
-      />
-      <aside
-        aria-label="Auricrux assistant"
-        style={{
-          position: "fixed",
-          top: 0,
-          right: 0,
-          width: panelWidth,
-          height: "100vh",
-          zIndex: 9999,
-          borderLeft: `1px solid ${auricruxColors.primary}`,
-          boxShadow: "-12px 0 40px rgba(15, 23, 42, 0.18)",
-          background: "#ffffff",
-          fontFamily: portalTokens.font,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+    <div
+      style={{
+        position: "fixed",
+        right: 12,
+        bottom: 12,
+        width: dockWidth,
+        maxHeight: open ? "min(78vh, 760px)" : "auto",
+        zIndex: 9999,
+        borderRadius: 18,
+        overflow: "hidden",
+        border: `1px solid ${open ? auricruxColors.primary : "#d6b25e"}`,
+        boxShadow: "0 20px 50px rgba(15, 23, 42, 0.2)",
+        background: "#ffffff",
+        fontFamily: "Arial",
+        transition: "width 160ms ease, border-color 160ms ease, max-height 160ms ease",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <div
         style={{
           padding: 12,
@@ -399,35 +356,39 @@ export default function AuricruxDock() {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
-          <div style={{ display: "flex", gap: 12, alignItems: "center", minWidth: 0 }}>
-            <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 14, padding: 4 }}>
-              <AuricruxAvatar state={avatarState} size={compact ? 72 : 84} showCaption={false} />
-            </div>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontWeight: 700, letterSpacing: 0.2 }}>{auricruxPersona.name}</div>
-              <div style={{ fontSize: 12, opacity: 0.9 }}>
-                {auricruxPersona.title}
-              </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontWeight: 700, letterSpacing: 0.2 }}>Auricrux</div>
+            <div style={{ fontSize: 12, opacity: 0.9 }}>
+              {open ? "Executive operating layer" : "Open comms"}
             </div>
           </div>
           <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-            <button
-              onClick={() => setCompact((v) => !v)}
-              style={headerButtonStyle}
-            >
-              {compact ? "Wider" : "Narrow"}
-            </button>
-            <button
-              onClick={() => setOpen(false)}
-              style={headerButtonStyle}
-            >
-              Close
-            </button>
+            {open ? (
+              <>
+                <button
+                  onClick={() => setCompact((v) => !v)}
+                  style={headerButtonStyle}
+                >
+                  {compact ? "Expand" : "Compact"}
+                </button>
+                <button
+                  onClick={() => setOpen(false)}
+                  style={headerButtonStyle}
+                >
+                  Minimize
+                </button>
+              </>
+            ) : (
+              <button onClick={() => setOpen(true)} style={headerButtonStyle}>
+                Open
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-        <div style={{ padding: 14, overflow: "auto", flex: 1 }}>
+      {open ? (
+        <div style={{ padding: 14, overflow: "auto" }}>
           <div
             style={{
               border: `1px solid ${meta.border}`,
@@ -442,11 +403,7 @@ export default function AuricruxDock() {
           </div>
 
           <div style={{ marginTop: 12, fontSize: 12, color: "#475569", lineHeight: 1.5 }}>
-            {auricruxPersona.intro}
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 14 }}>
-            <AuricruxAvatar state={avatarState} size={compact ? 108 : 128} compact={compact} />
+            Use Auricrux to narrate next actions, explain customer state, and preserve continuity across portal and academy routes.
           </div>
 
           <div
@@ -468,50 +425,80 @@ export default function AuricruxDock() {
               <div style={{ fontSize: 12, color: "#475569", marginTop: 4 }}>{portalTenant.roleSummary}</div>
             </div>
             <div style={{ display: "grid", gap: 6, fontSize: 12, color: "#1f2937" }}>
-              <div><strong>Project:</strong> {portalPageContext?.projectId || currentProject.id} · {currentProject.stage}</div>
-              {portalPageContext?.pipelineStep ? (
-                <div><strong>Pipeline step:</strong> {portalPageContext.pipelineStep}</div>
-              ) : null}
-              <div><strong>Next action:</strong> {workspaceContext.currentNextAction}</div>
+              <div><strong>Project:</strong> {currentProject.id} · {currentProject.stage}</div>
+              <div><strong>Next action:</strong> {leadsActions.topAction?.title || immersiveActions.topAction?.title || workspaceContext.currentNextAction}</div>
               <div><strong>Revenue blocker:</strong> {auricruxRail.currentBlocker}</div>
-              {academyContext ? (
-                <div><strong>Academy:</strong> {academyContext.programTitle || academyContext.programKey} · Module {academyContext.moduleNumber}</div>
-              ) : (
+              {leadsActions.hasActions ? (
+                <div>
+                  <strong>Leads:</strong>{" "}
+                  <a href={leadsActions.topAction.href} style={{ color: "#2563eb", fontWeight: 700 }}>
+                    {leadsActions.topAction.title}
+                  </a>
+                </div>
+              ) : null}
+              {immersiveActions.hasActions ? (
+                <div>
+                  <strong>Immersive:</strong>{" "}
+                  <a href={immersiveActions.topAction.href} style={{ color: "#2563eb", fontWeight: 700 }}>
+                    {immersiveActions.topAction.title}
+                  </a>
+                </div>
+              ) : !leadsActions.hasActions ? (
                 <div><strong>Training:</strong> Two learners need assignment to preserve academy continuity.</div>
-              )}
+              ) : null}
             </div>
           </div>
 
           <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
-            <button
-              onClick={speakLastReply}
-              disabled={!voiceSupported || !lastReply || speaking}
-              style={buttonStyle("secondary")}
-            >
-              {speaking ? "Speaking..." : "Hear reply"}
-            </button>
-            <button onClick={stop} disabled={!speaking} style={buttonStyle("secondary")}>Stop voice</button>
-            <button
-              onClick={() => submitFeedback("up")}
-              disabled={!lastReply || Boolean(feedbackState)}
-              style={buttonStyle(feedbackState === "up" ? "primary" : "secondary")}
-            >
-              {feedbackState === "up" ? "Thanks" : "Helpful"}
-            </button>
-            <button
-              onClick={() => submitFeedback("down")}
-              disabled={!lastReply || Boolean(feedbackState)}
-              style={buttonStyle(feedbackState === "down" ? "primary" : "secondary")}
-            >
-              {feedbackState === "down" ? "Noted" : "Improve"}
-            </button>
+            <button onClick={speak} style={buttonStyle("secondary")}>Voice</button>
             <button onClick={video} style={buttonStyle("secondary")}>Video</button>
           </div>
+
+          <AuricruxDoTeachBar
+            targetObjectType={typeof window !== "undefined" && window.location.pathname.includes("/portal/bids") ? "Bid" : "Project"}
+            targetObjectId={typeof window !== "undefined" && window.location.pathname.includes("/portal/bids") ? "BID-1" : currentProject.id}
+            capabilityId={typeof window !== "undefined" && window.location.pathname.includes("/academy") ? "academy-guidance" : "plan-briefing"}
+            executeLabel="Do this — advance governed workflow"
+            teachLabel="Teach me — cert-quantity-takeoff review"
+            onResult={(result) => {
+              const summary =
+                result?.guidance ||
+                result?.result?.package ||
+                result?.handlerResult?.guidance ||
+                "Auricrux action completed.";
+              setLog((prev) => [{ t: new Date().toISOString(), m: summary }, ...prev]);
+            }}
+          />
+
+          {lastExchange ? (
+            <div style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: auricruxColors.ink }}>Was this helpful?</span>
+              <button
+                type="button"
+                onClick={() => submitFeedback("up")}
+                disabled={Boolean(feedbackStatus)}
+                style={buttonStyle(feedbackStatus === "up" ? "primary" : "secondary")}
+              >
+                Helpful
+              </button>
+              <button
+                type="button"
+                onClick={() => submitFeedback("down")}
+                disabled={Boolean(feedbackStatus)}
+                style={buttonStyle(feedbackStatus === "down" ? "primary" : "secondary")}
+              >
+                Improve
+              </button>
+              {feedbackStatus === "saving" ? (
+                <span style={{ fontSize: 11, color: "#64748b" }}>Saving feedback…</span>
+              ) : null}
+            </div>
+          ) : null}
 
           <div style={{ marginTop: 12 }}>
             <div style={{ fontSize: 12, fontWeight: 700, color: auricruxColors.ink, marginBottom: 8 }}>Quick prompts</div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              {activeQuickPrompts.map((prompt) => (
+              {quickPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   onClick={() => send(prompt)}
@@ -589,8 +576,12 @@ export default function AuricruxDock() {
             )}
           </div>
         </div>
-      </aside>
-    </>
+      ) : (
+        <div style={{ padding: "10px 12px", background: "#fffdf7", color: "#6b7280", fontSize: 11, lineHeight: 1.5 }}>
+          Open Auricrux without covering the page.
+        </div>
+      )}
+    </div>
   );
 }
 

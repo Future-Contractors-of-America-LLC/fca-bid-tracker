@@ -9,7 +9,9 @@
     "lucide-react": "^1.14.0",
     "pdfjs-dist": "^4.10.38",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "three": "^0.175.0",
+    "web-ifc": "^0.0.68"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.1",

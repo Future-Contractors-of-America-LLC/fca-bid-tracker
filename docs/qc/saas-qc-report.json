@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-06-19T14:25:14.306Z",
+  "generatedAt": "2026-06-23T21:39:35.274Z",
   "scope": "SaaS QC",
   "apiBase": "https://auricrux-central.azurewebsites.net",
   "summary": {
-    "passed": 79,
+    "passed": 126,
     "failed": 0,
     "warnings": 0
   },
-  "portalRouteCount": 15,
-  "apiEndpointCount": 12,
+  "portalRouteCount": 25,
+  "apiEndpointCount": 13,
   "findings": [
     {
       "status": "pass",
@@ -28,6 +28,31 @@
     {
       "status": "pass",
       "label": "script:validate-academy-ctas.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-design-workspace.cjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-immersive-framework.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-leads-workspace.cjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-bids-workspace.cjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-bid-workspace.mjs",
       "detail": ""
     },
     {
@@ -97,12 +122,62 @@
     },
     {
       "status": "pass",
+      "label": "route:/portal/pipeline",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "route:/portal/audit",
       "detail": ""
     },
     {
       "status": "pass",
       "label": "route:/portal/profile",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/plans",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/finance",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/scheduling",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/field-tasks",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/field-supervision",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/warranty",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/design",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/immersive",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/leads",
       "detail": ""
     },
     {
@@ -118,6 +193,16 @@
     {
       "status": "pass",
       "label": "client:src/api/intakeClient.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/api/leadsClient.js",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "client:src/api/bidsClient.js",
       "detail": ""
     },
     {
@@ -197,6 +282,51 @@
     },
     {
       "status": "pass",
+      "label": "page:website/LegalHub",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/ContractorLegalResources",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Cookies",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/AcceptableUse",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Security",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Subprocessors",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/AiPolicy",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Accessibility",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/Dmca",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:website/Refunds",
       "detail": ""
     },
@@ -227,12 +357,22 @@
     },
     {
       "status": "pass",
+      "label": "page:portal/PortalLegal",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PlatformDashboard",
       "detail": ""
     },
     {
       "status": "pass",
       "label": "page:portal/PortalOperations",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalPipeline",
       "detail": ""
     },
     {
@@ -307,6 +447,66 @@
     },
     {
       "status": "pass",
+      "label": "page:portal/PortalPlans",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalFinance",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalDesignWorkspace",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalRfis",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalChangeOrders",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalCloseout",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalScheduling",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalFieldTasks",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalFieldSupervision",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalImmersive",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalLeads",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalWarranty",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:academy/AcademyHome",
       "detail": ""
     },
@@ -317,12 +517,42 @@
     },
     {
       "status": "pass",
+      "label": "page:academy/AcademyPrograms",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyDashboard",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyCredentials",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PortalOpportunityDetail",
       "detail": ""
     },
     {
       "status": "pass",
       "label": "page:portal/PortalProjectDetail",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalInvoiceDetail",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyProgramDetail",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:academy/AcademyModuleLesson",
       "detail": ""
     },
     {
@@ -382,17 +612,22 @@
     },
     {
       "status": "pass",
+      "label": "api:/api/academy-lms",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
       "label": "api:/api/customer-login",
       "detail": "HTTP 200"
     },
     {
       "status": "pass",
-      "label": "blueprint:/portal/bids",
+      "label": "blueprint:/portal/leads",
       "detail": ""
     },
     {
       "status": "pass",
-      "label": "blueprint:/portal/projects",
+      "label": "blueprint:/portal/bids",
       "detail": ""
     },
     {

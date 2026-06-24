@@ -7,19 +7,19 @@ import MarkupLayerPanel from "../../components/design/MarkupLayerPanel";
 import DesignStatusBar from "../../components/design/DesignStatusBar";
 import DesignPropertiesPanel from "../../components/design/DesignPropertiesPanel";
 import AuricruxDesignInsight from "../../components/design/AuricruxDesignInsight";
-import FcaNativeViewerPanel from "../../components/design/FcaNativeViewerPanel";
-import ApsInteropPanel from "../../components/design/ApsInteropPanel";
+import FcaNative3dViewer from "../../components/immersive/FcaNative3dViewer";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
-import usePortalProjectId from "../../hooks/usePortalProjectId";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
 import useDesignWorkspace from "../../hooks/useDesignWorkspace";
 import useDesignKeyboard from "../../hooks/useDesignKeyboard";
+import { centralApi } from "../../api/backendBase";
 import { routeStateOverlays } from "../../systemState";
 import { sendAuricruxMessage } from "../../api/auricruxClient";
 import {
   compareRevisions,
   exportDesignPackage,
+  fcaExportUrl,
   linkMarkupToRfi,
   runBimClashDetection,
   saveBimModel,
@@ -27,10 +27,13 @@ import {
   startDesignCollab,
   uploadDesignFile,
 } from "../../api/designWorkspaceClient";
+import PlanCreationPanel from "../../components/design/PlanCreationPanel";
 import CadEditorPanel from "../../components/design/CadEditorPanel";
 import BimCoordinationPanel from "../../components/design/BimCoordinationPanel";
 import TakeoffEstimatePanel from "../../components/design/TakeoffEstimatePanel";
 import usePreconContinuity from "../../hooks/usePreconContinuity";
+import useImmersiveNextActions from "../../hooks/useImmersiveNextActions";
+import AuricruxImmersiveHint from "../../components/immersive/AuricruxImmersiveHint";
 import { quantityFromGeometry } from "../../utils/designMarkupUtils";
 
 const panelStyle = {
@@ -55,8 +58,7 @@ export default function PortalDesignWorkspace() {
   const deepLink = useMemo(() => readDesignDeepLink(), []);
   const { state } = useWorkspaceState();
   const { activeProject } = useProjectWorkspace();
-  const { projectId: activePortalProjectId } = usePortalProjectId(deepLink.projectId);
-  const projectId = activePortalProjectId || deepLink.projectId || activeProject?.id || "";
+  const projectId = deepLink.projectId || activeProject?.id || state.project?.id || "A-117";
   const [selectedFileId, setSelectedFileId] = useState(deepLink.fileId || "");
   const [activeTool, setActiveTool] = useState("select");
   const [selectedMarkupId, setSelectedMarkupId] = useState("");
@@ -65,14 +67,21 @@ export default function PortalDesignWorkspace() {
 
   const { files } = useWorkflowEvidence(projectId);
   const designFiles = useMemo(
-    () => files.filter((file) => file.designReady || ["pdf", "dwg", "rvt", "ifc"].includes((file.format || "").toLowerCase())),
+    () => files.filter((file) => file.designReady || ["pdf", "dwg", "rvt", "ifc", "gltf", "glb"].includes((file.format || "").toLowerCase())),
     [files],
   );
 
   const workspace = useDesignWorkspace(projectId, selectedFileId, deepLink.sheetId);
   const precon = usePreconContinuity(projectId);
+  const immersiveActions = useImmersiveNextActions();
   const activeSheet = workspace.sheets.find((sheet) => sheet.sheetId === workspace.activeSheetId) || workspace.sheets[0];
   const fileFormat = workspace.fileRecord?.format || workspace.manifest?.format || "pdf";
+  const viewFormat = workspace.viewerSession?.format || fileFormat;
+  const useFcasViewer =
+    String(fileFormat).toLowerCase() === "fcas"
+    || workspace.manifest?.canonicalFormat === "FCAS"
+    || Boolean(workspace.manifest?.fcasBlobKey);
+  const showNative3d = workspace.viewerSession?.configured && ["ifc", "gltf", "glb", "dwg", "rvt"].includes(String(fileFormat).toLowerCase());
   const selectedMarkup = workspace.markups.find((markup) => markup.id === selectedMarkupId) || null;
 
   useDesignKeyboard({
@@ -114,7 +123,7 @@ export default function PortalDesignWorkspace() {
       const uploadedId = result?.file?.fileId;
       if (uploadedId) {
         setSelectedFileId(uploadedId);
-        setStatusMessage(`${file.name} uploaded, extracted, and registered in the governed file spine.`);
+        setStatusMessage(`${file.name} imported into FCA-native FCAM/FCAS on the governed file spine.`);
         await workspace.refresh();
       }
     } catch (uploadError) {
@@ -123,6 +132,12 @@ export default function PortalDesignWorkspace() {
       setBusy(false);
       event.target.value = "";
     }
+  }
+
+  function handleFcaExport(target) {
+    if (!selectedFileId) return;
+    window.open(centralApi(fcaExportUrl(selectedFileId, target)), "_blank", "noopener,noreferrer");
+    setStatusMessage(`FCA ${target.toUpperCase()} export opened from canonical FCAM/FCAS.`);
   }
 
   async function handleMarkupComplete(markupPayload) {
@@ -326,9 +341,8 @@ export default function PortalDesignWorkspace() {
   return (
     <PortalShell
       title="Design Workspace"
-      subtitle="Native plan room — markup, takeoff, coordination, and redlines."
+      subtitle="FCAM/FCAS/FCAP plan room with native 3D, WebXR VR, markup, takeoff, and Auricrux intelligence on one governed spine."
       activeHref="/portal/design"
-      currentJourney="coordination"
       routeOverlay={routeStateOverlays.design}
     >
       <div style={{ display: "grid", gap: 16 }}>
@@ -341,8 +355,11 @@ export default function PortalDesignWorkspace() {
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <label style={{ border: "1px solid #2563eb", background: "#eff6ff", color: "#1d4ed8", borderRadius: 10, padding: "10px 12px", fontWeight: 700, cursor: "pointer" }}>
                 Upload plan set
-                <input type="file" accept=".pdf,.dwg,.rvt,.ifc" onChange={handleUpload} style={{ display: "none" }} />
+                <input type="file" accept=".pdf,.dwg,.dxf,.rvt,.ifc,.glb,.gltf,.fcam,.fcas" onChange={handleUpload} style={{ display: "none" }} />
               </label>
+              <a href={`/portal/immersive?projectId=${encodeURIComponent(projectId)}`} style={{ textDecoration: "none", border: "1px solid #cbd5e1", borderRadius: 10, padding: "10px 12px", color: "#334155", fontWeight: 700 }}>
+                Immersive VR
+              </a>
               <a href={`/portal/files?projectId=${encodeURIComponent(projectId)}`} style={{ textDecoration: "none", border: "1px solid #cbd5e1", borderRadius: 10, padding: "10px 12px", color: "#334155", fontWeight: 700 }}>
                 File spine
               </a>
@@ -358,6 +375,8 @@ export default function PortalDesignWorkspace() {
           markupCount={workspace.markups.length}
           mode={activeTool}
         />
+
+        <AuricruxImmersiveHint actions={immersiveActions.items} />
 
         <div style={{ display: "grid", gridTemplateColumns: "280px 1fr 320px", gap: 16 }}>
           <div style={{ display: "grid", gap: 16 }}>
@@ -394,6 +413,17 @@ export default function PortalDesignWorkspace() {
               />
             </div>
             <div style={panelStyle}>
+              <PlanCreationPanel
+                projectId={projectId}
+                busy={busy}
+                onCreated={(fileId) => {
+                  if (fileId) setSelectedFileId(fileId);
+                  workspace.refresh();
+                  setStatusMessage("FCA native plan set created.");
+                }}
+              />
+            </div>
+            <div style={panelStyle}>
               <MarkupLayerPanel layers={workspace.layers} onToggle={toggleLayer} />
             </div>
           </div>
@@ -419,6 +449,7 @@ export default function PortalDesignWorkspace() {
                 markups={workspace.visibleMarkups}
                 activeTool={activeTool}
                 onMarkupComplete={handleMarkupComplete}
+                useFcas={useFcasViewer}
               />
             </div>
           </div>
@@ -436,10 +467,7 @@ export default function PortalDesignWorkspace() {
               />
             </div>
             <div style={panelStyle}>
-              <FcaNativeViewerPanel viewerSession={workspace.viewerSession} fileFormat={fileFormat} />
-            </div>
-            <div style={panelStyle}>
-              <AuricruxDesignInsight intelligence={workspace.intelligence} onAskAuricrux={handleAskAuricrux} projectId={projectId} fileId={workspace.activeFile?.id} />
+              <AuricruxDesignInsight intelligence={workspace.intelligence} onAskAuricrux={handleAskAuricrux} />
             </div>
             <div style={panelStyle}>
               <DesignPropertiesPanel activeSheet={activeSheet} selectedMarkup={selectedMarkup} intelligence={workspace.intelligence} />
@@ -468,9 +496,36 @@ export default function PortalDesignWorkspace() {
                 {!workspace.markups.length ? <div style={{ color: "#64748b" }}>No markups yet.</div> : null}
               </div>
             </div>
-            {(fileFormat === "dwg" || fileFormat === "rvt" || fileFormat === "ifc") ? (
+            {showNative3d ? (
               <div style={panelStyle}>
-                <div style={{ marginTop: 0 }}>
+                <FcaNative3dViewer
+                  viewerSession={workspace.viewerSession}
+                  fileFormat={viewFormat}
+                  streamUrl={workspace.viewerSession?.streamUrl ? undefined : workspace.contentUrl}
+                  onExport={handleFcaExport}
+                />
+                {fileFormat === "ifc" || fileFormat === "rvt" ? (
+                  <div style={{ marginTop: 16 }}>
+                    <BimCoordinationPanel
+                      sheets={workspace.sheets}
+                      markups={workspace.markups}
+                      onSave={handleBimSave}
+                      onClash={handleBimClash}
+                      busy={busy}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            ) : (fileFormat === "dwg" || fileFormat === "rvt") ? (
+              <div style={panelStyle}>
+                <div style={{ color: "#475569", lineHeight: 1.7 }}>
+                  <div style={{ fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>FCA Native Design</div>
+                  <p style={{ marginTop: 0 }}>
+                    FCA imports {String(fileFormat).toUpperCase()} into proprietary FCAM/FCAS on ingest.
+                    External files remain import evidence — canonical state is always FCA-native.
+                  </p>
+                </div>
+                <div style={{ marginTop: 16 }}>
                   {fileFormat === "dwg" ? (
                     <CadEditorPanel activeSheet={activeSheet} onSave={handleCadSave} busy={busy} />
                   ) : (
@@ -482,14 +537,6 @@ export default function PortalDesignWorkspace() {
                       busy={busy}
                     />
                   )}
-                </div>
-                <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid #e2e8f0" }}>
-                  <ApsInteropPanel
-                    viewerSession={workspace.viewerSession}
-                    fileFormat={fileFormat}
-                    onQueueTranslation={workspace.queueViewerTranslation}
-                    queueBusy={workspace.queueBusy}
-                  />
                 </div>
               </div>
             ) : null}

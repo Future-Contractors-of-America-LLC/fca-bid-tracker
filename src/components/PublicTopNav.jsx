@@ -8,8 +8,7 @@ import {
   resolveWorkspaceEntryHref,
 } from "../customerSession";
 import { navigateTo } from "../navigation";
-import { portalNavGroups, portalNavPrimary } from "../systemState";
-import { toggleAuricruxAssistant } from "../auricruxAssistant";
+import { auricruxRail, currentProject, portalMessages, projectAuditEvents, workspaceContext } from "../workspaceState";
 
 const headerStyle = {
   position: "sticky",
@@ -155,7 +154,39 @@ const mobileDrawerPanel = {
   overflow: "auto",
 };
 
-const NAV_MENUS = [
+const cueBarStyle = {
+  borderTop: "1px solid #e5d3a1",
+  background: "linear-gradient(135deg, #fffdf7 0%, #ffffff 100%)",
+  fontSize: 12,
+  color: "#8a6a14",
+  fontWeight: 600,
+  padding: "6px 16px",
+};
+
+function resolveRouteCue(pathname = "/") {
+  const path = pathname.replace(/\/$/, "") || "/";
+  if (path.startsWith("/portal/bids")) {
+    return `Package A-117 bid lane — ${auricruxRail.nextRecommendedAction}`;
+  }
+  if (path.startsWith("/portal/messages")) {
+    const unread = (portalMessages || []).filter((item) => item.status !== "read").length;
+    return unread
+      ? `${unread} owner message(s) need governed follow-through on ${currentProject.id}.`
+      : `Comms continuity clear — ${workspaceContext.currentNextAction}`;
+  }
+  if (path.startsWith("/portal/audit")) {
+    return `${(projectAuditEvents || []).length} audit event(s) on ${currentProject.id} spine.`;
+  }
+  if (path.startsWith("/academy")) {
+    return `Academy teach-back tied to cert-quantity-takeoff on ${currentProject.id}.`;
+  }
+  if (path.startsWith("/portal")) {
+    return `${workspaceContext.currentNextAction} · ${currentProject.id}`;
+  }
+  return `${workspaceContext.currentNextAction} — ${auricruxRail.nextRecommendedAction}`;
+}
+
+const publicNavGroups = [
   {
     label: "Platform",
     items: [
@@ -209,37 +240,49 @@ const NAV_MENUS = [
   },
 ];
 
-function isNavActive(currentPath, href) {
-  return currentPath === href || (href !== "/portal" && currentPath.startsWith(`${href}/`));
-}
-
-const assistantButtonStyle = {
-  border: "1px solid #e8c46a",
-  background: "linear-gradient(135deg, #fffaf0 0%, #fff 100%)",
-  color: "#8a6a14",
-  fontWeight: 700,
-  fontSize: 13,
-  padding: "8px 12px",
-  borderRadius: 6,
-  whiteSpace: "nowrap",
-  cursor: "pointer",
-  fontFamily: "inherit",
-};
-
-function AuricruxAssistantButton({ onNavigate }) {
-  return (
-    <button
-      type="button"
-      style={assistantButtonStyle}
-      onClick={() => {
-        toggleAuricruxAssistant();
-        onNavigate?.();
-      }}
-    >
-      Ask Auricrux
-    </button>
-  );
-}
+const portalNavGroups = [
+  {
+    label: "Operations",
+    items: [
+      { label: "Commercial pipeline", href: "/portal/pipeline" },
+      { label: "Lead intelligence", href: "/leads/" },
+      { label: "Dashboard", href: "/portal/platform" },
+      { label: "Project management", href: "/portal/projects" },
+      { label: "Scheduling", href: "/portal/scheduling" },
+      { label: "Field tasks", href: "/portal/field-tasks" },
+      { label: "Field supervision", href: "/portal/field-supervision" },
+      { label: "Bids", href: "/portal/bids" },
+      { label: "Estimates", href: "/portal/estimates" },
+      { label: "Proposals", href: "/portal/proposals" },
+      { label: "Files", href: "/portal/files" },
+      { label: "Legal & compliance", href: "/portal/legal" },
+      { label: "Design", href: "/portal/design" },
+      { label: "RFIs", href: "/portal/rfis" },
+      { label: "Change orders", href: "/portal/change-orders" },
+    ],
+  },
+  {
+    label: "Commercial",
+    items: [
+      { label: "Plans", href: "/portal/plans" },
+      { label: "Finance", href: "/portal/finance" },
+      { label: "Billing", href: "/portal/billing" },
+      { label: "Closeout", href: "/portal/closeout" },
+      { label: "Warranty", href: "/portal/warranty" },
+      { label: "Messages", href: "/portal/messages" },
+      { label: "Support", href: "/portal/support" },
+    ],
+  },
+  {
+    label: "Training & admin",
+    items: [
+      { label: "Academy", href: "/portal/academy" },
+      { label: "Course catalog", href: "/academy/catalog" },
+      { label: "Auricrux", href: "/portal/auricrux" },
+      { label: "Admin", href: "/portal/admin" },
+    ],
+  },
+];
 
 function useMediaQuery(query) {
   const [matches, setMatches] = useState(false);
@@ -266,7 +309,7 @@ function NavDropdown({ menu, currentPath, onNavigate }) {
     return () => document.removeEventListener("click", onDocClick);
   }, []);
 
-  const active = menu.items.some((item) => isNavActive(currentPath, item.href));
+  const active = menu.items.some((item) => currentPath === item.href || currentPath.startsWith(`${item.href}/`));
 
   return (
     <div ref={ref} style={{ position: "relative" }}>
@@ -280,7 +323,7 @@ function NavDropdown({ menu, currentPath, onNavigate }) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
       >
-        {menu.label} <span aria-hidden style={{ fontSize: 10, marginLeft: 2 }}>v</span>
+        {menu.label} ▾
       </button>
       {open ? (
         <div style={dropdownStyle}>
@@ -290,8 +333,8 @@ function NavDropdown({ menu, currentPath, onNavigate }) {
               href={item.href}
               style={{
                 ...linkStyle,
-                background: isNavActive(currentPath, item.href) ? "#eff6ff" : "transparent",
-                color: isNavActive(currentPath, item.href) ? "#1d4ed8" : "#334155",
+                background: currentPath === item.href ? "#eff6ff" : "transparent",
+                color: currentPath === item.href ? "#1d4ed8" : "#334155",
               }}
               onClick={() => {
                 setOpen(false);
@@ -345,13 +388,10 @@ export default function PublicTopNav({ mode = "public" }) {
     navigateTo(loginHref);
   }
 
-  function closeMobile() {
-    setMobileOpen(false);
-  }
+  const routeCue = resolveRouteCue(currentPath);
 
   const authActions = session?.authenticated ? (
     <>
-      <AuricruxAssistantButton />
       <a href={workspaceHref} style={signInStyle} onClick={closeMobile}>Workspace</a>
       <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>
     </>
@@ -371,7 +411,7 @@ export default function PublicTopNav({ mode = "public" }) {
         .fca-nav-desktop { display: none; }
         .fca-nav-mobile-actions { display: flex; }
         @media (min-width: 960px) {
-          .fca-nav-desktop { display: flex; flex-wrap: wrap; row-gap: 4px; }
+          .fca-nav-desktop { display: flex; }
           .fca-nav-mobile-actions { display: none; }
           .fca-brand-long { display: inline; }
           .fca-brand-short { display: none; }
@@ -382,7 +422,7 @@ export default function PublicTopNav({ mode = "public" }) {
         }
       `}</style>
 
-      <header style={headerStyle} className="fca-topnav-blur">
+      <header style={headerStyle}>
         <div style={innerStyle}>
           <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
             <FcaBrandMark compact />
@@ -392,22 +432,19 @@ export default function PublicTopNav({ mode = "public" }) {
 
           {mode === "portal" ? (
             <nav className="fca-nav-desktop" style={{ ...desktopNavStyle, display: isDesktop ? "flex" : "none" }} aria-label="Portal navigation">
-              {portalNavPrimary.map((item) => (
+              {portalNavGroups.flatMap((g) => g.items).map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
                   style={{
                     ...linkStyle,
                     display: "inline-block",
-                    color: isNavActive(currentPath, item.href) ? "#1d4ed8" : "#334155",
-                    background: isNavActive(currentPath, item.href) ? "#eff6ff" : "transparent",
+                    color: currentPath === item.href ? "#1d4ed8" : "#334155",
+                    background: currentPath === item.href ? "#eff6ff" : "transparent",
                   }}
                 >
                   {item.label}
                 </a>
-              ))}
-              {portalNavGroups.map((group) => (
-                <NavDropdown key={group.label} menu={group} currentPath={currentPath} />
               ))}
             </nav>
           ) : (
@@ -423,7 +460,7 @@ export default function PublicTopNav({ mode = "public" }) {
               >
                 Home
               </a>
-              {NAV_MENUS.map((menu) => (
+              {publicNavGroups.map((menu) => (
                 <NavDropdown key={menu.label} menu={menu} currentPath={currentPath} />
               ))}
             </nav>
@@ -440,22 +477,27 @@ export default function PublicTopNav({ mode = "public" }) {
               <a href={workspaceHref} style={{ ...primaryCtaStyle, padding: "8px 12px" }}>Workspace</a>
             )}
             <button type="button" style={hamburgerStyle} onClick={() => setMobileOpen(true)} aria-label="Open menu">
-              Menu
+              ☰
             </button>
           </div>
+        </div>
+        <div style={cueBarStyle}>
+          <span>{routeCue}</span>
+          <span style={{ marginLeft: 12, color: "#64748b" }}>
+            Next: {auricruxRail.nextRecommendedAction} · Project {currentProject.id}
+          </span>
         </div>
       </header>
 
       <MobileDrawer open={mobileOpen} onClose={closeMobile}>
         <div style={{ padding: "16px 20px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <strong style={{ fontSize: 16, color: "#0f172a" }}>Menu</strong>
-          <button type="button" onClick={closeMobile} style={{ ...hamburgerStyle, fontSize: 14 }} aria-label="Close">Close</button>
+          <button type="button" onClick={closeMobile} style={{ ...hamburgerStyle, fontSize: 16 }} aria-label="Close">✕</button>
         </div>
 
         <div style={{ padding: "12px 16px", display: "grid", gap: 8, borderBottom: "1px solid #e2e8f0" }}>
           {session?.authenticated ? (
             <>
-              <AuricruxAssistantButton onNavigate={closeMobile} />
               <a href={workspaceHref} style={primaryCtaStyle} onClick={closeMobile}>Open workspace</a>
               <a href={adminWorkspaceHref} style={signInStyle} onClick={closeMobile}>Admin workspace</a>
               <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>
@@ -470,29 +512,7 @@ export default function PublicTopNav({ mode = "public" }) {
         </div>
 
         <div style={{ padding: "8px 8px 24px", overflow: "auto", flex: 1 }}>
-          {mode === "portal" ? (
-            <div style={{ marginBottom: 12, padding: "0 8px" }}>
-              <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", padding: "8px 12px 4px" }}>
-                Quick links
-              </div>
-              {portalNavPrimary.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  onClick={closeMobile}
-                  style={{
-                    ...linkStyle,
-                    padding: "10px 12px",
-                    color: isNavActive(currentPath, item.href) ? "#1d4ed8" : "#0f172a",
-                    background: isNavActive(currentPath, item.href) ? "#eff6ff" : "transparent",
-                  }}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          ) : null}
-          {(mode === "portal" ? portalNavGroups : [{ label: "Site", items: [{ label: "Home", href: "/" }] }, ...NAV_MENUS.map((m) => ({ label: m.label, items: m.items }))]).map((group) => (
+          {(mode === "portal" ? portalNavGroups : [{ label: "Site", items: [{ label: "Home", href: "/" }] }, ...publicNavGroups.map((m) => ({ label: m.label, items: m.items }))]).map((group) => (
             <div key={group.label} style={{ marginBottom: 16 }}>
               <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", padding: "8px 12px 4px" }}>
                 {group.label}

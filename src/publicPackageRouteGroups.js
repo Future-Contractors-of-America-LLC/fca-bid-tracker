@@ -6,6 +6,7 @@ export const publicPackageRouteGroups = [
     routes: [
       { href: "/portal/bids", label: "Qualification Board" },
       { href: "/portal/pipeline", label: "Commercial Pipeline" },
+      { href: "/portal/leads", label: "Lead Intelligence" },
       { href: "/portal/estimates", label: "Estimate Workspace" },
       { href: "/portal/projects", label: "Project Flow" },
       { href: "/portal/files", label: "File Spine" },

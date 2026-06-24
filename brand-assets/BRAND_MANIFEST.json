@@ -47,6 +47,14 @@
       "file": "auricrux/auricrux-wordmark.svg"
     },
     {
+      "id": "auricrux-humanoid",
+      "type": "design",
+      "name": "Auricrux Humanoid Mark",
+      "file": "auricrux/auricrux-humanoid-mark.svg",
+      "colors": ["#D49A22", "#7C5313", "#0F172A", "#FFF4D1"],
+      "description": "Geometric operator sigil bust with helmet visor, shoulder plates, and chest crux. Original artwork; not a depiction of any real person."
+    },
+    {
       "id": "auricrux-crux-pulse",
       "type": "motion",
       "name": "Auricrux Crux Pulse",
@@ -69,6 +77,7 @@
     "publicUrlsAfterDeploy": [
       "https://futurecontractorsofamerica.com/brand/fca/fca-hex-mark.svg",
       "https://futurecontractorsofamerica.com/brand/auricrux/auricrux-crux-mark.svg",
+      "https://futurecontractorsofamerica.com/brand/auricrux/auricrux-humanoid-mark.svg",
       "https://futurecontractorsofamerica.com/brand/animations/auricrux-crux-pulse.svg"
     ],
     "favicon": "public/favicon.svg"

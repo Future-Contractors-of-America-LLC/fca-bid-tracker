@@ -41,15 +41,10 @@ export default function PublicActionRail({
 
       <div style={{ marginBottom: 16 }}>
         <AuricruxPresenceLayer
-          surfaceLabel="Auricrux embedded in public action rail"
-          title="Auricrux now closes the public route instead of waiting in a separate assistant tab"
-          detail="Every public route now hands off through an Auricrux-guided decision layer so conversion, workspace access, and platform review keep the same intelligence spine."
-          primaryHref="/portal/platform"
-          primaryLabel="Open Platform Dashboard"
-          secondaryHref="/login"
-          secondaryLabel="Open Login Portal"
+          surfaceKey="landing"
           compact
         />
+        {/* Auricrux embedded in public action rail */}
       </div>
 
       {workspaceRoutes.length ? (

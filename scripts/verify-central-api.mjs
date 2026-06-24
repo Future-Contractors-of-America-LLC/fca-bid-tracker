@@ -21,8 +21,8 @@ const checks = [
   {
     name: "bids_get_filtered",
     url: `${CENTRAL_API}/bids?customerId=default-customer`,
-    expectOk: false,
-    note: "Partition filter may 500 until Central repair; frontend falls back client-side.",
+    expectOk: true,
+    validate: (data) => Array.isArray(data),
   },
   {
     name: "leads_get",

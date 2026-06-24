@@ -15,25 +15,15 @@ function formatApiError(response, payload, fallbackMessage) {
   return payload?.error || `${fallbackMessage}${statusSuffix}.`;
 }
 
-export async function fetchAuricruxActions() {
-  const response = await centralFetch("/api/auricrux/actions", { method: "GET" });
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to load Auricrux actions"));
-  }
-  return payload;
-}
-
-export async function submitAuricruxAction({
+export async function executeAuricruxAction({
   mode,
   targetObjectType,
   targetObjectId,
   rationale,
+  capabilityId,
   sourceRoute,
-  beforeSnapshotJson,
-  afterSnapshotJson,
 }) {
-  const response = await centralFetch("/api/auricrux/actions", {
+  const response = await centralFetch("/api/auricrux-actions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -41,14 +31,43 @@ export async function submitAuricruxAction({
       targetObjectType,
       targetObjectId,
       rationale,
+      capabilityId,
       sourceRoute,
-      beforeSnapshotJson,
-      afterSnapshotJson,
     }),
   });
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to submit Auricrux action"));
+    throw new Error(formatApiError(response, payload, "Unable to run Auricrux action"));
+  }
+  return payload;
+}
+
+export async function runBidDoTeachWorkflow({ bidId = "BID-1", sourceRoute, fileName }) {
+  const response = await centralFetch("/api/bid-doteach-workflow", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      bidId,
+      sourceRoute: sourceRoute || "/portal/bids",
+      fileName: fileName || "Package A-117 Interior Demo Plan Set Rev 3.pdf",
+    }),
+  });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) {
+    throw new Error(formatApiError(response, payload, "Unable to run Package A-117 Do→Teach workflow"));
+  }
+  return payload;
+}
+
+export async function fetchSpineContext({ targetObjectType = "Bid", targetObjectId = "BID-1" }) {
+  const params = new URLSearchParams({
+    targetObjectType,
+    targetObjectId,
+  });
+  const response = await centralFetch(`/api/auricrux-spine?${params.toString()}`);
+  const payload = await readJsonSafe(response);
+  if (!response.ok || !payload?.ok) {
+    throw new Error(formatApiError(response, payload, "Unable to read Auricrux spine context"));
   }
   return payload;
 }

@@ -10,6 +10,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          if (id.includes("node_modules/three") || id.includes("node_modules/web-ifc")) return "fca-3d";
           if (!id.includes("src/pages")) return undefined;
           if (id.includes("src/pages/portal/PortalFieldSupervision")) return "portal-field";
           if (id.includes("src/pages/portal/PortalDesignWorkspace")) return "portal-design";

@@ -8,6 +8,9 @@ export const PILOT_PAYMENT_LINK =
   "https://buy.stripe.com/bJe14o0fQ5Pn8Tt7Bw5gc01";
 
 export const bidsUrl = `${CENTRAL_API}/bids`;
+export const auricruxActionsUrl = `${CENTRAL_API}/auricrux-actions`;
+export const bidDoTeachWorkflowUrl = `${CENTRAL_API}/bid-doteach-workflow`;
+export const auricruxSpineUrl = `${CENTRAL_API}/auricrux-spine`;
 export const leadsUrl = `${CENTRAL_API}/leads`;
 export const commercialPipelineUrl = `${CENTRAL_API}/commercial-pipeline`;
 export const executeUrl = `${CENTRAL_API}/execute`;

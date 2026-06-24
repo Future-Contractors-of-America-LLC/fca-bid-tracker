@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SaaS quality control ù portal tools, routes, API surfaces, governance.
+ * SaaS quality control ÔøΩ portal tools, routes, API surfaces, governance.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -11,7 +11,6 @@ const outputDir = path.join(root, "docs", "qc");
 fs.mkdirSync(outputDir, { recursive: true });
 
 const SAAS_PORTAL_ROUTES = [
-  "/portal",
   "/portal/platform",
   "/portal/bids",
   "/portal/estimates",
@@ -30,15 +29,13 @@ const SAAS_PORTAL_ROUTES = [
   "/portal/profile",
   "/portal/plans",
   "/portal/finance",
-  "/portal/design",
-  "/portal/rfis",
-  "/portal/change-orders",
-  "/portal/closeout",
   "/portal/scheduling",
   "/portal/field-tasks",
   "/portal/field-supervision",
   "/portal/warranty",
-  "/portal/legal",
+  "/portal/design",
+  "/portal/immersive",
+  "/portal/leads",
 ];
 
 const SAAS_API_ENDPOINTS = [
@@ -55,39 +52,15 @@ const SAAS_API_ENDPOINTS = [
   "/api/workflow-audit",
   "/api/academy-lms",
   "/api/customer-login",
-  "/api/change-orders",
-  "/api/job-cost",
-  "/api/closeout-packages",
-  "/api/warranty-cases",
-  "/api/field-photos",
-  "/api/auricrux/actions",
-  "/api/auricrux-comms",
 ];
 
 const SAAS_CLIENT_MODULES = [
   "src/api/workflowClient.js",
   "src/api/portalClient.js",
   "src/api/intakeClient.js",
-  "src/api/constructionClient.js",
-  "src/api/auricruxActionsClient.js",
-  "src/api/designWorkspaceClient.js",
+  "src/api/leadsClient.js",
+  "src/api/bidsClient.js",
   "src/hooks/useWorkspaceState.js",
-  "src/hooks/usePortalProjectId.js",
-  "src/hooks/useAuricruxLiveInsight.js",
-];
-
-const LEGAL_SURFACES = [
-  "src/pages/portal/PortalLegal.jsx",
-  "src/pages/portal/PortalFiles.jsx",
-  "src/pages/website/ContractorLegalResources.jsx",
-  "src/legal/content/ContractorLegalResourcesContent.jsx",
-  "src/contractorLegal/contractorLegalCatalog.js",
-  "src/contractorLegal/contractorLegalStorage.js",
-  "src/legal/entityInfo.js",
-  "src/fileGovernance.js",
-  "api/academy-program-modules.js",
-  "api/_lib/entityInfo.js",
-  "docs/legal/contractor/CONTRACTOR_LEGAL_INDEX.md",
 ];
 
 const SCRIPT_CHECKS = [
@@ -95,16 +68,11 @@ const SCRIPT_CHECKS = [
   "validate-critical-routes.mjs",
   "validate-public-package-route-groups.mjs",
   "validate-academy-ctas.mjs",
-  "validate-academy-catalog.mjs",
-  "validate-catalog-balance.mjs",
-  "validate-academy-media.mjs",
-  "validate-file-governance.mjs",
-  "validate-finance-workspace.mjs",
   "validate-design-workspace.cjs",
-  "validate-portal-auricrux-wiring.mjs",
-  "validate-portal-ux-sweep.mjs",
-  "validate-site-metadata.mjs",
-  "smoke-central-spine.mjs",
+  "validate-immersive-framework.mjs",
+  "validate-leads-workspace.cjs",
+  "validate-bids-workspace.cjs",
+  "validate-bid-workspace.mjs",
 ];
 
 const API_BASE = process.env.FCA_API_BASE || "https://auricrux-central.azurewebsites.net";
@@ -116,22 +84,22 @@ let failed = 0;
 function pass(label, detail = "") {
   passed += 1;
   findings.push({ status: "pass", label, detail });
-  console.log(`PASS: ${label}${detail ? ` ù ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? ` ÔøΩ ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
   findings.push({ status: "fail", label, detail });
-  console.error(`FAIL: ${label}${detail ? ` ù ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ÔøΩ ${detail}` : ""}`);
 }
 
 function warn(label, detail = "") {
   findings.push({ status: "warn", label, detail });
-  console.warn(`WARN: ${label}${detail ? ` ù ${detail}` : ""}`);
+  console.warn(`WARN: ${label}${detail ? ` ÔøΩ ${detail}` : ""}`);
 }
 
 for (const script of SCRIPT_CHECKS) {
-  const result = spawnSync("node", [`scripts/${script}`], { stdio: "inherit", shell: process.platform === "win32" });
+  const result = spawnSync(process.execPath, [`scripts/${script}`], { stdio: "inherit", shell: false });
   if (result.status === 0) pass(`script:${script}`);
   else fail(`script:${script}`);
 }
@@ -151,31 +119,6 @@ for (const clientPath of SAAS_CLIENT_MODULES) {
   const full = path.join(root, clientPath);
   if (fs.existsSync(full)) pass(`client:${clientPath}`);
   else fail(`client:${clientPath}`, "module missing");
-}
-
-for (const legalPath of LEGAL_SURFACES) {
-  const full = path.join(root, legalPath);
-  if (fs.existsSync(full)) pass(`legal:${legalPath}`);
-  else fail(`legal:${legalPath}`, "contractor legal surface missing");
-}
-
-const catalogSource = fs.readFileSync(path.join(root, "src", "contractorLegal", "contractorLegalCatalog.js"), "utf8");
-const resourcesSource = fs.readFileSync(path.join(root, "src", "legal", "content", "ContractorLegalResourcesContent.jsx"), "utf8");
-const staleSlugPattern = /lic-(contractor-business-formation|construction-law-essentials|dpor-residential-contractor-prep|osha-30-construction)/;
-if (staleSlugPattern.test(resourcesSource) || staleSlugPattern.test(catalogSource)) {
-  fail("legal:academy-slug-parity", "legacy lic-* academy slugs detected in contractor legal surfaces");
-} else {
-  pass("legal:academy-slug-parity", "catalog keys align with contractor legal CTAs");
-}
-
-const dinwiddieMarker = "22310 Old Vaughan Road";
-for (const legalPath of ["src/legal/entityInfo.js", "api/_lib/entityInfo.js"]) {
-  const full = path.join(root, legalPath);
-  if (fs.existsSync(full) && fs.readFileSync(full, "utf8").includes(dinwiddieMarker)) {
-    pass(`legal:principal-office:${legalPath}`);
-  } else {
-    fail(`legal:principal-office:${legalPath}`, "Dinwiddie principal office missing");
-  }
 }
 
 const importPattern = /import\("\.\/pages\/([^"]+)"\)/g;

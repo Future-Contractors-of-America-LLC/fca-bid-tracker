@@ -5,8 +5,8 @@ export const operationsPipeline = {
       title: "Lead Intake",
       owner: "Sales coordination",
       outcome: "Capture inbound demand with source, scope, budget signal, and contact continuity.",
-      primaryRoute: "/bid-entry",
-      primaryLabel: "Open Bid Entry",
+      primaryRoute: "/portal/leads",
+      primaryLabel: "Open Lead Intelligence",
       artifacts: [
         "Lead record",
         "Discovery intake",
@@ -19,8 +19,8 @@ export const operationsPipeline = {
       title: "Qualification",
       owner: "Preconstruction review",
       outcome: "Confirm scope fit, jurisdiction, travel viability, and buyer seriousness before deeper production work.",
-      primaryRoute: "/portal/bids",
-      primaryLabel: "Open Bid Workspace",
+      primaryRoute: "/portal/leads",
+      primaryLabel: "Open Lead Intelligence",
       artifacts: [
         "Qualification score",
         "Jurisdiction review",
@@ -33,8 +33,8 @@ export const operationsPipeline = {
       title: "Preconstruction",
       owner: "Estimating and preconstruction",
       outcome: "Turn qualified demand into scoped bid packaging, pricing structure, and award posture.",
-      primaryRoute: "/portal/projects",
-      primaryLabel: "Open Project Flow",
+      primaryRoute: "/portal/bids",
+      primaryLabel: "Open Qualification Board",
       artifacts: [
         "Scope package",
         "Takeoff summary",

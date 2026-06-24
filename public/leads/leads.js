@@ -250,14 +250,24 @@
     return normalizeLead(data.item);
   }
 
-  async function qualifyLead(leadId, reason) {
+  async function qualifyLead(leadId, reason, lead) {
+    const normalized = lead || {};
     const data = await request("/leads/" + encodeURIComponent(leadId) + "/qualify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         reason: reason || "Qualified through FCA Lead Intelligence review.",
         qualifiedBy: "auricrux",
-        sourceRoute: "/leads/detail.html"
+        sourceRoute: "/portal/leads",
+        budgetStatus: "confirmed",
+        jurisdictionStatus: "pending",
+        ownershipStatus: "verified",
+        checklist: {
+          plansReceived: true,
+          siteWalkComplete: true,
+          budgetConfirmed: true,
+          decisionMakerIdentified: true
+        }
       })
     });
     return {

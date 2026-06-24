@@ -8,7 +8,6 @@ export const routes = {
   "/login": lazyPage(() => import("./pages/website/Login")),
   "/intake": lazyPage(() => import("./pages/website/Intake")),
   "/checkout": lazyPage(() => import("./pages/website/Checkout")),
-  "/checkout/success": lazyPage(() => import("./pages/website/CheckoutSuccess")),
   "/pricing": lazyPage(() => import("./pages/website/Pricing")),
   "/features": lazyPage(() => import("./pages/website/Features")),
   "/solutions": lazyPage(() => import("./pages/website/Solutions")),
@@ -33,7 +32,7 @@ export const routes = {
   "/bid-entry": lazyPage(() => import("./pages/website/LegacyBidEntry")),
   "/bid-status": lazyPage(() => import("./pages/website/LegacyBidStatus")),
 
-  "/portal": lazyPage(() => import("./pages/portal/PortalWorkspaceRedirect")),
+  "/portal": lazyPage(() => import("./pages/portal/PortalHome")),
   "/portal/legal": lazyPage(() => import("./pages/portal/PortalLegal")),
   "/portal/platform": lazyPage(() => import("./pages/portal/PlatformDashboard")),
   "/portal/operations": lazyPage(() => import("./pages/portal/PortalOperations")),
@@ -61,15 +60,15 @@ export const routes = {
   "/portal/scheduling": lazyPage(() => import("./pages/portal/PortalScheduling")),
   "/portal/field-tasks": lazyPage(() => import("./pages/portal/PortalFieldTasks")),
   "/portal/field-supervision": lazyPage(() => import("./pages/portal/PortalFieldSupervision")),
+  "/portal/immersive": lazyPage(() => import("./pages/portal/PortalImmersive")),
+  "/portal/leads": lazyPage(() => import("./pages/portal/PortalLeads")),
   "/portal/warranty": lazyPage(() => import("./pages/portal/PortalWarranty")),
 
   "/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
   "/academy/catalog": lazyPage(() => import("./pages/academy/AcademyCatalog")),
-  "/academy/pathway": lazyPage(() => import("./pages/academy/AcademyPathwayHub")),
+  "/academy/programs": lazyPage(() => import("./pages/academy/AcademyPrograms")),
   "/academy/dashboard": lazyPage(() => import("./pages/academy/AcademyDashboard")),
   "/academy/credentials": lazyPage(() => import("./pages/academy/AcademyCredentials")),
-  "/academy/store": lazyPage(() => import("./pages/academy/store/AcademyStore")),
-  "/academy/store/success": lazyPage(() => import("./pages/academy/store/AcademyStoreSuccess")),
 };
 
 export const routePatterns = [
@@ -92,14 +91,6 @@ export const routePatterns = [
   {
     pattern: "/academy/programs/:programId/modules/:moduleNumber",
     Page: lazyPage(() => import("./pages/academy/AcademyModuleLesson")),
-  },
-  {
-    pattern: "/academy/store/course/:programKey",
-    Page: lazyPage(() => import("./pages/academy/store/AcademyStoreCourse")),
-  },
-  {
-    pattern: "/academy/store/pathway/:pathwayKey",
-    Page: lazyPage(() => import("./pages/academy/store/AcademyStorePathway")),
   },
 ];
 

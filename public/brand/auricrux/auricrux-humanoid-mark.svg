@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) 2026 Future Contractors of America LLC. All rights reserved. -->
+<!-- Auricrux Humanoid Mark - original trademark artwork. Geometric operator sigil; not a depiction of any real person. -->
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="axHumanoidBg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(60 62) rotate(90) scale(58)">
+      <stop stop-color="#1e293b"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </radialGradient>
+    <linearGradient id="axHumanoidShoulder" x1="20" y1="72" x2="100" y2="108" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8A5A12"/>
+      <stop offset="0.45" stop-color="#D49A22"/>
+      <stop offset="1" stop-color="#7C5313"/>
+    </linearGradient>
+    <linearGradient id="axHumanoidHelmet" x1="36" y1="24" x2="84" y2="72" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE8AA"/>
+      <stop offset="0.55" stop-color="#D49A22"/>
+      <stop offset="1" stop-color="#5A320A"/>
+    </linearGradient>
+    <linearGradient id="axHumanoidCrux" x1="60" y1="82" x2="60" y2="104" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF4D1"/>
+      <stop offset="1" stop-color="#B77912"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="60" cy="60" r="58" fill="url(#axHumanoidBg)"/>
+
+  <path d="M16 88L30 68H90L104 88V110H16V88Z" fill="url(#axHumanoidShoulder)" stroke="#4B3208" stroke-width="1.5"/>
+  <path d="M22 88L34 72H86L98 88" stroke="#FFF3C8" stroke-opacity="0.35" stroke-width="1.5"/>
+
+  <path d="M38 76H82L88 96H32L38 76Z" fill="#111827" stroke="#D49A22" stroke-width="1.5"/>
+
+  <path d="M60 82L66 90V96L60 102L54 96V90L60 82Z" fill="url(#axHumanoidCrux)" stroke="#7C5313" stroke-width="1.2"/>
+  <path d="M60 96V104" stroke="#7C5313" stroke-width="4" stroke-linecap="round"/>
+  <path d="M52 99H68" stroke="#7C5313" stroke-width="4" stroke-linecap="round"/>
+
+  <rect x="52" y="62" width="16" height="14" rx="4" fill="#334155" stroke="#64748b" stroke-width="1"/>
+
+  <path d="M60 26C43 26 34 40 34 54C34 68 43 74 60 74C77 74 86 68 86 54C86 40 77 26 60 26Z" fill="url(#axHumanoidHelmet)" stroke="#B77912" stroke-width="2"/>
+  <path d="M44 42H76L73 58H47L44 42Z" fill="#0f172a" fill-opacity="0.88" stroke="#334155" stroke-width="1"/>
+
+  <rect x="48" y="47" width="11" height="3.5" rx="1.75" fill="#D49A22"/>
+  <rect x="61" y="47" width="11" height="3.5" rx="1.75" fill="#D49A22"/>
+
+  <path d="M60 32L63 38L60 44L57 38L60 32Z" fill="#FFF4D1" stroke="#7C5313" stroke-width="1"/>
+  <circle cx="60" cy="38" r="9" stroke="#FFE9A4" stroke-opacity="0.45" stroke-width="1"/>
+
+  <path d="M36 52L44 48" stroke="#FFF3C8" stroke-opacity="0.5" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M84 52L76 48" stroke="#FFF3C8" stroke-opacity="0.5" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

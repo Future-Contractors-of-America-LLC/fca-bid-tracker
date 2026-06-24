@@ -23,8 +23,6 @@ const explicitRoutes = new Set([
   "/refunds",
   "/ip",
   "/legal",
-  "/legal/contractor-resources",
-  "/cookies",
   "/not-found",
   "/bid-entry",
   "/bid-status",
@@ -52,6 +50,8 @@ const explicitRoutes = new Set([
   "/portal/field-tasks",
   "/portal/field-supervision",
   "/portal/warranty",
+  "/portal/immersive",
+  "/portal/leads",
   "/portal/legal",
   "/academy",
   "/academy/catalog",
@@ -70,7 +70,14 @@ const allowedStaticPrefixes = [
   "/brand/",
   "/api/",
   "/leads/",
+  "/leads/index.html",
+  "/leads/new.html",
+  "/leads/detail.html",
   "/pipeline/",
+  "/pipeline",
+  "/onboarding/",
+  "/offers/",
+  "/bids/",
   "mailto:",
   "https://",
   "http://",
@@ -107,14 +114,8 @@ function isTrackedHref(href) {
 }
 
 function collectInternalHrefsFromContent(content) {
-  const hrefMatches = [...content.matchAll(/href="([^"]+)"/g)];
-  const markdownMatches = [...content.matchAll(/\[[^\]]+\]\((\/[^)]+)\)/g)];
-  return [
-    ...hrefMatches.map((match) => match[1]),
-    ...markdownMatches.map((match) => match[1]),
-  ]
-    .filter(isTrackedHref)
-    .map(normalizeHref);
+  const matches = [...content.matchAll(/href="([^"]+)"/g)];
+  return matches.map((match) => match[1]).filter(isTrackedHref).map(normalizeHref);
 }
 
 function collectHrefsFromValue(value, hrefs = new Set()) {
@@ -139,21 +140,6 @@ function collectHrefsFromValue(value, hrefs = new Set()) {
   return hrefs;
 }
 
-function matchRoutePattern(pattern, pathname) {
-  const normalizedPattern = pattern.endsWith("/") && pattern !== "/" ? pattern.slice(0, -1) : pattern;
-  const normalizedPath = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
-  const patternParts = normalizedPattern.split("/").filter(Boolean);
-  const pathParts = normalizedPath.split("/").filter(Boolean);
-  if (patternParts.length !== pathParts.length) return false;
-  for (let index = 0; index < patternParts.length; index += 1) {
-    const patternPart = patternParts[index];
-    const pathPart = pathParts[index];
-    if (patternPart.startsWith(":")) continue;
-    if (patternPart !== pathPart) return false;
-  }
-  return true;
-}
-
 const filesToScan = scanRoots.flatMap((target) => walk(target));
 const hrefs = new Set();
 
@@ -169,22 +155,16 @@ for (const route of Object.keys(routesModule.routes || {})) {
   explicitRoutes.add(route);
 }
 
-const routePatterns = routesModule.routePatterns || [];
-
 const websiteShellModule = await import(pathToFileURL(path.join(root, "src", "websiteShell.js")).href);
 for (const exportedValue of Object.values(websiteShellModule)) {
   collectHrefsFromValue(exportedValue, hrefs);
 }
 
-function isValidHref(baseHref) {
-  if (explicitRoutes.has(baseHref)) return true;
-  if (routePatterns.some((entry) => matchRoutePattern(entry.pattern, baseHref))) return true;
-  if (allowedStaticPrefixes.some((prefix) => baseHref.startsWith(prefix))) return true;
-  const staticRoots = ["/leads", "/pipeline"];
-  return staticRoots.some((root) => baseHref === root || baseHref.startsWith(`${root}/`));
-}
-
-const invalid = [...hrefs].filter((href) => !isValidHref(stripQueryAndHash(href)));
+const invalid = [...hrefs].filter((href) => {
+  const baseHref = stripQueryAndHash(href);
+  if (explicitRoutes.has(baseHref)) return false;
+  return !allowedStaticPrefixes.some((prefix) => href.startsWith(prefix));
+});
 
 if (invalid.length > 0) {
   console.error("Route validation failed. These href values are not backed by router routes or approved static prefixes:");

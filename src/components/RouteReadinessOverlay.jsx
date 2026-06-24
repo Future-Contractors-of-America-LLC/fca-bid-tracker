@@ -55,6 +55,24 @@ function resolveRouteDependencies(activeHref = "/portal/platform") {
     };
   }
 
+  if (activeHref.startsWith("/portal/leads")) {
+    return {
+      title: "Lead Intelligence readiness",
+      detail: "Lead CRM requires SaaS product access granted by your plan or workspace administrator. Public intake mirrors website submissions; portal mutations stay server-governed.",
+      products: ["saas"],
+      comms: [],
+    };
+  }
+
+  if (activeHref.startsWith("/portal/design") || activeHref.startsWith("/portal/immersive")) {
+    return {
+      title: "Design & immersive readiness",
+      detail: "Design Workspace and immersive VR require SaaS product access granted by your plan or workspace administrator — not client-side toggles.",
+      products: ["saas"],
+      comms: [],
+    };
+  }
+
   if (activeHref.startsWith("/portal/admin")) {
     return {
       title: "Admin route readiness",
@@ -92,16 +110,7 @@ export default function RouteReadinessOverlay({ activeHref, session, setProductA
 
   if (missingCount === 0) return null;
 
-  function repairRouteDependencies() {
-    missingProducts.forEach((product) => setProductAccess(product, true));
-    missingComms.forEach((channel) => setCommsAccess(channel, true));
-    refreshSyncStamp(`Repaired route readiness for ${activeHref} from proactive overlay`);
-  }
-
-  function activateEnterpriseReadiness() {
-    applyPlanPreset("enterprise");
-    refreshSyncStamp(`Activated enterprise route readiness for ${activeHref} from proactive overlay`);
-  }
+  const isAdmin = ["Owner / Admin", "Founder / Owner", "FCA System Admin"].includes(session?.role);
 
   return (
     <div style={shellStyle}>
@@ -132,12 +141,21 @@ export default function RouteReadinessOverlay({ activeHref, session, setProductA
       </div>
 
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <button type="button" onClick={repairRouteDependencies} style={actionButtonStyle("primary")}>
-          Repair Route Dependencies
-        </button>
-        <button type="button" onClick={activateEnterpriseReadiness} style={actionButtonStyle()}>
-          Activate Enterprise Readiness
-        </button>
+        <a href="/pricing" style={{ ...actionButtonStyle("primary"), textDecoration: "none", display: "inline-block" }}>
+          Review plans &amp; upgrade
+        </a>
+        <a href="/portal/billing" style={{ ...actionButtonStyle(), textDecoration: "none", display: "inline-block" }}>
+          Open billing
+        </a>
+        {isAdmin ? (
+          <a href="/portal/admin" style={{ ...actionButtonStyle(), textDecoration: "none", display: "inline-block" }}>
+            Admin entitlement controls
+          </a>
+        ) : (
+          <span style={{ color: "#64748b", alignSelf: "center" }}>
+            Product access is server-managed. Contact your workspace administrator to enable missing layers.
+          </span>
+        )}
       </div>
     </div>
   );

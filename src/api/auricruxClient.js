@@ -28,7 +28,7 @@ export async function sendAuricruxMessage({ message, route, context }) {
   return payload;
 }
 
-export async function sendAuricruxFeedback({ rating, message, reply, route, context, correction }) {
+export async function sendAuricruxFeedback({ rating, message, reply, route, context, correction = "" }) {
   const response = await centralFetch("/api/auricrux", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -39,13 +39,4 @@ export async function sendAuricruxFeedback({ rating, message, reply, route, cont
     throw new Error(formatApiError(response, payload, "Unable to record Auricrux feedback"));
   }
   return payload;
-}
-
-export async function fetchAuricruxTrainingStatus() {
-  const response = await centralFetch("/api/auricrux?scope=training", { method: "GET" });
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to load Auricrux training status"));
-  }
-  return payload.training;
 }

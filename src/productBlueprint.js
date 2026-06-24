@@ -9,8 +9,8 @@ export const saasOperationalPathways = [
       "Jurisdiction and travel-zone validation",
       "Consultation scheduling and intake fee collection",
     ],
-    href: "/portal/bids",
-    ctaLabel: "Open Bid Pipeline",
+    href: "/portal/leads",
+    ctaLabel: "Open Lead Intelligence",
   },
   {
     title: "Preconstruction and estimating workspace",
@@ -22,8 +22,8 @@ export const saasOperationalPathways = [
       "Allowance, contingency, and margin review",
       "Approval routing into project kickoff",
     ],
-    href: "/portal/projects",
-    ctaLabel: "Open Project Flow",
+    href: "/portal/bids",
+    ctaLabel: "Open Qualification Board",
   },
   {
     title: "Project delivery and document control",
@@ -73,7 +73,7 @@ export const academyClassrooms = [
     credential: "Preconstruction Readiness Certificate",
     cadence: "6-module classroom",
     delivery: "Estimator lab + vendor scenario drills",
-    linkedSurface: "/portal/bids",
+    linkedSurface: "/portal/leads",
     linkedLabel: "Open Bid Workspace",
     modules: [
       "Scope decomposition and bid package assembly",

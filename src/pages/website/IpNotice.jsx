@@ -20,6 +20,7 @@ export default function IpNotice() {
       <ul style={{ lineHeight: 1.8 }}>
         <li><a href="/brand/fca/fca-hex-mark.svg">FCA Hex Mark (SVG specimen)</a></li>
         <li><a href="/brand/auricrux/auricrux-crux-mark.svg">Auricrux Crux Mark (SVG specimen)</a></li>
+        <li><a href="/brand/auricrux/auricrux-humanoid-mark.svg">Auricrux Humanoid Mark (SVG specimen)</a></li>
         <li><a href="/brand/animations/auricrux-crux-pulse.svg">Auricrux Crux Pulse animation (SVG)</a></li>
       </ul>
 

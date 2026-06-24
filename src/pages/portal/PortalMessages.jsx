@@ -167,6 +167,7 @@ export default function PortalMessages() {
       routeOverlay={routeStateOverlays.messages}
       primaryHref="/portal/billing"
       primaryLabel="Open Billing"
+      auricruxSurfaceKey="comms"
     >
       <CustomerCommsLaunchpad session={session} title="Launch customer-enabled communications lanes" />
 

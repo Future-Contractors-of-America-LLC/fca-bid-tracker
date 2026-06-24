@@ -40,6 +40,12 @@ jobs:
       - name: Run governed build validation
         run: npm run build:system
 
+      - name: Run SaaS QC lane
+        run: npm run qc:saas
+
+      - name: Verify Central API contracts
+        run: npm run verify:central-api
+
       - name: Validate managed auth and commercial runtime
         if: ${{ always() }}
         run: npm run validate:managed-auth-commercial-runtime

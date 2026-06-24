@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { mutateCustomerEntitlements } from "../api/customerEntitlementsClient";
 import {
   CUSTOMER_SESSION_EVENT,
   clearCustomerSession,
@@ -183,61 +184,69 @@ export default function useCustomerSession() {
         logCommercialEvent("commercial-update", `Commercial profile updated for ${saved.company}`, "Auricrux preserved a customer commercial/profile mutation so rollout and revenue continuity remain visible.", saved.nextHref || "/portal/platform");
         return { ok: true, session: saved };
       },
-      setProductAccess(product, enabled) {
+      async setProductAccess(product, enabled) {
         if (!PRODUCT_KEYS.includes(product)) {
           return { ok: false, error: "Unknown product access target." };
         }
 
-        const saved = updateCustomerSession({
-          enabledProducts: {
-            [product]: enabled,
-          },
+        const serverResult = await mutateCustomerEntitlements({
+          action: "set-product",
+          product,
+          enabled,
         });
-
-        if (!saved) {
-          return { ok: false, error: "No authenticated customer session was found." };
+        if (!serverResult.ok) {
+          return { ok: false, error: serverResult.error || "Product access changes require administrator approval on the server." };
         }
 
+        const saved = writeCustomerSession({
+          ...(readCustomerSession() || {}),
+          ...serverResult.account,
+          authenticated: true,
+        });
         setSession(saved);
-        logAutomationEvent("product-repair", `${product.toUpperCase()} access ${enabled ? "enabled" : "disabled"}`, `Auricrux ${enabled ? "enabled" : "disabled"} ${product.toUpperCase()} access and propagated the change across the workspace shell.`, saved.nextHref || "/portal/platform");
-        logCommercialEvent("product-continuity", `${product.toUpperCase()} commercial availability ${enabled ? "restored" : "reduced"}`, `Auricrux ${enabled ? "restored" : "reduced"} ${product.toUpperCase()} product availability and updated the revenue-capable workspace shape.`, saved.nextHref || "/portal/platform");
+        logAutomationEvent("product-repair", `${product.toUpperCase()} access ${enabled ? "enabled" : "disabled"}`, `Server confirmed ${product.toUpperCase()} entitlement change.`, saved.nextHref || "/portal/platform");
         return { ok: true, session: saved };
       },
-      setCommsAccess(channel, enabled) {
+      async setCommsAccess(channel, enabled) {
         if (!COMMUNICATION_KEYS.includes(channel)) {
           return { ok: false, error: "Unknown communications access target." };
         }
 
-        const saved = updateCustomerSession({
-          enabledComms: {
-            [channel]: enabled,
-          },
+        const serverResult = await mutateCustomerEntitlements({
+          action: "set-comms",
+          channel,
+          enabled,
         });
-
-        if (!saved) {
-          return { ok: false, error: "No authenticated customer session was found." };
+        if (!serverResult.ok) {
+          return { ok: false, error: serverResult.error || "Communications access changes require administrator approval on the server." };
         }
 
+        const saved = writeCustomerSession({
+          ...(readCustomerSession() || {}),
+          ...serverResult.account,
+          authenticated: true,
+        });
         setSession(saved);
-        logAutomationEvent("comms-repair", `${channel.toUpperCase()} lane ${enabled ? "enabled" : "disabled"}`, `Auricrux ${enabled ? "enabled" : "disabled"} ${channel.toUpperCase()} for the current customer session and preserved the result for cross-route automation memory.`, saved.nextHref || "/portal/messages");
-        logCommercialEvent("comms-continuity", `${channel.toUpperCase()} communications ${enabled ? "enabled" : "disabled"}`, `Auricrux ${enabled ? "enabled" : "disabled"} ${channel.toUpperCase()} so sales, billing, support, and rollout channels stay commercially usable.`, saved.nextHref || "/portal/messages");
+        logAutomationEvent("comms-repair", `${channel.toUpperCase()} lane ${enabled ? "enabled" : "disabled"}`, `Server confirmed ${channel.toUpperCase()} entitlement change.`, saved.nextHref || "/portal/messages");
         return { ok: true, session: saved };
       },
-      applyPlanPreset(planKey) {
+      async applyPlanPreset(planKey) {
         const planPreset = resolvePlanPreset(planKey);
-        const saved = updateCustomerSession({
-          selectedPlan: planPreset.key,
-          enabledProducts: planPreset.enabledProducts,
-          enabledComms: planPreset.enabledComms,
+        const serverResult = await mutateCustomerEntitlements({
+          action: "apply-plan",
+          planKey: planPreset.key,
         });
-
-        if (!saved) {
-          return { ok: false, error: "No authenticated customer session was found." };
+        if (!serverResult.ok) {
+          return { ok: false, error: serverResult.error || "Plan changes require administrator approval on the server." };
         }
 
+        const saved = writeCustomerSession({
+          ...(readCustomerSession() || {}),
+          ...serverResult.account,
+          authenticated: true,
+        });
         setSession(saved);
-        logAutomationEvent("plan-promotion", `${planPreset.name} activated`, `Auricrux applied ${planPreset.name} and aligned product access plus communications lanes to the commercial package.`, saved.nextHref || "/portal/platform");
-        logCommercialEvent("plan-promotion", `${planPreset.name} commercial package activated`, `Auricrux aligned pricing, product depth, and communications scope to ${planPreset.name} for stronger revenue continuity.`, saved.nextHref || "/pricing");
+        logAutomationEvent("plan-promotion", `${planPreset.name} activated`, `Server confirmed ${planPreset.name} plan entitlements.`, saved.nextHref || "/portal/platform");
         return { ok: true, session: saved };
       },
       async logout() {

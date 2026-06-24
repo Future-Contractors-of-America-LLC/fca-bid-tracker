@@ -279,3 +279,57 @@ export async function runBimClashDetection(projectId, fileId) {
   }
   return unwrap(payload);
 }
+
+export function fcaExportUrl(fileId, target = "glb") {
+  return `/api/files/${encodeURIComponent(fileId)}/fca-export?target=${encodeURIComponent(target)}`;
+}
+
+export async function fetchFcasDocument(fileId) {
+  const response = await centralFetch(`/api/files/${encodeURIComponent(fileId)}/fcas-stream`, { method: "GET" });
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    throw new Error(payload?.error || "Unable to load FCAS document.");
+  }
+  return response.json();
+}
+
+export async function createNativePlanSet(projectId, body = {}) {
+  const response = await centralFetch(`/api/projects/${encodeURIComponent(projectId)}/design/plan-set`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload?.error || "Unable to create native plan set.");
+  return unwrap(payload);
+}
+
+export async function fetchDesignMeasurements(projectId, fileId) {
+  const response = await centralFetch(
+    `/api/projects/${encodeURIComponent(projectId)}/design/measurements?fileId=${encodeURIComponent(fileId)}`,
+    { method: "GET" },
+  );
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload?.error || "Unable to load measurements.");
+  return unwrap(payload);
+}
+
+export async function createDesignMeasurement(projectId, body = {}) {
+  const response = await centralFetch(`/api/projects/${encodeURIComponent(projectId)}/design/measurements`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload?.error || "Unable to record measurement.");
+  return unwrap(payload);
+}
+
+export async function fetchFcapPackage(projectId) {
+  const response = await centralFetch(`/api/projects/${encodeURIComponent(projectId)}/design/fcap-stream`, { method: "GET" });
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    throw new Error(payload?.error || "Unable to load FCAP package.");
+  }
+  return response.json();
+}

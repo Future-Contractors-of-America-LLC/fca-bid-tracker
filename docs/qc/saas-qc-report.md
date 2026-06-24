@@ -1,8 +1,8 @@
 # SaaS Quality Control Report
 
-- Generated: 2026-06-19T14:25:14.306Z
+- Generated: 2026-06-23T21:39:35.274Z
 - API base: https://auricrux-central.azurewebsites.net
-- Passed: 79
+- Passed: 126
 - Failed: 0
 - Warnings: 0
 
@@ -20,14 +20,29 @@
 - /portal/auricrux
 - /portal/academy
 - /portal/operations
+- /portal/pipeline
 - /portal/audit
 - /portal/profile
+- /portal/plans
+- /portal/finance
+- /portal/scheduling
+- /portal/field-tasks
+- /portal/field-supervision
+- /portal/warranty
+- /portal/design
+- /portal/immersive
+- /portal/leads
 
 ## Findings
 - **PASS** script:validate-routes.mjs
 - **PASS** script:validate-critical-routes.mjs
 - **PASS** script:validate-public-package-route-groups.mjs
 - **PASS** script:validate-academy-ctas.mjs
+- **PASS** script:validate-design-workspace.cjs
+- **PASS** script:validate-immersive-framework.mjs
+- **PASS** script:validate-leads-workspace.cjs
+- **PASS** script:validate-bids-workspace.cjs
+- **PASS** script:validate-bid-workspace.mjs
 - **PASS** route:/portal/platform
 - **PASS** route:/portal/bids
 - **PASS** route:/portal/estimates
@@ -41,11 +56,23 @@
 - **PASS** route:/portal/auricrux
 - **PASS** route:/portal/academy
 - **PASS** route:/portal/operations
+- **PASS** route:/portal/pipeline
 - **PASS** route:/portal/audit
 - **PASS** route:/portal/profile
+- **PASS** route:/portal/plans
+- **PASS** route:/portal/finance
+- **PASS** route:/portal/scheduling
+- **PASS** route:/portal/field-tasks
+- **PASS** route:/portal/field-supervision
+- **PASS** route:/portal/warranty
+- **PASS** route:/portal/design
+- **PASS** route:/portal/immersive
+- **PASS** route:/portal/leads
 - **PASS** client:src/api/workflowClient.js
 - **PASS** client:src/api/portalClient.js
 - **PASS** client:src/api/intakeClient.js
+- **PASS** client:src/api/leadsClient.js
+- **PASS** client:src/api/bidsClient.js
 - **PASS** client:src/hooks/useWorkspaceState.js
 - **PASS** page:website/Home
 - **PASS** page:website/Platform
@@ -61,14 +88,25 @@
 - **PASS** page:website/Referrals
 - **PASS** page:website/Terms
 - **PASS** page:website/Privacy
+- **PASS** page:website/LegalHub
+- **PASS** page:website/ContractorLegalResources
+- **PASS** page:website/Cookies
+- **PASS** page:website/AcceptableUse
+- **PASS** page:website/Security
+- **PASS** page:website/Subprocessors
+- **PASS** page:website/AiPolicy
+- **PASS** page:website/Accessibility
+- **PASS** page:website/Dmca
 - **PASS** page:website/Refunds
 - **PASS** page:website/IpNotice
 - **PASS** page:website/NotFound
 - **PASS** page:website/LegacyBidEntry
 - **PASS** page:website/LegacyBidStatus
 - **PASS** page:portal/PortalHome
+- **PASS** page:portal/PortalLegal
 - **PASS** page:portal/PlatformDashboard
 - **PASS** page:portal/PortalOperations
+- **PASS** page:portal/PortalPipeline
 - **PASS** page:portal/PortalProjects
 - **PASS** page:portal/PortalFiles
 - **PASS** page:portal/PortalAudit
@@ -83,10 +121,28 @@
 - **PASS** page:portal/PortalProfile
 - **PASS** page:portal/PortalAuricrux
 - **PASS** page:academy/AcademyHome
+- **PASS** page:portal/PortalPlans
+- **PASS** page:portal/PortalFinance
+- **PASS** page:portal/PortalDesignWorkspace
+- **PASS** page:portal/PortalRfis
+- **PASS** page:portal/PortalChangeOrders
+- **PASS** page:portal/PortalCloseout
+- **PASS** page:portal/PortalScheduling
+- **PASS** page:portal/PortalFieldTasks
+- **PASS** page:portal/PortalFieldSupervision
+- **PASS** page:portal/PortalImmersive
+- **PASS** page:portal/PortalLeads
+- **PASS** page:portal/PortalWarranty
 - **PASS** page:academy/AcademyHome
 - **PASS** page:academy/AcademyCatalog
+- **PASS** page:academy/AcademyPrograms
+- **PASS** page:academy/AcademyDashboard
+- **PASS** page:academy/AcademyCredentials
 - **PASS** page:portal/PortalOpportunityDetail
 - **PASS** page:portal/PortalProjectDetail
+- **PASS** page:portal/PortalInvoiceDetail
+- **PASS** page:academy/AcademyProgramDetail
+- **PASS** page:academy/AcademyModuleLesson
 - **PASS** api:/api/health: HTTP 200
 - **PASS** api:/api/bids: HTTP 200
 - **PASS** api:/api/projects: HTTP 200
@@ -98,8 +154,9 @@
 - **PASS** api:/api/billing-summary: HTTP 200
 - **PASS** api:/api/support-tickets: HTTP 200
 - **PASS** api:/api/workflow-audit: HTTP 200
+- **PASS** api:/api/academy-lms: HTTP 200
 - **PASS** api:/api/customer-login: HTTP 200
+- **PASS** blueprint:/portal/leads
 - **PASS** blueprint:/portal/bids
-- **PASS** blueprint:/portal/projects
 - **PASS** blueprint:/portal/files
 - **PASS** blueprint:/warranty
