@@ -1,4 +1,4 @@
-# IP Filing Preparation — Master Index
+# IP Filing Preparation â€” Master Index
 
 **Entity:** Future Contractors of America LLC  
 **Prepared:** 2026-06-18  
@@ -46,9 +46,9 @@ After deploy, identical copies serve from `/brand/**` on the live site for **use
 
 ## Recommended filing order
 
-1. **Trademark** — word marks + design marks (establishes brand priority)
-2. **Copyright** — deposit SVG source + key UI screenshots + Academy catalog excerpts
-3. **Patent** — provisional applications only after counsel review of invention disclosures
+1. **Trademark** â€” word marks + design marks (establishes brand priority)
+2. **Copyright** â€” deposit SVG source + key UI screenshots + Academy catalog excerpts
+3. **Patent** â€” provisional applications only after counsel review of invention disclosures
 
 ---
 

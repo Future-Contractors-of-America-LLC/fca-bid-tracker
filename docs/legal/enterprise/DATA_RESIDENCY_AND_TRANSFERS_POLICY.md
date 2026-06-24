@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.**
+> **Prepared for legal review â€” not legal advice.**
 
 ---
 
@@ -31,7 +31,7 @@ Unless otherwise agreed in an Order Form:
 Enterprise Order Forms may specify:
 
 - **US-only** processing (default)
-- **EU** processing (when commercially available — requires separate Order Form and may incur additional fees)
+- **EU** processing (when commercially available â€” requires separate Order Form and may incur additional fees)
 
 Contact legal@futurecontractorsofamerica.com for data residency requirements during procurement.
 

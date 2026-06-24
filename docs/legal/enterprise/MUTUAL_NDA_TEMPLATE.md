@@ -3,7 +3,7 @@
 **Future Contractors of America LLC**  
 **Version:** 1.0  
 
-> **Prepared for legal review — not legal advice.** For pilots, evaluations, and pre-sales discussions.
+> **Prepared for legal review â€” not legal advice.** For pilots, evaluations, and pre-sales discussions.
 
 ---
 

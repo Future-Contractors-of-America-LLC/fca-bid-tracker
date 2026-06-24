@@ -1,4 +1,4 @@
-# Change Order — Template
+# Change Order â€” Template
 
 **Project:** _________________________ **CO #:** _______
 

@@ -1,4 +1,4 @@
-# Patent Opportunities � Preparation for Counsel Review
+# Patent Opportunities â€” Preparation for Counsel Review
 
 **Entity:** Future Contractors of America LLC  
 **Disclaimer:** Software and business-method patents are difficult post-*Alice*. This document identifies **invention disclosure candidates** only. Do not file without patent attorney review.
@@ -10,18 +10,18 @@
 | Tier | Action | Cost / timeline |
 |------|--------|-----------------|
 | **Now** | Trademark + copyright (see other docs) | Lower cost, high brand value |
-| **90 days** | Provisional patent on strongest system invention | ~$3k�8k with attorney |
+| **90 days** | Provisional patent on strongest system invention | ~$3k-8k with attorney |
 | **12 months** | Non-provisional or PCT if product traction validates | Higher cost |
 
 ---
 
 ## Invention disclosure candidates
 
-### ID-001 � Auricrux explain / recommend / execute control loop
+### ID-001 â€” Auricrux explain / recommend / execute control loop
 
 **Title:** System and method for AI-guided contractor lifecycle operations with auditable three-phase agent control
 
-**Summary:** A platform where an embedded intelligence layer (Auricrux) inspects tenant/project/file context, produces human-readable explanations, ranked recommendations, and bounded automated execution actions across bid, project, billing, and training modules � with every phase logged to an audit spine.
+**Summary:** A platform where an embedded intelligence layer (Auricrux) inspects tenant/project/file context, produces human-readable explanations, ranked recommendations, and bounded automated execution actions across bid, project, billing, and training modules â€” with every phase logged to an audit spine.
 
 **Novel elements (for counsel to evaluate):**
 - Fixed three-phase contract (explain ? recommend ? execute) applied uniformly across heterogeneous contractor modules
@@ -37,7 +37,7 @@
 
 ---
 
-### ID-002 � Academy remediation linked to field operation blockers
+### ID-002 â€” Academy remediation linked to field operation blockers
 
 **Title:** System for routing workforce training assignments from detected operational gaps in construction delivery software
 
@@ -53,7 +53,7 @@
 
 ---
 
-### ID-003 � Unified contractor lifecycle audit spine with entity key continuity
+### ID-003 â€” Unified contractor lifecycle audit spine with entity key continuity
 
 **Title:** Method for maintaining cross-module audit and entity continuity in multi-tenant construction operating systems
 
@@ -61,15 +61,15 @@
 
 **Key code:** `auricrux-central-work/core/table_store.py`, `core/audit.py`
 
-**Prior art risk:** Medium�high (standard multi-tenant patterns). **Differentiation:** Specific lifecycle coverage law + Azure Functions route surface.
+**Prior art risk:** Medium-high (standard multi-tenant patterns). **Differentiation:** Specific lifecycle coverage law + Azure Functions route surface.
 
 ---
 
-### ID-004 � Motion-mark coupled product loading identity
+### ID-004 â€” Motion-mark coupled product loading identity
 
 **Title:** Branded non-progress loading animation as product intelligence layer identifier
 
-**Summary:** Distinctive pulsing crux animation (Auricrux Crux Pulse) used consistently at intelligence-layer load boundaries � not a generic spinner � establishing trade dress and UX identity.
+**Summary:** Distinctive pulsing crux animation (Auricrux Crux Pulse) used consistently at intelligence-layer load boundaries â€” not a generic spinner â€” establishing trade dress and UX identity.
 
 **Asset:** `brand-assets/animations/auricrux-crux-pulse.svg`
 
@@ -90,14 +90,14 @@
 
 ## Provisional patent filing checklist
 
-For each selected ID (counsel picks 1�2 max for first provisional):
+For each selected ID (counsel picks 1-2 max for first provisional):
 
 - [ ] Complete [INVENTION_DISCLOSURE_TEMPLATE.md](./INVENTION_DISCLOSURE_TEMPLATE.md)
 - [ ] Provide architecture diagram (tenant ? modules ? Auricrux)
-- [ ] List inventors (individual humans � LLC cannot be inventor)
+- [ ] List inventors (individual humans â€” LLC cannot be inventor)
 - [ ] Assign invention to Future Contractors of America LLC via signed assignment
 - [ ] Prior art search (Google Patents, USPTO)
-- [ ] File provisional within 12 months of public disclosure (website is public � **clock may be running**)
+- [ ] File provisional within 12 months of public disclosure (website is public â€” **clock may be running**)
 
 **Urgent:** If filing is desired, engage counsel promptly because the live website and GitHub repos may constitute public disclosure.
 

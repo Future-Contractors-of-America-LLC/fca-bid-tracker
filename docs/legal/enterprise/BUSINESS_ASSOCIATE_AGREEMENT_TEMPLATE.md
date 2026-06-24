@@ -1,10 +1,10 @@
 # Business Associate Agreement (Template)
 
 **Future Contractors of America LLC**  
-**HIPAA BAA Template — Version 1.0**  
+**HIPAA BAA Template â€” Version 1.0**  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Execute only when Customer is a Covered Entity or Business Associate and Services involve Protected Health Information (PHI). **FCA contractor platform is not HIPAA-compliant by default** — counsel must confirm scope before execution.
+> **Prepared for legal review â€” not legal advice.** Execute only when Customer is a Covered Entity or Business Associate and Services involve Protected Health Information (PHI). **FCA contractor platform is not HIPAA-compliant by default** â€” counsel must confirm scope before execution.
 
 ---
 
@@ -17,7 +17,7 @@
 
 ## 1. BACKGROUND
 
-Covered Entity may disclose PHI to FCA solely to perform services under the MSA/Order Form. This Agreement satisfies HIPAA Business Associate requirements at 45 CFR §§ 164.502(e) and 164.504(e).
+Covered Entity may disclose PHI to FCA solely to perform services under the MSA/Order Form. This Agreement satisfies HIPAA Business Associate requirements at 45 CFR Â§Â§ 164.502(e) and 164.504(e).
 
 ---
 
@@ -32,7 +32,7 @@ Terms have meanings in HIPAA Rules (45 CFR Parts 160 and 164). **Breach**, **Pro
 FCA will:
 
 1. Not use or disclose PHI other than as permitted by this Agreement, the MSA, or required by law
-2. Use appropriate safeguards per 45 CFR § 164.314(a) and the Security Rule
+2. Use appropriate safeguards per 45 CFR Â§ 164.314(a) and the Security Rule
 3. Report Security Incidents and Breaches per Section 6
 4. Ensure Subcontractors agree to same restrictions via written agreement
 5. Make PHI available for individual access, amendment, and accounting per Covered Entity instructions

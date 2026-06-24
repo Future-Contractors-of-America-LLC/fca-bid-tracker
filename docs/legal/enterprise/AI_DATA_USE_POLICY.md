@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Publish at https://futurecontractorsofamerica.com/ai-policy or incorporate in Terms.
+> **Prepared for legal review â€” not legal advice.** Publish at https://futurecontractorsofamerica.com/ai-policy or incorporate in Terms.
 
 ---
 
@@ -29,9 +29,9 @@ This policy describes how FCA uses artificial intelligence and machine learning 
 | Activity | Description |
 |----------|-------------|
 | **Inference** | Process prompts and context to generate suggestions, summaries, and workflow assistance |
-| **Logging** | Retain prompts/outputs for debugging, abuse prevention, and quality — per retention schedule |
+| **Logging** | Retain prompts/outputs for debugging, abuse prevention, and quality â€” per retention schedule |
 | **Improvement** | Use aggregated, de-identified usage metrics to improve features |
-| **Opt-in training** | Customer may opt in to allow anonymized patterns for product improvement — default **off** for enterprise |
+| **Opt-in training** | Customer may opt in to allow anonymized patterns for product improvement â€” default **off** for enterprise |
 
 ---
 

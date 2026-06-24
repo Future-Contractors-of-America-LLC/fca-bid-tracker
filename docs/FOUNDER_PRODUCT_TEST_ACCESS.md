@@ -1,4 +1,4 @@
-# FCA Product Test Access � Founder & QA
+# FCA Product Test Access â€” Founder & QA
 
 Use these credentials to sign in and test **SaaS** (portal, projects, bids, billing) and **Academy LMS** on the live platform.
 
@@ -19,7 +19,7 @@ Use these credentials to sign in and test **SaaS** (portal, projects, bids, bill
 
 ---
 
-## Michael � founder account (primary)
+## Michael â€” founder account (primary)
 
 | Field | Value |
 |-------|-------|
@@ -102,7 +102,7 @@ Full matrix: `docs/BACKEND_ADMIN_ACCESS.md`
 | Route | What you should see |
 |-------|---------------------|
 | `/academy` | Training catalog, programs |
-| `/academy/catalog` | Electrical apprenticeship L1�L10 pathways |
+| `/academy/catalog` | Electrical apprenticeship L1-L10 pathways |
 
 **API check (no login required for catalog read):**
 ```powershell
@@ -140,7 +140,7 @@ Expect `"ok": true` in the response.
 
 SharePoint bridge is **read/preflight only** today. Founder actions for full M365 write access are in `FOUNDER_COMPLETION_GUIDE.md` Section 4.
 
-Auricrux can surface SharePoint-linked content once Key Vault + Graph permissions are granted � not available for self-serve testing yet.
+Auricrux can surface SharePoint-linked content once Key Vault + Graph permissions are granted â€” not available for self-serve testing yet.
 
 ---
 

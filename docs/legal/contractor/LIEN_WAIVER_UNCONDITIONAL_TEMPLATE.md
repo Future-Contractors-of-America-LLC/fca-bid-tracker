@@ -1,6 +1,6 @@
-# Unconditional Lien Waiver (Final Payment) — Template
+# Unconditional Lien Waiver (Final Payment) â€” Template
 
-**Prepared for legal review — not legal advice.**
+**Prepared for legal review â€” not legal advice.**
 
 ---
 

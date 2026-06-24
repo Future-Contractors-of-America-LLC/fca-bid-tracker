@@ -44,8 +44,8 @@
 | **36** | *(usually skip unless finance product)* | Billing is operational, not banking |
 
 **Filing basis:**  
-- **1(a)** Use in commerce ù if live at futurecontractorsofamerica.com (yes)  
-- **1(b)** Intent to use ù for marks not yet used (mobile app pre-store)
+- **1(a)** Use in commerce √¢‚Ç¨‚Äù if live at futurecontractorsofamerica.com (yes)  
+- **1(b)** Intent to use √¢‚Ç¨‚Äù for marks not yet used (mobile app pre-store)
 
 ---
 
@@ -73,8 +73,8 @@
 | FCA Hex | Strong (design) | Original geometry; not generic industry icon |
 | Auricrux Crux | Strong (design) | Unique star + crux + crossbar combo |
 | Auricrux Crux Pulse | Strong (motion) | Non-functional branded animation |
-| FCA (letters) | Moderate | Short acronym ù may need acquired distinctiveness if examiner cites descriptive refs |
-| Future Contractors of America | Moderateùstrong | Descriptive of industry but distinctive as full phrase + hex pairing |
+| FCA (letters) | Moderate | Short acronym √¢‚Ç¨‚Äù may need acquired distinctiveness if examiner cites descriptive refs |
+| Future Contractors of America | Moderate-strong | Descriptive of industry but distinctive as full phrase + hex pairing |
 
 **Avoid:** Generic construction clip art; stock icons; colors-only claims without shape.
 
@@ -83,11 +83,11 @@
 ## TM / SM notice (use until registered)
 
 ```
-FCAù, Future Contractors of Americaù, Auricruxù, and FCA Contractor Commandù
+FCA-, Future Contractors of America-, Auricrux-, and FCA Contractor Command-
 are trademarks of Future Contractors of America LLC.
 ```
 
-After federal registration, replace ù with ù for registered marks only.
+After federal registration, replace √¢‚Ç¨‚Äù with √¢‚Ç¨‚Äù for registered marks only.
 
 Published at: https://futurecontractorsofamerica.com/ip
 
@@ -102,7 +102,7 @@ For each application:
 - [ ] Specimen showing mark used on or in connection with services
 - [ ] Entity name: Future Contractors of America LLC
 - [ ] Signatory with authority to bind LLC
-- [ ] Filing fee (~$250ù350 per class per mark, TEAS Plus vs Standard)
+- [ ] Filing fee (~$250-350 per class per mark, TEAS Plus vs Standard)
 
 ---
 
@@ -126,6 +126,6 @@ File duplicate in state of LLC formation (often Delaware or home state) if couns
 
 | Deadline | Action |
 |----------|--------|
-| Years 5ù6 | Section 8 declaration of use |
+| Years 5-6 | Section 8 declaration of use |
 | Year 10 | Renewal |
 | Any rebrand | File new application before switching geometry in `BRAND_MANIFEST.json`

@@ -3,7 +3,7 @@
 **Future Contractors of America LLC**  
 **Version:** 1.0  
 
-> **Prepared for legal review — not legal advice.** Execute with employees, contractors, and contributors. Complements `calyndra-ip/copyright/WORK_FOR_HIRE_ATTESTATION.md`.
+> **Prepared for legal review â€” not legal advice.** Execute with employees, contractors, and contributors. Complements `calyndra-ip/copyright/WORK_FOR_HIRE_ATTESTATION.md`.
 
 ---
 

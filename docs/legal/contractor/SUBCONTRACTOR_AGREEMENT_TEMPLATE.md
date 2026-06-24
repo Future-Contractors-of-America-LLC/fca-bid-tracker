@@ -1,6 +1,6 @@
-# Subcontractor Agreement — Template
+# Subcontractor Agreement â€” Template
 
-**Prepared for legal review — not legal advice.**
+**Prepared for legal review â€” not legal advice.**
 
 ## Parties
 
@@ -15,7 +15,7 @@ Subcontractor shall perform: _________________________ per plans, specifications
 
 ## Compensation
 
-Fixed price / T&M: $___________ · Payment terms: _________________________
+Fixed price / T&M: $___________ Â· Payment terms: _________________________
 
 ## Insurance
 
@@ -31,6 +31,6 @@ Progress and final lien waivers required per Contractor's payment schedule.
 
 ## Termination
 
-Material breach · failure to maintain insurance · safety violations.
+Material breach Â· failure to maintain insurance Â· safety violations.
 
 **Signatures:** _________________________ / _________________________

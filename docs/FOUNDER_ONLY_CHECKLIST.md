@@ -58,8 +58,8 @@ Prioritized tasks only **you** can complete. Engineering agents handle code, doc
 
 | Priority | Item | Why | Doc link | Blocker for |
 |:--------:|------|-----|----------|-------------|
-| ~~1~~ | ~~Merge PR + deploy~~ `fca-bid-tracker` | Done — PR #138 merged, SWA deployed | — | — |
-| ~~1~~ | ~~Merge PR + deploy~~ `auricrux-central` | Done — PR #33 merged | — | — |
+| ~~1~~ | ~~Merge PR + deploy~~ `fca-bid-tracker` | Done â€” PR #138 merged, SWA deployed | â€” | â€” |
+| ~~1~~ | ~~Merge PR + deploy~~ `auricrux-central` | Done â€” PR #33 merged | â€” | â€” |
 | 2 | Set `FCA_SESSION_SECRET` | Production session signing | [FOUNDER_COMPLETION_GUIDE.md](./FOUNDER_COMPLETION_GUIDE.md) Section 3.2 | Managed auth promotion |
 | 3 | Key Vault RBAC on `auricrux-kv` | CLI/scripts cannot read secrets | [FOUNDER_COMPLETION_GUIDE.md](./FOUNDER_COMPLETION_GUIDE.md) Section 4.1 | Secret rotation |
 | 3 | M365 Graph + SharePoint write consent | Document bridge beyond read/preflight | [FOUNDER_COMPLETION_GUIDE.md](./FOUNDER_COMPLETION_GUIDE.md) Section 4.2 | SharePoint write |
@@ -91,7 +91,7 @@ Prioritized tasks only **you** can complete. Engineering agents handle code, doc
 
 ---
 
-## Top 10 — do these first
+## Top 10 â€” do these first
 
 | # | Item | Group |
 |---|------|-------|
@@ -117,4 +117,4 @@ Prioritized tasks only **you** can complete. Engineering agents handle code, doc
 - Legal prep docs: copyright, trademark, patent, invention template
 - `validate-routes.mjs` updated; `npm run qc:market` 2/2 passed
 - MAUI app icon SVGs updated to FCA hex mark
-- `launch.customer` LMS enabled — merged to central `main`
+- `launch.customer` LMS enabled â€” merged to central `main`

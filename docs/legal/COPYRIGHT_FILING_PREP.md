@@ -59,9 +59,9 @@
 
 ## Deposit packaging checklist
 
-- [ ] Export all SVG to PDF (required by eCO for some categories) — use Inkscape or browser print-to-PDF
+- [ ] Export all SVG to PDF (required by eCO for some categories) â€” use Inkscape or browser print-to-PDF
 - [ ] Combine UI screenshots into single PDF titled `FCA-UI-Screenshots-2026.pdf`
-- [ ] ZIP source code excluding `node_modules`, `bin`, `obj` — max 500MB per upload; use first/last 25 pages rule if source is huge
+- [ ] ZIP source code excluding `node_modules`, `bin`, `obj` â€” max 500MB per upload; use first/last 25 pages rule if source is huge
 - [ ] Include `BRAND_MANIFEST.json` in deposit notes as ownership index
 - [ ] List **one** copyright claimant: Future Contractors of America LLC
 
@@ -97,9 +97,9 @@ If any logo, animation, or code was created by **non-employee** contractors:
 | Author | Future Contractors of America LLC |
 | Copyright claimant | Future Contractors of America LLC |
 | Nature of authorship | Text, artwork, computer program (check all that apply) |
-| Limitation of claim | Exclude third-party open-source libraries (MIT/React/etc.) — claim only original expression |
+| Limitation of claim | Exclude third-party open-source libraries (MIT/React/etc.) â€” claim only original expression |
 
-**Fee:** Check current copyright.gov fee schedule (~$45–65 online per work).
+**Fee:** Check current copyright.gov fee schedule (~$45â€“65 online per work).
 
 ---
 

@@ -4,13 +4,13 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Publish at https://futurecontractorsofamerica.com/dmca after counsel approval.
+> **Prepared for legal review โ€” not legal advice.** Publish at https://futurecontractorsofamerica.com/dmca after counsel approval.
 
 ---
 
 ## 1. Policy
 
-FCA respects intellectual property rights and responds to notices of alleged copyright infringement per the Digital Millennium Copyright Act (17 U.S.C. ง 512).
+FCA respects intellectual property rights and responds to notices of alleged copyright infringement per the Digital Millennium Copyright Act (17 U.S.C. ยง 512).
 
 ---
 
@@ -20,7 +20,7 @@ FCA respects intellectual property rights and responds to notices of alleged cop
 **Email:** dmca@futurecontractorsofamerica.com  
 **Mailing address:** 22310 Old Vaughan Road, Dinwiddie, VA 23841
 
-Register agent with U.S. Copyright Office per 37 CFR ง 201.38.
+Register agent with U.S. Copyright Office per 37 CFR ยง 201.38.
 
 ---
 
@@ -39,7 +39,7 @@ To report copyright infringement, send a written notice including:
 
 ## 4. Counter-Notification
 
-If material was removed in error, send counter-notification per 17 U.S.C. ง 512(g) including:
+If material was removed in error, send counter-notification per 17 U.S.C. ยง 512(g) including:
 
 1. Signature
 2. Identification of removed material and prior location
@@ -56,7 +56,7 @@ FCA may terminate accounts of repeat infringers in appropriate circumstances.
 
 ## 6. Misrepresentation
 
-Anyone who knowingly misrepresents infringement or counter-notification may be liable for damages under 17 U.S.C. ง 512(f).
+Anyone who knowingly misrepresents infringement or counter-notification may be liable for damages under 17 U.S.C. ยง 512(f).
 
 ---
 

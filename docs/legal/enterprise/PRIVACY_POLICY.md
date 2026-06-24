@@ -4,7 +4,7 @@
 **Effective Date:** June 19, 2026  
 **Version:** 1.0  
 
-> **Prepared for legal review — not legal advice.** Publish at https://futurecontractorsofamerica.com/privacy after counsel approval.
+> **Prepared for legal review â€” not legal advice.** Publish at https://futurecontractorsofamerica.com/privacy after counsel approval.
 
 ---
 
@@ -96,7 +96,7 @@ We may share personal information with:
 
 | Recipient | Purpose |
 |-----------|---------|
-| **Subprocessors** | Cloud hosting, email, payments, support — see [Subprocessor List](./SUBPROCESSOR_LIST.md) |
+| **Subprocessors** | Cloud hosting, email, payments, support â€” see [Subprocessor List](./SUBPROCESSOR_LIST.md) |
 | **Professional advisors** | Legal, accounting, auditors under confidentiality |
 | **Corporate transactions** | Merger, acquisition, financing due diligence |
 | **Law enforcement** | When required by law or to protect rights and safety |
@@ -122,7 +122,7 @@ We retain personal information as long as needed to provide the Services, comply
 |----------|-------------------|
 | Active account data | Duration of subscription + export window |
 | Billing records | 7 years (tax/accounting) |
-| Security logs | 12–24 months |
+| Security logs | 12â€“24 months |
 | Support tickets | 3 years after closure |
 | Marketing suppression list | Until opt-in restored or legal limit |
 
@@ -158,7 +158,7 @@ California residents may request to know, delete, and correct personal informati
 
 End-user rights requests for data processed on your behalf should be directed through your organization administrator or per your DPA.
 
-**Response timeline:** We respond within applicable legal timeframes (typically 30–45 days).
+**Response timeline:** We respond within applicable legal timeframes (typically 30â€“45 days).
 
 ---
 

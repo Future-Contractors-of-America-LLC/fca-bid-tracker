@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Internal operations policy; summary shared with enterprise customers under DPA.
+> **Prepared for legal review â€” not legal advice.** Internal operations policy; summary shared with enterprise customers under DPA.
 
 ---
 

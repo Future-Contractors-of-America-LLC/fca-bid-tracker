@@ -30,7 +30,7 @@ Future Contractors of America LLC
 
 ## Date first publicly disclosed (if any)
 
-Website live: https://futurecontractorsofamerica.com — note dates: ___________
+Website live: https://futurecontractorsofamerica.com â€” note dates: ___________
 
 ---
 

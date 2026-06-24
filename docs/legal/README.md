@@ -1,4 +1,4 @@
-# Legal Documents � Folder Guide
+# Legal Documents â€” Folder Guide
 
 **Entity:** Future Contractors of America LLC  
 **Last updated:** 2026-06-19
@@ -53,4 +53,4 @@ docs/legal/
 
 ## Governing law default
 
-Virginia (Commonwealth) � LLC formed in Virginia. Counsel may confirm per customer segment.
+Virginia (Commonwealth) â€” LLC formed in Virginia. Counsel may confirm per customer segment.

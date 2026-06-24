@@ -5,7 +5,7 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Publish summary at https://futurecontractorsofamerica.com/security after counsel approval.
+> **Prepared for legal review â€” not legal advice.** Publish summary at https://futurecontractorsofamerica.com/security after counsel approval.
 
 ---
 
