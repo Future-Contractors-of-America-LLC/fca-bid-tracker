@@ -29,6 +29,19 @@ if (!fs.existsSync(distRoot)) {
   throw new Error("dist directory missing. Run vite build first.");
 }
 
+// Strip the academy media tree from the SWA payload.
+// Azure Static Web Apps enforces a 500 MB (524,288,000 byte) upload limit.
+// public/academy/media/ is seeded as ~200 MB of generated HTML and grows with
+// every catalog expansion. Removing it from dist/ keeps deployments well under
+// the limit. The /academy/media/* paths are excluded from the SWA navigation
+// fallback (staticwebapp.config.json) so they return 404 rather than serving
+// index.html; academy module pages are instead generated on-demand by the LMS.
+const academyMediaDist = path.join(distRoot, "academy", "media");
+if (fs.existsSync(academyMediaDist)) {
+  fs.rmSync(academyMediaDist, { recursive: true, force: true });
+  console.log("Stripped dist/academy/media from SWA payload (size guard).");
+}
+
 // Vite 8 / rolldown may omit the main stylesheet link from index.html while lazy
 // chunks still attempt dynamic CSS preload — inject an explicit link so SWA boot
 // does not hit "Unable to preload CSS" on first paint.
