@@ -1,0 +1,133 @@
+{
+  "generatedAt": "2026-06-24T12:04:13.435Z",
+  "slice": "auth-session",
+  "failed": 0,
+  "findings": [
+    {
+      "status": "pass",
+      "label": "customerSession exports hydrateCustomerSession",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "customerSession exports CUSTOMER_SESSION_EXPIRED_EVENT",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "customerSession exports resolveDefaultPostLoginHref",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "customerSession exports resolveSessionExpiredLoginHref",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "customerSession exports canRenderProtectedRouteImmediately",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "router uses deduped session hydration",
+      "detail": "src/router.jsx",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "router handles session expiry",
+      "detail": "src/router.jsx",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "router fast-path for cached session",
+      "detail": "src/router.jsx",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "useCustomerSession shares hydration promise",
+      "detail": "src/hooks/useCustomerSession.js",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "login copy avoids destructive session reset messaging",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "login surfaces session expiry",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "login only resets session when explicitly requested",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "profile uses customer-friendly account security copy",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "profile includes Account security section",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "default post-login landing is /portal/platform",
+      "detail": "",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "live customer-auth-state",
+      "detail": "deferred � central API unreachable from validator host",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "live customer-session",
+      "detail": "deferred � central API unreachable from validator host",
+      "slice": "auth-session",
+      "tag": "mutation"
+    },
+    {
+      "status": "pass",
+      "label": "live customer-login rejects invalid credentials",
+      "detail": "deferred � central API unreachable from validator host",
+      "slice": "auth-session",
+      "tag": "mutation"
+    }
+  ]
+}

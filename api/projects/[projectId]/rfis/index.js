@@ -1,7 +1,7 @@
 const { CreateRFIPayloadSchema } = require('../../../_lib/validation/fcaSchemas')
 const { assertValid } = require('../../../_lib/validation/assertValid')
 const { makeApiSuccess, makeApiError } = require('../../../_lib/contracts/fcaContracts')
-const { getProject, listRFIs, createRFI } = require('../../../_lib/runtime/fcaRuntimeStore')
+const { getProject, listRFIs, createRFI, respondRFI } = require('../../../_lib/runtime/fcaRuntimeStore')
 
 module.exports = async function handler(req, res) {
   const { projectId } = req.query || {}
@@ -40,6 +40,36 @@ module.exports = async function handler(req, res) {
       const item = createRFI(projectId, payload)
 
       return res.status(202).json(
+        makeApiSuccess(
+          {
+            route: `/api/projects/${projectId}/rfis`,
+            projectId,
+            item,
+          },
+          {
+            packet: '061A',
+            timestamp: new Date().toISOString(),
+            backingSource: 'fca-runtime-store',
+          },
+        ),
+      )
+    } catch (error) {
+      return res.status(error.statusCode || 500).json(
+        makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
+      )
+    }
+  }
+
+  if (req.method === 'PATCH') {
+    try {
+      const body = req.body || {}
+      const rfiId = body.rfiId || body.id
+      const response = String(body.response || '').trim()
+      if (!rfiId || !response) {
+        return res.status(400).json(makeApiError('INVALID_RFI_RESPONSE', 'rfiId and response are required'))
+      }
+      const item = respondRFI(projectId, rfiId, { response })
+      return res.status(200).json(
         makeApiSuccess(
           {
             route: `/api/projects/${projectId}/rfis`,

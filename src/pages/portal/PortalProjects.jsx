@@ -50,10 +50,11 @@ const defaultCommandDraft = {
 
 export default function PortalProjects() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
-  const { projects, activeProject, meta, selectActiveProject, advanceProjectStage, clearPermitBlocker } = useProjectWorkspace();
+  const { projects, activeProject, meta, selectActiveProject, advanceProjectStage, clearPermitBlocker, updateProjectCommandNotes } = useProjectWorkspace();
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
   const [drafts, setDrafts] = useState(() => readLocalJson(PROJECT_COMMAND_KEY, {}));
   const [selectedProjectId, setSelectedProjectId] = useState(() => activeProject?.id || projects[0]?.id || "");
+  const [notesStatus, setNotesStatus] = useState("");
 
   useEffect(() => {
     refreshSyncStamp("Project command active");
@@ -89,6 +90,16 @@ export default function PortalProjects() {
         [key]: value,
       },
     }));
+  }
+
+  async function persistCommandNotes(projectId) {
+    const command = drafts[projectId] || defaultCommandDraft;
+    const saved = await updateProjectCommandNotes(projectId, {
+      ownerNote: command.ownerNote,
+      customerMilestone: command.customerMilestone,
+    });
+    setNotesStatus(saved ? "Notes saved to project record." : "Notes saved on this device.");
+    setTimeout(() => setNotesStatus(""), 3000);
   }
 
   const draft = visibleProject ? (drafts[visibleProject.id] || defaultCommandDraft) : defaultCommandDraft;
@@ -182,6 +193,7 @@ export default function PortalProjects() {
               <input
                 value={draft.ownerNote}
                 onChange={(event) => updateDraft(visibleProject.id, "ownerNote", event.target.value)}
+                onBlur={() => persistCommandNotes(visibleProject.id)}
                 style={portalInputStyle}
                 placeholder="What the owner needs next"
               />
@@ -191,11 +203,13 @@ export default function PortalProjects() {
               <input
                 value={draft.customerMilestone}
                 onChange={(event) => updateDraft(visibleProject.id, "customerMilestone", event.target.value)}
+                onBlur={() => persistCommandNotes(visibleProject.id)}
                 style={portalInputStyle}
                 placeholder="Kickoff scheduled"
               />
             </label>
           </div>
+          {notesStatus ? <div style={{ color: "#166534", fontSize: 13, marginBottom: 12 }}>{notesStatus}</div> : null}
 
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 14 }}>
             <button

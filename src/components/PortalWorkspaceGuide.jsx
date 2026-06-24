@@ -3,31 +3,45 @@ import { portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalToken
 const guideSteps = [
   {
     step: "1",
-    title: "Confirm company profile",
-    detail: "Set your company, plan, and enabled products so modules match your rollout.",
+    title: "Set up your account",
+    detail: "Confirm company, plan, and which products are turned on for your team.",
     href: "/portal/profile",
     label: "Open profile",
   },
   {
     step: "2",
-    title: "Review your pipeline",
+    title: "Work your pipeline",
     detail: "Qualify leads, track bids, and move awarded work into active projects.",
     href: "/portal/pipeline",
     label: "Open pipeline",
   },
   {
     step: "3",
-    title: "Open an active project",
-    detail: "Files, RFIs, change orders, field tasks, and closeout live on the project spine.",
+    title: "Run the job",
+    detail: "Files, RFIs, change orders, field tasks, and closeout live on the project.",
     href: "/portal/projects",
     label: "Open projects",
   },
   {
     step: "4",
-    title: "Run finance in FCA Books",
-    detail: "Record payments, job costs, pay apps, and banking activity in one ledger.",
+    title: "Handle money",
+    detail: "Payments, job costs, pay apps, and banking in FCA Books.",
     href: "/portal/finance",
     label: "Open finance",
+  },
+  {
+    step: "5",
+    title: "Ask Auricrux",
+    detail: "Not sure what to do? Auricrux shows blockers, next steps, and where to click.",
+    href: "/portal/auricrux",
+    label: "Open Auricrux",
+  },
+  {
+    step: "6",
+    title: "Train your crew",
+    detail: "Assign Academy tracks for onboarding, safety, and field skills.",
+    href: "/portal/academy",
+    label: "Open Academy",
   },
 ];
 
@@ -39,7 +53,7 @@ export default function PortalWorkspaceGuide({ compact = false }) {
         How to use FCA — follow this sequence
       </h2>
       <p style={{ color: portalTokens.body, lineHeight: 1.6, marginTop: 0, marginBottom: 14, fontSize: 14 }}>
-        FCA is organized like enterprise systems you already know: pipeline first, then project delivery, then billing and training.
+        Start with setup, move work through pipeline and projects, then use Auricrux whenever you need direction.
       </p>
       <div style={{ display: "grid", gridTemplateColumns: compact ? "1fr" : "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
         {guideSteps.map((item) => (

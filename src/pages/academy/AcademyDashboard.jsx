@@ -222,7 +222,7 @@ export default function AcademyDashboard() {
             Catalog integrity: {catalogIntegrity.actualTotal}/{catalogIntegrity.expectedTotal} programs
           </strong>
           <span style={{ color: "#475569", marginLeft: 8 }}>
-            {catalogIntegrity.aligned ? "Frontend and backend catalog are aligned." : "Backend deploy may still be catching up — Auricrux-Central should report 1,212 programs including fca-how-to."}
+            {catalogIntegrity.aligned ? "Training catalog is up to date." : "Training catalog is still syncing — refresh in a moment if counts look low."}
           </span>
         </div>
 
@@ -642,7 +642,7 @@ export default function AcademyDashboard() {
         <section style={{ ...cardStyle }}>
           <h2 style={{ marginTop: 0 }}>Gradebook and transcript</h2>
           <p style={{ color: "#64748b", marginTop: 0, lineHeight: 1.65 }}>
-            Canvas-style module scores, degree GPA estimates, and CEU hours from Auricrux-Central catalog metadata.
+            Module scores, degree GPA estimates, and CEU hours from your training catalog.
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
             <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>

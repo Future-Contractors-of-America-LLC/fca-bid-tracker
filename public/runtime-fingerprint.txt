@@ -1,8 +1,9 @@
 service=fca-bid-tracker
-generatedAt=pending-build
-source=repo-default
-gitRef=main
-gitSha=pending-build
-runId=pending-build
-expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com
+generatedAt=2026-06-24T12:00:52.038Z
+source=local-build
+gitRef=local
+gitSha=local
+runId=local
+defaultHost=delightful-mushroom-0de67860f.7.azurestaticapps.net
+expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
 continuityIntent=governed-public-runtime-fingerprint

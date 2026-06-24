@@ -16,6 +16,7 @@ window.FCA_BACKEND = {
   customerSessionApi: "https://api.futurecontractorsofamerica.com/api/customer-session",
   customerLogoutApi: "https://api.futurecontractorsofamerica.com/api/customer-logout",
   customerAuthStateApi: "https://api.futurecontractorsofamerica.com/api/customer-auth-state",
+  customerEntraApi: "https://api.futurecontractorsofamerica.com/api/customer-entra",
   stripePublishableKey: "pk_test_51LGShDDyaLrjkeNa24KnDiDeOZekDxWCD9SBHcLjE46W7sNtjUXoqTpKuoRYUSA8TDzoaVdVCAqA6OCTiNef3hOj00aI7mpqEd",
   workflowAuditApi: "https://api.futurecontractorsofamerica.com/api/workflow-audit",
   stripeWebhookApi: "https://api.futurecontractorsofamerica.com/api/stripe/webhook",

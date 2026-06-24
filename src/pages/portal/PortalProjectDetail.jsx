@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
+import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useProjectWorkspaceDetail from "../../hooks/useProjectWorkspaceDetail";
@@ -99,24 +99,13 @@ export default function PortalProjectDetail({ requestedPath, routeParams = {} })
       primaryLabel="Open Files"
       workspaceState={state}
     >
-      <div style={{ marginBottom: 16 }}>
-        <ExecutionTruthBanner
-          title="Project continuity home is now live in router truth"
-          status={fullyApiBacked ? "API-backed workspace reads" : "Fallback shell continuity active"}
-          source={`project=${meta.projectSource} · files=${meta.fileSource} · audit=${meta.auditSource}`}
-          tone={fullyApiBacked ? "info" : "warning"}
-          whatIsLive={[
-            "A dynamic routed project workspace exists at /portal/projects/:projectId.",
-            "The route now prefers canonical backend reads for project workspace, file summary, and audit summary.",
-            "File summary, audit summary, and Auricrux next-action visibility are grouped into one project home.",
-          ]}
-          whatIsNotLiveYet={[
-            "When backend truth is unavailable, the route still falls back to shell continuity state.",
-            "Direct route-specific project mutations and deeper correction workflows are not yet fully implemented here.",
-            "This route should not be treated as proof that all file, audit, and correction flows are production-complete end to end.",
-          ]}
-        />
-      </div>
+      {!fullyApiBacked ? (
+        <div style={{ marginBottom: 16 }}>
+          <PortalAlert tone="warning" title="Limited project sync">
+            Showing workspace continuity for this project. Full file, audit, and correction workflows sync when the API is connected.
+          </PortalAlert>
+        </div>
+      ) : null}
 
       {visible ? (
         <>

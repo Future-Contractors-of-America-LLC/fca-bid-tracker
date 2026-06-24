@@ -370,9 +370,9 @@ export default function PortalHome() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16, marginBottom: 24 }}>
         <div style={cardStyle}>
-          <h2 style={{ marginTop: 0 }}>Functional product: Customer task board</h2>
+          <h2 style={{ marginTop: 0 }}>Customer task board</h2>
           <p style={{ color: "#475569", lineHeight: 1.7 }}>
-            This is a real customer-usable product surface. Tasks can be created, completed, and carried inside the branded workspace while Auricrux keeps the sales-to-operations flow visible.
+            Track customer-facing tasks across qualification, delivery, and billing. Tasks save on this device until workspace sync completes.
           </p>
           <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
             <input value={newTaskTitle} onChange={(event) => setNewTaskTitle(event.target.value)} placeholder="Add a customer task" style={{ flex: 1, padding: "12px 14px", borderRadius: 12, border: "1px solid #cbd5e1" }} />
@@ -401,7 +401,7 @@ export default function PortalHome() {
 
         <div style={{ display: "grid", gap: 16 }}>
           <div style={cardStyle}>
-            <h2 style={{ marginTop: 0 }}>New real SaaS tools in 062B</h2>
+            <h2 style={{ marginTop: 0 }}>Workspace shortcuts</h2>
             <div style={{ display: "grid", gap: 12 }}>
               <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
                 <div style={{ fontWeight: 700, marginBottom: 6 }}>Tool 1 · Create permit escalation support request</div>
@@ -416,16 +416,9 @@ export default function PortalHome() {
             </div>
           </div>
 
-          <div style={cardStyle}>
-            <h2 style={{ marginTop: 0 }}>Auricrux confirmed</h2>
-            <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
-              <li>Explains the current opportunity and delivery posture</li>
-              <li>Recommends the next qualification, estimate, and customer actions</li>
-              <li>Executes task creation, support escalation, billing staging, and workspace branding continuity</li>
-              <li>Stays present across SaaS and Academy surfaces</li>
-            </ul>
+            <h2 style={{ marginTop: 0 }}>Quick actions</h2>
             <div style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#eff6ff" }}>
-              <div style={{ color: brandSkin.accent, fontWeight: 700, marginBottom: 6 }}>Auricrux next action</div>
+              <div style={{ color: brandSkin.accent, fontWeight: 700, marginBottom: 6 }}>Suggested next step</div>
               <div style={{ color: "#334155", lineHeight: 1.7 }}>Complete intake review, open the qualification workflow, and create the first estimate package before sending the branded customer follow-up.</div>
             </div>
           </div>

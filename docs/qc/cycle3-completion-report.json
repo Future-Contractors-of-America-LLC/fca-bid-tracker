@@ -1,0 +1,98 @@
+{
+  "generatedAt": "2026-06-24T12:04:13.508Z",
+  "cycle": 3,
+  "complete": true,
+  "failed": 0,
+  "findings": [
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "cycle 2 regression: validate-cycle2-complete.mjs",
+      "detail": ""
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "Entra OAuth core",
+      "detail": "core/entra_auth.py"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "Entra callback handler",
+      "detail": "customer-entra/__init__.py"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "Entra route registered",
+      "detail": "core/v1_routes.py"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "Entra web client",
+      "detail": "src/api/entraAuthClient.js"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "Entra login UI",
+      "detail": "src/pages/website/Login.jsx"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "invoice checkout client",
+      "detail": "src/api/stripeClient.js"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "invoice pay UI",
+      "detail": "src/pages/portal/PortalInvoiceDetail.jsx"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "billing portal UI",
+      "detail": "src/pages/portal/PortalBilling.jsx"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "billing list pay action",
+      "detail": "src/pages/portal/PortalBilling.jsx"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "SharePoint client",
+      "detail": "src/api/m365Client.js"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "SharePoint files bridge",
+      "detail": "src/pages/portal/PortalFiles.jsx"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "transactional email client",
+      "detail": "src/api/commsClient.js"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "messages email enqueue",
+      "detail": "src/pages/portal/PortalMessages.jsx"
+    },
+    {
+      "cycle": 3,
+      "status": "pass",
+      "label": "founder guide documents Central integrations",
+      "detail": ""
+    }
+  ]
+}

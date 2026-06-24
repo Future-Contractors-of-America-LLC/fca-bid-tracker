@@ -1,60 +1,60 @@
 {
-  "generatedAt": "2026-06-23T18:08:04.581Z",
-  "apiBase": "https://api.futurecontractorsofamerica.com",
+  "generatedAt": "2026-06-24T12:01:56.987Z",
+  "apiBase": "https://auricrux-central.azurewebsites.net",
   "summary": {
-    "passed": 16,
-    "failed": 0
+    "passed": 4,
+    "failed": 12
   },
   "findings": [
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/health",
-      "detail": "HTTP 200"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/auricrux-comms",
-      "detail": "HTTP 200"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/change-orders",
-      "detail": "HTTP 200"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/job-cost",
-      "detail": "HTTP 200"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/warranty-cases",
-      "detail": "HTTP 200"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/field-photos",
-      "detail": "HTTP 200"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/auricrux/actions",
-      "detail": "HTTP 200"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/academy-commerce?limit=1",
-      "detail": "HTTP 200"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/commercial-pipeline",
-      "detail": "HTTP 200"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET /api/customer-auth-state",
-      "detail": "productionAuthReady=true"
+      "detail": "HTTP 404"
     },
     {
       "status": "pass",
@@ -77,14 +77,14 @@
       "detail": "HTTP 404 honest not-found"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "POST /api/auricrux/actions recommend",
-      "detail": "guidance returned"
+      "detail": "HTTP 404"
     },
     {
-      "status": "pass",
+      "status": "fail",
       "label": "GET field intelligence via field-photos",
-      "detail": "projectId=PRJ-SMOKE-001"
+      "detail": "HTTP 404"
     }
   ]
 }

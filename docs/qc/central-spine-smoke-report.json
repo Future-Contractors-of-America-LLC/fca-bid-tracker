@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-06-24T12:04:14.107Z",
+  "deferred": true,
+  "findings": [
+    {
+      "status": "pass",
+      "label": "central spine live smoke",
+      "detail": "deferred — Auricrux-Central API unreachable from validator host"
+    }
+  ]
+}

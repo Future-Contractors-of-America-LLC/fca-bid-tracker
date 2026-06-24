@@ -1,5 +1,6 @@
 import useCustomerSession from "../hooks/useCustomerSession";
 import { navigateTo } from "../navigation";
+import { toggleAuricruxAssistant } from "../auricruxAssistant";
 import { workspaceContext } from "../systemState";
 import { portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
 
@@ -51,6 +52,13 @@ export default function CustomerSessionBar({
           </div>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button
+            type="button"
+            onClick={() => toggleAuricruxAssistant()}
+            style={{ ...buttonStyle, background: "#7c5313" }}
+          >
+            Ask Auricrux
+          </button>
           <a href={resolvedPath} style={buttonStyle}>Workspace</a>
           <button
             type="button"
@@ -82,6 +90,13 @@ export default function CustomerSessionBar({
           </div>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          <button
+            type="button"
+            onClick={() => toggleAuricruxAssistant()}
+            style={{ ...buttonStyle, background: "#7c5313" }}
+          >
+            Ask Auricrux
+          </button>
           {actions.map((action) => (
             <a
               key={action.label}

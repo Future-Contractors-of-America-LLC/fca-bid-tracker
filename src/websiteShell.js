@@ -235,16 +235,17 @@ export const portalEntryCtaSets = {
 
 export const platformDashboardCtaSets = {
   quickActions: [
-    { label: "Pipeline", href: "/portal/pipeline", variant: "primary" },
+    { label: "Auricrux", href: "/portal/auricrux", variant: "primary" },
+    { label: "Pipeline", href: "/portal/pipeline", variant: "secondary" },
     { label: "Projects", href: "/portal/projects", variant: "secondary" },
-    { label: "Bids", href: "/portal/bids", variant: "secondary" },
+    { label: "Academy", href: "/portal/academy", variant: "secondary" },
     { label: "Files", href: "/portal/files", variant: "secondary" },
-    { label: "Auricrux", href: "/portal/auricrux", variant: "light" },
   ],
   operationalCards: [
+    { title: "Auricrux guidance", detail: "Ask what to do next, see blockers, and jump to the right lane.", href: "/portal/auricrux", label: "Open Auricrux" },
     { title: "Commercial pipeline", detail: "Qualify bids through award, invoice, and payment.", href: "/portal/pipeline", label: "Open Pipeline" },
-    { title: "Bids and estimates", detail: "Qualify opportunities and build pricing.", href: "/portal/bids", label: "Open Bids" },
     { title: "Projects and field", detail: "Jobs, photos, plans, and redlines.", href: "/portal/projects", label: "Open Projects" },
+    { title: "Academy training", detail: "Onboarding, safety, certifications, and field skills.", href: "/portal/academy", label: "Open Academy" },
     { title: "Files and design", detail: "Plan room, sheets, and document control.", href: "/portal/files", label: "Open Files" },
   ],
 };
@@ -519,7 +520,7 @@ export const shellProductionActions = [publicActionCatalog.workspace, publicActi
 export const publicRouteCtas = {
   public: { primaryHref: "/intake", primaryLabel: "Get started", secondaryHref: "/login", secondaryLabel: "Sign in" },
   platform: { primaryHref: "/login", primaryLabel: "Sign in", secondaryHref: "/intake", secondaryLabel: "Get started" },
-  auricrux: { primaryHref: "/auricrux", primaryLabel: "Meet Auricrux", secondaryHref: "/platform", secondaryLabel: "Platform overview" },
+  auricrux: { primaryHref: "/login?next=/portal/auricrux", primaryLabel: "Sign in for guidance", secondaryHref: "/platform", secondaryLabel: "Platform overview" },
   workspace: { primaryHref: "/login", primaryLabel: "Sign in", secondaryHref: "/platform", secondaryLabel: "Platform overview" },
   conversion: { primaryHref: publicActionCatalog.walkthrough.href, primaryLabel: publicActionCatalog.walkthrough.label, secondaryHref: "/platform", secondaryLabel: "Platform overview" },
 };

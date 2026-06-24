@@ -2,7 +2,7 @@
 
 export const auricruxPersona = {
   name: "Auricrux",
-  portraitSrc: "/brand/auricrux/auricrux-portrait.png",
+  humanoidMarkSrc: "/brand/auricrux/auricrux-humanoid-mark.svg",
   title: "Executive construction operator",
   tagline: "Field-tested. Boardroom clear.",
   intro:

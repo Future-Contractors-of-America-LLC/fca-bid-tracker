@@ -1,5 +1,12 @@
+import { centralApi, centralFetch } from "./api/backendBase.js";
+
 export const CUSTOMER_SESSION_KEY = "fca_customer_session_v1";
 export const CUSTOMER_SESSION_EVENT = "fca-customer-session-updated";
+export const CUSTOMER_SESSION_EXPIRED_EVENT = "fca-customer-session-expired";
+
+const DEFAULT_POST_LOGIN_HREF = "/portal/platform";
+
+let hydrateSessionPromise = null;
 
 const DEFAULT_AUTH_BOUNDARY = {
   productionAuthReady: false,
@@ -42,7 +49,6 @@ function broadcastCustomerSessionUpdate() {
   window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_EVENT));
 }
 
-import { centralFetch } from "./api/backendBase.js";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
@@ -110,10 +116,21 @@ export function writeCustomerSession(session) {
   return payload;
 }
 
+function isSameOriginCentralApi(path = "/api/customer-session") {
+  if (typeof window === "undefined") return false;
+  return centralApi(path).startsWith(window.location.origin);
+}
+
+function broadcastSessionExpired() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_EXPIRED_EVENT));
+}
+
 export async function syncCustomerSessionFromServer() {
   if (typeof window === "undefined") return null;
 
   const localSession = readCustomerSession();
+  const sameOriginApi = isSameOriginCentralApi("/api/customer-session");
 
   try {
     const response = await centralFetch("/api/customer-session", {
@@ -130,8 +147,14 @@ export async function syncCustomerSessionFromServer() {
         accountMode: payload.account?.accountMode || "seeded",
         authBoundary: payload.authBoundary,
         lastLoginAt: new Date().toISOString(),
-        nextHref: localSession?.nextHref || payload.account?.nextHref || "/portal/platform",
+        nextHref: localSession?.nextHref || payload.account?.nextHref || DEFAULT_POST_LOGIN_HREF,
       });
+    }
+
+    if (response.ok && payload?.ok && !payload?.authenticated && localSession && sameOriginApi) {
+      await clearCustomerSession({ server: false });
+      broadcastSessionExpired();
+      return null;
     }
 
     // Cross-origin API cannot read browser session cookies from the SWA domain — keep local session.
@@ -139,6 +162,26 @@ export async function syncCustomerSessionFromServer() {
   } catch {
     return localSession;
   }
+}
+
+export function hydrateCustomerSession() {
+  if (typeof window === "undefined") return Promise.resolve(readCustomerSession());
+
+  if (!hydrateSessionPromise) {
+    hydrateSessionPromise = syncCustomerSessionFromServer()
+      .catch(() => readCustomerSession())
+      .finally(() => {
+        hydrateSessionPromise = null;
+      });
+  }
+
+  return hydrateSessionPromise;
+}
+
+export function canRenderProtectedRouteImmediately(pathname = "/") {
+  if (typeof window === "undefined") return false;
+  if (!isProtectedCustomerRoute(pathname)) return true;
+  return Boolean(readCustomerSession()?.authenticated);
 }
 
 export function updateCustomerSession(updates = {}) {
@@ -262,12 +305,24 @@ export function resolveProfileHref(session = readCustomerSession()) {
   return session?.authenticated ? "/portal/profile" : resolveLoginHref();
 }
 
-export function resolveWorkspaceEntryHref(session = readCustomerSession(), requestedPath = "/portal/platform") {
-  if (!session?.authenticated) return resolveLoginHref(requestedPath);
-  if (requestedPath && isProtectedCustomerRoute(requestedPath) && hasCustomerProductAccess(session, requestedPath)) return requestedPath;
-  if (session.nextHref && isProtectedCustomerRoute(session.nextHref) && hasCustomerProductAccess(session, session.nextHref)) return session.nextHref;
-  if (hasCustomerProductAccess(session, "/portal/platform")) return "/portal/platform";
+export function resolveDefaultPostLoginHref(session = readCustomerSession()) {
+  if (!session?.authenticated) return DEFAULT_POST_LOGIN_HREF;
+  if (hasCustomerProductAccess(session, DEFAULT_POST_LOGIN_HREF)) return DEFAULT_POST_LOGIN_HREF;
+  if (hasCustomerProductAccess(session, "/portal/pipeline")) return "/portal/pipeline";
   if (hasCustomerProductAccess(session, "/portal/auricrux")) return "/portal/auricrux";
   if (hasCustomerProductAccess(session, "/academy")) return "/academy";
   return "/portal/profile";
+}
+
+export function resolveWorkspaceEntryHref(session = readCustomerSession(), requestedPath = DEFAULT_POST_LOGIN_HREF) {
+  if (!session?.authenticated) return resolveLoginHref(requestedPath);
+  if (requestedPath && isProtectedCustomerRoute(requestedPath) && hasCustomerProductAccess(session, requestedPath)) return requestedPath;
+  if (session.nextHref && isProtectedCustomerRoute(session.nextHref) && hasCustomerProductAccess(session, session.nextHref)) return session.nextHref;
+  return resolveDefaultPostLoginHref(session);
+}
+
+export function resolveSessionExpiredLoginHref(nextPath = null) {
+  const base = resolveLoginHref(nextPath);
+  const separator = base.includes("?") ? "&" : "?";
+  return `${base}${separator}session=expired`;
 }

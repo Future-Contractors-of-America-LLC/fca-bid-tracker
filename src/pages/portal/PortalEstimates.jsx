@@ -3,6 +3,7 @@ import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import usePortalProjectId from "../../hooks/usePortalProjectId";
 import useEstimateWorkspace from "../../hooks/useEstimateWorkspace";
+import { mutateEstimate } from "../../api/commercialClient";
 import usePreconContinuity from "../../hooks/usePreconContinuity";
 import TakeoffEstimatePanel from "../../components/design/TakeoffEstimatePanel";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
@@ -113,8 +114,24 @@ export default function PortalEstimates() {
   }
 
   function addDraftLine(estimateId) {
-    const current = drafts[estimateId]?.newLines || [];
-    updateDraft(estimateId, "newLines", current.concat({ id: `line-${Date.now()}`, label: "New scope line", amount: "$0", note: "Customer-customized line item" }));
+    const line = { label: "New scope line", amount: "$0", note: "Customer-customized line item" };
+    setBusyAction(`line-${estimateId}`);
+    setActionError("");
+    mutateEstimate("add-line", {
+      estimateId,
+      label: line.label,
+      amount: line.amount,
+      note: line.note,
+      detail: `Added ${line.label} to ${estimateId}.`,
+    })
+      .then(() => refresh())
+      .then(() => setStatusMessage(`Line item added to ${estimateId}.`))
+      .catch((error) => {
+        const current = drafts[estimateId]?.newLines || [];
+        updateDraft(estimateId, "newLines", current.concat({ id: `line-${Date.now()}`, ...line }));
+        setStatusMessage("Line saved locally until API sync returns.");
+      })
+      .finally(() => setBusyAction(""));
   }
 
   return (
@@ -247,15 +264,6 @@ export default function PortalEstimates() {
             </div>
           );
         })}
-      </div>
-
-      <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Estimate Studio</h2>
-        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains estimate status, assumptions, and exclusions</li>
-          <li>Recommends next pricing and proposal actions</li>
-          <li>Executes estimate advancement and proposal generation</li>
-        </ul>
       </div>
     </PortalShell>
   );

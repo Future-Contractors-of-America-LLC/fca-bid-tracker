@@ -4,7 +4,7 @@
 **Template Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Execute with Order Form for enterprise customers.
+> **Prepared for legal review ï¿½ not legal advice.** Execute with Order Form for enterprise customers.
 
 ---
 

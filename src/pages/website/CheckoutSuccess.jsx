@@ -15,8 +15,8 @@ export default function CheckoutSuccess() {
   const sessionId = searchParams.get("session_id");
 
   const isAcademy = offer?.kind === "academy-course" || offer?.kind === "academy-pathway";
-  const nextHref = isAcademy ? "/academy" : "/login";
-  const nextLabel = isAcademy ? "Open Academy" : "Continue to workspace login";
+  const nextHref = isAcademy ? "/academy" : "/portal/platform";
+  const nextLabel = isAcademy ? "Open Academy" : "Open your workspace";
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
@@ -48,7 +48,7 @@ export default function CheckoutSuccess() {
         <p style={{ color: "#475569", lineHeight: 1.7 }}>
           {isAcademy
             ? "Your academy purchase is recorded. Open Academy to access your program, track credential progress, and continue learning inside the live FCA workspace."
-            : "Your workspace purchase is recorded. Sign in to activate your rollout package, open the platform dashboard, and continue with Auricrux-guided next steps."}
+            : "Your workspace purchase is recorded. Open the platform dashboard to start your pipeline, projects, and Auricrux-guided next steps."}
         </p>
 
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 20 }}>

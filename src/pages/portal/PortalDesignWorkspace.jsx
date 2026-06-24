@@ -45,8 +45,8 @@ function readDesignDeepLink() {
   if (typeof window === "undefined") return { projectId: "", fileId: "", sheetId: "" };
   const params = new URLSearchParams(window.location.search);
   return {
-    projectId: params.get("projectId") || "",
-    fileId: params.get("fileId") || "",
+    projectId: params.get("projectId") || params.get("project") || "",
+    fileId: params.get("fileId") || params.get("file") || "",
     sheetId: params.get("sheetId") || "",
   };
 }

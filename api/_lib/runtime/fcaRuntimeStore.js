@@ -180,6 +180,24 @@ function createRFI(projectId, payload) {
   return clone(item)
 }
 
+function respondRFI(projectId, rfiId, payload = {}) {
+  const store = getStore()
+  const index = store.rfis.findIndex((item) => item.id === rfiId && item.projectId === projectId)
+  if (index === -1) {
+    throw new Error(`RFI not found: ${rfiId}`)
+  }
+
+  store.rfis[index] = {
+    ...store.rfis[index],
+    response: payload.response || "",
+    recordStatus: "answered",
+    status: "answered",
+    updatedAt: nowIso(),
+  }
+
+  return clone(store.rfis[index])
+}
+
 module.exports = {
   listProjects,
   getProject,
@@ -189,4 +207,5 @@ module.exports = {
   createTakeoff,
   listRFIs,
   createRFI,
+  respondRFI,
 }

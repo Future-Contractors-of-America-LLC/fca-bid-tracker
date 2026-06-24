@@ -1,4 +1,5 @@
 import { resolvePlanPreset } from "../pricingPlans";
+import { portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
 
 function summarizeEnabledComms(enabledComms = {}) {
   return Object.entries(enabledComms)
@@ -6,6 +7,12 @@ function summarizeEnabledComms(enabledComms = {}) {
     .map(([key]) => key)
     .join(", ") || "None enabled";
 }
+
+const productLinks = {
+  saas: { href: "/portal/platform", label: "Open workspace" },
+  lms: { href: "/portal/academy", label: "Open Academy" },
+  auricrux: { href: "/portal/auricrux", label: "Get guidance" },
+};
 
 export default function ProductAccessStatusPanel({ session, stateMeta }) {
   const sessionProducts = session?.enabledProducts;
@@ -35,59 +42,77 @@ export default function ProductAccessStatusPanel({ session, stateMeta }) {
 
   const cards = [
     {
-      label: "Selected plan",
+      key: "plan",
+      label: "Your plan",
       status: `${selectedPlan.name} · ${selectedPlan.price}`,
-      detail: `Billing model: ${selectedPlan.billingModel}. This plan now acts as the commercial access baseline for the authenticated customer workspace.`,
+      detail: `Billed as ${selectedPlan.billingModel.toLowerCase()}. Change plans anytime from profile or billing.`,
+      href: "/portal/plans",
+      linkLabel: "View plans",
     },
     {
-      label: "SaaS workspace",
-      status: products.saas ? "Enabled" : "Pending",
-      detail: "Portal workspace, bids, files, messages, billing, support, admin, and dashboard continuity.",
+      key: "saas",
+      label: "Workspace",
+      status: products.saas ? "Included" : "Not enabled",
+      detail: "Pipeline, projects, files, billing, and daily operations.",
+      href: productLinks.saas.href,
+      linkLabel: productLinks.saas.label,
+      enabled: products.saas,
     },
     {
-      label: "Academy / LMS",
-      status: products.lms ? "Enabled" : "Pending",
-      detail: "Training tracks, safety readiness, onboarding continuity, and workforce enablement.",
+      key: "lms",
+      label: "Academy",
+      status: products.lms ? "Included" : "Not enabled",
+      detail: "Training tracks, safety, onboarding, and certifications.",
+      href: productLinks.lms.href,
+      linkLabel: productLinks.lms.label,
+      enabled: products.lms,
     },
     {
-      label: "Auricrux guidance",
-      status: products.auricrux ? "Enabled" : "Pending",
-      detail: "Next actions, blocker visibility, continuity guidance, and operating-state narration across the shell.",
+      key: "auricrux",
+      label: "Auricrux",
+      status: products.auricrux ? "Included" : "Not enabled",
+      detail: "What to do next, blockers, and where to go in the workspace.",
+      href: productLinks.auricrux.href,
+      linkLabel: productLinks.auricrux.label,
+      enabled: products.auricrux,
     },
     {
-      label: "Auricrux comms",
+      key: "comms",
+      label: "Message channels",
       status: summarizeEnabledComms(enabledComms),
-      detail: "Customer-enabled chat, SMS, phone, email, Teams, conference, and lecture lanes bound to the active workspace.",
+      detail: "Chat, SMS, phone, email, Teams, conference, and lecture.",
+      href: "/portal/messages",
+      linkLabel: "Open messages",
+      enabled: true,
     },
   ];
 
   return (
-    <div
-      style={{
-        border: "1px solid #dbe3ef",
-        borderRadius: 16,
-        padding: 18,
-        background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)",
-        boxShadow: "0 12px 24px rgba(15, 23, 42, 0.04)",
-        marginBottom: 24,
-      }}
-    >
-      <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live customer product access</div>
-      <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 14 }}>
-        {(session?.workspaceLabel || stateMeta?.customerWorkspaceLabel || "Authenticated workspace")} is authenticated as {(session?.role || stateMeta?.customerRole || "Owner / Admin")}. This customer session has live product continuity across SaaS workspace, Academy/LMS, Auricrux guidance, routed communications lanes, and a plan-aware commercial baseline.
-      </div>
+    <section style={{ ...portalCardStyle, marginBottom: 24, borderLeft: `4px solid ${portalTokens.primary}`, background: portalTokens.primarySoft }}>
+      <div style={portalEyebrowStyle}>Your access</div>
+      <h2 style={{ margin: "6px 0 8px", fontSize: "1.15rem" }}>What is included in your account</h2>
+      <p style={{ color: portalTokens.body, lineHeight: 1.65, marginTop: 0, marginBottom: 14, fontSize: 14 }}>
+        {(session?.workspaceLabel || stateMeta?.customerWorkspaceLabel || "Your workspace")} · signed in as {(session?.role || stateMeta?.customerRole || "Owner / Admin")}.
+      </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
         {cards.map((card) => (
-          <div key={card.label} style={{ border: "1px solid #dbe3ef", borderRadius: 12, padding: 14, background: "#fff" }}>
-            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 700, marginBottom: 6 }}>
+          <article key={card.key} style={{ border: `1px solid ${portalTokens.border}`, borderRadius: 12, padding: 14, background: portalTokens.panel }}>
+            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.05em", color: portalTokens.muted, fontWeight: 700, marginBottom: 6 }}>
               {card.label}
             </div>
-            <div style={{ fontSize: ["Auricrux comms", "Selected plan"].includes(card.label) ? 16 : 22, fontWeight: 700, marginBottom: 8, color: "#111827", textTransform: card.label === "Auricrux comms" ? "none" : "initial" }}>{card.status}</div>
-            <div style={{ color: "#475569", lineHeight: 1.6 }}>{card.detail}</div>
-          </div>
+            <div style={{ fontSize: card.key === "comms" ? 15 : 20, fontWeight: 700, marginBottom: 8, color: portalTokens.ink, textTransform: card.key === "comms" ? "none" : "initial" }}>
+              {card.status}
+            </div>
+            <p style={{ color: portalTokens.body, lineHeight: 1.6, marginTop: 0, marginBottom: 10, fontSize: 13 }}>{card.detail}</p>
+            {card.href ? (
+              <a href={card.enabled === false ? "/portal/profile" : card.href} style={portalButtonSecondary}>
+                {card.linkLabel}
+              </a>
+            ) : null}
+          </article>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

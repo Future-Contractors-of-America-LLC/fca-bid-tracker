@@ -38,10 +38,19 @@ export default function PortalCloseout() {
   }
 
   useEffect(() => {
+    if (!hasProject) {
+      setItems([]);
+      setLoading(false);
+      return;
+    }
     reload();
-  }, [projectId]);
+  }, [projectId, hasProject]);
 
   async function handleCreate() {
+    if (!hasProject) {
+      setError("Select an active project from Projects before creating a closeout package.");
+      return;
+    }
     setNotice("");
     setError("");
     try {
@@ -105,10 +114,14 @@ export default function PortalCloseout() {
         tone="blue"
       />
 
+      {!hasProject ? <div style={card}>Select an active project from <a href="/portal/projects">Projects</a> to manage closeout packages.</div> : null}
+
+      {hasProject ? (
       <div style={{ display: "flex", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
         <button type="button" style={button} onClick={handleCreate}>Create closeout package</button>
         <button type="button" style={{ ...button, background: "#e2e8f0", color: "#0f172a" }} onClick={reload}>Refresh</button>
       </div>
+      ) : null}
 
       {notice ? <div style={{ ...card, color: "#166534", borderColor: "#bbf7d0", background: "#f0fdf4" }}>{notice}</div> : null}
       {error ? <div style={{ ...card, color: "#991b1b", borderColor: "#fecaca", background: "#fef2f2" }}>{error}</div> : null}

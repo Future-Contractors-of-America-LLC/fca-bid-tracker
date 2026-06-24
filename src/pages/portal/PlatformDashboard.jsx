@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import PortalWorkspaceGuide from "../../components/PortalWorkspaceGuide";
+import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
 import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
@@ -9,6 +10,7 @@ import { portalMessages, routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import { openAuricruxAssistant } from "../../auricruxAssistant";
 import { portalButtonPrimary, portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
 
 export default function PlatformDashboard() {
@@ -22,38 +24,38 @@ export default function PlatformDashboard() {
   return (
     <PortalShell
       title="Workspace"
-      subtitle="Setup, Auricrux guidance, and your product lanes."
+      subtitle="Your products, Auricrux guidance, and day-to-day lanes in one place."
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
-      primaryHref="/portal/projects"
-      primaryLabel="Open Projects"
+      primaryHref="/portal/auricrux"
+      primaryLabel="Ask Auricrux"
       navDensity="full"
       showRouteOverlay={false}
     >
-      <div style={{ marginBottom: 24 }}>
-        <a href="/portal/operations" style={portalButtonSecondary}>Open operations command</a>
-      </div>
+      <CustomerProductLaunchpad session={session} />
 
-      <PortalWorkspaceGuide />
-
-      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${portalTokens.primary}`, background: portalTokens.primarySoft }}>
+      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid #d4a32a`, background: "linear-gradient(135deg, #fffbeb 0%, #fff 100%)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "flex-start" }}>
           <div style={{ flex: "1 1 240px" }}>
-            <div style={portalEyebrowStyle}>Auricrux</div>
+            <div style={{ ...portalEyebrowStyle, color: "#92400e" }}>Auricrux · your guide</div>
             <div style={{ fontWeight: 700, marginTop: 6, lineHeight: 1.5, color: portalTokens.ink }}>
               {state.auricrux.currentBlocker}
             </div>
             <div style={{ color: portalTokens.body, fontSize: 14, marginTop: 8, lineHeight: 1.55 }}>
-              Next: {state.workspace.currentNextAction}
+              Next step: {state.workspace.currentNextAction}
             </div>
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <a href="/portal/auricrux" style={portalButtonPrimary}>Ask Auricrux</a>
-            <a href="/portal/admin" style={portalButtonSecondary}>Setup</a>
+            <button type="button" onClick={() => openAuricruxAssistant()} style={{ ...portalButtonPrimary, border: "none", cursor: "pointer" }}>
+              Chat with Auricrux
+            </button>
+            <a href="/portal/auricrux" style={portalButtonSecondary}>Guidance page</a>
           </div>
         </div>
       </div>
+
+      <PortalWorkspaceGuide compact />
 
       <div
         style={{

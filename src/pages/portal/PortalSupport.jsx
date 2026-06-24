@@ -65,7 +65,7 @@ export default function PortalSupport() {
             status: item.status || "Open",
           })),
         }));
-        refreshSyncStamp("Portal support synced from Auricrux-Central");
+        refreshSyncStamp("Support tickets synced");
       })
       .catch(() => {
         if (active) setApiBacking("local-fallback");
@@ -163,7 +163,7 @@ export default function PortalSupport() {
     >
       {apiBacking === "local-fallback" ? (
         <PortalAlert tone="warning">
-          Support API unreachable. Tickets are stored locally until Auricrux-Central sync recovers.
+          Support is temporarily offline. Tickets are saved on this device until sync returns.
         </PortalAlert>
       ) : null}
       <div style={{ ...cardStyle, marginBottom: 24, background: brandSkin.surface || "#eff6ff", border: `1px solid ${brandSkin.accent || "#1d4ed8"}` }}>
@@ -181,7 +181,7 @@ export default function PortalSupport() {
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Functional product: Support and service request command</h2>
+        <h2 style={{ marginTop: 0 }}>Create support request</h2>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
           <label>
             <div style={{ fontWeight: 700, marginBottom: 6 }}>Subject</div>
@@ -220,15 +220,6 @@ export default function PortalSupport() {
             </div>
           ))}
         </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Support Command</h2>
-        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains the customer issue, blocker, and recovery posture</li>
-          <li>Recommends the next support, file, project, or communication action</li>
-          <li>Executes support request creation and resolution signaling</li>
-        </ul>
       </div>
     </PortalShell>
   );

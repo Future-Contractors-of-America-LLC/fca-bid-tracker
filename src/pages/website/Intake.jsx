@@ -107,6 +107,25 @@ export default function Intake() {
       </div>
 
       <section style={{ ...cardStyle, maxWidth: 720, margin: "0 auto" }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+          {["Company profile", "Plan selection", "Secure checkout"].map((step, index) => (
+            <div
+              key={step}
+              style={{
+                flex: "1 1 140px",
+                padding: "10px 12px",
+                borderRadius: 10,
+                background: index === 0 ? "#eff6ff" : "#f8fafc",
+                border: index === 0 ? "1px solid #93c5fd" : "1px solid #e2e8f0",
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#334155",
+              }}
+            >
+              {index + 1}. {step}
+            </div>
+          ))}
+        </div>
         <form onSubmit={handleSubmit}>
           <label>
             <strong>Plan</strong>

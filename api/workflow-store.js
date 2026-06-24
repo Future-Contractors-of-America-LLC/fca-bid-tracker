@@ -74,6 +74,8 @@ function normalizeProjectRecord(project = {}, index = 0) {
     auricruxSummary:
       project.auricruxSummary ||
       "Auricrux is reading this project as an active operating context inside the shared FCA workspace.",
+    ownerNote: project.ownerNote || "",
+    customerMilestone: project.customerMilestone || "",
     sourceBidId: project.sourceBidId || null,
     lastActionAt: project.lastActionAt || null,
     actionHistory: Array.isArray(project.actionHistory) ? project.actionHistory : [],
@@ -968,6 +970,31 @@ export function mutateProject(tenantId, action, payload = {}) {
         detail: payload.detail || "Auricrux cleared the permit blocker.",
         reason: "Project mobility requires permit-path continuity.",
         discipline: "Project Setup",
+      });
+      break;
+    }
+    case "update-command-notes": {
+      updatedProject = normalizeProjectRecord({
+        ...currentProject,
+        ownerNote: payload.ownerNote ?? currentProject.ownerNote ?? "",
+        customerMilestone: payload.customerMilestone ?? currentProject.customerMilestone ?? "",
+        nextAction: payload.detail || currentProject.nextAction,
+        lastActionAt: nowIso(),
+        actionHistory: [
+          stampHistoryEntry("Project command notes saved", payload.detail || "Owner note and customer milestone updated."),
+          ...currentProject.actionHistory,
+        ].slice(0, 12),
+      }, projectIndex);
+
+      appendAudit(workflow, {
+        eventType: "project-context",
+        actorType: "user",
+        targetObjectType: "Project",
+        targetObjectId: currentProject.id,
+        action: `${currentProject.id} command notes updated`,
+        detail: payload.detail || "Project owner note and customer milestone saved.",
+        reason: "Delivery teams need durable project command context.",
+        discipline: "Operations",
       });
       break;
     }

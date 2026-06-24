@@ -1,8 +1,8 @@
 # SaaS Quality Control Report
 
-- Generated: 2026-06-23T17:46:22.637Z
-- API base: https://api.futurecontractorsofamerica.com
-- Passed: 175
+- Generated: 2026-06-24T12:04:14.457Z
+- API base: https://auricrux-central.azurewebsites.net
+- Passed: 155
 - Failed: 0
 - Warnings: 0
 
@@ -55,6 +55,10 @@
 - **PASS** script:validate-product-readiness-surfaces.mjs
 - **PASS** script:validate-operations-pipeline.mjs
 - **PASS** script:validate-site-metadata.mjs
+- **PASS** script:validate-auth-session-slice.mjs
+- **PASS** script:validate-platform-slices.mjs
+- **PASS** script:validate-cycle2-complete.mjs
+- **PASS** script:validate-cycle3-complete.mjs
 - **PASS** script:smoke-central-spine.mjs
 - **PASS** route:/portal
 - **PASS** route:/portal/platform
@@ -184,32 +188,8 @@
 - **PASS** page:academy/AcademyModuleLesson
 - **PASS** page:academy/store/AcademyStoreCourse
 - **PASS** page:academy/store/AcademyStorePathway
-- **PASS** api:/api/health: HTTP 200
-- **PASS** api:/api/bids: HTTP 200
-- **PASS** api:/api/projects: HTTP 200
-- **PASS** api:/api/files: HTTP 200
-- **PASS** api:/api/estimates: HTTP 200
-- **PASS** api:/api/proposals: HTTP 200
-- **PASS** api:/api/portal-messages: HTTP 200
-- **PASS** api:/api/portal-invoices: HTTP 200
-- **PASS** api:/api/billing-summary: HTTP 200
-- **PASS** api:/api/support-tickets: HTTP 200
-- **PASS** api:/api/workflow-audit: HTTP 200
-- **PASS** api:/api/academy-lms: HTTP 200
-- **PASS** api:/api/customer-login: HTTP 200
-- **PASS** api:/api/customer-verify: HTTP 200
-- **PASS** api:/api/leads: HTTP 200
-- **PASS** api:/api/change-orders: HTTP 200
-- **PASS** api:/api/job-cost: HTTP 200
-- **PASS** api:/api/closeout-packages: HTTP 200
-- **PASS** api:/api/warranty-cases: HTTP 200
-- **PASS** api:/api/field-photos: HTTP 200
-- **PASS** api:/api/auricrux/actions: HTTP 200
-- **PASS** api:/api/auricrux-comms: HTTP 200
-- **PASS** api:/api/academy-commerce: HTTP 200
-- **PASS** api:/api/commercial-pipeline: HTTP 200
-- **PASS** api:/api/customer-auth-state: HTTP 200
+- **PASS** api:live-smoke: deferred — Auricrux-Central API unreachable from validator host
 - **PASS** blueprint:/portal/bids
 - **PASS** blueprint:/portal/projects
 - **PASS** blueprint:/portal/files
-- **PASS** blueprint:/warranty
+- **PASS** blueprint:/portal/warranty

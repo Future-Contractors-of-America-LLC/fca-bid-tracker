@@ -13,6 +13,7 @@ import {
   fetchPortalInvoices,
   issuePortalInvoice,
 } from "../../api/portalClient";
+import { createInvoiceCheckout, createPortalBillingPortal } from "../../api/stripeClient";
 import { routeStateOverlays } from "../../systemState";
 import {
   PortalAlert,
@@ -131,6 +132,55 @@ export default function PortalBilling() {
     }
   }
 
+  async function payInvoice(invoiceId) {
+    setActionError("");
+    setBusyId(`pay-${invoiceId}`);
+    try {
+      const origin = typeof window !== "undefined" ? window.location.origin : "";
+      const payload = await createInvoiceCheckout(invoiceId, {
+        customerEmail: session?.email,
+        successUrl: `${origin}/portal/billing?payment=success`,
+        cancelUrl: `${origin}/portal/billing?payment=cancelled`,
+        returnUrl: `${origin}/portal/billing?payment=success`,
+        uiMode: "embedded",
+      });
+      if (payload?.checkoutUrl) {
+        window.location.assign(payload.checkoutUrl);
+        return;
+      }
+      if (payload?.clientSecret) {
+        window.location.assign(`/portal/billing/${encodeURIComponent(invoiceId)}`);
+        return;
+      }
+      throw new Error("Stripe checkout is not available for this invoice.");
+    } catch (error) {
+      setActionError(error.message || "Unable to start payment.");
+    } finally {
+      setBusyId("");
+    }
+  }
+
+  async function openBillingPortal() {
+    setActionError("");
+    setBusyId("portal");
+    try {
+      const origin = typeof window !== "undefined" ? window.location.origin : "";
+      const payload = await createPortalBillingPortal({
+        customerEmail: session?.email,
+        returnUrl: `${origin}/portal/billing`,
+      });
+      const portalUrl = payload?.checkoutUrl || payload?.portalUrl || payload?.url;
+      if (!portalUrl) {
+        throw new Error("Billing portal is not available.");
+      }
+      window.location.assign(portalUrl);
+    } catch (error) {
+      setActionError(error.message || "Unable to open billing portal.");
+    } finally {
+      setBusyId("");
+    }
+  }
+
   async function deliverInvoice(invoiceId) {
     setActionError("");
     setDeliveryNotice("");
@@ -186,8 +236,15 @@ export default function PortalBilling() {
       <PortalPageIntro
         eyebrow="Customer billing"
         title={`${companyName} invoice workspace`}
-        detail="Create a draft, issue to the customer, then record payment in finance without leaving FCA."
-        actions={<a href="/portal/finance" style={portalButtonSecondary}>Open FCA Books</a>}
+        detail="Create a draft, issue to the customer, collect payment in FCA Checkout, and record payment in finance without leaving FCA."
+        actions={(
+          <>
+            <button type="button" onClick={openBillingPortal} disabled={busyId === "portal"} style={{ ...portalButtonSecondary, cursor: "pointer" }}>
+              {busyId === "portal" ? "Opening..." : "Manage subscription"}
+            </button>
+            <a href="/portal/finance" style={portalButtonSecondary}>Open FCA Books</a>
+          </>
+        )}
       />
 
       <PortalQuickStats
@@ -264,7 +321,10 @@ export default function PortalBilling() {
                   ) : null}
                   {row.status === "Issued" ? (
                     <>
-                      <button type="button" onClick={() => deliverInvoice(row.id)} disabled={busyId === `deliver-${row.id}`} style={portalButtonPrimary}>
+                      <button type="button" onClick={() => payInvoice(row.id)} disabled={busyId === `pay-${row.id}`} style={portalButtonPrimary}>
+                        {busyId === `pay-${row.id}` ? "Starting..." : "Pay"}
+                      </button>
+                      <button type="button" onClick={() => deliverInvoice(row.id)} disabled={busyId === `deliver-${row.id}`} style={portalButtonSecondary}>
                         {busyId === `deliver-${row.id}` ? "Sending..." : "Send"}
                       </button>
                       <a href={`/portal/finance?view=payments&invoiceId=${encodeURIComponent(row.id)}`} style={portalButtonSecondary}>Record payment</a>

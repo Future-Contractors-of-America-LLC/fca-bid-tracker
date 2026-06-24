@@ -1,20 +1,24 @@
 {
   "service": "fca-bid-tracker",
-  "generatedAt": "pending-build",
-  "source": "repo-default",
-  "gitRef": "main",
-  "gitSha": "pending-build",
-  "runId": "pending-build",
+  "generatedAt": "2026-06-24T12:00:51.896Z",
+  "source": "local-build",
+  "gitRef": "local",
+  "gitSha": "local",
+  "runId": "local",
+  "defaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
   "expectedHosts": [
     "futurecontractorsofamerica.com",
-    "www.futurecontractorsofamerica.com"
+    "www.futurecontractorsofamerica.com",
+    "delightful-mushroom-0de67860f.7.azurestaticapps.net"
   ],
   "verificationRoutes": [
     "/deployment-status.json",
     "/live-shell-verification.html",
     "/api/auricrux",
     "/api/customer-login",
-    "/login"
+    "/login",
+    "/commit-witness-local.txt"
   ],
+  "commitWitnessRoute": "/commit-witness-local.txt",
   "deploymentIntent": "static-web-app-plus-functions"
 }

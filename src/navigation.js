@@ -8,6 +8,28 @@ function isUnsafeProtocolTarget(href) {
   return normalizedHref.startsWith("javascript:") || normalizedHref.startsWith("data:") || normalizedHref.startsWith("vbscript:");
 }
 
+const prefetchedPaths = new Set();
+
+export function prefetchManagedPath(href = "") {
+  if (typeof window === "undefined" || !href) return;
+  if (!isManagedNavigationTarget(href)) return;
+
+  try {
+    const url = new URL(href.trim(), window.location.origin);
+    const pathKey = url.pathname;
+    if (prefetchedPaths.has(pathKey)) return;
+    prefetchedPaths.add(pathKey);
+
+    const link = document.createElement("link");
+    link.rel = "prefetch";
+    link.href = `${pathKey}${url.search}`;
+    link.as = "document";
+    document.head.appendChild(link);
+  } catch {
+    // best-effort prefetch only
+  }
+}
+
 export function isManagedAppPath(pathname = "/") {
   const normalized = normalizePath(pathname);
   return Boolean(routes[normalized]) || isProtectedCustomerRoute(normalized);

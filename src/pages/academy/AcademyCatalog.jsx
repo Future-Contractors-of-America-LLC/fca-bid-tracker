@@ -361,7 +361,7 @@ export default function AcademyCatalog() {
               {catalogIntegrity.aligned ? "Live catalog aligned" : "Catalog sync in progress"}
             </strong>
             <span style={{ color: "#475569", marginLeft: 8 }}>
-              {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs from {meta.backingSource || "Auricrux-Central"}
+              {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs in your library
               {catalogIntegrity.aligned ? "" : " — deploy may still be propagating; refresh shortly."}
             </span>
           </div>

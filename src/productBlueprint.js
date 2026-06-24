@@ -48,7 +48,7 @@ export const saasOperationalPathways = [
       "Review generation and testimonial follow-through",
       "Referral loop visibility for revenue expansion",
     ],
-    href: "/warranty",
+    href: "/portal/warranty",
     ctaLabel: "Open Warranty Continuity",
   },
 ];

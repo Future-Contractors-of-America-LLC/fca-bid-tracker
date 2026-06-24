@@ -53,17 +53,22 @@ const commsCards = [
   { key: "lecture", title: "Lecture", description: "Academy-led instruction and rollout delivery.", href: "/portal/messages#lecture", ctaLabel: "Open Lecture Lane" },
 ];
 
-function resolveLaunchReadiness(accountSource, authBoundary) {
-  if (authBoundary?.productionAuthReady) return "Connected to your account";
-  if (accountSource === "api") return "Connected to your account";
-  if (accountSource === "local-fallback") return "Demo workspace active";
-  return "Workspace active";
+function resolveAccountSecurityLabel(accountSource, authBoundary) {
+  if (authBoundary?.activeMode === "managed-server-session") return "Enterprise sign-in active";
+  if (accountSource === "api" || accountSource === "server-session") return "Signed in securely";
+  if (accountSource === "seeded-local-fallback" || accountSource === "local-fallback") return "Demo workspace";
+  return "Signed in";
+}
+
+function resolveVerificationLabel(authBoundary) {
+  if (authBoundary?.activeMode === "managed-server-session") return "Password plus verification for sensitive actions";
+  return "Password sign-in; verification required for banking and billing";
 }
 
 export default function PortalProfile() {
   const { session, isAuthenticated, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
-  const { state: authState, meta: authMeta } = useCustomerAuthState();
+  const { state: authState } = useCustomerAuthState();
 
   useEffect(() => {
     refreshSyncStamp("Persisted customer profile state active");
@@ -79,7 +84,8 @@ export default function PortalProfile() {
   const customerId = session?.customerId || "CUST-FCA-LIVE-001";
   const selectedPlan = session?.selectedPlan || "startup";
   const accountSource = session?.accountSource || "workspace-shell";
-  const launchReadiness = resolveLaunchReadiness(accountSource, authState.authBoundary);
+  const securityStatus = resolveAccountSecurityLabel(accountSource, authState.authBoundary);
+  const verificationStatus = resolveVerificationLabel(authState.authBoundary);
 
   function toggleProduct(productKey, enabled) {
     setProductAccess(productKey, !enabled);
@@ -134,15 +140,15 @@ export default function PortalProfile() {
       <CustomerCommsLaunchpad session={session} title="Communications access" />
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #fffaf0 0%, #ffffff 100%)", border: "1px solid #e5d3a1" }}>
-        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Authentication truth boundary</div>
+        <div style={{ color: "#8a6a14", fontWeight: 700, marginBottom: 8 }}>Account security</div>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
-          <div><strong>Production auth ready:</strong> {authState.authBoundary?.productionAuthReady ? "Yes" : "No"}</div>
-          <div><strong>Active mode:</strong> {authState.authBoundary?.activeMode || "Unknown"}</div>
-          <div><strong>Identity provider:</strong> {authState.authBoundary?.identityProvider || "Unknown"}</div>
-          <div><strong>Validation:</strong> {authState.authBoundary?.sessionValidation || "Unknown"}</div>
-          <div><strong>Status message:</strong> {authState.message}</div>
-          <div><strong>Auth state source:</strong> {authMeta.backingSource}</div>
+          <div><strong>Sign-in status:</strong> {securityStatus}</div>
+          <div><strong>Verification:</strong> {verificationStatus}</div>
+          <div><strong>Session:</strong> {isAuthenticated ? "Active on this device" : "Not signed in"}</div>
         </div>
+        <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginBottom: 0, marginTop: 12 }}>
+          Sign out from shared devices using the Sign out button on the login page. Enterprise SSO is available on request for multi-user teams.
+        </p>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16 }}>
@@ -155,9 +161,8 @@ export default function PortalProfile() {
             <div><strong>Customer email:</strong> {sessionEmail}</div>
             <div><strong>Workspace role:</strong> {workspaceRole}</div>
             <div><strong>Selected plan:</strong> {selectedPlan}</div>
-            <div><strong>Account source:</strong> {accountSource}</div>
-            <div><strong>Launch readiness:</strong> {launchReadiness}</div>
-            <div><strong>Session status:</strong> {isAuthenticated ? "Signed in" : "Workspace active"}</div>
+            <div><strong>Account status:</strong> {securityStatus}</div>
+            <div><strong>Session status:</strong> {isAuthenticated ? "Signed in" : "Not signed in"}</div>
             <div><strong>Last login:</strong> {sessionLogin}</div>
           </div>
         </div>
@@ -191,9 +196,9 @@ export default function PortalProfile() {
         </div>
 
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live customer product controls</div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Product access</div>
           <div style={{ color: "#475569", lineHeight: 1.8 }}>
-            This profile now controls real access across SaaS workspace, Academy / LMS, Auricrux, and communications. Toggle a product or channel here to verify that login continuity, launch surfaces, and route protection stay honest to the authenticated customer session.
+            Choose which products and channels are on for your team — workspace, Academy, Auricrux guidance, and messages. Changes apply to your signed-in session immediately.
           </div>
         </div>
 
@@ -259,15 +264,6 @@ export default function PortalProfile() {
             );
           })}
         </div>
-      </div>
-
-      <div style={{ ...cardStyle, marginTop: 16 }}>
-        <h2 style={{ marginTop: 0 }}>Why this route matters</h2>
-        <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0 }}>
-          The profile icon now has a real destination inside the product. Instead of routing customers into a dead-end account stub,
-          this surface confirms who is signed in, what workspace they control, what project spine is active, what role they hold in the construction workflow,
-          what product layers they can access, what communications lanes are enabled, what plan they are on, what account source is active, and what Auricrux says should happen next.
-        </p>
       </div>
     </PortalShell>
   );

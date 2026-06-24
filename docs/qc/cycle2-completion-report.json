@@ -1,0 +1,110 @@
+{
+  "generatedAt": "2026-06-24T12:04:13.490Z",
+  "cycle": 2,
+  "complete": true,
+  "failed": 0,
+  "findings": [
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "cycle 1 gate: validate-auth-session-slice.mjs",
+      "detail": ""
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "cycle 1 gate: validate-platform-slices.mjs",
+      "detail": ""
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "commentary shell scan complete",
+      "detail": ""
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "navigation prefetch helper",
+      "detail": "src/navigation.js"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "router prefetches on link hover",
+      "detail": "src/router.jsx"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "staticwebapp immutable asset caching",
+      "detail": ""
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "RFI respond mutation in runtime store",
+      "detail": "api/_lib/runtime/fcaRuntimeStore.js"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "RFI respond client",
+      "detail": "src/api/constructionClient.js"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "RFI respond UI",
+      "detail": "src/pages/portal/PortalRfis.jsx"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "RFI PATCH handler",
+      "detail": "api/projects/[projectId]/rfis/index.js"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "project command notes mutation",
+      "detail": "api/workflow-store.js"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "project notes hook",
+      "detail": "src/hooks/useProjectWorkspace.js"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "project notes persist on blur",
+      "detail": "src/pages/portal/PortalProjects.jsx"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "audit uses customer-friendly alert",
+      "detail": "src/pages/portal/PortalAudit.jsx"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "audit removed engineering truth banner",
+      "detail": ""
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "mobile session check",
+      "detail": "src/FcaMobile/Services/FcaApiClient.cs"
+    },
+    {
+      "cycle": 2,
+      "status": "pass",
+      "label": "mobile sign out",
+      "detail": "src/FcaMobile/Services/FcaApiClient.cs"
+    }
+  ]
+}

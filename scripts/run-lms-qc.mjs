@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * LMS depth + content quality control — catalog, media, live API, CTAs, compliance maps.
+ * LMS depth + content quality control ï¿½ catalog, media, live API, CTAs, compliance maps.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -30,19 +30,19 @@ const ACADEMY_SCRIPTS = [
 function pass(label, detail = "") {
   passed += 1;
   findings.push({ status: "pass", label, detail });
-  console.log(`PASS: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
   findings.push({ status: "fail", label, detail });
-  console.error(`FAIL: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function warn(label, detail = "") {
   warnings += 1;
   findings.push({ status: "warn", label, detail });
-  console.warn(`WARN: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.warn(`WARN: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 for (const script of ACADEMY_SCRIPTS) {

@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
-import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
+import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
@@ -75,24 +75,9 @@ export default function PortalAudit() {
       workspaceState={state}
     >
       {!apiBacked ? (
-        <div style={{ marginBottom: 16 }}>
-          <ExecutionTruthBanner
-            title="Audit continuity shell is active"
-            status="Workspace active"
-            source={auditMeta.backingSource}
-            tone="warning"
-            whatIsLive={[
-              "Audit timeline layout and project-scoping controls.",
-              "Actor-type and event-type filtering inside the shell.",
-              "Continuity-oriented review of project/file/Auricrux history posture.",
-            ]}
-            whatIsNotLiveYet={[
-              "This route is not currently using fully verified governed audit truth for all displayed records.",
-              "Fallback audit history can appear when API-backed audit evidence is unavailable.",
-              "Full correction, reversal, and production-grade audit lifecycle support is not yet verified here.",
-            ]}
-          />
-        </div>
+        <PortalAlert tone="warning" title="Limited audit sync">
+          Showing workspace continuity history. Full governed audit records appear when the workflow API is connected.
+        </PortalAlert>
       ) : null}
 
       <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>

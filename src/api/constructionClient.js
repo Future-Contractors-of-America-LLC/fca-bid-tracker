@@ -113,6 +113,17 @@ export async function createProjectRfi(projectId, body) {
   return payload?.data?.item || payload?.item || payload?.data || payload;
 }
 
+export async function respondProjectRfi(projectId, rfiId, responseText) {
+  const response = await centralFetch(`/api/projects/${encodeURIComponent(projectId)}/rfis`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ rfiId, response: responseText, sourceRoute: "/portal/rfis" }),
+  });
+  const payload = await readJsonSafe(response);
+  if (!response.ok || payload?.ok === false) throw new Error(payload?.error || "Unable to save RFI response.");
+  return payload?.data?.item || payload?.item || payload?.data || payload;
+}
+
 export async function createChangeOrder(body) {
   const response = await centralFetch("/api/change-orders", {
     method: "POST",

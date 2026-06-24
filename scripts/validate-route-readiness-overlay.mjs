@@ -10,9 +10,9 @@ const checks = [
       'setProductAccess(product, true)',
       'setCommsAccess(channel, true)',
       'applyPlanPreset("enterprise")',
-      'Repair Route Dependencies',
-      'Activate Enterprise Readiness',
-      'The platform dashboard should proactively expose missing workspace dependencies before users hit blocked routes downstream.',
+      'Enable missing access',
+      'Switch to Enterprise plan',
+      'Enable workspace tools and Auricrux guidance so the dashboard can show your full operating picture.',
     ],
   },
   {

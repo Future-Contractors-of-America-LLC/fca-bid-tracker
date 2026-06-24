@@ -180,7 +180,7 @@ function writeCourseProgress(progress) {
 export default function AcademyHome() {
   const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { refreshSyncStamp } = useWorkspaceState();
-  const { academyState, meta } = useAcademyLms();
+  const { academyState, meta, advanceProgress } = useAcademyLms();
   const [progress, setProgress] = useState(() => readCourseProgress());
 
   const apiPrograms = academyState?.catalog?.programs ?? [];
@@ -196,8 +196,16 @@ export default function AcademyHome() {
     writeCourseProgress(progress);
   }, [progress]);
 
-  function toggleLesson(lessonId) {
-    setProgress((current) => ({ ...current, [lessonId]: !current[lessonId] }));
+  function toggleLesson(lessonId, programId = "") {
+    const nextComplete = !progress[lessonId];
+    setProgress((current) => ({ ...current, [lessonId]: nextComplete }));
+    if (!nextComplete) return;
+    const enrollment = enrollments.find((entry) => entry.programId === programId || entry.programKey === programId);
+    if (enrollment?.enrollmentId) {
+      advanceProgress(enrollment.enrollmentId, 10, `Completed lesson ${lessonId}`).catch(() => {
+        // local progress remains as fallback
+      });
+    }
   }
 
   const catalogLessons = useMemo(() => flattenCatalogLessons(), []);
@@ -249,7 +257,7 @@ export default function AcademyHome() {
 
       {(apiPrograms.length > 0 || enrollments.length > 0) && (
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Live LMS · Auricrux-Central catalog</div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>FCA Academy catalog</div>
           <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
             Apprenticeship and certification programs are served from the backend catalog. Open a program to view module lessons, complete knowledge checks, and track progress.
           </p>
@@ -280,7 +288,7 @@ export default function AcademyHome() {
           {catalogIntegrity.aligned ? "Catalog aligned" : "Catalog sync"}
         </strong>
         <span style={{ color: "#475569", marginLeft: 8 }}>
-          {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs from Auricrux-Central
+          {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs available
           {catalogIntegrity.apiConnected ? ` (${meta.backingSource})` : " — API pending"}
           {catalogIntegrity.aligned ? "." : " — deploy may still be propagating."}
         </span>
@@ -381,12 +389,6 @@ export default function AcademyHome() {
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Academy</h2>
-        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 16 }}>
-          <li>Explains the lesson objective and why it matters in the customer workflow</li>
-          <li>Recommends the next SaaS action tied to intake, qualification, estimates, files, projects, communications, support, billing, warranty, and tasks</li>
-          <li>Executes guided completion signals and keeps learning-to-workflow continuity visible</li>
-        </ul>
         <a href={executiveSignalCtaSets.academy.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
           {executiveSignalCtaSets.academy.label}
         </a>

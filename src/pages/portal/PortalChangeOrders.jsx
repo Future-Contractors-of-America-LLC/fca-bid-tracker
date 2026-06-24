@@ -11,6 +11,7 @@ export default function PortalChangeOrders() {
   const { projectId, hasProject } = usePortalProjectId();
   const [items, setItems] = useState([]);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [draft, setDraft] = useState({ title: "", amount: "", reason: "" });
@@ -52,10 +53,12 @@ export default function PortalChangeOrders() {
   async function handleAdvance(changeOrderId) {
     setBusy(true);
     setError("");
+    setNotice("");
     try {
       await advanceChangeOrder({ changeOrderId, projectId });
       const payload = await fetchChangeOrders(projectId);
       setItems(payload.items || []);
+      setNotice("Change order advanced. Review SOV and job billing for updated contract value.");
     } catch (err) {
       setError(err.message || "Unable to advance change order.");
     } finally {
@@ -96,6 +99,7 @@ export default function PortalChangeOrders() {
           </button>
         </form>
       ) : null}
+      {notice ? <div style={{ ...card, color: "#166534", borderColor: "#bbf7d0", background: "#f0fdf4", marginBottom: 16 }}>{notice}</div> : null}
       {error ? <div style={{ ...card, color: "#991b1b", borderColor: "#fecaca", background: "#fef2f2" }}>{error}</div> : null}
       {loading ? <div style={card}>Loading change orders…</div> : null}
       <div style={{ display: "grid", gap: 12 }}>

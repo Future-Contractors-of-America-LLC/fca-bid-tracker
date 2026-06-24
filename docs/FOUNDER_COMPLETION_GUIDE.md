@@ -1,8 +1,8 @@
 # Founder Completion Guide
 
-Everything below requires **your** accounts, credentials, legal approval, or store enrollment. The engineering team handles code, CI, and deployments; these items unblock revenue, mobile store presence, enterprise sales, and production hardening.
+Everything below requires **your** accounts, credentials, legal approval, or store enrollment for items that cannot be automated (primarily **app store publish**). Revenue, enterprise auth, M365 file sync, and transactional email are **wired through Auricrux-Central** — engineering completes the integration; you verify live configuration in Azure when needed.
 
-**Last updated:** 2026-06-18  
+**Last updated:** 2026-06-24  
 **Repos:** `auricrux-central`, `fca-bid-tracker`, `fca-mobile-maui` (canonical mobile), `fca-mobile` (legacy � do not extend)
 
 ---
@@ -24,11 +24,11 @@ Everything below requires **your** accounts, credentials, legal approval, or sto
 
 ## Section 1 � Revenue (highest priority)
 
-### 1.1 Stripe live keys
+### 1.1 Stripe live keys (in-house via Auricrux-Central)
 
-**Why:** Without live keys, checkout and webhooks stay in test mode.
+**Why:** FCA checkout, invoice payment, and subscription billing run through **Stripe on Auricrux-Central** — not external checkout silos. Portal billing and website checkout call `POST /api/stripe-checkout`; webhooks land on Central at `/api/stripe/webhook`.
 
-**Steps:**
+**Status:** Integration code is complete. Verify live keys are present in Azure:
 
 1. Sign in to [Stripe Dashboard](https://dashboard.stripe.com).
 2. Switch to **Live** mode (toggle top-right).
@@ -289,11 +289,11 @@ dotnet workload list   # should include maui
 
 ## Section 3 � Enterprise authentication (Microsoft / Google SSO)
 
-### 3.1 Azure Entra ID app registration
+### 3.1 Azure Entra ID app registration (live via `/api/customer-entra`)
 
-**Why:** Replace password-only login for enterprise buyers.
+**Why:** Enterprise buyers sign in with Microsoft through Auricrux-Central OAuth — the web login page exposes **Sign in with Microsoft** when `AZURE_CLIENT_ID` and `AZURE_TENANT_ID` are set on Central.
 
-**Steps:**
+**Status:** OAuth authorize/callback and session exchange are implemented. Verify redirect URIs match your deployment:
 
 1. [Azure Portal](https://portal.azure.com) ? **Microsoft Entra ID ? App registrations ? New registration**
 2. Name: `FCA Contractor Command`
@@ -342,9 +342,11 @@ After SSO works, disable or rotate:
 3. Assign to your user or the Auricrux-Central managed identity
 4. Retry secret reads from deployment scripts
 
-### 4.2 M365 / SharePoint integration
+### 4.2 M365 / SharePoint integration (live read bridge)
 
-1. Entra ID ? **App registrations** (separate or same app)
+**Status:** Auricrux-Central exposes `/api/m365/sharepoint/*` endpoints. Portal Files surfaces governed SharePoint items when Graph credentials are configured.
+
+1. Entra ID ? **App registrations** (same app as SSO or dedicated Graph app)
 2. API permissions: `Sites.ReadWrite.All`, `Files.ReadWrite.All` (admin consent required)
 3. Store client secret in Key Vault
 4. Set Auricrux-Central env vars per `auricrux-central-work/docs/` SharePoint runbooks

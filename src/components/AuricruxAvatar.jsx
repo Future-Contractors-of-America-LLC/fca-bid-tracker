@@ -1,10 +1,9 @@
 import { brandIdentity } from "../brandIdentity";
 import { auricruxPersona } from "../config/auricruxPersona";
-
-const PORTRAIT_SRC = auricruxPersona.portraitSrc || "/brand/auricrux/auricrux-portrait.png";
+import AuricruxHumanoidFigure from "./AuricruxHumanoidFigure";
 
 /**
- * Auricrux humanoid avatar — photorealistic portrait with live state cues.
+ * Auricrux humanoid avatar — original trademark artwork with live state cues.
  * state: idle | listening | thinking | speaking
  */
 export default function AuricruxAvatar({
@@ -79,12 +78,8 @@ export default function AuricruxAvatar({
         .auricrux-avatar--thinking .auricrux-avatar__frame {
           animation: auricrux-breathe 5.5s ease-in-out infinite, auricrux-think 2.8s ease-in-out infinite;
         }
-        .auricrux-avatar__photo {
+        .auricrux-avatar__figure {
           display: block;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center 18%;
         }
         .auricrux-avatar__badge {
           position: absolute;
@@ -109,15 +104,7 @@ export default function AuricruxAvatar({
         className="auricrux-avatar__frame"
         style={{ width: size, height: size }}
       >
-        <img
-          src={PORTRAIT_SRC}
-          alt=""
-          className="auricrux-avatar__photo"
-          width={size}
-          height={size}
-          loading="lazy"
-          decoding="async"
-        />
+        <AuricruxHumanoidFigure state={state} size={size} />
         <span className="auricrux-avatar__badge" aria-hidden="true">
           AX
         </span>

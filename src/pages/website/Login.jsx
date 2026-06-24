@@ -8,6 +8,13 @@ import { auricruxPersona } from "../../config/auricruxPersona";
 import LoginActionCenter from "../../components/LoginActionCenter";
 import { centralFetch } from "../../api/backendBase";
 import { verifyCustomerLogin } from "../../api/authClient";
+import {
+  clearEntraExchangeFromLocation,
+  exchangeEntraSession,
+  fetchEntraAuthStatus,
+  readEntraExchangeFromLocation,
+  startEntraSignIn,
+} from "../../api/entraAuthClient";
 import { isAllowedPostLoginHref, resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -36,7 +43,7 @@ const EMPTY_FORM = {
 
 function readLoginQueryState() {
   if (typeof window === "undefined") {
-    return { seeded: false, autologin: false, internal: false, nextHref: null, accountKey: "test" };
+    return { seeded: false, autologin: false, internal: false, nextHref: null, accountKey: "test", sessionExpired: false, resetRequested: false };
   }
   const params = new URLSearchParams(window.location.search);
   const accountParam = params.get("account");
@@ -45,7 +52,9 @@ function readLoginQueryState() {
   const autologin = params.get("autologin") === "1" && seeded;
   const internal = params.get("mode") === "internal" || seeded;
   const nextHref = params.get("next");
-  return { seeded, autologin, internal, nextHref, accountKey };
+  const sessionExpired = params.get("session") === "expired";
+  const resetRequested = params.get("reset") === "1";
+  return { seeded, autologin, internal, nextHref, accountKey, sessionExpired, resetRequested };
 }
 
 function resolveLocalFallbackAccount(email, password) {
@@ -99,6 +108,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const [pendingChallenge, setPendingChallenge] = useState(null);
   const [error, setError] = useState("");
   const [authStatus, setAuthStatus] = useState("idle");
+  const [entraConfigured, setEntraConfigured] = useState(false);
   const autologinAttemptedRef = useRef(false);
   const redirectAttemptedRef = useRef(false);
   const sessionResetRef = useRef(false);
@@ -114,7 +124,52 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     : "/portal/platform";
 
   useEffect(() => {
-    if (queryState.seeded || sessionResetRef.current) return;
+    let active = true;
+    fetchEntraAuthStatus()
+      .then((status) => {
+        if (active) setEntraConfigured(status.configured);
+      })
+      .catch(() => {
+        if (active) setEntraConfigured(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const exchangeToken = readEntraExchangeFromLocation();
+    if (!exchangeToken || queryState.seeded) return undefined;
+    let cancelled = false;
+    setAuthStatus("authenticating");
+    exchangeEntraSession(exchangeToken)
+      .then((payload) => {
+        if (cancelled) return;
+        clearEntraExchangeFromLocation();
+        completeLogin({
+          ...payload.account,
+          authBoundary: payload.authBoundary,
+          accountSource: payload.authenticationMode || "entra-server-session",
+        });
+      })
+      .catch((entraError) => {
+        if (cancelled) return;
+        clearEntraExchangeFromLocation();
+        setAuthStatus("failed");
+        setError(entraError?.message || "Microsoft sign-in failed.");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [queryState.seeded]);
+
+  useEffect(() => {
+    if (queryState.seeded || !isAuthenticated) return;
+    navigateTo(resolveWorkspaceEntryHref(session, nextHref));
+  }, [isAuthenticated, nextHref, queryState.seeded, session]);
+
+  useEffect(() => {
+    if (queryState.seeded || !queryState.resetRequested || sessionResetRef.current) return;
     sessionResetRef.current = true;
     let cancelled = false;
 
@@ -133,7 +188,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     return () => {
       cancelled = true;
     };
-  }, [logout, queryState.seeded]);
+  }, [logout, queryState.resetRequested, queryState.seeded]);
 
   useEffect(() => {
     if (!queryState.seeded) return;
@@ -279,6 +334,18 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     navigateTo("/login");
   }
 
+  async function handleMicrosoftSignIn() {
+    setError("");
+    setAuthStatus("authenticating");
+    try {
+      const returnUrl = `${window.location.origin}/login?next=${encodeURIComponent(nextHref)}`;
+      await startEntraSignIn(returnUrl);
+    } catch (entraError) {
+      setAuthStatus("failed");
+      setError(entraError?.message || "Microsoft sign-in is unavailable.");
+    }
+  }
+
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc" }}>
       <PublicTopNav />
@@ -303,8 +370,14 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         >
           <h1 style={{ marginTop: 0, marginBottom: 6, fontSize: 22 }}>Sign in</h1>
           <p style={{ color: "#64748b", marginTop: 0, marginBottom: 20, lineHeight: 1.55, fontSize: 14 }}>
-            Each visit starts fresh. Sensitive areas such as banking require a verification step after your password.
+            Access your FCA workspace — pipeline, projects, billing, and Academy training in one place.
           </p>
+
+          {queryState.sessionExpired ? (
+            <div style={{ color: "#b45309", background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, padding: "10px 12px", marginBottom: 14, fontSize: 14, lineHeight: 1.5 }}>
+              Your session ended. Sign in again to continue where you left off.
+            </div>
+          ) : null}
 
           {authStatus === "awaiting-verification" ? (
             <>
@@ -347,7 +420,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
           )}
 
           {authStatus === "authenticating" ? (
-            <div style={{ color: "#0f766e", marginBottom: 12, fontWeight: 600, fontSize: 14 }}>Opening workspace...</div>
+            <div style={{ color: "#0f766e", marginBottom: 12, fontWeight: 600, fontSize: 14 }}>Opening your workspace...</div>
           ) : null}
           {authStatus === "seeded" ? (
             <div style={{ color: "#0f766e", marginBottom: 12, fontSize: 14 }}>Founder test credentials loaded.</div>
@@ -358,8 +431,17 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             <button type="submit" style={{ ...portalButtonPrimary, border: "none", cursor: "pointer" }}>
               {authStatus === "awaiting-verification" ? "Verify and continue" : internalMode ? "Open workspace" : "Sign in"}
             </button>
+            {entraConfigured && authStatus !== "awaiting-verification" ? (
+              <button
+                type="button"
+                onClick={handleMicrosoftSignIn}
+                style={{ ...portalButtonPrimary, background: "#fff", color: "#0f172a", border: "1px solid #cbd5e1", cursor: "pointer" }}
+              >
+                Sign in with Microsoft
+              </button>
+            ) : null}
             <button type="button" onClick={handleResetSession} style={{ ...portalButtonPrimary, background: "#fff", color: "#0f172a", border: "1px solid #cbd5e1", cursor: "pointer" }}>
-              Reset session
+              Sign out
             </button>
           </div>
 

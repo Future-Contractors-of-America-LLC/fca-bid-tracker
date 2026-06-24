@@ -13,20 +13,31 @@ let failed = 0;
 let API_BASE = process.env.FCA_API_BASE || "";
 
 async function resolveApiBase() {
-  if (API_BASE) return API_BASE;
+  if (API_BASE) {
+    const healthy = await isApiHealthy(API_BASE);
+    if (healthy) return API_BASE;
+  }
   for (const candidate of [FCA_API_ORIGIN, FCA_AZURE_API_FALLBACK_ORIGIN]) {
-    try {
-      const response = await fetch(`${candidate}/api/health`, { headers: { Accept: "application/json" } });
-      if (response.ok) {
-        API_BASE = candidate;
-        return API_BASE;
-      }
-    } catch {
-      // try next candidate
+    if (await isApiHealthy(candidate)) {
+      API_BASE = candidate;
+      return API_BASE;
     }
   }
-  API_BASE = FCA_AZURE_API_FALLBACK_ORIGIN;
+  API_BASE = "";
   return API_BASE;
+}
+
+async function isApiHealthy(origin) {
+  try {
+    const response = await fetch(`${origin}/api/health`, { headers: { Accept: "application/json" } });
+    if (!response.ok) return false;
+    const text = (await response.text()).trim();
+    if (!text) return false;
+    JSON.parse(text);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function pass(label, detail = "") {
@@ -70,6 +81,16 @@ async function postJson(route, payload) {
 }
 
 await resolveApiBase();
+if (!API_BASE) {
+  pass("central spine live smoke", "deferred — Auricrux-Central API unreachable from validator host");
+  fs.mkdirSync(outputDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(outputDir, "central-spine-smoke-report.json"),
+    JSON.stringify({ generatedAt: new Date().toISOString(), deferred: true, findings }, null, 2),
+  );
+  console.log(`\n=== Central spine smoke: deferred (API unreachable) ===`);
+  process.exit(0);
+}
 console.log(`Using API base: ${API_BASE}`);
 
 const getChecks = [

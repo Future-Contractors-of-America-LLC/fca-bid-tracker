@@ -7,6 +7,7 @@ import {
   fetchPortalMessages,
   sendPortalMessage,
 } from "../../api/portalClient";
+import { drainCommsQueue, enqueueTransactionalEmail } from "../../api/commsClient";
 import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import { auricruxCommsChannels, portalMessages, routeStateOverlays } from "../../systemState";
 
@@ -79,7 +80,7 @@ export default function PortalMessages() {
             channel: item.channel || "email",
           })),
         }));
-        refreshSyncStamp("Portal messages synced from Auricrux-Central");
+        refreshSyncStamp("Messages synced");
       })
       .catch(() => {
         if (active) setApiBacking("local-fallback");
@@ -104,9 +105,23 @@ export default function PortalMessages() {
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
   const filteredMessages = useMemo(() => {
-    if (!activeChannel || !channelMap[activeChannel]) return portalMessages;
-    return portalMessages.filter((message) => channelMap[activeChannel].includes(message.channel));
-  }, [activeChannel]);
+    if (apiBacking !== "local-fallback" && (drafts.sent || []).length) {
+      return (drafts.sent || []).map((message) => ({
+        from: companyName,
+        subject: message.subject,
+        preview: message.message,
+        channel: message.channel,
+        priority: "Sent",
+        nextAction: "Await customer or internal response",
+      }));
+    }
+    if (!activeChannel || !channelMap[activeChannel]) {
+      return portalMessages.map((message) => ({ ...message, priority: `${message.priority} · Sample` }));
+    }
+    return portalMessages
+      .filter((message) => channelMap[activeChannel].includes(message.channel))
+      .map((message) => ({ ...message, priority: `${message.priority} · Sample` }));
+  }, [activeChannel, apiBacking, companyName, drafts.sent]);
 
   const commItems = auricruxCommsChannels.map((item) => ({
     ...item,
@@ -126,7 +141,18 @@ export default function PortalMessages() {
       message: drafts.message,
       channel: drafts.channel,
     };
-    sendPortalMessage(payload)
+    const emailPromise = payload.channel === "email" && session?.email
+      ? enqueueTransactionalEmail({
+          subject: payload.subject,
+          body: payload.message,
+          recipientEmail: session.email,
+          recipientName: session.company || companyName,
+          sourceRoute: "/portal/messages",
+        }).then(() => drainCommsQueue().catch(() => null))
+      : Promise.resolve();
+
+    emailPromise
+      .then(() => sendPortalMessage(payload))
       .then(() => fetchPortalMessages())
       .then((result) => {
         setApiBacking(result?.backingSource || "auricrux-central-portal-store");
@@ -171,7 +197,7 @@ export default function PortalMessages() {
     >
       {apiBacking === "local-fallback" ? (
         <PortalAlert tone="warning">
-          Messages API unreachable. Drafts are stored locally until Auricrux-Central sync recovers.
+          Messages are temporarily offline. Drafts are saved on this device until sync returns.
         </PortalAlert>
       ) : null}
       <CustomerCommsLaunchpad session={session} title="Launch customer-enabled communications lanes" />
@@ -191,7 +217,7 @@ export default function PortalMessages() {
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Functional product: Customer Communications Command</h2>
+        <h2 style={{ marginTop: 0 }}>Compose message</h2>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
           <label>
             <div style={{ fontWeight: 700, marginBottom: 6 }}>Channel</div>
@@ -235,7 +261,7 @@ export default function PortalMessages() {
       </div>
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Live communication stream</h2>
+        <h2 style={{ marginTop: 0 }}>{apiBacking !== "local-fallback" && (drafts.sent || []).length ? "Live communication stream" : "Sample communication stream"}</h2>
         {filteredMessages.map((message) => (
           <div key={`${message.from}-${message.subject}`} style={{ padding: "12px 0", borderBottom: "1px solid #e5e7eb" }}>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
@@ -250,15 +276,6 @@ export default function PortalMessages() {
             </div>
           </div>
         ))}
-      </div>
-
-      <div style={{ ...cardStyle, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in Communications Command</h2>
-        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains customer communication posture and priority</li>
-          <li>Recommends the next cross-channel customer action</li>
-          <li>Executes customer-update composition and continuity signaling</li>
-        </ul>
       </div>
     </PortalShell>
   );

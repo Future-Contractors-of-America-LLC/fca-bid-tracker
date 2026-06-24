@@ -3,7 +3,7 @@ import {
   CUSTOMER_SESSION_EVENT,
   clearCustomerSession,
   readCustomerSession,
-  syncCustomerSessionFromServer,
+  hydrateCustomerSession,
   updateCustomerSession,
   writeCustomerSession,
 } from "../customerSession";
@@ -92,7 +92,7 @@ export default function useCustomerSession() {
 
     async function hydrate() {
       try {
-        const synced = await syncCustomerSessionFromServer();
+        const synced = await hydrateCustomerSession();
         if (!active) return;
         setSession(synced || readCustomerSession());
       } catch {

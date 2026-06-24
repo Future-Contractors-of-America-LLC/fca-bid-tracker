@@ -38,7 +38,7 @@ function readProjectIdFromLocation() {
   if (typeof window === "undefined") return "";
   try {
     const params = new URLSearchParams(window.location.search);
-    return (params.get("projectId") || "").trim();
+    return (params.get("projectId") || params.get("project") || "").trim();
   } catch {
     return "";
   }

@@ -1,9 +1,11 @@
 import { createOperationalPortalPage } from "../../components/OperationalToolPage.jsx";
+import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import {
   completeFieldScheduleEvent,
   createFieldScheduleEvent,
   fetchFieldSchedule,
 } from "../../api/fieldOpsClient";
+import { routeStateOverlays } from "../../systemState";
 
 export default createOperationalPortalPage({
   title: "Scheduling",
@@ -11,7 +13,10 @@ export default createOperationalPortalPage({
   activeHref: "/portal/scheduling",
   storageKey: "fca_portal_scheduling_v1",
   itemLabel: "Scheduled event",
-  journey: "lead",
+  journey: "job",
+  routeOverlay: routeStateOverlays.projects,
+  primaryHref: "/portal/field-tasks",
+  primaryLabel: "Open field tasks",
   seedItems: [],
   fields: [
     { key: "title", label: "Event title", required: true, placeholder: "Inspection / mobilization / meeting" },
@@ -26,4 +31,23 @@ export default createOperationalPortalPage({
     completeItem: completeFieldScheduleEvent,
   },
   projectScoped: true,
+  renderBeforeContent({ selectedProjectId }) {
+    const fieldHref = selectedProjectId
+      ? `/portal/field-tasks?projectId=${encodeURIComponent(selectedProjectId)}`
+      : "/portal/field-tasks";
+
+    return (
+      <AuricruxInsightPanel
+        title="Auricrux Scheduling Intelligence"
+        targetObjectId={selectedProjectId || "workspace"}
+        sourceRoute="/portal/scheduling"
+        rationale="Mobilization, inspections, and walkthroughs should stay tied to active field tasks and project milestones."
+        nextAction="Confirm crew availability before locking inspection or turnover dates."
+        actionHref={fieldHref}
+        actionLabel="Open field tasks"
+        tone="blue"
+        liveRecommend={Boolean(selectedProjectId)}
+      />
+    );
+  },
 });

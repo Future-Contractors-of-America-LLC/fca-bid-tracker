@@ -54,6 +54,17 @@ export default function PortalProposals() {
         </div>
       ) : null}
 
+      {!proposals.length ? (
+        <div style={{ ...cardStyle, marginBottom: 16, color: "#475569", lineHeight: 1.7 }}>
+          {meta?.backingSource === "unavailable"
+            ? "Proposals are temporarily unavailable. Generate a proposal from Estimates or retry shortly."
+            : "No proposals yet. Advance an estimate and generate a proposal package to start customer delivery."}
+          <div style={{ marginTop: 12 }}>
+            <a href="/portal/estimates" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open Estimates</a>
+          </div>
+        </div>
+      ) : null}
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
         {proposals.map((proposal) => (
           <div key={proposal.proposalId} style={cardStyle}>

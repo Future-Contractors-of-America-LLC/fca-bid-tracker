@@ -155,6 +155,23 @@ export default function useProjectWorkspace() {
           return saved;
         }
       },
+      async updateProjectCommandNotes(projectId, { ownerNote = "", customerMilestone = "" }, detail = "Project command notes saved.") {
+        try {
+          const payload = await mutateWorkflowProject("update-command-notes", {
+            projectId,
+            ownerNote,
+            customerMilestone,
+            detail,
+          });
+          const saved = updateProjectWorkspace((current) => current.map((project) => (project.id === projectId ? payload.project : project)));
+          setProjects(saved);
+          setMeta({ backingSource: payload.backingSource || "api-workflow-store", persistenceState: "API project mutation active", lastSyncedAt: new Date().toISOString() });
+          return payload.project;
+        } catch {
+          setMeta({ backingSource: "localStorage", persistenceState: "Fallback project notes active", lastSyncedAt: new Date().toISOString() });
+          return null;
+        }
+      },
     };
   }, [activeProjectId, meta, projects]);
 }

@@ -114,13 +114,18 @@ export default function PortalBids() {
             key: "package",
             label: "Opportunity",
             render: (row) => (
-              <button
-                type="button"
-                onClick={() => setActiveBidId(row.id)}
-                style={{ border: "none", background: "transparent", padding: 0, textAlign: "left", cursor: "pointer", font: "inherit", color: portalTokens.primaryInk, fontWeight: 700 }}
-              >
-                {row.package}
-              </button>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                <button
+                  type="button"
+                  onClick={() => setActiveBidId(row.id)}
+                  style={{ border: "none", background: "transparent", padding: 0, textAlign: "left", cursor: "pointer", font: "inherit", color: portalTokens.primaryInk, fontWeight: 700 }}
+                >
+                  {row.package}
+                </button>
+                <a href={`/portal/opportunities/${encodeURIComponent(row.id)}`} style={{ fontSize: 12, color: portalTokens.primary, fontWeight: 600, textDecoration: "none" }}>
+                  Open detail
+                </a>
+              </div>
             ),
           },
           { key: "value", label: "Value" },
@@ -136,8 +141,8 @@ export default function PortalBids() {
         rows={tableRows}
         emptyTitle="No bids in your qualification board"
         emptyDetail="Create your first opportunity from intake or the public job board, then return here to qualify and route work."
-        emptyPrimaryHref="/job-board"
-        emptyPrimaryLabel="Browse job board"
+        emptyPrimaryHref="/portal/pipeline"
+        emptyPrimaryLabel="Open pipeline"
       />
 
       {activeBid ? (

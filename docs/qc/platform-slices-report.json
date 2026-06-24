@@ -1,0 +1,161 @@
+{
+  "generatedAt": "2026-06-24T12:04:13.484Z",
+  "failed": 0,
+  "sliceCount": 15,
+  "findings": [
+    {
+      "slice": "02-website",
+      "status": "pass",
+      "label": "contact removes coming-soon blockers",
+      "detail": "src/pages/website/Contact.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "02-website",
+      "status": "pass",
+      "label": "checkout success opens workspace",
+      "detail": "src/pages/website/CheckoutSuccess.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "02-website",
+      "status": "pass",
+      "label": "intake shows conversion stepper",
+      "detail": "src/pages/website/Intake.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "03-pipeline",
+      "status": "pass",
+      "label": "bids link to opportunity detail",
+      "detail": "src/pages/portal/PortalBids.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "03-pipeline",
+      "status": "pass",
+      "label": "bids empty state routes to pipeline",
+      "detail": "src/pages/portal/PortalBids.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "04-estimating",
+      "status": "pass",
+      "label": "estimate add-line mutation exists",
+      "detail": "api/commercial-store.js",
+      "tag": "mutation"
+    },
+    {
+      "slice": "04-estimating",
+      "status": "pass",
+      "label": "estimates persist new lines via API",
+      "detail": "src/pages/portal/PortalEstimates.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "04-estimating",
+      "status": "pass",
+      "label": "proposals empty state guidance",
+      "detail": "src/pages/portal/PortalProposals.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "05-projects",
+      "status": "pass",
+      "label": "files accept project deep-link aliases",
+      "detail": "src/pages/portal/PortalFiles.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "06-comms",
+      "status": "pass",
+      "label": "messages prefer API-sent stream when live",
+      "detail": "src/pages/portal/PortalMessages.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "07-academy",
+      "status": "pass",
+      "label": "academy lesson toggle syncs LMS progress",
+      "detail": "src/pages/academy/AcademyHome.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "08-design",
+      "status": "pass",
+      "label": "design accepts project deep-link alias",
+      "detail": "src/pages/portal/PortalDesignWorkspace.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "09-rfi-closeout",
+      "status": "pass",
+      "label": "closeout guards missing project",
+      "detail": "src/pages/portal/PortalCloseout.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "10-field",
+      "status": "pass",
+      "label": "scheduling includes Auricrux guidance",
+      "detail": "src/pages/portal/PortalScheduling.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "10-field",
+      "status": "pass",
+      "label": "operational tools accept project query alias",
+      "detail": "src/components/OperationalToolPage.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "11-finance",
+      "status": "pass",
+      "label": "change order advance shows billing continuity",
+      "detail": "src/pages/portal/PortalChangeOrders.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "12-warranty",
+      "status": "pass",
+      "label": "warranty links to support",
+      "detail": "src/pages/portal/PortalWarranty.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "13-admin",
+      "status": "pass",
+      "label": "profile removes commentary shell",
+      "detail": "src/pages/portal/PortalProfile.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "14-auricrux",
+      "status": "pass",
+      "label": "auricrux shows live vs guidance mode",
+      "detail": "src/pages/portal/PortalAuricrux.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "15-mobile",
+      "status": "pass",
+      "label": "mobile API client stores session cookies",
+      "detail": "src/FcaMobile/Services/FcaApiClient.cs",
+      "tag": "mutation"
+    },
+    {
+      "slice": "16-platform",
+      "status": "pass",
+      "label": "platform dashboard includes workspace guide",
+      "detail": "src/pages/portal/PlatformDashboard.jsx",
+      "tag": "mutation"
+    },
+    {
+      "slice": "16-platform",
+      "status": "pass",
+      "label": "profile includes account security section",
+      "detail": "src/pages/portal/PortalProfile.jsx",
+      "tag": "mutation"
+    }
+  ]
+}

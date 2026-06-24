@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import ProjectFileAuditPanel from "../../components/ProjectFileAuditPanel";
 import AuricruxBriefingCard from "../../components/AuricruxBriefingCard";
-import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
+import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
@@ -10,6 +10,7 @@ import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets, qualificationEvidenceByProject } from "../../qualificationEvidence";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { submitAuricruxAction } from "../../api/auricruxActionsClient";
+import { fetchSharePointDriveStatus, listSharePointFolderItems, sharePointItemHref } from "../../api/m365Client";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -112,8 +113,8 @@ function readDeepLinkParams() {
   if (typeof window === "undefined") return { projectId: "", fileId: "" };
   const params = new URLSearchParams(window.location.search);
   return {
-    projectId: params.get("project") || "",
-    fileId: params.get("file") || "",
+    projectId: params.get("projectId") || params.get("project") || "",
+    fileId: params.get("fileId") || params.get("file") || "",
   };
 }
 
@@ -125,6 +126,9 @@ export default function PortalFiles() {
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState(() => readLocalJson(FILE_INTAKE_DRAFTS_KEY, defaultDraft));
   const [deepLink] = useState(() => readDeepLinkParams());
+  const [sharePointStatus, setSharePointStatus] = useState(null);
+  const [sharePointItems, setSharePointItems] = useState([]);
+  const [sharePointError, setSharePointError] = useState("");
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
 
   const visibleProject = activeProject || state.project;
@@ -152,6 +156,26 @@ export default function PortalFiles() {
     if (!deepLink.fileId || !targetedFile) return;
     setFilters((current) => (current.q === targetedFile.name ? current : { ...current, q: targetedFile.name }));
   }, [deepLink.fileId, targetedFile, setFilters]);
+
+  useEffect(() => {
+    let active = true;
+    setSharePointError("");
+    Promise.all([
+      fetchSharePointDriveStatus().catch(() => null),
+      listSharePointFolderItems().catch(() => null),
+    ])
+      .then(([statusPayload, folderPayload]) => {
+        if (!active) return;
+        if (statusPayload) setSharePointStatus(statusPayload);
+        if (folderPayload?.items) setSharePointItems(folderPayload.items.slice(0, 8));
+      })
+      .catch((error) => {
+        if (active) setSharePointError(error.message || "SharePoint sync unavailable.");
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   async function handleFileAction(file, action, detail, extra = {}) {
     setBusyFileId(file.fileId);
@@ -229,22 +253,41 @@ export default function PortalFiles() {
     >
       {!apiBacked ? (
         <div style={{ marginBottom: 16 }}>
-          <ExecutionTruthBanner
-            title="File spine shell is active"
-            status="Workspace active"
-            source={evidenceMeta.backingSource}
-            tone="warning"
-            whatIsLive={[
-              "Active project-aware file context inside the shared workspace shell.",
-              "Owner-linkage modeling, file review surfaces, and continuity-oriented summaries.",
-              "Shell-level classification, evidence, and briefing posture tied to the active project root.",
-            ]}
-            whatIsNotLiveYet={[
-              "This route is not currently using fully verified canonical file register/upload behavior for all actions.",
-              "Visible file actions can fall back to seeded continuity state when backend workflow calls are unavailable.",
-              "This route does not verify full native document intelligence or production-grade durable upload completion.",
-            ]}
-          />
+          <PortalAlert tone="warning" title="Offline file workspace">
+            File actions use workspace continuity when the workflow API is unavailable. Connect to sync governed uploads and evidence links.
+          </PortalAlert>
+        </div>
+      ) : null}
+
+      {sharePointStatus || sharePointItems.length ? (
+        <div style={{ ...cardStyle, marginBottom: 16, background: "#f8fbff", border: "1px solid #dbe3ef" }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>SharePoint governed library</div>
+          <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
+            Project files can be opened from the FCA SharePoint site through Auricrux-Central Graph integration.
+          </div>
+          {sharePointStatus?.site?.webUrl ? (
+            <a href={sharePointStatus.site.webUrl} target="_blank" rel="noreferrer" style={{ ...secondaryButtonStyle, display: "inline-block", textDecoration: "none", marginBottom: 12 }}>
+              Open SharePoint site
+            </a>
+          ) : null}
+          {sharePointItems.length ? (
+            <div style={{ display: "grid", gap: 8 }}>
+              {sharePointItems.map((item) => (
+                <div key={item.id || item.name} style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", borderTop: "1px solid #e2e8f0", paddingTop: 8 }}>
+                  <div>
+                    <strong>{item.name}</strong>
+                    <div style={{ color: "#64748b", fontSize: 13 }}>{item.folder ? "Folder" : "File"}</div>
+                  </div>
+                  {sharePointItemHref(item) ? (
+                    <a href={sharePointItemHref(item)} target="_blank" rel="noreferrer" style={{ color: "#2563eb", fontWeight: 700 }}>
+                      Open
+                    </a>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {sharePointError ? <div style={{ color: "#b45309", marginTop: 10 }}>{sharePointError}</div> : null}
         </div>
       ) : null}
 
@@ -272,7 +315,7 @@ export default function PortalFiles() {
       ) : null}
 
       <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <h2 style={{ marginTop: 0 }}>Functional product: File intake and evidence registration</h2>
+        <h2 style={{ marginTop: 0 }}>File intake and evidence registration</h2>
         <form onSubmit={handleCreateFileRecord} style={{ display: "grid", gap: 12 }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
             <label>
@@ -345,15 +388,6 @@ export default function PortalFiles() {
           </div>
         </div>
       ) : null}
-
-      <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <h2 style={{ marginTop: 0 }}>Auricrux confirmed in File Workspace</h2>
-        <ul style={{ paddingLeft: 20, lineHeight: 1.9, color: "#334155", marginBottom: 0 }}>
-          <li>Explains file readiness, evidence posture, and downstream project impact</li>
-          <li>Recommends next file, estimate, and customer actions</li>
-          <li>Executes review registration, evidence linkage, and briefing generation</li>
-        </ul>
-      </div>
 
       <div style={{ ...cardStyle, marginBottom: 16 }}>
         <h2 style={{ marginTop: 0 }}>File governance registers</h2>

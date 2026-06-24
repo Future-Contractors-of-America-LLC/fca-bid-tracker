@@ -234,6 +234,17 @@ export const routeStateOverlays = {
     auricruxRole: "Govern and monitor",
     auricruxDetail: "Auricrux keeps administrative state legible and tied to live workspace readiness rather than detached settings.",
   },
+  auricrux: {
+    title: "Auricrux guidance",
+    summary: "Your operator guide for what to do next — blockers, priorities, and the right lane to open.",
+    status: "Guidance active",
+    primaryFocus: "Next best action",
+    primaryDetail: "See what is holding work up and where to go to move it forward.",
+    dependency: "Workspace context",
+    dependencyDetail: "Guidance works best when your profile, project, and pipeline are set up.",
+    auricruxRole: "Guide and explain",
+    auricruxDetail: "Ask questions, get step-by-step direction, and jump to the right product.",
+  },
 };
 
 export const projectAuditEvents = [
@@ -756,6 +767,7 @@ export const portalNavGroups = [
 
 /** Curated hub tiles on workspace dashboard — full directory via portalModules. */
 export const portalHubModules = [
+  { href: "/portal/auricrux", label: "Auricrux", description: "What to do next" },
   { href: "/portal/pipeline", label: "Pipeline", description: "Bid through payment" },
   { href: "/portal/bids", label: "Bids", description: "Qualify and award" },
   { href: "/portal/projects", label: "Projects", description: "Job execution" },

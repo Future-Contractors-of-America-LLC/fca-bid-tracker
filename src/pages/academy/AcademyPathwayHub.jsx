@@ -247,7 +247,7 @@ export default function AcademyPathwayHub() {
           <strong>Connected ecosystem</strong>
           <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0 }}>
             This mini-LMS is embedded in FCA Contractor Command and futurecontractorsofamerica.com.
-            Progress, credentials, and portal labs sync through Auricrux-Central - one operator, multiple pathway experiences.
+            Progress, credentials, and portal labs stay in sync across every pathway you open.
           </p>
         </section>
       </main>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PortalShell from "../../components/PortalShell";
-import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
+import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
@@ -90,7 +90,7 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
     try {
       try {
         await convertOpportunityToProject(opportunityId, { detail: "Converted from opportunity detail route." });
-        setActionMessage("Opportunity converted to project via Auricrux-Central.");
+        setActionMessage("Opportunity converted to an active project.");
       } catch {
         await markWonAndCreateProject(opportunityId, "Converted from opportunity detail route.");
         setActionMessage("Opportunity awarded and project created in workspace.");
@@ -113,23 +113,13 @@ export default function PortalOpportunityDetail({ requestedPath, routeParams = {
       primaryLabel="Open Bid Pipeline"
       workspaceState={state}
     >
-      <div style={{ marginBottom: 16 }}>
-        <ExecutionTruthBanner
-          title="Opportunity workspace shell is active"
-          status={apiBacked ? "API-backed workspace read" : "Fallback shell continuity active"}
-          source={`workspace=${meta.backingSource} · bids=${bidMeta.backingSource}`}
-          tone={apiBacked ? "info" : "warning"}
-          whatIsLive={[
-            "A dynamic routed opportunity workspace exists at /portal/opportunities/:opportunityId.",
-            "The route prefers a canonical backend workspace read for opportunity detail.",
-            "Governed project conversion can be triggered from this route when readiness allows.",
-          ]}
-          whatIsNotLiveYet={[
-            "When backend truth is unavailable, the route still falls back to shell continuity derived from the bid spine.",
-            "Direct opportunity-specific file uploads and estimate line mutations remain on dedicated workspace routes.",
-          ]}
-        />
-      </div>
+      {!apiBacked ? (
+        <div style={{ marginBottom: 16 }}>
+          <PortalAlert tone="warning" title="Limited opportunity sync">
+            Opportunity detail is using workspace continuity. Connect to the API for live bid spine reads and governed project conversion.
+          </PortalAlert>
+        </div>
+      ) : null}
 
       {visible ? (
         <>

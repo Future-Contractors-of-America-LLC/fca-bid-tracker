@@ -7,7 +7,6 @@ import PublicActionRail from "../../components/PublicActionRail";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import ContactActionCenter from "../../components/ContactActionCenter";
-import ExecutionTruthBanner from "../../components/ExecutionTruthBanner";
 import ProductIllustration from "../../components/ProductIllustration";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { contactPaths, publicActionCatalog, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
@@ -48,22 +47,6 @@ export default function Contact() {
       <div style={{ marginBottom: 24 }}>
         <ContactActionCenter session={session} login={login} />
       </div>
-
-      <ExecutionTruthBanner
-        title="Walkthrough activation now creates a governed lead"
-        status="Lead intake wired · session still client-provisioned"
-        source="POST /api/leads · fca-contact-walkthrough"
-        tone="info"
-        whatIsLive={[
-          "Walkthrough CTAs create a governed lead record before session activation.",
-          "Plan-matched session posture across portal surfaces.",
-          "Conversion routing into portal, billing, messaging, and admin demo paths.",
-        ]}
-        whatIsNotLiveYet={[
-          "Managed customer accounts are not auto-provisioned from walkthrough leads yet.",
-          "Production auth still requires FCA_CUSTOMER_ACCOUNTS_JSON on Auricrux-Central.",
-        ]}
-      />
 
       <div style={{ marginBottom: 24, marginTop: 24 }}>
         <CustomerTrustPanel

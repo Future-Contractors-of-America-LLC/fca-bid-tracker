@@ -137,6 +137,29 @@ export function mutateEstimate(tenantId, action, payload = {}) {
       }
       break;
     }
+    case "add-line": {
+      const newLine = {
+        code: payload.code || `LINE-${Date.now()}`,
+        label: payload.label || "New scope line",
+        amount: payload.amount || "$0",
+        note: payload.note || "Customer-customized line item",
+      };
+      updated = {
+        ...current,
+        lines: [...(current.lines || []), newLine],
+        lastActionAt: new Date().toISOString(),
+        actionHistory: [stamp("Line item added", payload.detail || newLine.label), ...(current.actionHistory || [])].slice(0, 12),
+      };
+      break;
+    }
+    case "update-scope-notes":
+      updated = {
+        ...current,
+        scopeNotes: payload.scopeNotes ?? current.scopeNotes,
+        lastActionAt: new Date().toISOString(),
+        actionHistory: [stamp("Scope notes updated", payload.detail || "Estimate scope notes saved."), ...(current.actionHistory || [])].slice(0, 12),
+      };
+      break;
     default:
       throw new Error(`Unsupported estimate action: ${action}`);
   }
