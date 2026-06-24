@@ -60,6 +60,32 @@ export function enqueueRepairWorkItems(root, repairPlans, runId) {
   return queue;
 }
 
+/**
+ * Close workflow-repair-loop backlog items after a green simulation run.
+ */
+export function resolveRepairWorkItems(root, runId) {
+  const queuePath = path.join(SYSTEM_DIR, "work_queue.json");
+  const queue = readJson(root, queuePath, { version: 1, items: [] });
+  queue.items = Array.isArray(queue.items) ? queue.items : [];
+
+  const now = new Date().toISOString();
+  let changed = false;
+  for (const item of queue.items) {
+    if (item.source !== "workflow-repair-loop" || item.status !== "queued") continue;
+    item.status = "resolved";
+    item.resolvedAtUtc = now;
+    item.resolvedByRunId = runId;
+    item.resolution = "workflow-simulation-green";
+    changed = true;
+  }
+
+  if (changed) {
+    queue.updatedAtUtc = now;
+    writeJson(root, queuePath, queue);
+  }
+  return queue;
+}
+
 export function persistRepairLoopReceipt(root, receipt) {
   const stamp = receipt.generatedAt.replace(/[:.]/g, "").slice(0, 15);
   writeJson(root, `${SYSTEM_DIR}/workflow_repair_state.json`, receipt.state);

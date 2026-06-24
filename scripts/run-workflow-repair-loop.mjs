@@ -3,9 +3,9 @@
  * FCA/Auricrux repair-improvement loop for contractor workflow simulations.
  *
  * Protocol (coverage law: Observe -> Act -> Review):
- *  1. Observe ó run live workflow simulation, capture failures
- *  2. Act     ó apply bounded auto-repairs (retry transients) + enqueue engineering/founder items
- *  3. Review  ó re-run simulation, persist receipt, update work queue
+ *  1. Observe ù run live workflow simulation, capture failures
+ *  2. Act     ù apply bounded auto-repairs (retry transients) + enqueue engineering/founder items
+ *  3. Review  ù re-run simulation, persist receipt, update work queue
  */
 import { spawnSync } from "node:child_process";
 import path from "node:path";
@@ -23,6 +23,7 @@ import {
   enqueueRepairWorkItems,
   persistRepairLoopReceipt,
   readJson,
+  resolveRepairWorkItems,
 } from "./lib/workflowRepairState.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -160,7 +161,7 @@ async function main() {
       break;
     }
 
-    console.log(`\n=== Round ${round}: ${failures.length} failure(s) ó planning repairs (Act) ===\n`);
+    console.log(`\n=== Round ${round}: ${failures.length} failure(s) ù planning repairs (Act) ===\n`);
     const plans = planRepairs(failures);
     for (const plan of plans) {
       const applied = applyRepairPlan(plan);
@@ -195,6 +196,7 @@ async function main() {
   if (complete) {
     state.consecutiveSuccesses = (state.consecutiveSuccesses || 0) + 1;
     state.consecutiveFailures = 0;
+    resolveRepairWorkItems(root, runId);
   } else {
     state.consecutiveFailures = (state.consecutiveFailures || 0) + 1;
     state.consecutiveSuccesses = 0;
