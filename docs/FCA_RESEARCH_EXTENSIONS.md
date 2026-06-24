@@ -72,3 +72,4 @@ Web research informing FCA/Auricrux slices beyond the current coverage matrix. T
 | Cross-doc conflict matrix | `product-complete` (Cycle 10) | 08 Briefing |
 | Agentic submittal routing | planned | 07 Documents |
 | SMS nurture on intake | planned | 01, Comms |
+| Warranty SLA + closeout continuity | `product-complete` (Cycle 12) | 12 Warranty |

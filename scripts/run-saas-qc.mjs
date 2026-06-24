@@ -140,6 +140,8 @@ const SCRIPT_CHECKS = [
   "validate-cycle10-complete.mjs",
   "validate-fca-native-payments-journey.mjs",
   "validate-cycle11-complete.mjs",
+  "validate-warranty-service-journey.mjs",
+  "validate-cycle12-complete.mjs",
   "verify-post-deploy.mjs",
   "smoke-central-spine.mjs",
 ];

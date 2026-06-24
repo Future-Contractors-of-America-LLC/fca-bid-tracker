@@ -4,6 +4,7 @@ import PublicOperationsStrip from "../../components/PublicOperationsStrip";
 import ProductProofSection from "../../components/ProductProofSection";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicActionRail from "../../components/PublicActionRail";
+import WarrantyIntakeForm from "../../components/warranty/WarrantyIntakeForm";
 import { warrantyItems, warrantyProof } from "../../content/warrantyContent";
 import { cardStyle, ctaPrimaryStyle, pageShellStyle } from "../../publicShellStyles";
 import { publicActionCatalog, publicRouteCtas, shellJourney } from "../../websiteShell";
@@ -48,7 +49,11 @@ export default function Warranty() {
       </div>
 
       <div style={{ ...cardStyle, marginTop: 24 }}>
-        <h2 style={{ marginTop: 0 }}>What FCA warranty continuity should cover</h2>
+        <WarrantyIntakeForm />
+      </div>
+
+      <div style={{ ...cardStyle, marginTop: 24 }}>
+        <h2 style={{ marginTop: 0 }}>What FCA warranty continuity covers</h2>
         <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.8, color: "#334155" }}>
           <li>Dedicated post-occupancy service intake and response posture</li>
           <li>Access to closeout, as-built, and turnover artifacts</li>
