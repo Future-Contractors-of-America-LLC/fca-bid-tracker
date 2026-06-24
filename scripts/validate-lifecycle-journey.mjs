@@ -39,7 +39,10 @@ const journey = [
   { step: "projects", href: "/portal/projects", files: ["src/pages/portal/PortalProjects.jsx"] },
   { step: "files", href: "/portal/files", files: ["src/pages/portal/PortalFiles.jsx"] },
   { step: "rfis", href: "/portal/rfis", files: ["src/pages/portal/PortalRfis.jsx"] },
+  { step: "change-orders", href: "/portal/change-orders", files: ["src/pages/portal/PortalChangeOrders.jsx"] },
   { step: "billing", href: "/portal/billing", files: ["src/pages/portal/PortalBilling.jsx"] },
+  { step: "closeout", href: "/portal/closeout", files: ["src/pages/portal/PortalCloseout.jsx"] },
+  { step: "warranty", href: "/portal/warranty", files: ["src/pages/portal/PortalWarranty.jsx"] },
   { step: "academy", href: "/academy", files: ["src/pages/academy/AcademyHome.jsx"] },
 ];
 
@@ -60,6 +63,9 @@ requireIncludes("src/productBlueprint.js", "qualification pipeline", "blueprint 
 requireIncludes("src/components/PortalWorkspaceGuide.jsx", "pipeline", "workspace guide references pipeline");
 requireIncludes("src/pages/portal/PortalBilling.jsx", "createInvoiceCheckout", "billing supports in-house checkout");
 requireIncludes("src/pages/portal/PortalRfis.jsx", "respondProjectRfi", "RFI respond in lifecycle");
+requireIncludes("src/pages/portal/PortalChangeOrders.jsx", "advanceChangeOrder", "change order advance in lifecycle");
+requireIncludes("src/pages/portal/PortalCloseout.jsx", "advanceCloseoutPackage", "closeout advance in lifecycle");
+requireIncludes("src/pages/portal/PortalWarranty.jsx", "advanceWarrantyCase", "warranty advance in lifecycle");
 requireIncludes("src/pages/academy/AcademyHome.jsx", "advanceProgress", "academy progress in lifecycle");
 
 const outputDir = path.join(root, "docs", "qc");
