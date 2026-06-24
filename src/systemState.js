@@ -634,6 +634,11 @@ export const portalModules = [
     description: "Design workspace, markups, sheets, and redline continuity",
   },
   {
+    href: "/portal/immersive",
+    label: "Immersive & VR",
+    description: "Field overlay labs, WebXR sessions, and construction simulation",
+  },
+  {
     href: "/portal/rfis",
     label: "RFIs",
     description: "Requests for information tied to sheets and field conditions",
