@@ -94,7 +94,9 @@ requireIncludes("14-auricrux", "src/pages/portal/PortalAuricrux.jsx", "usingLive
 
 // Slice 15 ù Mobile MAUI
 if (fs.existsSync(path.join(mobileRoot, "src", "FcaMobile", "Services", "FcaApiClient.cs"))) {
-  requireIncludes("15-mobile", "src/FcaMobile/Services/FcaApiClient.cs", "CookieContainer", "mobile API client stores session cookies", mobileRoot);
+  requireIncludes("15-mobile", "src/FcaMobile/Services/FcaApiClient.cs", "CustomerStore", "mobile API client uses customer store", mobileRoot);
+  requireIncludes("15-mobile", "src/FcaMobile/Services/FcaApiClient.cs", "SignOutAsync", "mobile API client supports sign-out", mobileRoot);
+  requireIncludes("15-mobile", "src/FcaMobile/Services/FcaApiClient.cs", "HasActiveSessionAsync", "mobile API client checks session", mobileRoot);
 } else {
   fail("15-mobile", "mobile repo present", "fca-mobile-maui-work not found");
 }
