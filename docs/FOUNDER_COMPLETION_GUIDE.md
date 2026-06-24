@@ -20,7 +20,7 @@ Everything below requires **your** accounts, credentials, legal approval, or sto
 
 **Local Android build still needs:** Android SDK (see Section 3). SDK + MAUI are installed; Android SDK is the remaining local gap.
 
----
+**Product confidence without field work:** GitHub Actions runs the **workflow repair loop** every 6 hours (Observe -> Act -> Review). Read `docs/qc/workflow-repair-latest.md` or Actions -> FCA Workflow Simulations. Protocol: `docs/FCA_REPAIR_LOOP_PROTOCOL.md`. Set repo secrets `FCA_SIM_LOGIN_EMAIL` and `FCA_SIM_LOGIN_PASSWORD` (QA account in `docs/FOUNDER_PRODUCT_TEST_ACCESS.md`).
 
 ## Section 1 � Revenue (highest priority)
 

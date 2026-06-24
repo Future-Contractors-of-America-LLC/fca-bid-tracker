@@ -1,0 +1,88 @@
+name: FCA Workflow Simulations
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fca-workflow-simulations
+  cancel-in-progress: false
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate repair loop protocol wiring
+        run: node scripts/validate-workflow-repair-loop.mjs
+
+      - name: Run workflow repair loop (Observe -> Act -> Review)
+        env:
+          FCA_API_BASE: https://api.futurecontractorsofamerica.com
+          AURICRUX_CENTRAL_API: https://api.futurecontractorsofamerica.com/api
+          FCA_SIM_LOGIN_EMAIL: ${{ secrets.FCA_SIM_LOGIN_EMAIL }}
+          FCA_SIM_LOGIN_PASSWORD: ${{ secrets.FCA_SIM_LOGIN_PASSWORD }}
+          FCA_REPAIR_LOOP_MAX_ROUNDS: "3"
+          FCA_REPAIR_LOOP_RETRY_MS: "5000"
+        run: npm run sim:workflow:loop
+
+      - name: Publish repair loop summary
+        if: always()
+        run: |
+          if [ -f docs/qc/workflow-repair-latest.md ]; then
+            cat docs/qc/workflow-repair-latest.md >> "$GITHUB_STEP_SUMMARY"
+          elif [ -f docs/qc/workflow-simulation-latest.md ]; then
+            cat docs/qc/workflow-simulation-latest.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Workflow repair report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload workflow simulation artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: workflow-simulation-${{ github.run_id }}
+          path: |
+            docs/qc/workflow-simulation-report.json
+            docs/qc/workflow-simulation-latest.md
+            docs/qc/workflow-repair-report.json
+            docs/qc/workflow-repair-latest.md
+            auricrux/system/workflow_repair_receipt.json
+            auricrux/system/workflow_repair_state.json
+          if-no-files-found: warn
+
+      - name: Persist workflow reports on main
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "auricrux-ci"
+          git config user.email "auricrux-ci@futurecontractorsofamerica.com"
+          git add docs/qc/workflow-simulation-report.json docs/qc/workflow-simulation-latest.md docs/qc/workflow-repair-report.json docs/qc/workflow-repair-latest.md auricrux/system/workflow_repair_receipt.json auricrux/system/workflow_repair_state.json auricrux/system/work_queue.json auricrux/system/loop_runs/workflow-repair-*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No workflow report changes."
+            exit 0
+          fi
+          git commit -m "Workflow repair loop report for run ${GITHUB_RUN_ID}"
+          git push origin HEAD:main || echo "Report push deferred - check branch protection"
