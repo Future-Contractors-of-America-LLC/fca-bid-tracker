@@ -128,6 +128,8 @@ const SCRIPT_CHECKS = [
   "validate-cycle4-complete.mjs",
   "validate-cycle5-complete.mjs",
   "validate-cycle6-complete.mjs",
+  "validate-field-execution-journey.mjs",
+  "validate-cycle7-complete.mjs",
   "verify-post-deploy.mjs",
   "smoke-central-spine.mjs",
 ];
