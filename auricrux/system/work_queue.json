@@ -1,20 +1,23 @@
 {
   "version": 1,
   "queueName": "fca-revenue-sprint-queue",
-  "updatedAtUtc": "2026-06-24T23:20:36.670Z",
+  "updatedAtUtc": "2026-06-24T23:31:00.000Z",
   "items": [
     {
       "id": "WFR-unmapped-failure-WFR-1782341904660",
       "title": "Investigate workflow failure: Customer login",
       "lane": "product",
       "priority": "medium",
-      "status": "queued",
+      "status": "resolved",
       "source": "workflow-repair-loop",
       "runId": "WFR-1782341904660",
       "failedStep": "Customer login",
       "detail": "Invalid FCA customer credentials.",
       "targetRepo": "fca-bid-tracker",
-      "createdAtUtc": "2026-06-24T22:58:30.296Z"
+      "createdAtUtc": "2026-06-24T22:58:30.296Z",
+      "resolvedAtUtc": "2026-06-24T23:29:00.000Z",
+      "resolvedByRunId": "WFR-1782342879898",
+      "resolution": "workflow-simulation-green"
     },
     {
       "id": "REV-001",
