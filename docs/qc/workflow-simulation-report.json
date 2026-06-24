@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-06-24T22:58:30.290Z",
-  "runId": "SIM-1782341905980",
+  "generatedAt": "2026-06-24T23:07:56.365Z",
+  "runId": "SIM-1782342443844",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "summary": {
-    "passed": 1,
-    "failed": 1,
+    "passed": 17,
+    "failed": 0,
     "skipped": 0,
-    "total": 2
+    "total": 17
   },
-  "complete": false,
+  "complete": true,
   "steps": [
     {
       "name": "API reachable",
@@ -17,8 +17,83 @@
     },
     {
       "name": "Customer login",
-      "status": "fail",
-      "detail": "Invalid FCA customer credentials."
+      "status": "pass",
+      "detail": "2FA challenge issued"
+    },
+    {
+      "name": "Customer verify",
+      "status": "pass",
+      "detail": "founder.test@futurecontractorsofamerica.com"
+    },
+    {
+      "name": "Customer session",
+      "status": "pass",
+      "detail": ""
+    },
+    {
+      "name": "Lead intake",
+      "status": "pass",
+      "detail": "lead_facdb284"
+    },
+    {
+      "name": "Qualify lead",
+      "status": "pass",
+      "detail": "opp_lead_facdb284"
+    },
+    {
+      "name": "Advance bid qualification",
+      "status": "pass",
+      "detail": "BID-1"
+    },
+    {
+      "name": "Pipeline stage update",
+      "status": "pass",
+      "detail": "estimate"
+    },
+    {
+      "name": "Award -> project",
+      "status": "pass",
+      "detail": "project_opp_lead_facdb284"
+    },
+    {
+      "name": "Create RFI",
+      "status": "pass",
+      "detail": "RFI-1782342460785"
+    },
+    {
+      "name": "Create change order",
+      "status": "pass",
+      "detail": "CO-1782342461861"
+    },
+    {
+      "name": "Create field task",
+      "status": "pass",
+      "detail": "FT-1782342465612"
+    },
+    {
+      "name": "Payment intake",
+      "status": "pass",
+      "detail": "INTAKE-1782342468883"
+    },
+    {
+      "name": "Payment checkout",
+      "status": "pass",
+      "detail": "completed"
+    },
+    {
+      "name": "Warranty intake",
+      "status": "pass",
+      "detail": "WAR-1782342472994"
+    },
+    {
+      "name": "Auricrux recommend",
+      "status": "pass",
+      "detail": "guidance returned"
+    },
+    {
+      "name": "Academy catalog",
+      "status": "pass",
+      "detail": "reachable"
     }
   ]
 }

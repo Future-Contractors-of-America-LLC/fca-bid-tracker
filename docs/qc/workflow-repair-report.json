@@ -1,49 +1,33 @@
 {
-  "generatedAt": "2026-06-24T22:58:30.621Z",
-  "runId": "WFR-1782341904660",
+  "generatedAt": "2026-06-24T23:07:56.372Z",
+  "runId": "WFR-1782342442812",
   "protocol": "observe-act-review",
-  "complete": false,
+  "complete": true,
   "maxRounds": 3,
   "rounds": [
     {
       "round": 1,
-      "complete": false,
-      "passed": 1,
-      "total": 2,
-      "failures": [
-        {
-          "name": "Customer login",
-          "status": "fail",
-          "detail": "Invalid FCA customer credentials."
-        }
-      ]
+      "complete": true,
+      "passed": 17,
+      "total": 17,
+      "failures": []
     }
   ],
-  "repairPlans": [
-    {
-      "id": "unmapped-failure",
-      "repairClass": "engineering-queue",
-      "title": "Investigate workflow failure: Customer login",
-      "detail": "Invalid FCA customer credentials.",
-      "step": {
-        "name": "Customer login",
-        "status": "fail",
-        "detail": "Invalid FCA customer credentials."
-      },
-      "autoRepair": null,
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "medium",
-      "outcome": "engineering-queued"
-    }
-  ],
+  "repairPlans": [],
   "auricruxReviews": [],
-  "finalSummary": "Workflow simulation still failing after 1 bounded repair round(s). 1 item(s) queued. Consecutive failures: 1.",
+  "finalSummary": "Workflow simulation recovered in 1 round(s). Consecutive successes: 1.",
   "state": {
-    "runCount": 1,
-    "consecutiveSuccesses": 0,
-    "consecutiveFailures": 1,
+    "runCount": 2,
+    "consecutiveSuccesses": 1,
+    "consecutiveFailures": 0,
     "history": [
+      {
+        "at": "2026-06-24T23:07:56.372Z",
+        "runId": "WFR-1782342442812",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
       {
         "at": "2026-06-24T22:58:30.621Z",
         "runId": "WFR-1782341904660",
@@ -52,8 +36,8 @@
         "failures": 1
       }
     ],
-    "lastRunUtc": "2026-06-24T22:58:30.621Z",
-    "lastComplete": false,
-    "lastRunId": "WFR-1782341904660"
+    "lastRunUtc": "2026-06-24T23:07:56.372Z",
+    "lastComplete": true,
+    "lastRunId": "WFR-1782342442812"
   }
 }
