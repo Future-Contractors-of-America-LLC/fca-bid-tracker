@@ -3,11 +3,35 @@
   "controller": "auricrux-control-plane",
   "status": "online",
   "preferredPath": "github-actions-control-plane",
-  "lastRunUtc": "2026-06-23T17:28:42.293Z",
+  "lastRunUtc": "2026-06-24T00:08:41.523Z",
   "lastMode": "status",
   "lastEvent": "schedule",
   "lastOutcome": "success",
   "history": [
+    {
+      "at": "2026-06-24T00:08:41.523Z",
+      "event": "schedule",
+      "mode": "status",
+      "outcome": "success"
+    },
+    {
+      "at": "2026-06-23T22:50:34.931Z",
+      "event": "schedule",
+      "mode": "status",
+      "outcome": "success"
+    },
+    {
+      "at": "2026-06-23T21:18:36.487Z",
+      "event": "schedule",
+      "mode": "status",
+      "outcome": "success"
+    },
+    {
+      "at": "2026-06-23T19:30:48.500Z",
+      "event": "schedule",
+      "mode": "status",
+      "outcome": "success"
+    },
     {
       "at": "2026-06-23T17:28:42.293Z",
       "event": "schedule",
@@ -100,30 +124,6 @@
     },
     {
       "at": "2026-06-21T15:30:04.020Z",
-      "event": "schedule",
-      "mode": "status",
-      "outcome": "success"
-    },
-    {
-      "at": "2026-06-21T13:17:29.270Z",
-      "event": "schedule",
-      "mode": "status",
-      "outcome": "success"
-    },
-    {
-      "at": "2026-06-21T10:43:29.578Z",
-      "event": "schedule",
-      "mode": "status",
-      "outcome": "success"
-    },
-    {
-      "at": "2026-06-21T07:04:09.400Z",
-      "event": "schedule",
-      "mode": "status",
-      "outcome": "success"
-    },
-    {
-      "at": "2026-06-21T02:03:20.325Z",
       "event": "schedule",
       "mode": "status",
       "outcome": "success"

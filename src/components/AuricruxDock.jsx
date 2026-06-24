@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { brandIdentity } from "../brandIdentity";
 import { auricruxPersona } from "../config/auricruxPersona";
 import AuricruxAvatar from "./AuricruxAvatar";
-import useAuricruxVoice from "../hooks/useAuricruxVoice";
+import useAuricruxVoice, { resolveSpeechTierFromContext } from "../hooks/useAuricruxVoice";
 import { sendAuricruxMessage, sendAuricruxFeedback } from "../api/auricruxClient";
 import { submitAuricruxAction } from "../api/auricruxActionsClient";
 import { readAcademyContext, subscribeAcademyContext } from "../academyContext";
@@ -23,9 +23,9 @@ import {
 import { portalTokens } from "../portalDesignTokens";
 
 const quickPrompts = [
-  "What is the next customer action?",
-  "Show training continuity.",
-  "What is blocking revenue right now?",
+  "What should I do next?",
+  "Where do I find my products?",
+  "What is blocking my project?",
 ];
 
 const academyQuickPrompts = [
@@ -159,6 +159,17 @@ export default function AuricruxDock() {
   const [feedbackState, setFeedbackState] = useState("");
   const { supported: voiceSupported, speaking, speak, stop } = useAuricruxVoice();
 
+  const speechTier = useMemo(() => {
+    if (!academyContext) return 3;
+    return resolveSpeechTierFromContext({
+      lane: academyContext.lane || "professional",
+      programLevel: academyContext.programLevel || 1,
+      moduleNumber: academyContext.moduleNumber || 1,
+      lessonIndex: academyContext.lessonIndex || 1,
+      completedModules: academyContext.completedModules || 0,
+    });
+  }, [academyContext]);
+
   const avatarState = loading ? "thinking" : speaking ? "speaking" : text.trim() ? "listening" : "idle";
 
   const meta = useMemo(() => modeMeta(mode, poweredByLlm), [mode, poweredByLlm]);
@@ -278,7 +289,7 @@ export default function AuricruxDock() {
       ]);
 
       if (data.reply) {
-        void speak(data.reply.replace(/^AURICRUX:\s*/i, ""));
+        void speak(data.reply.replace(/^AURICRUX:\s*/i, ""), { tier: speechTier });
       }
 
       void submitAuricruxAction({
@@ -311,7 +322,7 @@ export default function AuricruxDock() {
   }
 
   function speakLastReply() {
-    if (lastReply) void speak(lastReply);
+    if (lastReply) void speak(lastReply, { tier: speechTier });
   }
 
   async function submitFeedback(rating) {
@@ -570,7 +581,7 @@ export default function AuricruxDock() {
           >
             {log.length === 0 ? (
               <div style={{ color: "#7c6b4a", fontSize: 12, lineHeight: 1.6 }}>
-                Ask Auricrux for the next action, a customer update, training guidance, or a production-rollout narration cue.
+                Ask Auricrux for the next step, help finding a product, training guidance, or what is blocking your work.
               </div>
             ) : (
               log.map((l, i) => (

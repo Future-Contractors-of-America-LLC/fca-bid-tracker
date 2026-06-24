@@ -1,12 +1,12 @@
 # LMS Depth & Content QC Report
 
-- Generated: 2026-06-23T17:46:29.812Z
+- Generated: 2026-06-23T18:41:45.160Z
 - Programs (static slice): 15
 - Total lessons: 71
-- Lessons with full media: 0
-- Lessons pending media: 71
-- Media coverage: 0%
-- Passed: 80 | Failed: 0 | Warnings: 71
+- Lessons with full media: 71
+- Lessons pending media: 0
+- Media coverage: 100%
+- Passed: 151 | Failed: 0 | Warnings: 0
 
 ## Findings
 - **PASS** script:validate-academy-ctas.mjs
@@ -19,133 +19,133 @@
 - **PASS** program-link:fca-workspace-quick-start: /portal/projects
 - **PASS** course-lessons:ONB-001: 4 lessons
 - **PASS** course-titles:ONB-001
-- **WARN** lesson-media:ONB-001:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:ONB-001:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:ONB-001:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:ONB-001:4: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:ONB-001:1: lecture+lab
+- **PASS** lesson-media:ONB-001:2: lecture+lab
+- **PASS** lesson-media:ONB-001:3: lecture+lab
+- **PASS** lesson-media:ONB-001:4: lecture+lab
 - **PASS** program-meta:electrical-apprenticeship-year1
 - **PASS** program-link:electrical-apprenticeship-year1: /portal/support
 - **PASS** course-lessons:APP-ELEC-101: 6 lessons
 - **PASS** course-titles:APP-ELEC-101
-- **WARN** lesson-media:APP-ELEC-101:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:APP-ELEC-101:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:APP-ELEC-101:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:APP-ELEC-101:4: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:APP-ELEC-101:5: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:APP-ELEC-101:6: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:APP-ELEC-101:1: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:2: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:3: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:4: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:5: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:6: lecture+lab
 - **PASS** program-meta:osha30-certification-prep
 - **PASS** program-link:osha30-certification-prep: /portal/audit
 - **PASS** course-lessons:CERT-OSHA30-201: 6 lessons
 - **PASS** course-titles:CERT-OSHA30-201
-- **WARN** lesson-media:CERT-OSHA30-201:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:CERT-OSHA30-201:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:CERT-OSHA30-201:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:CERT-OSHA30-201:4: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:CERT-OSHA30-201:5: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:CERT-OSHA30-201:6: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:CERT-OSHA30-201:1: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:2: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:3: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:4: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:5: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:6: lecture+lab
 - **PASS** program-meta:aas-construction-operations-sem1
 - **PASS** program-link:aas-construction-operations-sem1: /portal/platform
 - **PASS** course-lessons:DEG-AAS-110: 6 lessons
 - **PASS** course-titles:DEG-AAS-110
-- **WARN** lesson-media:DEG-AAS-110:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:DEG-AAS-110:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:DEG-AAS-110:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:DEG-AAS-110:4: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:DEG-AAS-110:5: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:DEG-AAS-110:6: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:DEG-AAS-110:1: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:2: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:3: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:4: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:5: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:6: lecture+lab
 - **PASS** program-meta:virginia-dpor-residential-license-prep
 - **PASS** program-link:virginia-dpor-residential-license-prep: /portal/files
 - **PASS** course-lessons:LIC-DPOR-301: 6 lessons
 - **PASS** course-titles:LIC-DPOR-301
-- **WARN** lesson-media:LIC-DPOR-301:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LIC-DPOR-301:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LIC-DPOR-301:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LIC-DPOR-301:4: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LIC-DPOR-301:5: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LIC-DPOR-301:6: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:LIC-DPOR-301:1: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:2: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:3: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:4: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:5: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:6: lecture+lab
 - **PASS** program-meta:fca-contractor-command-user-guide
 - **PASS** program-link:fca-contractor-command-user-guide: /portal
 - **PASS** course-lessons:GUIDE-FCA-001: 6 lessons
 - **PASS** course-titles:GUIDE-FCA-001
-- **WARN** lesson-media:GUIDE-FCA-001:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:GUIDE-FCA-001:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:GUIDE-FCA-001:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:GUIDE-FCA-001:4: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:GUIDE-FCA-001:5: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:GUIDE-FCA-001:6: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:GUIDE-FCA-001:1: lecture+lab
+- **PASS** lesson-media:GUIDE-FCA-001:2: lecture+lab
+- **PASS** lesson-media:GUIDE-FCA-001:3: lecture+lab
+- **PASS** lesson-media:GUIDE-FCA-001:4: lecture+lab
+- **PASS** lesson-media:GUIDE-FCA-001:5: lecture+lab
+- **PASS** lesson-media:GUIDE-FCA-001:6: lecture+lab
 - **PASS** program-meta:fca-bids-qualification-estimates
 - **PASS** program-link:fca-bids-qualification-estimates: /portal/bids
 - **PASS** course-lessons:FCA-BIDS-101: 5 lessons
 - **PASS** course-titles:FCA-BIDS-101
-- **WARN** lesson-media:FCA-BIDS-101:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-BIDS-101:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-BIDS-101:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-BIDS-101:4: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-BIDS-101:5: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:FCA-BIDS-101:1: lecture+lab
+- **PASS** lesson-media:FCA-BIDS-101:2: lecture+lab
+- **PASS** lesson-media:FCA-BIDS-101:3: lecture+lab
+- **PASS** lesson-media:FCA-BIDS-101:4: lecture+lab
+- **PASS** lesson-media:FCA-BIDS-101:5: lecture+lab
 - **PASS** program-meta:fca-projects-stage-control
 - **PASS** program-link:fca-projects-stage-control: /portal/projects
 - **PASS** course-lessons:FCA-PROJ-201: 5 lessons
 - **PASS** course-titles:FCA-PROJ-201
-- **WARN** lesson-media:FCA-PROJ-201:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-PROJ-201:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-PROJ-201:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-PROJ-201:4: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-PROJ-201:5: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:FCA-PROJ-201:1: lecture+lab
+- **PASS** lesson-media:FCA-PROJ-201:2: lecture+lab
+- **PASS** lesson-media:FCA-PROJ-201:3: lecture+lab
+- **PASS** lesson-media:FCA-PROJ-201:4: lecture+lab
+- **PASS** lesson-media:FCA-PROJ-201:5: lecture+lab
 - **PASS** program-meta:fca-files-audit-governance
 - **PASS** program-link:fca-files-audit-governance: /portal/files
 - **PASS** course-lessons:FCA-FILE-301: 4 lessons
 - **PASS** course-titles:FCA-FILE-301
-- **WARN** lesson-media:FCA-FILE-301:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-FILE-301:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-FILE-301:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-FILE-301:4: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:FCA-FILE-301:1: lecture+lab
+- **PASS** lesson-media:FCA-FILE-301:2: lecture+lab
+- **PASS** lesson-media:FCA-FILE-301:3: lecture+lab
+- **PASS** lesson-media:FCA-FILE-301:4: lecture+lab
 - **PASS** program-meta:fca-billing-invoicing
 - **PASS** program-link:fca-billing-invoicing: /portal/billing
 - **PASS** course-lessons:FCA-BILL-401: 4 lessons
 - **PASS** course-titles:FCA-BILL-401
-- **WARN** lesson-media:FCA-BILL-401:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-BILL-401:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-BILL-401:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-BILL-401:4: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:FCA-BILL-401:1: lecture+lab
+- **PASS** lesson-media:FCA-BILL-401:2: lecture+lab
+- **PASS** lesson-media:FCA-BILL-401:3: lecture+lab
+- **PASS** lesson-media:FCA-BILL-401:4: lecture+lab
 - **PASS** program-meta:fca-legal-command-workspace
 - **PASS** program-link:fca-legal-command-workspace: /portal/legal
 - **PASS** course-lessons:FCA-LEGAL-501: 4 lessons
 - **PASS** course-titles:FCA-LEGAL-501
-- **WARN** lesson-media:FCA-LEGAL-501:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-LEGAL-501:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-LEGAL-501:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-LEGAL-501:4: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:FCA-LEGAL-501:1: lecture+lab
+- **PASS** lesson-media:FCA-LEGAL-501:2: lecture+lab
+- **PASS** lesson-media:FCA-LEGAL-501:3: lecture+lab
+- **PASS** lesson-media:FCA-LEGAL-501:4: lecture+lab
 - **PASS** program-meta:fca-support-auricrux-operator
 - **PASS** program-link:fca-support-auricrux-operator: /portal/support
 - **PASS** course-lessons:FCA-SUP-601: 4 lessons
 - **PASS** course-titles:FCA-SUP-601
-- **WARN** lesson-media:FCA-SUP-601:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-SUP-601:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-SUP-601:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-SUP-601:4: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:FCA-SUP-601:1: lecture+lab
+- **PASS** lesson-media:FCA-SUP-601:2: lecture+lab
+- **PASS** lesson-media:FCA-SUP-601:3: lecture+lab
+- **PASS** lesson-media:FCA-SUP-601:4: lecture+lab
 - **PASS** program-meta:fca-academy-progress-tracking
 - **PASS** program-link:fca-academy-progress-tracking: /academy/dashboard
 - **PASS** course-lessons:FCA-ACAD-701: 3 lessons
 - **PASS** course-titles:FCA-ACAD-701
-- **WARN** lesson-media:FCA-ACAD-701:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-ACAD-701:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:FCA-ACAD-701:3: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:FCA-ACAD-701:1: lecture+lab
+- **PASS** lesson-media:FCA-ACAD-701:2: lecture+lab
+- **PASS** lesson-media:FCA-ACAD-701:3: lecture+lab
 - **PASS** program-meta:contractor-business-formation-legal
 - **PASS** program-link:contractor-business-formation-legal: /portal/legal
 - **PASS** course-lessons:LEGAL-FORM-201: 4 lessons
 - **PASS** course-titles:LEGAL-FORM-201
-- **WARN** lesson-media:LEGAL-FORM-201:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LEGAL-FORM-201:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LEGAL-FORM-201:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LEGAL-FORM-201:4: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:LEGAL-FORM-201:1: lecture+lab
+- **PASS** lesson-media:LEGAL-FORM-201:2: lecture+lab
+- **PASS** lesson-media:LEGAL-FORM-201:3: lecture+lab
+- **PASS** lesson-media:LEGAL-FORM-201:4: lecture+lab
 - **PASS** program-meta:contractor-construction-law-essentials
 - **PASS** program-link:contractor-construction-law-essentials: /portal/legal
 - **PASS** course-lessons:LEGAL-CONST-301: 4 lessons
 - **PASS** course-titles:LEGAL-CONST-301
-- **WARN** lesson-media:LEGAL-CONST-301:1: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LEGAL-CONST-301:2: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LEGAL-CONST-301:3: lecture=false labDemo=false eval=false � static slice pending production URLs
-- **WARN** lesson-media:LEGAL-CONST-301:4: lecture=false labDemo=false eval=false � static slice pending production URLs
+- **PASS** lesson-media:LEGAL-CONST-301:1: lecture+lab
+- **PASS** lesson-media:LEGAL-CONST-301:2: lecture+lab
+- **PASS** lesson-media:LEGAL-CONST-301:3: lecture+lab
+- **PASS** lesson-media:LEGAL-CONST-301:4: lecture+lab
 - **PASS** pathways: 3 defined
 - **PASS** legal-program:contractor-business-formation-legal: Contractor Business Formation & Legal Setup
 - **PASS** legal-program:contractor-construction-law-essentials: Construction Law Essentials for Contractors

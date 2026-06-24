@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-06-23T17:45:44.286Z",
+  "generatedAt": "2026-06-23T18:06:24.920Z",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "summary": {
-    "passed": 1,
-    "failed": 1
+    "passed": 5,
+    "failed": 0
   },
   "findings": [
     {
@@ -12,9 +12,24 @@
       "detail": "productionAuthReady=true"
     },
     {
-      "status": "fail",
+      "status": "pass",
       "label": "customer-login",
-      "detail": "Authentication failed: AADSTS7000215: Invalid client secret provided. Ensure the secret being sent in the request is the client secret value, not the client secret ID, for a secret added to app '460fdaed-5f98-4e21-8c70-debfc009b215'. Trace ID: a0029ea0-e6c8-41a8-ba80-07c48b3b1600 Correlation ID: b83a61b8-a62d-489f-8dac-91593d03a075 Timestamp: 2026-06-23 17:45:43Z"
+      "detail": "requiresVerification=true"
+    },
+    {
+      "status": "pass",
+      "label": "customer-verify",
+      "detail": "session for founder.test@futurecontractorsofamerica.com"
+    },
+    {
+      "status": "pass",
+      "label": "customer-session",
+      "detail": "authenticated as founder.test@futurecontractorsofamerica.com"
+    },
+    {
+      "status": "pass",
+      "label": "customer-logout",
+      "detail": "session cleared"
     }
   ]
 }
