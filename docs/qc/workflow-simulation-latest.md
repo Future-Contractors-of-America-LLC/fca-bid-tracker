@@ -1,7 +1,7 @@
 # FCA Workflow Simulation
 
-- **When:** 2026-06-24T23:07:56.365Z
-- **Run ID:** SIM-1782342443844
+- **When:** 2026-06-24T23:32:38.571Z
+- **Run ID:** SIM-1782343936402
 - **API:** https://api.futurecontractorsofamerica.com
 - **Result:** ALL STEPS PASSED - 17/17 passed
 
@@ -15,17 +15,17 @@ This robot runs the same API mutations a contractor operator would - lead intake
 - **PASS** Customer login: 2FA challenge issued
 - **PASS** Customer verify: founder.test@futurecontractorsofamerica.com
 - **PASS** Customer session
-- **PASS** Lead intake: lead_facdb284
-- **PASS** Qualify lead: opp_lead_facdb284
+- **PASS** Lead intake: lead_5f25a9ff
+- **PASS** Qualify lead: opp_lead_5f25a9ff
 - **PASS** Advance bid qualification: BID-1
 - **PASS** Pipeline stage update: estimate
-- **PASS** Award -> project: project_opp_lead_facdb284
-- **PASS** Create RFI: RFI-1782342460785
-- **PASS** Create change order: CO-1782342461861
-- **PASS** Create field task: FT-1782342465612
-- **PASS** Payment intake: INTAKE-1782342468883
+- **PASS** Award -> project: project_opp_lead_5f25a9ff
+- **PASS** Create RFI: RFI-1782343950680
+- **PASS** Create change order: CO-1782343951890
+- **PASS** Create field task: FT-1782343954407
+- **PASS** Payment intake: INTAKE-1782343956061
 - **PASS** Payment checkout: completed
-- **PASS** Warranty intake: WAR-1782342472994
+- **PASS** Warranty intake: WAR-1782343957777
 - **PASS** Auricrux recommend: guidance returned
 - **PASS** Academy catalog: reachable
 
@@ -34,4 +34,4 @@ This robot runs the same API mutations a contractor operator would - lead intake
 - Green = that part of the product worked on the live API when this ran.
 - Red = something broke; engineering should fix before claiming that workflow works.
 - Re-run anytime: `npm run sim:workflow`
-- GitHub Actions runs this every 6 hours on `main` (requires `FCA_SIM_LOGIN_EMAIL` / `FCA_SIM_LOGIN_PASSWORD` secrets).
+- GitHub Actions runs this every hour on `main` (requires `FCA_SIM_LOGIN_EMAIL` / `FCA_SIM_LOGIN_PASSWORD` secrets).

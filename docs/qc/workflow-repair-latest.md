@@ -1,7 +1,7 @@
 # FCA Workflow Repair Loop
 
-- **When:** 2026-06-24T23:07:56.372Z
-- **Run ID:** WFR-1782342442812
+- **When:** 2026-06-24T23:32:38.578Z
+- **Run ID:** WFR-1782343935704
 - **Protocol:** Observe -> Act -> Review (FCA/Auricrux coverage law)
 - **Result:** RECOVERED � workflow simulation green
 
@@ -16,10 +16,10 @@
 
 ## Summary
 
-Workflow simulation recovered in 1 round(s). Consecutive successes: 1.
+Workflow simulation recovered in 1 round(s). Consecutive successes: 2.
 
 ## For the founder
 
-- This loop runs automatically with workflow simulations every 6 hours.
+- This loop runs automatically with workflow simulations every hour.
 - Green end state = product workflows worked without you testing manually.
 - Red end state = repair items were queued; check `auricrux/system/work_queue.json`.
