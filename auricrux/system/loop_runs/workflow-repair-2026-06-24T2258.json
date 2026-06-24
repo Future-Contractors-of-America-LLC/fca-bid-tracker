@@ -1,0 +1,59 @@
+{
+  "generatedAt": "2026-06-24T22:58:30.621Z",
+  "runId": "WFR-1782341904660",
+  "protocol": "observe-act-review",
+  "complete": false,
+  "maxRounds": 3,
+  "rounds": [
+    {
+      "round": 1,
+      "complete": false,
+      "passed": 1,
+      "total": 2,
+      "failures": [
+        {
+          "name": "Customer login",
+          "status": "fail",
+          "detail": "Invalid FCA customer credentials."
+        }
+      ]
+    }
+  ],
+  "repairPlans": [
+    {
+      "id": "unmapped-failure",
+      "repairClass": "engineering-queue",
+      "title": "Investigate workflow failure: Customer login",
+      "detail": "Invalid FCA customer credentials.",
+      "step": {
+        "name": "Customer login",
+        "status": "fail",
+        "detail": "Invalid FCA customer credentials."
+      },
+      "autoRepair": null,
+      "targetLane": "product",
+      "targetRepo": "fca-bid-tracker",
+      "priority": "medium",
+      "outcome": "engineering-queued"
+    }
+  ],
+  "auricruxReviews": [],
+  "finalSummary": "Workflow simulation still failing after 1 bounded repair round(s). 1 item(s) queued. Consecutive failures: 1.",
+  "state": {
+    "runCount": 1,
+    "consecutiveSuccesses": 0,
+    "consecutiveFailures": 1,
+    "history": [
+      {
+        "at": "2026-06-24T22:58:30.621Z",
+        "runId": "WFR-1782341904660",
+        "complete": false,
+        "rounds": 1,
+        "failures": 1
+      }
+    ],
+    "lastRunUtc": "2026-06-24T22:58:30.621Z",
+    "lastComplete": false,
+    "lastRunId": "WFR-1782341904660"
+  }
+}

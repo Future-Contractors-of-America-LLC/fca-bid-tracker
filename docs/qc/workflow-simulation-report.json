@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-06-24T22:58:30.290Z",
+  "runId": "SIM-1782341905980",
+  "apiBase": "https://api.futurecontractorsofamerica.com",
+  "summary": {
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0,
+    "total": 2
+  },
+  "complete": false,
+  "steps": [
+    {
+      "name": "API reachable",
+      "status": "pass",
+      "detail": "https://api.futurecontractorsofamerica.com"
+    },
+    {
+      "name": "Customer login",
+      "status": "fail",
+      "detail": "Invalid FCA customer credentials."
+    }
+  ]
+}
