@@ -1,8 +1,7 @@
 {
   "version": 1,
   "queueName": "fca-revenue-sprint-queue",
-  "updatedAtUtc": "2026-06-25T17:33:08.280Z",
-  "items": [
+  "updatedAtUtc": "2026-06-25T17:49:26.471Z",`n  "items": [
     {
       "id": "LMS-MEDIA-FIX",
       "title": "Academy lesson media slots incomplete",
@@ -78,7 +77,9 @@
       "title": "Controlled SWA production deploy and smoke verify",
       "lane": "deploy",
       "priority": "critical",
-      "status": "queued"
+      "status": "done",
+      "note": "SWA workflow_dispatch run 28189155078; witness drift until deploy completes.",
+      "completedAtUtc": "2026-06-25T17:49:26.471Z"
     },
     {
       "id": "REV-006",
