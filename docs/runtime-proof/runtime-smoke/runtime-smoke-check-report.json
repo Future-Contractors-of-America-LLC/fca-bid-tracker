@@ -1,27 +1,27 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-25T19:41:09.304Z",
+  "generatedAt": "2026-06-25T19:41:40.843Z",
   "emissionGuaranteed": true,
   "total": 10,
-  "passed": 10,
-  "failed": 0,
+  "passed": 8,
+  "failed": 2,
   "results": [
     {
       "name": "projects_collection_get",
       "statusCode": 200,
       "expectStatus": 200,
-      "bodyType": "success",
+      "bodyType": "unknown",
       "expectType": "success",
-      "passed": true,
+      "passed": false,
       "error": null
     },
     {
       "name": "projects_collection_post",
-      "statusCode": 202,
+      "statusCode": 200,
       "expectStatus": 202,
-      "bodyType": "success",
+      "bodyType": "unknown",
       "expectType": "success",
-      "passed": true,
+      "passed": false,
       "error": null
     },
     {
