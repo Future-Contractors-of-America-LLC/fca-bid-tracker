@@ -59,6 +59,7 @@ jobs:
           token: ${{ steps.cross_repo_token.outputs.cross_repo_token }}
 
       - name: Run SaaS quality control
+        if: steps.cross_repo_token.outputs.cross_repo_token != ''
         env:
           FCA_API_BASE: https://api.futurecontractorsofamerica.com
           FCA_CENTRAL_ROOT: ${{ github.workspace }}/auricrux-central-work
@@ -66,6 +67,7 @@ jobs:
         run: npm run qc:saas
 
       - name: Run LMS depth quality control
+        if: steps.cross_repo_token.outputs.cross_repo_token != ''
         env:
           FCA_API_BASE: https://auricrux-central.azurewebsites.net
           FCA_CENTRAL_ROOT: ${{ github.workspace }}/auricrux-central-work

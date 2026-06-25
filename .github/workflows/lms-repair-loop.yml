@@ -48,6 +48,7 @@ jobs:
         run: node scripts/validate-lms-repair-loop.mjs
 
       - name: Run LMS repair loop (Observe -> Act -> Review)
+        if: env.FCA_SIM_LOGIN_EMAIL != '' && env.FCA_SIM_LOGIN_PASSWORD != '' && env.FCA_GITHUB_TOKEN != ''
         env:
           FCA_API_BASE: https://api.futurecontractorsofamerica.com
           AURICRUX_CENTRAL_API: https://api.futurecontractorsofamerica.com/api
@@ -58,6 +59,14 @@ jobs:
           FCA_LMS_REPAIR_LOOP_MAX_ROUNDS: "3"
           FCA_LMS_REPAIR_LOOP_RETRY_MS: "5000"
         run: npm run sim:lms:loop
+
+      - name: Skip LMS repair loop when credentials are missing
+        if: env.FCA_SIM_LOGIN_EMAIL == '' || env.FCA_SIM_LOGIN_PASSWORD == '' || env.FCA_GITHUB_TOKEN == ''
+        env:
+          FCA_SIM_LOGIN_EMAIL: ${{ secrets.FCA_SIM_LOGIN_EMAIL }}
+          FCA_SIM_LOGIN_PASSWORD: ${{ secrets.FCA_SIM_LOGIN_PASSWORD }}
+          FCA_GITHUB_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+        run: echo "Skipping LMS repair loop because required secrets are not configured."
 
       - name: Publish LMS repair loop summary
         if: always()
