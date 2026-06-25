@@ -1,13 +1,13 @@
 # Live Deployment Proof Bundle Readiness Validation
 
 - Packet: 062Y
-- Generated: 2026-06-25T18:58:41.978Z
-- success: true
+- Generated: 2026-06-25T19:41:06.129Z
+- success: false
 
 ## Checks
 - proofSuitePass: true
-- currentHeadVerifierPass: true
+- currentHeadVerifierPass: false
 - metadataTransitionPass: true
 
 ## Failures
-- none
+- currentHeadVerifierPass
