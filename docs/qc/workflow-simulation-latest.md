@@ -1,7 +1,7 @@
 # FCA Workflow Simulation
 
-- **When:** 2026-06-25T01:41:29.323Z
-- **Run ID:** SIM-1782351675975
+- **When:** 2026-06-25T02:41:05.252Z
+- **Run ID:** SIM-1782355251439
 - **API:** https://api.futurecontractorsofamerica.com
 - **Result:** ALL STEPS PASSED - 17/17 passed
 
@@ -15,17 +15,17 @@ This robot runs the same API mutations a contractor operator would - lead intake
 - **PASS** Customer login: 2FA challenge issued
 - **PASS** Customer verify: founder.test@futurecontractorsofamerica.com
 - **PASS** Customer session
-- **PASS** Lead intake: lead_89fd021d
-- **PASS** Qualify lead: opp_lead_89fd021d
+- **PASS** Lead intake: lead_3fcdd7a3
+- **PASS** Qualify lead: opp_lead_3fcdd7a3
 - **PASS** Advance bid qualification: BID-1
 - **PASS** Pipeline stage update: estimate
-- **PASS** Award -> project: project_opp_lead_89fd021d
-- **PASS** Create RFI: RFI-1782351681457
-- **PASS** Create change order: CO-1782351682533
-- **PASS** Create field task: FT-1782351684733
-- **PASS** Payment intake: INTAKE-1782351686366
+- **PASS** Award -> project: project_opp_lead_3fcdd7a3
+- **PASS** Create RFI: RFI-1782355256920
+- **PASS** Create change order: CO-1782355257910
+- **PASS** Create field task: FT-1782355260491
+- **PASS** Payment intake: INTAKE-1782355262400
 - **PASS** Payment checkout: completed
-- **PASS** Warranty intake: WAR-1782351688207
+- **PASS** Warranty intake: WAR-1782355264336
 - **PASS** Auricrux recommend: guidance returned
 - **PASS** Academy catalog: reachable
 
