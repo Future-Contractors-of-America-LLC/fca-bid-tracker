@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-06-25T14:13:29.532Z",
-  "runId": "LMS-SIM-1782396790295",
+  "generatedAt": "2026-06-25T14:19:09.626Z",
+  "runId": "LMS-SIM-1782397122328",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "swaOrigin": "https://futurecontractorsofamerica.com",
   "scope": "FCA Academy LMS simulation",
   "summary": {
-    "passed": 138,
-    "failed": 35,
+    "passed": 172,
+    "failed": 1,
     "skipped": 0,
     "total": 173
   },
   "complete": false,
   "phases": {
-    "staticQc": 35,
+    "staticQc": 1,
     "learnerWorkflow": 0,
     "swaProbes": 0,
     "centralArtifacts": 0
@@ -134,38 +134,38 @@
     },
     {
       "name": "lesson-media:APP-ELEC-101:1",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:APP-ELEC-101:2",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:APP-ELEC-101:3",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:APP-ELEC-101:4",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:APP-ELEC-101:5",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:APP-ELEC-101:6",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
@@ -194,38 +194,38 @@
     },
     {
       "name": "lesson-media:CERT-OSHA30-201:1",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:CERT-OSHA30-201:2",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:CERT-OSHA30-201:3",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:CERT-OSHA30-201:4",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:CERT-OSHA30-201:5",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:CERT-OSHA30-201:6",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
@@ -254,38 +254,38 @@
     },
     {
       "name": "lesson-media:DEG-AAS-110:1",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:DEG-AAS-110:2",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:DEG-AAS-110:3",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:DEG-AAS-110:4",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:DEG-AAS-110:5",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:DEG-AAS-110:6",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
@@ -314,38 +314,38 @@
     },
     {
       "name": "lesson-media:LIC-DPOR-301:1",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LIC-DPOR-301:2",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LIC-DPOR-301:3",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LIC-DPOR-301:4",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LIC-DPOR-301:5",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LIC-DPOR-301:6",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
@@ -404,8 +404,8 @@
     },
     {
       "name": "lesson-media:GUIDE-FCA-001:6",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
@@ -458,8 +458,8 @@
     },
     {
       "name": "lesson-media:FCA-BIDS-101:5",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
@@ -776,26 +776,26 @@
     },
     {
       "name": "lesson-media:LEGAL-FORM-201:1",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LEGAL-FORM-201:2",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LEGAL-FORM-201:3",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LEGAL-FORM-201:4",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
@@ -824,26 +824,26 @@
     },
     {
       "name": "lesson-media:LEGAL-CONST-301:1",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LEGAL-CONST-301:2",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LEGAL-CONST-301:3",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
       "name": "lesson-media:LEGAL-CONST-301:4",
-      "status": "fail",
-      "detail": "missing lecture, labDemo",
+      "status": "pass",
+      "detail": "lecture+lab",
       "phase": "static-qc"
     },
     {
@@ -1023,7 +1023,7 @@
     {
       "name": "Academy commerce intake",
       "status": "pass",
-      "detail": "INTAKE-1782396807406",
+      "detail": "INTAKE-1782397147264",
       "phase": "learner-workflow"
     },
     {

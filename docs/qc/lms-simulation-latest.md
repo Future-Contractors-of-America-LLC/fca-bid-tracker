@@ -1,10 +1,10 @@
 # FCA Academy LMS Simulation
 
-- **When:** 2026-06-25T14:13:29.532Z
-- **Run ID:** LMS-SIM-1782396790295
+- **When:** 2026-06-25T14:19:09.626Z
+- **Run ID:** LMS-SIM-1782397122328
 - **API:** https://api.futurecontractorsofamerica.com
 - **SWA:** https://futurecontractorsofamerica.com
-- **Result:** 35 FAILURE(S) - 138/173 passed
+- **Result:** 1 FAILURE(S) - 172/173 passed
 
 ## What this proves
 
@@ -40,42 +40,42 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** program-link:electrical-apprenticeship-year1: /portal/support
 - **PASS** course-lessons:APP-ELEC-101: 6 lessons
 - **PASS** course-titles:APP-ELEC-101
-- **FAIL** lesson-media:APP-ELEC-101:1: missing lecture, labDemo
-- **FAIL** lesson-media:APP-ELEC-101:2: missing lecture, labDemo
-- **FAIL** lesson-media:APP-ELEC-101:3: missing lecture, labDemo
-- **FAIL** lesson-media:APP-ELEC-101:4: missing lecture, labDemo
-- **FAIL** lesson-media:APP-ELEC-101:5: missing lecture, labDemo
-- **FAIL** lesson-media:APP-ELEC-101:6: missing lecture, labDemo
+- **PASS** lesson-media:APP-ELEC-101:1: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:2: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:3: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:4: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:5: lecture+lab
+- **PASS** lesson-media:APP-ELEC-101:6: lecture+lab
 - **PASS** program-meta:osha30-certification-prep
 - **PASS** program-link:osha30-certification-prep: /portal/audit
 - **PASS** course-lessons:CERT-OSHA30-201: 6 lessons
 - **PASS** course-titles:CERT-OSHA30-201
-- **FAIL** lesson-media:CERT-OSHA30-201:1: missing lecture, labDemo
-- **FAIL** lesson-media:CERT-OSHA30-201:2: missing lecture, labDemo
-- **FAIL** lesson-media:CERT-OSHA30-201:3: missing lecture, labDemo
-- **FAIL** lesson-media:CERT-OSHA30-201:4: missing lecture, labDemo
-- **FAIL** lesson-media:CERT-OSHA30-201:5: missing lecture, labDemo
-- **FAIL** lesson-media:CERT-OSHA30-201:6: missing lecture, labDemo
+- **PASS** lesson-media:CERT-OSHA30-201:1: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:2: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:3: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:4: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:5: lecture+lab
+- **PASS** lesson-media:CERT-OSHA30-201:6: lecture+lab
 - **PASS** program-meta:aas-construction-operations-sem1
 - **PASS** program-link:aas-construction-operations-sem1: /portal/platform
 - **PASS** course-lessons:DEG-AAS-110: 6 lessons
 - **PASS** course-titles:DEG-AAS-110
-- **FAIL** lesson-media:DEG-AAS-110:1: missing lecture, labDemo
-- **FAIL** lesson-media:DEG-AAS-110:2: missing lecture, labDemo
-- **FAIL** lesson-media:DEG-AAS-110:3: missing lecture, labDemo
-- **FAIL** lesson-media:DEG-AAS-110:4: missing lecture, labDemo
-- **FAIL** lesson-media:DEG-AAS-110:5: missing lecture, labDemo
-- **FAIL** lesson-media:DEG-AAS-110:6: missing lecture, labDemo
+- **PASS** lesson-media:DEG-AAS-110:1: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:2: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:3: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:4: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:5: lecture+lab
+- **PASS** lesson-media:DEG-AAS-110:6: lecture+lab
 - **PASS** program-meta:virginia-dpor-residential-license-prep
 - **PASS** program-link:virginia-dpor-residential-license-prep: /portal/files
 - **PASS** course-lessons:LIC-DPOR-301: 6 lessons
 - **PASS** course-titles:LIC-DPOR-301
-- **FAIL** lesson-media:LIC-DPOR-301:1: missing lecture, labDemo
-- **FAIL** lesson-media:LIC-DPOR-301:2: missing lecture, labDemo
-- **FAIL** lesson-media:LIC-DPOR-301:3: missing lecture, labDemo
-- **FAIL** lesson-media:LIC-DPOR-301:4: missing lecture, labDemo
-- **FAIL** lesson-media:LIC-DPOR-301:5: missing lecture, labDemo
-- **FAIL** lesson-media:LIC-DPOR-301:6: missing lecture, labDemo
+- **PASS** lesson-media:LIC-DPOR-301:1: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:2: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:3: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:4: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:5: lecture+lab
+- **PASS** lesson-media:LIC-DPOR-301:6: lecture+lab
 - **PASS** program-meta:fca-contractor-command-user-guide
 - **PASS** program-link:fca-contractor-command-user-guide: /portal
 - **PASS** course-lessons:GUIDE-FCA-001: 6 lessons
@@ -85,7 +85,7 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** lesson-media:GUIDE-FCA-001:3: lecture+lab
 - **PASS** lesson-media:GUIDE-FCA-001:4: lecture+lab
 - **PASS** lesson-media:GUIDE-FCA-001:5: lecture+lab
-- **FAIL** lesson-media:GUIDE-FCA-001:6: missing lecture, labDemo
+- **PASS** lesson-media:GUIDE-FCA-001:6: lecture+lab
 - **PASS** program-meta:fca-bids-qualification-estimates
 - **PASS** program-link:fca-bids-qualification-estimates: /portal/bids
 - **PASS** course-lessons:FCA-BIDS-101: 5 lessons
@@ -94,7 +94,7 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** lesson-media:FCA-BIDS-101:2: lecture+lab
 - **PASS** lesson-media:FCA-BIDS-101:3: lecture+lab
 - **PASS** lesson-media:FCA-BIDS-101:4: lecture+lab
-- **FAIL** lesson-media:FCA-BIDS-101:5: missing lecture, labDemo
+- **PASS** lesson-media:FCA-BIDS-101:5: lecture+lab
 - **PASS** program-meta:fca-projects-stage-control
 - **PASS** program-link:fca-projects-stage-control: /portal/projects
 - **PASS** course-lessons:FCA-PROJ-201: 5 lessons
@@ -147,18 +147,18 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** program-link:contractor-business-formation-legal: /portal/legal
 - **PASS** course-lessons:LEGAL-FORM-201: 4 lessons
 - **PASS** course-titles:LEGAL-FORM-201
-- **FAIL** lesson-media:LEGAL-FORM-201:1: missing lecture, labDemo
-- **FAIL** lesson-media:LEGAL-FORM-201:2: missing lecture, labDemo
-- **FAIL** lesson-media:LEGAL-FORM-201:3: missing lecture, labDemo
-- **FAIL** lesson-media:LEGAL-FORM-201:4: missing lecture, labDemo
+- **PASS** lesson-media:LEGAL-FORM-201:1: lecture+lab
+- **PASS** lesson-media:LEGAL-FORM-201:2: lecture+lab
+- **PASS** lesson-media:LEGAL-FORM-201:3: lecture+lab
+- **PASS** lesson-media:LEGAL-FORM-201:4: lecture+lab
 - **PASS** program-meta:contractor-construction-law-essentials
 - **PASS** program-link:contractor-construction-law-essentials: /portal/legal
 - **PASS** course-lessons:LEGAL-CONST-301: 4 lessons
 - **PASS** course-titles:LEGAL-CONST-301
-- **FAIL** lesson-media:LEGAL-CONST-301:1: missing lecture, labDemo
-- **FAIL** lesson-media:LEGAL-CONST-301:2: missing lecture, labDemo
-- **FAIL** lesson-media:LEGAL-CONST-301:3: missing lecture, labDemo
-- **FAIL** lesson-media:LEGAL-CONST-301:4: missing lecture, labDemo
+- **PASS** lesson-media:LEGAL-CONST-301:1: lecture+lab
+- **PASS** lesson-media:LEGAL-CONST-301:2: lecture+lab
+- **PASS** lesson-media:LEGAL-CONST-301:3: lecture+lab
+- **PASS** lesson-media:LEGAL-CONST-301:4: lecture+lab
 - **PASS** pathways: 3 defined
 - **PASS** legal-program:contractor-business-formation-legal: Contractor Business Formation & Legal Setup
 - **PASS** legal-program:contractor-construction-law-essentials: Construction Law Essentials for Contractors
@@ -188,7 +188,7 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** Academy LMS snapshot: 4 learners, 4 enrollments
 - **PASS** Academy progress PATCH: ENR-001
 - **PASS** Academy lane catalog probe: electrical-core-level-1
-- **PASS** Academy commerce intake: INTAKE-1782396807406
+- **PASS** Academy commerce intake: INTAKE-1782397147264
 - **PASS** SWA route /academy: 200 OK
 - **PASS** SWA route /academy/catalog: 200 OK
 - **PASS** SWA route /academy/store: 200 OK
