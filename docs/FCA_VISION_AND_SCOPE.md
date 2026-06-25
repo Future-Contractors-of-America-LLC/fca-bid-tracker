@@ -34,7 +34,7 @@ Commercial contractors who need to compete with tools like **PlanHub** (leads), 
 
 Lead ? Bid ? Estimate ? Proposal ? Award ? Project Setup ? Document Control ? Takeoff ? RFIs ? Change Orders ? Field/QC ? Billing ? Closeout/Warranty ? Academy ? Comms ? Admin
 
-**Coverage law:** Every module must attach to tenant, project (where relevant), files/evidence, auditable outputs, and Auricrux read/act/review.
+**Coverage law:** Every module must attach to tenant, project (where relevant), files/evidence, auditable outputs, and Auricrux read/act/review. Academy LMS has a dedicated **Observe -> Act -> Review** repair loop (`docs/FCA_LMS_REPAIR_LOOP_PROTOCOL.md`).
 
 See full matrix: `auricrux-central-work/FCA_COVERAGE_MATRIX.md`
 
@@ -83,6 +83,7 @@ See full matrix: `auricrux-central-work/FCA_COVERAGE_MATRIX.md`
 | System inventory | `auricrux-central-work/FCA_SYSTEM_INVENTORY.md` |
 | Founder test access | `fca-bid-tracker-work/docs/FOUNDER_PRODUCT_TEST_ACCESS.md` |
 | Founder completion | `fca-bid-tracker-work/docs/FOUNDER_COMPLETION_GUIDE.md` |
+| Academy LMS repair loop | `fca-bid-tracker-work/docs/FCA_LMS_REPAIR_LOOP_PROTOCOL.md` |
 | Backend consolidation | `auricrux-central-work/BACKEND_CONSOLIDATION_STATUS.md` |
 
 ---

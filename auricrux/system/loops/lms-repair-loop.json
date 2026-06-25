@@ -1,0 +1,27 @@
+{
+  "id": "lms-repair",
+  "version": 1,
+  "name": "FCA Academy LMS Continuous Repair Loop",
+  "purpose": "Academy catalog depth, live learner workflow, SWA route probes, and central artifact validation with bounded self-repair.",
+  "schedule": "30 * * * *",
+  "repo": "fca-bid-tracker",
+  "runner": "scripts/run-lms-repair-loop.mjs",
+  "workflow": ".github/workflows/lms-repair-loop.yml",
+  "outputs": [
+    "docs/qc/lms-simulation-report.json",
+    "docs/qc/lms-repair-latest.md",
+    "auricrux/system/lms_repair_state.json",
+    "auricrux/system/lms_repair_receipt.json",
+    "auricrux/system/next_action.json",
+    "auricrux/system/work_queue.json"
+  ],
+  "repairActions": [
+    "LMS-CATALOG-FIX",
+    "LMS-MEDIA-FIX",
+    "LMS-SWA-REDEPLOY",
+    "LMS-COMMERCE-FIX",
+    "LMS-ENTITLEMENT-FIX",
+    "LMS-CENTRAL-ARTIFACTS-FIX",
+    "LMS-AUTH-CONFIG"
+  ]
+}

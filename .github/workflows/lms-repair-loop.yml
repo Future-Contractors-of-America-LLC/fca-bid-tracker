@@ -1,0 +1,100 @@
+name: FCA LMS Repair Loop
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  schedule:
+    - cron: "30 * * * *"
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fca-lms-repair-loop
+  cancel-in-progress: false
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Checkout auricrux-central (academy artifacts phase)
+        continue-on-error: true
+        uses: actions/checkout@v6
+        with:
+          repository: Future-Contractors-of-America-LLC/auricrux-central
+          path: auricrux-central-work
+          token: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+
+      - name: Validate LMS repair loop protocol wiring
+        run: node scripts/validate-lms-repair-loop.mjs
+
+      - name: Run LMS repair loop (Observe -> Act -> Review)
+        env:
+          FCA_API_BASE: https://api.futurecontractorsofamerica.com
+          AURICRUX_CENTRAL_API: https://api.futurecontractorsofamerica.com/api
+          FCA_CENTRAL_ROOT: ${{ github.workspace }}/auricrux-central-work
+          FCA_SIM_LOGIN_EMAIL: ${{ secrets.FCA_SIM_LOGIN_EMAIL }}
+          FCA_SIM_LOGIN_PASSWORD: ${{ secrets.FCA_SIM_LOGIN_PASSWORD }}
+          FCA_GITHUB_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+          FCA_LMS_REPAIR_LOOP_MAX_ROUNDS: "3"
+          FCA_LMS_REPAIR_LOOP_RETRY_MS: "5000"
+        run: npm run sim:lms:loop
+
+      - name: Publish LMS repair loop summary
+        if: always()
+        run: |
+          if [ -f docs/qc/lms-repair-latest.md ]; then
+            cat docs/qc/lms-repair-latest.md >> "$GITHUB_STEP_SUMMARY"
+          elif [ -f docs/qc/lms-simulation-latest.md ]; then
+            cat docs/qc/lms-simulation-latest.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "LMS repair report missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload LMS simulation artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: lms-repair-loop-${{ github.run_id }}
+          path: |
+            docs/qc/lms-simulation-report.json
+            docs/qc/lms-simulation-latest.md
+            docs/qc/lms-repair-report.json
+            docs/qc/lms-repair-latest.md
+            auricrux/system/lms_repair_receipt.json
+            auricrux/system/lms_repair_state.json
+            auricrux/system/next_action.json
+          if-no-files-found: warn
+
+      - name: Persist LMS reports on main
+        if: always() && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "auricrux-ci"
+          git config user.email "auricrux-ci@futurecontractorsofamerica.com"
+          git add docs/qc/lms-simulation-report.json docs/qc/lms-simulation-latest.md docs/qc/lms-repair-report.json docs/qc/lms-repair-latest.md auricrux/system/lms_repair_receipt.json auricrux/system/lms_repair_state.json auricrux/system/work_queue.json auricrux/system/next_action.json auricrux/system/loop_runs/lms-repair-*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No LMS report changes."
+            exit 0
+          fi
+          git commit -m "LMS repair loop report for run ${GITHUB_RUN_ID}"
+          git pull --rebase origin main
+          git push origin HEAD:main || echo "Report push deferred - check branch protection"

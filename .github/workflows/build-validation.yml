@@ -37,6 +37,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate LMS repair loop protocol wiring
+        run: node scripts/validate-lms-repair-loop.mjs
+
       - name: Resolve cross-repo token
         id: cross_repo_token
         continue-on-error: true

@@ -22,7 +22,9 @@ Everything below requires **your** accounts, credentials, legal approval, or sto
 
 **Product confidence without field work:** GitHub Actions runs the **workflow repair loop** every hour (Observe -> Act -> Review). Read `docs/qc/workflow-repair-latest.md` or Actions -> FCA Workflow Simulations. Protocol: `docs/FCA_REPAIR_LOOP_PROTOCOL.md`. Set repo secrets `FCA_SIM_LOGIN_EMAIL` and `FCA_SIM_LOGIN_PASSWORD` (QA account in `docs/FOUNDER_PRODUCT_TEST_ACCESS.md`).
 
-## Section 1 ï¿½ Revenue (highest priority)
+**Academy LMS confidence:** GitHub Actions runs the **LMS repair loop** every hour at :30 (staggered). Read docs/qc/lms-repair-latest.md or Actions -> FCA LMS Repair Loop. Protocol: docs/FCA_LMS_REPAIR_LOOP_PROTOCOL.md. Uses the same QA login secrets.
+
+## Section 1 — Revenue (highest priority)
 
 ### 1.1 FCA native payment rail (primary - no Stripe required)
 

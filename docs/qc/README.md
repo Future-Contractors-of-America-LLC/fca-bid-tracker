@@ -12,6 +12,17 @@ Reports are written to this folder:
 
 - `saas-qc-report.md` / `.json`
 - `lms-qc-report.md` / `.json`
+- `lms-simulation-latest.md` / `lms-simulation-report.json` (Academy behavioral simulation)
+- `lms-repair-latest.md` / `lms-repair-report.json` (Academy repair loop)
+
+## Continuous LMS repair loop
+
+| Command | Scope |
+|---------|--------|
+| `npm run sim:lms` | Single Observe pass (static QC + learner workflow + SWA + central artifacts) |
+| `npm run sim:lms:loop` | Full Observe -> Act -> Review bounded repair loop |
+
+Protocol: `docs/FCA_LMS_REPAIR_LOOP_PROTOCOL.md`. Founder guide: `docs/FOUNDER_LMS_SIMULATIONS.md`.
 
 ## SaaS surfaces checked
 
