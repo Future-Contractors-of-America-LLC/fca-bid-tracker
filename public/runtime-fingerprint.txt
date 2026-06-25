@@ -1,9 +1,9 @@
 service=fca-bid-tracker
-generatedAt=2026-06-24T16:34:26.613Z
-source=local-build
-gitRef=local
-gitSha=local
-runId=local
+generatedAt=2026-06-25T11:19:59.302Z
+source=github-actions
+gitRef=refs/heads/copilot/fix-suppress-jekyll-processing
+gitSha=851eb5aa4448d32183c33f34449bcdf61b3d8174
+runId=28166388285
 defaultHost=delightful-mushroom-0de67860f.7.azurestaticapps.net
 expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
 continuityIntent=governed-public-runtime-fingerprint
