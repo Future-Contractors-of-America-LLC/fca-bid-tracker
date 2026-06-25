@@ -1,11 +1,11 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-25T01:41:13.914Z",
+  "generatedAt": "2026-06-25T01:57:35.610Z",
   "observed": {
     "provenance": "github_actions_ci",
     "ciPersisted": true,
-    "ciRunId": "28140931163",
-    "ciCommitSha": "6a47630faf166654769ac448badf0f78d31738d0",
+    "ciRunId": "28141190350",
+    "ciCommitSha": "3dba7367a9beacf990fc879727d458e3a255ef7c",
     "status": "ci_surface_present_with_failures"
   },
   "success": true,

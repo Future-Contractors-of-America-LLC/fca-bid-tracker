@@ -1,10 +1,10 @@
 # Live Proof Split State Report
 
 - Packet: 062Y
-- Generated: 2026-06-25T01:41:14.982Z
+- Generated: 2026-06-25T01:57:36.265Z
 - success: false
-- witnessCommitSha: b1fc46b34e374a205095ea5d8a430e3d3a9cd628
-- proofCommitSha: 603bbe675c5af1fa81283b408c518f151fc06553
+- witnessCommitSha: 165d7f5e8c5ea0a55aff7940e310eac8f08a58a9
+- proofCommitSha: 32347d7a8391399aaadc66c0ce7962d21a5892a8
 
 ## Failures
 - CI-backed live deployment proof commit is already observed; split-state lock no longer applies
