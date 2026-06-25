@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-25T20:04:08.247Z",
-  "runId": "LMS-SIM-1782417830924",
+  "generatedAt": "2026-06-25T20:20:16.300Z",
+  "runId": "LMS-SIM-1782418793413",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "swaOrigin": "https://futurecontractorsofamerica.com",
   "scope": "FCA Academy LMS simulation",
   "summary": {
-    "passed": 171,
-    "failed": 2,
+    "passed": 167,
+    "failed": 6,
     "skipped": 0,
     "total": 173
   },
@@ -14,7 +14,7 @@
   "phases": {
     "staticQc": 2,
     "learnerWorkflow": 0,
-    "swaProbes": 0,
+    "swaProbes": 4,
     "centralArtifacts": 0
   },
   "steps": [
@@ -1023,31 +1023,31 @@
     {
       "name": "Academy commerce intake",
       "status": "pass",
-      "detail": "INTAKE-1782417846281",
+      "detail": "INTAKE-1782418814369",
       "phase": "learner-workflow"
     },
     {
       "name": "SWA route /academy",
-      "status": "pass",
-      "detail": "200 OK",
+      "status": "fail",
+      "detail": "missing academy markers in HTML (academy, Academy)",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /academy/catalog",
-      "status": "pass",
-      "detail": "200 OK",
+      "status": "fail",
+      "detail": "missing academy markers in HTML (academy, catalog, Catalog)",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /academy/store",
-      "status": "pass",
-      "detail": "200 OK",
+      "status": "fail",
+      "detail": "missing academy markers in HTML (academy, store, Store)",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /portal/academy",
-      "status": "pass",
-      "detail": "200 OK",
+      "status": "fail",
+      "detail": "missing academy markers in HTML (academy, Academy)",
       "phase": "swa-probes"
     },
     {

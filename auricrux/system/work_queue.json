@@ -1,8 +1,21 @@
 {
   "version": 1,
   "queueName": "fca-revenue-sprint-queue",
-  "updatedAtUtc": "2026-06-25T20:04:08.256Z",
+  "updatedAtUtc": "2026-06-25T20:20:17.046Z",
   "items": [
+    {
+      "id": "LMS-SWA-REDEPLOY",
+      "title": "Academy SWA routes offline or missing markers",
+      "lane": "platform",
+      "priority": "high",
+      "status": "queued",
+      "source": "lms-repair-loop",
+      "runId": "LMS-WFR-1782418792812",
+      "failedStep": "SWA route /academy",
+      "detail": "Redeploy SWA or restore /academy route files in the shell.",
+      "targetRepo": "fca-bid-tracker",
+      "createdAtUtc": "2026-06-25T20:20:17.046Z"
+    },
     {
       "id": "LMS-TRIAGE",
       "title": "Investigate Academy failure: script:validate-academy-ctas.mjs",

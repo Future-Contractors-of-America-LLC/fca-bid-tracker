@@ -1,10 +1,10 @@
 # FCA Academy LMS Simulation
 
-- **When:** 2026-06-25T20:04:08.247Z
-- **Run ID:** LMS-SIM-1782417830924
+- **When:** 2026-06-25T20:20:16.300Z
+- **Run ID:** LMS-SIM-1782418793413
 - **API:** https://api.futurecontractorsofamerica.com
 - **SWA:** https://futurecontractorsofamerica.com
-- **Result:** 2 FAILURE(S) - 171/173 passed
+- **Result:** 6 FAILURE(S) - 167/173 passed
 
 ## What this proves
 
@@ -188,11 +188,11 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** Academy LMS snapshot: 4 learners, 4 enrollments
 - **PASS** Academy progress PATCH: ENR-001
 - **PASS** Academy lane catalog probe: electrical-core-level-1
-- **PASS** Academy commerce intake: INTAKE-1782417846281
-- **PASS** SWA route /academy: 200 OK
-- **PASS** SWA route /academy/catalog: 200 OK
-- **PASS** SWA route /academy/store: 200 OK
-- **PASS** SWA route /portal/academy: 200 OK
+- **PASS** Academy commerce intake: INTAKE-1782418814369
+- **FAIL** SWA route /academy: missing academy markers in HTML (academy, Academy)
+- **FAIL** SWA route /academy/catalog: missing academy markers in HTML (academy, catalog, Catalog)
+- **FAIL** SWA route /academy/store: missing academy markers in HTML (academy, store, Store)
+- **FAIL** SWA route /portal/academy: missing academy markers in HTML (academy, Academy)
 - **PASS** Central academy artifacts: skipped � auricrux-central sibling not present
 
 ## For the founder

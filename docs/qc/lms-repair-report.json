@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-25T20:04:10.062Z",
-  "runId": "LMS-WFR-1782417830160",
+  "generatedAt": "2026-06-25T20:20:38.155Z",
+  "runId": "LMS-WFR-1782418792812",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -9,7 +9,7 @@
     {
       "round": 1,
       "complete": false,
-      "passed": 171,
+      "passed": 167,
       "total": 173,
       "failures": [
         {
@@ -23,6 +23,30 @@
           "status": "fail",
           "detail": "",
           "phase": "static-qc"
+        },
+        {
+          "name": "SWA route /academy",
+          "status": "fail",
+          "detail": "missing academy markers in HTML (academy, Academy)",
+          "phase": "swa-probes"
+        },
+        {
+          "name": "SWA route /academy/catalog",
+          "status": "fail",
+          "detail": "missing academy markers in HTML (academy, catalog, Catalog)",
+          "phase": "swa-probes"
+        },
+        {
+          "name": "SWA route /academy/store",
+          "status": "fail",
+          "detail": "missing academy markers in HTML (academy, store, Store)",
+          "phase": "swa-probes"
+        },
+        {
+          "name": "SWA route /portal/academy",
+          "status": "fail",
+          "detail": "missing academy markers in HTML (academy, Academy)",
+          "phase": "swa-probes"
         }
       ]
     }
@@ -63,6 +87,28 @@
       "priority": "critical",
       "actionId": "LMS-COMMERCE-FIX",
       "outcome": "engineering-queued"
+    },
+    {
+      "id": "lms-swa-offline",
+      "repairClass": "engineering-queue",
+      "title": "Academy SWA routes offline or missing markers",
+      "detail": "Redeploy SWA or restore /academy route files in the shell.",
+      "step": {
+        "name": "SWA route /academy",
+        "status": "fail",
+        "detail": "missing academy markers in HTML (academy, Academy)",
+        "phase": "swa-probes"
+      },
+      "autoRepair": "swa-redeploy",
+      "targetLane": "platform",
+      "targetRepo": "fca-bid-tracker",
+      "priority": "high",
+      "actionId": "LMS-SWA-REDEPLOY",
+      "outcome": "swa-redeploy-queued",
+      "redeploy": {
+        "dispatched": false,
+        "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
+      }
     }
   ],
   "auricruxReviews": [
@@ -73,15 +119,29 @@
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
       "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+    },
+    {
+      "step": "SWA route /academy",
+      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
     }
   ],
-  "redeploy": null,
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 15.",
+  "redeploy": {
+    "dispatched": false,
+    "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
+  },
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 16.",
   "state": {
-    "runCount": 15,
+    "runCount": 16,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 15,
+    "consecutiveFailures": 16,
     "history": [
+      {
+        "at": "2026-06-25T20:20:38.155Z",
+        "runId": "LMS-WFR-1782418792812",
+        "complete": false,
+        "rounds": 1,
+        "failures": 6
+      },
       {
         "at": "2026-06-25T20:04:10.062Z",
         "runId": "LMS-WFR-1782417830160",
@@ -188,8 +248,8 @@
         "failures": 35
       }
     ],
-    "lastRunUtc": "2026-06-25T20:04:10.062Z",
+    "lastRunUtc": "2026-06-25T20:20:38.155Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782417830160"
+    "lastRunId": "LMS-WFR-1782418792812"
   }
 }

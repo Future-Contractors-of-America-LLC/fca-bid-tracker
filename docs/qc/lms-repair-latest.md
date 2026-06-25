@@ -1,26 +1,31 @@
 # FCA Academy LMS Repair Loop
 
-- **When:** 2026-06-25T20:04:10.062Z
-- **Run ID:** LMS-WFR-1782417830160
+- **When:** 2026-06-25T20:20:38.155Z
+- **Run ID:** LMS-WFR-1782418792812
 - **Protocol:** Observe -> Act -> Review (FCA Academy coverage law)
 - **Result:** OPEN � failures remain after bounded repair
 
 ## Rounds
 
-### Round 1 � FAIL (171/173 steps)
+### Round 1 � FAIL (167/173 steps)
 - script:validate-academy-ctas.mjs: failed
 - script:validate-academy-native-commerce-journey.mjs: failed
+- SWA route /academy: missing academy markers in HTML (academy, Academy)
+- SWA route /academy/catalog: missing academy markers in HTML (academy, catalog, Catalog)
+- SWA route /academy/store: missing academy markers in HTML (academy, store, Store)
+- SWA route /portal/academy: missing academy markers in HTML (academy, Academy)
 
 ## Repair actions taken
 
 - **engineering-queue** Investigate Academy failure: script:validate-academy-ctas.mjs: engineering-queued
 - **engineering-queue** Academy native commerce rail regression: engineering-queued
+- **engineering-queue** Academy SWA routes offline or missing markers: swa-redeploy-queued
 
 
 
 ## Summary
 
-Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 15.
+Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 16.
 
 ## For the founder
 
