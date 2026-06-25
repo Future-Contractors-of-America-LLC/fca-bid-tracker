@@ -70,7 +70,9 @@ jobs:
         run: node scripts/patch-live-branding-visibility.mjs
 
       - name: Generate deployable Azure Functions layout
-        run: node scripts/prepare-api-functions.mjs
+        run: |
+          node scripts/generate-central-proxy-functions.mjs
+          node scripts/prepare-api-functions.mjs
 
       - name: Verify build artifact exists
         run: |

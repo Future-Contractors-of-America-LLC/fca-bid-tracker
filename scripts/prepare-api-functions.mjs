@@ -5,6 +5,19 @@ const repoRoot = process.cwd();
 const apiRoot = path.join(repoRoot, 'api');
 const outRoot = path.join(repoRoot, 'api_generated');
 
+/** Flat legacy handlers — kept for imports only, never deployed as HTTP functions. */
+const LEGACY_FLAT_ONLY = new Set([
+  'workflow-store.js',
+  'workspace-read-models.js',
+  'leads-store.js',
+  'finance-store.js',
+  'commercial-store.js',
+  'warranty-store.js',
+  'remediation-store.js',
+  'customer-account-store.js',
+  'academy-store.js',
+]);
+
 function rmrf(target) {
   fs.rmSync(target, { recursive: true, force: true });
 }
@@ -13,20 +26,15 @@ function ensureDir(target) {
   fs.mkdirSync(target, { recursive: true });
 }
 
-function copyIfExists(from, to) {
-  if (fs.existsSync(from)) {
-    fs.copyFileSync(from, to);
-    return true;
-  }
-  return false;
-}
-
 function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
-function createFunctionWrapper(sourceFileName) {
-  return `module.exports = async function (context, req) {\n  const handler = require('../${sourceFileName}');\n  const result = await handler(context, req);\n\n  if (!context.res && result && typeof result === 'object' && ('status' in result || 'body' in result || 'headers' in result)) {\n    context.res = result;\n    return;\n  }\n\n  if (!context.res && typeof result !== 'undefined') {\n    context.res = {\n      status: 200,\n      headers: { 'Content-Type': 'application/json; charset=utf-8' },\n      body: result\n    };\n    return;\n  }\n\n  if (!context.res) {\n    context.res = {\n      status: 204\n    };\n  }\n};\n`;
+function hasCentralProxyIndex(dirName) {
+  const indexPath = path.join(apiRoot, dirName, 'index.js');
+  if (!fs.existsSync(indexPath)) return false;
+  const source = fs.readFileSync(indexPath, 'utf8');
+  return source.includes('createCentralProxy') || source.includes('createCentralPathProxy');
 }
 
 function main() {
@@ -37,94 +45,63 @@ function main() {
   rmrf(outRoot);
   ensureDir(outRoot);
 
-  const hasHost = copyIfExists(path.join(apiRoot, 'host.json'), path.join(outRoot, 'host.json'));
-  if (!hasHost) {
+  const hasHost = fs.existsSync(path.join(apiRoot, 'host.json'));
+  if (hasHost) {
+    fs.copyFileSync(path.join(apiRoot, 'host.json'), path.join(outRoot, 'host.json'));
+  } else {
     writeJson(path.join(outRoot, 'host.json'), { version: '2.0' });
   }
 
-  const hasPackage = copyIfExists(path.join(apiRoot, 'package.json'), path.join(outRoot, 'package.json'));
-  if (!hasPackage) {
+  if (fs.existsSync(path.join(apiRoot, 'package.json'))) {
+    fs.copyFileSync(path.join(apiRoot, 'package.json'), path.join(outRoot, 'package.json'));
+  } else {
     writeJson(path.join(outRoot, 'package.json'), { name: 'fca-bid-tracker-api-generated', version: '1.0.0' });
   }
 
   const libDir = path.join(apiRoot, '_lib');
-  if (fs.existsSync(libDir) && fs.statSync(libDir).isDirectory()) {
+  if (fs.existsSync(libDir)) {
     fs.cpSync(libDir, path.join(outRoot, '_lib'), { recursive: true });
   }
 
   const academyCatalogSource = path.join(repoRoot, 'src', 'academyCatalog.js');
   const entityInfoSource = path.join(repoRoot, 'src', 'legal', 'entityInfo.js');
-  const apiLibDir = path.join(apiRoot, '_lib');
   const generatedLibDir = path.join(outRoot, '_lib');
-  ensureDir(apiLibDir);
   ensureDir(generatedLibDir);
   if (fs.existsSync(academyCatalogSource)) {
-    fs.copyFileSync(academyCatalogSource, path.join(apiLibDir, 'academyCatalog.js'));
     fs.copyFileSync(academyCatalogSource, path.join(generatedLibDir, 'academyCatalog.js'));
   }
   if (fs.existsSync(entityInfoSource)) {
-    const apiEntityInfo = `/** API copy of src/legal/entityInfo.js — synced via prepare-api-functions.mjs */\n${fs.readFileSync(entityInfoSource, 'utf8')}`;
-    fs.writeFileSync(path.join(apiLibDir, 'entityInfo.js'), apiEntityInfo, 'utf8');
+    const apiEntityInfo = `/** API copy of src/legal/entityInfo.js */\n${fs.readFileSync(entityInfoSource, 'utf8')}`;
     fs.writeFileSync(path.join(generatedLibDir, 'entityInfo.js'), apiEntityInfo, 'utf8');
   }
 
   const apiEntries = fs.readdirSync(apiRoot, { withFileTypes: true });
 
-  // Only directories that are already real function apps should suppress wrapper generation.
   const canonicalFunctionDirs = new Set(
     apiEntries
       .filter((entry) => entry.isDirectory())
       .filter((entry) => fs.existsSync(path.join(apiRoot, entry.name, 'function.json')))
-      .map((entry) => entry.name)
+      .map((entry) => entry.name),
   );
 
   for (const entry of apiEntries) {
     if (!entry.isDirectory()) continue;
     if (entry.name === '_lib') continue;
-
-    const sourceDir = path.join(apiRoot, entry.name);
-    const functionJsonPath = path.join(sourceDir, 'function.json');
+    const functionJsonPath = path.join(apiRoot, entry.name, 'function.json');
     if (fs.existsSync(functionJsonPath)) {
-      fs.cpSync(sourceDir, path.join(outRoot, entry.name), { recursive: true });
+      fs.cpSync(path.join(apiRoot, entry.name), path.join(outRoot, entry.name), { recursive: true });
     }
   }
 
   for (const entry of apiEntries) {
     if (!entry.isFile()) continue;
     if (!entry.name.endsWith('.js')) continue;
-
-    const base = entry.name.slice(0, -3);
-
-    // Keep flat file available for wrappers and shared imports.
-    copyIfExists(path.join(apiRoot, entry.name), path.join(outRoot, entry.name));
-
-    if (canonicalFunctionDirs.has(base)) {
-      continue;
+    if (LEGACY_FLAT_ONLY.has(entry.name)) {
+      fs.copyFileSync(path.join(apiRoot, entry.name), path.join(outRoot, entry.name));
     }
-
-    const fnDir = path.join(outRoot, base);
-    ensureDir(fnDir);
-
-    fs.writeFileSync(path.join(fnDir, 'index.js'), createFunctionWrapper(entry.name), 'utf8');
-    writeJson(path.join(fnDir, 'function.json'), {
-      bindings: [
-        {
-          authLevel: 'anonymous',
-          type: 'httpTrigger',
-          direction: 'in',
-          name: 'req',
-          methods: ['get', 'post', 'put', 'patch', 'delete', 'options']
-        },
-        {
-          type: 'http',
-          direction: 'out',
-          name: 'res'
-        }
-      ]
-    });
   }
 
-  console.log('Prepared Azure Functions backend at api_generated');
+  console.log(`Prepared Azure Functions backend at api_generated (${canonicalFunctionDirs.size} central proxy routes).`);
 }
 
 main();

@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { fetchAuricruxActions } from "../../api/auricruxActionsClient";
-import { auricruxActions as fallbackActions, auricruxCommsChannels, auricruxRail, routeStateOverlays } from "../../systemState";
+import usePortalApiLoad from "../../hooks/usePortalApiLoad";
+import PortalApiStatusBanner from "../../components/portal/PortalApiStatusBanner";
+import { auricruxCommsChannels, auricruxRail, routeStateOverlays } from "../../systemState";
 import { openAuricruxAssistant } from "../../auricruxAssistant";
 import { auricruxPersona } from "../../config/auricruxPersona";
 import { portalButtonPrimary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
@@ -45,7 +47,19 @@ function normalizeGuidedAction(action) {
 export default function PortalAuricrux() {
   const { session } = useCustomerSession();
   const { state } = useWorkspaceState();
-  const [liveActions, setLiveActions] = useState([]);
+  const actionsLoad = usePortalApiLoad(() => fetchAuricruxActions(), []);
+  const liveActions = actionsLoad.data?.items || [];
+
+  const guidedActions = useMemo(
+    () => liveActions.map(normalizeGuidedAction),
+    [liveActions],
+  );
+
+  const blocker = state.auricrux?.currentBlocker || auricruxRail.currentBlocker;
+  const nextAction = state.workspace?.currentNextAction || auricruxRail.nextRecommendedAction;
+
+  const usingLiveActions = actionsLoad.isLive && liveActions.length > 0;
+
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
   const commItems = auricruxCommsChannels.map((item) => ({
     ...item,
@@ -53,25 +67,6 @@ export default function PortalAuricrux() {
     href: `/portal/messages#${item.label.toLowerCase()}`,
     ctaLabel: `Open ${item.label}`,
   }));
-
-  useEffect(() => {
-    fetchAuricruxActions()
-      .then((payload) => {
-        const items = payload?.items || [];
-        if (items.length) setLiveActions(items);
-      })
-      .catch(() => setLiveActions([]));
-  }, []);
-
-  const guidedActions = useMemo(() => {
-    const source = liveActions.length ? liveActions : fallbackActions;
-    return source.map(normalizeGuidedAction);
-  }, [liveActions]);
-
-  const blocker = state.auricrux?.currentBlocker || auricruxRail.currentBlocker;
-  const nextAction = state.workspace?.currentNextAction || auricruxRail.nextRecommendedAction;
-
-  const usingLiveActions = liveActions.length > 0;
 
   return (
     <PortalShell
@@ -83,6 +78,12 @@ export default function PortalAuricrux() {
       primaryHref="/portal/platform"
       primaryLabel="Back to workspace"
     >
+      <PortalApiStatusBanner
+        status={actionsLoad.status}
+        error={actionsLoad.error}
+        onRetry={actionsLoad.reload}
+        label="Auricrux actions"
+      />
       <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${usingLiveActions ? "#16a34a" : "#d97706"}`, background: usingLiveActions ? "#f0fdf4" : "#fffbeb" }}>
         <div style={{ ...portalEyebrowStyle, color: usingLiveActions ? "#166534" : "#92400e" }}>
           {usingLiveActions ? "Live recommendations" : "Guidance mode"}
@@ -90,7 +91,7 @@ export default function PortalAuricrux() {
         <p style={{ color: portalTokens.body, fontSize: 14, lineHeight: 1.55, margin: "8px 0 0" }}>
           {usingLiveActions
             ? "Actions below are loaded from your workspace API."
-            : "Offline guidance is active until live actions sync. Use Ask Auricrux in the header for immediate help."}
+            : "Live actions will appear here once the workspace API responds. Use Ask Auricrux in the header for immediate help."}
         </p>
       </div>
 
@@ -138,6 +139,11 @@ export default function PortalAuricrux() {
           Tap a card to open the lane Auricrux recommends. You can also use the top-nav <strong>Ask Auricrux</strong> button anytime.
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10 }}>
+          {guidedActions.length === 0 ? (
+            <p style={{ color: portalTokens.muted, margin: 0 }}>
+              No live recommendations yet. Open Ask Auricrux to get the next move for your workspace.
+            </p>
+          ) : null}
           {guidedActions.slice(0, 8).map((action) => (
             <article key={action.key} style={{ border: `1px solid ${portalTokens.border}`, borderRadius: 12, padding: 14, background: portalTokens.panel }}>
               <div style={{ fontWeight: 700, marginBottom: 6, lineHeight: 1.45 }}>{action.title}</div>

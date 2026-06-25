@@ -5,7 +5,12 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get", "patch", "options"],
+      "methods": [
+        "get",
+        "post",
+        "patch",
+        "options"
+      ],
       "route": "academy-lms"
     },
     {

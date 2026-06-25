@@ -8,10 +8,9 @@
       "methods": [
         "get",
         "post",
-        "patch",
         "options"
       ],
-      "route": "portal-invoices"
+      "route": "auricrux-actions"
     },
     {
       "type": "http",

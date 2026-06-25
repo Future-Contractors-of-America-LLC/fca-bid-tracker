@@ -143,6 +143,48 @@ const continuityActions = [
   { href: "/portal/support", label: "Support" },
 ];
 
+function buildChatContext({
+  route,
+  portalTenant,
+  workspaceContext,
+  auricruxRail,
+  portalPageContext,
+  academyContext,
+  designParams,
+  pageProjectId,
+}) {
+  if (!route.startsWith("/portal")) {
+    return {
+      company: "Future Contractors of America",
+      route,
+      nextAction: route.startsWith("/academy")
+        ? "Browse Academy programs or assign training to your crew."
+        : "Learn how FCA unifies bids, field execution, billing, and contractor training.",
+      blocker: "None — public discovery lane.",
+      pageSurface: route === "/" ? "marketing-home" : "public-site",
+      academyContext: academyContext || null,
+    };
+  }
+
+  return {
+    company: portalTenant.name,
+    nextAction: workspaceContext.currentNextAction,
+    blocker: auricruxRail.currentBlocker,
+    projectId: pageProjectId,
+    pipelineStep: portalPageContext?.pipelineStep || null,
+    bidId: portalPageContext?.bidId || null,
+    pageSurface: portalPageContext?.surface || null,
+    academyContext: academyContext || null,
+    designContext: route.includes("/portal/design")
+      ? {
+          fileId: designParams.get("fileId") || "",
+          sheetId: designParams.get("sheetId") || "",
+          overlay: routeStateOverlays.design,
+        }
+      : null,
+  };
+}
+
 export default function AuricruxDock() {
   const [text, setText] = useState("");
   const [log, setLog] = useState([]);
@@ -267,23 +309,16 @@ export default function AuricruxDock() {
       const data = await sendAuricruxMessage({
         message: cmd,
         route,
-        context: {
-          company: portalTenant.name,
-          nextAction: workspaceContext.currentNextAction,
-          blocker: auricruxRail.currentBlocker,
-          projectId: pageProjectId,
-          pipelineStep: portalPageContext?.pipelineStep || null,
-          bidId: portalPageContext?.bidId || null,
-          pageSurface: portalPageContext?.surface || null,
-          academyContext: academyContext || null,
-          designContext: route.includes("/portal/design")
-            ? {
-                fileId: designParams.get("fileId") || "",
-                sheetId: designParams.get("sheetId") || "",
-                overlay: routeStateOverlays.design,
-              }
-            : null,
-        },
+        context: buildChatContext({
+          route,
+          portalTenant,
+          workspaceContext,
+          auricruxRail,
+          portalPageContext,
+          academyContext,
+          designParams,
+          pageProjectId,
+        }),
       });
       setMode(data.poweredByLlm || data.mode === "llm-assistant" ? "live" : "fallback");
       setPoweredByLlm(Boolean(data.poweredByLlm || data.mode === "llm-assistant"));

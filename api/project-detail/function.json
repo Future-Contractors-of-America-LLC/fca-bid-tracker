@@ -7,11 +7,10 @@
       "name": "req",
       "methods": [
         "get",
-        "post",
         "patch",
         "options"
       ],
-      "route": "portal-invoices"
+      "route": "projects/{projectId}"
     },
     {
       "type": "http",

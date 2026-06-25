@@ -45,29 +45,6 @@ const STEPS = [
   { key: "payment", label: "Collect payment", detail: "Record payment in FCA Books and post to GL." },
 ];
 
-function readLocalPipelineLinks() {
-  if (typeof window === "undefined") return {};
-  try {
-    const raw = JSON.parse(window.localStorage.getItem(PIPELINE_KEY) || "{}");
-    return Object.fromEntries(
-      Object.entries(raw).map(([bidId, link]) => [bidId, { bidId, ...link }]),
-    );
-  } catch {
-    return {};
-  }
-}
-
-function writeLocalPipelineLink(bidId, patch) {
-  if (typeof window === "undefined") return;
-  const current = readLocalPipelineLinks();
-  const legacy = { ...current[bidId] };
-  delete legacy.bidId;
-  window.localStorage.setItem(
-    PIPELINE_KEY,
-    JSON.stringify({ ...current, [bidId]: { ...legacy, ...patch } }),
-  );
-}
-
 function normalizeLink(link = {}) {
   return {
     bidId: link.bidId,
@@ -120,7 +97,7 @@ export default function PortalPipeline() {
   const [invoices, setInvoices] = useState([]);
   const [links, setLinks] = useState({});
   const [pipelineSource, setPipelineSource] = useState("loading");
-  const [pipelineBanner, setPipelineBanner] = useState("");
+  const [pipelineLoadError, setPipelineLoadError] = useState("");
   const [invoiceDraft, setInvoiceDraft] = useState({ invoiceName: "", amount: "", note: "" });
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
@@ -144,7 +121,7 @@ export default function PortalPipeline() {
 
   useEffect(() => {
     let active = true;
-    setPipelineBanner("");
+    setPipelineLoadError("");
     fetchCommercialPipeline()
       .then(async (payload) => {
         if (!active) return;
@@ -152,11 +129,11 @@ export default function PortalPipeline() {
         setLinks(pipelineItemsToMap(items));
         setPipelineSource(payload.backingSource || "auricrux-central-table-store");
       })
-      .catch(() => {
+      .catch((err) => {
         if (!active) return;
-        setLinks(readLocalPipelineLinks());
-        setPipelineSource("localStorage-fallback");
-        setPipelineBanner("Pipeline API unreachable. Showing local fallback data until sync recovers.");
+        setLinks({});
+        setPipelineSource("error");
+        setPipelineLoadError(err?.message || "Pipeline API unreachable.");
       });
     return () => {
       active = false;
@@ -186,15 +163,11 @@ export default function PortalPipeline() {
       const nextLinks = { ...links, [bidId]: normalizeLink(payload.item) };
       setLinks(nextLinks);
       setPipelineSource(payload.backingSource || "auricrux-central-table-store");
-      setPipelineBanner("");
+      setPipelineLoadError("");
       return nextLinks;
-    } catch {
-      writeLocalPipelineLink(bidId, patch);
-      const fallback = readLocalPipelineLinks();
-      setLinks(fallback);
-      setPipelineSource("localStorage-fallback");
-      setPipelineBanner("Pipeline API unreachable. Changes saved locally until sync recovers.");
-      return fallback;
+    } catch (err) {
+      setPipelineLoadError(err?.message || "Unable to save pipeline link.");
+      throw err;
     }
   }
 
@@ -370,7 +343,7 @@ export default function PortalPipeline() {
         detail="Select a job, complete each step in order, and keep billing tied to the same opportunity."
       />
 
-      {pipelineBanner ? <PortalAlert tone="warning">{pipelineBanner}</PortalAlert> : null}
+      {pipelineLoadError ? <PortalAlert tone="warning">{pipelineLoadError}</PortalAlert> : null}
 
       {activeBid?.id ? (
         <div style={{ marginBottom: 18 }}>

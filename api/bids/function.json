@@ -5,13 +5,18 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["get", "post"],
+      "methods": [
+        "get",
+        "post",
+        "patch",
+        "options"
+      ],
       "route": "bids"
     },
     {
       "type": "http",
       "direction": "out",
-      "name": "$return"
+      "name": "res"
     }
   ]
 }

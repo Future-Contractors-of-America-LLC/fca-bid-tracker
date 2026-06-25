@@ -1,4 +1,4 @@
 const { createCentralProxy } = require("../_lib/proxyToCentral");
 
-/** SWA-compatible proxy: forwards /api/projects → Auricrux Central /api/projects. */
+/** SWA proxy: forwards /api/projects → Auricrux Central /projects. */
 module.exports = createCentralProxy("/projects");

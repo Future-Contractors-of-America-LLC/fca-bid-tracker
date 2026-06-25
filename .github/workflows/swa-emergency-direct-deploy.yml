@@ -46,6 +46,7 @@ jobs:
         run: |
           node scripts/patch-live-login-continuity.mjs
           node scripts/patch-live-branding-visibility.mjs
+          node scripts/generate-central-proxy-functions.mjs
           node scripts/prepare-api-functions.mjs
 
       - name: Validate branding marker in dist artifact

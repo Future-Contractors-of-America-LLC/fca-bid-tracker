@@ -4,8 +4,26 @@ import path from "node:path";
 const repoRoot = process.cwd();
 const apiRoot = path.join(repoRoot, "api");
 
-/** @type {Array<{ dir: string, route: string, centralPath: string, methods?: string[], dynamic?: boolean }>} */
+/** @type {Array<{ dir: string, route: string, centralPath?: string, methods?: string[], dynamic?: boolean }>} */
 const PROXIES = [
+  { dir: "projects", route: "projects", centralPath: "/projects" },
+  {
+    dir: "project-detail",
+    route: "projects/{projectId}",
+    dynamic: true,
+    methods: ["get", "patch", "options"],
+  },
+  {
+    dir: "project-rfis",
+    route: "projects/{projectId}/rfis",
+    dynamic: true,
+  },
+  {
+    dir: "project-takeoffs",
+    route: "projects/{projectId}/takeoffs",
+    dynamic: true,
+  },
+  { dir: "bids", route: "bids", centralPath: "/bids" },
   { dir: "estimates", route: "estimates", centralPath: "/estimates" },
   { dir: "proposals", route: "proposals", centralPath: "/proposals" },
   { dir: "files", route: "files", centralPath: "/files" },
@@ -26,26 +44,43 @@ const PROXIES = [
   },
   { dir: "job-cost", route: "job-cost", centralPath: "/job-cost" },
   { dir: "field-photos", route: "field-photos", centralPath: "/field-photos" },
+  { dir: "field-tasks", route: "field-tasks", centralPath: "/field-tasks" },
+  { dir: "field-schedule", route: "field-schedule", centralPath: "/field-schedule" },
   { dir: "commercial-pipeline", route: "commercial-pipeline", centralPath: "/commercial-pipeline" },
   { dir: "leads", route: "leads", centralPath: "/leads" },
+  { dir: "financial-workspace", route: "financial-workspace", centralPath: "/financial-workspace" },
+  { dir: "portal-messages", route: "portal-messages", centralPath: "/portal-messages" },
+  { dir: "portal-invoices", route: "portal-invoices", centralPath: "/portal-invoices" },
+  { dir: "support-tickets", route: "support-tickets", centralPath: "/support-tickets" },
+  { dir: "academy-lms", route: "academy-lms", centralPath: "/academy-lms" },
+  { dir: "auricrux", route: "auricrux", centralPath: "/auricrux", methods: ["get", "post", "options"] },
+  {
+    dir: "auricrux-actions",
+    route: "auricrux/actions",
+    centralPath: "/auricrux/actions",
+    methods: ["get", "post", "options"],
+  },
+  {
+    dir: "auricrux-actions-alias",
+    route: "auricrux-actions",
+    centralPath: "/auricrux-actions",
+    methods: ["get", "post", "options"],
+  },
   {
     dir: "projects-workspace",
     route: "projects/{projectId}/workspace",
-    centralPath: null,
     dynamic: true,
     methods: ["get", "options"],
   },
   {
     dir: "opportunities-workspace",
     route: "opportunities/{opportunityId}/workspace",
-    centralPath: null,
     dynamic: true,
     methods: ["get", "options"],
   },
   {
     dir: "opportunity-convert",
     route: "opportunities/{opportunityId}/convert-to-project",
-    centralPath: null,
     dynamic: true,
     methods: ["post", "options"],
   },
@@ -89,7 +124,7 @@ module.exports = createCentralProxy("${entry.centralPath}");
   });
 
   fs.writeFileSync(path.join(targetDir, "index.js"), indexSource, "utf8");
-  console.log(`Prepared ${entry.dir} → ${entry.dynamic ? "dynamic path" : entry.centralPath}`);
+  console.log(`Prepared ${entry.dir} → ${entry.dynamic ? entry.route : entry.centralPath}`);
 }
 
 for (const entry of PROXIES) {
