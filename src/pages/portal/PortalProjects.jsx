@@ -12,6 +12,7 @@ import {
   PortalQuickStats,
   PortalStatusBadge,
 } from "../../components/portal/PortalPrimitives";
+import PortalApiStatusBanner from "../../components/portal/PortalApiStatusBanner";
 import {
   portalButtonPrimary,
   portalButtonSecondary,
@@ -50,7 +51,7 @@ const defaultCommandDraft = {
 
 export default function PortalProjects() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
-  const { projects, activeProject, meta, selectActiveProject, advanceProjectStage, clearPermitBlocker, updateProjectCommandNotes } = useProjectWorkspace();
+  const { projects, activeProject, meta, reloadProjects, selectActiveProject, advanceProjectStage, clearPermitBlocker, updateProjectCommandNotes } = useProjectWorkspace();
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
   const [drafts, setDrafts] = useState(() => readLocalJson(PROJECT_COMMAND_KEY, {}));
   const [selectedProjectId, setSelectedProjectId] = useState(() => activeProject?.id || projects[0]?.id || "");
@@ -66,6 +67,7 @@ export default function PortalProjects() {
 
   const visibleProject = projects.find((project) => project.id === selectedProjectId) || activeProject || state.project;
   const apiBacked = meta.backingSource === "api-workflow-store";
+  const loadStatus = meta.backingSource === "loading" ? "loading" : meta.backingSource === "api-error" ? "error" : "ready";
 
   const tableRows = useMemo(
     () =>
@@ -98,7 +100,7 @@ export default function PortalProjects() {
       ownerNote: command.ownerNote,
       customerMilestone: command.customerMilestone,
     });
-    setNotesStatus(saved ? "Notes saved to project record." : "Notes saved on this device.");
+    setNotesStatus(saved ? "Notes saved to project record." : "Unable to save notes — check workspace API connection.");
     setTimeout(() => setNotesStatus(""), 3000);
   }
 
@@ -129,11 +131,18 @@ export default function PortalProjects() {
         ]}
       />
 
-      {!apiBacked ? (
+      {!apiBacked && loadStatus === "ready" ? (
         <PortalAlert tone="warning" title="Limited API sync">
-          Project actions may save locally until workflow API sync is fully available. Your selections still drive the workspace shell.
+          Project actions require a live connection to FCA Contractor Command.
         </PortalAlert>
       ) : null}
+
+      <PortalApiStatusBanner
+        status={loadStatus}
+        error={meta.loadError}
+        label="projects"
+        onRetry={reloadProjects}
+      />
 
       {visibleProject?.id ? (
         <div style={{ marginBottom: 16 }}>

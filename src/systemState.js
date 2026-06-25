@@ -737,6 +737,7 @@ export const portalNavGroups = [
   {
     label: "Office",
     items: [
+      { label: "Auricrux", href: "/portal/auricrux" },
       { label: "Files", href: "/portal/files" },
       { label: "Design workspace", href: "/portal/design" },
       { label: "Legal", href: "/portal/legal" },

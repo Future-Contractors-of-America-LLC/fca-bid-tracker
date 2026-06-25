@@ -24,36 +24,6 @@ const cardStyle = {
 const TASK_STORAGE_KEY = "fca_customer_task_board_v1";
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
 
-const defaultTasks = [
-  {
-    id: "task-intake-review",
-    title: "Review new opportunity intake",
-    lane: "today",
-    owner: "Sales Coordinator",
-    due: "Today",
-    detail: "Confirm scope notes, budget signal, and jurisdiction before qualification.",
-    done: false,
-  },
-  {
-    id: "task-estimate-start",
-    title: "Open estimate worksheet",
-    lane: "this-week",
-    owner: "Estimator",
-    due: "This week",
-    detail: "Build the first estimate line set and stage proposal output for review.",
-    done: false,
-  },
-  {
-    id: "task-customer-followup",
-    title: "Send customer next-step summary",
-    lane: "customer",
-    owner: "Auricrux",
-    due: "After review",
-    detail: "Deliver branded follow-up with tasks, files requested, and next meeting target.",
-    done: false,
-  },
-];
-
 const defaultBrandSkin = {
   companyName: "Customer Workspace",
   accent: "#1d4ed8",
@@ -112,7 +82,7 @@ export default function PortalHome() {
   const { bids } = useBidWorkspace();
   const { projects, activeProject } = useProjectWorkspace();
   const { academyState } = useAcademyLms();
-  const [tasks, setTasks] = useState(() => readLocalJson(TASK_STORAGE_KEY, defaultTasks));
+  const [tasks, setTasks] = useState(() => readLocalJson(TASK_STORAGE_KEY, []));
   const [brandSkin, setBrandSkin] = useState(() => readLocalJson(BRAND_STORAGE_KEY, defaultBrandSkin));
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [pipelineLinks, setPipelineLinks] = useState({});
@@ -202,6 +172,7 @@ export default function PortalHome() {
   ]), []);
 
   const routeCards = [
+    { title: "Auricrux", detail: "Ask what to do next on bids, projects, billing, and training — powered by your live workspace.", href: "/portal/auricrux", label: "Open Auricrux hub" },
     { title: "Qualification", detail: "Advance opportunities and route work into estimate launch.", href: "/portal/bids", label: "Open Qualification" },
     { title: "Estimates", detail: "Move pricing, scope notes, and proposal packaging forward.", href: "/portal/estimates", label: "Open Estimates" },
     { title: "Projects", detail: "Control stage movement, milestones, and delivery posture.", href: "/portal/projects", label: "Open Projects" },

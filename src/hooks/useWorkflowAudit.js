@@ -1,91 +1,48 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchWorkflowAudit } from "../api/workflowClient";
-import { projectAuditEvents } from "../systemState";
-
-function scopeSeedAudit(events, projectId, filters = {}) {
-  let items = events.filter(
-    (event) =>
-      !projectId ||
-      !event.targetObjectId ||
-      event.targetObjectId === projectId ||
-      event.detail?.includes("PRJ-A117") ||
-      event.reason?.includes("PRJ-A117")
-  );
-
-  if (filters.eventType && filters.eventType !== "All") {
-    items = items.filter((event) => event.eventType === filters.eventType);
-  }
-
-  if (filters.actorType && filters.actorType !== "All") {
-    items = items.filter((event) => event.actorType === filters.actorType);
-  }
-
-  if (filters.q) {
-    const q = filters.q.toLowerCase();
-    items = items.filter((event) => [event.action, event.detail, event.reason, event.discipline, event.targetObjectType, event.actorType, event.eventType].filter(Boolean).join(" ").toLowerCase().includes(q));
-  }
-
-  return items;
-}
 
 export default function useWorkflowAudit(projectId) {
   const [filters, setFilters] = useState({ eventType: "All", actorType: "All", q: "" });
-  const [auditEvents, setAuditEvents] = useState(() => scopeSeedAudit(projectAuditEvents, projectId, filters));
+  const [auditEvents, setAuditEvents] = useState([]);
   const [meta, setMeta] = useState({
-    backingSource: "seeded-system-state",
-    persistenceState: "Fallback workflow audit active",
+    backingSource: "loading",
+    persistenceState: "Loading workflow audit from FCA Contractor Command…",
+    loadError: "",
     lastSyncedAt: null,
   });
 
   const hydrate = useCallback(async () => {
+    setMeta((current) => ({
+      ...current,
+      backingSource: "loading",
+      persistenceState: "Loading workflow audit from FCA Contractor Command…",
+      loadError: "",
+    }));
     try {
       const payload = await fetchWorkflowAudit({ projectId, ...filters });
       setAuditEvents(Array.isArray(payload.items) ? payload.items : []);
       setMeta({
         backingSource: "api-workflow-store",
         persistenceState: "Workflow-backed audit evidence active",
+        loadError: "",
         lastSyncedAt: new Date().toISOString(),
       });
-    } catch {
-      setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId, filters));
+      return payload.items || [];
+    } catch (err) {
+      setAuditEvents([]);
       setMeta({
-        backingSource: "seeded-system-state",
-        persistenceState: "Fallback workflow audit active",
+        backingSource: "api-error",
+        persistenceState: "Unable to load workflow audit",
+        loadError: err?.message || "Unable to load workflow audit state.",
         lastSyncedAt: null,
       });
+      return [];
     }
   }, [projectId, filters]);
 
   useEffect(() => {
-    let active = true;
-
-    async function run() {
-      try {
-        const payload = await fetchWorkflowAudit({ projectId, ...filters });
-        if (!active) return;
-        setAuditEvents(Array.isArray(payload.items) ? payload.items : []);
-        setMeta({
-          backingSource: "api-workflow-store",
-          persistenceState: "Workflow-backed audit evidence active",
-          lastSyncedAt: new Date().toISOString(),
-        });
-      } catch {
-        if (!active) return;
-        setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId, filters));
-        setMeta({
-          backingSource: "seeded-system-state",
-          persistenceState: "Fallback workflow audit active",
-          lastSyncedAt: null,
-        });
-      }
-    }
-
-    run();
-
-    return () => {
-      active = false;
-    };
-  }, [projectId, filters]);
+    hydrate();
+  }, [hydrate]);
 
   const summary = useMemo(() => {
     const byEventType = auditEvents.reduce((acc, event) => {
