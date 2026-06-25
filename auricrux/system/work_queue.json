@@ -1,7 +1,8 @@
 {
   "version": 1,
   "queueName": "fca-revenue-sprint-queue",
-  "updatedAtUtc": "2026-06-25T17:49:26.471Z",`n  "items": [
+  "updatedAtUtc": "2026-06-25T18:00:18.905Z",
+  "items": [
     {
       "id": "LMS-MEDIA-FIX",
       "title": "Academy lesson media slots incomplete",
@@ -77,9 +78,8 @@
       "title": "Controlled SWA production deploy and smoke verify",
       "lane": "deploy",
       "priority": "critical",
-      "status": "done",
-      "note": "SWA workflow_dispatch run 28189155078; witness drift until deploy completes.",
-      "completedAtUtc": "2026-06-25T17:49:26.471Z"
+      "status": "blocked",
+      "note": "SWA deploy failed: deployment_token invalid (run 28189887824). Refresh AZURE_STATIC_WEB_APPS_API_TOKEN in GitHub secrets per domain-binding-drift-runbook."
     },
     {
       "id": "REV-006",
