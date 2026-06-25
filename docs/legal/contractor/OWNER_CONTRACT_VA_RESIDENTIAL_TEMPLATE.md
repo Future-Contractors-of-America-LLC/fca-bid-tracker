@@ -1,6 +1,6 @@
-# Owner Contract — Virginia Residential — Template
+# Owner Contract â€” Virginia Residential â€” Template
 
-**Prepared for legal review — not legal advice. Align with Virginia DPOR consumer protection requirements.**
+**Prepared for legal review â€” not legal advice. Align with Virginia DPOR consumer protection requirements.**
 
 ## Parties
 
@@ -14,12 +14,12 @@ Describe work, plans dated _______, specifications: _________________________
 
 ## Contract price
 
-Total: $___________ · Deposit (if any): $___________ per Virginia limits  
+Total: $___________ Â· Deposit (if any): $___________ per Virginia limits  
 Payment schedule: _________________________
 
 ## Start / completion
 
-Estimated start: _______ · Substantial completion: _______
+Estimated start: _______ Â· Substantial completion: _______
 
 ## Change orders
 

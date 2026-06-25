@@ -1,4 +1,4 @@
-# FCA Contractor Command — Implementation Packet 02
+# FCA Contractor Command â€” Implementation Packet 02
 
 Status: Active execution packet  
 Scope: Project + File + Audit implementation mapping  
@@ -51,7 +51,7 @@ What repo truth still does **not** prove:
 
 ---
 
-## Packet 02A — Project persistence slice
+## Packet 02A â€” Project persistence slice
 
 ### Required backend outputs
 - `GET /api/projects`
@@ -87,7 +87,7 @@ What repo truth still does **not** prove:
 
 ---
 
-## Packet 02B — File spine minimum callable slice
+## Packet 02B â€” File spine minimum callable slice
 
 ### Required backend outputs
 - `GET /api/files`
@@ -127,7 +127,7 @@ What repo truth still does **not** prove:
 
 ---
 
-## Packet 02C — Audit spine minimum callable slice
+## Packet 02C â€” Audit spine minimum callable slice
 
 ### Required backend outputs
 - `GET /api/audit-events`
@@ -163,7 +163,7 @@ What repo truth still does **not** prove:
 
 ---
 
-## Packet 02D — Route implementation sequence
+## Packet 02D â€” Route implementation sequence
 
 ### Route 1: `/portal/projects`
 Ship first because it establishes canonical project selection.
@@ -207,7 +207,7 @@ Required UI outcomes:
 Route completion standard:
 - active project filters correctly when present
 - owner linkage is visible on every card row
-- no fake “AI analyzed” copy appears without a stored briefing artifact
+- no fake â€œAI analyzedâ€ copy appears without a stored briefing artifact
 
 ### Route 4: `/portal/audit`
 Ship fourth because it proves continuity and founder-hands-off observability.
@@ -291,8 +291,8 @@ No storage implementation in this packet may break later expansion into drawing 
 - Auricrux action surfaces point to governed targets only
 
 ### Truth validation
-- no route claims “live upload” without stored file metadata
-- no route claims “analysis complete” without briefing or audit artifact
+- no route claims â€œlive uploadâ€ without stored file metadata
+- no route claims â€œanalysis completeâ€ without briefing or audit artifact
 - no route claims autonomous execution without visible evidence trail
 
 ---

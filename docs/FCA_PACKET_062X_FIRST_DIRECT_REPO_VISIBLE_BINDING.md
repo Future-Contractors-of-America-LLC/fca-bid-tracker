@@ -1,4 +1,4 @@
-# FCA Packet 062X — First Direct Repo-Visible Binding
+# FCA Packet 062X â€” First Direct Repo-Visible Binding
 
 ## Issue
 `062X` was frozen as next-packet truth only because no directly repo-visible `062X` artifact had been observed. That hold condition is now intentionally cleared by creating the first direct repo-visible `062X` artifact in repo truth.

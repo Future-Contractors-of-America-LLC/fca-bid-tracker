@@ -54,13 +54,13 @@ The `060` range remains truthfully closed as a failed hard deployment target. `0
 
 ## Current Blocker
 
-### Blocker 1 — 061Z deployment-closeout proof remains unresolved
+### Blocker 1 â€” 061Z deployment-closeout proof remains unresolved
 Controlling packet progression does not change the unresolved deployment-closeout truth boundary.
 
-### Blocker 2 — main integration truth remains distinct from controlling packet truth
+### Blocker 2 â€” main integration truth remains distinct from controlling packet truth
 Direct `062Y` activation does not prove that all prior packet contents are integrated on `main`.
 
-### Blocker 3 — observed successful run truth still outranks further breadth claims
+### Blocker 3 â€” observed successful run truth still outranks further breadth claims
 Repo-visible sequence advancement is not the same as locked main-run or live-deployment proof.
 
 ---

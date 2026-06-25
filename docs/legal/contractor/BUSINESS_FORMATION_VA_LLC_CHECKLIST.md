@@ -1,6 +1,6 @@
 # Virginia LLC Formation Checklist
 
-**Prepared for legal review — not legal advice.**
+**Prepared for legal review â€” not legal advice.**
 
 ## Entity
 
@@ -8,7 +8,7 @@
 - [ ] Reserve / verify business name with Virginia SCC
 - [ ] File **Articles of Organization** with Virginia SCC (https://cis.scc.virginia.gov/)
 - [ ] Designate **registered agent** with Virginia street address
-- [ ] Obtain **Certificate of Organization** / SCC confirmation (store in `/portal/files` as Legal · Formation)
+- [ ] Obtain **Certificate of Organization** / SCC confirmation (store in `/portal/files` as Legal Â· Formation)
 - [ ] Obtain **EIN** from IRS (https://www.irs.gov/ein)
 - [ ] Draft and execute **Operating Agreement**
 - [ ] Open business bank account using EIN

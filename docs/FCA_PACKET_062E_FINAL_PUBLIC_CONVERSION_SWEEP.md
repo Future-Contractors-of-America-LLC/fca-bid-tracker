@@ -1,4 +1,4 @@
-# FCA Packet 062E — Final Public Conversion Sweep
+# FCA Packet 062E â€” Final Public Conversion Sweep
 
 ## Issue
 062D aligned home, login, contact, and pricing to shared package-route-group truth, but the final high-leverage public conversion surfaces still needed the same discipline applied.

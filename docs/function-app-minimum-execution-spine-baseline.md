@@ -117,7 +117,7 @@ The currently verified minimum execution spine is:
 
 ## Founder Action Required
 
-**No** — not at this checkpoint.
+**No** â€” not at this checkpoint.
 
 Founder action is only required later if runtime verification shows:
 - missing Azure credentials

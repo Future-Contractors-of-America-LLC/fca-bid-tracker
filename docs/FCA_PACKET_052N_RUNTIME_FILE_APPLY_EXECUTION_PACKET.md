@@ -32,7 +32,7 @@ It **does** define the exact runtime files to create now, their exact paths, and
 
 ## Apply Wave Summary
 
-### Batch A — Shared contract layer
+### Batch A â€” Shared contract layer
 Create:
 - `src/lib/contracts/fcaEnums.ts`
 - `src/types/fca-contracts.ts`
@@ -40,13 +40,13 @@ Create:
 - `api/_lib/contracts/fcaEnums.js`
 - `api/_lib/contracts/fcaContracts.js`
 
-### Batch B — Validation layer
+### Batch B â€” Validation layer
 Create:
 - `src/lib/contracts/fcaSchemas.ts`
 - `api/_lib/validation/fcaSchemas.js`
 - `api/_lib/validation/assertValid.js`
 
-### Batch C — First route wave
+### Batch C â€” First route wave
 Create:
 - `api/projects/index.js`
 - `api/projects/[projectId].js`

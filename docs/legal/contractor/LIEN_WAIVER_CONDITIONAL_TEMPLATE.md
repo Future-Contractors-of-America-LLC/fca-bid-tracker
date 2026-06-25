@@ -1,6 +1,6 @@
-# Conditional Lien Waiver (Progress Payment) — Template
+# Conditional Lien Waiver (Progress Payment) â€” Template
 
-**Prepared for legal review — not legal advice. Virginia mechanic's lien law applies.**
+**Prepared for legal review â€” not legal advice. Virginia mechanic's lien law applies.**
 
 ---
 
@@ -20,4 +20,4 @@ This waiver is conditional until payment is received and cleared.
 
 ---
 
-*Store executed copy on `/portal/files` — category: Legal · Lien Waiver. Track in `/portal/legal`.*
+*Store executed copy on `/portal/files` â€” category: Legal Â· Lien Waiver. Track in `/portal/legal`.*

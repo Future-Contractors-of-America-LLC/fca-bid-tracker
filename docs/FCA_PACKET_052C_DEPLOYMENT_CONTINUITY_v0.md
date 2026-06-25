@@ -58,7 +58,7 @@ This packet covers only the continuity-critical deployment surfaces required to 
 
 ## Required Live Surfaces
 
-### Surface A — Public entry
+### Surface A â€” Public entry
 Must truthfully present:
 - what FCA is
 - what the current usable workflow is
@@ -66,7 +66,7 @@ Must truthfully present:
 - how a customer is onboarded
 - how a user reaches the correct portal path
 
-### Surface B — Protected portal
+### Surface B â€” Protected portal
 Must provide:
 - authenticated access path
 - stable navigation
@@ -74,14 +74,14 @@ Must provide:
 - no dead-end navigation
 - no route claims without backing implementation
 
-### Surface C — Core continuity routes
+### Surface C â€” Core continuity routes
 Must exist and reconcile to canonical object identity:
 - project
 - file
 - audit
 - guided Auricrux action
 
-### Surface D — Runtime visibility
+### Surface D â€” Runtime visibility
 Must expose enough truth for operator and customer trust:
 - current state
 - latest action
@@ -108,7 +108,7 @@ If a live surface displays workflow state that cannot be tied back to these obje
 
 ## Deployment Readiness Gates
 
-### Gate 1 — Route truth
+### Gate 1 â€” Route truth
 The following route classes must be truthful in repo and live behavior:
 - public landing / intake
 - authenticated portal shell
@@ -116,24 +116,24 @@ The following route classes must be truthful in repo and live behavior:
 - file workspace
 - audit workspace
 
-### Gate 2 — Auth truth
+### Gate 2 â€” Auth truth
 The authenticated product path must:
 - protect private routes
 - fail safely when auth is absent
 - avoid false claims of successful sign-in
 - avoid route loops and broken redirects
 
-### Gate 3 — Persistence truth
+### Gate 3 â€” Persistence truth
 Core objects must persist or degrade truthfully.
 No surface may imply durable save when only transient state exists.
 
-### Gate 4 — Messaging truth
+### Gate 4 â€” Messaging truth
 All public / customer-facing language must distinguish between:
 - live usable now
 - in build
 - planned later
 
-### Gate 5 — Founder-hands-off truth
+### Gate 5 â€” Founder-hands-off truth
 A normal user path must not require founder routing to:
 - enter
 - authenticate

@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Internal policy; summary available to enterprise procurement upon request.
+> **Prepared for legal review â€” not legal advice.** Internal policy; summary available to enterprise procurement upon request.
 
 ---
 

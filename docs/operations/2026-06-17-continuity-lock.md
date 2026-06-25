@@ -95,7 +95,7 @@ From this point forward, any claimed gap must first be checked against:
 3. existing workflow files,
 4. existing governed docs under `docs/operations` and the repo root.
 
-If the capability already exists, the next action is validation, correction, integration, or promotion — not reimplementation.
+If the capability already exists, the next action is validation, correction, integration, or promotion â€” not reimplementation.
 
 ---
 

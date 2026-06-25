@@ -1,13 +1,13 @@
-# Contractor Legal Document Corpus — Master Index
+# Contractor Legal Document Corpus â€” Master Index
 
-**Prepared for legal review — not legal advice.**  
-**Entity reference:** Future Contractors of America LLC — 22310 Old Vaughan Road, Dinwiddie, VA 23841
+**Prepared for legal review â€” not legal advice.**  
+**Entity reference:** Future Contractors of America LLC â€” 22310 Old Vaughan Road, Dinwiddie, VA 23841
 
 ---
 
 ## Purpose
 
-Templates and checklists for **contractors using FCA** to run compliant businesses — distinct from `enterprise/` (FCA vendor law).
+Templates and checklists for **contractors using FCA** to run compliant businesses â€” distinct from `enterprise/` (FCA vendor law).
 
 **Portal workspace:** `/portal/legal`  
 **Public index:** `/legal/contractor-resources`  
@@ -32,9 +32,9 @@ Templates and checklists for **contractors using FCA** to run compliant business
 
 ## Virginia-specific notes
 
-- LLC formation: Virginia State Corporation Commission (SCC) — https://cis.scc.virginia.gov/
-- Contractor licensure: Virginia DPOR — residential and commercial classifications
-- Lien law: Virginia Mechanic's Lien statutes — counsel must review waiver language before use
+- LLC formation: Virginia State Corporation Commission (SCC) â€” https://cis.scc.virginia.gov/
+- Contractor licensure: Virginia DPOR â€” residential and commercial classifications
+- Lien law: Virginia Mechanic's Lien statutes â€” counsel must review waiver language before use
 
 ---
 

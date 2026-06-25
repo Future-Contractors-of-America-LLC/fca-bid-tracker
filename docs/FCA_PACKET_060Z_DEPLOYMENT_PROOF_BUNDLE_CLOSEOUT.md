@@ -13,8 +13,8 @@ Target Packet: `060Z`
 Close the `060` range truthfully by inspecting the refreshed proof commits and stating whether the hard deployment target is actually met.
 
 ## Refreshed proof commits inspected
-- `0f8ad8c0fe0e361ac0db7043d9695334d5f83c8a` — post-`060X` runtime-smoke proof persistence
-- `cc6032f5f85d0de917beda8711036860de6ddad9` — post-`060Y` runtime-smoke proof persistence
+- `0f8ad8c0fe0e361ac0db7043d9695334d5f83c8a` â€” post-`060X` runtime-smoke proof persistence
+- `cc6032f5f85d0de917beda8711036860de6ddad9` â€” post-`060Y` runtime-smoke proof persistence
 
 ## Verified repo truth at 060Z
 ### Runtime-smoke proof lane materially improved
@@ -32,7 +32,7 @@ The refreshed runtime-smoke proof artifacts now correctly identify active packet
 The refreshed `060Y` runtime-smoke report proves the hardened emission path works because `runtime-smoke-check-report.json` exists even while all 10 smoke checks failed.
 
 ## Verified remaining blockers at 060Z
-### Blocker 1 — runtime smoke still fails on current head
+### Blocker 1 â€” runtime smoke still fails on current head
 The refreshed `060Y` runtime-smoke report proves current-head runtime smoke is still failing.
 
 Confirmed failure classes now visible in repo truth:
@@ -43,10 +43,10 @@ Confirmed failure classes now visible in repo truth:
    - expected `202` but saw `200`
    - body classification returned `unknown` instead of expected success shape
 
-### Blocker 2 — build-validation proof lane is still missing on `main`
+### Blocker 2 â€” build-validation proof lane is still missing on `main`
 No repo-visible `docs/runtime-proof/build-validation/` proof directory is present on current `main`.
 
-### Blocker 3 — live deployment proof is still unproven in-session
+### Blocker 3 â€” live deployment proof is still unproven in-session
 No current-head repo-visible success proof was observed for:
 - live deployment verifier success
 - deployed managed auth runtime success
@@ -54,7 +54,7 @@ No current-head repo-visible success proof was observed for:
 - verified live commercial/revenue runtime path
 
 ## 060Z gate decision
-**FAIL — hard deployment target not met.**
+**FAIL â€” hard deployment target not met.**
 
 `060Z` is reached as a truth-preserving closeout packet, but the actual deployment-complete proof bundle is not complete.
 
@@ -78,4 +78,4 @@ The next numbered family must begin with blocker-first remediation:
 5. only then re-evaluate live deployment, managed auth, academy parity, and commercial/runtime proof
 
 ## Next required packet
-- `061A` — runtime smoke root-cause remediation packet
+- `061A` â€” runtime smoke root-cause remediation packet

@@ -1,4 +1,4 @@
-# FCA Contractor Command — File Spine Payload Schema v1
+# FCA Contractor Command â€” File Spine Payload Schema v1
 
 Status: Active Draft
 Scope: Packet 023 implementation contract

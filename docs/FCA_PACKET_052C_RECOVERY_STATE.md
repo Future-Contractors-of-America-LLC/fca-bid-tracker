@@ -1,4 +1,4 @@
-# FCA Packet 052C — Recovery State
+# FCA Packet 052C â€” Recovery State
 
 Status: Active recovery anchor
 Repository: `Future-Contractors-of-America-LLC/fca-bid-tracker`

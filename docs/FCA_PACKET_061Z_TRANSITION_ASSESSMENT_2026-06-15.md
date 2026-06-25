@@ -13,7 +13,7 @@ Target Packet: `061Z`
 Confirm whether the controlling trace should now be treated as moved into `061Z`, and record the truthful state of the deployment target at the moment of assessment.
 
 ## Confirmed transition result
-Yes — the controlling sequence should now be treated as moved into `061Z` as the active target-closeout packet.
+Yes â€” the controlling sequence should now be treated as moved into `061Z` as the active target-closeout packet.
 
 This is true because repo-visible governing artifacts already establish:
 - `061Y` as the last completed blocker-correction packet

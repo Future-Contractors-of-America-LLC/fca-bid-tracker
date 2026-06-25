@@ -1,4 +1,4 @@
-# Implementation Packet 025 — File/Audit Surface Hardening
+# Implementation Packet 025 â€” File/Audit Surface Hardening
 
 Date: 2026-06-09
 Status: Executed

@@ -81,7 +81,7 @@ Then record:
 
 ## Founder Action Required
 
-**No** — not until command-level execution reveals an external dependency such as missing package installation capability, missing environment configuration, or platform-level permission issues.
+**No** â€” not until command-level execution reveals an external dependency such as missing package installation capability, missing environment configuration, or platform-level permission issues.
 
 ## Operating Rule
 

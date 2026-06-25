@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Applies to downloadable client software, mobile apps, and local agents (e.g., FCA mobile, desktop components).
+> **Prepared for legal review â€” not legal advice.** Applies to downloadable client software, mobile apps, and local agents (e.g., FCA mobile, desktop components).
 
 ---
 

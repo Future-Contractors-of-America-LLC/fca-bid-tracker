@@ -1,4 +1,4 @@
-# Implementation Packet 023 — Contractor Command Project/File Spine Contract
+# Implementation Packet 023 â€” Contractor Command Project/File Spine Contract
 
 Date: 2026-06-09
 Status: Executed

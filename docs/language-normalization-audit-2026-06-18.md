@@ -1,4 +1,4 @@
-# FCA Language Normalization Audit — 2026-06-18
+# FCA Language Normalization Audit â€” 2026-06-18
 
 ## Scope
 

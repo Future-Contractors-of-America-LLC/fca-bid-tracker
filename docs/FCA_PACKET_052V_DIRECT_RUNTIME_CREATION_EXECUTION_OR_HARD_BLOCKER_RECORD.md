@@ -94,10 +94,10 @@ No fake completion is allowed.
 
 The next packet must do one of the following:
 
-### Path A — create runtime files directly
+### Path A â€” create runtime files directly
 Create the approved first-wave runtime files in repo.
 
-### Path B — emit exact hard blocker artifact
+### Path B â€” emit exact hard blocker artifact
 If creation cannot proceed safely, record:
 - blocked files
 - blocker type

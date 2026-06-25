@@ -1,4 +1,4 @@
-# FCA Contractor Command — Project Context Model v1
+# FCA Contractor Command â€” Project Context Model v1
 
 Status: Active Draft
 Scope: Packet 023 implementation contract

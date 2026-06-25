@@ -31,7 +31,7 @@ Therefore the **docs packet chain is repo-proven through `052W`**.
 
 ## Runtime Creation Attempt Scope
 
-### Wave A — shared contract files
+### Wave A â€” shared contract files
 Attempt direct creation of:
 - `src/lib/contracts/fcaEnums.ts`
 - `src/types/fca-contracts.ts`
@@ -39,13 +39,13 @@ Attempt direct creation of:
 - `api/_lib/contracts/fcaEnums.js`
 - `api/_lib/contracts/fcaContracts.js`
 
-### Wave B — validation files
+### Wave B â€” validation files
 Attempt direct creation of:
 - `src/lib/contracts/fcaSchemas.ts`
 - `api/_lib/validation/fcaSchemas.js`
 - `api/_lib/validation/assertValid.js`
 
-### Wave C — first route files
+### Wave C â€” first route files
 Attempt direct creation of:
 - `api/projects/index.js`
 - `api/projects/[projectId].js`
@@ -88,13 +88,13 @@ No alternate code source is authorized for first-wave attempt execution.
 
 ## Attempt Outcomes
 
-### Outcome A — creation succeeds
+### Outcome A â€” creation succeeds
 Requirements:
 - runtime files exist at exact approved paths
 - repo commit proves creation
 - next packet records exact file presence truth and commit hash
 
-### Outcome B — creation blocked
+### Outcome B â€” creation blocked
 Requirements:
 - blocker artifact names exact blocked files
 - blocker type is explicit

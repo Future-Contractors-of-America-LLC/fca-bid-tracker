@@ -32,7 +32,7 @@ It **does** define the exact file-creation payload scope for the first real runt
 
 ## Required Runtime File Creation Set
 
-### Group A — Shared contract files
+### Group A â€” Shared contract files
 Create now:
 - `src/lib/contracts/fcaEnums.ts`
 - `src/types/fca-contracts.ts`
@@ -40,13 +40,13 @@ Create now:
 - `api/_lib/contracts/fcaEnums.js`
 - `api/_lib/contracts/fcaContracts.js`
 
-### Group B — Validation files
+### Group B â€” Validation files
 Create now:
 - `src/lib/contracts/fcaSchemas.ts`
 - `api/_lib/validation/fcaSchemas.js`
 - `api/_lib/validation/assertValid.js`
 
-### Group C — First route files
+### Group C â€” First route files
 Create now:
 - `api/projects/index.js`
 - `api/projects/[projectId].js`

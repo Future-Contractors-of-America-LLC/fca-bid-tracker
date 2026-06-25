@@ -16,4 +16,4 @@ Target Packet: `061Z`
 - rewrite-transition validator output is repo-visible and passing
 
 ## Anti-drift rule
-Do not revert the lane back to “CI provenance unconfirmed” unless new contrary repo evidence appears.
+Do not revert the lane back to â€œCI provenance unconfirmedâ€ unless new contrary repo evidence appears.

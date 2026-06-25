@@ -1,4 +1,4 @@
-# FCA Packet 062W — Continuity Correction
+# FCA Packet 062W â€” Continuity Correction
 
 ## Issue
 The controlling packet sequence has advanced again beyond the previously corrected `062U` state. Repo-visible packet evidence now supports `062W`, so leaving the ledger at `062U` would reintroduce continuity drift.

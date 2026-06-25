@@ -29,7 +29,7 @@ Use the same value in org/enterprise secrets if your runner also reads org-level
 
 For workflows that use built-in `GITHUB_TOKEN` only:
 
-**Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests**
+**Settings â†’ Actions â†’ General â†’ Workflow permissions â†’ Allow GitHub Actions to create and approve pull requests**
 
 ### Workflows that require the token
 
@@ -67,4 +67,4 @@ See `auricrux-central/scripts/training/README.md`.
 | `FCA_SESSION_SECRET` | HMAC signing for customer session cookies |
 | `FCA_CUSTOMER_ACCOUNTS_JSON` | Managed customer accounts |
 | `GRAPH_MAIL_SENDER` + Graph app creds | Send login verification email |
-| `FCA_VERIFICATION_DEV_EXPOSE_CODE=1` | Dev only — return OTP in login response when email is unavailable |
+| `FCA_VERIFICATION_DEV_EXPOSE_CODE=1` | Dev only â€” return OTP in login response when email is unavailable |

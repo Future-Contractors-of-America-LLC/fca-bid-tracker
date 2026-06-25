@@ -68,7 +68,7 @@ It must not pretend these artifacts do not exist.
 
 ## Execution Lanes
 
-### Lane 052E-A — Canonical route-state alignment
+### Lane 052E-A â€” Canonical route-state alignment
 Use the existing route audit and continuity artifacts to produce a single live route-state answer:
 
 For each exposed route determine:
@@ -84,7 +84,7 @@ Required output target:
 
 ---
 
-### Lane 052E-B — Auth-state alignment
+### Lane 052E-B â€” Auth-state alignment
 Use the existing managed-auth artifacts to produce one exact truth statement for:
 - current sign-in path
 - protected route behavior
@@ -97,7 +97,7 @@ Required output target:
 
 ---
 
-### Lane 052E-C — Deployment verification alignment
+### Lane 052E-C â€” Deployment verification alignment
 Merge the repo-visible deployment verification artifacts into one progression gate document that clearly states:
 - repo verified
 - build verified
@@ -110,7 +110,7 @@ Required output target:
 
 ---
 
-### Lane 052E-D — Founder-hands-off path alignment
+### Lane 052E-D â€” Founder-hands-off path alignment
 Identify the remaining points where the founder is still acting as router, explainer, or validator for normal user flow.
 
 Required output target:

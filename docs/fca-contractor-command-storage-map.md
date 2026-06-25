@@ -1,4 +1,4 @@
-# FCA Contractor Command — Storage Map v1
+# FCA Contractor Command â€” Storage Map v1
 
 Status: Active Draft
 Scope: Phase-2 flagship storage and persistence alignment

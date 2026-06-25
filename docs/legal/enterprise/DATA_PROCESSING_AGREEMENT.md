@@ -4,7 +4,7 @@
 **Template Version:** 1.0 (GDPR / UK GDPR / CCPA Processor Terms)  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Exhibit C to the [Master Services Agreement](./MASTER_SERVICES_AGREEMENT.md). Counsel must attach EU Standard Contractual Clauses (2021/914) modules as applicable.
+> **Prepared for legal review â€” not legal advice.** Exhibit C to the [Master Services Agreement](./MASTER_SERVICES_AGREEMENT.md). Counsel must attach EU Standard Contractual Clauses (2021/914) modules as applicable.
 
 ---
 
@@ -61,7 +61,7 @@ FCA will:
 
 ---
 
-## 5. DETAILS OF PROCESSING — ANNEX I
+## 5. DETAILS OF PROCESSING â€” ANNEX I
 
 | Element | Description |
 |---------|-------------|
@@ -169,19 +169,19 @@ This DPA remains in effect for the duration of processing and until all Personal
 
 ---
 
-## ANNEX II — TECHNICAL AND ORGANIZATIONAL MEASURES
+## ANNEX II â€” TECHNICAL AND ORGANIZATIONAL MEASURES
 
 See [Security Addendum](./SECURITY_ADDENDUM.md) Section 4 (Summary of Controls).
 
 ---
 
-## ANNEX III — SUBPROCESSORS
+## ANNEX III â€” SUBPROCESSORS
 
 See [Subprocessor List](./SUBPROCESSOR_LIST.md).
 
 ---
 
-## ANNEX IV — STANDARD CONTRACTUAL CLAUSES
+## ANNEX IV â€” STANDARD CONTRACTUAL CLAUSES
 
 *[Counsel to attach executed EU SCCs 2021/914 and UK Addendum as PDF or incorporated module.]*
 

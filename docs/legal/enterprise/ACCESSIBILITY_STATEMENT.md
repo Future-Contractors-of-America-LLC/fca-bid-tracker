@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Publish at https://futurecontractorsofamerica.com/accessibility after counsel approval.
+> **Prepared for legal review â€” not legal advice.** Publish at https://futurecontractorsofamerica.com/accessibility after counsel approval.
 
 ---
 
@@ -54,7 +54,7 @@ We will work with you to provide reasonable accommodations or alternative access
 
 This statement supports compliance efforts under:
 
-- Americans with Disabilities Act (ADA) — Title III where applicable to B2B SaaS
+- Americans with Disabilities Act (ADA) â€” Title III where applicable to B2B SaaS
 - Section 508 (U.S. federal procurement when applicable)
 - EN 301 549 (EU public sector procurement when applicable)
 

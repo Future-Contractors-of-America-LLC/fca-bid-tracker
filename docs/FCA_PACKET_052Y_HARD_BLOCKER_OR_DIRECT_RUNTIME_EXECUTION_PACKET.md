@@ -66,7 +66,7 @@ As of this packet, those runtime files remain **not repo-proven present**.
 
 ## Allowed Next States
 
-### State A — Direct runtime execution
+### State A â€” Direct runtime execution
 Preferred default.
 
 Requirements:
@@ -75,7 +75,7 @@ Requirements:
 - commit the new runtime files into repo
 - next packet records exact created files and commit truth
 
-### State B — Hard blocker capture
+### State B â€” Hard blocker capture
 Allowed only if a real blocker prevents safe direct creation.
 
 Accepted blocker classes:

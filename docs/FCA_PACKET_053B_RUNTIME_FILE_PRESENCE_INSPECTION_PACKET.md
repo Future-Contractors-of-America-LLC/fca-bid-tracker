@@ -41,7 +41,7 @@ It defines the exact inspection matrix required for the next narrowing step.
 
 ## Inspection Matrix
 
-### Group A — Shared contract layer
+### Group A â€” Shared contract layer
 | Path | Required inspection state |
 |---|---|
 | `src/lib/contracts/fcaEnums.ts` | present / absent / collision |
@@ -50,14 +50,14 @@ It defines the exact inspection matrix required for the next narrowing step.
 | `api/_lib/contracts/fcaEnums.js` | present / absent / collision |
 | `api/_lib/contracts/fcaContracts.js` | present / absent / collision |
 
-### Group B — Validation layer
+### Group B â€” Validation layer
 | Path | Required inspection state |
 |---|---|
 | `src/lib/contracts/fcaSchemas.ts` | present / absent / collision |
 | `api/_lib/validation/fcaSchemas.js` | present / absent / collision |
 | `api/_lib/validation/assertValid.js` | present / absent / collision |
 
-### Group C — First route layer
+### Group C â€” First route layer
 | Path | Required inspection state |
 |---|---|
 | `api/projects/index.js` | present / absent / collision |

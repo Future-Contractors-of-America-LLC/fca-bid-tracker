@@ -122,7 +122,7 @@ This requires route inventory alignment review before deployment-readiness claim
 
 ## Founder Action Required
 
-**No** — these are repo-fixable investigation and implementation defects.
+**No** â€” these are repo-fixable investigation and implementation defects.
 
 ## Next Concrete Action
 

@@ -8,13 +8,13 @@ Canonical summary aligned with `auricrux-central/FCA_COVERAGE_MATRIX.md` and liv
 
 ## One-line vision
 
-**Future Contractors of America (FCA) is a unified commercial contractor operating system** — leads, bids, projects, plan room, billing, customer portal, and workforce training in one platform, with Auricrux as the embedded intelligence layer that explains, recommends, and executes next actions.
+**Future Contractors of America (FCA) is a unified commercial contractor operating system** â€” leads, bids, projects, plan room, billing, customer portal, and workforce training in one platform, with Auricrux as the embedded intelligence layer that explains, recommends, and executes next actions.
 
 ---
 
 ## Who it is for
 
-Commercial contractors who need to compete with tools like **PlanHub** (leads), **Procore** (project management), **Bluebeam/ACC** (plans), **QuickBooks** (billing), and **NCCER-style LMS** (workforce training) — without running five disconnected systems.
+Commercial contractors who need to compete with tools like **PlanHub** (leads), **Procore** (project management), **Bluebeam/ACC** (plans), **QuickBooks** (billing), and **NCCER-style LMS** (workforce training) â€” without running five disconnected systems.
 
 ---
 
@@ -23,7 +23,7 @@ Commercial contractors who need to compete with tools like **PlanHub** (leads), 
 | Pillar | Customer name | What it delivers |
 |--------|---------------|------------------|
 | **Contractor Command** | SaaS workspace | Leads, estimates, projects, files, RFIs, billing, portal, support |
-| **Academy** | LMS | Electrical apprenticeship L1–L10, safety, supervisor credentials |
+| **Academy** | LMS | Electrical apprenticeship L1â€“L10, safety, supervisor credentials |
 | **Auricrux** | Guided operations | Next-action clarity across sales, delivery, comms, billing, training |
 | **Mobile** | FCA Contractor Command app | Native iOS/Android (C# MAUI), same platform APIs |
 | **Website** | futurecontractorsofamerica.com | Marketing, intake, checkout, sign-in |
@@ -45,7 +45,7 @@ See full matrix: `auricrux-central-work/FCA_COVERAGE_MATRIX.md`
 | Repo | Role |
 |------|------|
 | `auricrux-central` | Canonical Python API + data store |
-| `fca-bid-tracker` | React SPA — website, portal, academy UI |
+| `fca-bid-tracker` | React SPA â€” website, portal, academy UI |
 | `fca-mobile-maui` | Native mobile (canonical; Expo deprecated) |
 
 ---
@@ -58,9 +58,9 @@ See full matrix: `auricrux-central-work/FCA_COVERAGE_MATRIX.md`
 | Portal: messages, billing, support | Live (API-backed) |
 | Projects, bids, files, academy-lms API | Live |
 | RFIs / takeoffs | Shipping (table-backed) |
-| Stripe revenue path | Test/live keys — founder action |
+| Stripe revenue path | Test/live keys â€” founder action |
 | SharePoint write bridge | Preflight only |
-| Entra SSO | Planned — founder action |
+| Entra SSO | Planned â€” founder action |
 | Full finance spine | Demo + routes; depth planned |
 | SOC 2 / DPA | Founder/legal action |
 
@@ -69,9 +69,9 @@ See full matrix: `auricrux-central-work/FCA_COVERAGE_MATRIX.md`
 ## Brand rules
 
 1. **FCA** is the primary customer-facing brand.
-2. **Auricrux** is the embedded operating layer — not a separate product name on public pages.
+2. **Auricrux** is the embedded operating layer â€” not a separate product name on public pages.
 3. No Tyler branding on customer routes.
-4. Sales language only on public surfaces — no engineering/founder/dev jargon.
+4. Sales language only on public surfaces â€” no engineering/founder/dev jargon.
 
 ---
 

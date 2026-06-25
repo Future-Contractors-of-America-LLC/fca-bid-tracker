@@ -87,7 +87,7 @@ Use this class only when the issue depends on something outside repository contr
 
 ## Founder Action Required
 
-**No** — not for route continuity review itself.
+**No** â€” not for route continuity review itself.
 
 Escalate only if a route continuity problem is caused by a true external blocker rather than repository implementation.
 
@@ -102,5 +102,5 @@ Use this checklist to drive the next verification pass under issue `#20`, with e
 
 ## Operating Rule
 
-A route is not considered “good enough” because it renders.
+A route is not considered â€œgood enoughâ€ because it renders.
 It must support continuity, next action clarity, and believable customer movement through the FCA shell.

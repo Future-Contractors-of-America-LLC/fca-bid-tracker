@@ -24,9 +24,9 @@ Every control-plane cycle now performs:
 5. publish repo and public digest surfaces
 
 ## Current Queue
-- MNCL-001 — Project spine execution baseline
-- MNCL-002 — File spine execution baseline
-- MNCL-003 — Audit event persistence baseline
+- MNCL-001 â€” Project spine execution baseline
+- MNCL-002 â€” File spine execution baseline
+- MNCL-003 â€” Audit event persistence baseline
 
 ## Boundary
 This packet does not claim product completion.

@@ -12,9 +12,9 @@ Target Packet: `060A`
 ## Repo-Visible Command Truth
 From `package.json`, the currently repo-visible commands are:
 
-- `build:system` → `npm run build`
-- `build` → `bash ./build.sh`
-- `verify:live-deployment` → `node no-op.js`
+- `build:system` â†’ `npm run build`
+- `build` â†’ `bash ./build.sh`
+- `verify:live-deployment` â†’ `node no-op.js`
 
 ## Proof Boundary
 ### Repo-proven

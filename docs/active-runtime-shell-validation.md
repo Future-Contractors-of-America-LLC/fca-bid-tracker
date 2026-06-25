@@ -254,7 +254,7 @@ The highest-value remaining work in this lane is no longer broad route validatio
 
 ## Founder Action Required
 
-**No** — this remains repo-verifiable and repo-fixable.
+**No** â€” this remains repo-verifiable and repo-fixable.
 
 ## Next Concrete Action
 

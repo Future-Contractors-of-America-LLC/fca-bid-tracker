@@ -1,4 +1,4 @@
-# FCA Packet 062D — Cross-Surface Package Alignment
+# FCA Packet 062D â€” Cross-Surface Package Alignment
 
 ## Issue
 062C grounded public package claims in exact route groups, but only the pricing surface consumed that truth source. Home, login, and contact still risked drifting into route-agnostic product language.

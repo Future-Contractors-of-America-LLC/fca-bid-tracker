@@ -1,4 +1,4 @@
-# FCA Packet 062A — Site-Level Alignment Execution
+# FCA Packet 062A â€” Site-Level Alignment Execution
 
 ## Decision
 Repository truth already contains multiple real SaaS and LMS vertical slices. The active defect is not absence of slices; it is site-level alignment drift between website, portal, academy, auth posture, and packaged customer journey.

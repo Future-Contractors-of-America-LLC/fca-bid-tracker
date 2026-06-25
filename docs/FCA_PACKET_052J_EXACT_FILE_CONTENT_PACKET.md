@@ -43,7 +43,7 @@ It **does** provide exact starter content for the first implementation wave.
 
 ---
 
-## File 1 — `src/lib/contracts/fcaEnums.ts`
+## File 1 â€” `src/lib/contracts/fcaEnums.ts`
 
 ```ts
 export const PROJECT_STATES = [
@@ -122,7 +122,7 @@ export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number]
 
 ---
 
-## File 2 — `src/types/fca-contracts.ts`
+## File 2 â€” `src/types/fca-contracts.ts`
 
 ```ts
 import type {
@@ -316,7 +316,7 @@ export interface AuditEvent extends BaseRecord {
 
 ---
 
-## File 3 — `src/lib/api/fcaApiTypes.ts`
+## File 3 â€” `src/lib/api/fcaApiTypes.ts`
 
 ```ts
 export interface ApiSuccess<T> {
@@ -343,7 +343,7 @@ export type ApiResult<T> = ApiSuccess<T> | ApiError
 
 ---
 
-## File 4 — `src/lib/contracts/fcaSchemas.ts`
+## File 4 â€” `src/lib/contracts/fcaSchemas.ts`
 
 ```ts
 import { z } from 'zod'
@@ -449,7 +449,7 @@ export const CreateAuricruxActionPayloadSchema = z.object({
 
 ---
 
-## File 5 — `api/_lib/contracts/fcaEnums.js`
+## File 5 â€” `api/_lib/contracts/fcaEnums.js`
 
 ```js
 const PROJECT_STATES = [
@@ -525,7 +525,7 @@ module.exports = {
 
 ---
 
-## File 6 — `api/_lib/contracts/fcaContracts.js`
+## File 6 â€” `api/_lib/contracts/fcaContracts.js`
 
 ```js
 function makeApiSuccess(data, meta = {}) {
@@ -555,7 +555,7 @@ module.exports = {
 
 ---
 
-## File 7 — `api/_lib/validation/fcaSchemas.js`
+## File 7 â€” `api/_lib/validation/fcaSchemas.js`
 
 ```js
 const { z } = require('zod')
@@ -658,7 +658,7 @@ module.exports = {
 
 ---
 
-## File 8 — `api/_lib/validation/assertValid.js`
+## File 8 â€” `api/_lib/validation/assertValid.js`
 
 ```js
 function assertValid(schema, payload) {

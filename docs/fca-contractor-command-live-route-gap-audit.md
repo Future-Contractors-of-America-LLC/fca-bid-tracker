@@ -1,4 +1,4 @@
-# FCA Contractor Command — Live Route Gap Audit v1
+# FCA Contractor Command â€” Live Route Gap Audit v1
 
 Status: Active Draft  
 Scope: Packet 036 live shell audit against route acceptance enforcement
@@ -258,16 +258,16 @@ Specific gaps:
 
 ## Highest-Priority Route Defects
 
-### P1 — Replace misleading contact behavior
+### P1 â€” Replace misleading contact behavior
 The current public intake route is the most serious truth defect because it simulates conversion into authenticated product access without governed lead creation.
 
-### P2 — Implement missing opportunity route
+### P2 â€” Implement missing opportunity route
 The flagship spine cannot be honestly represented without `/portal/opportunities/:opportunityId`.
 
-### P3 — Implement missing project detail route
+### P3 â€” Implement missing project detail route
 The flagship project continuity home `/portal/projects/:projectId` is absent.
 
-### P4 — Add explicit fallback-state disclosure
+### P4 â€” Add explicit fallback-state disclosure
 Projects, Files, and Audit all need visible fallback/missing-wiring truth before they can be described as product-capable.
 
 ## Immediate Remediation Sequence

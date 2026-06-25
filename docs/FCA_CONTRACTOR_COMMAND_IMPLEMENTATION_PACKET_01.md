@@ -1,4 +1,4 @@
-# FCA Contractor Command — Implementation Packet 01
+# FCA Contractor Command â€” Implementation Packet 01
 
 Status: Active execution packet  
 Scope: Sales-to-Operations vertical slice  
@@ -34,7 +34,7 @@ The repository does **not** currently expose `FCA_COVERAGE_MATRIX.md` on `main` 
 
 ## Delivery Sequence
 
-### Packet 01A — Canonical object and route lock
+### Packet 01A â€” Canonical object and route lock
 
 Create and/or standardize these objects:
 
@@ -63,7 +63,7 @@ Acceptance gate:
 - nav exposes only real or explicitly marked in-build surfaces
 - no orphan route exists without an object owner
 
-### Packet 01B — Project spine
+### Packet 01B â€” Project spine
 
 Implement:
 
@@ -78,7 +78,7 @@ Acceptance gate:
 - project detail view renders stable object data
 - project is tenant-scoped
 
-### Packet 01C — Proposal spine
+### Packet 01C â€” Proposal spine
 
 Implement:
 
@@ -93,7 +93,7 @@ Acceptance gate:
 - proposal artifact exists and is viewable
 - proposal changes are audited
 
-### Packet 01D — File spine
+### Packet 01D â€” File spine
 
 Implement:
 
@@ -108,7 +108,7 @@ Acceptance gate:
 - file metadata persists
 - file list is visible on parent workspace
 
-### Packet 01E — Audit spine
+### Packet 01E â€” Audit spine
 
 Implement:
 

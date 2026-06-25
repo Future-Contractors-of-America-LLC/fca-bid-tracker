@@ -1,4 +1,4 @@
-# FCA Contractor Command — Live Shell Remediation Packet v1
+# FCA Contractor Command â€” Live Shell Remediation Packet v1
 
 Status: Active Draft  
 Scope: Packet 037 live-shell truth repair
@@ -12,17 +12,17 @@ It defines the minimum UI truth guards required so current live routes stop over
 
 ## Remediation Priorities
 
-### P1 — Repair public intake truth posture
+### P1 â€” Repair public intake truth posture
 Target route:
 - `/contact`
 
-### P2 — Add explicit fallback-state disclosure
+### P2 â€” Add explicit fallback-state disclosure
 Target routes:
 - `/portal/projects`
 - `/portal/files`
 - `/portal/audit`
 
-### P3 — Prepare missing flagship routes
+### P3 â€” Prepare missing flagship routes
 Target future routes:
 - `/portal/opportunities/:opportunityId`
 - `/portal/projects/:projectId`

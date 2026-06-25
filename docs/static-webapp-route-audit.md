@@ -9,10 +9,10 @@ It is intentionally conservative: a route is only marked as fully verified when 
 
 ## Status Key
 
-- **Verified baseline** — repo state confirms the route exists in the intended shell narrative and no immediate contradiction is known
-- **Needs continuity verification** — route is expected or referenced in the shell, but continuity still needs explicit pass/fail review
-- **Transitional / compatibility review** — route may remain for compatibility but should be reviewed for shell consistency
-- **Blocked externally** — route behavior depends on infrastructure or configuration outside repository control
+- **Verified baseline** â€” repo state confirms the route exists in the intended shell narrative and no immediate contradiction is known
+- **Needs continuity verification** â€” route is expected or referenced in the shell, but continuity still needs explicit pass/fail review
+- **Transitional / compatibility review** â€” route may remain for compatibility but should be reviewed for shell consistency
+- **Blocked externally** â€” route behavior depends on infrastructure or configuration outside repository control
 
 ## Audit Board
 
@@ -57,7 +57,7 @@ Use **blocked externally** only if the route depends on:
 
 ## Founder Action Required
 
-**No** — not for this audit baseline.
+**No** â€” not for this audit baseline.
 
 ## Next Concrete Action
 

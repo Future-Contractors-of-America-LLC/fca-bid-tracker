@@ -45,7 +45,7 @@ then it does not belong in 052D.
 
 ## Required Closure Classes
 
-### Closure Class A — Public entry truth closure
+### Closure Class A â€” Public entry truth closure
 Remove all mismatch between current live public copy and actual live product capability.
 
 Required outcomes:
@@ -54,14 +54,14 @@ Required outcomes:
 - no dead CTA or misleading marketing language remains
 - intake entry path is singular and clear
 
-### Closure Class B — Route gap closure
+### Closure Class B â€” Route gap closure
 Every customer-facing or operator-facing route relevant to current deployment must be classified as exactly one of:
 - live and valid
 - staged but hidden
 - blocked and removed from navigation
 - redirected to truthful fallback
 
-### Closure Class C — Auth gap closure
+### Closure Class C â€” Auth gap closure
 The system must truthfully enforce protected access behavior.
 
 Required outcomes:
@@ -71,7 +71,7 @@ Required outcomes:
 - sign-in path is visible and comprehensible
 - founder is not required to manually place a user in the correct route
 
-### Closure Class D — Persistence truth closure
+### Closure Class D â€” Persistence truth closure
 Current live surfaces must not imply durable storage where durable storage is not actually bound.
 
 Required outcomes:
@@ -80,30 +80,30 @@ Required outcomes:
 - file / project / audit object continuity is not overstated
 - save-state language matches implementation truth
 
-### Closure Class E — Founder-routing closure
+### Closure Class E â€” Founder-routing closure
 Normal platform usage must not depend on the founder to explain:
 - where to enter
 - how to authenticate
 - what happens next
 - where the current usable workflow lives
 
-### Closure Class F — Deployment-verification closure
+### Closure Class F â€” Deployment-verification closure
 The repository must contain a durable artifact that states what has been checked and what remains unverified.
 
 ---
 
 ## 052D Required Artifacts
 
-### 052D-A — Public truth closure artifact
+### 052D-A â€” Public truth closure artifact
 `docs/FCA_PACKET_052D_PUBLIC_ENTRY_TRUTH_CLOSURE.md`
 
-### 052D-B — Route closure artifact
+### 052D-B â€” Route closure artifact
 `docs/FCA_PACKET_052D_ROUTE_GAP_CLOSURE.md`
 
-### 052D-C — Auth closure artifact
+### 052D-C â€” Auth closure artifact
 `docs/FCA_PACKET_052D_AUTH_GAP_CLOSURE.md`
 
-### 052D-D — Deployment verification artifact
+### 052D-D â€” Deployment verification artifact
 `docs/FCA_PACKET_052D_DEPLOYMENT_VERIFICATION_CLOSURE.md`
 
 ---

@@ -1,4 +1,4 @@
-# FCA Contractor Command — Route Acceptance Enforcement v1
+# FCA Contractor Command â€” Route Acceptance Enforcement v1
 
 Status: Active Draft
 Scope: Packet 035 route-level enforcement for first live flagship paths
@@ -18,7 +18,7 @@ A route fails acceptance if any one of the following is missing:
 - audit event truth
 - downstream continuity
 
-## Route 1 — Intake Route (`/contact` or equivalent CTA surface)
+## Route 1 â€” Intake Route (`/contact` or equivalent CTA surface)
 
 ### Governs
 - `Lead`
@@ -46,7 +46,7 @@ A route fails acceptance if any one of the following is missing:
 - no object ID or durable confirmation can exist
 - route behaves like a marketing dead end
 
-## Route 2 — Opportunity Workspace (`/portal/opportunities/:opportunityId`)
+## Route 2 â€” Opportunity Workspace (`/portal/opportunities/:opportunityId`)
 
 ### Governs
 - `Opportunity`
@@ -81,7 +81,7 @@ A route fails acceptance if any one of the following is missing:
 - award/conversion language exists without governed action path
 - estimate/file context disappears during progression
 
-## Route 3 — Project Workspace (`/portal/projects/:projectId`)
+## Route 3 â€” Project Workspace (`/portal/projects/:projectId`)
 
 ### Governs
 - `Project`
@@ -114,7 +114,7 @@ A route fails acceptance if any one of the following is missing:
 - file/audit/Auricrux summaries are absent while route claims execution readiness
 - route relies on contradictory local project state
 
-## Route 4 — Project Files Route (`/portal/files` and project file views)
+## Route 4 â€” Project Files Route (`/portal/files` and project file views)
 
 ### Governs
 - `FileAsset`
@@ -151,7 +151,7 @@ A route fails acceptance if any one of the following is missing:
 - route pretends native document intelligence exists when it does not
 - blob/storage reference exists with no governed metadata path
 
-## Route 5 — Audit Route (`/portal/audit`)
+## Route 5 â€” Audit Route (`/portal/audit`)
 
 ### Governs
 - `AuditEvent`

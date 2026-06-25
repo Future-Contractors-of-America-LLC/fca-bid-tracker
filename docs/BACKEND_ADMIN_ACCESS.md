@@ -1,4 +1,4 @@
-# Backend & Admin Access ù FCA SaaS + LMS
+# Backend & Admin Access ¬ù FCA SaaS + LMS
 
 **Last updated:** 2026-06-19
 
@@ -10,9 +10,9 @@ Use these accounts to reach the **full SaaS workspace**, **Academy LMS**, **tena
 
 | Link | URL | Purpose |
 |------|-----|---------|
-| Sign in (header) | https://futurecontractorsofamerica.com/login | Standard customer login ù no autofill |
+| Sign in (header) | https://futurecontractorsofamerica.com/login | Standard customer login ¬ù no autofill |
 | Admin workspace (header) | https://futurecontractorsofamerica.com/login?next=/portal/admin | Login then land on admin controls |
-| Admin controls (after auth) | https://futurecontractorsofamerica.com/portal/admin | Direct route ù auth guard redirects to login with `next=` |
+| Admin controls (after auth) | https://futurecontractorsofamerica.com/portal/admin | Direct route ¬ù auth guard redirects to login with `next=` |
 | Platform dashboard | https://futurecontractorsofamerica.com/portal/platform | SaaS command center |
 | Academy | https://futurecontractorsofamerica.com/academy | LMS catalog |
 
@@ -20,7 +20,7 @@ Use these accounts to reach the **full SaaS workspace**, **Academy LMS**, **tena
 
 ## Account matrix
 
-### 1. Michael ù founder (production account)
+### 1. Michael ¬ù founder (production account)
 
 | Field | Value |
 |-------|-------|
@@ -86,7 +86,7 @@ These are the **hosted API and control plane** surfaces behind the web app:
 | Auricrux Central API | https://auricrux-central.azurewebsites.net/api/health |
 | Customer login API | `POST /api/customer-login` |
 | Academy LMS API | `/api/academy-lms` |
-| Azure Portal | https://portal.azure.com ù search **auricrux-central** |
+| Azure Portal | https://portal.azure.com ¬ù search **auricrux-central** |
 | Function App logs | Azure Portal ? auricrux-central ? Monitoring ? Log stream |
 | App settings (managed auth) | `FCA_CUSTOMER_ACCOUNTS_JSON`, `FCA_SESSION_SECRET`, `FCA_ALLOW_SEEDED_LOGIN_FALLBACK` |
 

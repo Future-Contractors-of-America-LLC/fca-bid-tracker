@@ -1,4 +1,4 @@
-# Implementation Packet 005 — Executed
+# Implementation Packet 005 â€” Executed
 
 ## Delivered
 

@@ -3,7 +3,7 @@
 ## Packet
 Create the first explicit flagship execution contract for:
 
-Lead / Opportunity → Project / Job → File / Evidence → Audit Event
+Lead / Opportunity â†’ Project / Job â†’ File / Evidence â†’ Audit Event
 
 ## Why This Was Needed
 The repo had partial object, file, project, and audit documents, but the flagship spine still lacked one contract that forced those pieces into a single execution chain.

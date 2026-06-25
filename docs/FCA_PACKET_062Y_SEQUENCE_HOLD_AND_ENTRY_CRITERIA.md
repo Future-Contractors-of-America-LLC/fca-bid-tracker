@@ -1,4 +1,4 @@
-# FCA Packet 062Y — Sequence Hold and Entry Criteria
+# FCA Packet 062Y â€” Sequence Hold and Entry Criteria
 
 ## Issue
 The controlling sequence is now locked truthfully at `062X`, with `062Y` identified as the next packet. However, `062Y` is not yet directly supported by a repo-visible branch, PR, or packet artifact in the evidence inspected here.

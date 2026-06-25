@@ -1,4 +1,4 @@
-# FCA Contractor Command — Flagship Backend Truth Contract v1
+# FCA Contractor Command â€” Flagship Backend Truth Contract v1
 
 Status: Active Draft  
 Scope: Packet 044 backend-truth hardening for intake, conversion, file register, and audit discipline
@@ -38,7 +38,7 @@ A flagship workflow is not backend-truth-complete unless it:
 ## 1. Governed Lead Intake Object Path
 
 ### Why this is now mandatory
-The uploaded lifecycle and execution matrix makes intake a formal phase, not a marketing side-effect. Intake must execute lead capture, scoring, budget validation, jurisdiction validation, ownership verification, forms, and fee collection, with the required output being a **qualified opportunity**. Intake also cannot be treated as complete without output. fileciteturn1file10
+The uploaded lifecycle and execution matrix makes intake a formal phase, not a marketing side-effect. Intake must execute lead capture, scoring, budget validation, jurisdiction validation, ownership verification, forms, and fee collection, with the required output being a **qualified opportunity**. Intake also cannot be treated as complete without output. îˆ€fileciteîˆ‚turn1file10îˆ
 
 ### Current repo defect
 `/contact` still activates walkthrough/demo access without creating a governed Lead object.
@@ -118,7 +118,7 @@ Lead intake is not complete unless it creates:
 ## 2. Opportunity Conversion Contract
 
 ### Why this is now mandatory
-The uploaded materials require structured objects and valid lifecycle progression from Lead to Qualified to Bid/Permit/Build. They also define Phase 2 output as a **qualified opportunity** and repeatedly make Project/Job the continuity home for the system. fileciteturn1file10 fileciteturn1file14
+The uploaded materials require structured objects and valid lifecycle progression from Lead to Qualified to Bid/Permit/Build. They also define Phase 2 output as a **qualified opportunity** and repeatedly make Project/Job the continuity home for the system. îˆ€fileciteîˆ‚turn1file10îˆ îˆ€fileciteîˆ‚turn1file14îˆ
 
 ### Canonical conversion rule
 An Opportunity may convert to Project only if:
@@ -175,7 +175,7 @@ Project creation is invalid if it loses upstream opportunity/client/site linkage
 ## 3. Canonical File Register / Upload Contract
 
 ### Why this is now mandatory
-The uploaded build-sequence and no-gap rules require file input/output at every level, require every module to attach to Project/Job, and identify Files / PlanSets and the file spine as part of the required continuity architecture. The uploaded sequence also specifically defines the next phase after bid/tracker as Project/Job spine plus Files/Document ingestion plus Auricrux document intelligence. fileciteturn1file5 fileciteturn1file6 fileciteturn1file14
+The uploaded build-sequence and no-gap rules require file input/output at every level, require every module to attach to Project/Job, and identify Files / PlanSets and the file spine as part of the required continuity architecture. The uploaded sequence also specifically defines the next phase after bid/tracker as Project/Job spine plus Files/Document ingestion plus Auricrux document intelligence. îˆ€fileciteîˆ‚turn1file5îˆ îˆ€fileciteîˆ‚turn1file6îˆ îˆ€fileciteîˆ‚turn1file14îˆ
 
 ### Canonical rule
 File bytes and file metadata are distinct.
@@ -252,7 +252,7 @@ Summary rollups must come from canonical backend summary composition, not route-
 ## 4. Audit Event Payload Tightening
 
 ### Why this is now mandatory
-The uploaded materials define execution as Analyze / Decide / Generate / Execute / Validate / Record / Optimize and require Auricrux actions to be logged, reversible, reviewable, and attached to the continuity spine. They also require every action to produce output and the whole system to be auditable. fileciteturn1file0 fileciteturn1file19
+The uploaded materials define execution as Analyze / Decide / Generate / Execute / Validate / Record / Optimize and require Auricrux actions to be logged, reversible, reviewable, and attached to the continuity spine. They also require every action to produce output and the whole system to be auditable. îˆ€fileciteîˆ‚turn1file0îˆ îˆ€fileciteîˆ‚turn1file19îˆ
 
 ### Canonical audit rule
 Every material mutation in the flagship spine must emit an audit payload with enough information to support:

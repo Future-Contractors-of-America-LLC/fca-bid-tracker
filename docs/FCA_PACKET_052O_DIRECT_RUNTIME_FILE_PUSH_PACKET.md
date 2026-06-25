@@ -32,7 +32,7 @@ It **does** define the exact runtime files to push, their grouping, and the post
 
 ## Direct Push Scope
 
-### Push Group A — Shared contract files
+### Push Group A â€” Shared contract files
 Push these files directly into repo runtime paths:
 - `src/lib/contracts/fcaEnums.ts`
 - `src/types/fca-contracts.ts`
@@ -40,13 +40,13 @@ Push these files directly into repo runtime paths:
 - `api/_lib/contracts/fcaEnums.js`
 - `api/_lib/contracts/fcaContracts.js`
 
-### Push Group B — Validation files
+### Push Group B â€” Validation files
 Push these files directly into repo runtime paths:
 - `src/lib/contracts/fcaSchemas.ts`
 - `api/_lib/validation/fcaSchemas.js`
 - `api/_lib/validation/assertValid.js`
 
-### Push Group C — First route files
+### Push Group C â€” First route files
 Push these files directly into repo runtime paths:
 - `api/projects/index.js`
 - `api/projects/[projectId].js`

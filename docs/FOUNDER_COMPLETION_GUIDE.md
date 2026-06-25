@@ -1,28 +1,28 @@
 # Founder Completion Guide
 
-Everything below requires **your** accounts, credentials, legal approval, or store enrollment for items that cannot be automated (primarily **app store publish**). Revenue, enterprise auth, M365 file sync, and transactional email are **wired through Auricrux-Central** — engineering completes the integration; you verify live configuration in Azure when needed.
+Everything below requires **your** accounts, credentials, legal approval, or store enrollment for items that cannot be automated (primarily **app store publish**). Revenue, enterprise auth, M365 file sync, and transactional email are **wired through Auricrux-Central** â€” engineering completes the integration; you verify live configuration in Azure when needed.
 
 **Last updated:** 2026-06-24  
-**Repos:** `auricrux-central`, `fca-bid-tracker`, `fca-mobile-maui` (canonical mobile), `fca-mobile` (legacy � do not extend)
+**Repos:** `auricrux-central`, `fca-bid-tracker`, `fca-mobile-maui` (canonical mobile), `fca-mobile` (legacy ï¿½ do not extend)
 
 ---
 
-## Quick status � what is already done for you
+## Quick status ï¿½ what is already done for you
 
 | Area | Status |
 |------|--------|
 | .NET 8 SDK | Installed on your Windows machine (8.0.422) |
 | MAUI workload | Installed (`dotnet workload install maui`) |
-| Mobile app code | Complete in `fca-mobile-maui-work` � 14 screens, live API wiring |
+| Mobile app code | Complete in `fca-mobile-maui-work` ï¿½ 14 screens, live API wiring |
 | Web SPA | Live at https://futurecontractorsofamerica.com |
 | Backend API | Live at https://auricrux-central.azurewebsites.net |
-| GitHub CI for mobile | Workflow ready � builds after repo push |
+| GitHub CI for mobile | Workflow ready ï¿½ builds after repo push |
 
 **Local Android build still needs:** Android SDK (see Section 3). SDK + MAUI are installed; Android SDK is the remaining local gap.
 
 **Product confidence without field work:** GitHub Actions runs the **workflow repair loop** every hour (Observe -> Act -> Review). Read `docs/qc/workflow-repair-latest.md` or Actions -> FCA Workflow Simulations. Protocol: `docs/FCA_REPAIR_LOOP_PROTOCOL.md`. Set repo secrets `FCA_SIM_LOGIN_EMAIL` and `FCA_SIM_LOGIN_PASSWORD` (QA account in `docs/FOUNDER_PRODUCT_TEST_ACCESS.md`).
 
-## Section 1 � Revenue (highest priority)
+## Section 1 ï¿½ Revenue (highest priority)
 
 ### 1.1 FCA native payment rail (primary - no Stripe required)
 
@@ -114,9 +114,9 @@ curl https://api.futurecontractorsofamerica.com/api/health
 
 ---
 
-## Section 2 � Mobile app store submission (.NET MAUI)
+## Section 2 ï¿½ Mobile app store submission (.NET MAUI)
 
-> **Important:** Use **`fca-mobile-maui`**, not the legacy Expo repo. Mobile is pure C# � no JavaScript or Python.
+> **Important:** Use **`fca-mobile-maui`**, not the legacy Expo repo. Mobile is pure C# ï¿½ no JavaScript or Python.
 
 ### 2.1 Apple Developer Program
 
@@ -154,8 +154,8 @@ curl https://api.futurecontractorsofamerica.com/api/health
 3. Complete **Store listing** (draft OK until first upload):
    - Short description (80 chars): e.g. `Leads, jobs, plans, billing, and training for commercial contractors.`
    - Full description: use `fca-mobile-maui-work/README.md` product table as base
-   - App icon: 512�512 PNG (export from `Resources/AppIcon/appicon.svg`)
-   - Feature graphic: 1024�500 PNG
+   - App icon: 512ï¿½512 PNG (export from `Resources/AppIcon/appicon.svg`)
+   - Feature graphic: 1024ï¿½500 PNG
    - Screenshots: minimum 2 phone screenshots (see 2.5)
 4. **App content** questionnaires: privacy policy URL, data safety, target audience
 5. **Release ? Production ? Create new release** (after AAB upload from CI)
@@ -214,7 +214,7 @@ CI workflow for signed builds can be added after secrets exist (engineering can 
 
 | Screen | What to show |
 |--------|----------------|
-| Welcome | Value props � leads, jobs, training |
+| Welcome | Value props ï¿½ leads, jobs, training |
 | Command Center | KPI tiles populated |
 | Lead pipeline | List of opportunities |
 | Jobs | Active job sites |
@@ -222,10 +222,10 @@ CI workflow for signed builds can be added after secrets exist (engineering can 
 
 **Sizes:**
 
-- **iOS:** 6.7" (1290�2796) and 6.5" (1284�2778) � App Store Connect
-- **Android:** Phone screenshots min 320px short edge; 1080�1920 typical
+- **iOS:** 6.7" (1290ï¿½2796) and 6.5" (1284ï¿½2778) ï¿½ App Store Connect
+- **Android:** Phone screenshots min 320px short edge; 1080ï¿½1920 typical
 
-**Brand mark:** Source SVG at `fca-mobile-work/assets/source/fca-mark.svg` � export PNG at 512, 1024 as needed.
+**Brand mark:** Source SVG at `fca-mobile-work/assets/source/fca-mark.svg` ï¿½ export PNG at 512, 1024 as needed.
 
 ---
 
@@ -278,11 +278,11 @@ dotnet workload list   # should include maui
 
 ---
 
-## Section 3 � Enterprise authentication (Microsoft / Google SSO)
+## Section 3 ï¿½ Enterprise authentication (Microsoft / Google SSO)
 
 ### 3.1 Azure Entra ID app registration (live via `/api/customer-entra`)
 
-**Why:** Enterprise buyers sign in with Microsoft through Auricrux-Central OAuth — the web login page exposes **Sign in with Microsoft** when `AZURE_CLIENT_ID` and `AZURE_TENANT_ID` are set on Central.
+**Why:** Enterprise buyers sign in with Microsoft through Auricrux-Central OAuth â€” the web login page exposes **Sign in with Microsoft** when `AZURE_CLIENT_ID` and `AZURE_TENANT_ID` are set on Central.
 
 **Status:** OAuth authorize/callback and session exchange are implemented. Verify redirect URIs match your deployment:
 
@@ -320,7 +320,7 @@ After SSO works, disable or rotate:
 
 ---
 
-## Section 4 � Azure / M365 / AI
+## Section 4 ï¿½ Azure / M365 / AI
 
 ### 4.1 Key Vault access
 
@@ -353,14 +353,14 @@ After SSO works, disable or rotate:
 
 ---
 
-## Section 5 � Legal / enterprise procurement
+## Section 5 ï¿½ Legal / enterprise procurement
 
 **Canonical drafts:** [legal/enterprise/LEGAL_ENTERPRISE_INDEX.md](./legal/enterprise/LEGAL_ENTERPRISE_INDEX.md)
 
 | Item | Action | Owner |
 |------|--------|-------|
 | **Enterprise legal corpus** | Review full pack at `legal/enterprise/` (MSA, DPA, SLA, security, subprocessors, policies) | Legal counsel + you |
-| **IP filing pack** | Trademark, copyright, patent prep � start at [legal/IP_MASTER_INDEX.md](./legal/IP_MASTER_INDEX.md) | Legal counsel + you |
+| **IP filing pack** | Trademark, copyright, patent prep ï¿½ start at [legal/IP_MASTER_INDEX.md](./legal/IP_MASTER_INDEX.md) | Legal counsel + you |
 | **Privacy policy** | Counsel approves `legal/enterprise/PRIVACY_POLICY.md`; publish at `/privacy` | Legal / you |
 | **Terms of service** | Counsel approves `legal/enterprise/TERMS_OF_SERVICE.md`; publish at `/terms` | Legal / you |
 | **DPA / MSA / SLA** | Execute templates in `legal/enterprise/` with Order Form | Legal counsel |
@@ -370,7 +370,7 @@ After SSO works, disable or rotate:
 
 ---
 
-## Section 6 � GitHub repo setup (if not yet pushed)
+## Section 6 ï¿½ GitHub repo setup (if not yet pushed)
 
 Engineering will push `fca-mobile-maui`. If you need to do it manually:
 
@@ -386,7 +386,7 @@ gh repo create Future-Contractors-of-America-LLC/fca-mobile-maui --public --sour
 
 ---
 
-## Section 7 � End-to-end verification checklist
+## Section 7 ï¿½ End-to-end verification checklist
 
 Run after completing relevant sections above:
 
@@ -418,9 +418,9 @@ Start-Process "https://futurecontractorsofamerica.com/intake?plan=startup"
 
 ## Priority order (recommended)
 
-1. **FCA native checkout live** (revenue today — `/checkout?plan=startup` or `pilot`)
+1. **FCA native checkout live** (revenue today â€” `/checkout?plan=startup` or `pilot`)
 2. **Push `fca-mobile-maui` + green CI** (mobile credibility)
-3. **Android keystore + Play Console app** (Android first � faster review)
+3. **Android keystore + Play Console app** (Android first ï¿½ faster review)
 4. **Apple Developer + TestFlight** (iOS)
 5. **API subdomain DNS** (enterprise polish)
 6. **Entra SSO + session secret** (enterprise sales)

@@ -15,7 +15,7 @@ Attack the next remaining blocker by converting the newly refreshed runtime-smok
 ## Refreshed workflow truth observed
 A post-`060X` proof commit now exists on `main`:
 
-- `0f8ad8c0fe0e361ac0db7043d9695334d5f83c8a` — `Persist runtime smoke proof artifacts for run 27499234352`
+- `0f8ad8c0fe0e361ac0db7043d9695334d5f83c8a` â€” `Persist runtime smoke proof artifacts for run 27499234352`
 
 This proves the repaired workflow executed and persisted several refreshed packet-accurate artifacts.
 

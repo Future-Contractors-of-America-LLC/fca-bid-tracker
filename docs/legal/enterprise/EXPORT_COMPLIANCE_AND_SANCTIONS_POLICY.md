@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.**
+> **Prepared for legal review â€” not legal advice.**
 
 ---
 
@@ -19,7 +19,7 @@ FCA complies with U.S. export control and economic sanctions laws. This policy d
 Including but not limited to:
 
 - U.S. Export Administration Regulations (EAR)
-- International Traffic in Arms Regulations (ITAR) — *FCA contractor software is not defense articles unless separately agreed*
+- International Traffic in Arms Regulations (ITAR) â€” *FCA contractor software is not defense articles unless separately agreed*
 - Office of Foreign Assets Control (OFAC) sanctions programs
 - UK and EU sanctions where applicable to FCA operations
 
@@ -29,7 +29,7 @@ Including but not limited to:
 
 Customer may not use the Services:
 
-- In any country or region subject to comprehensive U.S. embargo (e.g., Cuba, Iran, North Korea, Syria, Crimea region — list updated per OFAC)
+- In any country or region subject to comprehensive U.S. embargo (e.g., Cuba, Iran, North Korea, Syria, Crimea region â€” list updated per OFAC)
 - For the benefit of any person or entity on the OFAC Specially Designated Nationals (SDN) list or equivalent denied-party lists
 - To export, re-export, or transfer technical data in violation of EAR or ITAR without required licenses
 

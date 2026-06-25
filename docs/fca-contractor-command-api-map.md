@@ -1,4 +1,4 @@
-# FCA Contractor Command — API Map v1
+# FCA Contractor Command â€” API Map v1
 
 Status: Active Draft
 Scope: Phase-2 execution packet for flagship product spine

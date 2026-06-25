@@ -4,7 +4,7 @@
 **Effective Date:** June 19, 2026  
 **Version:** 1.0  
 
-> **Prepared for legal review — not legal advice.** Incorporated into [Terms of Service](./TERMS_OF_SERVICE.md). Publish at https://futurecontractorsofamerica.com/acceptable-use after counsel approval.
+> **Prepared for legal review â€” not legal advice.** Incorporated into [Terms of Service](./TERMS_OF_SERVICE.md). Publish at https://futurecontractorsofamerica.com/acceptable-use after counsel approval.
 
 ---
 
@@ -36,7 +36,7 @@ You will not, and will not permit users to:
 
 - Upload or transmit unlawful, defamatory, harassing, or discriminatory content
 - Infringe intellectual property, privacy, or publicity rights
-- Store or transmit child sexual abuse material (CSAM) — zero tolerance; reported to authorities
+- Store or transmit child sexual abuse material (CSAM) â€” zero tolerance; reported to authorities
 - Use the Services for fraudulent bids, false licensing claims, or misrepresentation to owners or regulators
 
 ### 3.3 Abuse of Platform

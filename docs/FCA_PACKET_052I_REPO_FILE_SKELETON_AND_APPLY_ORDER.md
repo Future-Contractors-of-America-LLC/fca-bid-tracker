@@ -81,7 +81,7 @@ It **does** define the exact file set and implementation order for the next code
 
 ## 2. Apply Order
 
-### Step 1 — enums first
+### Step 1 â€” enums first
 Create:
 - `src/lib/contracts/fcaEnums.ts`
 - `api/_lib/contracts/fcaEnums.js`
@@ -89,7 +89,7 @@ Create:
 Reason:
 All schema, UI, and route validation depends on stable enum values.
 
-### Step 2 — core types/contracts
+### Step 2 â€” core types/contracts
 Create:
 - `src/types/fca-contracts.ts`
 - `api/_lib/contracts/fcaContracts.js`
@@ -98,7 +98,7 @@ Create:
 Reason:
 This fixes object naming and request/response shape before route wiring.
 
-### Step 3 — validation layer
+### Step 3 â€” validation layer
 Create:
 - `src/lib/contracts/fcaSchemas.ts`
 - `api/_lib/validation/fcaSchemas.js`
@@ -107,7 +107,7 @@ Create:
 Reason:
 No route should accept payloads before contract validation exists.
 
-### Step 4 — route helpers and minimal route stubs
+### Step 4 â€” route helpers and minimal route stubs
 Create route files listed in section 1.3 with:
 - method guard
 - tenant/project param extraction
@@ -118,7 +118,7 @@ Create route files listed in section 1.3 with:
 Reason:
 This creates deterministic implementation surfaces without pretending the business logic is complete.
 
-### Step 5 — workspace shell entry points
+### Step 5 â€” workspace shell entry points
 Create/update:
 - `src/pages/projects/ProjectWorkspacePage.jsx`
 - `src/components/projects/ProjectWorkspaceTabs.jsx`
@@ -127,7 +127,7 @@ Create/update:
 Reason:
 UI must expose the shared project spine before module-specific panels.
 
-### Step 6 — module panels
+### Step 6 â€” module panels
 Create/update:
 - files
 - drawings
@@ -140,7 +140,7 @@ Create/update:
 Reason:
 Panels must consume the canonical project context and types defined in earlier steps.
 
-### Step 7 — documentation and acceptance checklists
+### Step 7 â€” documentation and acceptance checklists
 Create/update docs listed in section 1.5.
 
 Reason:

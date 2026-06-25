@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Continuously prove contractor workflows work on the live API **and** self-heal when safe, queue repairs when not, and improve over time — without the founder manually testing in the field.
+Continuously prove contractor workflows work on the live API **and** self-heal when safe, queue repairs when not, and improve over time â€” without the founder manually testing in the field.
 
 ## Protocol
 
@@ -30,7 +30,7 @@ npm run sim:workflow:loop     # full Observe -> Act -> Review loop
 | `engineering-queue` | Queue item for Central/web code fix |
 | `auricrux-review` | POST `/api/auricrux/actions` recommend on failed steps |
 
-**Not auto-repaired (by design):** code bugs, missing GitHub secrets, production credential changes. Those become work-queue items — not silent failures.
+**Not auto-repaired (by design):** code bugs, missing GitHub secrets, production credential changes. Those become work-queue items â€” not silent failures.
 
 ## Configuration
 
@@ -38,15 +38,15 @@ npm run sim:workflow:loop     # full Observe -> Act -> Review loop
 |-----|---------|---------|
 | `FCA_REPAIR_LOOP_MAX_ROUNDS` | `3` | Max Observe->Act->Review cycles per run |
 | `FCA_REPAIR_LOOP_RETRY_MS` | `5000` | Delay before transient retry |
-| `FCA_SIM_LOGIN_EMAIL` | — | Required for authenticated workflow |
-| `FCA_SIM_LOGIN_PASSWORD` | — | Required for authenticated workflow |
+| `FCA_SIM_LOGIN_EMAIL` | â€” | Required for authenticated workflow |
+| `FCA_SIM_LOGIN_PASSWORD` | â€” | Required for authenticated workflow |
 
 ## Founder read path
 
-1. `docs/qc/workflow-repair-latest.md` — last loop outcome
-2. `docs/qc/workflow-simulation-latest.md` — last simulation steps
+1. `docs/qc/workflow-repair-latest.md` â€” last loop outcome
+2. `docs/qc/workflow-simulation-latest.md` â€” last simulation steps
 3. GitHub Actions -> **FCA Workflow Simulations** -> Summary
-4. `auricrux/system/work_queue.json` — open repair backlog
+4. `auricrux/system/work_queue.json` â€” open repair backlog
 
 ## Schedule
 
@@ -54,8 +54,8 @@ Runs with **FCA Workflow Simulations** every hour and on push to `main`.
 
 ## Validation
 
-- `scripts/validate-workflow-repair-loop.mjs` — protocol wiring gate
-- `scripts/validate-fca-sovereignty.mjs` — static sovereignty (complementary)
+- `scripts/validate-workflow-repair-loop.mjs` â€” protocol wiring gate
+- `scripts/validate-fca-sovereignty.mjs` â€” static sovereignty (complementary)
 
 ## Relation to Auricrux Law
 

@@ -109,7 +109,7 @@ For customer-facing remediation, the priority files are now confirmed to be:
 
 ## Founder Action Required
 
-**No** — this is still repo-fixable.
+**No** â€” this is still repo-fixable.
 
 ## Next Concrete Action
 

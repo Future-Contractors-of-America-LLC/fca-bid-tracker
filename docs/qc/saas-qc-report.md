@@ -188,7 +188,7 @@
 - **PASS** page:academy/AcademyModuleLesson
 - **PASS** page:academy/store/AcademyStoreCourse
 - **PASS** page:academy/store/AcademyStorePathway
-- **PASS** api:live-smoke: deferred — Auricrux-Central API unreachable from validator host
+- **PASS** api:live-smoke: deferred â€” Auricrux-Central API unreachable from validator host
 - **PASS** blueprint:/portal/bids
 - **PASS** blueprint:/portal/projects
 - **PASS** blueprint:/portal/files

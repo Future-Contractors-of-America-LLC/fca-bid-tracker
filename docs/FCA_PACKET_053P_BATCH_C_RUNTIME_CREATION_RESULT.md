@@ -27,7 +27,7 @@ These five runtime files are now repo-proven present by this commit.
 - route smoke check results
 - persistence wiring behind new route stubs
 - shared shell UI consuming all canonical contract files
-- deployed end-to-end SaaS ↔ Academy remediation flow
+- deployed end-to-end SaaS â†” Academy remediation flow
 
 ## Next Move
 Run the first-wave repo proof gate and record runtime wave presence as complete.

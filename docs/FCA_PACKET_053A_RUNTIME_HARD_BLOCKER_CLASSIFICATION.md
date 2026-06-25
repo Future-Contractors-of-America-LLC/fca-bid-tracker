@@ -105,13 +105,13 @@ That divergence is now explicitly classified rather than hidden.
 
 ## Required Remediation Paths
 
-### Remediation Path A — repo inspection first
+### Remediation Path A â€” repo inspection first
 Explicitly inspect current runtime paths for the blocked file set and record presence/absence per file.
 
-### Remediation Path B — direct file creation with repo proof
+### Remediation Path B â€” direct file creation with repo proof
 If absent, create the exact runtime files in repo and record commit hash and file list.
 
-### Remediation Path C — path-collision remediation
+### Remediation Path C â€” path-collision remediation
 If any target file already exists with conflicting content or incompatible module format, create a targeted merge/remediation packet instead of blind overwrite.
 
 Default preferred order:

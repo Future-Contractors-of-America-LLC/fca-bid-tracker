@@ -59,7 +59,7 @@ It **does** define the exact files that must now either be created directly or e
 
 ## Allowed Outcomes
 
-### Outcome A — runtime files created
+### Outcome A â€” runtime files created
 This is the default and preferred path.
 
 Requirements:
@@ -68,7 +68,7 @@ Requirements:
 - file creation is committed in repo
 - next packet records exact file presence and commit truth
 
-### Outcome B — blocker artifact created
+### Outcome B â€” blocker artifact created
 Allowed only if a real blocker prevents safe file creation.
 
 Accepted blocker classes:

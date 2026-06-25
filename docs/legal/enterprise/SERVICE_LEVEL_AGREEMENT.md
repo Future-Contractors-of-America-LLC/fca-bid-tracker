@@ -5,7 +5,7 @@
 **Version:** 1.0  
 **Effective Date:** June 19, 2026  
 
-> **Prepared for legal review — not legal advice.** Applies to enterprise Order Forms that reference this SLA.
+> **Prepared for legal review â€” not legal advice.** Applies to enterprise Order Forms that reference this SLA.
 
 ---
 
@@ -22,7 +22,7 @@ This Service Level Agreement ("**SLA**") applies to production hosted Services i
 FCA will use commercially reasonable efforts to achieve **99.9% Monthly Uptime Percentage** for Covered Services.
 
 **Monthly Uptime Percentage** =  
-`(Total Minutes in Month ? Downtime Minutes) / Total Minutes in Month × 100`
+`(Total Minutes in Month ? Downtime Minutes) / Total Minutes in Month Ã— 100`
 
 ### 2.2 Downtime Definition
 
@@ -48,8 +48,8 @@ If Monthly Uptime falls below 99.9%, Customer may request service credits:
 
 | Monthly Uptime | Service Credit (% of monthly fees for Covered Services) |
 |----------------|------------------------------------------------------|
-| 99.0% – 99.89% | 10% |
-| 95.0% – 98.99% | 25% |
+| 99.0% â€“ 99.89% | 10% |
+| 95.0% â€“ 98.99% | 25% |
 | Below 95.0% | 50% |
 
 ### 3.1 Credit Request
@@ -68,12 +68,12 @@ Service credits are Customer's sole and exclusive remedy for failure to meet upt
 
 | Severity | Definition | Initial response target |
 |----------|------------|-------------------------|
-| **P1 – Critical** | Production down; no workaround | 1 hour (24×7) |
-| **P2 – High** | Major feature impaired | 4 business hours |
-| **P3 – Medium** | Non-critical defect | 1 business day |
-| **P4 – Low** | Question / enhancement | 2 business days |
+| **P1 â€“ Critical** | Production down; no workaround | 1 hour (24Ã—7) |
+| **P2 â€“ High** | Major feature impaired | 4 business hours |
+| **P3 â€“ Medium** | Non-critical defect | 1 business day |
+| **P4 â€“ Low** | Question / enhancement | 2 business days |
 
-**Business hours:** Monday–Friday, 9:00 AM–6:00 PM US Eastern, excluding U.S. federal holidays.
+**Business hours:** Mondayâ€“Friday, 9:00 AMâ€“6:00 PM US Eastern, excluding U.S. federal holidays.
 
 **Contact:** support@futurecontractorsofamerica.com (or dedicated portal if provided)
 

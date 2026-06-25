@@ -44,9 +44,9 @@ Before testing, have these values ready:
 
 ---
 
-## Phase 1 — Runtime Truth Check
+## Phase 1 â€” Runtime Truth Check
 
-### Check 1 — Auth state endpoint
+### Check 1 â€” Auth state endpoint
 
 Open:
 
@@ -73,9 +73,9 @@ Open:
 
 ---
 
-## Phase 2 — Managed Login Verification
+## Phase 2 â€” Managed Login Verification
 
-### Check 2 — Open login page
+### Check 2 â€” Open login page
 
 Open:
 
@@ -90,7 +90,7 @@ Open:
 - no broken redirect loop
 - no internal-only copy on the normal customer route
 
-### Check 3 — Sign in with managed customer account
+### Check 3 â€” Sign in with managed customer account
 
 Use the managed customer credentials from `FCA_CUSTOMER_ACCOUNTS_JSON`.
 
@@ -108,9 +108,9 @@ Use the managed customer credentials from `FCA_CUSTOMER_ACCOUNTS_JSON`.
 
 ---
 
-## Phase 3 — Session Verification
+## Phase 3 â€” Session Verification
 
-### Check 4 — Verify session endpoint after login
+### Check 4 â€” Verify session endpoint after login
 
 Open:
 
@@ -138,9 +138,9 @@ Open:
 
 ---
 
-## Phase 4 — Profile Truth Surface Verification
+## Phase 4 â€” Profile Truth Surface Verification
 
-### Check 5 — Open profile
+### Check 5 â€” Open profile
 
 Open:
 
@@ -175,9 +175,9 @@ Profile should display:
 
 ---
 
-## Phase 5 — Protected Route Access Verification
+## Phase 5 â€” Protected Route Access Verification
 
-### Check 6 — SaaS route
+### Check 6 â€” SaaS route
 
 Open:
 
@@ -188,7 +188,7 @@ Open:
 Expected:
 - loads successfully if `enabledProducts.saas = true`
 
-### Check 7 — Projects route
+### Check 7 â€” Projects route
 
 Open:
 
@@ -199,7 +199,7 @@ Open:
 Expected:
 - loads successfully if SaaS is enabled
 
-### Check 8 — Bids route
+### Check 8 â€” Bids route
 
 Open:
 
@@ -210,7 +210,7 @@ Open:
 Expected:
 - loads successfully if SaaS is enabled
 
-### Check 9 — Academy route
+### Check 9 â€” Academy route
 
 Open:
 
@@ -222,7 +222,7 @@ Expected:
 - loads successfully if `enabledProducts.lms = true`
 - should restrict or redirect truthfully if LMS is disabled
 
-### Check 10 — Auricrux route
+### Check 10 â€” Auricrux route
 
 Open:
 
@@ -241,9 +241,9 @@ Expected:
 
 ---
 
-## Phase 6 — Communications Access Verification
+## Phase 6 â€” Communications Access Verification
 
-### Check 11 — Verify comms-linked surfaces
+### Check 11 â€” Verify comms-linked surfaces
 
 Primary route:
 
@@ -270,7 +270,7 @@ Then inspect comms controls and related routes such as:
 
 ---
 
-## Phase 7 — Seeded Fallback Verification
+## Phase 7 â€” Seeded Fallback Verification
 
 Only do this during first safe activation when:
 
@@ -278,7 +278,7 @@ Only do this during first safe activation when:
 FCA_ALLOW_SEEDED_LOGIN_FALLBACK=true
 ```
 
-### Check 12 — Verify fallback still exists intentionally
+### Check 12 â€” Verify fallback still exists intentionally
 
 Try the seeded validation path only if you intentionally want it available during transition.
 
@@ -295,7 +295,7 @@ Try the seeded validation path only if you intentionally want it available durin
 
 ---
 
-## Phase 8 — Cutover Verification After Disabling Fallback
+## Phase 8 â€” Cutover Verification After Disabling Fallback
 
 After Phase 1 succeeds, set:
 
@@ -305,12 +305,12 @@ FCA_ALLOW_SEEDED_LOGIN_FALLBACK=false
 
 Redeploy, then test again.
 
-### Check 13 — Managed login still works
+### Check 13 â€” Managed login still works
 
 Expected:
 - managed credentials still work normally
 
-### Check 14 — Seeded login on normal path fails
+### Check 14 â€” Seeded login on normal path fails
 
 Expected:
 - old seeded credentials should no longer authenticate on the normal login path

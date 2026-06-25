@@ -1,4 +1,4 @@
-# FCA Build State Update — 2026-06-13
+# FCA Build State Update â€” 2026-06-13
 
 Status: Active
 Repository: `Future-Contractors-of-America-LLC/fca-bid-tracker`
@@ -18,7 +18,7 @@ What is true now:
 2. The repo contains the flagship Contractor Command route / API / storage / project-context / file-spine / audit-spine artifacts.
 3. The repo contains multiple deployment and live-route audit artifacts.
 4. The repo contains managed-auth activation and live-auth verification artifacts.
-5. The active packet continuity has now been re-anchored at `052C` → `052D` → `052E`, with target `60A`.
+5. The active packet continuity has now been re-anchored at `052C` â†’ `052D` â†’ `052E`, with target `60A`.
 
 What is not yet proven:
 
@@ -100,7 +100,7 @@ The main risk is:
 - continuity confusion between older packet families and the active sequence
 - inability to cleanly state what is repo-verified vs live-verified
 
-That is exactly why 052C–052E had to be re-anchored.
+That is exactly why 052Câ€“052E had to be re-anchored.
 
 ---
 

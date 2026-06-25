@@ -1,4 +1,4 @@
-# Enterprise Legal Document Corpus � Master Index
+# Enterprise Legal Document Corpus ï¿½ Master Index
 
 **Entity:** Future Contractors of America LLC  
 **Jurisdiction of formation:** Commonwealth of Virginia  
@@ -19,7 +19,7 @@ This folder contains the **canonical enterprise legal corpus** for FCA (Future C
 
 ## Document map
 
-### Tier 1 � Public / customer-facing (publish to website)
+### Tier 1 ï¿½ Public / customer-facing (publish to website)
 
 | Document | File | Target URL |
 |----------|------|------------|
@@ -34,7 +34,7 @@ This folder contains the **canonical enterprise legal corpus** for FCA (Future C
 | Security Overview | [SECURITY_ADDENDUM.md](./SECURITY_ADDENDUM.md) | `/security` |
 | DMCA / Copyright | [DMCA_COPYRIGHT_POLICY.md](./DMCA_COPYRIGHT_POLICY.md) | `/dmca` |
 
-### Tier 2 � Enterprise procurement (execute with Order Form / MSA)
+### Tier 2 ï¿½ Enterprise procurement (execute with Order Form / MSA)
 
 | Document | File | When used |
 |----------|------|-----------|
@@ -45,7 +45,7 @@ This folder contains the **canonical enterprise legal corpus** for FCA (Future C
 | Business Associate Agreement | [BUSINESS_ASSOCIATE_AGREEMENT_TEMPLATE.md](./BUSINESS_ASSOCIATE_AGREEMENT_TEMPLATE.md) | HIPAA-covered customers only |
 | End User License Agreement | [END_USER_LICENSE_AGREEMENT.md](./END_USER_LICENSE_AGREEMENT.md) | Software download / on-prem components |
 
-### Tier 3 � Compliance & trust (internal + customer audit)
+### Tier 3 ï¿½ Compliance & trust (internal + customer audit)
 
 | Document | File | Audience |
 |----------|------|----------|
@@ -56,7 +56,7 @@ This folder contains the **canonical enterprise legal corpus** for FCA (Future C
 | Anti-Bribery & Corruption | [ANTI_BRIBERY_AND_CORRUPTION_POLICY.md](./ANTI_BRIBERY_AND_CORRUPTION_POLICY.md) | Vendor onboarding, FCPA |
 | Vendor Code of Conduct | [VENDOR_CODE_OF_CONDUCT.md](./VENDOR_CODE_OF_CONDUCT.md) | Supplier agreements |
 
-### Tier 4 � Templates (ad hoc execution)
+### Tier 4 ï¿½ Templates (ad hoc execution)
 
 | Document | File | When used |
 |----------|------|-----------|
@@ -124,20 +124,20 @@ Counsel should confirm whether Virginia or Delaware governing law is preferred f
 
 **Not yet in this corpus (founder/counsel actions):**
 
-- SOC 2 Type II report (roadmap � see FOUNDER_ONLY_CHECKLIST)
+- SOC 2 Type II report (roadmap ï¿½ see FOUNDER_ONLY_CHECKLIST)
 - Penetration test attestation letter
 - ISO 27001 certification
-- Signed Standard Contractual Clauses (EU Commission 2021 modules) � referenced in DPA; counsel to attach
+- Signed Standard Contractual Clauses (EU Commission 2021 modules) ï¿½ referenced in DPA; counsel to attach
 - Insurance certificates (cyber, E&O, general liability)
 
 ---
 
 ## Publication workflow
 
-1. **Counsel review** � Attorney reviews corpus; records redlines in version history.
-2. **Sync to web** — Tier 1 policies published from `src/legal/content/*.jsx` (sync with markdown in this folder)
-3. **Enterprise sales** � Export MSA + DPA + SLA as PDF/DOCX from counsel-approved versions.
-4. **Subprocessor updates** — Update SUBPROCESSOR_LIST.md and SubprocessorsContent.jsx; notify enterprise customers per DPA.
+1. **Counsel review** ï¿½ Attorney reviews corpus; records redlines in version history.
+2. **Sync to web** â€” Tier 1 policies published from `src/legal/content/*.jsx` (sync with markdown in this folder)
+3. **Enterprise sales** ï¿½ Export MSA + DPA + SLA as PDF/DOCX from counsel-approved versions.
+4. **Subprocessor updates** â€” Update SUBPROCESSOR_LIST.md and SubprocessorsContent.jsx; notify enterprise customers per DPA.
 
 ---
 
@@ -146,7 +146,7 @@ Counsel should confirm whether Virginia or Delaware governing law is preferred f
 | Location | Contents |
 |----------|----------|
 | `docs/legal/IP_MASTER_INDEX.md` | Trademark, copyright, patent filing prep |
-| `docs/FOUNDER_COMPLETION_GUIDE.md` �5 | Founder legal procurement checklist |
+| `docs/FOUNDER_COMPLETION_GUIDE.md` ï¿½5 | Founder legal procurement checklist |
 | `docs/FOUNDER_ONLY_CHECKLIST.md` | Prioritized legal tasks |
 | `calyndra-app/terms.html` | Calyndra product-line Terms (separate AAC product) |
 | `calyndra-app/privacy.html` | Calyndra product-line Privacy |

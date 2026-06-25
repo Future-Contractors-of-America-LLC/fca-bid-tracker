@@ -4,7 +4,7 @@
 **Last Updated:** June 19, 2026  
 **Version:** 1.0  
 
-> **Prepared for legal review — not legal advice.** Publish at https://futurecontractorsofamerica.com/subprocessors. Notify enterprise customers ?30 days before material changes per DPA.
+> **Prepared for legal review â€” not legal advice.** Publish at https://futurecontractorsofamerica.com/subprocessors. Notify enterprise customers ?30 days before material changes per DPA.
 
 ---
 

@@ -1,4 +1,4 @@
-# FCA Contractor Command — Route Map v1
+# FCA Contractor Command â€” Route Map v1
 
 Status: Active Draft
 Scope: Flagship product spine route inventory

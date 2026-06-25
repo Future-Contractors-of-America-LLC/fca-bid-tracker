@@ -32,7 +32,7 @@ It **does** lock the exact runtime creation execution scope and forces the next 
 
 ## Direct Runtime Creation Scope
 
-### Wave A — Shared contract files
+### Wave A â€” Shared contract files
 Create directly in runtime tree:
 - `src/lib/contracts/fcaEnums.ts`
 - `src/types/fca-contracts.ts`
@@ -40,13 +40,13 @@ Create directly in runtime tree:
 - `api/_lib/contracts/fcaEnums.js`
 - `api/_lib/contracts/fcaContracts.js`
 
-### Wave B — Validation files
+### Wave B â€” Validation files
 Create directly in runtime tree:
 - `src/lib/contracts/fcaSchemas.ts`
 - `api/_lib/validation/fcaSchemas.js`
 - `api/_lib/validation/assertValid.js`
 
-### Wave C — First route files
+### Wave C â€” First route files
 Create directly in runtime tree:
 - `api/projects/index.js`
 - `api/projects/[projectId].js`
@@ -101,20 +101,20 @@ No alternate runtime code source is authorized for first-wave creation.
 
 ## Validation Gates
 
-### Gate 1 — contract layer
+### Gate 1 â€” contract layer
 ```bash
 npm install
 npm run lint
 npm run build
 ```
 
-### Gate 2 — validation layer
+### Gate 2 â€” validation layer
 ```bash
 npm run lint
 npm run build
 ```
 
-### Gate 3 — route layer
+### Gate 3 â€” route layer
 ```bash
 npm run lint
 npm run build

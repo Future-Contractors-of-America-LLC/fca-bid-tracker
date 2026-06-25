@@ -30,7 +30,7 @@ It **does** define the exact grouped runtime code application set for the first 
 
 ---
 
-## Commit Batch A — Shared Contract Layer
+## Commit Batch A â€” Shared Contract Layer
 
 ### Files to apply
 - `src/lib/contracts/fcaEnums.ts`
@@ -52,7 +52,7 @@ Create one canonical contract language across frontend and backend before adding
 
 ---
 
-## Commit Batch B — Validation Layer
+## Commit Batch B â€” Validation Layer
 
 ### Files to apply
 - `src/lib/contracts/fcaSchemas.ts`
@@ -72,7 +72,7 @@ Establish one canonical payload-validation layer before route insertion.
 
 ---
 
-## Commit Batch C — First Route Wave
+## Commit Batch C â€” First Route Wave
 
 ### Files to apply
 - `api/projects/index.js`
@@ -95,7 +95,7 @@ Create the first canonical project-spine route surfaces using the shared contrac
 
 ---
 
-## Commit Batch D — Verification and Guard Docs
+## Commit Batch D â€” Verification and Guard Docs
 
 ### Files to apply/update
 - `docs/fca-contractor-command-route-implementation-checklist.md`

@@ -12,8 +12,8 @@ Target Packet: `060A`
 ## Repo-Visible Script Chain
 From repo-visible package and shell truth:
 
-- `npm run build:system` → `npm run build`
-- `npm run build` → `bash ./build.sh`
+- `npm run build:system` â†’ `npm run build`
+- `npm run build` â†’ `bash ./build.sh`
 
 ## Build Script Behavior
 The repo-visible `build.sh` currently proves this build path:

@@ -22,12 +22,12 @@ This runbook assumes the repo already contains:
 
 Use a two-step rollout:
 
-### Phase 1 — Safe activation
+### Phase 1 â€” Safe activation
 - turn on managed accounts
 - keep seeded fallback available
 - verify managed login works
 
-### Phase 2 — Truthful cutover
+### Phase 2 â€” Truthful cutover
 - disable seeded fallback
 - verify only managed credentials work on the normal login path
 
@@ -129,35 +129,35 @@ false
 
 If the site is deployed on Azure Static Web Apps with Functions:
 
-### Step 1 — Open Azure portal
+### Step 1 â€” Open Azure portal
 - Sign in to Azure portal
 - Open the FCA deployment resource for the live shell / Static Web App
 
-### Step 2 — Open configuration
+### Step 2 â€” Open configuration
 - Go to **Environment** or **Configuration** / **Application settings** depending on the surface available
 - Locate the settings area used by the Functions runtime
 
-### Step 3 — Add `FCA_CUSTOMER_ACCOUNTS_JSON`
+### Step 3 â€” Add `FCA_CUSTOMER_ACCOUNTS_JSON`
 - Add a new app setting named:
   - `FCA_CUSTOMER_ACCOUNTS_JSON`
 - Paste the JSON array as a single-line JSON value
 
-### Step 4 — Add `FCA_SESSION_SECRET`
+### Step 4 â€” Add `FCA_SESSION_SECRET`
 - Add a new app setting named:
   - `FCA_SESSION_SECRET`
 - Paste the long random secret value
 
-### Step 5 — Add seeded fallback flag
+### Step 5 â€” Add seeded fallback flag
 - Add a new app setting named:
   - `FCA_ALLOW_SEEDED_LOGIN_FALLBACK`
 - Set value to:
   - `true`
 
-### Step 6 — Save configuration
+### Step 6 â€” Save configuration
 - Save settings
 - Confirm the environment restarts or redeploys as required
 
-### Step 7 — Wait for runtime pickup
+### Step 7 â€” Wait for runtime pickup
 - Wait for the configuration change to propagate
 - If needed, trigger a redeploy from GitHub or restart the environment from Azure
 
@@ -165,7 +165,7 @@ If the site is deployed on Azure Static Web Apps with Functions:
 
 ## Phase 1 Validation Checklist
 
-### Validation 1 — Auth state endpoint
+### Validation 1 â€” Auth state endpoint
 Open:
 
 ```text
@@ -182,7 +182,7 @@ Expected result after correct configuration:
   - `true` if both managed accounts and session secret are set correctly
 - message should indicate managed auth is configured
 
-### Validation 2 — Login route
+### Validation 2 â€” Login route
 Open:
 
 ```text
@@ -196,7 +196,7 @@ Expected:
 - no invalid-credentials error
 - route advances to `/portal/platform` or appropriate next protected route
 
-### Validation 3 — Session endpoint
+### Validation 3 â€” Session endpoint
 After login, verify:
 
 ```text
@@ -209,7 +209,7 @@ Expected:
 - account should reflect managed customer values
 - account mode should not present as plain seeded fallback if managed auth succeeded
 
-### Validation 4 — Profile route truth
+### Validation 4 â€” Profile route truth
 Open:
 
 ```text
@@ -221,7 +221,7 @@ Expected:
 - launch readiness aligned to managed auth state
 - selected plan and product access match configured managed account
 
-### Validation 5 — Product access routes
+### Validation 5 â€” Product access routes
 Verify access to:
 
 - `/portal/platform`
@@ -234,7 +234,7 @@ Expected:
 - access behavior matches `enabledProducts`
 - no route mismatch between plan/account config and actual portal access
 
-### Validation 6 — Seeded fallback still works during Phase 1
+### Validation 6 â€” Seeded fallback still works during Phase 1
 If fallback remains enabled, verify internal or seeded validation path still works intentionally.
 
 Expected:
@@ -247,23 +247,23 @@ Expected:
 
 Only proceed after Phase 1 passes.
 
-### Step 1 — Disable seeded fallback
+### Step 1 â€” Disable seeded fallback
 Change:
 
 ```text
 FCA_ALLOW_SEEDED_LOGIN_FALLBACK=false
 ```
 
-### Step 2 — Save and redeploy
+### Step 2 â€” Save and redeploy
 - Save config
 - wait for propagation or trigger redeploy
 
-### Step 3 — Re-test managed login
+### Step 3 â€” Re-test managed login
 Expected:
 - managed account still works
 - portal access remains normal
 
-### Step 4 — Re-test seeded credentials on normal path
+### Step 4 â€” Re-test seeded credentials on normal path
 Expected:
 - old seeded credentials should fail on the normal login path
 - internal-only test behavior should not leak into customer-facing auth unless explicitly routed

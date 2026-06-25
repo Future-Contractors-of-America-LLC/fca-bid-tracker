@@ -116,7 +116,7 @@ The Function App minimum execution spine is considered ready only when all of th
 
 ## Founder Action Required
 
-**No** — not at this checkpoint.
+**No** â€” not at this checkpoint.
 
 Founder action is only required later if runtime execution reveals external Azure permissions, secrets, billing, or environment limitations.
 

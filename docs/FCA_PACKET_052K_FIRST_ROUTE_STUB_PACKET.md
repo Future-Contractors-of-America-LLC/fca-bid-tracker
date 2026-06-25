@@ -40,7 +40,7 @@ It **does** provide exact repo-ready starter route stubs aligned to the 052H/052
 
 ---
 
-## File 1 — `api/projects/index.js`
+## File 1 â€” `api/projects/index.js`
 
 ```js
 const { CreateProjectPayloadSchema } = require('../_lib/validation/fcaSchemas')
@@ -94,7 +94,7 @@ module.exports = async function handler(req, res) {
 
 ---
 
-## File 2 — `api/projects/[projectId].js`
+## File 2 â€” `api/projects/[projectId].js`
 
 ```js
 const { makeApiSuccess, makeApiError } = require('../_lib/contracts/fcaContracts')
@@ -146,7 +146,7 @@ module.exports = async function handler(req, res) {
 
 ---
 
-## File 3 — `api/projects/[projectId]/takeoffs/index.js`
+## File 3 â€” `api/projects/[projectId]/takeoffs/index.js`
 
 ```js
 const { CreateTakeoffItemPayloadSchema } = require('../../../../_lib/validation/fcaSchemas')
@@ -208,7 +208,7 @@ module.exports = async function handler(req, res) {
 
 ---
 
-## File 4 — `api/projects/[projectId]/rfis/index.js`
+## File 4 â€” `api/projects/[projectId]/rfis/index.js`
 
 ```js
 const { CreateRFIPayloadSchema } = require('../../../../_lib/validation/fcaSchemas')
@@ -270,7 +270,7 @@ module.exports = async function handler(req, res) {
 
 ---
 
-## File 5 — `api/auricrux/actions/index.js`
+## File 5 â€” `api/auricrux/actions/index.js`
 
 ```js
 const { CreateAuricruxActionPayloadSchema } = require('../../_lib/validation/fcaSchemas')

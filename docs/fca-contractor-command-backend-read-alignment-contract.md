@@ -1,4 +1,4 @@
-# FCA Contractor Command — Backend Read Alignment Contract v1
+# FCA Contractor Command â€” Backend Read Alignment Contract v1
 
 Status: Active Draft  
 Scope: Packet 041 backend-read alignment for flagship spine detail surfaces
@@ -28,15 +28,15 @@ A flagship detail route is not backend-aligned unless it can name:
 
 ```text
 Opportunity detail route
-  ↓ requires
+  â†“ requires
 Opportunity workspace read model
-  ↓ links to
+  â†“ links to
 Project detail route
-  ↓ requires
+  â†“ requires
 Project workspace read model
-  ↓ links to
+  â†“ links to
 File summary read model
-  ↓ links to
+  â†“ links to
 Audit summary read model
 ```
 

@@ -1,4 +1,4 @@
-# Implementation Packet 026 — Notifications and Audit Continuity Normalization
+# Implementation Packet 026 â€” Notifications and Audit Continuity Normalization
 
 Date: 2026-06-09
 Status: Executed

@@ -1,4 +1,4 @@
-# FCA Contractor Command — Flagship Spine Handoff Contract v1
+# FCA Contractor Command â€” Flagship Spine Handoff Contract v1
 
 Status: Active Draft  
 Scope: Packet 034 implementation contract
@@ -7,7 +7,7 @@ Scope: Packet 034 implementation contract
 
 This contract defines the first real execution chain for FCA Contractor Command:
 
-**Lead / Opportunity → Project / Job → File / Evidence → Audit Event**
+**Lead / Opportunity â†’ Project / Job â†’ File / Evidence â†’ Audit Event**
 
 Its purpose is to stop shell-only drift and force every user-facing surface to hand off into governed backend behavior.
 
@@ -25,13 +25,13 @@ A workflow step is not considered product-complete unless it:
 
 ```text
 Lead
-  ↓ qualify
+  â†“ qualify
 Opportunity
-  ↓ award / convert
+  â†“ award / convert
 Project
-  ↓ upload / classify / link
+  â†“ upload / classify / link
 FileAsset + EvidenceLink
-  ↓ record
+  â†“ record
 AuditEvent
 ```
 

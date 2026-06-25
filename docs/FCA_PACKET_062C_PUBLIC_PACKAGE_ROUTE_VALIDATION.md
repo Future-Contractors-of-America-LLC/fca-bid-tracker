@@ -1,4 +1,4 @@
-# FCA Packet 062C — Public Package Route Validation
+# FCA Packet 062C â€” Public Package Route Validation
 
 ## Issue
 062B correctly stated that the next move was to wire public package claims to exact route groups and validate that public pricing, Academy tracks, and command-center tools point to real reachable repo slices.

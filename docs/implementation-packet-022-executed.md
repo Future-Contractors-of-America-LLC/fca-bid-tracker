@@ -1,4 +1,4 @@
-# Implementation Packet 022 — Contractor Command Phase-2 Mapping
+# Implementation Packet 022 â€” Contractor Command Phase-2 Mapping
 
 Date: 2026-06-09
 Status: Executed

@@ -58,7 +58,7 @@ Immediate follow-up under this board:
 
 ## Founder Action Required
 
-**No** — not at this step.
+**No** â€” not at this step.
 
 Founder action is only required if one of the following becomes true:
 - missing credential or secret

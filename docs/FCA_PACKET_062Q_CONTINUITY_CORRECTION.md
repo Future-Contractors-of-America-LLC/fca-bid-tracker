@@ -1,4 +1,4 @@
-# FCA Packet 062Q — Continuity Correction
+# FCA Packet 062Q â€” Continuity Correction
 
 ## Issue
 The continuity ledger on `main` was stale at `062E`, while the active packet sequence had already advanced through packet branches and open PRs to `062Q`.

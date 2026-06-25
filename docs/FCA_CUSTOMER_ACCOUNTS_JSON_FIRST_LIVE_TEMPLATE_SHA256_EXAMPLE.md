@@ -1,4 +1,4 @@
-# FCA Customer Accounts JSON — First Live Template (SHA-256 Example)
+# FCA Customer Accounts JSON â€” First Live Template (SHA-256 Example)
 
 Use this if you want to supply `passwordHash` instead of plain `password`.
 

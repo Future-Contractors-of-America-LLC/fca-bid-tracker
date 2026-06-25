@@ -1,4 +1,4 @@
-# FCA Contractor Command — Audit Event Payload Schema v1
+# FCA Contractor Command â€” Audit Event Payload Schema v1
 
 Status: Active Draft
 Scope: Packet 023 implementation contract

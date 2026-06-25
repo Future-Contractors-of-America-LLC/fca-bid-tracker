@@ -1,4 +1,4 @@
-# FCA Packet 062Y — First Direct Repo-Visible Binding
+# FCA Packet 062Y â€” First Direct Repo-Visible Binding
 
 ## Issue
 `062Y` was frozen as next-packet truth only because no directly repo-visible `062Y` artifact had been observed. That hold condition is now intentionally cleared by creating the first direct repo-visible `062Y` artifact in repo truth.

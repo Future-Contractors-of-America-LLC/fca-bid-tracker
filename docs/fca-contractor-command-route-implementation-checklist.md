@@ -1,4 +1,4 @@
-# FCA Contractor Command — Route Implementation Checklist v2
+# FCA Contractor Command â€” Route Implementation Checklist v2
 
 Status: Active Draft
 Scope: Packet 035 route-level enforcement checklist

@@ -48,19 +48,19 @@ Therefore this packet is an **execution record and checkpoint**, not a false cla
 ### Planned wave
 The first runtime push wave remains defined as:
 
-#### Group A — shared contract files
+#### Group A â€” shared contract files
 - `src/lib/contracts/fcaEnums.ts`
 - `src/types/fca-contracts.ts`
 - `src/lib/api/fcaApiTypes.ts`
 - `api/_lib/contracts/fcaEnums.js`
 - `api/_lib/contracts/fcaContracts.js`
 
-#### Group B — validation files
+#### Group B â€” validation files
 - `src/lib/contracts/fcaSchemas.ts`
 - `api/_lib/validation/fcaSchemas.js`
 - `api/_lib/validation/assertValid.js`
 
-#### Group C — first route files
+#### Group C â€” first route files
 - `api/projects/index.js`
 - `api/projects/[projectId].js`
 - `api/projects/[projectId]/takeoffs/index.js`
@@ -89,10 +89,10 @@ The correct next step is **actual runtime file push execution**, not more packet
 
 The next packet must perform one of two lawful actions:
 
-### Path A — direct runtime file creation in repo
+### Path A â€” direct runtime file creation in repo
 Create the first-wave runtime files directly in the repository under the approved paths.
 
-### Path B — failure artifact
+### Path B â€” failure artifact
 If direct creation is blocked by path uncertainty, missing repo compatibility facts, or tooling limitation, create a failure/remediation artifact that names the exact blocker.
 
 Default path remains **A**.
