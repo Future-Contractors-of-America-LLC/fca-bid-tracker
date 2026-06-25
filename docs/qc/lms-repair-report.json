@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-25T18:33:25.336Z",
-  "runId": "LMS-WFR-1782412383023",
+  "generatedAt": "2026-06-25T18:56:55.499Z",
+  "runId": "LMS-WFR-1782413800835",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -48,12 +48,19 @@
     }
   ],
   "redeploy": null,
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 1 item(s) queued. Consecutive failures: 10.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 1 item(s) queued. Consecutive failures: 11.",
   "state": {
-    "runCount": 10,
+    "runCount": 11,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 10,
+    "consecutiveFailures": 11,
     "history": [
+      {
+        "at": "2026-06-25T18:56:55.499Z",
+        "runId": "LMS-WFR-1782413800835",
+        "complete": false,
+        "rounds": 1,
+        "failures": 1
+      },
       {
         "at": "2026-06-25T18:33:25.336Z",
         "runId": "LMS-WFR-1782412383023",
@@ -125,8 +132,8 @@
         "failures": 35
       }
     ],
-    "lastRunUtc": "2026-06-25T18:33:25.336Z",
+    "lastRunUtc": "2026-06-25T18:56:55.499Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782412383023"
+    "lastRunId": "LMS-WFR-1782413800835"
   }
 }
