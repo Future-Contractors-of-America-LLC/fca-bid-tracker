@@ -87,7 +87,7 @@ function modeMeta(mode, poweredByLlm) {
       bg: auricruxColors.primarySoft,
       border: "#e8c46a",
       summary:
-        "Fallback guidance is preserving shell continuity while backend connectivity is restored.",
+        "Live AI is temporarily unavailable. Replies use guided workspace rules until the executive model reconnects.",
     };
   }
 
@@ -275,7 +275,7 @@ export default function AuricruxDock() {
             : null,
         },
       });
-      setMode(data.mode === "llm-assistant" ? "live" : "live");
+      setMode(data.poweredByLlm || data.mode === "llm-assistant" ? "live" : "fallback");
       setPoweredByLlm(Boolean(data.poweredByLlm || data.mode === "llm-assistant"));
       setLastReply(data.reply || "");
       setLastPrompt(cmd);
@@ -283,7 +283,9 @@ export default function AuricruxDock() {
       setLog((prev) => [
         {
           t: new Date().toISOString(),
-          m: `AURICRUX: ${data.reply}`,
+          m: data.llmUnavailableReason
+            ? `AURICRUX: ${data.reply} (Guidance mode — ${data.llmUnavailableReason})`
+            : `AURICRUX: ${data.reply}`,
         },
         ...prev,
       ]);

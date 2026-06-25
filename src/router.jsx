@@ -1,9 +1,10 @@
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 
 import NotFound from "./pages/website/NotFound";
-import Login from "./pages/website/Login";
-import AccessRestricted from "./pages/website/AccessRestricted";
-import AuricruxFrontendDock from "./components/AuricruxFrontendDock";
+
+const Login = lazy(() => import("./pages/website/Login"));
+const AccessRestricted = lazy(() => import("./pages/website/AccessRestricted"));
+const AuricruxFrontendDock = lazy(() => import("./components/AuricruxFrontendDock"));
 import {
   CUSTOMER_SESSION_EVENT,
   CUSTOMER_SESSION_EXPIRED_EVENT,
@@ -144,7 +145,9 @@ export default function Router() {
           accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"}
         />
       </Suspense>
-      <AuricruxFrontendDock />
+      <Suspense fallback={null}>
+        <AuricruxFrontendDock />
+      </Suspense>
     </>
   );
 }

@@ -1,3 +1,5 @@
+import AuricruxBrandMark from "./AuricruxBrandMark";
+
 const presets = {
   home: {
     title: "Contractor command center",
@@ -137,10 +139,22 @@ export default function ProductIllustration({ variant = "home", compact = false 
           </div>
 
           <div style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 14, background: "#fff" }}>
-            <div style={{ height: 10, width: "42%", borderRadius: 999, background: preset.accent, marginBottom: 12, opacity: 0.85 }} />
-            <div style={{ height: 8, width: "88%", borderRadius: 999, background: "#e2e8f0", marginBottom: 8 }} />
-            <div style={{ height: 8, width: "72%", borderRadius: 999, background: "#e2e8f0", marginBottom: 8 }} />
-            <div style={{ height: 8, width: "64%", borderRadius: 999, background: "#e2e8f0", marginBottom: 16 }} />
+            {variant === "auricrux" ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 12 }}>
+                <AuricruxBrandMark compact showLabel={false} />
+                <div>
+                  <div style={{ fontWeight: 800, color: "#7c5313" }}>Auricrux</div>
+                  <div style={{ color: "#64748b", fontSize: 13 }}>Ask questions. Get next steps. Stay on the job.</div>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div style={{ height: 10, width: "42%", borderRadius: 999, background: preset.accent, marginBottom: 12, opacity: 0.85 }} />
+                <div style={{ height: 8, width: "88%", borderRadius: 999, background: "#e2e8f0", marginBottom: 8 }} />
+                <div style={{ height: 8, width: "72%", borderRadius: 999, background: "#e2e8f0", marginBottom: 8 }} />
+                <div style={{ height: 8, width: "64%", borderRadius: 999, background: "#e2e8f0", marginBottom: 16 }} />
+              </>
+            )}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
               {[1, 2, 3].map((item) => (
                 <div key={item} style={{ height: 52, borderRadius: 10, background: "#f8fafc", border: "1px dashed #cbd5e1" }} />

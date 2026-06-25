@@ -2,6 +2,8 @@
 
 export const auricruxPersona = {
   name: "Auricrux",
+  markSrc: "/brand/auricrux/auricrux-crux-mark.svg",
+  /** @deprecated use markSrc — kept for legacy academy HTML paths */
   humanoidMarkSrc: "/brand/auricrux/auricrux-humanoid-mark.svg",
   title: "Executive construction operator",
   tagline: "Field-tested. Boardroom clear.",
