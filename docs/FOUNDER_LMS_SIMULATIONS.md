@@ -1,6 +1,6 @@
 # Founder Academy LMS Simulations
 
-You do not need to manually walk every Academy route to know whether FCA Academy works. An **LMS robot** exercises catalog depth, live learner API mutations, SWA routes, and commerce intake every hour — the same paths a training coordinator would use.
+You do not need to manually walk every Academy route to know whether FCA Academy works. An **LMS robot** exercises catalog depth, live learner API mutations, SWA routes, and commerce intake every hour â€” the same paths a training coordinator would use.
 
 ## Read the latest result
 
@@ -36,14 +36,14 @@ Green steps = that Academy path worked on live surfaces. Red = broken; do not se
 
 Add GitHub secrets (or local env vars before `npm run sim:lms`):
 
-- `FCA_SIM_LOGIN_EMAIL` — e.g. `founder.test@futurecontractorsofamerica.com`
-- `FCA_SIM_LOGIN_PASSWORD` — from `docs/FOUNDER_PRODUCT_TEST_ACCESS.md`
+- `FCA_SIM_LOGIN_EMAIL` â€” e.g. `founder.test@futurecontractorsofamerica.com`
+- `FCA_SIM_LOGIN_PASSWORD` â€” from `docs/FOUNDER_PRODUCT_TEST_ACCESS.md`
 
-Accounts must have **LMS entitlement** (`lms: true`). Without credentials, learner workflow steps fail at login — that is intentional.
+Accounts must have **LMS entitlement** (`lms: true`). Without credentials, learner workflow steps fail at login â€” that is intentional.
 
 ## How this differs from Cycle QC
 
-`npm run qc:lms` checks **code wiring and static catalog depth** on push/PR. Academy simulations check **behavior** — HTTP mutations and live SWA routes. Both matter; only simulations tell you the LMS actually works for a learner journey.
+`npm run qc:lms` checks **code wiring and static catalog depth** on push/PR. Academy simulations check **behavior** â€” HTTP mutations and live SWA routes. Both matter; only simulations tell you the LMS actually works for a learner journey.
 
 ## Schedule
 

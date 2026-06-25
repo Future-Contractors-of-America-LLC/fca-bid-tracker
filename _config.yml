@@ -1,3 +1,14 @@
 title: Future Contractors of America
 theme: null
 plugins: []
+exclude:
+  - docs
+  - dist
+  - node_modules
+  - api_generated
+  - generated
+  - scripts
+  - src
+  - public
+  - auricrux
+  - workspace

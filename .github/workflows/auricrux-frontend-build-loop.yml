@@ -51,9 +51,14 @@ jobs:
         run: npm ci
 
       - name: Run frontend build loop
+        if: steps.cross_repo_token.outputs.cross_repo_token != ''
         env:
           FCA_CENTRAL_ROOT: ${{ github.workspace }}/auricrux-central-work
         run: node scripts/frontend_build_loop.mjs
+
+      - name: Skip frontend build loop when cross-repo token is missing
+        if: steps.cross_repo_token.outputs.cross_repo_token == ''
+        run: echo "Skipping frontend build loop because cross-repo token is not configured."
 
       - name: Commit loop artifacts
         run: |
