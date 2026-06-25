@@ -58,7 +58,7 @@ const defaultBrandSkin = {
   companyName: "Customer Workspace",
   accent: "#1d4ed8",
   surface: "#eff6ff",
-  welcomeMessage: "Welcome back. Your workspace is carrying sales, files, tasks, and training continuity forward.",
+  welcomeMessage: "Welcome back. Your bids, files, tasks, and training are in one workspace.",
 };
 
 const PIPELINE_STEPS = [
@@ -207,7 +207,7 @@ export default function PortalHome() {
     { title: "Projects", detail: "Control stage movement, milestones, and delivery posture.", href: "/portal/projects", label: "Open Projects" },
     { title: "Files", detail: "Keep evidence, permit packets, and customer documents attached to the right context.", href: "/portal/files", label: "Open Files" },
     { title: "Design Workspace", detail: "Review PDF, DWG, and RVT plan sets with markup, takeoff, and Auricrux coordination.", href: "/portal/design", label: "Open Design Workspace" },
-    { title: "Billing", detail: "Stage invoices and preserve revenue continuity.", href: "/portal/billing", label: "Open Billing" },
+    { title: "Billing", detail: "Send invoices and track payments.", href: "/portal/billing", label: "Open Billing" },
     { title: "Commercial Pipeline", detail: "Run bid qualification through project award, invoice, and payment.", href: "/portal/pipeline", label: "Open Pipeline" },
     { title: "Academy", detail: "Train teams through apprenticeship, certification, degree, licensure, and how-to tracks.", href: "/academy/catalog", label: "Open Academy Catalog" },
   ];
@@ -259,8 +259,8 @@ export default function PortalHome() {
             title="Auricrux Command Intelligence"
             targetObjectId={activeProject.id}
             sourceRoute="/portal"
-            rationale="Review workspace posture and advance the next governed customer move across bids, projects, and billing."
-            nextAction={activeProject.nextAction || "Select the highest-value open workflow and advance it with governed continuity."}
+            rationale="Review your workspace and advance the highest-priority bid, project, or billing step."
+            nextAction={activeProject.nextAction || "Pick the most important open item and move it to the next stage."}
             actionHref={`/portal/projects/${encodeURIComponent(activeProject.id)}`}
             actionLabel="Open active project"
             tone="blue"

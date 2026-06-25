@@ -252,7 +252,7 @@ export default function AcademyHome() {
         applyPlanPreset={applyPlanPreset}
         refreshSyncStamp={refreshSyncStamp}
       />
-      <CustomerCommsLaunchpad session={session} title="Launch training and communications from one branded customer experience" />
+      <CustomerCommsLaunchpad session={session} title="Launch training and customer communications from one place" />
       <AcademyLmsControlPanel />
 
       {(apiPrograms.length > 0 || enrollments.length > 0) && (

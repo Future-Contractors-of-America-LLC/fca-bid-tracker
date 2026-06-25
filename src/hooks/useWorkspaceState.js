@@ -26,8 +26,8 @@ function buildProjectContext(baseProject, activeProject) {
       `${(activeProject.actionHistory || []).length} persisted project actions and workspace-linked artifacts`,
     fileSpineStatus:
       activeProject.fileSpineStatus ||
-      `Files, document-control actions, and Auricrux continuity are being normalized against ${activeProject.id || baseProject.id}.`,
-    auditLabel: activeProject.auditLabel || "Project continuity audit active",
+      `Files, document control, and Auricrux guidance are synced to ${activeProject.id || baseProject.id}.`,
+    auditLabel: activeProject.auditLabel || "Project audit trail active",
     auditStatus:
       activeProject.auditStatus ||
       `Recent stage, permit, and coordination actions are preserved under ${activeProject.id || baseProject.id}.`,
@@ -79,7 +79,7 @@ function bindCustomerSession(baseState) {
     tenant: {
       ...baseState.tenant,
       name: session.company,
-      roleSummary: `${session.workspaceLabel} is authenticated and running through the shared FCA workspace continuity layer.`,
+      roleSummary: `${session.workspaceLabel} is signed in to the shared FCA workspace.`,
     },
     meta: {
       ...baseState.meta,

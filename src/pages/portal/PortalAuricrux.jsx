@@ -90,7 +90,7 @@ export default function PortalAuricrux() {
         <p style={{ color: portalTokens.body, fontSize: 14, lineHeight: 1.55, margin: "8px 0 0" }}>
           {usingLiveActions
             ? "Actions below are loaded from your workspace API."
-            : "Showing continuity guidance until live Auricrux actions sync. Use Chat with Auricrux for immediate help."}
+            : "Offline guidance is active until live actions sync. Use Ask Auricrux in the header for immediate help."}
         </p>
       </div>
 

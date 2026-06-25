@@ -103,7 +103,7 @@ export default function PortalAudit() {
           <div><strong>Audit workflow status:</strong> {auditMeta.persistenceState}</div>
           <div><strong>Visible audit records:</strong> {summary.total}</div>
           <div><strong>Audit status:</strong> {visibleProject.auditStatus}</div>
-          {!apiBacked ? <div><strong>Execution note:</strong> When API-backed audit evidence is unavailable, this route is showing continuity scaffolding and fallback audit history for workspace validation only.</div> : null}
+          {!apiBacked ? <div><strong>Note:</strong> Live audit data is unavailable. Showing saved workspace history until the API reconnects.</div> : null}
         </div>
       </div>
 

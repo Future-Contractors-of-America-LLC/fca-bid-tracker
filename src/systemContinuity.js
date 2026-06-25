@@ -69,36 +69,36 @@ export const publicPricingMessaging = {
 export const publicContactMessaging = {
   header: {
     eyebrow: "FCA Contact",
-    title: "Talk with FCA about your rollout",
+    title: "Talk with FCA about your business",
     subtitle:
-      "Move from interest into a walkthrough, pilot conversation, or broader rollout assessment with a clear next step led by Auricrux.",
+      "Book a walkthrough, start a pilot, or ask our team which plan fits your crew — Auricrux can help you prepare before the call.",
   },
   journey: {
-    title: "A walkthrough should feel like the natural next step",
+    title: "See the platform on your terms",
     detail:
-      "This route makes the next step explicit so a live conversation feels like the natural outcome of platform framing, workspace continuity, and operating-state validation.",
+      "Tell us about your operation and we will show you bids, projects, billing, and Academy training in a live workspace — not a slide deck.",
   },
   trust: {
     eyebrow: "Start with clarity",
     title: "Know what to expect from a walkthrough",
     detail:
-      "A customer conversation should quickly show how FCA fits your workflow, where it reduces friction, and what rollout path makes sense next.",
+      "We focus on your workflow: where FCA saves time, how your team gets trained, and what it takes to go live.",
   },
   snapshot: {
-    title: "Walkthroughs start from real workspace state",
+    title: "Walkthroughs use real product screens",
     detail:
-      "This page reinforces that the review is not a disconnected pitch flow. Tenant, project, and Auricrux continuity already exist before the walkthrough begins.",
-    ctaLabel: "Open unified platform dashboard",
+      "Your review covers the same dashboard, portal, and Academy routes your team will use after signup.",
+    ctaLabel: "Open platform overview",
   },
   immediate: {
-    title: "Immediate next step",
+    title: "Fastest path to answers",
     detail:
-      "The strongest conversion path is still a direct walkthrough of the live FCA workspace. This page keeps that option visible while the platform continues to harden.",
+      "Schedule a walkthrough with sales or start intake now — both routes connect you to the same FCA workspace.",
   },
   actionRail: {
-    title: "Close with the same shared next steps",
+    title: "Choose your next step",
     detail:
-      "Even at the conversion endpoint, the route preserves the same workspace, platform, academy, and walkthrough actions as the rest of the site so the experience stays unified.",
+      "Get started online, book a call, or sign in if you already have an account.",
   },
 };
 
@@ -107,39 +107,39 @@ export const academyContinuityMessaging = {
     eyebrow: "FCA Academy",
     title: "Training, certification, and workforce readiness",
     subtitle:
-      "Academy stays connected to the same customer journey shown in the portal, so onboarding and training remain part of one operating flow directed by Auricrux.",
+      "Onboard crews, track certifications, and tie training to the jobs running in your Contractor Command workspace.",
   },
   expansion: {
-    title: "Academy is part of the same operating system",
+    title: "Training built into your operating system",
     detail:
-      "Training and certification are treated as part of the same governed system as validation, SaaS continuity, public conversion routes, and communication follow-through.",
+      "Academy progress lives next to bids, projects, and billing — so owners see who is certified before crews hit the field.",
   },
   continuity: {
-    title: "Academy now participates in the same branded workspace state",
+    title: "One record for jobs and training",
     detail:
-      "The academy is no longer a side destination. It reads the same tenant, project, workspace, audit, and Auricrux state that powers the customer portal so workforce readiness stays attached to the same operational record.",
+      "Learner progress, credentials, and assignments stay linked to your company workspace instead of a separate LMS login.",
   },
   rollout: {
-    title: "Why this matters in rollout",
+    title: "Why teams adopt Academy with FCA",
     detail:
-      "FCA Academy now participates in the same operational shell state as the portal. That moves the product closer to one true tenant, project, file, audit, route-state, and Auricrux-driven system.",
+      "Safety, apprenticeship, and licensure prep ship with the same platform your estimators and PMs already use — no duplicate systems to manage.",
   },
 };
 
 export const portalMessagesMessaging = {
   header: {
-    title: "Messages and communication continuity",
+    title: "Customer and team messages",
     subtitle:
-      "This route keeps owner updates, permit coordination, field-readiness notices, and billing-adjacent communication tied to execution state inside the shared FCA workspace.",
+      "Owner updates, permit coordination, field notices, and billing questions stay tied to the job they belong to.",
   },
   continuity: {
-    title: "Auricrux is keeping coordination tied to approvals, permits, and mobilization state",
+    title: "Keep communication moving with the work",
     recommendation:
-      "Clear approval in /portal/bids, release document dependencies from /portal/files, then advance /portal/billing so communication never becomes a dead end.",
+      "Clear the bid in Bids, release documents in Files, then advance Billing so every message has a next step.",
   },
   expansion: {
-    title: "Comms development is now treated as construction follow-through",
+    title: "Messages connected to delivery",
     detail:
-      "The messages route participates in the same operating buildout as bid approval, document control, billing progression, academy readiness, and customer-facing execution visibility.",
+      "Comms routes share the same job context as approvals, document control, billing, and Academy assignments.",
   },
 };

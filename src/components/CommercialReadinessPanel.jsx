@@ -31,8 +31,8 @@ function summarizeEnabledProducts(enabledProducts = {}) {
 }
 
 export default function CommercialReadinessPanel({
-  title = "Rollout readiness",
-  detail = "Auricrux is keeping approval, revenue, and rollout readiness visible so your team can move forward with confidence.",
+  title = "Ready to go live",
+  detail = "Auricrux keeps approvals, revenue, and next steps visible so your team knows what to do today.",
   primaryHref = "/contact",
   primaryLabel = "Schedule a Walkthrough",
   secondaryHref = "/portal/platform",
@@ -69,7 +69,7 @@ export default function CommercialReadinessPanel({
         <ReadinessCell label="Next action" value={workspaceContext.currentNextAction} />
         <ReadinessCell label="Approval blocker" value={auricruxRail.currentBlocker} />
         <ReadinessCell label="Revenue impact" value={auricruxRail.blockerImpact} />
-        <ReadinessCell label="Rollout move" value={auricruxRail.nextRecommendedAction} />
+        <ReadinessCell label="Recommended move" value={auricruxRail.nextRecommendedAction} />
         <ReadinessCell label="Project spine" value={`${currentProject.id} · ${currentProject.stage}`} />
         <ReadinessCell label="Enabled products" value={summarizeEnabledProducts(enabledProducts)} />
         <ReadinessCell label="Enabled comms" value={summarizeEnabledComms(enabledComms)} />

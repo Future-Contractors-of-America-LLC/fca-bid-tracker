@@ -181,11 +181,11 @@ export default function PortalSupport() {
         <div style={{ color: brandSkin.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Customer-branded support experience</div>
         <h2 style={{ marginTop: 0, marginBottom: 10 }}>{companyName}</h2>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
-          {companyName} can now open service requests, preserve support continuity, and keep customer-facing recovery visible inside the branded workspace.
+          {companyName} customers can open service requests, track resolution, and keep support history inside the branded workspace.
         </p>
         <div style={{ color: "#475569", lineHeight: 1.8 }}>
           <div><strong>Workspace state source:</strong> {apiBacking || state.meta.backingSource}</div>
-          <div><strong>Authenticated customer:</strong> {state.meta.authenticatedCustomer || "Continuity shell visitor"}</div>
+          <div><strong>Signed in as:</strong> {state.meta.authenticatedCustomer || "Guest — sign in to save tickets"}</div>
           <div><strong>Selected plan:</strong> {session?.selectedPlan || "enterprise"}</div>
           <div><strong>Auricrux posture:</strong> explain, recommend, execute</div>
         </div>

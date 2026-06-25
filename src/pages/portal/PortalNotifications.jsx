@@ -56,16 +56,16 @@ export default function PortalNotifications() {
           {
             type: "session",
             badge: "Live workspace",
-            title: "Authenticated workspace continuity active",
-            detail: `${session.company} is now attached to ${state.project.id} through the shared FCA workspace shell.`,
-            routeHint: "Continue through bids, files, messages, and billing without losing customer context.",
+            title: "Signed in to your workspace",
+            detail: `${session.company} is connected to project ${state.project.id}.`,
+            routeHint: "Continue through bids, files, messages, and billing from one place.",
             time: "Live",
           },
           {
             type: "launch",
             badge: launchReadiness,
             title: "Launch account posture recorded",
-            detail: `Account source is ${accountSource}. Notifications now keep launch-user truth visible alongside customer continuity.`,
+            detail: `Account source is ${accountSource}. Your launch checklist stays visible alongside live job updates.`,
             routeHint: accountSource === "api" ? "Production auth verified for this workspace." : "Keep launch checklist open until production auth and billing are fully live.",
             time: "Now",
           },
@@ -96,14 +96,14 @@ export default function PortalNotifications() {
         title="Auricrux Notification Intelligence"
         targetObjectId={state.project?.id || session?.email || "NOTIFY"}
         sourceRoute="/portal/notifications"
-        rationale="Approvals and field signals must route through governed notification continuity."
+        rationale="Route approvals and field alerts to the right owner on each job."
         nextAction="Act on the highest-priority notification in the feed."
         actionHref="/portal/audit"
         actionLabel="Open audit"
       />
       {accountSource === "local-fallback" ? (
         <PortalAlert tone="warning">
-          Demo workspace active. Notification feed uses seeded continuity until production customer auth is configured.
+          Demo workspace active. Notifications below are sample data until you sign in with a production account.
         </PortalAlert>
       ) : null}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
