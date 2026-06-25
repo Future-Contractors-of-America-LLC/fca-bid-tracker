@@ -1,7 +1,7 @@
 {
   "version": 1,
   "controller": "auricrux-control-plane",
-  "generatedAtUtc": "2026-06-25T01:35:38.488Z",
+  "generatedAtUtc": "2026-06-25T05:49:46.271Z",
   "event": "schedule",
   "mode": "status",
   "outcome": "success",
@@ -13,10 +13,8 @@
     "auricrux/system/run_digest.json"
   ],
   "nextAction": {
-    "id": "REV-001",
-    "title": "Revenue sprint: wire Stripe checkout CTAs and deploy production shell",
-    "status": "in_progress"
+    "status": "ready"
   },
-  "queueDepth": 8,
+  "queueDepth": 10,
   "status": "success"
 }
