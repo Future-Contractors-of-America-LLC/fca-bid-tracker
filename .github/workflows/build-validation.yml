@@ -37,13 +37,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Resolve cross-repo token
+        id: cross_repo_token
+        continue-on-error: true
+        env:
+          AURICRUX_GITHUB_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash scripts/ci/resolve-cross-repo-token.sh Future-Contractors-of-America-LLC/auricrux-central
+
       - name: Checkout auricrux-central (academy catalog balance)
         continue-on-error: true
+        if: steps.cross_repo_token.outputs.cross_repo_token != ''
         uses: actions/checkout@v6
         with:
           repository: Future-Contractors-of-America-LLC/auricrux-central
           path: auricrux-central-work
-          token: ${{ secrets.AURICRUX_GITHUB_TOKEN }}
+          token: ${{ steps.cross_repo_token.outputs.cross_repo_token }}
 
       - name: Run SaaS quality control
         env:

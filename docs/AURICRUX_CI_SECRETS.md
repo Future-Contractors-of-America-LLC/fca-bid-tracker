@@ -12,6 +12,10 @@ gh secret set AURICRUX_GITHUB_TOKEN --org Future-Contractors-of-America-LLC \
   --repos auricrux-central,fca-bid-tracker
 ```
 
+**Important:** `fca-bid-tracker` workflows read the secret **from the fca-bid-tracker repository**, not from auricrux-central. If you set different values on each repo, cross-repo checkout from fca-bid-tracker will fail even when auricrux-central's copy works.
+
+CI now tries tokens in order: `AURICRUX_GITHUB_TOKEN` → `COPILOT_GITHUB_TOKEN` → `GITHUB_TOKEN` (`github.token`). The last works when **auricrux-central → Settings → Actions → General → Access** allows workflows from `fca-bid-tracker`.
+
 Use the same value in org/enterprise secrets if your runner also reads org-level secrets.
 
 ### Token permissions
