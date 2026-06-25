@@ -1,7 +1,7 @@
 # Auricrux Communications & Media Roadmap
 
 **Last updated:** 2026-06-19  
-**Status:** Planning — implementation queued after UX/auth sprint
+**Status:** Planning â€” implementation queued after UX/auth sprint
 
 ---
 
@@ -13,14 +13,14 @@
 
 ---
 
-## Phase 1 — Communications foundation (Week 1–2)
+## Phase 1 â€” Communications foundation (Week 1â€“2)
 
 | Channel | Target integration | Notes |
 |---------|-------------------|-------|
 | Text / chat | Existing portal messages + Teams webhook | Extend `enabledComms.chat` |
 | Email | Microsoft Graph / SendGrid | `enabledComms.email`; template library in central |
 | Live audio/video | Azure Communication Services or Teams embed | `enabledComms.conference` |
-| Auricrux UI | Window launcher (done) ? `/auricrux` panel | Replace browser-only stubs in legacy dock |
+| Auricrux UI | Window launcher (done) â†’ `/auricrux` panel | Replace browser-only stubs in legacy dock |
 
 **Deliverables:**
 - `api/auricrux-comms` route in auricrux-central
@@ -29,7 +29,7 @@
 
 ---
 
-## Phase 2 — Academy lesson media (Week 2–4)
+## Phase 2 â€” Academy lesson media (Week 2â€“4)
 
 ### Content schema (per lesson)
 
@@ -47,12 +47,12 @@
 **Production pipeline:**
 1. Script from `docs/revenue-sprint/FOUNDRY_CONTENT_PACK.md`
 2. Record / generate via Foundry + human QC
-3. Upload ? register in catalog
+3. Upload â†’ register in catalog
 4. QC gate: every catalog lesson must have `lecture.videoUrl` before "published"
 
 ---
 
-## Phase 3 — Sales & marketing launch (Week 1–3, parallel)
+## Phase 3 â€” Sales & marketing launch (Week 1â€“3, parallel)
 
 | Asset | Owner | Status |
 |-------|-------|--------|
@@ -66,7 +66,7 @@
 
 **Campaign tagline (draft):** *One platform from first lead to field-ready crews.*
 
-**CTA paths:** `/intake` · `/pricing` · `/login` (header Sign in)
+**CTA paths:** `/intake` Â· `/pricing` Â· `/login` (header Sign in)
 
 ---
 
