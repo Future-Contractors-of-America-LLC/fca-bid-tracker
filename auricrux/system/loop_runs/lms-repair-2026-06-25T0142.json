@@ -1,0 +1,299 @@
+{
+  "generatedAt": "2026-06-25T01:42:06.773Z",
+  "runId": "LMS-WFR-1782351710495",
+  "protocol": "observe-act-review",
+  "module": "fca-academy-lms",
+  "complete": false,
+  "maxRounds": 3,
+  "rounds": [
+    {
+      "round": 1,
+      "complete": false,
+      "passed": 138,
+      "total": 173,
+      "failures": [
+        {
+          "name": "script:validate-academy-native-commerce-journey.mjs",
+          "status": "fail",
+          "detail": "",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:APP-ELEC-101:1",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:APP-ELEC-101:2",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:APP-ELEC-101:3",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:APP-ELEC-101:4",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:APP-ELEC-101:5",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:APP-ELEC-101:6",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:CERT-OSHA30-201:1",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:CERT-OSHA30-201:2",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:CERT-OSHA30-201:3",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:CERT-OSHA30-201:4",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:CERT-OSHA30-201:5",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:CERT-OSHA30-201:6",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:DEG-AAS-110:1",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:DEG-AAS-110:2",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:DEG-AAS-110:3",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:DEG-AAS-110:4",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:DEG-AAS-110:5",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:DEG-AAS-110:6",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LIC-DPOR-301:1",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LIC-DPOR-301:2",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LIC-DPOR-301:3",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LIC-DPOR-301:4",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LIC-DPOR-301:5",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LIC-DPOR-301:6",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:GUIDE-FCA-001:6",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:FCA-BIDS-101:5",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LEGAL-FORM-201:1",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LEGAL-FORM-201:2",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LEGAL-FORM-201:3",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LEGAL-FORM-201:4",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LEGAL-CONST-301:1",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LEGAL-CONST-301:2",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LEGAL-CONST-301:3",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        },
+        {
+          "name": "lesson-media:LEGAL-CONST-301:4",
+          "status": "fail",
+          "detail": "missing lecture, labDemo",
+          "phase": "static-qc"
+        }
+      ]
+    }
+  ],
+  "repairPlans": [
+    {
+      "id": "lms-commerce-rail",
+      "repairClass": "engineering-queue",
+      "title": "Academy native commerce rail regression",
+      "detail": "Verify /api/fca-payments/intake and academy commerce client wiring on live Central.",
+      "step": {
+        "name": "script:validate-academy-native-commerce-journey.mjs",
+        "status": "fail",
+        "detail": "",
+        "phase": "static-qc"
+      },
+      "autoRepair": null,
+      "targetLane": "revenue",
+      "targetRepo": "auricrux-central",
+      "priority": "critical",
+      "actionId": "LMS-COMMERCE-FIX",
+      "outcome": "engineering-queued"
+    },
+    {
+      "id": "lms-media-missing",
+      "repairClass": "engineering-queue",
+      "title": "Academy lesson media slots incomplete",
+      "detail": "Run npm run seed:academy-static-media or fix lessonMedia URLs in academy catalog.",
+      "step": {
+        "name": "lesson-media:APP-ELEC-101:1",
+        "status": "fail",
+        "detail": "missing lecture, labDemo",
+        "phase": "static-qc"
+      },
+      "autoRepair": null,
+      "targetLane": "content",
+      "targetRepo": "fca-bid-tracker",
+      "priority": "high",
+      "actionId": "LMS-MEDIA-FIX",
+      "outcome": "engineering-queued"
+    }
+  ],
+  "auricruxReviews": [
+    {
+      "step": "script:validate-academy-native-commerce-journey.mjs",
+      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+    },
+    {
+      "step": "lesson-media:APP-ELEC-101:1",
+      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+    },
+    {
+      "step": "lesson-media:APP-ELEC-101:2",
+      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+    }
+  ],
+  "redeploy": null,
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 1.",
+  "state": {
+    "runCount": 1,
+    "consecutiveSuccesses": 0,
+    "consecutiveFailures": 1,
+    "history": [
+      {
+        "at": "2026-06-25T01:42:06.773Z",
+        "runId": "LMS-WFR-1782351710495",
+        "complete": false,
+        "rounds": 1,
+        "failures": 35
+      }
+    ],
+    "lastRunUtc": "2026-06-25T01:42:06.773Z",
+    "lastComplete": false,
+    "lastRunId": "LMS-WFR-1782351710495"
+  }
+}

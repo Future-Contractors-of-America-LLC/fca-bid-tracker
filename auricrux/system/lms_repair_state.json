@@ -1,0 +1,17 @@
+{
+  "runCount": 1,
+  "consecutiveSuccesses": 0,
+  "consecutiveFailures": 1,
+  "history": [
+    {
+      "at": "2026-06-25T01:42:06.773Z",
+      "runId": "LMS-WFR-1782351710495",
+      "complete": false,
+      "rounds": 1,
+      "failures": 35
+    }
+  ],
+  "lastRunUtc": "2026-06-25T01:42:06.773Z",
+  "lastComplete": false,
+  "lastRunId": "LMS-WFR-1782351710495"
+}

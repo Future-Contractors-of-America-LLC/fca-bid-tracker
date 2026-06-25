@@ -1,0 +1,1060 @@
+{
+  "generatedAt": "2026-06-25T01:42:02.120Z",
+  "runId": "LMS-SIM-1782351711184",
+  "apiBase": "https://api.futurecontractorsofamerica.com",
+  "swaOrigin": "https://futurecontractorsofamerica.com",
+  "scope": "FCA Academy LMS simulation",
+  "summary": {
+    "passed": 138,
+    "failed": 35,
+    "skipped": 0,
+    "total": 173
+  },
+  "complete": false,
+  "phases": {
+    "staticQc": 35,
+    "learnerWorkflow": 0,
+    "swaProbes": 0,
+    "centralArtifacts": 0
+  },
+  "steps": [
+    {
+      "name": "script:validate-academy-ctas.mjs",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "script:validate-academy-catalog.mjs",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "script:validate-catalog-balance.mjs",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "script:validate-academy-media.mjs",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "script:validate-academy-readiness-overlay.mjs",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "script:validate-academy-live-api.mjs",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "script:validate-academy-native-commerce-journey.mjs",
+      "status": "fail",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:fca-workspace-quick-start",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:fca-workspace-quick-start",
+      "status": "pass",
+      "detail": "/portal/projects",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:ONB-001",
+      "status": "pass",
+      "detail": "4 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:ONB-001",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:ONB-001:1",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:ONB-001:2",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:ONB-001:3",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:ONB-001:4",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:electrical-apprenticeship-year1",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:electrical-apprenticeship-year1",
+      "status": "pass",
+      "detail": "/portal/support",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:APP-ELEC-101",
+      "status": "pass",
+      "detail": "6 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:APP-ELEC-101",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:APP-ELEC-101:1",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:APP-ELEC-101:2",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:APP-ELEC-101:3",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:APP-ELEC-101:4",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:APP-ELEC-101:5",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:APP-ELEC-101:6",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:osha30-certification-prep",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:osha30-certification-prep",
+      "status": "pass",
+      "detail": "/portal/audit",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:CERT-OSHA30-201",
+      "status": "pass",
+      "detail": "6 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:CERT-OSHA30-201",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:CERT-OSHA30-201:1",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:CERT-OSHA30-201:2",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:CERT-OSHA30-201:3",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:CERT-OSHA30-201:4",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:CERT-OSHA30-201:5",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:CERT-OSHA30-201:6",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:aas-construction-operations-sem1",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:aas-construction-operations-sem1",
+      "status": "pass",
+      "detail": "/portal/platform",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:DEG-AAS-110",
+      "status": "pass",
+      "detail": "6 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:DEG-AAS-110",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:DEG-AAS-110:1",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:DEG-AAS-110:2",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:DEG-AAS-110:3",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:DEG-AAS-110:4",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:DEG-AAS-110:5",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:DEG-AAS-110:6",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:virginia-dpor-residential-license-prep",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:virginia-dpor-residential-license-prep",
+      "status": "pass",
+      "detail": "/portal/files",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:LIC-DPOR-301",
+      "status": "pass",
+      "detail": "6 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:LIC-DPOR-301",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LIC-DPOR-301:1",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LIC-DPOR-301:2",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LIC-DPOR-301:3",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LIC-DPOR-301:4",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LIC-DPOR-301:5",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LIC-DPOR-301:6",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:fca-contractor-command-user-guide",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:fca-contractor-command-user-guide",
+      "status": "pass",
+      "detail": "/portal",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:GUIDE-FCA-001",
+      "status": "pass",
+      "detail": "6 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:GUIDE-FCA-001",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:GUIDE-FCA-001:1",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:GUIDE-FCA-001:2",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:GUIDE-FCA-001:3",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:GUIDE-FCA-001:4",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:GUIDE-FCA-001:5",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:GUIDE-FCA-001:6",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:fca-bids-qualification-estimates",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:fca-bids-qualification-estimates",
+      "status": "pass",
+      "detail": "/portal/bids",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:FCA-BIDS-101",
+      "status": "pass",
+      "detail": "5 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:FCA-BIDS-101",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-BIDS-101:1",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-BIDS-101:2",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-BIDS-101:3",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-BIDS-101:4",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-BIDS-101:5",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:fca-projects-stage-control",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:fca-projects-stage-control",
+      "status": "pass",
+      "detail": "/portal/projects",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:FCA-PROJ-201",
+      "status": "pass",
+      "detail": "5 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:FCA-PROJ-201",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-PROJ-201:1",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-PROJ-201:2",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-PROJ-201:3",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-PROJ-201:4",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-PROJ-201:5",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:fca-files-audit-governance",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:fca-files-audit-governance",
+      "status": "pass",
+      "detail": "/portal/files",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:FCA-FILE-301",
+      "status": "pass",
+      "detail": "4 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:FCA-FILE-301",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-FILE-301:1",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-FILE-301:2",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-FILE-301:3",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-FILE-301:4",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:fca-billing-invoicing",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:fca-billing-invoicing",
+      "status": "pass",
+      "detail": "/portal/billing",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:FCA-BILL-401",
+      "status": "pass",
+      "detail": "4 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:FCA-BILL-401",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-BILL-401:1",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-BILL-401:2",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-BILL-401:3",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-BILL-401:4",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:fca-legal-command-workspace",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:fca-legal-command-workspace",
+      "status": "pass",
+      "detail": "/portal/legal",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:FCA-LEGAL-501",
+      "status": "pass",
+      "detail": "4 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:FCA-LEGAL-501",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-LEGAL-501:1",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-LEGAL-501:2",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-LEGAL-501:3",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-LEGAL-501:4",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:fca-support-auricrux-operator",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:fca-support-auricrux-operator",
+      "status": "pass",
+      "detail": "/portal/support",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:FCA-SUP-601",
+      "status": "pass",
+      "detail": "4 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:FCA-SUP-601",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-SUP-601:1",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-SUP-601:2",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-SUP-601:3",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-SUP-601:4",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:fca-academy-progress-tracking",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:fca-academy-progress-tracking",
+      "status": "pass",
+      "detail": "/academy/dashboard",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:FCA-ACAD-701",
+      "status": "pass",
+      "detail": "3 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:FCA-ACAD-701",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-ACAD-701:1",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-ACAD-701:2",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:FCA-ACAD-701:3",
+      "status": "pass",
+      "detail": "lecture+lab",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:contractor-business-formation-legal",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:contractor-business-formation-legal",
+      "status": "pass",
+      "detail": "/portal/legal",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:LEGAL-FORM-201",
+      "status": "pass",
+      "detail": "4 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:LEGAL-FORM-201",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LEGAL-FORM-201:1",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LEGAL-FORM-201:2",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LEGAL-FORM-201:3",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LEGAL-FORM-201:4",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-meta:contractor-construction-law-essentials",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "program-link:contractor-construction-law-essentials",
+      "status": "pass",
+      "detail": "/portal/legal",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-lessons:LEGAL-CONST-301",
+      "status": "pass",
+      "detail": "4 lessons",
+      "phase": "static-qc"
+    },
+    {
+      "name": "course-titles:LEGAL-CONST-301",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LEGAL-CONST-301:1",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LEGAL-CONST-301:2",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LEGAL-CONST-301:3",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lesson-media:LEGAL-CONST-301:4",
+      "status": "fail",
+      "detail": "missing lecture, labDemo",
+      "phase": "static-qc"
+    },
+    {
+      "name": "pathways",
+      "status": "pass",
+      "detail": "3 defined",
+      "phase": "static-qc"
+    },
+    {
+      "name": "legal-program:contractor-business-formation-legal",
+      "status": "pass",
+      "detail": "Contractor Business Formation & Legal Setup",
+      "phase": "static-qc"
+    },
+    {
+      "name": "legal-program:contractor-construction-law-essentials",
+      "status": "pass",
+      "detail": "Construction Law Essentials for Contractors",
+      "phase": "static-qc"
+    },
+    {
+      "name": "legal-api:academy-program-modules",
+      "status": "pass",
+      "detail": "program detail builder present",
+      "phase": "static-qc"
+    },
+    {
+      "name": "api:academy-lms",
+      "status": "pass",
+      "detail": "programs in API: 1212",
+      "phase": "static-qc"
+    },
+    {
+      "name": "api:catalog-integrity",
+      "status": "pass",
+      "detail": "aligned",
+      "phase": "static-qc"
+    },
+    {
+      "name": "api:academy-learners",
+      "status": "pass",
+      "detail": "4 learners",
+      "phase": "static-qc"
+    },
+    {
+      "name": "api:academy-enrollments",
+      "status": "pass",
+      "detail": "9 enrollments",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lms-surface:src/pages/academy/AcademyHome.jsx",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lms-surface:src/pages/academy/AcademyCatalog.jsx",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lms-surface:src/pages/academy/AcademyModuleLesson.jsx",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lms-surface:src/pages/academy/AcademyProgramDetail.jsx",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lms-surface:src/hooks/useAcademyLms.js",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "lms-surface:src/api/academyClient.js",
+      "status": "pass",
+      "detail": "",
+      "phase": "static-qc"
+    },
+    {
+      "name": "Academy API reachable",
+      "status": "pass",
+      "detail": "https://api.futurecontractorsofamerica.com",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy API health",
+      "status": "pass",
+      "detail": "https://api.futurecontractorsofamerica.com",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy customer login",
+      "status": "pass",
+      "detail": "founder.test@futurecontractorsofamerica.com (2FA)",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy catalog summary",
+      "status": "pass",
+      "detail": "1212 programs",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy catalog total",
+      "status": "pass",
+      "detail": "1212",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy catalog integrity",
+      "status": "pass",
+      "detail": "aligned",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy lane apprenticeship",
+      "status": "pass",
+      "detail": "207",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy lane certification",
+      "status": "pass",
+      "detail": "88",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy lane degree",
+      "status": "pass",
+      "detail": "803",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy lane licensure",
+      "status": "pass",
+      "detail": "82",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy lane professional",
+      "status": "pass",
+      "detail": "23",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy lane fca-how-to",
+      "status": "pass",
+      "detail": "9",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy LMS snapshot",
+      "status": "pass",
+      "detail": "4 learners, 4 enrollments",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy progress PATCH",
+      "status": "pass",
+      "detail": "ENR-001",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy lane catalog probe",
+      "status": "pass",
+      "detail": "electrical-core-level-1",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "Academy commerce intake",
+      "status": "pass",
+      "detail": "INTAKE-1782351719708",
+      "phase": "learner-workflow"
+    },
+    {
+      "name": "SWA route /academy",
+      "status": "pass",
+      "detail": "200 OK",
+      "phase": "swa-probes"
+    },
+    {
+      "name": "SWA route /academy/catalog",
+      "status": "pass",
+      "detail": "200 OK",
+      "phase": "swa-probes"
+    },
+    {
+      "name": "SWA route /academy/store",
+      "status": "pass",
+      "detail": "200 OK",
+      "phase": "swa-probes"
+    },
+    {
+      "name": "SWA route /portal/academy",
+      "status": "pass",
+      "detail": "200 OK",
+      "phase": "swa-probes"
+    },
+    {
+      "name": "Central academy artifacts",
+      "status": "pass",
+      "detail": "skipped � auricrux-central sibling not present",
+      "phase": "central-artifacts"
+    }
+  ]
+}

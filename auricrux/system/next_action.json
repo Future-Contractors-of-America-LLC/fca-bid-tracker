@@ -1,16 +1,15 @@
 {
-  "version": 1,
-  "id": "REV-001",
-  "title": "Revenue sprint: wire Stripe checkout CTAs and deploy production shell",
-  "mode": "build",
-  "priority": "critical",
-  "status": "in_progress",
-  "owner": "cursor-agent",
-  "blockedBy": [],
-  "produces": [
-    "live Pilot checkout on pricing and home",
-    "legal pages",
-    "table-backed workflow persistence"
-  ],
-  "updatedAtUtc": "2026-06-25T01:35:38.488Z"
+  "contract_version": "1.0.0",
+  "action_id": "LMS-COMMERCE-FIX",
+  "source_workflow": "lms-repair-loop",
+  "action_summary": "Academy native commerce rail regression",
+  "action_detail": "Verify /api/fca-payments/intake and academy commerce client wiring on live Central.",
+  "action_type": "bounded-corrective-step",
+  "status": "ready",
+  "priority_band": "critical",
+  "failed_step": "script:validate-academy-native-commerce-journey.mjs",
+  "target_repo": "auricrux-central",
+  "generated_at": "2026-06-25T01:42:06.773Z",
+  "updatedAtUtc": "2026-06-25T01:42:06.773Z",
+  "trigger_source": "LMS-WFR-1782351710495"
 }
