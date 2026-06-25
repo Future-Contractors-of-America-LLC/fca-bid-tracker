@@ -26,7 +26,16 @@ function requireIncludes(relativePath, needles, baseDir = root) {
   });
 }
 
+const centralMarker = path.join(centralRoot, "FCA_COVERAGE_MATRIX.md");
+const centralAvailable = fs.existsSync(centralMarker);
+if (!centralAvailable) {
+  console.warn(
+    `auricrux-central not present at ${centralRoot}; skipping central spine alignment checks.`,
+  );
+}
+
 function requireCentralIncludes(relativePath, needles) {
+  if (!centralAvailable) return;
   requireIncludes(relativePath, needles, centralRoot);
 }
 

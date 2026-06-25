@@ -5,10 +5,9 @@ set -euo pipefail
 # Usage: resolve-cross-repo-token.sh <owner/repo> [owner/repo...]
 #
 # Tries, in order: AURICRUX_GITHUB_TOKEN, COPILOT_GITHUB_TOKEN, GITHUB_TOKEN
-# (GITHUB_TOKEN is github.token in Actions when repo access is granted).
+# Uses git ls-remote (what actions/checkout uses), not only the REST metadata API.
 #
-# On success writes cross_repo_token + token_source to GITHUB_OUTPUT and
-# CROSS_REPO_TOKEN to GITHUB_ENV.
+# Set ALLOW_MISSING_CROSS_REPO=1 to warn and exit 0 when no token works.
 
 repos=("$@")
 if [ "${#repos[@]}" -eq 0 ]; then
@@ -20,6 +19,10 @@ fi
 
 can_read_repo() {
   local tok="$1" repo="$2"
+  if GIT_TERMINAL_PROMPT=0 git ls-remote "https://x-access-token:${tok}@github.com/${repo}.git" HEAD >/dev/null 2>&1; then
+    echo "Token can read ${repo} (git)."
+    return 0
+  fi
   local response
   response="$(curl -sS -o /tmp/auricrux-token-check.json -w '%{http_code}' \
     -H "Authorization: Bearer ${tok}" \
@@ -27,10 +30,10 @@ can_read_repo() {
     -H "X-GitHub-Api-Version: 2022-11-28" \
     "https://api.github.com/repos/${repo}")"
   if [ "${response}" = "200" ]; then
-    echo "Token can read ${repo}."
+    echo "Token can read ${repo} (api)."
     return 0
   fi
-  echo "Token cannot read ${repo} (HTTP ${response})."
+  echo "Token cannot read ${repo} (git failed; api HTTP ${response})."
   jq -r '.message // .' /tmp/auricrux-token-check.json 2>/dev/null || true
   return 1
 }
@@ -40,7 +43,7 @@ try_token() {
   [ -n "${tok}" ] || return 1
   for repo in "${repos[@]}"; do
     if ! can_read_repo "${tok}" "${repo}"; then
-      echo "Skipping ${name} â€” missing access to ${repo}."
+      echo "Skipping ${name} - missing access to ${repo}."
       return 1
     fi
   done
@@ -68,7 +71,12 @@ for name in AURICRUX_GITHUB_TOKEN COPILOT_GITHUB_TOKEN GITHUB_TOKEN; do
   fi
 done
 
+if [ "${ALLOW_MISSING_CROSS_REPO:-}" = "1" ]; then
+  echo "::warning::No token can read ${repos[*]}; continuing without cross-repo checkout."
+  exit 0
+fi
+
 echo "::error::No configured token can read: ${repos[*]}"
-echo "::error::Workflows in fca-bid-tracker use the AURICRUX_GITHUB_TOKEN secret stored on fca-bid-tracker (not auricrux-central)."
-echo "::error::Either set the same cross-repo PAT on fca-bid-tracker, or grant this repo workflow access in auricrux-central: Settings -> Actions -> General -> Access."
+echo "::error::Workflows in fca-bid-tracker use secrets stored on fca-bid-tracker (not auricrux-central)."
+echo "::error::Set the same cross-repo PAT on fca-bid-tracker, or grant workflow access in auricrux-central Settings -> Actions -> General -> Access."
 exit 1
