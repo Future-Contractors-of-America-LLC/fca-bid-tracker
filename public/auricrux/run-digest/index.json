@@ -1,7 +1,7 @@
 {
   "version": 1,
   "controller": "auricrux-control-plane",
-  "generatedAtUtc": "2026-06-25T19:29:02.958Z",
+  "generatedAtUtc": "2026-06-25T21:16:54.126Z",
   "event": "schedule",
   "mode": "status",
   "outcome": "success",
@@ -15,6 +15,6 @@
   "nextAction": {
     "status": "ready"
   },
-  "queueDepth": 10,
+  "queueDepth": 12,
   "status": "success"
 }
