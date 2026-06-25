@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-25T18:56:55.499Z",
-  "runId": "LMS-WFR-1782413800835",
+  "generatedAt": "2026-06-25T19:39:55.441Z",
+  "runId": "LMS-WFR-1782416368860",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -9,9 +9,15 @@
     {
       "round": 1,
       "complete": false,
-      "passed": 172,
+      "passed": 171,
       "total": 173,
       "failures": [
+        {
+          "name": "script:validate-academy-ctas.mjs",
+          "status": "fail",
+          "detail": "",
+          "phase": "static-qc"
+        },
         {
           "name": "script:validate-academy-native-commerce-journey.mjs",
           "status": "fail",
@@ -22,6 +28,24 @@
     }
   ],
   "repairPlans": [
+    {
+      "id": "unmapped-failure",
+      "repairClass": "engineering-queue",
+      "title": "Investigate Academy failure: script:validate-academy-ctas.mjs",
+      "detail": "No playbook mapped; engineering triage required.",
+      "step": {
+        "name": "script:validate-academy-ctas.mjs",
+        "status": "fail",
+        "detail": "",
+        "phase": "static-qc"
+      },
+      "autoRepair": null,
+      "targetLane": "product",
+      "targetRepo": "fca-bid-tracker",
+      "priority": "medium",
+      "actionId": "LMS-TRIAGE",
+      "outcome": "engineering-queued"
+    },
     {
       "id": "lms-commerce-rail",
       "repairClass": "engineering-queue",
@@ -43,17 +67,28 @@
   ],
   "auricruxReviews": [
     {
+      "step": "script:validate-academy-ctas.mjs",
+      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+    },
+    {
       "step": "script:validate-academy-native-commerce-journey.mjs",
       "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
     }
   ],
   "redeploy": null,
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 1 item(s) queued. Consecutive failures: 11.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 12.",
   "state": {
-    "runCount": 11,
+    "runCount": 12,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 11,
+    "consecutiveFailures": 12,
     "history": [
+      {
+        "at": "2026-06-25T19:39:55.441Z",
+        "runId": "LMS-WFR-1782416368860",
+        "complete": false,
+        "rounds": 1,
+        "failures": 2
+      },
       {
         "at": "2026-06-25T18:56:55.499Z",
         "runId": "LMS-WFR-1782413800835",
@@ -132,8 +167,8 @@
         "failures": 35
       }
     ],
-    "lastRunUtc": "2026-06-25T18:56:55.499Z",
+    "lastRunUtc": "2026-06-25T19:39:55.441Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782413800835"
+    "lastRunId": "LMS-WFR-1782416368860"
   }
 }

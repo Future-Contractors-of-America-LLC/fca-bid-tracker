@@ -1,8 +1,21 @@
 {
   "version": 1,
   "queueName": "fca-revenue-sprint-queue",
-  "updatedAtUtc": "2026-06-25T19:29:02.958Z",
+  "updatedAtUtc": "2026-06-25T19:39:51.948Z",
   "items": [
+    {
+      "id": "LMS-TRIAGE",
+      "title": "Investigate Academy failure: script:validate-academy-ctas.mjs",
+      "lane": "product",
+      "priority": "medium",
+      "status": "queued",
+      "source": "lms-repair-loop",
+      "runId": "LMS-WFR-1782416368860",
+      "failedStep": "script:validate-academy-ctas.mjs",
+      "detail": "No playbook mapped; engineering triage required.",
+      "targetRepo": "fca-bid-tracker",
+      "createdAtUtc": "2026-06-25T19:39:51.948Z"
+    },
     {
       "id": "LMS-MEDIA-FIX",
       "title": "Academy lesson media slots incomplete",

@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-06-25T18:56:53.148Z",
-  "runId": "LMS-SIM-1782413801291",
+  "generatedAt": "2026-06-25T19:39:51.938Z",
+  "runId": "LMS-SIM-1782416369609",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "swaOrigin": "https://futurecontractorsofamerica.com",
   "scope": "FCA Academy LMS simulation",
   "summary": {
-    "passed": 172,
-    "failed": 1,
+    "passed": 171,
+    "failed": 2,
     "skipped": 0,
     "total": 173
   },
   "complete": false,
   "phases": {
-    "staticQc": 1,
+    "staticQc": 2,
     "learnerWorkflow": 0,
     "swaProbes": 0,
     "centralArtifacts": 0
@@ -20,7 +20,7 @@
   "steps": [
     {
       "name": "script:validate-academy-ctas.mjs",
-      "status": "pass",
+      "status": "fail",
       "detail": "",
       "phase": "static-qc"
     },
@@ -1023,7 +1023,7 @@
     {
       "name": "Academy commerce intake",
       "status": "pass",
-      "detail": "INTAKE-1782413811590",
+      "detail": "INTAKE-1782416389826",
       "phase": "learner-workflow"
     },
     {

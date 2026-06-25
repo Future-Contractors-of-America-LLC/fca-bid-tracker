@@ -1,24 +1,26 @@
 # FCA Academy LMS Repair Loop
 
-- **When:** 2026-06-25T18:56:55.499Z
-- **Run ID:** LMS-WFR-1782413800835
+- **When:** 2026-06-25T19:39:55.441Z
+- **Run ID:** LMS-WFR-1782416368860
 - **Protocol:** Observe -> Act -> Review (FCA Academy coverage law)
 - **Result:** OPEN � failures remain after bounded repair
 
 ## Rounds
 
-### Round 1 � FAIL (172/173 steps)
+### Round 1 � FAIL (171/173 steps)
+- script:validate-academy-ctas.mjs: failed
 - script:validate-academy-native-commerce-journey.mjs: failed
 
 ## Repair actions taken
 
+- **engineering-queue** Investigate Academy failure: script:validate-academy-ctas.mjs: engineering-queued
 - **engineering-queue** Academy native commerce rail regression: engineering-queued
 
 
 
 ## Summary
 
-Academy LMS simulation still failing after 1 bounded repair round(s). 1 item(s) queued. Consecutive failures: 11.
+Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 12.
 
 ## For the founder
 
