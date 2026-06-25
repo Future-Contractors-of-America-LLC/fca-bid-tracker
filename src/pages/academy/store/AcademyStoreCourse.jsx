@@ -6,7 +6,6 @@ import {
   fetchAcademyCommerceItem,
   formatUsd,
 } from "../../../api/academyCommerceClient";
-import { shellHeaderCtaSets, shellJourney } from "../../../websiteShell";
 import { pageShellStyle } from "../../../publicShellStyles";
 
 const cardStyle = {
@@ -67,7 +66,7 @@ export default function AcademyStoreCourse() {
 
   return (
     <div style={pageShellStyle}>
-      <ShellHeader ctaSet={shellHeaderCtaSets.academy} journey={shellJourney.academy} />
+      <ShellHeader compact eyebrow="FCA Academy Store" />
       <main style={{ maxWidth: 900, margin: "0 auto", padding: "32px 20px 48px" }}>
         <a href="/academy/store" style={{ color: "#2563eb", textDecoration: "none", fontWeight: 600 }}>
           Back to Academy Store

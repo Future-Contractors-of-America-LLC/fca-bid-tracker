@@ -365,9 +365,45 @@ export default function AuricruxDock() {
     }
   }
 
-  if (!open) return null;
-
   const panelWidth = compact ? "min(360px, 100vw)" : "min(420px, 100vw)";
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        aria-label="Open Auricrux assistant"
+        onClick={() => setOpen(true)}
+        style={{
+          position: "fixed",
+          bottom: 24,
+          right: 24,
+          zIndex: 9990,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "12px 16px 12px 12px",
+          borderRadius: 999,
+          border: `2px solid ${auricruxColors.primary}`,
+          background: `linear-gradient(135deg, ${auricruxColors.primaryDark} 0%, ${auricruxColors.primary} 100%)`,
+          color: "#fff7e1",
+          fontWeight: 700,
+          fontSize: 14,
+          cursor: "pointer",
+          boxShadow: "0 12px 32px rgba(15, 23, 42, 0.22)",
+          fontFamily: portalTokens.font,
+        }}
+      >
+        <img
+          src="/brand/auricrux/auricrux-crux-mark.svg"
+          alt=""
+          width={28}
+          height={28}
+          style={{ display: "block" }}
+        />
+        Ask Auricrux
+      </button>
+    );
+  }
 
   return (
     <>

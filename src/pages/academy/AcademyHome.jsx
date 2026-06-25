@@ -8,7 +8,7 @@ import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import PublicCtaRow from "../../components/PublicCtaRow";
-import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { academyCtaSets, executiveSignalCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useAcademyLms from "../../hooks/useAcademyLms";
@@ -394,10 +394,7 @@ export default function AcademyHome() {
         </a>
       </div>
 
-      <PublicCtaRow actions={academyCtaSets.continuityActions} />
-      <PublicCtaRow actions={academyCtaSets.connectedPortalRoutes} />
-      <PublicCtaRow actions={publicBodyCtaSets.academyEntry} />
-      <PublicCtaRow actions={academyCtaSets.productionClose} />
+      <PublicCtaRow actions={[...academyCtaSets.continuityActions, ...academyCtaSets.productionClose]} />
       <ShellFooter />
     </div>
   );

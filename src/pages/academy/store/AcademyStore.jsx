@@ -4,7 +4,7 @@ import ShellFooter from "../../../components/ShellFooter";
 import PublicCtaRow from "../../../components/PublicCtaRow";
 import { fetchAcademyCommerceCatalog, formatUsd } from "../../../api/academyCommerceClient";
 import { academyCheckoutHref } from "../../../commerceCheckout";
-import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../../websiteShell";
+import { academyCtaSets } from "../../../websiteShell";
 import { pageShellStyle } from "../../../publicShellStyles";
 
 const PAGE_SIZE = 48;
@@ -174,7 +174,7 @@ export default function AcademyStore() {
 
   return (
     <div style={pageShellStyle}>
-      <ShellHeader ctaSet={shellHeaderCtaSets.academy} journey={shellJourney.academy} />
+      <ShellHeader compact eyebrow="FCA Academy Store" />
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 20px 48px" }}>
         <div style={{ marginBottom: 24 }}>
           <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, letterSpacing: "0.04em", textTransform: "uppercase" }}>
@@ -281,7 +281,7 @@ export default function AcademyStore() {
           </div>
         ) : null}
 
-        <PublicCtaRow ctaSet={academyCtaSets.catalog} style={{ marginTop: 32 }} />
+        <PublicCtaRow actions={academyCtaSets.storeBrowse} style={{ marginTop: 32 }} />
       </main>
       <ShellFooter />
     </div>

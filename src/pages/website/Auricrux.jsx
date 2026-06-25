@@ -10,18 +10,18 @@ import {
 import { cardStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
-  "Reads your live tenant, project, and bid state - not static marketing pages.",
-  "Surfaces the recommended next action so teams know what to do next.",
-  "Stays with you across dashboard, portal, Academy, support, and admin.",
-  "Feels active and operational - not a brochure.",
+  "Knows your live bids, projects, and training progress — not generic FAQ answers.",
+  "Tells your team exactly what to do next on every job.",
+  "Works across estimating, delivery, billing, Academy, and support.",
+  "Available on every page — click Ask Auricrux to start.",
 ];
 
 export default function AuricruxPage() {
   return (
     <MarketingPageShell
-      eyebrow="Auricrux Guidance"
-      title="Auricrux stays active across the FCA experience"
-      subtitle="The visible guidance layer that reads state, explains continuity, recommends next actions, and keeps teams aligned across the workspace."
+      eyebrow="Auricrux AI Operator"
+      title="Your AI operator for bids, jobs, billing, and training"
+      subtitle="Auricrux answers questions, recommends next steps, and keeps your team moving — inside Contractor Command and Academy."
       primaryHref={publicRouteCtas.auricrux.primaryHref}
       primaryLabel={publicRouteCtas.auricrux.primaryLabel}
       secondaryHref={publicRouteCtas.auricrux.secondaryHref}
@@ -31,20 +31,20 @@ export default function AuricruxPage() {
       <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>
           <div>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Guided visibility</div>
-            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux is part of the product experience</h2>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Always on, always in context</div>
+            <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux works inside your live workspace</h2>
           </div>
           <AuricruxBrandMark />
         </div>
         <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Auricrux keeps tenant, project, route, and next-step context visible as users move through estimating, approvals, document control, billing follow-through, and workforce readiness.
+          Ask Auricrux what to do next on any bid, project, or training module. It reads your tenant state and gives actionable guidance — not generic marketing copy.
         </p>
       </div>
 
       <CustomerTrustPanel
-        eyebrow="What Auricrux improves"
-        title="Guidance that helps contractor teams stay aligned"
-        detail="Auricrux helps teams understand what needs attention next without forcing owners, estimators, project coordinators, or field leads to piece the workflow together on their own."
+        eyebrow="Why contractors use Auricrux"
+        title="Close more work and deliver with less friction"
+        detail="Auricrux helps owners, estimators, project coordinators, and field leads stay aligned without chasing updates across disconnected tools."
         items={[
           {
             title: "Clarify next steps",

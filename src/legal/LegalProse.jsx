@@ -33,8 +33,11 @@ export function LegalEffective({ date = "June 19, 2026", version = "1.0" }) {
 
 export function LegalNotice() {
   return (
-    <p style={{ fontSize: 13, color: "#64748b", fontStyle: "italic", marginBottom: 20 }}>
-      Prepared for legal review. Enterprise procurement templates are available in our legal corpus upon request at{" "}
+    <p style={{ fontSize: 14, color: "#334155", marginBottom: 20, lineHeight: 1.75 }}>
+      These policies form a binding agreement between you and {FCA_ENTITY.legalName}, a Virginia limited liability
+      company. By accessing or using our website, portal, mobile applications, academy, or APIs, you acknowledge that
+      you have read, understood, and agree to be bound by the applicable terms. If you do not agree, you must not use
+      the Services. For legal inquiries contact{" "}
       <a href={`mailto:${FCA_ENTITY.emails.legal}`} style={legalLink}>
         {FCA_ENTITY.emails.legal}
       </a>

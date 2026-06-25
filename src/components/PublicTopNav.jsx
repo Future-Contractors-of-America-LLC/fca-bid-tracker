@@ -176,8 +176,9 @@ const NAV_MENUS = [
   {
     label: "Academy",
     items: [
-      { label: "Academy Home", href: "/academy" },
       { label: "Course Catalog", href: "/academy/catalog" },
+      { label: "Academy Store", href: "/academy/store" },
+      { label: "Sign in for LMS", href: "/login?next=/academy" },
     ],
   },
   {
@@ -356,6 +357,7 @@ export default function PublicTopNav({ mode = "public" }) {
     </>
   ) : (
     <>
+      <AuricruxAssistantButton />
       <a href={loginHref} style={signInStyle} onClick={closeMobile}>Sign in</a>
       {!isDesktop ? null : (
         <a href={adminWorkspaceHref} style={signInStyle} onClick={closeMobile}>Admin</a>

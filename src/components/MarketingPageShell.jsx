@@ -25,7 +25,7 @@ export default function MarketingPageShell({
   primaryLabel = "Get started",
   secondaryHref = "/contact",
   secondaryLabel = "Talk to our team",
-  showClosingCta = true,
+  showClosingCta = false,
   illustrationKey = null,
   children,
 }) {

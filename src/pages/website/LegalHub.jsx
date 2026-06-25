@@ -10,7 +10,7 @@ export default function LegalHub() {
       <LegalEffective />
       <LegalP>
         Future Contractors of America LLC (Virginia) publishes the policies below for customers, prospects, and enterprise
-        procurement teams. Canonical drafts are maintained in <code>docs/legal/enterprise/</code> for counsel review.
+        procurement teams. Executed enterprise agreements, including MSAs, DPAs, and SLAs, are available upon request.
       </LegalP>
 
       <LegalH3>Customer-facing policies</LegalH3>

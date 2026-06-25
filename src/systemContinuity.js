@@ -32,37 +32,37 @@ export const publicHomeMessaging = {
 
 export const publicPricingMessaging = {
   header: {
-    eyebrow: "FCA Plans & Rollout",
-    title: "Choose the rollout path that fits your team.",
+    eyebrow: "FCA Plans & Pricing",
+    title: "Plans that scale with your contracting business.",
     subtitle:
-      "This page supports practical rollout sequencing with narrower pricing steps, deeper tier detail, and clear Academy + Auricrux scope at every level.",
+      "Compare rollout options, Academy access, and Auricrux guidance — then start a pilot or talk with sales about the right fit for your team.",
   },
   hero: {
-    title: "Move from pricing into rollout readiness",
+    title: "Pick the plan that matches your growth stage",
     detail:
-      "This is more than a static price sheet. It ties scope to live product experience, Academy innovation depth, project visibility, team readiness, and next steps under Auricrux guidance.",
+      "Every tier includes core bid-to-bill workflows, customer visibility, and workforce training. Higher tiers add deeper Academy catalogs, priority support, and expanded Auricrux automation.",
   },
   journey: {
-    title: "Plans should connect directly to rollout decisions",
+    title: "From pricing to live rollout in days, not months",
     detail:
-      "Use this route to move from public framing into workspace continuity, platform visibility, and rollout planning without guesswork.",
+      "Choose a plan, complete intake, and enter a configured workspace with leads, projects, billing, and training ready for your team.",
   },
   trust: {
-    eyebrow: "Choose the right rollout path",
-    title: "Pricing is organized around readiness, not guesswork",
+    eyebrow: "Built for commercial contractors",
+    title: "Transparent pricing tied to real outcomes",
     detail:
-      "The goal is to match your team to the right rollout pace, support level, Academy depth, and operating visibility based on current needs.",
+      "Compare features side by side, see what is included at each tier, and book a walkthrough before you commit.",
   },
   snapshot: {
-    title: "Pricing references live workspace state",
+    title: "See what you get before you buy",
     detail:
-      "This planning surface points directly at tenant, project, Academy, and Auricrux continuity so rollout conversations stay attached to the operating workspace.",
-    ctaLabel: "Review platform state before your call",
+      "Explore the platform, Academy catalog, and Auricrux assistant on a live walkthrough — or start a test workspace to experience the product firsthand.",
+    ctaLabel: "Schedule a walkthrough",
   },
   actionRail: {
-    title: "Finish planning with a clear next step",
+    title: "Ready to move forward?",
     detail:
-      "Pricing closes with the same shared action rail as the rest of the public site so rollout planning, workspace entry, academy continuity, and walkthrough options remain aligned.",
+      "Start intake, book a walkthrough, or sign in to your existing workspace.",
   },
 };
 

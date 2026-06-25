@@ -32,8 +32,8 @@ export const publicActionCatalog = {
     variant: "light",
   },
   academy: {
-    label: "Open Academy",
-    href: "/academy",
+    label: "Browse Academy",
+    href: "/academy/catalog",
     variant: "light",
   },
   platformOverview: {
@@ -197,6 +197,10 @@ export const academyCtaSets = {
   continuityActions: [{ ...publicActionCatalog.academyContinuity, label: "Open Academy", variant: "primary" }, publicActionCatalog.pricing],
   connectedPortalRoutes: [publicActionCatalog.projects, publicActionCatalog.files, publicActionCatalog.messages, publicActionCatalog.billing],
   productionClose: [{ ...publicActionCatalog.contact, variant: "primary" }],
+  storeBrowse: [
+    { href: "/academy/catalog", label: "Browse full catalog", variant: "primary" },
+    { href: "/contact", label: "Talk to our team", variant: "secondary" },
+  ],
 };
 
 export const homeCtaSets = {

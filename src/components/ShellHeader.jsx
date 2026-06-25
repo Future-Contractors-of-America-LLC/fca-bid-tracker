@@ -42,8 +42,8 @@ export default function ShellHeader({
 
       {compact ? (
         <div style={compactTitleStyle}>
-          <div style={{ ...portalEyebrowStyle, marginBottom: 6 }}>{eyebrow}</div>
-          <h1 style={{ margin: 0 }}>{title}</h1>
+          {eyebrow ? <div style={{ ...portalEyebrowStyle, marginBottom: title || subtitle ? 6 : 0 }}>{eyebrow}</div> : null}
+          {title ? <h1 style={{ margin: 0 }}>{title}</h1> : null}
           {subtitle ? (
             <p style={{ marginTop: 8, marginBottom: 0, color: portalTokens.body, lineHeight: 1.55, maxWidth: 680, fontSize: 15 }}>
               {subtitle}

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ShellHeader from "../../../components/ShellHeader";
 import ShellFooter from "../../../components/ShellFooter";
 import { enrollAfterAcademyPurchase } from "../../../api/academyCommerceClient";
-import { shellHeaderCtaSets, shellJourney } from "../../../websiteShell";
 import { pageShellStyle } from "../../../publicShellStyles";
 
 const cardStyle = {
@@ -61,7 +60,7 @@ export default function AcademyStoreSuccess() {
 
   return (
     <div style={pageShellStyle}>
-      <ShellHeader ctaSet={shellHeaderCtaSets.academy} journey={shellJourney.academy} />
+      <ShellHeader compact eyebrow="FCA Academy Store" />
       <main style={{ maxWidth: 760, margin: "0 auto", padding: "32px 20px 48px" }}>
         <div style={cardStyle}>
           <h1 style={{ marginTop: 0 }}>Purchase received</h1>
