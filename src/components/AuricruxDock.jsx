@@ -149,6 +149,7 @@ export default function AuricruxDock() {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("ready");
   const [poweredByLlm, setPoweredByLlm] = useState(false);
+  const [llmUnavailableReason, setLlmUnavailableReason] = useState("");
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(true);
   const [hydrated, setHydrated] = useState(false);
@@ -172,7 +173,16 @@ export default function AuricruxDock() {
 
   const avatarState = loading ? "thinking" : speaking ? "speaking" : text.trim() ? "listening" : "idle";
 
-  const meta = useMemo(() => modeMeta(mode, poweredByLlm), [mode, poweredByLlm]);
+  const meta = useMemo(() => {
+    const base = modeMeta(mode, poweredByLlm);
+    if (!poweredByLlm && llmUnavailableReason) {
+      return {
+        ...base,
+        summary: `Guidance mode — ${llmUnavailableReason}`,
+      };
+    }
+    return base;
+  }, [mode, poweredByLlm, llmUnavailableReason]);
   const activeQuickPrompts = academyContext ? academyQuickPrompts : quickPrompts;
 
   useEffect(() => subscribeAcademyContext(setAcademyContext), []);
@@ -277,6 +287,7 @@ export default function AuricruxDock() {
       });
       setMode(data.poweredByLlm || data.mode === "llm-assistant" ? "live" : "fallback");
       setPoweredByLlm(Boolean(data.poweredByLlm || data.mode === "llm-assistant"));
+      setLlmUnavailableReason(data.llmUnavailableReason || "");
       setLastReply(data.reply || "");
       setLastPrompt(cmd);
 
@@ -304,6 +315,7 @@ export default function AuricruxDock() {
     } catch (err) {
       setMode("fallback");
       setPoweredByLlm(false);
+      setLlmUnavailableReason("");
       const continuityReply = routePromptReply(cmd);
       setLastReply(continuityReply);
       setLastPrompt(cmd);
