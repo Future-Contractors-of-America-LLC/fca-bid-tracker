@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 # Verify AURICRUX_GITHUB_TOKEN can reach required cross-repo surfaces.
