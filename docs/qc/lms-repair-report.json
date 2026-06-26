@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-26T01:37:54.193Z",
-  "runId": "LMS-WFR-1782437818116",
+  "generatedAt": "2026-06-26T06:35:30.445Z",
+  "runId": "LMS-WFR-1782455706356",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -114,11 +114,11 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-ctas.mjs",
-      "guidance": "I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Weeks 1-4: Course introduction, syllabus review, and learning outcomes for CMAA 101, I am teaching you the way I would onboard someone on my own payroll. Analyze and apply cmaa 101 with accredited rigor: evidence-based conclusions, field-relevant cases, and audit-ready deliver"
+      "guidance": "I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Weeks 1-4: Course introduction, syllabus review, and learning outcomes for CNA 101, I am teaching you the way I would onboard someone on my own payroll. Analyze and apply cna 101 with accredited rigor: evidence-based conclusions, field-relevant cases, and audit-ready deliverab"
     },
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+      "guidance": "I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Weeks 1-4: Course introduction, syllabus review, and learning outcomes for FCA Academy, I am teaching you the way I would onboard someone on my own payroll. Analyze and apply academy training with accredited rigor: evidence-based conclusions, field-relevant cases, and audit-re"
     },
     {
       "step": "SWA route /academy",
@@ -129,12 +129,19 @@
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 25.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 26.",
   "state": {
-    "runCount": 25,
+    "runCount": 26,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 25,
+    "consecutiveFailures": 26,
     "history": [
+      {
+        "at": "2026-06-26T06:35:30.445Z",
+        "runId": "LMS-WFR-1782455706356",
+        "complete": false,
+        "rounds": 1,
+        "failures": 6
+      },
       {
         "at": "2026-06-26T01:37:54.193Z",
         "runId": "LMS-WFR-1782437818116",
@@ -311,8 +318,8 @@
         "failures": 35
       }
     ],
-    "lastRunUtc": "2026-06-26T01:37:54.193Z",
+    "lastRunUtc": "2026-06-26T06:35:30.445Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782437818116"
+    "lastRunId": "LMS-WFR-1782455706356"
   }
 }
