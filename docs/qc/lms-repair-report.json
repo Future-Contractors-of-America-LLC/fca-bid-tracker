@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-26T16:06:54.370Z",
-  "runId": "LMS-WFR-1782489951593",
+  "generatedAt": "2026-06-26T17:13:15.111Z",
+  "runId": "LMS-WFR-1782493875071",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -114,11 +114,11 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-ctas.mjs",
-      "guidance": "I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Weeks 1-4: Course introduction, syllabus review, and learning outcomes for CTC 101, I am teaching you the way I would onboard someone on my own payroll. Analyze and apply ctc 101 with accredited rigor: evidence-based conclusions, field-relevant cases, and audit-ready deliverab"
+      "guidance": "I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Weeks 1-4: Course introduction, syllabus review, and learning outcomes for CON 101, I am teaching you the way I would onboard someone on my own payroll. Analyze and apply construction fundamentals with accredited rigor: evidence-based conclusions, field-relevant cases, and aud"
     },
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Weeks 1-4: Course introduction, syllabus review, and learning outcomes for FCA Academy, I am teaching you the way I would onboard someone on my own payroll. Analyze and apply academy simulation script:validate-academy-native-commerce-journey.mjs with accredited rigor: evidence"
+      "guidance": "I am Auricrux. In this segment on Operator intent: why validate-academy-native-commerce-journey.mjs exists in FCA, I am teaching you the way I onboard a new apprentice on my crew - one clear step at a time. Synthesize academic and field knowledge to execute native commerce journey validation with accredited rigor: evidence-based conclusions, field-relevant cases, and audit-ready deliverables. I am"
     },
     {
       "step": "SWA route /academy",
@@ -129,12 +129,19 @@
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 31.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 32.",
   "state": {
-    "runCount": 31,
+    "runCount": 32,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 31,
+    "consecutiveFailures": 32,
     "history": [
+      {
+        "at": "2026-06-26T17:13:15.111Z",
+        "runId": "LMS-WFR-1782493875071",
+        "complete": false,
+        "rounds": 1,
+        "failures": 6
+      },
       {
         "at": "2026-06-26T16:06:54.370Z",
         "runId": "LMS-WFR-1782489951593",
@@ -337,17 +344,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 35
-      },
-      {
-        "at": "2026-06-25T06:32:39.042Z",
-        "runId": "LMS-WFR-1782369144683",
-        "complete": false,
-        "rounds": 1,
-        "failures": 35
       }
     ],
-    "lastRunUtc": "2026-06-26T16:06:54.370Z",
+    "lastRunUtc": "2026-06-26T17:13:15.111Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782489951593"
+    "lastRunId": "LMS-WFR-1782493875071"
   }
 }
