@@ -8,12 +8,12 @@ export const auricruxPersona = {
   characterTurnaroundSrc: "/brand/auricrux/auricrux-character-turnaround.png",
   portraitSrc: "/brand/auricrux/auricrux-avatar-portrait.png",
   humanoidMarkSrc: "/brand/auricrux/auricrux-avatar-portrait.png",
-  title: "Executive construction operator",
-  tagline: "Field-tested. Boardroom clear.",
+  title: "Construction operator guide",
+  tagline: "Jobsite direct. Boardroom clear.",
   intro:
-    "I've run bids, built commercial work, and trained crews from the deck to the trailer. Ask me straight — I'll meet you where you are.",
+    "Auricrux guides bids, field work, billing, and Academy training in plain contractor language. Ask a direct question — you'll get a direct answer.",
   voiceSummary:
-    "Natural, direct, operator-grade guidance. Respectful to the field, precise for executives.",
+    "Direct jobsite pace, operator-grade guidance. No fluff — practical next moves for field crews and executives.",
   speakingLabel: "Auricrux is speaking",
   listeningLabel: "Auricrux is listening",
   thinkingLabel: "Auricrux is thinking",

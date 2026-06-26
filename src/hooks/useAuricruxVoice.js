@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const PREFERRED_VOICES = [
+  "Microsoft Ryan Online",
   "Microsoft Guy Online",
+  "Microsoft Mark Online",
   "Microsoft David Online",
   "Google UK English Male",
   "Daniel",
@@ -10,11 +12,11 @@ const PREFERRED_VOICES = [
 ];
 
 export const SPEECH_TIER_PARAMS = {
-  1: { rate: 0.88, pitch: 0.86, label: "Apprentice instructor" },
-  2: { rate: 0.91, pitch: 0.89, label: "Journeyman practitioner" },
-  3: { rate: 0.94, pitch: 0.91, label: "Field foreman" },
-  4: { rate: 0.96, pitch: 0.93, label: "Project superintendent" },
-  5: { rate: 0.98, pitch: 0.95, label: "Executive construction operator" },
+  1: { rate: 1.0, pitch: 0.9, label: "Apprentice instructor" },
+  2: { rate: 1.02, pitch: 0.91, label: "Journeyman practitioner" },
+  3: { rate: 1.04, pitch: 0.92, label: "Field foreman" },
+  4: { rate: 1.06, pitch: 0.93, label: "Project superintendent" },
+  5: { rate: 1.08, pitch: 0.94, label: "Executive construction operator" },
 };
 
 const LANE_TIER_BASE = {
@@ -107,7 +109,7 @@ export default function useAuricruxVoice() {
       if (!cleaned || typeof window === "undefined" || !window.speechSynthesis) return Promise.resolve(false);
 
       const tierParams = options.tier != null ? ttsParamsForTier(options.tier) : null;
-      const rate = options.rate ?? tierParams?.rate ?? 0.94;
+      const rate = options.rate ?? tierParams?.rate ?? 1.04;
       const pitch = options.pitch ?? tierParams?.pitch ?? 0.92;
 
       stop();

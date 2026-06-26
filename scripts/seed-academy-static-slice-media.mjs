@@ -66,14 +66,13 @@ body { font-family: Georgia, "Times New Roman", serif; margin: 0; background: #0
   <div class="player" role="region" aria-label="Auricrux recorded lecture lesson ${lessonIndex}">
     <div class="player-bar">
       <span class="play-dot"></span>
-      <span class="player-label">Auricrux · Master practitioner lecture</span>
-      <span class="player-time">~18 min</span>
+      <span class="player-label">Auricrux · Operator lecture</span>
+      <span class="player-time">~8 min</span>
     </div>
     <div class="transcript">
-      <p><strong>Auricrux presents:</strong> ${escapeHtml(lessonTitle)}</p>
-      <p>I am Auricrux. In this segment I teach ${escapeHtml(moduleTitle)} the way I would onboard someone on my own payroll inside Contractor Command.</p>
+      <p><strong>Lesson:</strong> ${escapeHtml(lessonTitle)}</p>
+      <p>This segment covers ${escapeHtml(moduleTitle)} with jobsite-direct steps inside Contractor Command — no biography, just the standard and the next move.</p>
       <p>${escapeHtml(lab || "Complete the live portal lab and document evidence on the governed file spine before your knowledge check.")}</p>
-      <p>Pause the lecture, open your lab workbook, replicate the procedure, and log evidence before marking this lesson complete.</p>
     </div>
   </div>
 </section>
@@ -121,7 +120,7 @@ body { font-family: system-ui, -apple-system, Segoe UI, sans-serif; margin: 0; b
   <h3>Auricrux in the field: ${escapeHtml(moduleTitle)}</h3>
   <div class="demo-player">
     <div class="demo-bar"><span class="rec"></span> Auricrux live demonstration · Watch, then replicate</div>
-    <p class="demo-intro">I am walking through ${escapeHtml(moduleTitle)} exactly as I would on a jobsite or in your FCA portal lab.</p>
+    <p class="demo-intro">This walkthrough covers ${escapeHtml(moduleTitle)} on a jobsite or in your FCA portal lab — step by step, no biography.</p>
     <ol class="demo-list">
       <li>Review safety and gather required tools or references.</li>
       <li>${escapeHtml(lab || "Complete the live portal lab with Auricrux guidance.")}</li>
