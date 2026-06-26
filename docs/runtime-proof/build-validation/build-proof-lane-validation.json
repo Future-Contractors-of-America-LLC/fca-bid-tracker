@@ -5,6 +5,6 @@
   "ciPersisted": true,
   "success": false,
   "failure": "CI-persisted build-validation proof has not yet been directly observed.",
-  "ciRunId": "28237792449",
-  "ciCommitSha": "7d6c747184ee3fa74b6bde715d3f8113df3a3003"
+  "ciRunId": "28249992746",
+  "ciCommitSha": "3127ab33585decec5fc26badee52fdeff99fd5a9"
 }
