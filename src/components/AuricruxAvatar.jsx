@@ -1,10 +1,10 @@
 import { brandIdentity } from "../brandIdentity";
 import { auricruxPersona } from "../config/auricruxPersona";
 
-const AVATAR_SRC = auricruxPersona.avatarSrc || "/brand/auricrux/auricrux-avatar-front.png";
+const AVATAR_SRC = auricruxPersona.avatarSrc || "/brand/auricrux/auricrux-avatar-portrait.png";
 
 /**
- * Auricrux avatar — FCA construction operator character (front view) with live state cues.
+ * Auricrux avatar — head-and-shoulders portrait with live state cues.
  * state: idle | listening | thinking | speaking
  */
 export default function AuricruxAvatar({
@@ -84,24 +84,7 @@ export default function AuricruxAvatar({
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center 8%;
-        }
-        .auricrux-avatar__badge {
-          position: absolute;
-          bottom: 4%;
-          right: 4%;
-          width: 22%;
-          height: 22%;
-          border-radius: 50%;
-          background: ${colors.primaryDark};
-          border: 2px solid #fff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 9px;
-          font-weight: 800;
-          color: #fff7e1;
-          letter-spacing: 0.04em;
+          object-position: center center;
         }
       `}</style>
 
@@ -118,9 +101,6 @@ export default function AuricruxAvatar({
           loading="lazy"
           decoding="async"
         />
-        <span className="auricrux-avatar__badge" aria-hidden="true">
-          AX
-        </span>
       </div>
 
       {showCaption ? (

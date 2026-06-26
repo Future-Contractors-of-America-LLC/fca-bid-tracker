@@ -142,11 +142,11 @@ export default function ProductIllustration({ variant = "home", compact = false 
             {variant === "auricrux" ? (
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 12 }}>
                 <img
-                  src="/brand/auricrux/auricrux-avatar-front.png"
+                  src="/brand/auricrux/auricrux-avatar-portrait.png"
                   alt=""
                   width={56}
                   height={56}
-                  style={{ borderRadius: "50%", objectFit: "cover", objectPosition: "center 8%", border: "2px solid #d49a22" }}
+                  style={{ borderRadius: "50%", objectFit: "cover", objectPosition: "center center", border: "2px solid #d49a22" }}
                 />
                 <div>
                   <div style={{ fontWeight: 800, color: "#7c5313" }}>Auricrux</div>

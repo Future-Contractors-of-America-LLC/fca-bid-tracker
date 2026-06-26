@@ -55,12 +55,12 @@
       "description": "Canonical FCA-branded construction operator turnaround (FRONT/BACK/LEFT/RIGHT). Hard hat, hi-vis vest with FCA mark, tool belt."
     },
     {
-      "id": "auricrux-avatar-front",
+      "id": "auricrux-avatar-portrait",
       "type": "design",
-      "name": "Auricrux Avatar Front View",
-      "file": "auricrux/auricrux-avatar-front.png",
+      "name": "Auricrux Avatar Portrait",
+      "file": "auricrux/auricrux-avatar-portrait.png",
       "colors": ["#FF8C00", "#0F172A"],
-      "description": "Front view crop from character turnaround — dock, login, chat, and academy presenter panels."
+      "description": "Head-and-shoulders portrait crop from character turnaround — dock, login, chat, and academy panels."
     },
     {
       "id": "auricrux-humanoid",
