@@ -1,10 +1,10 @@
 import { brandIdentity } from "../brandIdentity";
 import { auricruxPersona } from "../config/auricruxPersona";
 
-const CRUX_MARK_SRC = "/brand/auricrux/auricrux-crux-mark.svg";
+const PORTRAIT_SRC = auricruxPersona.portraitSrc || "/brand/auricrux/auricrux-portrait.png";
 
 /**
- * Auricrux avatar — canonical crux mark with live state cues.
+ * Auricrux avatar — photorealistic portrait with live state cues.
  * state: idle | listening | thinking | speaking
  */
 export default function AuricruxAvatar({
@@ -68,10 +68,7 @@ export default function AuricruxAvatar({
           animation: auricrux-breathe 4.2s ease-in-out infinite;
           transform-origin: center bottom;
           border: 3px solid ${ringColor};
-          background: radial-gradient(circle at 50% 35%, #fff4d1 0%, #0f172a 72%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          background: #0f172a;
         }
         .auricrux-avatar--speaking .auricrux-avatar__frame {
           animation: auricrux-breathe 3s ease-in-out infinite, auricrux-glow 1.8s ease-in-out infinite;
@@ -82,24 +79,48 @@ export default function AuricruxAvatar({
         .auricrux-avatar--thinking .auricrux-avatar__frame {
           animation: auricrux-breathe 5.5s ease-in-out infinite, auricrux-think 2.8s ease-in-out infinite;
         }
-        .auricrux-avatar__mark {
+        .auricrux-avatar__photo {
           display: block;
-          object-fit: contain;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center 18%;
+        }
+        .auricrux-avatar__badge {
+          position: absolute;
+          bottom: 4%;
+          right: 4%;
+          width: 22%;
+          height: 22%;
+          border-radius: 50%;
+          background: ${colors.primaryDark};
+          border: 2px solid #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 9px;
+          font-weight: 800;
+          color: #fff7e1;
+          letter-spacing: 0.04em;
         }
       `}</style>
 
       <div
         className="auricrux-avatar__frame"
-        style={{ width: size, height: size, padding: size * 0.12 }}
+        style={{ width: size, height: size }}
       >
         <img
-          className="auricrux-avatar__mark"
-          src={CRUX_MARK_SRC}
+          src={PORTRAIT_SRC}
           alt=""
-          width={Math.round(size * 0.76)}
-          height={Math.round(size * 0.76)}
-          draggable={false}
+          className="auricrux-avatar__photo"
+          width={size}
+          height={size}
+          loading="lazy"
+          decoding="async"
         />
+        <span className="auricrux-avatar__badge" aria-hidden="true">
+          AX
+        </span>
       </div>
 
       {showCaption ? (

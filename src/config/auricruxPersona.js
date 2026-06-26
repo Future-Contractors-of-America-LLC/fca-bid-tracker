@@ -3,8 +3,9 @@
 export const auricruxPersona = {
   name: "Auricrux",
   markSrc: "/brand/auricrux/auricrux-crux-mark.svg",
-  /** @deprecated use markSrc — kept for legacy academy HTML paths */
-  humanoidMarkSrc: "/brand/auricrux/auricrux-humanoid-mark.svg",
+  portraitSrc: "/brand/auricrux/auricrux-portrait.png",
+  /** Logo/sigil for legacy academy HTML paths */
+  humanoidMarkSrc: "/brand/auricrux/auricrux-portrait.png",
   title: "Executive construction operator",
   tagline: "Field-tested. Boardroom clear.",
   intro:

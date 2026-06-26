@@ -443,7 +443,7 @@ export default function AuricruxDock() {
         }}
       >
         <img
-          src="/brand/auricrux/auricrux-crux-mark.svg"
+          src="/brand/auricrux/auricrux-portrait.png"
           alt=""
           width={28}
           height={28}

@@ -47,6 +47,14 @@
       "file": "auricrux/auricrux-wordmark.svg"
     },
     {
+      "id": "auricrux-portrait",
+      "type": "design",
+      "name": "Auricrux Operator Portrait",
+      "file": "auricrux/auricrux-portrait.png",
+      "colors": ["#D49A22", "#0F172A"],
+      "description": "Photorealistic construction-executive portrait for dock, login, and academy presenter panels."
+    },
+    {
       "id": "auricrux-humanoid",
       "type": "design",
       "name": "Auricrux Humanoid Mark",
