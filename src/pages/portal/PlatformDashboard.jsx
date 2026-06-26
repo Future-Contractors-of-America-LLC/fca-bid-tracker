@@ -7,16 +7,21 @@ import WorkspaceQuickActions from "../../components/WorkspaceQuickActions";
 import CustomerPlanSummaryPanel from "../../components/CustomerPlanSummaryPanel";
 import AutomationRecoveryFeed from "../../components/AutomationRecoveryFeed";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
-import { portalMessages, routeStateOverlays } from "../../systemState";
+import PortalApiStatusBanner from "../../components/portal/PortalApiStatusBanner";
+import { routeStateOverlays } from "../../systemState";
 import { platformDashboardCtaSets } from "../../websiteShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import usePortalApiLoad from "../../hooks/usePortalApiLoad";
+import { fetchPortalMessages } from "../../api/portalClient";
 import { openAuricruxAssistant } from "../../auricruxAssistant";
 import { portalButtonPrimary, portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
 
 export default function PlatformDashboard() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session } = useCustomerSession();
+  const messagesLoad = usePortalApiLoad(() => fetchPortalMessages(), []);
+  const recentMessages = (messagesLoad.data?.items || []).slice(0, 3);
 
   useEffect(() => {
     refreshSyncStamp("Live workspace dashboard active");
@@ -95,9 +100,15 @@ export default function PlatformDashboard() {
 
       <div style={{ ...portalCardStyle, marginBottom: 16 }}>
         <div style={{ ...portalEyebrowStyle, marginBottom: 10 }}>Recent updates</div>
-        {portalMessages.slice(0, 3).map((message) => (
-          <div key={message.subject} style={{ padding: "8px 0", borderBottom: `1px solid ${portalTokens.border}` }}>
-            <strong style={{ fontSize: 14 }}>{message.from}</strong>
+        <PortalApiStatusBanner
+          status={messagesLoad.status}
+          error={messagesLoad.error}
+          onRetry={messagesLoad.reload}
+          label="messages"
+        />
+        {recentMessages.map((message) => (
+          <div key={message.id || message.subject} style={{ padding: "8px 0", borderBottom: `1px solid ${portalTokens.border}` }}>
+            <strong style={{ fontSize: 14 }}>{message.channel || "Update"}</strong>
             <div style={{ color: portalTokens.body, fontSize: 14 }}>{message.subject}</div>
           </div>
         ))}

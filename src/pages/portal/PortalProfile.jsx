@@ -8,6 +8,7 @@ import useCustomerAuthState from "../../hooks/useCustomerAuthState";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { routeStateOverlays } from "../../systemState";
 import { pricingPlanOptions } from "../../pricingPlans";
+import { isDemoAccountSource } from "../../config/authSources";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -57,7 +58,7 @@ const commsCards = [
 function resolveAccountSecurityLabel(accountSource, authBoundary) {
   if (authBoundary?.activeMode === "managed-server-session") return "Enterprise sign-in active";
   if (accountSource === "api" || accountSource === "server-session") return "Signed in securely";
-  if (accountSource === "seeded-local-fallback" || accountSource === "local-fallback") return "Demo workspace";
+  if (isDemoAccountSource(accountSource)) return "Demo workspace";
   return "Signed in";
 }
 

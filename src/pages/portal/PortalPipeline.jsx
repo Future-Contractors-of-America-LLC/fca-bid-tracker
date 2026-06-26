@@ -4,6 +4,8 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useCustomerSession from "../../hooks/useCustomerSession";
+import usePortalApiLoad from "../../hooks/usePortalApiLoad";
+import PortalApiStatusBanner from "../../components/portal/PortalApiStatusBanner";
 import {
   createPortalInvoice,
   fetchPortalInvoices,
@@ -94,15 +96,28 @@ export default function PortalPipeline() {
   const { projects, activeProject } = useProjectWorkspace();
 
   const [activeBidId, setActiveBidId] = useState(() => bids[0]?.id || "");
-  const [invoices, setInvoices] = useState([]);
-  const [links, setLinks] = useState({});
-  const [pipelineSource, setPipelineSource] = useState("loading");
-  const [pipelineLoadError, setPipelineLoadError] = useState("");
   const [invoiceDraft, setInvoiceDraft] = useState({ invoiceName: "", amount: "", note: "" });
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const [trainingProgramKey, setTrainingProgramKey] = useState("");
   const [trainingMessage, setTrainingMessage] = useState("");
+
+  const invoicesLoad = usePortalApiLoad(() => fetchPortalInvoices(), []);
+  const invoices = invoicesLoad.data?.items || [];
+
+  const pipelineLoad = usePortalApiLoad(async () => {
+    const payload = await fetchCommercialPipeline();
+    const items = await migrateLocalPipelineToApi(payload.items || []);
+    return {
+      ...payload,
+      items,
+      links: pipelineItemsToMap(items),
+    };
+  }, []);
+
+  const links = pipelineLoad.data?.links || {};
+  const pipelineSource = pipelineLoad.backingSource || (pipelineLoad.status === "error" ? "error" : "loading");
+  const pipelineLoadError = pipelineLoad.error || "";
 
   const companyName = state?.tenant?.name || session?.company || "Customer Workspace";
   const activeBid = bids.find((bid) => bid.id === activeBidId) || bids[0] || null;
@@ -112,33 +127,6 @@ export default function PortalPipeline() {
   useEffect(() => {
     if (!activeBidId && bids[0]?.id) setActiveBidId(bids[0].id);
   }, [bids, activeBidId]);
-
-  useEffect(() => {
-    fetchPortalInvoices()
-      .then((payload) => setInvoices(payload.items || []))
-      .catch(() => setInvoices([]));
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-    setPipelineLoadError("");
-    fetchCommercialPipeline()
-      .then(async (payload) => {
-        if (!active) return;
-        const items = await migrateLocalPipelineToApi(payload.items || []);
-        setLinks(pipelineItemsToMap(items));
-        setPipelineSource(payload.backingSource || "auricrux-central-table-store");
-      })
-      .catch((err) => {
-        if (!active) return;
-        setLinks({});
-        setPipelineSource("error");
-        setPipelineLoadError(err?.message || "Pipeline API unreachable.");
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
 
   async function savePipelineLink(bidId, patch) {
     const merged = { ...normalizeLink(links[bidId]), ...patch, bidId };
@@ -160,13 +148,9 @@ export default function PortalPipeline() {
     };
     try {
       const payload = await upsertPipelineLink(body);
-      const nextLinks = { ...links, [bidId]: normalizeLink(payload.item) };
-      setLinks(nextLinks);
-      setPipelineSource(payload.backingSource || "auricrux-central-table-store");
-      setPipelineLoadError("");
-      return nextLinks;
+      await pipelineLoad.reload();
+      return { ...links, [bidId]: normalizeLink(payload.item) };
     } catch (err) {
-      setPipelineLoadError(err?.message || "Unable to save pipeline link.");
       throw err;
     }
   }
@@ -294,8 +278,7 @@ export default function PortalPipeline() {
       const invoiceId = bridged?.portalInvoice?.id;
       if (invoiceId) {
         await savePipelineLink(activeBid.id, { invoiceId, projectId, estimateId });
-        const payload = await fetchPortalInvoices();
-        setInvoices(payload.items || []);
+        await invoicesLoad.reload();
         refreshSyncStamp("Pipeline invoice issued from governed estimate bridge");
         return;
       }
@@ -309,8 +292,7 @@ export default function PortalPipeline() {
         if (invoiceId) {
           await issuePortalInvoice(invoiceId);
           await savePipelineLink(activeBid.id, { invoiceId, projectId });
-          const payload = await fetchPortalInvoices();
-          setInvoices(payload.items || []);
+          await invoicesLoad.reload();
         }
         refreshSyncStamp("Pipeline invoice issued");
       } catch (err) {
@@ -341,6 +323,13 @@ export default function PortalPipeline() {
         eyebrow="Pipeline wizard"
         title={`${companyName} commercial flow`}
         detail="Select a job, complete each step in order, and keep billing tied to the same opportunity."
+      />
+
+      <PortalApiStatusBanner
+        status={pipelineLoad.status}
+        error={pipelineLoad.error}
+        onRetry={pipelineLoad.reload}
+        label="pipeline"
       />
 
       {pipelineLoadError ? <PortalAlert tone="warning">{pipelineLoadError}</PortalAlert> : null}
