@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-26T18:10:14.346Z",
-  "runId": "LMS-WFR-1782497380663",
+  "generatedAt": "2026-06-26T20:18:09.043Z",
+  "runId": "LMS-WFR-1782505059796",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -114,11 +114,11 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-ctas.mjs",
-      "guidance": "I am Auricrux. I have logged your command for validate-academy-ctas.mjs. Review the active bid and advance the next milestone."
+      "guidance": "I am Auricrux. I have worked bids, projects, and field operations across commercial construction. In this segment on Academy Simulation scope and role, I am teaching you the way I would onboard someone on my own payroll. Build exam-ready competency in academy simulation for contractor command qualification in bids, project workflow, and field application. I am walking through script:validate-acade"
     },
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+      "guidance": "I am Auricrux. I have logged your lab request for Validate native commerce journey in Academy. Review the script output for validate-academy-native-commerce-journey.mjs and confirm the expected learner experience."
     },
     {
       "step": "SWA route /academy",
@@ -129,12 +129,19 @@
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 33.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 34.",
   "state": {
-    "runCount": 33,
+    "runCount": 34,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 33,
+    "consecutiveFailures": 34,
     "history": [
+      {
+        "at": "2026-06-26T20:18:09.043Z",
+        "runId": "LMS-WFR-1782505059796",
+        "complete": false,
+        "rounds": 1,
+        "failures": 6
+      },
       {
         "at": "2026-06-26T18:10:14.345Z",
         "runId": "LMS-WFR-1782497380663",
@@ -337,17 +344,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 35
-      },
-      {
-        "at": "2026-06-25T12:38:26.682Z",
-        "runId": "LMS-WFR-1782391091473",
-        "complete": false,
-        "rounds": 1,
-        "failures": 35
       }
     ],
-    "lastRunUtc": "2026-06-26T18:10:14.345Z",
+    "lastRunUtc": "2026-06-26T20:18:09.043Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782497380663"
+    "lastRunId": "LMS-WFR-1782505059796"
   }
 }
