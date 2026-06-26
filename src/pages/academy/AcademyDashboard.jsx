@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import useAcademyLms from "../../hooks/useAcademyLms";
+import { allowDemoFallbacks } from "../../config/productionMode";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, DPOR_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, ELECTRICAL_LICENSURE_UNITS, LICENSURE_PATHWAYS, organizeApiCatalogByLane, APPRENTICESHIP_TRADES, APPRENTICESHIP_TRADE_LEVELS, FCA_HOWTO_SEQUENCE, PROFESSIONAL_PATHWAYS } from "../../academyOfferings";
 import { listPathwayLmsConfigs } from "../../academyPathwayLms";
@@ -217,14 +218,16 @@ export default function AcademyDashboard() {
       />
 
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
-        <div style={{ ...cardStyle, marginBottom: 24, border: catalogIntegrity.aligned ? "1px solid #bbf7d0" : "1px solid #fde68a", background: catalogIntegrity.aligned ? "#f0fdf4" : "#fffbeb" }}>
-          <strong style={{ color: catalogIntegrity.aligned ? "#15803d" : "#b45309" }}>
-            Catalog integrity: {catalogIntegrity.actualTotal}/{catalogIntegrity.expectedTotal} programs
-          </strong>
-          <span style={{ color: "#475569", marginLeft: 8 }}>
-            {catalogIntegrity.aligned ? "Training catalog is up to date." : "Training catalog is still syncing — refresh in a moment if counts look low."}
-          </span>
-        </div>
+        {allowDemoFallbacks() ? (
+          <div style={{ ...cardStyle, marginBottom: 24, border: catalogIntegrity.aligned ? "1px solid #bbf7d0" : "1px solid #fde68a", background: catalogIntegrity.aligned ? "#f0fdf4" : "#fffbeb" }}>
+            <strong style={{ color: catalogIntegrity.aligned ? "#15803d" : "#b45309" }}>
+              Catalog integrity: {catalogIntegrity.actualTotal}/{catalogIntegrity.expectedTotal} programs
+            </strong>
+            <span style={{ color: "#475569", marginLeft: 8 }}>
+              {catalogIntegrity.aligned ? "Training catalog is up to date." : "Training catalog is still syncing — refresh in a moment if counts look low."}
+            </span>
+          </div>
+        ) : null}
 
         {nextEnrollment ? (
           <section style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>

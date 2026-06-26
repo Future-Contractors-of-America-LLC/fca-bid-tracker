@@ -195,7 +195,38 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   }
 
   function renderLecturePanel() {
+    const lectureVideoUrl = module?.lectureVideoUrl;
     const lectureSrc = module?.auricruxLectureUrl || module?.lectureUrl || module?.mediaUrl;
+
+    if (lectureVideoUrl) {
+      return (
+        <div style={{ display: "grid", gap: 12 }}>
+          <video
+            controls
+            playsInline
+            preload="metadata"
+            style={{ ...iframeStyle, minHeight: 360, background: "#0f172a" }}
+            src={lectureVideoUrl}
+          >
+            Your browser does not support embedded video.
+          </video>
+          {lectureSrc ? (
+            <details>
+              <summary style={{ cursor: "pointer", color: "#475569", fontWeight: 600 }}>
+                Transcript and operator notes
+              </summary>
+              <iframe
+                title={`Module ${moduleNumber} Auricrux lecture transcript`}
+                src={lectureSrc}
+                style={{ ...iframeStyle, minHeight: 320, marginTop: 10 }}
+                loading="lazy"
+              />
+            </details>
+          ) : null}
+        </div>
+      );
+    }
+
     if (lectureSrc) {
       return (
         <iframe

@@ -70,13 +70,13 @@ function modeMeta(mode, poweredByLlm) {
     };
   }
 
-  if (mode === "live") {
+  if (mode === "contextual-assistant" || mode === "live") {
     return {
-      label: "Guidance mode",
-      tone: "#166534",
-      bg: "#dcfce7",
-      border: "#86efac",
-      summary: "Connected to Auricrux assistant with rule-based guidance.",
+      label: "Operator guide",
+      tone: "#92400e",
+      bg: "#fffbeb",
+      border: "#fde68a",
+      summary: "Rule-based routing — LLM unavailable. Answers may be generic until the model connects.",
     };
   }
 

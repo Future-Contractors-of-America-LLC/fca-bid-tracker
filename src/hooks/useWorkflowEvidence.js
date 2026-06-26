@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchWorkflowAudit, fetchWorkflowFiles, mutateWorkflowFile } from "../api/workflowClient";
+import { allowDemoFallbacks } from "../config/productionMode";
 import { portalFiles, projectAuditEvents } from "../systemState";
 
 function scopeSeedFiles(files, projectId, filters = {}) {
@@ -39,11 +40,17 @@ function scopeSeedAudit(events, projectId) {
 
 export default function useWorkflowEvidence(projectId) {
   const [filters, setFilters] = useState({ category: "All", status: "All", q: "" });
-  const [files, setFiles] = useState(() => scopeSeedFiles(portalFiles, projectId, filters));
-  const [auditEvents, setAuditEvents] = useState(() => scopeSeedAudit(projectAuditEvents, projectId));
+  const [files, setFiles] = useState(() =>
+    allowDemoFallbacks() ? scopeSeedFiles(portalFiles, projectId, filters) : [],
+  );
+  const [auditEvents, setAuditEvents] = useState(() =>
+    allowDemoFallbacks() ? scopeSeedAudit(projectAuditEvents, projectId) : [],
+  );
   const [meta, setMeta] = useState({
-    backingSource: "seeded-system-state",
-    persistenceState: "Fallback workflow evidence active",
+    backingSource: allowDemoFallbacks() ? "seeded-system-state" : "api-pending",
+    persistenceState: allowDemoFallbacks()
+      ? "Fallback workflow evidence active"
+      : "Loading workflow evidence",
     lastSyncedAt: null,
   });
 
@@ -61,14 +68,25 @@ export default function useWorkflowEvidence(projectId) {
         persistenceState: "Workflow-backed file and audit evidence active",
         lastSyncedAt: new Date().toISOString(),
       });
-    } catch {
-      setFiles(scopeSeedFiles(portalFiles, projectId, filters));
-      setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId));
-      setMeta({
-        backingSource: "seeded-system-state",
-        persistenceState: "Fallback workflow evidence active",
-        lastSyncedAt: null,
-      });
+    } catch (error) {
+      if (allowDemoFallbacks()) {
+        setFiles(scopeSeedFiles(portalFiles, projectId, filters));
+        setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId));
+        setMeta({
+          backingSource: "seeded-system-state",
+          persistenceState: "Fallback workflow evidence active",
+          lastSyncedAt: null,
+        });
+      } else {
+        setFiles([]);
+        setAuditEvents([]);
+        setMeta({
+          backingSource: "api-error",
+          persistenceState: error?.message || "Workflow API unavailable",
+          error: true,
+          lastSyncedAt: null,
+        });
+      }
     }
   }, [projectId, filters]);
 
@@ -91,15 +109,26 @@ export default function useWorkflowEvidence(projectId) {
           persistenceState: "Workflow-backed file and audit evidence active",
           lastSyncedAt: new Date().toISOString(),
         });
-      } catch {
+      } catch (error) {
         if (!active) return;
-        setFiles(scopeSeedFiles(portalFiles, projectId, filters));
-        setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId));
-        setMeta({
-          backingSource: "seeded-system-state",
-          persistenceState: "Fallback workflow evidence active",
-          lastSyncedAt: null,
-        });
+        if (allowDemoFallbacks()) {
+          setFiles(scopeSeedFiles(portalFiles, projectId, filters));
+          setAuditEvents(scopeSeedAudit(projectAuditEvents, projectId));
+          setMeta({
+            backingSource: "seeded-system-state",
+            persistenceState: "Fallback workflow evidence active",
+            lastSyncedAt: null,
+          });
+        } else {
+          setFiles([]);
+          setAuditEvents([]);
+          setMeta({
+            backingSource: "api-error",
+            persistenceState: error?.message || "Workflow API unavailable",
+            error: true,
+            lastSyncedAt: null,
+          });
+        }
       }
     }
 

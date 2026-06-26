@@ -112,7 +112,10 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
     setEnrollBusy(true);
     setActionMessage("");
     try {
-      await assignProgram(learnerId, programId, "Auricrux");
+      await assignProgram(learnerId, programId, "Auricrux", "", {
+        email: learnerId,
+        fullName: session?.displayName || session?.companyName || session?.customerName,
+      });
       setActionMessage("Enrollment active. Start with module 1 below.");
     } catch (error) {
       setActionMessage(error.message || "Unable to enroll in this program.");
