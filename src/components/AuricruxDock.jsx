@@ -143,6 +143,22 @@ const continuityActions = [
   { href: "/portal/support", label: "Support" },
 ];
 
+function buildRecentTurns(log) {
+  const turns = [];
+  const chronological = [...(log || [])].reverse();
+  for (const entry of chronological) {
+    const text = entry?.m || "";
+    if (text.startsWith("SENT: ")) {
+      turns.push({ role: "user", content: text.slice(6).trim() });
+    } else if (text.startsWith("AURICRUX: ")) {
+      const reply = text.replace(/^AURICRUX:\s*/i, "").replace(/\s*\(Guidance mode.*\)$/i, "").trim();
+      if (reply) turns.push({ role: "assistant", content: reply });
+    }
+    if (turns.length >= 4) break;
+  }
+  return turns.slice(-4);
+}
+
 function buildChatContext({
   route,
   portalTenant,
@@ -152,10 +168,12 @@ function buildChatContext({
   academyContext,
   designParams,
   pageProjectId,
+  recentTurns,
 }) {
   if (!route.startsWith("/portal")) {
     return {
       company: "Future Contractors of America",
+      tenantId: portalTenant.id,
       route,
       nextAction: route.startsWith("/academy")
         ? "Browse Academy programs or assign training to your crew."
@@ -163,11 +181,14 @@ function buildChatContext({
       blocker: "None — public discovery lane.",
       pageSurface: route === "/" ? "marketing-home" : "public-site",
       academyContext: academyContext || null,
+      recentTurns: recentTurns || [],
     };
   }
 
   return {
+    tenantId: portalTenant.id,
     company: portalTenant.name,
+    route,
     nextAction: workspaceContext.currentNextAction,
     blocker: auricruxRail.currentBlocker,
     projectId: pageProjectId,
@@ -175,6 +196,7 @@ function buildChatContext({
     bidId: portalPageContext?.bidId || null,
     pageSurface: portalPageContext?.surface || null,
     academyContext: academyContext || null,
+    recentTurns: recentTurns || [],
     designContext: route.includes("/portal/design")
       ? {
           fileId: designParams.get("fileId") || "",
@@ -309,6 +331,7 @@ export default function AuricruxDock() {
       const data = await sendAuricruxMessage({
         message: cmd,
         route,
+        tenantId: portalTenant.id,
         context: buildChatContext({
           route,
           portalTenant,
@@ -318,6 +341,7 @@ export default function AuricruxDock() {
           academyContext,
           designParams,
           pageProjectId,
+          recentTurns: buildRecentTurns(log),
         }),
       });
       setMode(data.poweredByLlm || data.mode === "llm-assistant" ? "live" : "fallback");

@@ -15,11 +15,11 @@ function formatApiError(response, payload, fallbackMessage) {
   return payload?.error || `${fallbackMessage}${statusSuffix}.`;
 }
 
-export async function sendAuricruxMessage({ message, route, context }) {
+export async function sendAuricruxMessage({ message, route, context, tenantId }) {
   const response = await centralFetch("/api/auricrux", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, route, context }),
+    body: JSON.stringify({ message, route, context, tenantId }),
   });
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
