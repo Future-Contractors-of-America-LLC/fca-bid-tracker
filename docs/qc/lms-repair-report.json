@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-26T10:36:22.705Z",
-  "runId": "LMS-WFR-1782470169039",
+  "generatedAt": "2026-06-26T12:24:32.589Z",
+  "runId": "LMS-WFR-1782476645838",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -114,7 +114,7 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-ctas.mjs",
-      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+      "guidance": "I am Auricrux. I have managed bids, built projects, and licensed trades across commercial construction. In this segment on Weeks 1-4: Course introduction, syllabus review, and learning outcomes for CTC 101, I am teaching you the way I would onboard someone on my own payroll. Analyze and apply ctc 101 with accredited rigor: evidence-based conclusions, field-relevant cases, and audit-ready deliverab"
     },
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
@@ -129,12 +129,19 @@
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 27.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 28.",
   "state": {
-    "runCount": 27,
+    "runCount": 28,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 27,
+    "consecutiveFailures": 28,
     "history": [
+      {
+        "at": "2026-06-26T12:24:32.589Z",
+        "runId": "LMS-WFR-1782476645838",
+        "complete": false,
+        "rounds": 1,
+        "failures": 6
+      },
       {
         "at": "2026-06-26T10:36:22.705Z",
         "runId": "LMS-WFR-1782470169039",
@@ -325,8 +332,8 @@
         "failures": 35
       }
     ],
-    "lastRunUtc": "2026-06-26T10:36:22.705Z",
+    "lastRunUtc": "2026-06-26T12:24:32.589Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782470169039"
+    "lastRunId": "LMS-WFR-1782476645838"
   }
 }
