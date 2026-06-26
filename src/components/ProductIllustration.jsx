@@ -141,7 +141,13 @@ export default function ProductIllustration({ variant = "home", compact = false 
           <div style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 14, background: "#fff" }}>
             {variant === "auricrux" ? (
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 12 }}>
-                <AuricruxBrandMark compact showLabel={false} />
+                <img
+                  src="/brand/auricrux/auricrux-avatar-front.png"
+                  alt=""
+                  width={56}
+                  height={56}
+                  style={{ borderRadius: "50%", objectFit: "cover", objectPosition: "center 8%", border: "2px solid #d49a22" }}
+                />
                 <div>
                   <div style={{ fontWeight: 800, color: "#7c5313" }}>Auricrux</div>
                   <div style={{ color: "#64748b", fontSize: 13 }}>Ask questions. Get next steps. Stay on the job.</div>

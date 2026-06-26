@@ -47,12 +47,20 @@
       "file": "auricrux/auricrux-wordmark.svg"
     },
     {
-      "id": "auricrux-portrait",
+      "id": "auricrux-character",
       "type": "design",
-      "name": "Auricrux Operator Portrait",
-      "file": "auricrux/auricrux-portrait.png",
-      "colors": ["#D49A22", "#0F172A"],
-      "description": "Photorealistic construction-executive portrait for dock, login, and academy presenter panels."
+      "name": "Auricrux Construction Operator Character",
+      "file": "auricrux/auricrux-character-turnaround.png",
+      "colors": ["#FF8C00", "#0F172A", "#FFFFFF", "#D49A22"],
+      "description": "Canonical FCA-branded construction operator turnaround (FRONT/BACK/LEFT/RIGHT). Hard hat, hi-vis vest with FCA mark, tool belt."
+    },
+    {
+      "id": "auricrux-avatar-front",
+      "type": "design",
+      "name": "Auricrux Avatar Front View",
+      "file": "auricrux/auricrux-avatar-front.png",
+      "colors": ["#FF8C00", "#0F172A"],
+      "description": "Front view crop from character turnaround — dock, login, chat, and academy presenter panels."
     },
     {
       "id": "auricrux-humanoid",

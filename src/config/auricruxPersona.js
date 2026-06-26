@@ -3,9 +3,13 @@
 export const auricruxPersona = {
   name: "Auricrux",
   markSrc: "/brand/auricrux/auricrux-crux-mark.svg",
-  portraitSrc: "/brand/auricrux/auricrux-portrait.png",
-  /** Logo/sigil for legacy academy HTML paths */
-  humanoidMarkSrc: "/brand/auricrux/auricrux-portrait.png",
+  /** Front view from canonical FCA construction-operator character sheet */
+  avatarSrc: "/brand/auricrux/auricrux-avatar-front.png",
+  /** Full FRONT/BACK/LEFT/RIGHT turnaround reference */
+  characterTurnaroundSrc: "/brand/auricrux/auricrux-character-turnaround.png",
+  /** @deprecated wrong asset — use avatarSrc */
+  portraitSrc: "/brand/auricrux/auricrux-avatar-front.png",
+  humanoidMarkSrc: "/brand/auricrux/auricrux-avatar-front.png",
   title: "Executive construction operator",
   tagline: "Field-tested. Boardroom clear.",
   intro:

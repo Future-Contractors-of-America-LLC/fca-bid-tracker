@@ -1,4 +1,5 @@
-import AuricruxBrandMark from "../../components/AuricruxBrandMark";
+import AuricruxAvatar from "../../components/AuricruxAvatar";
+import { auricruxPersona } from "../../config/auricruxPersona";
 import MarketingPageShell from "../../components/MarketingPageShell";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
@@ -29,16 +30,22 @@ export default function AuricruxPage() {
       illustrationKey="auricrux"
     >
       <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center", flexWrap: "wrap", marginBottom: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: 20, alignItems: "center", flexWrap: "wrap", marginBottom: 16 }}>
           <div>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Always on, always in context</div>
             <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux works inside your live workspace</h2>
+            <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
+              Ask Auricrux what to do next on any bid, project, or training module. It reads your tenant state and gives actionable guidance — not generic marketing copy.
+            </p>
           </div>
-          <AuricruxBrandMark />
+          <AuricruxAvatar state="idle" size={128} compact />
         </div>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          Ask Auricrux what to do next on any bid, project, or training module. It reads your tenant state and gives actionable guidance — not generic marketing copy.
-        </p>
+        <img
+          src={auricruxPersona.characterTurnaroundSrc}
+          alt="Auricrux FCA construction operator character reference — front, back, left, and right views"
+          style={{ width: "100%", maxWidth: 960, borderRadius: 12, border: "1px solid #e2e8f0", display: "block", margin: "0 auto" }}
+          loading="lazy"
+        />
       </div>
 
       <CustomerTrustPanel

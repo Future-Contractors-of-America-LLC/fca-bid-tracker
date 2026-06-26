@@ -1,10 +1,10 @@
 import { brandIdentity } from "../brandIdentity";
 import { auricruxPersona } from "../config/auricruxPersona";
 
-const PORTRAIT_SRC = auricruxPersona.portraitSrc || "/brand/auricrux/auricrux-portrait.png";
+const AVATAR_SRC = auricruxPersona.avatarSrc || "/brand/auricrux/auricrux-avatar-front.png";
 
 /**
- * Auricrux avatar — photorealistic portrait with live state cues.
+ * Auricrux avatar — FCA construction operator character (front view) with live state cues.
  * state: idle | listening | thinking | speaking
  */
 export default function AuricruxAvatar({
@@ -84,7 +84,7 @@ export default function AuricruxAvatar({
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center 18%;
+          object-position: center 8%;
         }
         .auricrux-avatar__badge {
           position: absolute;
@@ -110,8 +110,8 @@ export default function AuricruxAvatar({
         style={{ width: size, height: size }}
       >
         <img
-          src={PORTRAIT_SRC}
-          alt=""
+          src={AVATAR_SRC}
+          alt="Auricrux construction operator"
           className="auricrux-avatar__photo"
           width={size}
           height={size}
