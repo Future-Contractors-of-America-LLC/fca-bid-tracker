@@ -55,6 +55,12 @@ const PROXIES = [
   { dir: "academy-lms", route: "academy-lms", centralPath: "/academy-lms" },
   { dir: "auricrux", route: "auricrux", centralPath: "/auricrux", methods: ["get", "post", "options"] },
   {
+    dir: "auricrux-speak",
+    route: "auricrux/speak",
+    centralPath: "/auricrux/speak",
+    methods: ["post", "options"],
+  },
+  {
     dir: "auricrux-actions",
     route: "auricrux/actions",
     centralPath: "/auricrux/actions",
