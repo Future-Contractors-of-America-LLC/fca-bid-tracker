@@ -1,7 +1,7 @@
 # FCA Workflow Repair Loop
 
-- **When:** 2026-06-27T09:28:10.755Z
-- **Run ID:** WFR-1782552347949
+- **When:** 2026-06-27T11:25:14.468Z
+- **Run ID:** WFR-1782559418750
 - **Protocol:** Observe -> Act -> Review (FCA/Auricrux coverage law)
 - **Result:** OPEN � failures remain after bounded repair
 
@@ -24,7 +24,7 @@
 
 ## Summary
 
-Workflow simulation still failing after 3 bounded repair round(s). 0 item(s) queued. Consecutive failures: 4.
+Workflow simulation still failing after 3 bounded repair round(s). 0 item(s) queued. Consecutive failures: 5.
 
 ## For the founder
 
