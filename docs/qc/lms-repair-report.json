@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-27T02:05:35.905Z",
-  "runId": "LMS-WFR-1782525901768",
+  "generatedAt": "2026-06-27T04:35:20.675Z",
+  "runId": "LMS-WFR-1782534882133",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -107,21 +107,28 @@
       "outcome": "swa-redeploy-queued",
       "redeploy": {
         "dispatched": false,
-        "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
+        "reason": "could not create workflow dispatch event: HTTP 504: 504 Gateway Timeout (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/285653398/dispatches)\n"
       }
     }
   ],
   "auricruxReviews": [],
   "redeploy": {
     "dispatched": false,
-    "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
+    "reason": "could not create workflow dispatch event: HTTP 504: 504 Gateway Timeout (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/285653398/dispatches)\n"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 40.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 41.",
   "state": {
-    "runCount": 40,
+    "runCount": 41,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 40,
+    "consecutiveFailures": 41,
     "history": [
+      {
+        "at": "2026-06-27T04:35:20.675Z",
+        "runId": "LMS-WFR-1782534882133",
+        "complete": false,
+        "rounds": 1,
+        "failures": 6
+      },
       {
         "at": "2026-06-27T02:05:35.905Z",
         "runId": "LMS-WFR-1782525901768",
@@ -324,17 +331,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 2
-      },
-      {
-        "at": "2026-06-25T18:56:55.499Z",
-        "runId": "LMS-WFR-1782413800835",
-        "complete": false,
-        "rounds": 1,
-        "failures": 1
       }
     ],
-    "lastRunUtc": "2026-06-27T02:05:35.905Z",
+    "lastRunUtc": "2026-06-27T04:35:20.675Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782525901768"
+    "lastRunId": "LMS-WFR-1782534882133"
   }
 }
