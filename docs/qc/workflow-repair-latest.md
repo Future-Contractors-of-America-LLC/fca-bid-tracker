@@ -1,7 +1,7 @@
 # FCA Workflow Repair Loop
 
-- **When:** 2026-06-27T20:20:58.873Z
-- **Run ID:** WFR-1782591537370
+- **When:** 2026-06-27T20:48:22.949Z
+- **Run ID:** WFR-1782593182239
 - **Protocol:** Observe -> Act -> Review (FCA/Auricrux coverage law)
 - **Result:** RECOVERED � workflow simulation green
 
@@ -16,7 +16,7 @@
 
 ## Summary
 
-Workflow simulation recovered in 1 round(s). Consecutive successes: 5.
+Workflow simulation recovered in 1 round(s). Consecutive successes: 6.
 
 ## For the founder
 
