@@ -5,6 +5,8 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import CreateBidForm from "../../components/portal/CreateBidForm";
+import FounderOperatingGuide from "../../components/portal/FounderOperatingGuide";
 import { publishPortalPageContext } from "../../portalPageContext";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
 import { routeStateOverlays } from "../../systemState";
@@ -37,6 +39,7 @@ export default function PortalBids() {
   const {
     bids,
     meta,
+    createBid,
     updateBidStatus,
     clearBidBlocker,
     updateBidQualification,
@@ -44,6 +47,7 @@ export default function PortalBids() {
     markWonAndCreateProject,
   } = useBidWorkspace();
   const [activeBidId, setActiveBidId] = useState(() => bids[0]?.id || "");
+  const [creatingBid, setCreatingBid] = useState(false);
   const activeBid = bids.find((entry) => entry.id === activeBidId) || bids[0] || null;
   const brandSkin = readBrandSkin();
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
@@ -100,11 +104,28 @@ export default function PortalBids() {
 
       <PortalQuickStats
         items={[
-          { label: "Open bids", value: bids.length, hint: "Visible in this workspace" },
+          { label: "Open bids", value: bids.length, hint: "Live on your spine" },
           { label: "Qualified", value: qualifiedCount, hint: "Ready for next gate" },
           { label: "Blockers", value: blockedCount, hint: "Need attention" },
         ]}
       />
+
+      <CreateBidForm
+        busy={creatingBid}
+        onCreate={async (fields) => {
+          setCreatingBid(true);
+          try {
+            const bid = await createBid(fields);
+            setActiveBidId(bid.id);
+          } finally {
+            setCreatingBid(false);
+          }
+        }}
+      />
+
+      {!bids.length ? (
+        <FounderOperatingGuide bidsCount={0} companyName={companyName} />
+      ) : null}
 
       {activeBid?.id ? (
         <div style={{ marginBottom: 16 }}>

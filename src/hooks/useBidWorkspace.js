@@ -152,6 +152,38 @@ export default function useBidWorkspace() {
           throw err;
         }
       },
+      async createBid(fields, detail = "Created a real opportunity on the production spine.") {
+        try {
+          const payload = await mutateWorkflowBid("create-bid", { ...fields, detail, sourceRoute: "/portal/bids" });
+          const saved = updateBidWorkspace((current) => [payload.bid, ...current.filter((bid) => bid.id !== payload.bid.id)]);
+          setBids(saved);
+          setMeta({
+            backingSource: payload.backingSource || "api-workflow-store",
+            persistenceState: "Production bid created on governed spine",
+            loadError: "",
+            lastSyncedAt: new Date().toISOString(),
+          });
+          appendAutomationLog({
+            type: "bid-create",
+            title: `${payload.bid.package} created`,
+            detail,
+            route: "/portal/bids",
+          });
+          appendCommercialLog({
+            type: "bid-create",
+            title: `${payload.bid.package} added to qualification board`,
+            detail,
+            route: "/portal/bids",
+          });
+          return payload.bid;
+        } catch (err) {
+          setMeta((current) => ({
+            ...current,
+            loadError: err?.message || "Unable to create opportunity.",
+          }));
+          throw err;
+        }
+      },
       async markWonAndCreateProject(bidId, detail = "Won work converted into job setup.") {
         try {
           const payload = await mutateWorkflowBid("mark-won-create-project", { bidId, detail });

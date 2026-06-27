@@ -8,6 +8,7 @@ import useCustomerSession from "../../hooks/useCustomerSession";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import FounderOperatingGuide from "../../components/portal/FounderOperatingGuide";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import { fetchCommercialPipeline, migrateLocalPipelineToApi, pipelineItemsToMap } from "../../api/pipelineClient";
 import { fetchPortalInvoices } from "../../api/portalClient";
@@ -224,6 +225,7 @@ export default function PortalHome() {
       navDensity="full"
     >
       <ProductAccessStatusPanel session={session} />
+      <FounderOperatingGuide bidsCount={bids.length} companyName={companyName} />
       {activeProject?.id ? (
         <div style={{ marginBottom: 24 }}>
           <AuricruxInsightPanel
