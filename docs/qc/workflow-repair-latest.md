@@ -1,22 +1,30 @@
 # FCA Workflow Repair Loop
 
-- **When:** 2026-06-26T23:35:17.338Z
-- **Run ID:** WFR-1782516875108
+- **When:** 2026-06-27T00:00:55.165Z
+- **Run ID:** WFR-1782518351527
 - **Protocol:** Observe -> Act -> Review (FCA/Auricrux coverage law)
-- **Result:** RECOVERED � workflow simulation green
+- **Result:** OPEN � failures remain after bounded repair
 
 ## Rounds
 
-### Round 1 � PASS (17/17 steps)
-- (no failures)
+### Round 1 � FAIL (16/17 steps)
+- Auricrux recommend: HTTP 500
+
+### Round 2 � FAIL (16/17 steps)
+- Auricrux recommend: HTTP 500
+
+### Round 3 � FAIL (16/17 steps)
+- Auricrux recommend: HTTP 500
 
 ## Repair actions taken
 
-- No automated repairs applied
+- **retry-transient** Transient API failure: scheduled-retry
+- **retry-transient** Transient API failure: scheduled-retry
+- **retry-transient** Transient API failure: scheduled-retry
 
 ## Summary
 
-Workflow simulation recovered in 1 round(s). Consecutive successes: 42.
+Workflow simulation still failing after 3 bounded repair round(s). 0 item(s) queued. Consecutive failures: 1.
 
 ## For the founder
 
