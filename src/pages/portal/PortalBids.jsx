@@ -5,7 +5,6 @@ import CommercialContinuityFeed from "../../components/CommercialContinuityFeed"
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
-import AuricruxOperatePanel from "../../components/auricrux/AuricruxOperatePanel";
 import { publishPortalPageContext } from "../../portalPageContext";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
 import { routeStateOverlays } from "../../systemState";
@@ -109,11 +108,6 @@ export default function PortalBids() {
 
       {activeBid?.id ? (
         <div style={{ marginBottom: 16 }}>
-          <AuricruxOperatePanel
-            bidId={activeBid.id}
-            packageLabel={activeBid.package || activeBid.id}
-            sourceRoute="/portal/bids"
-          />
           <AuricruxInsightPanel
             title="Auricrux Qualification Intelligence"
             targetObjectType="Bid"
@@ -125,6 +119,12 @@ export default function PortalBids() {
             actionLabel="Open pipeline"
             tone="blue"
             liveRecommend
+            operateConfig={{
+              variant: "bid-doteach",
+              bidId: activeBid.id,
+              packageLabel: activeBid.package || activeBid.id,
+              sourceRoute: "/portal/bids",
+            }}
           />
         </div>
       ) : null}

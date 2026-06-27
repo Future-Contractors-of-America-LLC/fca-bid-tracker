@@ -1,4 +1,5 @@
 import useAuricruxLiveInsight from "../../hooks/useAuricruxLiveInsight";
+import AuricruxOperatePanel from "./AuricruxOperatePanel";
 
 export default function AuricruxInsightPanel({
   title = "Auricrux Intelligence",
@@ -10,10 +11,12 @@ export default function AuricruxInsightPanel({
   actionLabel = "Open",
   tone = "amber",
   liveRecommend = true,
+  useOperationalChat = true,
   targetObjectType = "Project",
   targetObjectId = "",
   sourceRoute = "",
   rationale = "",
+  operateConfig = null,
 }) {
   const resolvedRationale =
     rationale || nextAction || `Provide governed next-step guidance for ${targetObjectType} ${targetObjectId || "workspace"}.`;
@@ -25,11 +28,12 @@ export default function AuricruxInsightPanel({
     sourceRoute,
     rationale: resolvedRationale,
     fallbackNextAction: nextAction || "",
+    useOperationalChat,
   });
 
   const displayNextAction = live.nextAction || nextAction;
 
-  if (!displayNextAction && !recommendations.length && !children) return null;
+  if (!displayNextAction && !recommendations.length && !children && !operateConfig) return null;
 
   const palette =
     tone === "blue"
@@ -38,13 +42,19 @@ export default function AuricruxInsightPanel({
         ? { border: "#86efac", bg: "linear-gradient(180deg, #ecfdf5 0%, #fff 100%)", label: "#047857", btn: "#047857" }
         : { border: "#fde68a", bg: "linear-gradient(180deg, #fffbeb 0%, #fff 100%)", label: "#92400e", btn: "#d97706" };
 
+  const liveLabel = live.operational
+    ? "Live execution brief"
+    : live.isLive
+      ? "Live recommendation"
+      : "Guidance mode";
+
   return (
     <div style={{ border: `1px solid ${palette.border}`, borderRadius: 14, padding: 16, background: palette.bg, marginBottom: 16 }}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", marginBottom: 8 }}>
         <div style={{ color: palette.label, fontWeight: 800 }}>{title}</div>
         {liveRecommend && targetObjectId ? (
           <span style={{ fontSize: 11, fontWeight: 700, color: live.isLive ? "#047857" : "#64748b" }}>
-            {live.loading ? "Auricrux loading…" : live.isLive ? "Live recommendation" : "Guidance mode"}
+            {live.loading ? "Auricrux loading…" : liveLabel}
           </span>
         ) : null}
       </div>
@@ -58,6 +68,12 @@ export default function AuricruxInsightPanel({
             </div>
           ))}
         </div>
+      ) : null}
+      {operateConfig ? (
+        <AuricruxOperatePanel
+          {...operateConfig}
+          sourceRoute={operateConfig.sourceRoute || sourceRoute}
+        />
       ) : null}
       {children}
       {recommendations.length ? (

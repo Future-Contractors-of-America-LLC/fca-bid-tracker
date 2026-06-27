@@ -347,6 +347,12 @@ export default function PortalPipeline() {
             actionLabel="Open qualification board"
             tone="blue"
             liveRecommend
+            operateConfig={{
+              variant: "bid-doteach",
+              bidId: activeBid.id,
+              packageLabel: activeBid.package || activeBid.id,
+              sourceRoute: "/portal/pipeline",
+            }}
           />
         </div>
       ) : null}

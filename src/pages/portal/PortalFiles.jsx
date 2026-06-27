@@ -10,6 +10,7 @@ import { fileGovernance } from "../../fileGovernance";
 import { qualificationEvidencePackets, qualificationEvidenceByProject } from "../../qualificationEvidence";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { submitAuricruxAction } from "../../api/auricruxActionsClient";
+import { publishPortalPageContext } from "../../portalPageContext";
 import { fetchSharePointDriveStatus, listSharePointFolderItems, sharePointItemHref } from "../../api/m365Client";
 
 const cardStyle = {
@@ -142,6 +143,20 @@ export default function PortalFiles() {
   const apiBacked = evidenceMeta.backingSource === "api-workflow-store";
 
   useEffect(() => {
+    if (!visibleProject?.id) {
+      publishPortalPageContext(null);
+      return undefined;
+    }
+    publishPortalPageContext({
+      surface: "files",
+      projectId: visibleProject.id,
+      targetObjectType: "Project",
+      targetObjectId: visibleProject.id,
+    });
+    return () => publishPortalPageContext(null);
+  }, [visibleProject?.id]);
+
+  useEffect(() => {
     if (activeProject) {
       syncActiveProject(activeProject, `File spine synchronized to ${activeProject.id}`);
     }
@@ -195,13 +210,14 @@ export default function PortalFiles() {
     setBusyFileId(file.fileId);
     try {
       const payload = await submitAuricruxAction({
-        mode: "recommend",
-        targetObjectType: "File",
-        targetObjectId: file.fileId,
+        mode: "execute",
+        capabilityId: "plan-briefing",
+        targetObjectType: "Project",
+        targetObjectId: visibleProject.id,
         rationale: `Generate governed briefing for ${file.name} under project ${visibleProject.id}.`,
         sourceRoute: "/portal/files",
       });
-      const guidanceReply = payload?.guidance?.reply || "";
+      const guidanceReply = payload?.guidance?.reply || payload?.guidance || "";
       await handleFileAction(
         file,
         "create-briefing",
@@ -295,6 +311,7 @@ export default function PortalFiles() {
         <div style={{ marginBottom: 16 }}>
           <AuricruxInsightPanel
             title="Auricrux File Intelligence"
+            targetObjectType="Project"
             targetObjectId={visibleProject.id}
             sourceRoute="/portal/files"
             rationale="Review governed file posture, evidence links, and briefing readiness for the active project."
@@ -303,6 +320,16 @@ export default function PortalFiles() {
             actionLabel="Open design workspace"
             tone="blue"
             liveRecommend
+            operateConfig={{
+              variant: "execute",
+              capabilityId: "plan-briefing",
+              mode: "execute",
+              targetObjectType: "Project",
+              targetObjectId: visibleProject.id,
+              sourceRoute: "/portal/files",
+              buttonLabel: "Generate plan briefing with Auricrux",
+              description: "Execute governed plan briefing on the active project spine — scope gaps, evidence posture, and next commercial moves.",
+            }}
           />
         </div>
       ) : null}
