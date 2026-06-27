@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * FCA Academy LMS unified simulation ó Observe phases 1-4.
+ * FCA Academy LMS unified simulation ù Observe phases 1-4.
  * Emits lms-simulation-report.json for the repair loop.
  */
 import fs from "node:fs";
@@ -68,7 +68,7 @@ function writeReport() {
     apiBase: apiBase || process.env.FCA_API_BASE || "",
     swaOrigin: swa.origin,
     scope: "FCA Academy LMS simulation",
-    summary: { passed, failed, skipped: 0, total: steps.length },
+    summary: { passed, failed, skipped: steps.filter((s) => s.status === "skip").length, total: steps.length },
     complete: failed === 0,
     phases: {
       staticQc: qc.failed,
@@ -91,7 +91,7 @@ function writeReport() {
 
 ## What this proves
 
-This robot exercises Academy catalog depth, live learner API mutations, SWA route reachability, and central content artifacts ó without manual LMS walkthrough.
+This robot exercises Academy catalog depth, live learner API mutations, SWA route reachability, and central content artifacts ù without manual LMS walkthrough.
 
 ## Phases
 

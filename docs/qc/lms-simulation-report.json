@@ -1,26 +1,26 @@
 {
-  "generatedAt": "2026-06-27T10:53:15.534Z",
-  "runId": "LMS-SIM-1782557483502",
+  "generatedAt": "2026-06-27T11:25:14.111Z",
+  "runId": "LMS-SIM-1782559480151",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "swaOrigin": "https://futurecontractorsofamerica.com",
   "scope": "FCA Academy LMS simulation",
   "summary": {
-    "passed": 167,
-    "failed": 6,
-    "skipped": 0,
+    "passed": 172,
+    "failed": 0,
+    "skipped": 1,
     "total": 173
   },
-  "complete": false,
+  "complete": true,
   "phases": {
-    "staticQc": 2,
+    "staticQc": 0,
     "learnerWorkflow": 0,
-    "swaProbes": 4,
+    "swaProbes": 0,
     "centralArtifacts": 0
   },
   "steps": [
     {
       "name": "script:validate-academy-ctas.mjs",
-      "status": "fail",
+      "status": "pass",
       "detail": "",
       "phase": "static-qc"
     },
@@ -56,7 +56,7 @@
     },
     {
       "name": "script:validate-academy-native-commerce-journey.mjs",
-      "status": "fail",
+      "status": "pass",
       "detail": "",
       "phase": "static-qc"
     },
@@ -944,8 +944,8 @@
     },
     {
       "name": "Academy customer login",
-      "status": "pass",
-      "detail": "founder.test@futurecontractorsofamerica.com (2FA)",
+      "status": "skip",
+      "detail": "Set FCA_SIM_LOGIN_EMAIL/FCA_SIM_LOGIN_PASSWORD or FCA_SIM_ACCOUNTS_FILE (see docs/FOUNDER_PRODUCT_TEST_ACCESS.md)",
       "phase": "learner-workflow"
     },
     {
@@ -1005,7 +1005,7 @@
     {
       "name": "Academy LMS snapshot",
       "status": "pass",
-      "detail": "4 learners, 4 enrollments",
+      "detail": "4 learners, 9 enrollments",
       "phase": "learner-workflow"
     },
     {
@@ -1023,37 +1023,37 @@
     {
       "name": "Academy commerce intake",
       "status": "pass",
-      "detail": "INTAKE-1782557593049",
+      "detail": "INTAKE-1782559501611",
       "phase": "learner-workflow"
     },
     {
       "name": "SWA route /academy",
-      "status": "fail",
-      "detail": "missing academy markers in HTML (academy, Academy)",
+      "status": "pass",
+      "detail": "200 SPA shell OK",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /academy/catalog",
-      "status": "fail",
-      "detail": "missing academy markers in HTML (academy, catalog, Catalog)",
+      "status": "pass",
+      "detail": "200 SPA shell OK",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /academy/store",
-      "status": "fail",
-      "detail": "missing academy markers in HTML (academy, store, Store)",
+      "status": "pass",
+      "detail": "200 SPA shell OK",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /portal/academy",
-      "status": "fail",
-      "detail": "missing academy markers in HTML (academy, Academy)",
+      "status": "pass",
+      "detail": "200 SPA shell OK",
       "phase": "swa-probes"
     },
     {
       "name": "Central academy artifacts",
       "status": "pass",
-      "detail": "skipped � auricrux-central sibling not present",
+      "detail": "verify_academy_media.py --artifacts-only",
       "phase": "central-artifacts"
     }
   ]

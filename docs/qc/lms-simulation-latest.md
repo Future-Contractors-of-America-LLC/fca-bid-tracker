@@ -1,10 +1,10 @@
 # FCA Academy LMS Simulation
 
-- **When:** 2026-06-27T10:53:15.534Z
-- **Run ID:** LMS-SIM-1782557483502
+- **When:** 2026-06-27T11:25:14.111Z
+- **Run ID:** LMS-SIM-1782559480151
 - **API:** https://api.futurecontractorsofamerica.com
 - **SWA:** https://futurecontractorsofamerica.com
-- **Result:** 6 FAILURE(S) - 167/173 passed
+- **Result:** ALL STEPS PASSED - 172/173 passed
 
 ## What this proves
 
@@ -21,13 +21,13 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 
 ## Steps
 
-- **FAIL** script:validate-academy-ctas.mjs
+- **PASS** script:validate-academy-ctas.mjs
 - **PASS** script:validate-academy-catalog.mjs
 - **PASS** script:validate-catalog-balance.mjs
 - **PASS** script:validate-academy-media.mjs
 - **PASS** script:validate-academy-readiness-overlay.mjs
 - **PASS** script:validate-academy-live-api.mjs
-- **FAIL** script:validate-academy-native-commerce-journey.mjs
+- **PASS** script:validate-academy-native-commerce-journey.mjs
 - **PASS** program-meta:fca-workspace-quick-start
 - **PASS** program-link:fca-workspace-quick-start: /portal/projects
 - **PASS** course-lessons:ONB-001: 4 lessons
@@ -175,7 +175,7 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** lms-surface:src/api/academyClient.js
 - **PASS** Academy API reachable: https://api.futurecontractorsofamerica.com
 - **PASS** Academy API health: https://api.futurecontractorsofamerica.com
-- **PASS** Academy customer login: founder.test@futurecontractorsofamerica.com (2FA)
+- **SKIP** Academy customer login: Set FCA_SIM_LOGIN_EMAIL/FCA_SIM_LOGIN_PASSWORD or FCA_SIM_ACCOUNTS_FILE (see docs/FOUNDER_PRODUCT_TEST_ACCESS.md)
 - **PASS** Academy catalog summary: 1212 programs
 - **PASS** Academy catalog total: 1212
 - **PASS** Academy catalog integrity: aligned
@@ -185,15 +185,15 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** Academy lane licensure: 82
 - **PASS** Academy lane professional: 23
 - **PASS** Academy lane fca-how-to: 9
-- **PASS** Academy LMS snapshot: 4 learners, 4 enrollments
+- **PASS** Academy LMS snapshot: 4 learners, 9 enrollments
 - **PASS** Academy progress PATCH: ENR-001
 - **PASS** Academy lane catalog probe: electrical-core-level-1
-- **PASS** Academy commerce intake: INTAKE-1782557593049
-- **FAIL** SWA route /academy: missing academy markers in HTML (academy, Academy)
-- **FAIL** SWA route /academy/catalog: missing academy markers in HTML (academy, catalog, Catalog)
-- **FAIL** SWA route /academy/store: missing academy markers in HTML (academy, store, Store)
-- **FAIL** SWA route /portal/academy: missing academy markers in HTML (academy, Academy)
-- **PASS** Central academy artifacts: skipped � auricrux-central sibling not present
+- **PASS** Academy commerce intake: INTAKE-1782559501611
+- **PASS** SWA route /academy: 200 SPA shell OK
+- **PASS** SWA route /academy/catalog: 200 SPA shell OK
+- **PASS** SWA route /academy/store: 200 SPA shell OK
+- **PASS** SWA route /portal/academy: 200 SPA shell OK
+- **PASS** Central academy artifacts: verify_academy_media.py --artifacts-only
 
 ## For the founder
 

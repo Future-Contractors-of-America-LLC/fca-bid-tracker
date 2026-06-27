@@ -6,10 +6,20 @@ export function resolveCentralRoot(webRoot) {
   if (process.env.FCA_CENTRAL_ROOT) {
     return path.resolve(process.env.FCA_CENTRAL_ROOT);
   }
-  const nested = path.join(webRoot, "auricrux-central-work");
-  const sibling = path.resolve(webRoot, "..", "auricrux-central-work");
+
   const marker = "FCA_COVERAGE_MATRIX.md";
-  if (fs.existsSync(path.join(nested, marker))) return nested;
-  if (fs.existsSync(path.join(sibling, marker))) return sibling;
-  return sibling;
+  const candidates = [
+    path.join(webRoot, "auricrux-central"),
+    path.join(webRoot, "auricrux-central-work"),
+    path.resolve(webRoot, "..", "auricrux-central"),
+    path.resolve(webRoot, "..", "auricrux-central-work"),
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(path.join(candidate, marker))) {
+      return candidate;
+    }
+  }
+
+  return path.resolve(webRoot, "..", "auricrux-central");
 }

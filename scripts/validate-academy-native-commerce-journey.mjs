@@ -51,7 +51,7 @@ try {
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify({
       offerKind: "academy-course",
-      programKey: "cycle14-qc-course",
+      programKey: "electrical-apprenticeship-level-1",
       email: "cycle14-qc@futurecontractorsofamerica.com",
       company: "FCA QC",
     }),

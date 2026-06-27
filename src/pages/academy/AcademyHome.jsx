@@ -8,7 +8,7 @@ import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import PublicCtaRow from "../../components/PublicCtaRow";
-import { academyCtaSets, executiveSignalCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
+import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useAcademyLms from "../../hooks/useAcademyLms";
@@ -253,6 +253,7 @@ export default function AcademyHome() {
         refreshSyncStamp={refreshSyncStamp}
       />
       <CustomerCommsLaunchpad session={session} title="Launch training and customer communications from one place" />
+      <PublicCtaRow actions={publicBodyCtaSets.academyEntry} style={{ marginBottom: 24 }} />
       <AcademyLmsControlPanel />
 
       {(apiPrograms.length > 0 || enrollments.length > 0) && (
@@ -394,6 +395,7 @@ export default function AcademyHome() {
         </a>
       </div>
 
+      <PublicCtaRow actions={academyCtaSets.connectedPortalRoutes} style={{ marginBottom: 24 }} />
       <PublicCtaRow actions={[...academyCtaSets.continuityActions, ...academyCtaSets.productionClose]} />
       <ShellFooter />
     </div>

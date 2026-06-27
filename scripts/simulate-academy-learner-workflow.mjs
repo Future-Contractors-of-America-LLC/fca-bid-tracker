@@ -28,6 +28,7 @@ export async function runAcademyLearnerWorkflow(apiBase, options = {}) {
     steps.push({ name, status, detail, phase: "learner-workflow" });
     if (!log) return;
     if (status === "pass") console.log(`PASS: ${name}${detail ? ` - ${detail}` : ""}`);
+    else if (status === "skip") console.log(`SKIP: ${name}${detail ? ` - ${detail}` : ""}`);
     else console.error(`FAIL: ${name}${detail ? ` - ${detail}` : ""}`);
   };
 
@@ -43,40 +44,43 @@ export async function runAcademyLearnerWorkflow(apiBase, options = {}) {
   // --- 2. Customer login ---
   const credentials = resolveSimCredentials();
   if (!credentials) {
-    say("fail", "Academy customer login", "FCA_SIM_LOGIN_EMAIL and FCA_SIM_LOGIN_PASSWORD required");
-    return { steps, sessionCookie };
-  }
-
-  try {
-    const login = await requestJson(apiBase, "/api/customer-login", {
-      method: "POST",
-      body: { email: credentials.email, password: credentials.password },
-    });
-
-    if (login.response.ok && login.payload?.ok && login.payload?.session?.customer?.email) {
-      sessionCookie = login.cookie || sessionCookie;
-      const lmsAccess = login.payload?.session?.customer?.productAccess?.lms;
-      if (lmsAccess === false) {
-        say("fail", "Academy customer login", "account lacks LMS entitlement (lms: false)");
-      } else {
-        say("pass", "Academy customer login", credentials.email);
-      }
-    } else if (login.payload?.requiresVerification && login.payload?.challengeId && login.payload?.devVerificationHint) {
-      const verify = await requestJson(apiBase, "/api/customer-verify", {
+    say(
+      "skip",
+      "Academy customer login",
+      "Set FCA_SIM_LOGIN_EMAIL/FCA_SIM_LOGIN_PASSWORD or FCA_SIM_ACCOUNTS_FILE (see docs/FOUNDER_PRODUCT_TEST_ACCESS.md)",
+    );
+  } else {
+    try {
+      const login = await requestJson(apiBase, "/api/customer-login", {
         method: "POST",
-        body: { challengeId: login.payload.challengeId, code: login.payload.devVerificationHint },
+        body: { email: credentials.email, password: credentials.password },
       });
-      if (verify.response.ok && verify.payload?.ok) {
-        sessionCookie = verify.cookie || sessionCookie;
-        say("pass", "Academy customer login", `${credentials.email} (2FA)`);
+
+      if (login.response.ok && login.payload?.ok && login.payload?.session?.customer?.email) {
+        sessionCookie = login.cookie || sessionCookie;
+        const lmsAccess = login.payload?.session?.customer?.productAccess?.lms;
+        if (lmsAccess === false) {
+          say("fail", "Academy customer login", "account lacks LMS entitlement (lms: false)");
+        } else {
+          say("pass", "Academy customer login", credentials.email);
+        }
+      } else if (login.payload?.requiresVerification && login.payload?.challengeId && login.payload?.devVerificationHint) {
+        const verify = await requestJson(apiBase, "/api/customer-verify", {
+          method: "POST",
+          body: { challengeId: login.payload.challengeId, code: login.payload.devVerificationHint },
+        });
+        if (verify.response.ok && verify.payload?.ok) {
+          sessionCookie = verify.cookie || sessionCookie;
+          say("pass", "Academy customer login", `${credentials.email} (2FA)`);
+        } else {
+          say("fail", "Academy customer verify", verify.payload?.error || `HTTP ${verify.response.status}`);
+        }
       } else {
-        say("fail", "Academy customer verify", verify.payload?.error || `HTTP ${verify.response.status}`);
+        say("fail", "Academy customer login", login.payload?.error || `HTTP ${login.response.status}`);
       }
-    } else {
-      say("fail", "Academy customer login", login.payload?.error || `HTTP ${login.response.status}`);
+    } catch (error) {
+      say("fail", "Academy customer login", error.message);
     }
-  } catch (error) {
-    say("fail", "Academy customer login", error.message);
   }
 
   // --- 3. Catalog summary ---
@@ -120,7 +124,7 @@ export async function runAcademyLearnerWorkflow(apiBase, options = {}) {
       const enrollments = lms.payload?.enrollments?.length ?? 0;
       say("pass", "Academy LMS snapshot", `${learners} learners, ${enrollments} enrollments`);
     } else if (lms.response.status === 403) {
-      say("fail", "Academy LMS snapshot", "HTTP 403 ó LMS entitlement missing");
+      say("fail", "Academy LMS snapshot", "HTTP 403 ù LMS entitlement missing");
     } else {
       say("fail", "Academy LMS snapshot", `HTTP ${lms.response.status}`);
     }

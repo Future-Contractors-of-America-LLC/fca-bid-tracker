@@ -183,6 +183,9 @@ export default function Checkout() {
         contactName: name.trim(),
         clientReferenceId,
       });
+      if (typeof window !== "undefined" && (offer.kind === "academy-course" || offer.kind === "academy-pathway")) {
+        window.localStorage.setItem("fca_academy_buyer_email", email.trim());
+      }
       setNativeIntake(intakePayload);
       setPaymentStep("pay");
       setStatus("");

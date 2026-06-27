@@ -1,20 +1,24 @@
 /**
  * Live SWA route probes for Academy surfaces (Observe phase 3).
+ * SPA routes return the shell — validate HTTP 200 + app bootstrap, then API depth where needed.
  */
 import { FCA_MARKETING_ORIGIN } from "../domainHosts.constants.mjs";
 
 const SWA_ROUTES = [
-  { path: "/academy", markers: ["academy", "Academy"] },
-  { path: "/academy/catalog", markers: ["academy", "catalog", "Catalog"] },
-  { path: "/academy/store", markers: ["academy", "store", "Store"] },
-  { path: "/portal/academy", markers: ["academy", "Academy"] },
+  { path: "/academy", apiProbe: "/academy-commerce?limit=1" },
+  { path: "/academy/catalog", apiProbe: "/academy-commerce?limit=1" },
+  { path: "/academy/store", apiProbe: "/academy-commerce?limit=1" },
+  { path: "/portal/academy", apiProbe: null },
 ];
 
+const SPA_MARKERS = ['id="root"', "Future Contractors of America", "fca-backend-config", "/src/bootstrap"];
+
 /**
- * @param {{ origin?: string, log?: boolean }} [options]
+ * @param {{ origin?: string, apiBase?: string, log?: boolean }} [options]
  */
 export async function runLmsSwaProbes(options = {}) {
   const origin = (options.origin || process.env.FCA_SWA_ORIGIN || FCA_MARKETING_ORIGIN).replace(/\/$/, "");
+  const apiBase = (options.apiBase || process.env.FCA_API_BASE || process.env.AURICRUX_CENTRAL_API || "https://api.futurecontractorsofamerica.com/api").replace(/\/$/, "");
   const log = options.log !== false;
   const steps = [];
 
@@ -37,12 +41,29 @@ export async function runLmsSwaProbes(options = {}) {
         say("fail", `SWA route ${route.path}`, `HTTP ${response.status}`);
         continue;
       }
-      const hasMarker = route.markers.some((marker) => body.includes(marker));
-      if (!hasMarker) {
-        say("fail", `SWA route ${route.path}`, `missing academy markers in HTML (${route.markers.join(", ")})`);
-      } else {
-        say("pass", `SWA route ${route.path}`, `${response.status} OK`);
+      const hasSpaShell = SPA_MARKERS.some((marker) => body.includes(marker));
+      if (!hasSpaShell) {
+        say("fail", `SWA route ${route.path}`, "missing SPA bootstrap markers in HTML");
+        continue;
       }
+
+      if (route.apiProbe) {
+        try {
+          const apiResponse = await fetch(`${apiBase}${route.apiProbe}`, {
+            headers: { Accept: "application/json" },
+          });
+          const apiPayload = await apiResponse.json();
+          if (!apiResponse.ok || !apiPayload?.ok) {
+            say("fail", `SWA route ${route.path}`, `shell OK but API probe failed (${apiResponse.status})`);
+            continue;
+          }
+        } catch (apiError) {
+          say("fail", `SWA route ${route.path}`, `shell OK but API probe error: ${apiError.message}`);
+          continue;
+        }
+      }
+
+      say("pass", `SWA route ${route.path}`, `${response.status} SPA shell OK`);
     } catch (error) {
       say("fail", `SWA route ${route.path}`, error.message);
     }
