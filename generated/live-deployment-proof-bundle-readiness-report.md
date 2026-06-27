@@ -1,7 +1,7 @@
 # Live Deployment Proof Bundle Readiness Report
 
 - Packet: 062Y
-- Generated: 2026-06-27T22:54:04.151Z
+- Generated: 2026-06-27T23:11:09.444Z
 - success: false
 
 ## Checks
