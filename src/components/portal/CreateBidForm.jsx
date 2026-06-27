@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { portalButtonPrimary, portalCardStyle, portalTokens } from "../portalDesignTokens";
+import { portalButtonPrimary, portalCardStyle, portalTokens } from "../../portalDesignTokens";
 
 export default function CreateBidForm({ onCreate, busy = false }) {
   const [packageName, setPackageName] = useState("");

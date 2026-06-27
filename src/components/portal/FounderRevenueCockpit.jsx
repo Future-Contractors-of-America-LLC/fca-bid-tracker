@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
+import { portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
 
 const API_BASE = typeof window !== "undefined"
   ? (window.__FCA_BACKEND_CONFIG__?.apiBase || "https://api.futurecontractorsofamerica.com/api")

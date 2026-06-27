@@ -1,5 +1,5 @@
-import { portalCardStyle, portalTokens } from "../portalDesignTokens";
-import { isFounderSession } from "../customerSession";
+import { portalCardStyle, portalTokens } from "../../portalDesignTokens";
+import { isFounderSession } from "../../customerSession";
 
 const ENTRY_OFFERS = [
   {
