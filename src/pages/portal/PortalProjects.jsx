@@ -148,6 +148,7 @@ export default function PortalProjects() {
         <div style={{ marginBottom: 16 }}>
           <AuricruxInsightPanel
             title="Auricrux Project Intelligence"
+            targetObjectType="Project"
             targetObjectId={visibleProject.id}
             sourceRoute="/portal/projects"
             rationale={visibleProject.nextAction || "Advance the active project with governed field, finance, and closeout continuity."}
@@ -156,6 +157,11 @@ export default function PortalProjects() {
             actionLabel="Open project home"
             tone="blue"
             liveRecommend
+            operateConfig={{
+              variant: "project-execute",
+              projectId: visibleProject.id,
+              sourceRoute: "/portal/projects",
+            }}
           />
         </div>
       ) : null}

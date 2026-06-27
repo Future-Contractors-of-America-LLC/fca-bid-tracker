@@ -89,9 +89,10 @@ export default function ProductAccessStatusPanel({ session, stateMeta }) {
 
   return (
     <section style={{ ...portalCardStyle, marginBottom: 24, borderLeft: `4px solid ${portalTokens.primary}`, background: portalTokens.primarySoft }}>
-      <div style={portalEyebrowStyle}>Your access</div>
-      <h2 style={{ margin: "6px 0 8px", fontSize: "1.15rem" }}>What is included in your account</h2>
+      <div style={portalEyebrowStyle}>Your FCA access</div>
+      <h2 style={{ margin: "6px 0 8px", fontSize: "1.15rem" }}>One ecosystem — workspace, academy, Auricrux</h2>
       <p style={{ color: portalTokens.body, lineHeight: 1.65, marginTop: 0, marginBottom: 14, fontSize: 14 }}>
+        FCA Contractor Command is a single product. Purchases activate capabilities on one tenant spine.
         {(session?.workspaceLabel || stateMeta?.customerWorkspaceLabel || "Your workspace")} · signed in as {(session?.role || stateMeta?.customerRole || "Owner / Admin")}.
       </p>
 

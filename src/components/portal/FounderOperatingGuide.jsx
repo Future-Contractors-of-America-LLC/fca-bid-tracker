@@ -1,29 +1,29 @@
 import { portalCardStyle, portalTokens } from "../portalDesignTokens";
 
-const REVENUE_PATHS = [
+const ENTRY_OFFERS = [
   {
-    title: "Sell Academy (your lane as an instructor)",
-    detail: "Trade school students and programs buy courses/pathways. Store → checkout → auto-enroll → first module. Pitch your school network — you do not need active construction bids.",
+    title: "Academy entry SKU",
+    detail: "Sell courses and pathways to schools and students. Same FCA tenant — training connects to workspace when they upgrade.",
     href: "/academy/store",
-    label: "Open Academy Store",
+    label: "Academy store",
   },
   {
-    title: "Sell Contractor Command (SaaS)",
-    detail: "Contractors buy workspace pilots ($2,500) or monthly plans. They run bids — you operate FCA as vendor. Pricing → checkout → workspace activation.",
+    title: "Workspace entry SKU",
+    detail: "Sell Contractor Command pilots and plans to contractors. Same FCA tenant — Academy included on growth plans.",
     href: "/pricing",
-    label: "Open pricing",
+    label: "Pricing and checkout",
   },
   {
-    title: "Operate Auricrux on customer work",
-    detail: "When a SaaS customer is onboarded, run execute/teach on their bids and files — not on fake demo packages.",
+    title: "Auricrux operates the ecosystem",
+    detail: "Execute and teach on real customer bids, files, and enrollments — embedded across every surface.",
     href: "/portal/auricrux",
     label: "Open Auricrux operator",
   },
   {
-    title: "Verify commerce end-to-end",
-    detail: "Buy one course with your email, confirm enrollment, open module 1. If any step fails, that is the priority fix — not more demo polish.",
+    title: "Verify unified checkout",
+    detail: "One purchase activates the right capabilities on one tenant spine — workspace, academy, or both.",
     href: "/checkout?program=electrical-apprenticeship-level-1",
-    label: "Test academy checkout",
+    label: "Test unified checkout",
   },
 ];
 
@@ -31,15 +31,16 @@ export default function FounderOperatingGuide({ bidsCount = 0, companyName = "Yo
   return (
     <div style={{ ...portalCardStyle, marginBottom: 16, border: "2px solid #1d4ed8" }}>
       <div style={{ color: "#1d4ed8", fontWeight: 800, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>
-        FCA revenue operating guide
+        FCA Contractor Command — founder operator
       </div>
-      <h2 style={{ margin: "0 0 8px", color: portalTokens.primaryInk }}>{companyName} — founder operator</h2>
+      <h2 style={{ margin: "0 0 8px", color: portalTokens.primaryInk }}>{companyName}</h2>
       <p style={{ margin: "0 0 16px", color: "#475569", lineHeight: 1.7 }}>
-        You are not customer #1 as an active GC. You are founder #1: sell Academy to students and schools, sell Contractor Command to contractors, and run Auricrux across real paying tenants.
+        FCA is one connected ecosystem: operations, workforce training, Auricrux intelligence, comms, and billing on a single tenant spine.
+        You sell entry SKUs to schools and contractors — you do not operate as an active GC.
         {bidsCount ? ` ${bidsCount} opportunit${bidsCount === 1 ? "y" : "ies"} on your spine.` : ""}
       </p>
       <div style={{ display: "grid", gap: 12 }}>
-        {REVENUE_PATHS.map((step) => (
+        {ENTRY_OFFERS.map((step) => (
           <div key={step.title} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
             <div style={{ fontWeight: 800, color: "#0f172a", marginBottom: 6 }}>{step.title}</div>
             <p style={{ margin: "0 0 10px", color: "#475569", lineHeight: 1.6, fontSize: 14 }}>{step.detail}</p>

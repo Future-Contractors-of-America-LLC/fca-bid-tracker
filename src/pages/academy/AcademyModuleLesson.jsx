@@ -521,6 +521,18 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
         ) : null}
       </AcademyCourseChrome>
 
+      <div style={{ ...cardStyle, marginTop: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+        <div style={{ color: "#2563eb", fontWeight: 800, marginBottom: 8 }}>Apply in your FCA workspace</div>
+        <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 0 }}>
+          FCA Academy and Contractor Command share one tenant. Use Auricrux in the workspace to execute what you learned in this module.
+        </p>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <a href="/portal/platform" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open workspace →</a>
+          <a href="/portal/auricrux" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Ask Auricrux to execute →</a>
+          <a href="/portal/projects" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open projects →</a>
+        </div>
+      </div>
+
       <ShellFooter ctaSet={academyCtaSets.home} />
     </div>
   );

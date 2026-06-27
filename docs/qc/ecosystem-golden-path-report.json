@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-06-27T12:27:55.223Z",
+  "product": "FCA Contractor Command",
+  "unifiedGoldenPath": "discover → purchase → activate tenant → operate → teach → communicate → bill",
+  "complete": true,
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "total": 6
+  },
+  "steps": [
+    {
+      "name": "Commerce — academy native journey",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "name": "Commerce — FCA native payments",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "name": "Website — public conversion surfaces",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "name": "Lifecycle — contractor journey wiring",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "name": "Auricrux — journey layer embedded",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "name": "Academy — CTA continuity",
+      "status": "pass",
+      "detail": "ok"
+    }
+  ]
+}

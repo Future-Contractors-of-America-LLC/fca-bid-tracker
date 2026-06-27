@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
+import FounderRevenueCockpit from "../../components/portal/FounderRevenueCockpit";
 import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import PortalWorkspaceGuide from "../../components/PortalWorkspaceGuide";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
@@ -39,6 +40,7 @@ export default function PlatformDashboard() {
       navDensity="full"
       showRouteOverlay={false}
     >
+      <FounderRevenueCockpit session={session} />
       <PortalSliceAuricrux
         title="Auricrux Workspace Intelligence"
         targetObjectId={state?.project?.id || session?.email || "WORKSPACE"}

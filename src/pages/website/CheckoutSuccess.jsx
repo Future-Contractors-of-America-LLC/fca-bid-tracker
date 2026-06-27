@@ -17,6 +17,7 @@ export default function CheckoutSuccess() {
   const offer = useMemo(() => resolveCheckoutOffer(searchParams), [searchParams]);
   const sessionId = searchParams.get("session_id");
   const isAcademy = offer?.kind === "academy-course" || offer?.kind === "academy-pathway";
+  const isWorkspace = offer?.kind === "workspace";
   const [enrollment, setEnrollment] = useState(null);
   const [enrollError, setEnrollError] = useState("");
 
@@ -53,19 +54,20 @@ export default function CheckoutSuccess() {
     || (offer?.kind === "academy-course" && offer.key
       ? `/academy/programs/${offer.key}/modules/1`
       : "/academy/dashboard");
-  const nextHref = enrollment ? firstModuleHref : isAcademy ? "/academy/dashboard" : "/portal/platform";
-  const nextLabel = isAcademy ? (enrollment ? "Start your course" : "Open Academy") : "Open your workspace";
+
+  const portalHref = "/portal/platform";
+  const academyHref = enrollment ? firstModuleHref : "/academy/dashboard";
 
   return (
     <div style={{ ...pageShellStyle, background: "#f8fafc", minHeight: "100vh" }}>
       <ShellHeader
         eyebrow="Payment received"
-        title="Your FCA purchase is confirmed"
-        subtitle="Secure payment completed. Continue into workspace activation or academy enrollment from the same FCA shell."
-        primaryHref={nextHref}
-        primaryLabel={nextLabel}
-        secondaryHref="/portal/billing"
-        secondaryLabel="Open billing"
+        title="Your FCA workspace is ready"
+        subtitle="One unified FCA Contractor Command account — workspace, academy, and Auricrux on a single tenant spine."
+        primaryHref={isAcademy ? academyHref : portalHref}
+        primaryLabel={isAcademy ? "Start your course" : "Open workspace"}
+        secondaryHref={isAcademy ? portalHref : academyHref}
+        secondaryLabel={isAcademy ? "Open workspace" : "Open Academy"}
         journey={shellJourney}
         currentJourney="conversion"
       />
@@ -77,7 +79,8 @@ export default function CheckoutSuccess() {
 
         {offer ? (
           <div style={{ lineHeight: 1.8, color: "#334155", marginBottom: 20 }}>
-            <div><strong>Package:</strong> {offer.name}</div>
+            <div><strong>FCA product:</strong> Contractor Command (unified ecosystem)</div>
+            <div><strong>Entry offer:</strong> {offer.name}</div>
             <div><strong>Amount:</strong> {offer.priceLabel}</div>
             {sessionId ? <div><strong>Reference:</strong> {sessionId}</div> : null}
           </div>
@@ -85,24 +88,27 @@ export default function CheckoutSuccess() {
 
         {enrollment ? (
           <p style={{ color: "#047857", fontWeight: 700, lineHeight: 1.7 }}>
-            Enrollment confirmed. Your academy access is active — open your first module to begin.
+            Enrollment confirmed. Academy access is active on your FCA tenant — open your first module or jump to the workspace.
           </p>
         ) : enrollError ? (
           <p style={{ color: "#b45309", lineHeight: 1.7 }}>
-            Payment recorded. Enrollment needs one more step: {enrollError} Open Academy or contact rollout if this persists.
+            Payment recorded on your FCA tenant. Enrollment needs one more step: {enrollError}
           </p>
         ) : (
           <p style={{ color: "#475569", lineHeight: 1.7 }}>
             {isAcademy
-              ? "Your academy purchase is recorded. Confirming enrollment now…"
-              : "Your workspace purchase is recorded. Open the platform dashboard to start your pipeline, projects, and Auricrux-guided next steps."}
+              ? "Your academy purchase is recorded on your unified FCA account. Confirming enrollment now…"
+              : isWorkspace
+                ? "Your workspace plan is active. Open Contractor Command to run pipeline, projects, files, and billing — Auricrux embedded throughout."
+                : "Your FCA purchase is recorded. Open the workspace and academy from the same account."}
           </p>
         )}
 
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 20 }}>
-          <a href={nextHref} style={ctaPrimaryStyle}>{nextLabel}</a>
+          <a href={portalHref} style={ctaPrimaryStyle}>Open workspace</a>
+          <a href={academyHref} style={ctaSecondaryStyle}>Open Academy</a>
+          <a href="/portal/auricrux" style={ctaSecondaryStyle}>Ask Auricrux</a>
           <a href="/portal/billing" style={ctaSecondaryStyle}>Review billing</a>
-          <a href="/contact" style={ctaSecondaryStyle}>Contact rollout</a>
         </div>
       </section>
 

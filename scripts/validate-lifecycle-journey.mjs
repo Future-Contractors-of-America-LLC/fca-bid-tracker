@@ -67,7 +67,7 @@ requireIncludes("src/pages/portal/PortalProposals.jsx", "advanceProposal", "prop
 requireIncludes("src/pages/portal/PortalPipeline.jsx", "markWonAndCreateProject", "award conversion in lifecycle");
 requireIncludes("src/pages/portal/PortalFiles.jsx", "create-briefing", "briefing mutation in lifecycle");
 requireIncludes("src/pages/website/Intake.jsx", "submitGovernedIntake", "lead intake in lifecycle");
-requireIncludes("src/pages/portal/PortalBilling.jsx", "createInvoiceCheckout", "billing supports in-house checkout");
+requireIncludes("src/pages/portal/PortalBilling.jsx", "submitFcaNativeCheckout", "billing supports in-house checkout");
 requireIncludes("src/pages/portal/PortalRfis.jsx", "respondProjectRfi", "RFI respond in lifecycle");
 requireIncludes("src/pages/portal/PortalChangeOrders.jsx", "advanceChangeOrder", "change order advance in lifecycle");
 requireIncludes("src/pages/portal/PortalCloseout.jsx", "advanceCloseoutPackage", "closeout advance in lifecycle");
