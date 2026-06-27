@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import BidActionCenter from "../../components/BidActionCenter";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useBidWorkspace from "../../hooks/useBidWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
+import AuricruxOperatePanel from "../../components/auricrux/AuricruxOperatePanel";
+import { publishPortalPageContext } from "../../portalPageContext";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
 import { routeStateOverlays } from "../../systemState";
 import {
@@ -67,6 +69,20 @@ export default function PortalBids() {
     [activeBidId, bids],
   );
 
+  useEffect(() => {
+    if (!activeBid?.id) {
+      publishPortalPageContext(null);
+      return undefined;
+    }
+    publishPortalPageContext({
+      surface: "portal-bids",
+      bidId: activeBid.id,
+      targetObjectId: activeBid.id,
+      targetObjectType: "Bid",
+    });
+    return () => publishPortalPageContext(null);
+  }, [activeBid?.id]);
+
   return (
     <PortalShell
       title="Opportunity qualification"
@@ -93,6 +109,11 @@ export default function PortalBids() {
 
       {activeBid?.id ? (
         <div style={{ marginBottom: 16 }}>
+          <AuricruxOperatePanel
+            bidId={activeBid.id}
+            packageLabel={activeBid.package || activeBid.id}
+            sourceRoute="/portal/bids"
+          />
           <AuricruxInsightPanel
             title="Auricrux Qualification Intelligence"
             targetObjectType="Bid"

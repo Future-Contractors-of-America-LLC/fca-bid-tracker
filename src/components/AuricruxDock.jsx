@@ -24,8 +24,14 @@ import { portalTokens } from "../portalDesignTokens";
 
 const quickPrompts = [
   "What should I do next?",
-  "Where do I find my products?",
+  "Run Package A-117 with Auricrux",
   "What is blocking my project?",
+];
+
+const bidQuickPrompts = [
+  "Run bid intake on this package",
+  "Run Package A-117 with Auricrux",
+  "Teach me the plan briefing gaps",
 ];
 
 const academyQuickPrompts = [
@@ -60,6 +66,26 @@ function safeStorageSet(key, value) {
 }
 
 function modeMeta(mode, poweredByLlm) {
+  if (mode === "workflow-execute" || mode === "execute-assistant") {
+    return {
+      label: "Operator execute",
+      tone: "#1e3a8a",
+      bg: "#dbeafe",
+      border: "#93c5fd",
+      summary: "Auricrux executed a governed workflow on the spine.",
+    };
+  }
+
+  if (mode === "teach-assistant") {
+    return {
+      label: "Operator teach-back",
+      tone: "#5b21b6",
+      bg: "#ede9fe",
+      border: "#c4b5fd",
+      summary: "Auricrux delivered RA04 teach-back from live execution context.",
+    };
+  }
+
   if (poweredByLlm || mode === "llm-assistant") {
     return {
       label: "Executive operator mode",
@@ -194,6 +220,8 @@ function buildChatContext({
     projectId: pageProjectId,
     pipelineStep: portalPageContext?.pipelineStep || null,
     bidId: portalPageContext?.bidId || null,
+    targetObjectId: portalPageContext?.bidId || portalPageContext?.targetObjectId || null,
+    activeBidId: portalPageContext?.bidId || null,
     pageSurface: portalPageContext?.surface || null,
     academyContext: academyContext || null,
     recentTurns: recentTurns || [],
@@ -247,7 +275,12 @@ export default function AuricruxDock() {
     }
     return base;
   }, [mode, poweredByLlm, llmUnavailableReason]);
-  const activeQuickPrompts = academyContext ? academyQuickPrompts : quickPrompts;
+  const routePath = typeof window !== "undefined" ? window.location.pathname : "";
+  const activeQuickPrompts = academyContext
+    ? academyQuickPrompts
+    : routePath.startsWith("/portal/bids")
+      ? bidQuickPrompts
+      : quickPrompts;
 
   useEffect(() => subscribeAcademyContext(setAcademyContext), []);
   useEffect(() => subscribePortalPageContext(setPortalPageContext), []);
@@ -344,18 +377,24 @@ export default function AuricruxDock() {
           recentTurns: buildRecentTurns(log),
         }),
       });
-      setMode(data.poweredByLlm || data.mode === "llm-assistant" ? "live" : "fallback");
+      setMode(data.operational ? data.mode || "workflow-execute" : data.poweredByLlm || data.mode === "llm-assistant" ? "live" : "fallback");
       setPoweredByLlm(Boolean(data.poweredByLlm || data.mode === "llm-assistant"));
       setLlmUnavailableReason(data.llmUnavailableReason || "");
       setLastReply(data.reply || "");
       setLastPrompt(cmd);
 
+      const operationalTag = data.executed
+        ? " [Executed on spine]"
+        : data.taught
+          ? " [Teach-back delivered]"
+          : "";
+
       setLog((prev) => [
         {
           t: new Date().toISOString(),
           m: data.llmUnavailableReason
-            ? `AURICRUX: ${data.reply} (Guidance mode — ${data.llmUnavailableReason})`
-            : `AURICRUX: ${data.reply}`,
+            ? `AURICRUX: ${data.reply}${operationalTag} (Guidance mode — ${data.llmUnavailableReason})`
+            : `AURICRUX: ${data.reply}${operationalTag}`,
         },
         ...prev,
       ]);
@@ -364,13 +403,15 @@ export default function AuricruxDock() {
         void speak(data.reply.replace(/^AURICRUX:\s*/i, ""), { tier: speechTier });
       }
 
-      void submitAuricruxAction({
-        mode: "recommend",
-        targetObjectType: "Project",
-        targetObjectId: pageProjectId,
-        rationale: cmd,
-        sourceRoute: route,
-      }).catch(() => {});
+      if (!data.operational) {
+        void submitAuricruxAction({
+          mode: "recommend",
+          targetObjectType: "Project",
+          targetObjectId: pageProjectId,
+          rationale: cmd,
+          sourceRoute: route,
+        }).catch(() => {});
+      }
     } catch (err) {
       setMode("fallback");
       setPoweredByLlm(false);

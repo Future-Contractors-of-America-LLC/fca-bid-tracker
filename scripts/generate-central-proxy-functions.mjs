@@ -67,6 +67,12 @@ const PROXIES = [
     methods: ["get", "post", "options"],
   },
   {
+    dir: "bid-doteach-workflow",
+    route: "bid-doteach-workflow",
+    centralPath: "/bid-doteach-workflow",
+    methods: ["post", "options"],
+  },
+  {
     dir: "projects-workspace",
     route: "projects/{projectId}/workspace",
     dynamic: true,
