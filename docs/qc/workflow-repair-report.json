@@ -1,107 +1,33 @@
 {
-  "generatedAt": "2026-06-27T17:05:40.936Z",
-  "runId": "WFR-1782579784743",
+  "generatedAt": "2026-06-27T18:01:22.222Z",
+  "runId": "WFR-1782583140044",
   "protocol": "observe-act-review",
-  "complete": false,
+  "complete": true,
   "maxRounds": 3,
   "rounds": [
     {
       "round": 1,
-      "complete": false,
-      "passed": 16,
+      "complete": true,
+      "passed": 17,
       "total": 17,
-      "failures": [
-        {
-          "name": "Auricrux recommend",
-          "status": "fail",
-          "detail": "HTTP 500"
-        }
-      ]
-    },
-    {
-      "round": 2,
-      "complete": false,
-      "passed": 16,
-      "total": 17,
-      "failures": [
-        {
-          "name": "Auricrux recommend",
-          "status": "fail",
-          "detail": "HTTP 500"
-        }
-      ]
-    },
-    {
-      "round": 3,
-      "complete": false,
-      "passed": 16,
-      "total": 17,
-      "failures": [
-        {
-          "name": "Auricrux recommend",
-          "status": "fail",
-          "detail": "HTTP 500"
-        }
-      ]
+      "failures": []
     }
   ],
-  "repairPlans": [
-    {
-      "id": "api-transient",
-      "repairClass": "retry-transient",
-      "title": "Transient API failure",
-      "detail": "Retry after backoff when Central or network is warming.",
-      "step": {
-        "name": "Auricrux recommend",
-        "status": "fail",
-        "detail": "HTTP 500"
-      },
-      "autoRepair": "retry-transient",
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "low",
-      "outcome": "scheduled-retry"
-    },
-    {
-      "id": "api-transient",
-      "repairClass": "retry-transient",
-      "title": "Transient API failure",
-      "detail": "Retry after backoff when Central or network is warming.",
-      "step": {
-        "name": "Auricrux recommend",
-        "status": "fail",
-        "detail": "HTTP 500"
-      },
-      "autoRepair": "retry-transient",
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "low",
-      "outcome": "scheduled-retry"
-    },
-    {
-      "id": "api-transient",
-      "repairClass": "retry-transient",
-      "title": "Transient API failure",
-      "detail": "Retry after backoff when Central or network is warming.",
-      "step": {
-        "name": "Auricrux recommend",
-        "status": "fail",
-        "detail": "HTTP 500"
-      },
-      "autoRepair": "retry-transient",
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "low",
-      "outcome": "scheduled-retry"
-    }
-  ],
+  "repairPlans": [],
   "auricruxReviews": [],
-  "finalSummary": "Workflow simulation still failing after 3 bounded repair round(s). 0 item(s) queued. Consecutive failures: 8.",
+  "finalSummary": "Workflow simulation recovered in 1 round(s). Consecutive successes: 1.",
   "state": {
-    "runCount": 51,
-    "consecutiveSuccesses": 0,
-    "consecutiveFailures": 8,
+    "runCount": 52,
+    "consecutiveSuccesses": 1,
+    "consecutiveFailures": 0,
     "history": [
+      {
+        "at": "2026-06-27T18:01:22.222Z",
+        "runId": "WFR-1782583140044",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
       {
         "at": "2026-06-27T17:05:40.936Z",
         "runId": "WFR-1782579784743",
@@ -304,17 +230,10 @@
         "complete": true,
         "rounds": 1,
         "failures": 0
-      },
-      {
-        "at": "2026-06-25T20:04:05.877Z",
-        "runId": "WFR-1782417821210",
-        "complete": true,
-        "rounds": 1,
-        "failures": 0
       }
     ],
-    "lastRunUtc": "2026-06-27T17:05:40.936Z",
-    "lastComplete": false,
-    "lastRunId": "WFR-1782579784743"
+    "lastRunUtc": "2026-06-27T18:01:22.222Z",
+    "lastComplete": true,
+    "lastRunId": "WFR-1782583140044"
   }
 }
