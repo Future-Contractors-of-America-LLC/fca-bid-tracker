@@ -1,7 +1,7 @@
 # FCA Academy LMS Repair Loop
 
-- **When:** 2026-06-27T08:09:48.958Z
-- **Run ID:** LMS-WFR-1782547765080
+- **When:** 2026-06-27T10:33:27.716Z
+- **Run ID:** LMS-WFR-1782556379144
 - **Protocol:** Observe -> Act -> Review (FCA Academy coverage law)
 - **Result:** OPEN � failures remain after bounded repair
 
@@ -25,7 +25,7 @@
 
 ## Summary
 
-Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 42.
+Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 43.
 
 ## For the founder
 
