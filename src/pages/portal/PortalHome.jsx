@@ -225,7 +225,7 @@ export default function PortalHome() {
       navDensity="full"
     >
       <ProductAccessStatusPanel session={session} />
-      <FounderOperatingGuide bidsCount={bids.length} companyName={companyName} />
+      <FounderOperatingGuide bidsCount={bids.length} companyName={companyName} session={session} />
       {activeProject?.id ? (
         <div style={{ marginBottom: 24 }}>
           <AuricruxInsightPanel

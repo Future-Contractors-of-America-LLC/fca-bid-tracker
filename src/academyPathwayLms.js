@@ -4,7 +4,7 @@ export const PATHWAY_LMS_CONFIG = {
   apprenticeship: {
     key: "apprenticeship",
     heroTitle: "Apprenticeship Academy",
-    heroSubtitle: "NCCER-style trade pathways from Core Level 1 through Level 10 specialization - nine trades, one Auricrux-led field standard.",
+    heroSubtitle: "FCA trade-standard pathways from Core Level 1 through Level 10 specialization - nine trades, one Auricrux-led field standard.",
     accent: "#b45309",
     accentSoft: "#fffbeb",
     border: "#fde68a",
@@ -12,7 +12,7 @@ export const PATHWAY_LMS_CONFIG = {
     operatedBy: "Auricrux",
     dashboardRoute: "/academy/dashboard#apprenticeship",
     catalogRoute: "/academy/catalog?pathway=apprenticeship",
-    features: ["Level progression", "Skills demonstrations", "Field labs", "NCCER-aligned modules"],
+    features: ["Level progression", "Skills demonstrations", "Field labs", "FCA-aligned modules"],
   },
   degree: {
     key: "degree",
@@ -30,7 +30,7 @@ export const PATHWAY_LMS_CONFIG = {
   certification: {
     key: "certification",
     heroTitle: "Certification Institute",
-    heroSubtitle: "Professional credentials aligned with OSHA, USGBC, AIA, NCCER, AACE, and leading construction associations.",
+    heroSubtitle: "Professional credentials aligned with OSHA, USGBC, AIA, FCA trade standards, AACE, and leading construction associations.",
     accent: "#047857",
     accentSoft: "#ecfdf5",
     border: "#a7f3d0",

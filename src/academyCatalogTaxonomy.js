@@ -59,7 +59,7 @@ export const CATALOG_PATHWAYS = [
   {
     key: "apprenticeship",
     label: "Apprenticeship",
-    description: "NCCER-style trade pathways from core jobsite foundations through Level 10 specialization across nine trades.",
+    description: "FCA trade-standard pathways from core jobsite foundations through Level 10 specialization across nine trades.",
     credentialType: "Apprenticeship Certificate",
   },
   {
@@ -217,11 +217,11 @@ export const CERTIFICATION_AGENCY_MAP = {
   "construction-management-cert": { primary: "CMAA", bodies: ["CMAA", "AIC", "AGC CM Division"], associations: ["ABC", "AGC"] },
   "estimating-preconstruction": { primary: "AACE International", bodies: ["AACE International", "ASPE", "RSMeans"], associations: ["AGC", "ABC"] },
   "bim-certification": { primary: "buildingSMART", bodies: ["buildingSMART", "Autodesk", "USIBD"], associations: ["AGC BIM Forum"] },
-  "superintendent": { primary: "AGC", bodies: ["AGC", "CMAA", "NCCER"], associations: ["ABC"] },
+  "superintendent": { primary: "AGC", bodies: ["AGC", "CMAA", "FCA trade standards"], associations: ["ABC"] },
   "qaqc": { primary: "ACI", bodies: ["ACI", "ICC", "ASTM"], associations: ["CMAA"] },
   "commissioning": { primary: "ASHRAE", bodies: ["ASHRAE", "ACG", "NFPA"], associations: ["USGBC"] },
   "sustainability-leed": { primary: "USGBC / GBCI", bodies: ["USGBC", "GBCI", "ASHRAE"], associations: ["ILFI"] },
-  "trade-journeyman": { primary: "NCCER", bodies: ["NCCER", "NIMS"], unions: ["IBEW", "UA", "SMART", "OPCMIA", "Ironworkers"] },
+  "trade-journeyman": { primary: "FCA", bodies: ["FCA trade standards", "NIMS"], unions: ["IBEW", "UA", "SMART", "OPCMIA", "Ironworkers"] },
   "business-development-cert": { primary: "AGC", bodies: ["AGC", "ABC", "DBIA"], associations: ["CMAA"] },
   "billing-payapps-cert": { primary: "AIA", bodies: ["AIA", "AGC", "CFMA"], associations: ["AGC"] },
   "customer-communications-cert": { primary: "PMI", bodies: ["PMI", "CMAA", "DBIA"], associations: ["AGC"] },
@@ -229,15 +229,15 @@ export const CERTIFICATION_AGENCY_MAP = {
 
 /** Apprenticeship trade compliance metadata (alignment language only). */
 export const APPRENTICESHIP_COMPLIANCE_MAP = {
-  electrical: { sponsor: "DOL RA / NCCER electrical curriculum alignment", hours: 8000, unions: ["IBEW", "NECA"], bodies: ["USDOL", "NCCER"] },
-  plumbing: { sponsor: "DOL RA / NCCER plumbing curriculum alignment", hours: 8000, unions: ["UA", "PHCC"], bodies: ["USDOL", "NCCER"] },
-  hvac: { sponsor: "DOL RA / NCCER HVAC curriculum alignment", hours: 8000, unions: ["UA", "SMART"], bodies: ["USDOL", "NCCER", "ACCA"] },
-  carpentry: { sponsor: "DOL RA / NCCER carpentry curriculum alignment", hours: 8000, unions: ["UBC"], bodies: ["USDOL", "NCCER"] },
-  masonry: { sponsor: "DOL RA / NCCER masonry curriculum alignment", hours: 6000, unions: ["OPCMIA"], bodies: ["USDOL", "NCCER"] },
-  welding: { sponsor: "DOL RA / NCCER / AWS alignment", hours: 6000, unions: ["Ironworkers"], bodies: ["USDOL", "NCCER", "AWS"] },
-  pipefitting: { sponsor: "DOL RA / NCCER pipefitting curriculum alignment", hours: 8000, unions: ["UA"], bodies: ["USDOL", "NCCER"] },
-  "sheet-metal": { sponsor: "DOL RA / NCCER sheet metal curriculum alignment", hours: 8000, unions: ["SMART"], bodies: ["USDOL", "NCCER", "SMACNA"] },
-  "fire-sprinkler": { sponsor: "DOL RA / NFPA 13 sprinkler fitter alignment", hours: 8000, unions: ["UA"], bodies: ["USDOL", "NCCER", "NFPA", "NICET"] },
+  electrical: { sponsor: "DOL RA / FCA electrical curriculum", hours: 8000, unions: ["IBEW", "NECA"], bodies: ["USDOL", "FCA"] },
+  plumbing: { sponsor: "DOL RA / FCA plumbing curriculum", hours: 8000, unions: ["UA", "PHCC"], bodies: ["USDOL", "FCA"] },
+  hvac: { sponsor: "DOL RA / FCA HVAC curriculum", hours: 8000, unions: ["UA", "SMART"], bodies: ["USDOL", "FCA", "ACCA"] },
+  carpentry: { sponsor: "DOL RA / FCA carpentry curriculum", hours: 8000, unions: ["UBC"], bodies: ["USDOL", "FCA"] },
+  masonry: { sponsor: "DOL RA / FCA masonry curriculum", hours: 6000, unions: ["OPCMIA"], bodies: ["USDOL", "FCA"] },
+  welding: { sponsor: "DOL RA / FCA welding curriculum / AWS codes", hours: 6000, unions: ["Ironworkers"], bodies: ["USDOL", "FCA", "AWS"] },
+  pipefitting: { sponsor: "DOL RA / FCA pipefitting curriculum", hours: 8000, unions: ["UA"], bodies: ["USDOL", "FCA"] },
+  "sheet-metal": { sponsor: "DOL RA / FCA sheet metal curriculum", hours: 8000, unions: ["SMART"], bodies: ["USDOL", "FCA", "SMACNA"] },
+  "fire-sprinkler": { sponsor: "DOL RA / NFPA 13 sprinkler fitter alignment", hours: 8000, unions: ["UA"], bodies: ["USDOL", "FCA", "NFPA", "NICET"] },
 };
 
 /** Degree accreditation alignment footnotes (not institutional accreditation claims). */

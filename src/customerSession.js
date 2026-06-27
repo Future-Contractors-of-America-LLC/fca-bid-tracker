@@ -284,6 +284,11 @@ export function resolveAdminWorkspaceHref(session = readCustomerSession()) {
   return resolveLoginHref(adminPath);
 }
 
+export function isFounderSession(session = readCustomerSession()) {
+  const email = (session?.email || "").trim().toLowerCase();
+  return session?.role === "Founder / Owner" || email === "michael@futurecontractorsofamerica.com";
+}
+
 export function resolveFounderAutologinHref(next = "/portal/platform", accountKey = "test") {
   const params = new URLSearchParams({
     seeded: "1",

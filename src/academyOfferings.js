@@ -13,7 +13,7 @@ export const OFFERING_LANES = [
   {
     key: "apprenticeship",
     label: "Apprenticeship",
-    description: "NCCER-style trade apprenticeship pathways across nine construction trades from Core Level 1 through Level 10 specialization.",
+    description: "FCA trade-standard apprenticeship pathways across nine construction trades from Core Level 1 through Level 10 specialization.",
     credentialType: "Apprenticeship Certificate",
   },
   {

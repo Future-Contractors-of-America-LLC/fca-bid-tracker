@@ -53,11 +53,10 @@ export default class RootErrorBoundary extends React.Component {
               FCA startup recovery
             </div>
             <h1 style={{ marginTop: 12, marginBottom: 12, fontSize: 28 }}>
-              The app hit a startup error instead of loading normally.
+              Something went wrong loading this page.
             </h1>
             <p style={{ marginTop: 0, color: "#475569", lineHeight: 1.6 }}>
-              The shell stayed open so the failure does not collapse into a blank white screen.
-              Retry the route, then reinstall the app shortcut if this is happening in installed mode.
+              Return home or open your workspace. If this keeps happening, contact FCA support with the details below.
             </p>
             <div
               style={{
@@ -89,7 +88,7 @@ export default class RootErrorBoundary extends React.Component {
                 Reload home
               </a>
               <a
-                href="/platform"
+                href="/portal/platform"
                 style={{
                   textDecoration: "none",
                   background: "#eff6ff",
@@ -100,7 +99,7 @@ export default class RootErrorBoundary extends React.Component {
                   fontWeight: 700,
                 }}
               >
-                Open platform
+                Open workspace
               </a>
             </div>
           </div>

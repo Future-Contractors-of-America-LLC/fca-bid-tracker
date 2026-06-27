@@ -37,7 +37,7 @@ export const publicActionCatalog = {
     variant: "light",
   },
   platformOverview: {
-    label: "Platform Overview",
+    label: "Product overview",
     href: "/platform",
     variant: "secondary",
   },
@@ -142,10 +142,10 @@ export const publicFallbackCtaCards = [
     label: publicActionCatalog.workspace.label,
   },
   {
-    title: publicActionCatalog.liveTestLogin.label,
-    detail: "Open the real seeded test-account login page with credentials preloaded so public validation starts immediately.",
-    href: publicActionCatalog.liveTestLogin.href,
-    label: publicActionCatalog.liveTestLogin.label,
+    title: publicActionCatalog.pricing.label,
+    detail: "Review rollout tiers and start secure online checkout.",
+    href: publicActionCatalog.pricing.href,
+    label: publicActionCatalog.pricing.label,
   },
   {
     title: publicActionCatalog.platformOverview.label,
@@ -207,8 +207,8 @@ export const homeCtaSets = {
   bidProduct: [{ ...publicActionCatalog.bidEntry, variant: "primary" }, publicActionCatalog.bidStatus],
   compatibilityRoutes: [publicActionCatalog.legacyIntake, publicActionCatalog.legacyStatus],
   testDrive: [
-    { ...publicActionCatalog.liveTestLogin, variant: "primary" },
-    publicActionCatalog.instantTestWorkspace,
+    { href: "/intake", label: "Get started", variant: "primary" },
+    { href: "/login", label: "Sign in", variant: "secondary" },
   ],
   productionClose: [
     { href: "/contact", label: "Talk to our team", variant: "primary" },
@@ -295,9 +295,9 @@ export const pricingTiers = [
     detail: "Low-friction entry for contractors who need real workflow control from lead intake through bid clarity without heavy overhead.",
     products: ["SaaS workspace", "Portal lite", "Auricrux guidance", "Academy foundations"],
     comms: ["Chat", "Email"],
-    ctaHref: STARTUP_CHECKOUT_URL || "/login",
-    ctaLabel: STARTUP_CHECKOUT_URL ? "Buy Startup — $99/mo" : "Start Startup Workspace",
-    checkoutUrl: STARTUP_CHECKOUT_URL || null,
+    ctaHref: "/checkout?plan=startup",
+    ctaLabel: "Buy Startup — $99/mo",
+    checkoutUrl: "/checkout?plan=startup",
     includes: [
       "1 active workspace",
       "Lead and bid intake continuity",
@@ -491,7 +491,7 @@ export const shellJourney = [
 
 export const shellPrimaryNav = [
   { label: "Home", href: "/", journeyKey: "public" },
-  { label: "Platform", href: "/platform", journeyKey: "platform" },
+  { label: "Product", href: "/platform", journeyKey: "platform" },
   { label: "Auricrux", href: "/auricrux", journeyKey: "platform" },
   { label: "Warranty", href: "/warranty", journeyKey: "conversion", action: publicActionCatalog.warranty },
   { label: "Referrals", href: "/referrals", journeyKey: "conversion", action: publicActionCatalog.referrals },
@@ -519,7 +519,9 @@ export const shellCompatibilityRoutes = [
   { label: publicActionCatalog.legacyStatus.label, href: publicActionCatalog.legacyStatus.href },
 ];
 
-export const shellProductionActions = [publicActionCatalog.workspace, publicActionCatalog.liveTestLogin, publicActionCatalog.platform, publicActionCatalog.walkthrough];
+export const shellProductionActions = [publicActionCatalog.workspace, publicActionCatalog.pricing, publicActionCatalog.walkthrough];
+
+export const shellFounderActions = [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace, publicActionCatalog.platform];
 
 export const publicRouteCtas = {
   public: { primaryHref: "/intake", primaryLabel: "Get started", secondaryHref: "/login", secondaryLabel: "Sign in" },
@@ -530,8 +532,8 @@ export const publicRouteCtas = {
 };
 
 export const publicBodyCtaSets = {
-  home: [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace, publicActionCatalog.platformOverview, publicActionCatalog.pricing],
-  platformHero: [{ ...publicActionCatalog.liveTestLogin, variant: "primary" }, { ...publicActionCatalog.instantTestWorkspace, variant: "secondary" }, publicActionCatalog.portal],
+  home: [publicActionCatalog.pricing, publicActionCatalog.platformOverview, publicActionCatalog.workspace],
+  platformHero: [{ href: "/intake", label: "Get started", variant: "primary" }, { ...publicActionCatalog.workspace, variant: "secondary" }, publicActionCatalog.portal],
   auricruxHero: [{ ...publicActionCatalog.platform, variant: "primary" }, publicActionCatalog.portal, publicActionCatalog.pricing],
   pricingHero: [{ ...publicActionCatalog.contact, variant: "primary" }, publicActionCatalog.platform, { ...publicActionCatalog.workspace, variant: "light" }],
   pricingImmediate: [{ ...publicActionCatalog.contact, variant: "primary" }, publicActionCatalog.platform, publicActionCatalog.portal],

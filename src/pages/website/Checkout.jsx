@@ -18,6 +18,7 @@ import {
 import {
   checkoutCancelHref,
   checkoutSuccessHref,
+  parseCheckoutAmountLabel,
   resolveCheckoutOffer,
 } from "../../commerceCheckout";
 import { pageShellStyle, cardStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
@@ -33,8 +34,8 @@ const fieldStyle = {
 };
 
 const trustItems = [
-  "Payment intake, invoice issuance, and books posting run on FCA-owned Central surfaces",
-  "ACH, wire, check, and card-on-file paths post directly to FCA Books — no Stripe required",
+  "Payment intake, invoice issuance, and activation run on FCA-owned Central surfaces",
+  "Online card payment only — no check, cash, or in-person payment paths on self-serve checkout",
   "Workspace or academy activation continues immediately after FCA confirms payment",
 ];
 
@@ -183,6 +184,12 @@ export default function Checkout() {
         contactName: name.trim(),
         clientReferenceId,
       });
+      const intakeAmount = parseCheckoutAmountLabel(intakePayload?.intake?.amount);
+      if (offer.amount != null && intakeAmount != null && Math.abs(Number(offer.amount) - intakeAmount) > 0.01) {
+        throw new Error(
+          `Checkout amount mismatch: you selected ${offer.priceLabel} but the invoice shows ${intakePayload.intake.amount}. Return to pricing and use the workspace checkout link for ${offer.name}.`,
+        );
+      }
       if (typeof window !== "undefined" && (offer.kind === "academy-course" || offer.kind === "academy-pathway")) {
         window.localStorage.setItem("fca_academy_buyer_email", email.trim());
       }
@@ -317,8 +324,8 @@ export default function Checkout() {
           <section style={cardStyle}>
             <FcaNativeCheckoutPanel
               intake={nativeIntake?.intake}
+              expectedAmount={nativeIntake?.intake?.amount || offer.priceLabel}
               instructions={nativeIntake?.instructions}
-              methods={nativeIntake?.methods}
               busy={busy}
               error={error}
               status={status}

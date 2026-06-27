@@ -34,8 +34,8 @@ export const auricruxRail = {
   blockerImpact: "Execution handoff, invoice readiness, and workforce assignment stay constrained until the customer decision is recorded.",
   lastAction: "Validated bid completeness and linked onboarding artifacts",
   lastActionResult: "The shared workspace now reflects bid, file, audit, and academy continuity state under PRJ-A117.",
-  readinessState: "Production shell ready / backend spine in progress",
-  readinessSummary: "The shell is positioned for permanent workspace use while deeper project, file, audit, and academy persistence continue to harden behind it.",
+  readinessState: "Workspace active",
+  readinessSummary: "Contractor Command connects bids, projects, files, billing, and academy training in one operating workspace.",
 };
 
 export const auricruxCommsChannels = [
@@ -76,7 +76,7 @@ export const auricruxCommsChannels = [
   },
   {
     label: "Conference",
-    value: "Founder demo and customer review",
+    value: "Live review and walkthrough",
     detail: "Live walkthroughs, project reviews, and executive check-ins route directly from the website into the real shell surfaces.",
     href: "/portal/auricrux",
     ctaLabel: "Open Auricrux Guidance",
@@ -757,8 +757,8 @@ export const portalNavGroups = [
     label: "Training",
     items: [
       { label: "Academy", href: "/portal/academy" },
-      { label: "Course catalog", href: "/academy/catalog" },
-      { label: "Credentials", href: "/academy/credentials" },
+      { label: "Course catalog", href: "/portal/academy" },
+      { label: "Credentials", href: "/portal/academy" },
     ],
   },
   {

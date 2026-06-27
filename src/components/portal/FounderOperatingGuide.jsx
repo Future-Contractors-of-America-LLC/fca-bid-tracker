@@ -1,4 +1,5 @@
 import { portalCardStyle, portalTokens } from "../portalDesignTokens";
+import { isFounderSession } from "../customerSession";
 
 const ENTRY_OFFERS = [
   {
@@ -22,12 +23,14 @@ const ENTRY_OFFERS = [
   {
     title: "Verify unified checkout",
     detail: "One purchase activates the right capabilities on one tenant spine — workspace, academy, or both.",
-    href: "/checkout?program=electrical-apprenticeship-level-1",
-    label: "Test unified checkout",
+    href: "/checkout?plan=startup",
+    label: "Test Startup checkout ($99/mo)",
   },
 ];
 
-export default function FounderOperatingGuide({ bidsCount = 0, companyName = "Your workspace" }) {
+export default function FounderOperatingGuide({ bidsCount = 0, companyName = "Your workspace", session = null }) {
+  if (!isFounderSession(session)) return null;
+
   return (
     <div style={{ ...portalCardStyle, marginBottom: 16, border: "2px solid #1d4ed8" }}>
       <div style={{ color: "#1d4ed8", fontWeight: 800, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: 8 }}>

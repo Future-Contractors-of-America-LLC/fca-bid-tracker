@@ -1,6 +1,34 @@
 import { pricingTiers } from "./websiteShell.js";
 import { pricingPlanCatalog } from "./pricingPlans.js";
 
+/** Amounts aligned with auricrux-central/core/fca_payment_intake.py WORKSPACE_PLANS / ACADEMY_OFFERS. */
+export const CHECKOUT_AMOUNT_CATALOG = {
+  workspace: {
+    startup: { amount: 99, billingModel: "monthly" },
+    pilot: { amount: 2500, billingModel: "one-time" },
+    team: { amount: 499, billingModel: "monthly" },
+    operations: { amount: 899, billingModel: "monthly" },
+    growth: { amount: 1500, billingModel: "monthly" },
+    enterprise: { amount: 3500, billingModel: "monthly" },
+  },
+  academy: {
+    course: { amount: 299, billingModel: "one-time" },
+    pathway: { amount: 1499, billingModel: "one-time" },
+  },
+};
+
+export function formatCheckoutAmount(amount, billingModel = "one-time") {
+  const value = Number(amount);
+  if (!Number.isFinite(value)) return String(amount || "");
+  const formatted = value % 1 === 0 ? value.toLocaleString("en-US") : value.toFixed(2);
+  return billingModel === "monthly" ? `$${formatted}/mo` : `$${formatted} one-time`;
+}
+
+export function parseCheckoutAmountLabel(label = "") {
+  const match = String(label).replace(/,/g, "").match(/\$?\s*([\d.]+)/);
+  return match ? Number(match[1]) : null;
+}
+
 function humanizeKey(key = "") {
   return key
     .split(/[-_]/g)
@@ -44,14 +72,20 @@ export function findWorkspaceTier(planKey) {
 export function resolveWorkspaceOffer(planKey) {
   const tier = findWorkspaceTier(planKey);
   const preset = pricingPlanCatalog[planKey];
-  if (!tier && !preset) return null;
+  const catalog = CHECKOUT_AMOUNT_CATALOG.workspace[planKey];
+  if (!tier && !preset && !catalog) return null;
+
+  const billingModel = catalog?.billingModel || preset?.billingModel || (tier?.price?.includes("one-time") ? "one-time" : "monthly");
+  const amount = catalog?.amount ?? parseCheckoutAmountLabel(tier?.price || preset?.price);
+  const priceLabel = amount != null ? formatCheckoutAmount(amount, billingModel) : tier?.price || preset?.price || "Contact for pricing";
 
   return {
     kind: "workspace",
     key: planKey,
     name: tier?.name || preset?.name || humanizeKey(planKey),
-    priceLabel: tier?.price || preset?.price || "Contact for pricing",
-    billingModel: preset?.billingModel || (tier?.price?.includes("one-time") ? "one-time" : "monthly"),
+    priceLabel,
+    amount,
+    billingModel,
     summary: tier?.detail || `FCA ${humanizeKey(planKey)} rollout package.`,
     includes: tier?.includes || [],
     products: tier?.products || [],
@@ -64,12 +98,14 @@ export function resolveWorkspaceOffer(planKey) {
 
 export function resolveAcademyOffer({ programKey, pathwayKey } = {}) {
   if (pathwayKey) {
+    const catalog = CHECKOUT_AMOUNT_CATALOG.academy.pathway;
     return {
       kind: "academy-pathway",
       key: pathwayKey,
       name: humanizeKey(pathwayKey),
-      priceLabel: "Program pathway",
-      billingModel: "one-time",
+      priceLabel: formatCheckoutAmount(catalog.amount, catalog.billingModel),
+      amount: catalog.amount,
+      billingModel: catalog.billingModel,
       summary: `Full FCA Academy pathway: ${humanizeKey(pathwayKey)}.`,
       includes: [
         "Structured credential pathway",
@@ -80,12 +116,14 @@ export function resolveAcademyOffer({ programKey, pathwayKey } = {}) {
   }
 
   if (programKey) {
+    const catalog = CHECKOUT_AMOUNT_CATALOG.academy.course;
     return {
       kind: "academy-course",
       key: programKey,
       name: humanizeKey(programKey),
-      priceLabel: "Course enrollment",
-      billingModel: "one-time",
+      priceLabel: formatCheckoutAmount(catalog.amount, catalog.billingModel),
+      amount: catalog.amount,
+      billingModel: catalog.billingModel,
       summary: `FCA Academy course: ${humanizeKey(programKey)}.`,
       includes: [
         "Self-paced or cohort-aligned modules",

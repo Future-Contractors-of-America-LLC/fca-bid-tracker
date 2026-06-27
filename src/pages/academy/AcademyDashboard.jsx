@@ -517,7 +517,7 @@ export default function AcademyDashboard() {
         <section style={{ ...cardStyle, marginBottom: 24 }}>
           <h2 style={{ marginTop: 0 }}>Electrical apprenticeship pathway (L1-L10)</h2>
           <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
-            NCCER-style level progression from core apprenticeship through specialization tracks.
+            FCA trade-standard level progression from core apprenticeship through specialization tracks.
           </p>
           <div style={{ display: "grid", gap: 8 }}>
             {electricalPathway.map((level) => {

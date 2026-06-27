@@ -7,6 +7,7 @@ import useBidWorkspace from "../../hooks/useBidWorkspace";
 import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import CreateBidForm from "../../components/portal/CreateBidForm";
 import FounderOperatingGuide from "../../components/portal/FounderOperatingGuide";
+import { readCustomerSession } from "../../customerSession";
 import { publishPortalPageContext } from "../../portalPageContext";
 import { qualificationEvidencePackets } from "../../qualificationEvidence";
 import { routeStateOverlays } from "../../systemState";
@@ -35,6 +36,7 @@ function readBrandSkin() {
 }
 
 export default function PortalBids() {
+  const session = readCustomerSession();
   const { state } = useWorkspaceState();
   const {
     bids,
@@ -124,7 +126,7 @@ export default function PortalBids() {
       />
 
       {!bids.length ? (
-        <FounderOperatingGuide bidsCount={0} companyName={companyName} />
+        <FounderOperatingGuide bidsCount={bids.length} companyName={companyName} session={session} />
       ) : null}
 
       {activeBid?.id ? (

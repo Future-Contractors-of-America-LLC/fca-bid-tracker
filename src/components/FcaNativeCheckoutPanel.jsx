@@ -11,19 +11,17 @@ const fieldStyle = {
   fontSize: 15,
 };
 
-const methodOptions = ["ACH", "Wire", "Check", "Card", "Cash", "Other"];
+const ONLINE_METHODS = ["Card"];
 
 export default function FcaNativeCheckoutPanel({
   intake,
-  instructions = {},
-  methods = methodOptions,
+  expectedAmount = "",
   busy = false,
   error = "",
   status = "",
   onBack,
   onSubmit,
 }) {
-  const [method, setMethod] = useState("ACH");
   const [reference, setReference] = useState("");
   const [memo, setMemo] = useState("");
 
@@ -31,72 +29,42 @@ export default function FcaNativeCheckoutPanel({
     event.preventDefault();
     onSubmit?.({
       intakeId: intake?.intakeId,
-      method,
+      method: "Card",
       reference: reference.trim(),
       memo: memo.trim(),
     });
   }
 
-  const ach = instructions?.ach || {};
-  const wire = instructions?.wire || {};
-  const check = instructions?.check || {};
+  const displayAmount = expectedAmount || intake?.amount || "";
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 style={{ marginTop: 0 }}>FCA native payment</h2>
+      <h2 style={{ marginTop: 0 }}>Secure online payment</h2>
       <p style={{ color: "#475569", lineHeight: 1.7 }}>
-        FCA is the payment rail. Your intake posts to governed invoices and FCA Books - no Stripe or external processor required.
+        Complete your purchase with an online card payment. FCA records the intake, issues your invoice, and activates your workspace or academy access.
       </p>
 
       <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0", marginBottom: 16 }}>
-        <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 800 }}>Intake reference</div>
-        <div style={{ fontWeight: 700, marginTop: 4 }}>{intake?.intakeId}</div>
-        <div style={{ color: "#475569", marginTop: 6 }}>Invoice {intake?.invoiceId} · {intake?.amount}</div>
-      </div>
-
-      <div style={{ display: "grid", gap: 12, marginBottom: 16 }}>
-        <div style={{ padding: 12, borderRadius: 12, border: "1px solid #dbeafe", background: "#eff6ff" }}>
-          <strong>{ach.label || "ACH"}</strong>
-          <div style={{ color: "#475569", fontSize: 14, lineHeight: 1.6, marginTop: 6 }}>
-            Routing {ach.routing || "-"} · {ach.memo}
-          </div>
-        </div>
-        <div style={{ padding: 12, borderRadius: 12, border: "1px solid #e2e8f0", background: "#fff" }}>
-          <strong>{wire.label || "Wire"}</strong>
-          <div style={{ color: "#475569", fontSize: 14, lineHeight: 1.6, marginTop: 6 }}>
-            {wire.bank || "Governed wire instructions"} · {wire.memo}
-          </div>
-        </div>
-        <div style={{ padding: 12, borderRadius: 12, border: "1px solid #e2e8f0", background: "#fff" }}>
-          <strong>{check.label || "Check"}</strong>
-          <div style={{ color: "#475569", fontSize: 14, lineHeight: 1.6, marginTop: 6 }}>
-            Payable to {check.payableTo || "Future Contractors of America LLC"} · {check.memo}
-          </div>
-        </div>
+        <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b", fontWeight: 800 }}>Order total</div>
+        <div style={{ fontSize: 28, fontWeight: 800, marginTop: 4, color: "#0f172a" }}>{displayAmount}</div>
+        <div style={{ fontWeight: 700, marginTop: 8 }}>{intake?.intakeId}</div>
+        <div style={{ color: "#475569", marginTop: 4, fontSize: 14 }}>Invoice {intake?.invoiceId}</div>
       </div>
 
       <label>
-        <strong>Payment method</strong>
-        <select value={method} onChange={(event) => setMethod(event.target.value)} style={{ ...fieldStyle, marginBottom: 16 }}>
-          {(methods.length ? methods : methodOptions).map((item) => (
-            <option key={item} value={item}>{item}</option>
-          ))}
-        </select>
-      </label>
-
-      <label>
-        <strong>Reference / confirmation</strong>
+        <strong>Card payment confirmation</strong>
         <input
           value={reference}
           onChange={(event) => setReference(event.target.value)}
           style={{ ...fieldStyle, marginBottom: 16 }}
-          placeholder="ACH trace, wire confirmation, or check number"
+          placeholder="Processor confirmation or authorization code"
+          required
         />
       </label>
 
       <label>
         <strong>Memo (optional)</strong>
-        <input value={memo} onChange={(event) => setMemo(event.target.value)} style={{ ...fieldStyle, marginBottom: 16 }} placeholder="Additional payment notes" />
+        <input value={memo} onChange={(event) => setMemo(event.target.value)} style={{ ...fieldStyle, marginBottom: 16 }} placeholder="Billing note for your records" />
       </label>
 
       {status ? (
@@ -118,7 +86,7 @@ export default function FcaNativeCheckoutPanel({
           </button>
         ) : null}
         <button type="submit" disabled={busy} style={{ ...ctaPrimaryStyle, border: "none", cursor: busy ? "wait" : "pointer", opacity: busy ? 0.85 : 1 }}>
-          {busy ? "Recording payment in FCA Books..." : "Confirm payment in FCA Books"}
+          {busy ? "Confirming payment..." : "Confirm online payment"}
         </button>
       </div>
     </form>

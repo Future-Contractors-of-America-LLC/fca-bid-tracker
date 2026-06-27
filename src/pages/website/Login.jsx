@@ -15,7 +15,7 @@ import {
   readEntraExchangeFromLocation,
   startEntraSignIn,
 } from "../../api/entraAuthClient";
-import { isAllowedPostLoginHref, resolveWorkspaceEntryHref } from "../../customerSession";
+import { isAllowedPostLoginHref, isFounderSession, resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { resolveSeededCustomerAccount, resolveSeededAccountByKey } from "../../customerAccounts";
@@ -422,8 +422,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
           {authStatus === "authenticating" ? (
             <div style={{ color: "#0f766e", marginBottom: 12, fontWeight: 600, fontSize: 14 }}>Opening your workspace...</div>
           ) : null}
-          {authStatus === "seeded" ? (
-            <div style={{ color: "#0f766e", marginBottom: 12, fontSize: 14 }}>Founder test credentials loaded.</div>
+          {authStatus === "seeded" && isFounderSession(session) ? (
+            <div style={{ color: "#0f766e", marginBottom: 12, fontSize: 14 }}>Founder workspace ready.</div>
           ) : null}
           {error ? <div style={{ color: "#b91c1c", marginBottom: 12, fontWeight: 600, fontSize: 14 }}>{error}</div> : null}
 
@@ -452,7 +452,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
           </p>
         </form>
 
-        {queryState.seeded ? (
+        {queryState.seeded && isFounderSession(session) ? (
           <div style={{ marginTop: 20 }}>
             <LoginActionCenter session={session} login={login} requestedPath={nextHref} />
           </div>

@@ -157,9 +157,9 @@ const mobileDrawerPanel = {
 
 const NAV_MENUS = [
   {
-    label: "Platform",
+    label: "Product",
     items: [
-      { label: "Overview", href: "/platform" },
+      { label: "Product overview", href: "/platform" },
       { label: "Features", href: "/features" },
       { label: "Solutions", href: "/solutions" },
       { label: "Auricrux Intelligence", href: "/auricrux" },
