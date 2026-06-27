@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-27T21:18:08.094Z",
-  "runId": "LMS-WFR-1782595003323",
+  "generatedAt": "2026-06-27T22:37:30.890Z",
+  "runId": "LMS-WFR-1782599759846",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -84,7 +84,7 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+      "guidance": "I specialize in construction operator training with a focus on bids, projects, field, billing, and academy. In this segment on Academy simulation script: validate-academy-native-commerce-journey.mjs, scope and role expectations for native commerce in the LMS are reviewed. Build competency in the validation of the native commerce journey as a segment of the broader LMS repair workflow. Do not skip "
     },
     {
       "step": "SWA route /academy",
@@ -99,12 +99,19 @@
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 56.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 57.",
   "state": {
-    "runCount": 56,
+    "runCount": 57,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 56,
+    "consecutiveFailures": 57,
     "history": [
+      {
+        "at": "2026-06-27T22:37:30.890Z",
+        "runId": "LMS-WFR-1782599759846",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-06-27T21:18:08.094Z",
         "runId": "LMS-WFR-1782595003323",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 6
-      },
-      {
-        "at": "2026-06-26T10:36:22.705Z",
-        "runId": "LMS-WFR-1782470169039",
-        "complete": false,
-        "rounds": 1,
-        "failures": 6
       }
     ],
-    "lastRunUtc": "2026-06-27T21:18:08.094Z",
+    "lastRunUtc": "2026-06-27T22:37:30.890Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782595003323"
+    "lastRunId": "LMS-WFR-1782599759846"
   }
 }
