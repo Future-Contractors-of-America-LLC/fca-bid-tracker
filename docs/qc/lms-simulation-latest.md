@@ -1,7 +1,7 @@
 # FCA Academy LMS Simulation
 
-- **When:** 2026-06-26T23:43:18.789Z
-- **Run ID:** LMS-SIM-1782517382164
+- **When:** 2026-06-27T00:49:42.155Z
+- **Run ID:** LMS-SIM-1782521353821
 - **API:** https://api.futurecontractorsofamerica.com
 - **SWA:** https://futurecontractorsofamerica.com
 - **Result:** 6 FAILURE(S) - 167/173 passed
@@ -188,7 +188,7 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** Academy LMS snapshot: 4 learners, 4 enrollments
 - **PASS** Academy progress PATCH: ENR-001
 - **PASS** Academy lane catalog probe: electrical-core-level-1
-- **PASS** Academy commerce intake: INTAKE-1782517397214
+- **PASS** Academy commerce intake: INTAKE-1782521381034
 - **FAIL** SWA route /academy: missing academy markers in HTML (academy, Academy)
 - **FAIL** SWA route /academy/catalog: missing academy markers in HTML (academy, catalog, Catalog)
 - **FAIL** SWA route /academy/store: missing academy markers in HTML (academy, store, Store)
