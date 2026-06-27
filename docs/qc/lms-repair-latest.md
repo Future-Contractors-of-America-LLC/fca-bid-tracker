@@ -1,23 +1,20 @@
 # FCA Academy LMS Repair Loop
 
-- **When:** 2026-06-27T10:53:48.457Z
-- **Run ID:** LMS-WFR-1782557482265
+- **When:** 2026-06-27T11:28:22.146Z
+- **Run ID:** LMS-WFR-1782559652494
 - **Protocol:** Observe -> Act -> Review (FCA Academy coverage law)
 - **Result:** OPEN � failures remain after bounded repair
 
 ## Rounds
 
-### Round 1 � FAIL (167/173 steps)
-- script:validate-academy-ctas.mjs: failed
+### Round 1 � FAIL (169/173 steps)
 - script:validate-academy-native-commerce-journey.mjs: failed
-- SWA route /academy: missing academy markers in HTML (academy, Academy)
-- SWA route /academy/catalog: missing academy markers in HTML (academy, catalog, Catalog)
-- SWA route /academy/store: missing academy markers in HTML (academy, store, Store)
-- SWA route /portal/academy: missing academy markers in HTML (academy, Academy)
+- SWA route /academy: shell OK but API probe error: Unexpected end of JSON input
+- SWA route /academy/catalog: shell OK but API probe error: Unexpected end of JSON input
+- SWA route /academy/store: shell OK but API probe error: Unexpected end of JSON input
 
 ## Repair actions taken
 
-- **engineering-queue** Investigate Academy failure: script:validate-academy-ctas.mjs: engineering-queued
 - **engineering-queue** Academy native commerce rail regression: engineering-queued
 - **engineering-queue** Academy SWA routes offline or missing markers: swa-redeploy-queued
 
@@ -25,7 +22,7 @@
 
 ## Summary
 
-Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 44.
+Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 45.
 
 ## For the founder
 

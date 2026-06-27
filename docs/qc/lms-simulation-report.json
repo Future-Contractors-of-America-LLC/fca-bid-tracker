@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-06-27T11:25:14.111Z",
-  "runId": "LMS-SIM-1782559480151",
+  "generatedAt": "2026-06-27T11:27:59.727Z",
+  "runId": "LMS-SIM-1782559653231",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "swaOrigin": "https://futurecontractorsofamerica.com",
   "scope": "FCA Academy LMS simulation",
   "summary": {
-    "passed": 172,
-    "failed": 0,
-    "skipped": 1,
+    "passed": 169,
+    "failed": 4,
+    "skipped": 0,
     "total": 173
   },
-  "complete": true,
+  "complete": false,
   "phases": {
-    "staticQc": 0,
+    "staticQc": 1,
     "learnerWorkflow": 0,
-    "swaProbes": 0,
+    "swaProbes": 3,
     "centralArtifacts": 0
   },
   "steps": [
@@ -56,7 +56,7 @@
     },
     {
       "name": "script:validate-academy-native-commerce-journey.mjs",
-      "status": "pass",
+      "status": "fail",
       "detail": "",
       "phase": "static-qc"
     },
@@ -944,8 +944,8 @@
     },
     {
       "name": "Academy customer login",
-      "status": "skip",
-      "detail": "Set FCA_SIM_LOGIN_EMAIL/FCA_SIM_LOGIN_PASSWORD or FCA_SIM_ACCOUNTS_FILE (see docs/FOUNDER_PRODUCT_TEST_ACCESS.md)",
+      "status": "pass",
+      "detail": "founder.test@futurecontractorsofamerica.com (2FA)",
       "phase": "learner-workflow"
     },
     {
@@ -1005,7 +1005,7 @@
     {
       "name": "Academy LMS snapshot",
       "status": "pass",
-      "detail": "4 learners, 9 enrollments",
+      "detail": "4 learners, 4 enrollments",
       "phase": "learner-workflow"
     },
     {
@@ -1023,25 +1023,25 @@
     {
       "name": "Academy commerce intake",
       "status": "pass",
-      "detail": "INTAKE-1782559501611",
+      "detail": "INTAKE-1782559675832",
       "phase": "learner-workflow"
     },
     {
       "name": "SWA route /academy",
-      "status": "pass",
-      "detail": "200 SPA shell OK",
+      "status": "fail",
+      "detail": "shell OK but API probe error: Unexpected end of JSON input",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /academy/catalog",
-      "status": "pass",
-      "detail": "200 SPA shell OK",
+      "status": "fail",
+      "detail": "shell OK but API probe error: Unexpected end of JSON input",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /academy/store",
-      "status": "pass",
-      "detail": "200 SPA shell OK",
+      "status": "fail",
+      "detail": "shell OK but API probe error: Unexpected end of JSON input",
       "phase": "swa-probes"
     },
     {
@@ -1053,7 +1053,7 @@
     {
       "name": "Central academy artifacts",
       "status": "pass",
-      "detail": "verify_academy_media.py --artifacts-only",
+      "detail": "skipped � auricrux-central sibling not present",
       "phase": "central-artifacts"
     }
   ]

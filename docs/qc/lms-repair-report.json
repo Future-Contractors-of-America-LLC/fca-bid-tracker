@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-27T10:53:48.457Z",
-  "runId": "LMS-WFR-1782557482265",
+  "generatedAt": "2026-06-27T11:28:22.146Z",
+  "runId": "LMS-WFR-1782559652494",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -9,15 +9,9 @@
     {
       "round": 1,
       "complete": false,
-      "passed": 167,
+      "passed": 169,
       "total": 173,
       "failures": [
-        {
-          "name": "script:validate-academy-ctas.mjs",
-          "status": "fail",
-          "detail": "",
-          "phase": "static-qc"
-        },
         {
           "name": "script:validate-academy-native-commerce-journey.mjs",
           "status": "fail",
@@ -27,49 +21,25 @@
         {
           "name": "SWA route /academy",
           "status": "fail",
-          "detail": "missing academy markers in HTML (academy, Academy)",
+          "detail": "shell OK but API probe error: Unexpected end of JSON input",
           "phase": "swa-probes"
         },
         {
           "name": "SWA route /academy/catalog",
           "status": "fail",
-          "detail": "missing academy markers in HTML (academy, catalog, Catalog)",
+          "detail": "shell OK but API probe error: Unexpected end of JSON input",
           "phase": "swa-probes"
         },
         {
           "name": "SWA route /academy/store",
           "status": "fail",
-          "detail": "missing academy markers in HTML (academy, store, Store)",
-          "phase": "swa-probes"
-        },
-        {
-          "name": "SWA route /portal/academy",
-          "status": "fail",
-          "detail": "missing academy markers in HTML (academy, Academy)",
+          "detail": "shell OK but API probe error: Unexpected end of JSON input",
           "phase": "swa-probes"
         }
       ]
     }
   ],
   "repairPlans": [
-    {
-      "id": "unmapped-failure",
-      "repairClass": "engineering-queue",
-      "title": "Investigate Academy failure: script:validate-academy-ctas.mjs",
-      "detail": "No playbook mapped; engineering triage required.",
-      "step": {
-        "name": "script:validate-academy-ctas.mjs",
-        "status": "fail",
-        "detail": "",
-        "phase": "static-qc"
-      },
-      "autoRepair": null,
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "medium",
-      "actionId": "LMS-TRIAGE",
-      "outcome": "engineering-queued"
-    },
     {
       "id": "lms-commerce-rail",
       "repairClass": "engineering-queue",
@@ -96,7 +66,7 @@
       "step": {
         "name": "SWA route /academy",
         "status": "fail",
-        "detail": "missing academy markers in HTML (academy, Academy)",
+        "detail": "shell OK but API probe error: Unexpected end of JSON input",
         "phase": "swa-probes"
       },
       "autoRepair": "swa-redeploy",
@@ -116,12 +86,19 @@
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 3 item(s) queued. Consecutive failures: 44.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 45.",
   "state": {
-    "runCount": 44,
+    "runCount": 45,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 44,
+    "consecutiveFailures": 45,
     "history": [
+      {
+        "at": "2026-06-27T11:28:22.145Z",
+        "runId": "LMS-WFR-1782559652494",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-06-27T10:53:48.457Z",
         "runId": "LMS-WFR-1782557482265",
@@ -324,17 +301,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 6
-      },
-      {
-        "at": "2026-06-25T20:04:10.062Z",
-        "runId": "LMS-WFR-1782417830160",
-        "complete": false,
-        "rounds": 1,
-        "failures": 2
       }
     ],
-    "lastRunUtc": "2026-06-27T10:53:48.457Z",
+    "lastRunUtc": "2026-06-27T11:28:22.145Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782557482265"
+    "lastRunId": "LMS-WFR-1782559652494"
   }
 }
