@@ -1,7 +1,7 @@
 # Runtime Smoke Check Report
 
 - Packet: 062Y
-- Generated: 2026-06-27T11:27:30.267Z
+- Generated: 2026-06-27T12:41:46.317Z
 - Total routes checked: 10
 - Passed: 8
 - Failed: 2
