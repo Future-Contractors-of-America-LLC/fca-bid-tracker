@@ -8,7 +8,7 @@ import { shellJourney } from "../../websiteShell";
 import { navigateTo } from "../../navigation";
 import { readCustomerRecord } from "../../api/intakeClient";
 import { createPlanCheckout } from "../../api/stripeClient";
-import { createAcademyCheckout } from "../../api/academyCommerceClient";
+import { createAcademyCheckout, fetchAcademyCommerceItem } from "../../api/academyCommerceClient";
 import {
   createFcaPaymentIntake,
   fetchFcaPaymentRailStatus,
@@ -20,6 +20,7 @@ import {
   checkoutSuccessHref,
   parseCheckoutAmountLabel,
   resolveCheckoutOffer,
+  resolveAcademyOffer,
 } from "../../commerceCheckout";
 import { pageShellStyle, cardStyle, twoColumnGridStyle, ctaPrimaryStyle } from "../../publicShellStyles";
 
@@ -47,7 +48,8 @@ export default function Checkout() {
     return new URLSearchParams(window.location.search);
   }, []);
 
-  const offer = useMemo(() => resolveCheckoutOffer(searchParams), [searchParams]);
+  const baseOffer = useMemo(() => resolveCheckoutOffer(searchParams), [searchParams]);
+  const [offer, setOffer] = useState(baseOffer);
   const intakeRecord = useMemo(() => readCustomerRecord(), []);
   const cancelled = searchParams.get("cancelled") === "1";
 
@@ -62,6 +64,34 @@ export default function Checkout() {
   const [nativeIntake, setNativeIntake] = useState(null);
   const [embeddedSession, setEmbeddedSession] = useState(null);
   const [useStripeFallback, setUseStripeFallback] = useState(false);
+
+  useEffect(() => {
+    setOffer(baseOffer);
+  }, [baseOffer]);
+
+  useEffect(() => {
+    if (!baseOffer || (baseOffer.kind !== "academy-course" && baseOffer.kind !== "academy-pathway")) return undefined;
+    let active = true;
+    fetchAcademyCommerceItem({
+      programKey: baseOffer.kind === "academy-course" ? baseOffer.key : undefined,
+      pathwayKey: baseOffer.kind === "academy-pathway" ? baseOffer.key : undefined,
+    })
+      .then((payload) => {
+        if (!active || !payload?.item) return;
+        const item = payload.item;
+        const resolved = resolveAcademyOffer({
+          programKey: baseOffer.kind === "academy-course" ? baseOffer.key : undefined,
+          pathwayKey: baseOffer.kind === "academy-pathway" ? baseOffer.key : undefined,
+          retailPrice: item.retailPrice,
+          title: item.title,
+        });
+        if (resolved) setOffer(resolved);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [baseOffer]);
 
   useEffect(() => {
     if (!offer) {

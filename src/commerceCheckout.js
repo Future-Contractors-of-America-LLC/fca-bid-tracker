@@ -11,11 +11,37 @@ export const CHECKOUT_AMOUNT_CATALOG = {
     growth: { amount: 1500, billingModel: "monthly" },
     enterprise: { amount: 3500, billingModel: "monthly" },
   },
-  academy: {
-    course: { amount: 299, billingModel: "one-time" },
-    pathway: { amount: 1499, billingModel: "one-time" },
-  },
 };
+
+/** Lane retail prices — mirror auricrux-central/core/academy_commerce.py LANE_BASE_PRICES. */
+export const ACADEMY_LANE_PRICES = {
+  apprenticeship: 99,
+  certification: 99,
+  degree: 59,
+  licensure: 179,
+  professional: 49,
+  "fca-how-to": 29,
+};
+
+const TRADE_PREFIXES = [
+  "electrical", "plumbing", "hvac", "carpentry", "masonry",
+  "welding", "pipefitting", "sheet-metal", "fire-sprinkler",
+];
+
+export function inferAcademyLane(programKey = "") {
+  const key = String(programKey || "").toLowerCase();
+  if (key.startsWith("deg-")) return "degree";
+  if (key.startsWith("cert-")) return "certification";
+  if (key.startsWith("lic-")) return "licensure";
+  if (TRADE_PREFIXES.some((prefix) => key.startsWith(`${prefix}-`))) return "apprenticeship";
+  return "professional";
+}
+
+export function resolveAcademyCourseAmount(programKey, retailPrice) {
+  if (retailPrice != null && retailPrice !== "") return Number(retailPrice);
+  const lane = inferAcademyLane(programKey);
+  return ACADEMY_LANE_PRICES[lane] ?? 79;
+}
 
 export function formatCheckoutAmount(amount, billingModel = "one-time") {
   const value = Number(amount);
@@ -96,16 +122,16 @@ export function resolveWorkspaceOffer(planKey) {
   };
 }
 
-export function resolveAcademyOffer({ programKey, pathwayKey } = {}) {
+export function resolveAcademyOffer({ programKey, pathwayKey, retailPrice, title } = {}) {
   if (pathwayKey) {
-    const catalog = CHECKOUT_AMOUNT_CATALOG.academy.pathway;
+    const amount = retailPrice != null ? Number(retailPrice) : null;
     return {
       kind: "academy-pathway",
       key: pathwayKey,
-      name: humanizeKey(pathwayKey),
-      priceLabel: formatCheckoutAmount(catalog.amount, catalog.billingModel),
-      amount: catalog.amount,
-      billingModel: catalog.billingModel,
+      name: title || humanizeKey(pathwayKey),
+      priceLabel: amount != null ? formatCheckoutAmount(amount, "one-time") : "Pathway bundle",
+      amount,
+      billingModel: "one-time",
       summary: `Full FCA Academy pathway: ${humanizeKey(pathwayKey)}.`,
       includes: [
         "Structured credential pathway",
@@ -116,14 +142,14 @@ export function resolveAcademyOffer({ programKey, pathwayKey } = {}) {
   }
 
   if (programKey) {
-    const catalog = CHECKOUT_AMOUNT_CATALOG.academy.course;
+    const amount = resolveAcademyCourseAmount(programKey, retailPrice);
     return {
       kind: "academy-course",
       key: programKey,
-      name: humanizeKey(programKey),
-      priceLabel: formatCheckoutAmount(catalog.amount, catalog.billingModel),
-      amount: catalog.amount,
-      billingModel: catalog.billingModel,
+      name: title || humanizeKey(programKey),
+      priceLabel: formatCheckoutAmount(amount, "one-time"),
+      amount,
+      billingModel: "one-time",
       summary: `FCA Academy course: ${humanizeKey(programKey)}.`,
       includes: [
         "Self-paced or cohort-aligned modules",
