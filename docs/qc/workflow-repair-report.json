@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-27T11:25:14.468Z",
-  "runId": "WFR-1782559418750",
+  "generatedAt": "2026-06-27T13:21:06.926Z",
+  "runId": "WFR-1782566374947",
   "protocol": "observe-act-review",
   "complete": false,
   "maxRounds": 3,
@@ -96,12 +96,19 @@
     }
   ],
   "auricruxReviews": [],
-  "finalSummary": "Workflow simulation still failing after 3 bounded repair round(s). 0 item(s) queued. Consecutive failures: 5.",
+  "finalSummary": "Workflow simulation still failing after 3 bounded repair round(s). 0 item(s) queued. Consecutive failures: 6.",
   "state": {
-    "runCount": 48,
+    "runCount": 49,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 5,
+    "consecutiveFailures": 6,
     "history": [
+      {
+        "at": "2026-06-27T13:21:06.925Z",
+        "runId": "WFR-1782566374947",
+        "complete": false,
+        "rounds": 3,
+        "failures": 1
+      },
       {
         "at": "2026-06-27T11:25:14.468Z",
         "runId": "WFR-1782559418750",
@@ -304,17 +311,10 @@
         "complete": true,
         "rounds": 1,
         "failures": 0
-      },
-      {
-        "at": "2026-06-25T19:04:08.013Z",
-        "runId": "WFR-1782414219786",
-        "complete": true,
-        "rounds": 1,
-        "failures": 0
       }
     ],
-    "lastRunUtc": "2026-06-27T11:25:14.468Z",
+    "lastRunUtc": "2026-06-27T13:21:06.925Z",
     "lastComplete": false,
-    "lastRunId": "WFR-1782559418750"
+    "lastRunId": "WFR-1782566374947"
   }
 }
