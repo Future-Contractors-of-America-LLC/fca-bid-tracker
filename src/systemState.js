@@ -124,6 +124,17 @@ export const routeStateOverlays = {
     auricruxRole: "Validate and recommend",
     auricruxDetail: "Auricrux checks bid completeness, explains blockers, and recommends the next approval move.",
   },
+  leads: {
+    title: "Lead route state",
+    summary: "Leads govern intake from first contact through qualification into opportunities on the commercial spine.",
+    status: "Lead state active",
+    primaryFocus: "Qualification readiness",
+    primaryDetail: "This route focuses on converting governed intake into qualified opportunities ready for bids.",
+    dependency: "Intake completeness",
+    dependencyDetail: "Budget, jurisdiction, and ownership must be confirmed before qualification handoff.",
+    auricruxRole: "Qualify and route",
+    auricruxDetail: "Auricrux reviews lead evidence and recommends qualify-or-reject with audit trail.",
+  },
   projects: {
     title: "Project route state",
     summary: "Projects specialize the shared state around delivery coordination, stage ownership, and execution handoff readiness.",
@@ -703,6 +714,7 @@ export const PORTAL_SUBTITLE_MAX = 120;
 /** Always-visible portal shortcuts: workspace, products entry, setup, Auricrux. */
 export const portalNavPrimary = [
   { label: "Workspace", href: "/portal/platform" },
+  { label: "Leads", href: "/portal/leads" },
   { label: "Pipeline", href: "/portal/pipeline" },
   { label: "Projects", href: "/portal/projects" },
   { label: "Files", href: "/portal/files" },
@@ -715,6 +727,7 @@ export const portalNavGroups = [
   {
     label: "Sell and bid",
     items: [
+      { label: "Leads board", href: "/portal/leads" },
       { label: "Commercial pipeline", href: "/portal/pipeline" },
       { label: "Bids", href: "/portal/bids" },
       { label: "Estimates", href: "/portal/estimates" },
@@ -774,6 +787,7 @@ export const portalNavGroups = [
 /** Curated hub tiles on workspace dashboard — full directory via portalModules. */
 export const portalHubModules = [
   { href: "/portal/auricrux", label: "Auricrux", description: "What to do next" },
+  { href: "/portal/leads", label: "Leads", description: "Intake and qualification" },
   { href: "/portal/pipeline", label: "Pipeline", description: "Bid through payment" },
   { href: "/portal/bids", label: "Bids", description: "Qualify and award" },
   { href: "/portal/projects", label: "Projects", description: "Job execution" },

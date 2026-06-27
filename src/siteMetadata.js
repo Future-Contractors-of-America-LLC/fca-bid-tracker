@@ -259,6 +259,10 @@ export const routeMetadata = {
     title: "Commercial Pipeline | Future Contractors of America",
     description: "Run the guided bid-to-billing pipeline inside the FCA contractor workspace.",
   },
+  "/portal/leads": {
+    title: "Leads Board | Future Contractors of America",
+    description: "Review, qualify, and route intake leads into opportunities on the FCA commercial spine.",
+  },
   "/portal/plans": {
     title: "Plans | Future Contractors of America",
     description: "Review commercial plans, packaging, and upgrade paths for your FCA account.",

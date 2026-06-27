@@ -39,6 +39,7 @@ export const routes = {
   "/portal/platform": lazyPage(() => import("./pages/portal/PlatformDashboard")),
   "/portal/operations": lazyPage(() => import("./pages/portal/PortalOperations")),
   "/portal/pipeline": lazyPage(() => import("./pages/portal/PortalPipeline")),
+  "/portal/leads": lazyPage(() => import("./pages/portal/PortalLeads")),
   "/portal/projects": lazyPage(() => import("./pages/portal/PortalProjects")),
   "/portal/files": lazyPage(() => import("./pages/portal/PortalFiles")),
   "/portal/audit": lazyPage(() => import("./pages/portal/PortalAudit")),

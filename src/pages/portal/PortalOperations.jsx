@@ -8,6 +8,12 @@ import { portalButtonPrimary, portalButtonSecondary, portalCardStyle, portalEyeb
 
 const opsLanes = [
   {
+    title: "Review intake leads",
+    detail: "Qualify governed leads into opportunities on the commercial spine.",
+    href: "/portal/leads",
+    label: "Open leads board",
+  },
+  {
     title: "Qualify opportunities",
     detail: "Score bids, confirm scope, and route qualified work into estimates.",
     href: "/portal/bids",
