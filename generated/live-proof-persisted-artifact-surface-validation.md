@@ -1,7 +1,7 @@
 # Live Proof Persisted Artifact Surface Validation
 
 - Packet: 062Y
-- Generated: 2026-06-28T21:31:10.610Z
+- Generated: 2026-06-28T21:42:23.143Z
 - success: false
 
 ## Missing
