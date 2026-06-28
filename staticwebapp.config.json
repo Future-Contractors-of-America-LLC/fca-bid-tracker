@@ -104,10 +104,7 @@
       "/runtime-fingerprint.txt",
       "/live-shell-verification.html",
       "/host-binding-audit.html",
-      "/api-continuity-audit.html",
-      "/academy/media/*.webm",
-      "/academy/media/*/*.webm",
-      "/academy/media/*/*/*.webm"
+      "/api-continuity-audit.html"
     ]
   },
   "responseOverrides": {
