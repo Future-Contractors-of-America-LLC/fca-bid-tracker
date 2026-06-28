@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-27T23:24:25.146Z",
-  "runId": "SIM-1782602513136",
+  "generatedAt": "2026-06-28T00:12:11.160Z",
+  "runId": "SIM-1782605362575",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "summary": {
     "passed": 17,
@@ -33,12 +33,12 @@
     {
       "name": "Lead intake",
       "status": "pass",
-      "detail": "lead_c89aee50"
+      "detail": "lead_2188dfee"
     },
     {
       "name": "Qualify lead",
       "status": "pass",
-      "detail": "opp_lead_c89aee50"
+      "detail": "opp_lead_2188dfee"
     },
     {
       "name": "Advance bid qualification",
@@ -53,27 +53,27 @@
     {
       "name": "Award -> project",
       "status": "pass",
-      "detail": "project_opp_lead_c89aee50"
+      "detail": "project_opp_lead_2188dfee"
     },
     {
       "name": "Create RFI",
       "status": "pass",
-      "detail": "RFI-1782602521822"
+      "detail": "RFI-1782605396269"
     },
     {
       "name": "Create change order",
       "status": "pass",
-      "detail": "CO-1782602529375"
+      "detail": "CO-1782605402118"
     },
     {
       "name": "Create field task",
       "status": "pass",
-      "detail": "FT-1782602551654"
+      "detail": "FT-1782605415733"
     },
     {
       "name": "Payment intake",
       "status": "pass",
-      "detail": "INTAKE-1782602566339"
+      "detail": "INTAKE-1782605422316"
     },
     {
       "name": "Payment checkout",
@@ -83,7 +83,7 @@
     {
       "name": "Warranty intake",
       "status": "pass",
-      "detail": "WAR-1782602572489"
+      "detail": "WAR-1782605431802"
     },
     {
       "name": "Auricrux recommend",
