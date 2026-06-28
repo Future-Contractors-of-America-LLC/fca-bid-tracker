@@ -1,7 +1,7 @@
 # FCA Academy LMS Simulation
 
-- **When:** 2026-06-28T14:12:45.293Z
-- **Run ID:** LMS-SIM-1782655950357
+- **When:** 2026-06-28T15:13:04.533Z
+- **Run ID:** LMS-SIM-1782659547136
 - **API:** https://api.futurecontractorsofamerica.com
 - **SWA:** https://futurecontractorsofamerica.com
 - **Result:** 4 FAILURE(S) - 169/173 passed
@@ -188,7 +188,7 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** Academy LMS snapshot: 4 learners, 4 enrollments
 - **PASS** Academy progress PATCH: ENR-001
 - **PASS** Academy lane catalog probe: electrical-core-level-1
-- **PASS** Academy commerce intake: INTAKE-1782655963749
+- **PASS** Academy commerce intake: INTAKE-1782659582822
 - **FAIL** SWA route /academy: shell OK but API probe error: Unexpected end of JSON input
 - **FAIL** SWA route /academy/catalog: shell OK but API probe error: Unexpected end of JSON input
 - **FAIL** SWA route /academy/store: shell OK but API probe error: Unexpected end of JSON input
