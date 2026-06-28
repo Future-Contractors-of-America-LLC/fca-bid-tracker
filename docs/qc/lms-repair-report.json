@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-28T17:50:17.149Z",
-  "runId": "LMS-WFR-1782668937363",
+  "generatedAt": "2026-06-28T19:59:42.679Z",
+  "runId": "LMS-WFR-1782676707434",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -92,19 +92,26 @@
     },
     {
       "step": "SWA route /academy/catalog",
-      "guidance": "In AcademySimulation SWA, clear the JSON input error on the catalog API probe before advancing training. Do not bypass the LMS repair loop."
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
     }
   ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 75.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 76.",
   "state": {
-    "runCount": 75,
+    "runCount": 76,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 75,
+    "consecutiveFailures": 76,
     "history": [
+      {
+        "at": "2026-06-28T19:59:42.679Z",
+        "runId": "LMS-WFR-1782676707434",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-06-28T17:50:17.149Z",
         "runId": "LMS-WFR-1782668937363",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-06-27T12:43:16.691Z",
-        "runId": "LMS-WFR-1782564114788",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-06-28T17:50:17.149Z",
+    "lastRunUtc": "2026-06-28T19:59:42.679Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782668937363"
+    "lastRunId": "LMS-WFR-1782676707434"
   }
 }

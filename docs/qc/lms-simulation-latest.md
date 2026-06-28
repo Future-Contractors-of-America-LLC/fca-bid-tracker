@@ -1,7 +1,7 @@
 # FCA Academy LMS Simulation
 
-- **When:** 2026-06-28T17:49:08.871Z
-- **Run ID:** LMS-SIM-1782668938204
+- **When:** 2026-06-28T19:58:36.798Z
+- **Run ID:** LMS-SIM-1782676708051
 - **API:** https://api.futurecontractorsofamerica.com
 - **SWA:** https://futurecontractorsofamerica.com
 - **Result:** 4 FAILURE(S) - 169/173 passed
@@ -165,7 +165,7 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** legal-api:academy-program-modules: program detail builder present
 - **PASS** api:academy-lms: programs in API: 1212
 - **PASS** api:catalog-integrity: aligned
-- **PASS** api:academy-learners: 5 learners
+- **PASS** api:academy-learners: 4 learners
 - **PASS** api:academy-enrollments: 11 enrollments
 - **PASS** lms-surface:src/pages/academy/AcademyHome.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyCatalog.jsx
@@ -175,7 +175,7 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** lms-surface:src/api/academyClient.js
 - **PASS** Academy API reachable: https://api.futurecontractorsofamerica.com
 - **PASS** Academy API health: https://api.futurecontractorsofamerica.com
-- **PASS** Academy customer login: founder.test@futurecontractorsofamerica.com (2FA)
+- **PASS** Academy customer login: founder.test@futurecontractorsofamerica.com
 - **PASS** Academy catalog summary: 1212 programs
 - **PASS** Academy catalog total: 1212
 - **PASS** Academy catalog integrity: aligned
@@ -188,7 +188,7 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** Academy LMS snapshot: 4 learners, 4 enrollments
 - **PASS** Academy progress PATCH: ENR-001
 - **PASS** Academy lane catalog probe: electrical-core-level-1
-- **PASS** Academy commerce intake: INTAKE-1782668946712
+- **PASS** Academy commerce intake: INTAKE-1782676715478
 - **FAIL** SWA route /academy: shell OK but API probe error: Unexpected end of JSON input
 - **FAIL** SWA route /academy/catalog: shell OK but API probe error: Unexpected end of JSON input
 - **FAIL** SWA route /academy/store: shell OK but API probe error: Unexpected end of JSON input
