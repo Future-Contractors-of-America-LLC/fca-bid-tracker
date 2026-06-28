@@ -154,7 +154,7 @@ jobs:
             echo "::error::FCA_ACADEMY_MEDIA_CDN_BASE repo variable not set (e.g. https://<account>.blob.core.windows.net/fca-academy-media)."
             exit 1
           fi
-          SAMPLE=$(find public/academy/media -name '*.webm' | head -1)
+          SAMPLE=$(find public/academy/media -name '*.webm' -print -quit)
           if [ -z "$SAMPLE" ]; then
             echo "No academy WebM samples to verify."
             exit 0
