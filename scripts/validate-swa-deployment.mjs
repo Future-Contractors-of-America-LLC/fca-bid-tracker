@@ -40,7 +40,18 @@ const checks = [
     markers: [
       '"verify:live-deployment": "node scripts/verify-live-deployment.mjs"',
       '"prebuild": "node scripts/generate-deployment-manifest.mjs && node scripts/generate-domain-continuity-witness.mjs && node scripts/generate-runtime-fingerprint.mjs"',
+      '"prepare:swa-deploy": "node scripts/prepare-swa-deploy.mjs"',
       '"validate:swa-deployment": "node scripts/validate-swa-deployment.mjs"'
+    ]
+  },
+  {
+    file: path.join(root, "scripts", "prepare-swa-deploy.mjs"),
+    markers: [
+      "FCA_ACADEMY_MEDIA_CDN",
+      "FCA_SWA_DEPLOY_LIMIT_BYTES",
+      "/academy/media/",
+      ".webm",
+      ".mp3",
     ]
   },
   {

@@ -109,6 +109,71 @@ jobs:
           test -f api_generated/academy-lms/index.js
           test -f api_generated/_lib/academyCatalog.js
 
+      - name: Upload academy binary media to Azure Blob CDN
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
+        env:
+          FCA_BLOB_STORAGE_CONNECTION: ${{ secrets.FCA_BLOB_STORAGE_CONNECTION }}
+          FCA_ACADEMY_MEDIA_CONTAINER: fca-academy-media
+        run: |
+          set -euo pipefail
+          if [ -z "$FCA_BLOB_STORAGE_CONNECTION" ]; then
+            echo "::error::FCA_BLOB_STORAGE_CONNECTION not set — academy WebM/MP3 must publish to blob before slim SWA deploy."
+            exit 1
+          fi
+          az storage container create \
+            --name "$FCA_ACADEMY_MEDIA_CONTAINER" \
+            --connection-string "$FCA_BLOB_STORAGE_CONNECTION" \
+            --public-access blob \
+            --only-show-errors
+          az storage blob upload-batch \
+            --connection-string "$FCA_BLOB_STORAGE_CONNECTION" \
+            --destination "$FCA_ACADEMY_MEDIA_CONTAINER" \
+            --source public/academy/media \
+            --pattern "*.webm" \
+            --destination-path academy/media \
+            --overwrite \
+            --only-show-errors
+          az storage blob upload-batch \
+            --connection-string "$FCA_BLOB_STORAGE_CONNECTION" \
+            --destination "$FCA_ACADEMY_MEDIA_CONTAINER" \
+            --source public/academy/media \
+            --pattern "*.mp3" \
+            --destination-path academy/media \
+            --overwrite \
+            --only-show-errors
+          WEBM_COUNT=$(find public/academy/media -name '*.webm' | wc -l)
+          echo "Uploaded ${WEBM_COUNT} academy WebM file(s) to ${FCA_ACADEMY_MEDIA_CONTAINER}"
+
+      - name: Verify academy blob CDN reachability
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
+        env:
+          FCA_ACADEMY_MEDIA_CDN_BASE: ${{ vars.FCA_ACADEMY_MEDIA_CDN_BASE }}
+        run: |
+          set -euo pipefail
+          if [ -z "$FCA_ACADEMY_MEDIA_CDN_BASE" ]; then
+            echo "::error::FCA_ACADEMY_MEDIA_CDN_BASE repo variable not set (e.g. https://<account>.blob.core.windows.net/fca-academy-media)."
+            exit 1
+          fi
+          SAMPLE=$(find public/academy/media -name '*.webm' | head -1)
+          if [ -z "$SAMPLE" ]; then
+            echo "No academy WebM samples to verify."
+            exit 0
+          fi
+          REL="${SAMPLE#public/}"
+          URL="${FCA_ACADEMY_MEDIA_CDN_BASE%/}/${REL}"
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          echo "HEAD $URL => HTTP $CODE"
+          if [ "$CODE" != "200" ]; then
+            echo "::error::Academy blob CDN verification failed (HTTP $CODE)"
+            exit 1
+          fi
+
+      - name: Slim SWA dist (offload academy WebM/MP3 to blob CDN)
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
+        env:
+          FCA_ACADEMY_MEDIA_CDN_BASE: ${{ vars.FCA_ACADEMY_MEDIA_CDN_BASE }}
+        run: npm run prepare:swa-deploy
+
       - name: Archive governed deployment payload
         run: |
           mkdir -p workspace

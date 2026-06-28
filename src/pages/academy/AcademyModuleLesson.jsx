@@ -11,6 +11,7 @@ import { resolveProgramCatalogMeta } from "../../academyCatalogTaxonomy";
 import { academyPageStyle } from "../../academyDesignSystem";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
+import { resolveAcademyMediaUrl } from "../../utils/academyMediaUrl";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -195,8 +196,8 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   }
 
   function renderLecturePanel() {
-    const lectureVideoUrl = module?.lectureVideoUrl;
-    const lectureSrc = module?.auricruxLectureUrl || module?.lectureUrl || module?.mediaUrl;
+    const lectureVideoUrl = resolveAcademyMediaUrl(module?.lectureVideoUrl);
+    const lectureSrc = resolveAcademyMediaUrl(module?.auricruxLectureUrl || module?.lectureUrl || module?.mediaUrl);
 
     if (lectureVideoUrl) {
       return (
@@ -245,7 +246,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
       return (
         <iframe
           title={`Module ${moduleNumber} Auricrux skills demonstration`}
-          src={module.auricruxSkillsDemoUrl}
+          src={resolveAcademyMediaUrl(module.auricruxSkillsDemoUrl)}
           style={iframeStyle}
           loading="lazy"
         />
@@ -253,7 +254,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
     }
     if (Array.isArray(module?.lessonMedia) && module.lessonMedia.length > 0) {
       const first = module.lessonMedia.find((item) => item.skillsDemoUrl || item.labDemoUrl);
-      const demoSrc = first?.skillsDemoUrl || first?.labDemoUrl;
+      const demoSrc = resolveAcademyMediaUrl(first?.skillsDemoUrl || first?.labDemoUrl);
       if (demoSrc) {
         return (
           <iframe
@@ -273,7 +274,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
       return (
         <iframe
           title={`Module ${moduleNumber} lab`}
-          src={module.labUrl}
+          src={resolveAcademyMediaUrl(module.labUrl)}
           style={iframeStyle}
           loading="lazy"
         />

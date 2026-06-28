@@ -21,6 +21,7 @@
     "prebuild": "node scripts/generate-deployment-manifest.mjs && node scripts/generate-domain-continuity-witness.mjs && node scripts/generate-runtime-fingerprint.mjs",
     "build:system": "npm run build",
     "build": "npx vite build && node scripts/post-spa-build.mjs",
+    "prepare:swa-deploy": "node scripts/prepare-swa-deploy.mjs",
     "qc:market": "node scripts/run-market-qc.mjs",
     "qc:saas": "node scripts/run-saas-qc.mjs",
     "smoke:central-spine": "node scripts/smoke-central-spine.mjs",
