@@ -15,7 +15,7 @@ const OFFLOAD_EXTENSIONS = new Set([".webm", ".mp3"]);
 
 function isOffloadedMedia(relativePath) {
   const normalized = relativePath.replace(/\\/g, "/");
-  if (!normalized.includes("/academy/media/")) return false;
+  if (!normalized.includes("academy/media/")) return false;
   return OFFLOAD_EXTENSIONS.has(path.extname(normalized).toLowerCase());
 }
 

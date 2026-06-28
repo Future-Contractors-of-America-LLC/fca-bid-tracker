@@ -49,7 +49,7 @@ const checks = [
     markers: [
       "FCA_ACADEMY_MEDIA_CDN",
       "FCA_SWA_DEPLOY_LIMIT_BYTES",
-      "/academy/media/",
+      "academy/media/",
       ".webm",
       ".mp3",
     ]
