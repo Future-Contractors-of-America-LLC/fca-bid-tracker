@@ -158,8 +158,9 @@ export default function PortalProjects() {
             tone="blue"
             liveRecommend
             operateConfig={{
-              variant: "project-execute",
-              projectId: visibleProject.id,
+              capabilityId: "project-setup",
+              targetObjectType: "Project",
+              targetObjectId: visibleProject.id,
               sourceRoute: "/portal/projects",
             }}
           />
