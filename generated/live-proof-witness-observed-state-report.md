@@ -1,10 +1,10 @@
 # Live Proof Witness Observed State Report
 
 - Packet: 062Y
-- Generated: 2026-06-29T20:25:03.480Z
+- Generated: 2026-06-29T20:28:21.132Z
 - success: false
-- observedCommitSha: 8dc22fcf51edb1962ac339d4bfc332f692c59b9a
-- observedCommitMessage: Persist live deployment run witness for run 28399174813
+- observedCommitSha: b5054d4aa80a0c419eb2df5b6128b9e55c2a56c8
+- observedCommitMessage: Persist live deployment run witness for run 28400166356
 
 ## Failures
 - live deployment run witness does not point at the expected source commit for the observed witness run
