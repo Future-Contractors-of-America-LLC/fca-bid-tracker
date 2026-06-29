@@ -1,0 +1,24 @@
+---
+description: Three-machine workload boundaries for FCA org repos and deploy paths
+alwaysApply: true
+---
+
+# Three-machine workload map
+
+Read `docs/THREE_MACHINE_WORKLOAD_MAP.md` (canonical copy also in `auricrux-central/docs/THREE_MACHINE_WORKLOAD_MAP.md`) before cross-repo or deploy work.
+
+## This repo (`fca-bid-tracker`)
+
+- **Primary machine:** main FCA implementation; push to `main` triggers SWA CI/CD.
+- **Laptop (no admin):** triage, live verification, continuity docs, PR review — no local `npm`/`az` required; use GitHub Actions as build truth.
+- **Secondary machine:** do not implement FCA changes here.
+
+## Hard rules
+
+- Never use Calyndra or Root's Garden SWA secrets in this repo.
+- Canonical FCA API: this repo's Functions/SWA + `auricrux-central` — not `auricrux-bid-api-node`.
+- Do not merge Calyndra/RG code into this repo.
+
+## If machine role is unknown
+
+Ask whether this session is **Primary**, **Secondary**, or **Laptop** before deploy or toolchain steps.
