@@ -52,6 +52,7 @@ Those capabilities require a real backend execution layer and structured storage
 
 ## Alignment Rules For This Repo
 
+0. Machine and deploy boundaries: see `docs/THREE_MACHINE_WORKLOAD_MAP.md` (canonical copy in `auricrux-central/docs/`)
 1. Public routes should remain customer-friendly, coherent, and conversion-safe
 2. Portal, academy, comms, and public website surfaces should behave as one FCA system
 3. New UX work should prefer shared components, shared state, and route continuity over isolated page edits

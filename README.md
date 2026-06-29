@@ -13,6 +13,7 @@ This repository should align to the canonical governance artifacts in `Future-Co
 - `FCA_COVERAGE_MATRIX.md`
 - `FCA_SYSTEM_INVENTORY.md`
 - `FCA_REPO_ALIGNMENT.md` in this repo for shell-specific alignment notes
+- `docs/THREE_MACHINE_WORKLOAD_MAP.md` — three-machine workload map (canonical copy also in `auricrux-central/docs/`)
 
 ## Repo Role
 
