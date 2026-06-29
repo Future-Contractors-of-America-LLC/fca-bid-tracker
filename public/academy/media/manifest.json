@@ -9,7 +9,7 @@
     "doTeachTeachbackWritten": 10,
     "lectureCoveragePct": 100.0,
     "labCoveragePct": 100.0,
-    "frontendMediaRoot": "C:\\Users\\Auricrux\\Documents\\GitHub\\fca-bid-tracker\\public\\academy\\media",
+    "frontendMediaRoot": "/home/runner/work/auricrux-central/auricrux-central/fca-bid-tracker/public/academy/media",
     "dryRun": false
   },
   "programs": [
