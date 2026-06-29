@@ -89,13 +89,32 @@ if (-not $dnsReady) {
 
 if ($dnsReady) {
   Write-Host "[5/5] Bind custom domain on Azure Blob + set media CDN variable..." -ForegroundColor Yellow
-  az storage account blob-service-properties update `
-    --account-name $StorageAccount `
+  az storage account update `
+    --name $StorageAccount `
     --resource-group $ResourceGroup `
-    --custom-domain-name $MediaSubdomain `
+    --custom-domain $MediaSubdomain `
     -o none
-  gh variable set FCA_ACADEMY_MEDIA_CDN_BASE --repo $GitHubRepo --body $mediaCdnBase
-  Write-Host "GitHub variable FCA_ACADEMY_MEDIA_CDN_BASE = $mediaCdnBase" -ForegroundColor Green
+
+  # Blob storage custom domains use the *.blob.core.windows.net cert unless Front Door/CDN is in front.
+  # Only flip the GitHub CDN base when HTTPS succeeds for a probe object.
+  $probeUrl = "$mediaCdnBase/academy/media/carpentry-core-level-1/module-01-auricrux-lecture.webm"
+  $httpsReady = $false
+  try {
+    $null = Invoke-WebRequest -Uri $probeUrl -Method Head -UseBasicParsing -TimeoutSec 20
+    $httpsReady = $true
+    Write-Host "HTTPS probe OK: $probeUrl" -ForegroundColor Green
+  } catch {
+    Write-Host "HTTPS not ready for $MediaSubdomain ($($_.Exception.Message))." -ForegroundColor Yellow
+    Write-Host "Keep blob endpoint until Azure CDN/Front Door provides a matching cert." -ForegroundColor Yellow
+  }
+
+  if ($httpsReady) {
+    gh variable set FCA_ACADEMY_MEDIA_CDN_BASE --repo $GitHubRepo --body $mediaCdnBase
+    Write-Host "GitHub variable FCA_ACADEMY_MEDIA_CDN_BASE = $mediaCdnBase" -ForegroundColor Green
+  } else {
+    gh variable set FCA_ACADEMY_MEDIA_CDN_BASE --repo $GitHubRepo --body $blobCdnBase
+    Write-Host "GitHub variable FCA_ACADEMY_MEDIA_CDN_BASE = $blobCdnBase (media subdomain DNS OK, HTTPS pending)" -ForegroundColor Green
+  }
 } else {
   Write-Host "[5/5] Set blob CDN variable until media subdomain DNS propagates..." -ForegroundColor Yellow
   gh variable set FCA_ACADEMY_MEDIA_CDN_BASE --repo $GitHubRepo --body $blobCdnBase
