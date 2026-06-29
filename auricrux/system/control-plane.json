@@ -3,11 +3,17 @@
   "controller": "auricrux-control-plane",
   "status": "online",
   "preferredPath": "github-actions-control-plane",
-  "lastRunUtc": "2026-06-28T23:17:23.845Z",
+  "lastRunUtc": "2026-06-29T01:54:19.147Z",
   "lastMode": "status",
   "lastEvent": "schedule",
   "lastOutcome": "success",
   "history": [
+    {
+      "at": "2026-06-29T01:54:19.147Z",
+      "event": "schedule",
+      "mode": "status",
+      "outcome": "success"
+    },
     {
       "at": "2026-06-28T23:17:23.845Z",
       "event": "schedule",
@@ -118,12 +124,6 @@
     },
     {
       "at": "2026-06-27T09:50:34.560Z",
-      "event": "schedule",
-      "mode": "status",
-      "outcome": "success"
-    },
-    {
-      "at": "2026-06-27T07:39:41.926Z",
       "event": "schedule",
       "mode": "status",
       "outcome": "success"
