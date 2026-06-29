@@ -1,11 +1,11 @@
 # CI Proof Index
 
 - Packet: 062Y
-- Generated: 2026-06-29T20:26:06.754Z
+- Generated: 2026-06-29T20:29:24.601Z
 - Repository: Future-Contractors-of-America-LLC/fca-bid-tracker
 - Ref: refs/heads/main
-- SHA: b01c2c00362b2bbc91f59c8efafe50e6ec8c108c
-- Run ID: 28400371032
+- SHA: 0a25a059ab5600d49a30ec27ef48de0ed31d6a36
+- Run ID: 28400548737
 - Workflow: FCA Runtime Smoke Validation
 
 ## Artifact presence
