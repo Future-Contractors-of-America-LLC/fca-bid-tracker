@@ -98,15 +98,18 @@ async function ensureStore() {
       loadCollection("rfis"),
     ]);
 
-    if (projects || takeoffs || rfis) {
-      globalThis[STORE_KEY] = {
-        projects: projects || [],
-        takeoffs: takeoffs || [],
-        rfis: rfis || [],
-      };
+    // Fix: partial-hydrate data loss guard.
+    // All three collections must be present (non-null) to trust Table data.
+    // If any one load returns null (404 or load failure), fall through to seed
+    // so we never compose a store with live data in one collection and an
+    // empty array in another — which schedulePersist would then write back,
+    // silently wiping the live rows.
+    if (projects !== null && takeoffs !== null && rfis !== null) {
+      globalThis[STORE_KEY] = { projects, takeoffs, rfis };
       return;
     }
 
+    // Table is empty or partially bootstrapped — seed and persist all.
     const seeded = seedStore();
     globalThis[STORE_KEY] = seeded;
     await Promise.all([
@@ -120,15 +123,19 @@ async function ensureStore() {
   return getMemoryStore();
 }
 
-function schedulePersist(store) {
+// Fix: per-collection persist — saves only the changed collection so concurrent
+// workers on scaled SWA instances cannot overwrite each other's collections.
+// Awaited by callers so responses are only returned after Table write succeeds
+// (resolves both the 202-before-persist and stale-debounced-write issues).
+async function persistCollection(collectionName, items) {
   if (!persistenceEnabled()) return;
-  setTimeout(() => {
-    Promise.all([
-      saveCollection("projects", store.projects),
-      saveCollection("takeoffs", store.takeoffs),
-      saveCollection("rfis", store.rfis),
-    ]).catch(() => {});
-  }, 200);
+  try {
+    await saveCollection(collectionName, items);
+  } catch (error) {
+    // Log but do not throw — memory is authoritative for the current request;
+    // Table divergence is surfaced in logs rather than silently ignored.
+    console.warn(`fcaRuntimeStore: persist failed for ${collectionName}`, error?.message || error);
+  }
 }
 
 function backingSource() {
@@ -165,7 +172,7 @@ async function createProject(payload) {
   };
 
   store.projects.unshift(item);
-  schedulePersist(store);
+  await persistCollection("projects", store.projects);
   return clone(item);
 }
 
@@ -183,7 +190,7 @@ async function updateProject(projectId, patch = {}) {
   };
 
   store.projects[index] = updated;
-  schedulePersist(store);
+  await persistCollection("projects", store.projects);
   return clone(updated);
 }
 
@@ -215,7 +222,7 @@ async function createTakeoff(projectId, payload) {
   };
 
   store.takeoffs.unshift(item);
-  schedulePersist(store);
+  await persistCollection("takeoffs", store.takeoffs);
   return clone(item);
 }
 
@@ -244,7 +251,7 @@ async function createRFI(projectId, payload) {
   };
 
   store.rfis.unshift(item);
-  schedulePersist(store);
+  await persistCollection("rfis", store.rfis);
   return clone(item);
 }
 
