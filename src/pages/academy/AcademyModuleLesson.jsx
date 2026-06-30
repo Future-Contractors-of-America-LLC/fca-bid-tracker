@@ -3,6 +3,9 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import KnowledgeCheckQuiz from "../../components/academy/KnowledgeCheckQuiz";
 import AcademyCourseChrome from "../../components/academy/AcademyCourseChrome";
+import AcademyScriptReader from "../../components/academy/AcademyScriptReader";
+import AcademyTextbookViewer from "../../components/academy/AcademyTextbookViewer";
+import AcademyProctorSession from "../../components/academy/AcademyProctorSession";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { fetchAcademyProgram } from "../../api/academyClient";
@@ -44,7 +47,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   const programId = routeParams.programId;
   const moduleNumber = Number(routeParams.moduleNumber);
   const { session } = useCustomerSession();
-  const { academyState, completeModule } = useAcademyLms();
+  const { academyState, completeModule, startProctoredAssessment } = useAcademyLms();
   const [programDetail, setProgramDetail] = useState(null);
   const [loadError, setLoadError] = useState("");
   const [loadingProgram, setLoadingProgram] = useState(true);
@@ -53,6 +56,10 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   const [quizPassed, setQuizPassed] = useState(false);
   const [activeTab, setActiveTab] = useState("lecture");
   const [overrideBusy, setOverrideBusy] = useState(false);
+  const [proctorSession, setProctorSession] = useState(null);
+  const [proctorBusy, setProctorBusy] = useState(false);
+
+  const isCtin410Module1 = programId === "deg-ctin-410" && moduleNumber === 1;
 
   const learnerId = session?.email || session?.customerId;
   const canInstructorOverride = Boolean(session?.authenticated && /admin|owner|instructor/i.test(session?.role || ""));
@@ -75,6 +82,8 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   const program = programDetail?.program;
   const modules = programDetail?.modules || [];
   const module = modules.find((item) => Number(item.moduleNumber) === moduleNumber);
+  const readingTextbook = programDetail?.readingTextbook;
+  const highStakesAssessment = (programDetail?.exams || programDetail?.tests || [])[0];
   const completionRequirements = programDetail?.completionRequirements;
   const catalogMeta = program ? resolveProgramCatalogMeta(program) : null;
 
@@ -470,6 +479,29 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
               ) : null}
               {activeTab === "quiz" && !isLocked && !isModuleComplete ? (
                 <KnowledgeCheckQuiz module={module} onSubmit={handleQuizSubmit} busy={quizBusy} />
+              ) : null}
+
+              <AcademyTextbookViewer readingTextbook={readingTextbook} moduleNumber={moduleNumber} />
+              <AcademyScriptReader title="Student-readable scripts" lectureScript={module?.lectureScript} skillsDemoScript={module?.skillsDemoScript} />
+              {highStakesAssessment && enrollment ? (
+                <AcademyProctorSession
+                  assessment={{ ...highStakesAssessment, kind: "exams" }}
+                  enrollmentId={enrollment.enrollmentId}
+                  learnerId={learnerId}
+                  proctorSession={proctorSession}
+                  busy={proctorBusy}
+                  onStart={async (body) => {
+                    setProctorBusy(true);
+                    try {
+                      const result = await startProctoredAssessment({ ...body, learnerId });
+                      setProctorSession(result);
+                      return result;
+                    } finally {
+                      setProctorBusy(false);
+                    }
+                  }}
+                  onComplete={(result) => setProctorSession({ ...result, status: "active" })}
+                />
               ) : null}
             </article>
 

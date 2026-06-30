@@ -109,6 +109,28 @@ export default function useAcademyLms() {
       appendCommercialLog({ type: "academy-certificate", title: `${enrollmentId} credential issued`, detail: `Credential issuance now reinforces customer trust and workforce readiness continuity.`, route: "/academy" });
       return payload;
     },
+
+    async registerIepAccommodations(learnerId, accommodations, documentationRef = "IEP/504 on file") {
+      const payload = await mutateAcademyLms("set-accommodations", { learnerId, accommodations, documentationRef });
+      setAcademyState(payload);
+      setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "IEP accommodations saved", lastSyncedAt: new Date().toISOString() });
+      return payload;
+    },
+    async startProctoredAssessment({ learnerId, enrollmentId, assessmentId, assessmentKind = "exams" }) {
+      const payload = await mutateAcademyLms("start-proctored-assessment", { learnerId, enrollmentId, assessmentId, assessmentKind });
+      setAcademyState(payload);
+      return payload.proctorSession;
+    },
+    async submitAssessment({ learnerId, enrollmentId, assessmentId, assessmentKind = "quizzes", answers, proctorSessionId }) {
+      const payload = await mutateAcademyLms("submit-assessment", { learnerId, enrollmentId, assessmentId, assessmentKind, answers, proctorSessionId });
+      setAcademyState(payload);
+      return payload.assessmentOutcome;
+    },
+    async checkPrerequisiteGates(learnerId, programKey) {
+      const payload = await mutateAcademyLms("check-prerequisite-gates", { learnerId, programKey });
+      setAcademyState(payload);
+      return payload.prerequisiteGateResult;
+    },
     async exportTranscript(learnerId) {
       const payload = await exportAcademyTranscript(learnerId);
       setAcademyState(payload);
