@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T19:54:45.198Z",
-  "runId": "LMS-WFR-1782848989317",
+  "generatedAt": "2026-06-30T21:35:54.082Z",
+  "runId": "LMS-WFR-1782855274287",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -84,27 +84,34 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+      "guidance": "I specialize in contractor training and certification pathways for bids, projects, field operations, billing, and compliance. In this segment on Academy Simulation scope and role, I am teaching you the way I would onboard someone on my own crew. Develop this skill for exam prep, recurring field reference, and advancing your contracting career."
     },
     {
       "step": "SWA route /academy",
-      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
     },
     {
       "step": "SWA route /academy/catalog",
-      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
     }
   ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 109.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 110.",
   "state": {
-    "runCount": 109,
+    "runCount": 110,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 109,
+    "consecutiveFailures": 110,
     "history": [
+      {
+        "at": "2026-06-30T21:35:54.082Z",
+        "runId": "LMS-WFR-1782855274287",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-06-30T19:54:45.198Z",
         "runId": "LMS-WFR-1782848989317",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-06-28T21:57:36.416Z",
-        "runId": "LMS-WFR-1782683773462",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-06-30T19:54:45.198Z",
+    "lastRunUtc": "2026-06-30T21:35:54.082Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782848989317"
+    "lastRunId": "LMS-WFR-1782855274287"
   }
 }
