@@ -50,17 +50,22 @@ const primaryLinkStyle = {
   color: "#fff",
 };
 
+// Fix: removed 'pending' from the degraded check.
+// useAcademyLms initializes with 'Academy API pending' before the first fetch
+// resolves — this is normal transient loading state, not a degradation signal.
+// Showing the degraded banner during every healthy page load is a false positive.
+// Only 'unavailable' and 'degraded' strings indicate a real upstream failure.
 function isAcademyApiDegraded(persistenceState) {
   if (!persistenceState) return false;
   const lower = String(persistenceState).toLowerCase();
-  return lower.includes("unavailable") || lower.includes("pending") || lower.includes("degraded");
+  return lower.includes("unavailable") || lower.includes("degraded");
 }
 
 function errorIsDegraded(error) {
   if (!error) return false;
   if (typeof error === "object" && error?.degraded === true) return true;
   const message = typeof error === "string" ? error : error?.message || "";
-  return /updating|unavailable|pending|temporarily|status 5\d\d|unexpected end of json/i.test(message);
+  return /updating|unavailable|temporarily|status 5\d\d|unexpected end of json/i.test(message);
 }
 
 export default function AcademyServiceStatusBanner({

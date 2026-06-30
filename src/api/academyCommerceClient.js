@@ -46,7 +46,11 @@ function commerceEndpoints(path) {
 async function postCommerce(path, body) {
   let lastPayload = null;
   let lastStatus = 0;
-  let lastEmptyBody = false;
+  // Fix: latch seenEmptyBody — never clear once set.
+  // Previously lastEmptyBody was overwritten each iteration, so a 502+empty-body
+  // followed by a 404+JSON-body cleared the flag, causing a generic error throw
+  // instead of the tagged academy-degraded error this PR targets.
+  let seenEmptyBody = false;
 
   for (const url of commerceEndpoints(path)) {
     try {
@@ -62,7 +66,7 @@ async function postCommerce(path, body) {
       const { payload, isEmptyBody } = await readAcademyResponse(response);
       lastPayload = payload;
       lastStatus = response.status;
-      lastEmptyBody = isEmptyBody;
+      if (isEmptyBody) seenEmptyBody = true;
 
       if (response.status === 404 || response.status === 405 || response.status === 502) {
         continue;
@@ -76,9 +80,9 @@ async function postCommerce(path, body) {
     }
   }
 
-  if (lastEmptyBody || lastStatus >= 500) {
+  if (seenEmptyBody || lastStatus >= 500) {
     throw academyDegradedError(
-      { kind: lastEmptyBody ? "empty-body" : "upstream-5xx", retriable: true, status: lastStatus },
+      { kind: seenEmptyBody ? "empty-body" : "upstream-5xx", retriable: true, status: lastStatus },
       "Unable to start academy checkout",
     );
   }
