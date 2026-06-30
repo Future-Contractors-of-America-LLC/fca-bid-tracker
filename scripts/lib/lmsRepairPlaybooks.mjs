@@ -19,6 +19,7 @@ export const REPAIR_ACTION_IDS = {
   "lms-entitlement": "LMS-ENTITLEMENT-FIX",
   "lms-central-artifacts": "LMS-CENTRAL-ARTIFACTS-FIX",
   "lms-auth-missing": "LMS-AUTH-CONFIG",
+  "lms-academy-ctas": "LMS-CTA-FIX",
 };
 
 export const PLAYBOOKS = [
@@ -121,6 +122,17 @@ export const PLAYBOOKS = [
     detail: "Retry when api.futurecontractorsofamerica.com health recovers.",
     autoRepair: "retry-transient",
     priority: "high",
+  },
+  {
+    id: "lms-academy-ctas",
+    match: (step) => /validate-academy-ctas|academy CTA|academy cta missing/i.test(`${step.name} ${step.detail}`),
+    repairClass: REPAIR_CLASSES.ENGINEERING_QUEUE,
+    title: "Academy CTA parity drift",
+    detail: "Academy CTAs are missing or pointing at stale routes. Re-run validate-academy-ctas.mjs locally and align src/websiteShell.js academyCtaSets + academy page CTAs with the canonical academy route map.",
+    targetLane: "product",
+    targetRepo: "fca-bid-tracker",
+    priority: "medium",
+    actionId: "LMS-CTA-FIX",
   },
 ];
 
