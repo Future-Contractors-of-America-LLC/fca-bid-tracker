@@ -1,5 +1,5 @@
 import { app } from "@azure/functions";
-import { requireAuth, withSessionRefresh } from "./auth-boundary.js";
+import { requireAuth, validateSessionToken, withSessionRefresh } from "./auth-boundary.js";
 import { getAcademySnapshot, mutateAcademy } from "./academy-store.js";
 import { getAcademyProgramDetail } from "./academy-program-modules.js";
 
@@ -11,7 +11,7 @@ app.http("academy-lms", {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;
 
-    const tenantId = auth.tenantId;
+    const tenantId = auth.tenantId; // session customerId
 
     if (request.method === "GET") {
       const programKey = new URL(request.url).searchParams.get("programKey");
