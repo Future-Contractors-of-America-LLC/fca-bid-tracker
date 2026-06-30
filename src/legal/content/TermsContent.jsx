@@ -109,6 +109,37 @@ export default function TermsContent() {
       <LegalH3>15. Export</LegalH3>
       <LegalP>Use must comply with U.S. export laws. See [Export Compliance](/security) in our Security overview.</LegalP>
 
+      <LegalH3>16. Educational Use and Student Data</LegalH3>
+
+      <LegalH4>FERPA School Official Designation</LegalH4>
+      <LegalP>
+        When FCA is engaged by a school or educational institution under a signed Data Privacy Agreement (DPA),
+        FCA serves as a &quot;school official&quot; with a legitimate educational interest as defined under the Family
+        Educational Rights and Privacy Act (FERPA), 20 U.S.C. § 1232g, and its implementing regulations at
+        34 C.F.R. Part 99. FCA agrees to be bound by the same conditions governing use and re-disclosure of
+        education records that apply to school officials, and will not re-disclose education records except as
+        permitted under FERPA and the applicable DPA.
+      </LegalP>
+
+      <LegalH4>Educational Use Only</LegalH4>
+      <LegalP>
+        Student accounts and any student education records processed under an institutional DPA may only be used
+        to provide the agreed educational services. FCA will not use student data for commercial advertising,
+        to build user profiles for non-educational purposes, or to sell or share student information with
+        third parties outside of subprocessors necessary to provide the Services.
+      </LegalP>
+
+      <LegalH4>Student Data Use Limitations</LegalH4>
+      <LegalUl
+        items={[
+          "Student education records are used solely to deliver the contracted educational program",
+          "No PII (name, email, date of birth, address) is required or accepted for student accounts",
+          "Student progress data and quiz scores are accessible only to the student, assigned instructors, and authorized school administrators",
+          "Data collected under a school DPA is deleted or returned to the district within 30 days of term end or written request",
+          "FCA complies with SOPIPA (Va. Code § 22.1-287.02) and COPPA for all student accounts",
+        ]}
+      />
+
       <LegalContact email="legal@futurecontractorsofamerica.com" label="Legal inquiries" />
     </>
   );

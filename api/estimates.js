@@ -1,20 +1,16 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { requireAuth } from "./auth-boundary.js";
 import { listEstimates, mutateEstimate } from "./commercial-store.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 app.http("estimates", {
   methods: ["GET", "PATCH"],
   authLevel: "anonymous",
   route: "estimates",
   handler: async (request) => {
-    const tenantId = resolveTenantId(request);
+    const auth = requireAuth(request);
+    if (!auth.ok) return auth.response;
+
+    const tenantId = auth.tenantId;
 
     if (request.method === "GET") {
       const items = listEstimates(tenantId);

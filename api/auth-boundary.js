@@ -3,7 +3,19 @@ import { allowSeededCustomerFallback, hasManagedCustomerAccounts } from "./custo
 
 const SESSION_COOKIE_NAME = "fca_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 8;
+const STUDENT_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
 const DEFAULT_SESSION_SECRET = "FCA_SERVER_SESSION_DEV_ONLY_CHANGE_ME";
+
+export const CHPS_TENANT_CONFIG = {
+  tenantId: "TEN-CHPS-PILOT-001",
+  schoolYear: "2026-2027",
+  auricruxLiveEnabled: false,
+  cteProgramAuricruxEnabled: true,
+  maxStudentAccounts: 80,
+  sessionIdleTimeoutMinutes: 30,
+  dataRetentionEndDate: "2027-06-30",
+  dpaStatus: "pending-signature",
+};
 
 function getSessionSecret() {
   return process.env.FCA_SESSION_SECRET || DEFAULT_SESSION_SECRET;
@@ -74,30 +86,32 @@ export function buildServerSession(account = null) {
   };
 }
 
-export function createSessionCookie(account) {
+export function createSessionCookie(account, now = Date.now()) {
   const payload = JSON.stringify({
     email: account.email,
     customerId: account.customerId,
     company: account.company,
     role: account.role,
+    cteProgramEnabled: account.cteProgramEnabled || false,
     workspaceLabel: account.workspaceLabel,
     selectedPlan: account.selectedPlan,
     enabledProducts: account.enabledProducts,
     enabledComms: account.enabledComms,
     accountMode: account.accountMode || "seeded",
-    exp: Date.now() + SESSION_TTL_SECONDS * 1000,
+    lastActiveAt: now,
+    exp: now + SESSION_TTL_SECONDS * 1000,
   });
 
   const encodedPayload = base64UrlEncode(payload);
   const signature = signPayload(encodedPayload);
   const token = `${encodedPayload}.${signature}`;
-  const cookie = `${SESSION_COOKIE_NAME}=${token}; HttpOnly; Path=/; Max-Age=${SESSION_TTL_SECONDS}; SameSite=Lax; Secure`;
+  const cookie = `${SESSION_COOKIE_NAME}=${token}; HttpOnly; Path=/; Max-Age=${SESSION_TTL_SECONDS}; SameSite=Strict; Secure`;
 
   return { token, cookie };
 }
 
 export function clearSessionCookie() {
-  return `${SESSION_COOKIE_NAME}=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax; Secure`;
+  return `${SESSION_COOKIE_NAME}=; HttpOnly; Path=/; Max-Age=0; SameSite=Strict; Secure`;
 }
 
 export function readSessionTokenFromCookieHeader(cookieHeader = "") {
@@ -125,4 +139,63 @@ export function validateSessionToken(token) {
   } catch {
     return null;
   }
+}
+
+const AUTH_REQUIRED_RESPONSE = {
+  status: 401,
+  jsonBody: {
+    status: 401,
+    ok: false,
+    error: "Authentication required.",
+    authContext: { authenticated: false, source: "missing-session" },
+  },
+};
+
+const IDLE_TIMEOUT_RESPONSE = {
+  status: 401,
+  jsonBody: {
+    status: 401,
+    ok: false,
+    error: "Authentication required.",
+    authContext: { authenticated: false, source: "idle-timeout", reason: "idle-timeout" },
+  },
+};
+
+function isStudentRole(role) {
+  return role === "student";
+}
+
+/**
+ * Validates authentication from the request cookie.
+ * Returns { ok: true, session, tenantId, refreshCookie } on success.
+ * Returns { ok: false, response } on failure — routes must return response immediately.
+ */
+export function requireAuth(request, now = Date.now()) {
+  const cookieHeader = request.headers.get("cookie") || "";
+  const token = readSessionTokenFromCookieHeader(cookieHeader);
+  const session = validateSessionToken(token);
+
+  if (!session) {
+    return { ok: false, response: AUTH_REQUIRED_RESPONSE };
+  }
+
+  if (isStudentRole(session.role)) {
+    const lastActive = session.lastActiveAt || 0;
+    if (now - lastActive > STUDENT_IDLE_TIMEOUT_MS) {
+      return { ok: false, response: IDLE_TIMEOUT_RESPONSE, idleTimeout: true, session };
+    }
+  }
+
+  const refreshedAccount = {
+    ...session,
+    lastActiveAt: now,
+  };
+  const { cookie: refreshCookie } = createSessionCookie(refreshedAccount, now);
+
+  return {
+    ok: true,
+    session,
+    tenantId: session.customerId || null,
+    refreshCookie,
+  };
 }

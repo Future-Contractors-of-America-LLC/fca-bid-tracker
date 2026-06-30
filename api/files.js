@@ -1,13 +1,6 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { requireAuth } from "./auth-boundary.js";
 import { listFiles, mutateFile, getWorkflowSummary, listAuditEvents, ensureWorkflowReady, workflowBackingSource } from "./workflow-store.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 function resolveLatestAuditEventId(tenantId, projectId, eventType) {
   const items = listAuditEvents(tenantId, { projectId, eventType, actorType: null, q: null });
@@ -19,7 +12,10 @@ app.http("files", {
   authLevel: "anonymous",
   route: "files",
   handler: async (request) => {
-    const tenantId = resolveTenantId(request);
+    const auth = requireAuth(request);
+    if (!auth.ok) return auth.response;
+
+    const tenantId = auth.tenantId;
     await ensureWorkflowReady(tenantId);
     const projectId = request.query.get("projectId") || null;
     const category = request.query.get("category") || null;

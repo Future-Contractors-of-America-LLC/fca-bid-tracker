@@ -1,21 +1,17 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { requireAuth } from "./auth-boundary.js";
 import { getAcademySnapshot, mutateAcademy } from "./academy-store.js";
 import { getAcademyProgramDetail } from "./academy-program-modules.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 app.http("academy-lms", {
   methods: ["GET", "PATCH"],
   authLevel: "anonymous",
   route: "academy-lms",
   handler: async (request) => {
-    const tenantId = resolveTenantId(request);
+    const auth = requireAuth(request);
+    if (!auth.ok) return auth.response;
+
+    const tenantId = auth.tenantId;
 
     if (request.method === "GET") {
       const programKey = new URL(request.url).searchParams.get("programKey");
@@ -29,6 +25,7 @@ app.http("academy-lms", {
         }
         return {
           status: 200,
+          headers: { "Set-Cookie": auth.refreshCookie, "Cache-Control": "no-store" },
           jsonBody: { ok: true, ...detail, backingSource: "api-academy-program-modules" },
         };
       }
@@ -36,6 +33,7 @@ app.http("academy-lms", {
       const snapshot = getAcademySnapshot(tenantId);
       return {
         status: 200,
+        headers: { "Set-Cookie": auth.refreshCookie, "Cache-Control": "no-store" },
         jsonBody: {
           ok: true,
           ...snapshot,
@@ -50,6 +48,7 @@ app.http("academy-lms", {
       const snapshot = mutateAcademy(tenantId, body?.action, body);
       return {
         status: 200,
+        headers: { "Set-Cookie": auth.refreshCookie, "Cache-Control": "no-store" },
         jsonBody: {
           ok: true,
           ...snapshot,

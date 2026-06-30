@@ -1,10 +1,10 @@
 {
   "service": "fca-bid-tracker",
-  "generatedAt": "2026-06-30T14:02:27.629Z",
+  "generatedAt": "2026-06-30T15:18:06.296Z",
   "source": "github-actions",
-  "gitRef": "refs/heads/main",
-  "gitSha": "e728f36a7a53359838722155e5c9b2526f8d3035",
-  "runId": "28449758211",
+  "gitRef": "refs/heads/copilot/implement-ferpa-compliance-hardening",
+  "gitSha": "f6e399d1a07d0b740a061c131eaa36856fe5c02e",
+  "runId": "28454102489",
   "defaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
   "expectedHosts": [
     "futurecontractorsofamerica.com",
@@ -17,8 +17,8 @@
     "/api/auricrux",
     "/api/customer-login",
     "/login",
-    "/commit-witness-e728f36a7a53359838722155e5c9b2526f8d3035.txt"
+    "/commit-witness-f6e399d1a07d0b740a061c131eaa36856fe5c02e.txt"
   ],
-  "commitWitnessRoute": "/commit-witness-e728f36a7a53359838722155e5c9b2526f8d3035.txt",
+  "commitWitnessRoute": "/commit-witness-f6e399d1a07d0b740a061c131eaa36856fe5c02e.txt",
   "deploymentIntent": "static-web-app-plus-functions"
 }

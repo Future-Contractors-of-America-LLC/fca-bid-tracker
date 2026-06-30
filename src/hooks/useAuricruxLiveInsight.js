@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { submitAuricruxAction } from "../api/auricruxActionsClient";
 import { sendAuricruxMessage } from "../api/auricruxClient";
+import { auricruxLiveEnabled } from "../lib/auricruxPermissions";
+import useCustomerSession from "./useCustomerSession";
 
 export default function useAuricruxLiveInsight({
   enabled = true,
@@ -11,12 +13,14 @@ export default function useAuricruxLiveInsight({
   fallbackNextAction = "",
   useOperationalChat = false,
 }) {
+  const { session } = useCustomerSession();
+  const liveAllowed = auricruxLiveEnabled(session?.customer);
   const [liveNextAction, setLiveNextAction] = useState("");
   const [loading, setLoading] = useState(false);
   const [operational, setOperational] = useState(false);
 
   useEffect(() => {
-    if (!enabled || !targetObjectId || !rationale) {
+    if (!enabled || !liveAllowed || !targetObjectId || !rationale) {
       setLiveNextAction("");
       setOperational(false);
       return undefined;
@@ -71,7 +75,7 @@ export default function useAuricruxLiveInsight({
     return () => {
       cancelled = true;
     };
-  }, [enabled, targetObjectType, targetObjectId, sourceRoute, rationale, useOperationalChat]);
+  }, [enabled, liveAllowed, targetObjectType, targetObjectId, sourceRoute, rationale, useOperationalChat]);
 
   return {
     nextAction: liveNextAction || fallbackNextAction,
@@ -79,5 +83,6 @@ export default function useAuricruxLiveInsight({
     loading,
     isLive: Boolean(liveNextAction),
     operational,
+    liveEnabled: liveAllowed,
   };
 }
