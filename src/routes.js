@@ -19,6 +19,7 @@ export const routes = {
   "/terms": lazyPage(() => import("./pages/website/Terms")),
   "/privacy": lazyPage(() => import("./pages/website/Privacy")),
   "/legal": lazyPage(() => import("./pages/website/LegalHub")),
+  "/legal/chps-dpa-sign": lazyPage(() => import("./pages/website/ChpsDpaSign")),
   "/legal/contractor-resources": lazyPage(() => import("./pages/website/ContractorLegalResources")),
   "/cookies": lazyPage(() => import("./pages/website/Cookies")),
   "/acceptable-use": lazyPage(() => import("./pages/website/AcceptableUse")),
@@ -117,6 +118,10 @@ export function normalizePath(pathname) {
 
   if (withLeadingSlash.length > 1 && withLeadingSlash.endsWith("/")) {
     return withLeadingSlash.slice(0, -1);
+  }
+
+  if (withLeadingSlash.endsWith(".html") && withLeadingSlash.length > 5) {
+    return withLeadingSlash.slice(0, -5);
   }
 
   return withLeadingSlash || "/";
