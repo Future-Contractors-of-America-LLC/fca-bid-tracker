@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T04:51:08.762Z",
-  "runId": "LMS-WFR-1782794988792",
+  "generatedAt": "2026-06-30T07:54:44.406Z",
+  "runId": "LMS-WFR-1782806004805",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -84,27 +84,34 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear customer approval on the active bid package."
+      "guidance": "I teach the way I'd want to learn on my own jobsite. In this segment on Academy simulation for native commerce validation, I am walking through the script validate-academy-native-commerce-journey.mjs. Build this lab in your dev environment and verify each step matches what you see on the field portal. Do not skip the validation at native commerce transaction recording."
     },
     {
       "step": "SWA route /academy",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+      "guidance": "I specialize in contractor training for bids, projects, field, billing, and compliance. In this segment on Site work authorization (SWA), scope and role expectations for field workers and PMs, I am teaching you the way I would on a jobsite. Build skill in authorizing site work with clear scope, documented customer approval, and aligned field execution. Review the active bid and advance the next mi"
     },
     {
       "step": "SWA route /academy/catalog",
-      "guidance": "I have activated the Academy module on your portal. Use the catalog to browse courses, launch simulations, and track certification progress."
+      "guidance": "I teach construction exam prep, trade skills, and jobsite standards aligned with licensure and certification pathways. In this segment on Soil and Water Assessment (SWA), scope and sequence for Soil and Water Assessment align with OSHA, DOT, EPA, USDA, and industry standards. Develop practical skill in soil and water assessment for environmental compliance, construction support, and resource manag"
     }
   ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 96.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 97.",
   "state": {
-    "runCount": 96,
+    "runCount": 97,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 96,
+    "consecutiveFailures": 97,
     "history": [
+      {
+        "at": "2026-06-30T07:54:44.405Z",
+        "runId": "LMS-WFR-1782806004805",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-06-30T04:51:08.762Z",
         "runId": "LMS-WFR-1782794988792",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-06-28T06:45:06.676Z",
-        "runId": "LMS-WFR-1782629030552",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-06-30T04:51:08.762Z",
+    "lastRunUtc": "2026-06-30T07:54:44.405Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782794988792"
+    "lastRunId": "LMS-WFR-1782806004805"
   }
 }
