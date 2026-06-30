@@ -1,0 +1,83 @@
+﻿{
+    "timestamp":  "2026-06-21T14:35:06.0635548-04:00",
+    "hostname":  "DESKTOP-P2APOGL",
+    "user":  "MichaelBartholomew",
+    "audit":  {
+                  "1_runtime_versions":  {
+                                             "git":  "git version 2.54.0.windows.1",
+                                             "node":  "v24.16.0",
+                                             "npm":  "11.13.0",
+                                             "pnpm":  "11.8.0"
+                                         },
+                  "2_python":  {
+                                   "python":  "Python 3.14.5",
+                                   "py_3_12":  "Python 3.12.10",
+                                   "py_0p":  "-V:3.14 *        C:\\Users\\MichaelBartholomew\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe\r\n -V:3.12          C:\\Users\\MichaelBartholomew\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+                               },
+                  "3_dotnet_docker":  {
+                                          "dotnet":  "10.0.300",
+                                          "docker":  "Docker version 29.5.3, build d1c06ef",
+                                          "docker_info_first_10_lines":  "Client:\r\n Version:    29.5.3\r\n Context:    desktop-linux\r\n Debug Mode: false\r\n Plugins:\r\n  agent: Docker AI Agent Runner (Docker Inc.)\r\n    Version:  v1.73.0\r\n    Path:     C:\\Program Files\\Docker\\cli-plugins\\docker-agent.exe\r\n  ai: Docker AI Agent - Ask Gordon (Docker Inc.)\r\n    Version:  v1.25.0"
+                                      },
+                  "4_cli_tools":  {
+                                      "az":  "{\r\n  \"azure-cli\": \"2.87.0\",\r\n  \"azure-cli-core\": \"2.87.0\",\r\n  \"azure-cli-telemetry\": \"1.1.0\",\r\n  \"extensions\": {}\r\n}",
+                                      "gh":  "gh version 2.95.0 (2026-06-17)\r\nhttps://github.com/cli/cli/releases/tag/v2.95.0",
+                                      "stripe":  "stripe version 1.42.14",
+                                      "func":  "4.12.0"
+                                  },
+                  "5_wsl_winget":  {
+                                       "wsl_status":  "D\u0000e\u0000f\u0000a\u0000u\u0000l\u0000t\u0000 \u0000V\u0000e\u0000r\u0000s\u0000i\u0000o\u0000n\u0000:\u0000 \u00002\u0000\r\n\u0000\r\n\u0000\r\n\u0000\r\n\u0000\r\n\u0000T\u0000h\u0000e\u0000 \u0000W\u0000i\u0000n\u0000d\u0000o\u0000w\u0000s\u0000 \u0000S\u0000u\u0000b\u0000s\u0000y\u0000s\u0000t\u0000e\u0000m\u0000 \u0000f\u0000o\u0000r\u0000 \u0000L\u0000i\u0000n\u0000u\u0000x\u0000 \u0000k\u0000e\u0000r\u0000n\u0000e\u0000l\u0000 \u0000c\u0000a\u0000n\u0000 \u0000b\u0000e\u0000 \u0000m\u0000a\u0000n\u0000u\u0000a\u0000l\u0000l\u0000y\u0000 \u0000u\u0000p\u0000d\u0000a\u0000t\u0000e\u0000d\u0000 \u0000w\u0000i\u0000t\u0000h\u0000 \u0000\u0027\u0000w\u0000s\u0000l\u0000 \u0000-\u0000-\u0000u\u0000p\u0000d\u0000a\u0000t\u0000e\u0000\u0027\u0000,\u0000 \u0000b\u0000u\u0000t\u0000 \u0000a\u0000u\u0000t\u0000o\u0000m\u0000a\u0000t\u0000i\u0000c\u0000 \u0000u\u0000p\u0000d\u0000a\u0000t\u0000e\u0000s\u0000 \u0000c\u0000a\u0000n\u0000n\u0000o\u0000t\u0000 \u0000o\u0000c\u0000c\u0000u\u0000r\u0000 \u0000d\u0000u\u0000e\u0000 \u0000t\u0000o\u0000 \u0000y\u0000o\u0000u\u0000r\u0000 \u0000s\u0000y\u0000s\u0000t\u0000e\u0000m\u0000 \u0000s\u0000e\u0000t\u0000t\u0000i\u0000n\u0000g\u0000s\u0000.\u0000\r\n\u0000\r\n\u0000\r\n\u0000T\u0000o\u0000 \u0000r\u0000e\u0000c\u0000e\u0000i\u0000v\u0000e\u0000 \u0000a\u0000u\u0000t\u0000o\u0000m\u0000a\u0000t\u0000i\u0000c\u0000 \u0000k\u0000e\u0000r\u0000n\u0000e\u0000l\u0000 \u0000u\u0000p\u0000d\u0000a\u0000t\u0000e\u0000s\u0000,\u0000 \u0000p\u0000l\u0000e\u0000a\u0000s\u0000e\u0000 \u0000e\u0000n\u0000a\u0000b\u0000l\u0000e\u0000 \u0000t\u0000h\u0000e\u0000 \u0000W\u0000i\u0000n\u0000d\u0000o\u0000w\u0000s\u0000 \u0000U\u0000p\u0000d\u0000a\u0000t\u0000e\u0000 \u0000s\u0000e\u0000t\u0000t\u0000i\u0000n\u0000g\u0000:\u0000 \u0000\u0027\u0000R\u0000e\u0000c\u0000e\u0000i\u0000v\u0000e\u0000 \u0000u\u0000p\u0000d\u0000a\u0000t\u0000e\u0000s\u0000 \u0000f\u0000o\u0000r\u0000 \u0000o\u0000t\u0000h\u0000e\u0000r\u0000 \u0000M\u0000i\u0000c\u0000r\u0000o\u0000s\u0000o\u0000f\u0000t\u0000 \u0000p\u0000r\u0000o\u0000d\u0000u\u0000c\u0000t\u0000s\u0000 \u0000w\u0000h\u0000e\u0000n\u0000 \u0000y\u0000o\u0000u\u0000 \u0000u\u0000p\u0000d\u0000a\u0000t\u0000e\u0000 \u0000W\u0000i\u0000n\u0000d\u0000o\u0000w\u0000s\u0000\u0027\u0000.\u0000 \u0000\r\n\u0000\r\n\u0000\r\n\u0000F\u0000o\u0000r\u0000 \u0000m\u0000o\u0000r\u0000e\u0000 \u0000i\u0000n\u0000f\u0000o\u0000r\u0000m\u0000a\u0000t\u0000i\u0000o\u0000n\u0000 \u0000p\u0000l\u0000e\u0000a\u0000s\u0000e\u0000 \u0000v\u0000i\u0000s\u0000i\u0000t\u0000 \u0000h\u0000t\u0000t\u0000p\u0000s\u0000:\u0000/\u0000/\u0000a\u0000k\u0000a\u0000.\u0000m\u0000s\u0000/\u0000w\u0000s\u0000l\u00002\u0000k\u0000e\u0000r\u0000n\u0000e\u0000l\u0000.\u0000\r\n\u0000\r\n\u0000\r\n\u0000\r\n\u0000\r\n\u0000T\u0000h\u0000e\u0000 \u0000W\u0000S\u0000L\u0000 \u00002\u0000 \u0000k\u0000e\u0000r\u0000n\u0000e\u0000l\u0000 \u0000f\u0000i\u0000l\u0000e\u0000 \u0000i\u0000s\u0000 \u0000n\u0000o\u0000t\u0000 \u0000f\u0000o\u0000u\u0000n\u0000d\u0000.\u0000 \u0000T\u0000o\u0000 \u0000u\u0000p\u0000d\u0000a\u0000t\u0000e\u0000 \u0000o\u0000r\u0000 \u0000r\u0000e\u0000s\u0000t\u0000o\u0000r\u0000e\u0000 \u0000t\u0000h\u0000e\u0000 \u0000k\u0000e\u0000r\u0000n\u0000e\u0000l\u0000 \u0000p\u0000l\u0000e\u0000a\u0000s\u0000e\u0000 \u0000r\u0000u\u0000n\u0000 \u0000\u0027\u0000w\u0000s\u0000l\u0000 \u0000-\u0000-\u0000u\u0000p\u0000d\u0000a\u0000t\u0000e\u0000\u0027\u0000.\u0000\r\n\u0000\r\n\u0000\r\n\u0000",
+                                       "winget":  "v1.28.240"
+                                   },
+                  "6_gh_auth_status":  "gh : You are not logged into any GitHub hosts. To log in, run: gh auth login\r\nAt C:\\Users\\MichaelBartholomew\\AppData\\Local\\Temp\\ps-script-990a440b-7be1-4ba6-884a-15a8e67921a6.ps1:110 char:38\r\n+ $report.audit[\u00276_gh_auth_status\u0027] = (gh auth status 2\u003e\u00261 | Out-String ...\r\n+                                      ~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (You are not log...: gh auth login:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError",
+                  "7_az_account_show":  "az : ERROR: Please run \u0027az login\u0027 to setup account.\r\nAt C:\\Users\\MichaelBartholomew\\AppData\\Local\\Temp\\ps-script-990a440b-7be1-4ba6-884a-15a8e67921a6.ps1:111 char:39\r\n+ $report.audit[\u00277_az_account_show\u0027] = (az account show 2\u003e\u00261 | Out-Stri ...\r\n+                                       ~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (ERROR: Please r... setup account.:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError",
+                  "8_psdrive_c":  {
+                                      "Used_bytes":  234407649280,
+                                      "Free_bytes":  641478815744,
+                                      "Used_GB":  218.31,
+                                      "Free_GB":  597.42
+                                  },
+                  "9_total_physical_memory":  {
+                                                  "bytes":  30001328128,
+                                                  "GB":  27.94
+                                              },
+                  "10_test_path":  {
+                                       "fca_bid_tracker":  {
+                                                               "exists":  true,
+                                                               "path":  "C:\\Users\\MichaelBartholomew\\Documents\\GitHub\\fca-bid-tracker"
+                                                           },
+                                       "auricrux_central":  {
+                                                                "exists":  false,
+                                                                "path":  "C:\\Users\\MichaelBartholomew\\Documents\\GitHub\\auricrux-central"
+                                                            },
+                                       "auricrux_bid_api_node":  {
+                                                                     "exists":  false,
+                                                                     "path":  "C:\\Users\\MichaelBartholomew\\Documents\\GitHub\\auricrux-bid-api-node"
+                                                                 },
+                                       "auricrux_mobile_maui":  {
+                                                                    "exists":  false,
+                                                                    "path":  "C:\\Users\\MichaelBartholomew\\Documents\\GitHub\\auricrux-mobile-maui"
+                                                                }
+                                   },
+                  "11_github_repos":  [
+                                          {
+                                              "name":  "fca-bid-tracker",
+                                              "path":  "C:\\Users\\MichaelBartholomew\\Documents\\GitHub\\fca-bid-tracker",
+                                              "has_dot_git":  false,
+                                              "status_sb":  "git : fatal: not a git repository (or any of the parent directories): .git\r\nAt C:\\Users\\MichaelBartholomew\\AppData\\Local\\Temp\\ps-script-990a440b-7be1-4ba6-884a-15a8e67921a6.ps1:127 char:22\r\n+   $item.status_sb = (git status -sb 2\u003e\u00261 | Out-String).Trim()\r\n+                      ~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (fatal: not a gi...ectories): .git:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError"
+                                          }
+                                      ],
+                  "12_pending_reboot":  {
+                                            "RebootRequired_key_exists":  false
+                                        },
+                  "13_npm_config_prefix":  "node.exe : npm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm \r\nhelp npmrc` for supported config options.\r\nAt line:1 char:1\r\n+ \u0026 \"C:\\Program Files\\nodejs/node.exe\" \"C:\\Program Files\\nodejs/node_mo ...\r\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (npm warn Unknow...config options.:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\nC:\\Users\\MichaelBartholomew\\AppData\\Roaming\\npm",
+                  "14_where_exe":  {
+                                       "git":  "C:\\Program Files\\Git\\cmd\\git.exe",
+                                       "node":  "C:\\Program Files\\nodejs\\node.exe",
+                                       "python":  "C:\\Python314\\python.exe\r\nC:\\Users\\MichaelBartholomew\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\r\nC:\\Users\\MichaelBartholomew\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe\r\nC:\\Users\\MichaelBartholomew\\AppData\\Local\\Python\\bin\\python.exe",
+                                       "docker":  "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker\r\nC:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+                                       "gh":  "C:\\Program Files\\GitHub CLI\\gh.exe",
+                                       "az":  "C:\\Program Files\\Microsoft SDKs\\Azure\\CLI2\\wbin\\az\r\nC:\\Program Files\\Microsoft SDKs\\Azure\\CLI2\\wbin\\az.cmd"
+                                   }
+              }
+}
