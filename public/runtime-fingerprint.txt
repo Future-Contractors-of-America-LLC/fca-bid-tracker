@@ -1,9 +1,9 @@
 service=fca-bid-tracker
-generatedAt=2026-06-30T15:18:06.358Z
+generatedAt=2026-06-30T17:52:14.051Z
 source=github-actions
-gitRef=refs/heads/copilot/implement-ferpa-compliance-hardening
-gitSha=f6e399d1a07d0b740a061c131eaa36856fe5c02e
-runId=28454102489
+gitRef=refs/heads/main
+gitSha=28cabd3bdfd61850c94776803da440c4684aca12
+runId=28464511455
 defaultHost=delightful-mushroom-0de67860f.7.azurestaticapps.net
 expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
 continuityIntent=governed-public-runtime-fingerprint
