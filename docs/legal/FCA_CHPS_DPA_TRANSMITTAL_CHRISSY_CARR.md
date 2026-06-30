@@ -15,7 +15,7 @@ Thank you for partnering with FCA on the Innovative Learning Team review of **FC
 ## What to do
 
 1. Open the **online signable DPA** (full agreement text + signature block):
-   **https://futurecontractorsofamerica.com/legal/chps-dpa-sign.html?invite=chps-innovative-learning-2026**
+   **https://futurecontractorsofamerica.com/legal/chps-dpa-sign?invite=chps-innovative-learning-2026**
 
 2. Review Sections 1–13 (FERPA, COPPA, SOPIPA, security safeguards, breach notification, retention).
 
