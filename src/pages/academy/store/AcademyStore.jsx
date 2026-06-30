@@ -2,7 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import ShellHeader from "../../../components/ShellHeader";
 import ShellFooter from "../../../components/ShellFooter";
 import PublicCtaRow from "../../../components/PublicCtaRow";
+import AcademyServiceStatusBanner from "../../../components/AcademyServiceStatusBanner";
 import { fetchAcademyCommerceCatalog, formatUsd } from "../../../api/academyCommerceClient";
+import { isAcademyDegradedError } from "../../../api/academyResponseGuard";
 import { academyCheckoutHref } from "../../../commerceCheckout";
 import { academyCtaSets } from "../../../websiteShell";
 import { pageShellStyle } from "../../../publicShellStyles";
@@ -135,12 +137,14 @@ export default function AcademyStore() {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
+  const [degraded, setDegraded] = useState(false);
 
   const loadCatalog = useCallback(async ({ laneFilter, offset = 0, append = false } = {}) => {
     const isInitial = offset === 0 && !append;
     if (isInitial) setLoading(true);
     else setLoadingMore(true);
     setError("");
+    setDegraded(false);
     try {
       const payload = await fetchAcademyCommerceCatalog({
         lane: laneFilter || undefined,
@@ -153,7 +157,12 @@ export default function AcademyStore() {
       setPagination(payload.pagination || { offset: 0, limit: PAGE_SIZE, totalCourses: 0, hasMore: false });
       setCourses((current) => (append ? [...current, ...(payload.courses || [])] : (payload.courses || [])));
     } catch (loadError) {
-      setError(loadError.message || "Unable to load academy store.");
+      if (isAcademyDegradedError(loadError)) {
+        setDegraded(true);
+        setError(loadError.message);
+      } else {
+        setError(loadError.message || "Unable to load academy store.");
+      }
     } finally {
       if (isInitial) setLoading(false);
       else setLoadingMore(false);
@@ -176,6 +185,11 @@ export default function AcademyStore() {
     <div style={pageShellStyle}>
       <ShellHeader compact eyebrow="FCA Academy Store" />
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 20px 48px" }}>
+        <AcademyServiceStatusBanner
+          persistenceState={degraded ? "Academy commerce service unavailable" : null}
+          error={degraded ? { message: error, degraded: true } : null}
+          context="Academy Store"
+        />
         <div style={{ marginBottom: 24 }}>
           <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, letterSpacing: "0.04em", textTransform: "uppercase" }}>
             FCA Academy Store
@@ -237,7 +251,7 @@ export default function AcademyStore() {
         </div>
 
         {loading ? <p style={{ color: "#64748b" }}>Loading store catalog...</p> : null}
-        {error ? <p style={{ color: "#b91c1c" }}>{error}</p> : null}
+        {error && !degraded ? <p style={{ color: "#b91c1c" }}>{error}</p> : null}
 
         {!loading && !error && tab === "courses" ? (
           <>

@@ -3,6 +3,7 @@ import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import PublicCtaRow from "../../components/PublicCtaRow";
 import AcademyBuyButton from "../../components/AcademyBuyButton";
+import AcademyServiceStatusBanner from "../../components/AcademyServiceStatusBanner";
 import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { findCatalogPlacement, organizeCatalogHierarchy } from "../../academyOfferings";
@@ -329,6 +330,7 @@ export default function AcademyCatalog() {
       />
 
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
+        <AcademyServiceStatusBanner persistenceState={meta?.persistenceState} context="Academy Catalog" />
         <Breadcrumb pathway={placement?.pathway || selectedPathway} topic={placement?.topic || selectedTopic} />
 
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #ddd6fe", background: "#f5f3ff" }}>

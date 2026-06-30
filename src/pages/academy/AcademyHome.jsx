@@ -5,6 +5,7 @@ import FcaBrandMark from "../../components/FcaBrandMark";
 import AuricruxBrandMark from "../../components/AuricruxBrandMark";
 import AcademyLmsControlPanel from "../../components/AcademyLmsControlPanel";
 import AcademyReadinessOverlay from "../../components/AcademyReadinessOverlay";
+import AcademyServiceStatusBanner from "../../components/AcademyServiceStatusBanner";
 import ProductAccessStatusPanel from "../../components/ProductAccessStatusPanel";
 import CustomerCommsLaunchpad from "../../components/CustomerCommsLaunchpad";
 import PublicCtaRow from "../../components/PublicCtaRow";
@@ -244,6 +245,7 @@ export default function AcademyHome() {
         <AuricruxBrandMark compact />
       </div>
 
+      <AcademyServiceStatusBanner persistenceState={meta?.persistenceState} context="Academy LMS" />
       <ProductAccessStatusPanel session={session} />
       <AcademyReadinessOverlay
         session={session}
