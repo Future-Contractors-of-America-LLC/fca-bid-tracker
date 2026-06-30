@@ -40,6 +40,10 @@ jobs:
       - name: Validate LMS repair loop protocol wiring
         run: node scripts/validate-lms-repair-loop.mjs
 
+      - name: PR media gate (no binary academy media in git)
+        if: github.event_name == 'pull_request'
+        run: node scripts/validate-pr-media-gate.mjs
+
       - name: Resolve cross-repo token
         id: cross_repo_token
         continue-on-error: true

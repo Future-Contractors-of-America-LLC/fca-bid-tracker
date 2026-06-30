@@ -16,6 +16,10 @@ fca-sim-accounts.local
 
 generated/local-training/
 
+# Academy binary media — blob CDN only (see docs/CHPS_LAPTOP_AGENT_BRIEF.md)
+public/academy/media/**/*.webm
+public/academy/media/**/*.mp3
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
