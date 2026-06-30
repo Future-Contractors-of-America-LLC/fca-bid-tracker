@@ -7,4 +7,6 @@ alwaysApply: true
 
 Read `../auricrux-central/docs/FCA_FRIDAY_SPRINT_PLAN.md` and `../auricrux-central/auricrux/system/fca_sprint_manifest.json` before FCA work.
 
-Laptop role: **witness only** — CI triage, live parity, UHD QC spot-check. Calyndra/Root's Garden paused.
+**Laptop feature work:** `../auricrux-central/docs/CHPS_LAPTOP_AGENT_BRIEF.md` — scoped PR tasks for frontend and SaaS surfaces.
+
+Laptop role: **witness + optional PR factory** — CI triage, live parity, UHD QC spot-check. Calyndra/Root's Garden paused.
