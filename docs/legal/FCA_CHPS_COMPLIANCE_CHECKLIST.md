@@ -74,7 +74,7 @@ This checklist maps each applicable federal and Virginia law to FCA Academy's im
 
 | Requirement | Status | Evidence |
 |---|---|---|
-| Signed DPA with LEA before data processing | 🔲 Pending Signature | See `FCA_CHPS_DATA_PRIVACY_AGREEMENT.md` |
+| Signed DPA with LEA before data processing | 🔲 Pending Signature | Online sign: `/legal/chps-dpa-sign.html` — transmittal to Chrissy Carr |
 | DPA includes data use limitations | ✅ Compliant | DPA Sections 3, 4 |
 | DPA includes security provisions | ✅ Compliant | DPA Section 7 |
 | DPA includes breach notification | ✅ Compliant | DPA Section 8 |

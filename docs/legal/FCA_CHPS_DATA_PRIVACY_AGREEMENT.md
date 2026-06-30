@@ -178,10 +178,12 @@ Date: ___________________________
 
 **Colonial Heights Public Schools**
 
-Signature: ___________________________  
+Signature: _Online countersignature at `/legal/chps-dpa-sign.html`_  
 Name: ___________________________  
-Title: ___________________________  
+Title: Director of Innovative Learning (or authorized designee)  
 Date: ___________________________
+
+_Recipient for Year 1 pilot transmittal: **Chrissy Carr**, Director of Innovative Learning._
 
 ---
 
