@@ -13,13 +13,22 @@ import crypto from "node:crypto";
 
 const STORE_KEY = "__FCA_STUDENT_STORE__";
 const SEED_COUNT = 80;
-const ACCESS_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const ACCESS_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 32 chars = 2^5
 
 function generateAccessCode() {
-  const bytes = crypto.randomBytes(8);
-  return Array.from(bytes)
-    .map((b) => ACCESS_CODE_CHARS[b % ACCESS_CODE_CHARS.length])
-    .join("");
+  const chars = ACCESS_CODE_CHARS;
+  const len = chars.length; // 32
+  const mask = len - 1; // 31 = 0b00011111 — no modulo bias since len is a power of 2
+  const result = [];
+  while (result.length < 8) {
+    const bytes = crypto.randomBytes(16);
+    for (const b of bytes) {
+      const idx = b & mask;
+      result.push(chars[idx]);
+      if (result.length === 8) break;
+    }
+  }
+  return result.join("");
 }
 
 function pad(n, width = 3) {
