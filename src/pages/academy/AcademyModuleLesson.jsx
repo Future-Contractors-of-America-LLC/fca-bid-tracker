@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import KnowledgeCheckQuiz from "../../components/academy/KnowledgeCheckQuiz";
+import AcademyScriptReader from "../../components/academy/AcademyScriptReader";
+import AcademyTextbookViewer from "../../components/academy/AcademyTextbookViewer";
+import AcademyProctorSession from "../../components/academy/AcademyProctorSession";
 import FcaSafetySiteLab from "../../components/immersive/FcaSafetySiteLab";
 import AuricruxImmersiveHint from "../../components/immersive/AuricruxImmersiveHint";
 import useAcademyLms from "../../hooks/useAcademyLms";
@@ -24,7 +27,7 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   const programId = routeParams.programId;
   const moduleNumber = Number(routeParams.moduleNumber);
   const { session } = useCustomerSession();
-  const { academyState, completeModule } = useAcademyLms();
+  const { academyState, completeModule, startProctoredAssessment } = useAcademyLms();
   const immersiveActions = useImmersiveNextActions();
   const [programDetail, setProgramDetail] = useState(null);
   const [loadError, setLoadError] = useState("");
@@ -33,6 +36,8 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   const [quizPassed, setQuizPassed] = useState(false);
   const [immersiveSessionId, setImmersiveSessionId] = useState("");
   const [labComplete, setLabComplete] = useState(false);
+  const [proctorSession, setProctorSession] = useState(null);
+  const [proctorBusy, setProctorBusy] = useState(false);
 
   const isCtin410Module1 = programId === "deg-ctin-410" && moduleNumber === 1;
 
@@ -54,6 +59,8 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
   const program = programDetail?.program;
   const modules = programDetail?.modules || [];
   const module = modules.find((item) => Number(item.moduleNumber) === moduleNumber);
+  const readingTextbook = programDetail?.readingTextbook;
+  const highStakesAssessment = (programDetail?.exams || programDetail?.tests || [])[0];
   const completionRequirements = programDetail?.completionRequirements;
 
   const completedNumbers = enrollment?.completedModuleNumbers || [];
@@ -238,6 +245,29 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
                 </div>
               ) : null}
               {renderLessonSections()}
+
+            <AcademyTextbookViewer readingTextbook={readingTextbook} moduleNumber={moduleNumber} />
+            <AcademyScriptReader title="Student-readable scripts" lectureScript={module?.lectureScript} skillsDemoScript={module?.skillsDemoScript} />
+            {highStakesAssessment && enrollment ? (
+              <AcademyProctorSession
+                assessment={{ ...highStakesAssessment, kind: "exams" }}
+                enrollmentId={enrollment.enrollmentId}
+                learnerId={learnerId}
+                proctorSession={proctorSession}
+                busy={proctorBusy}
+                onStart={async (body) => {
+                  setProctorBusy(true);
+                  try {
+                    const session = await startProctoredAssessment({ ...body, learnerId });
+                    setProctorSession(session);
+                    return session;
+                  } finally {
+                    setProctorBusy(false);
+                  }
+                }}
+                onComplete={(session) => setProctorSession({ ...session, status: "active" })}
+              />
+            ) : null}
             </article>
 
             {isCtin410Module1 && !isLocked ? (
