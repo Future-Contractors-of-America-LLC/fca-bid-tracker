@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CHPS Data Privacy Agreement — FCA Academy</title>
+  <style>
+    :root {
+      --navy: #0f2744;
+      --gold: #c9a227;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    header {
+      background: var(--navy);
+      color: #fff;
+      padding: 28px 24px;
+    }
+    header h1 { margin: 0 0 6px; font-size: 1.45rem; }
+    header p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 24px 20px 48px; }
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+    .card h2 { margin: 0 0 12px; font-size: 1.1rem; color: var(--navy); }
+    .agreement {
+      max-height: 420px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-size: 0.92rem;
+      background: #fafbfc;
+    }
+    .agreement h3 { font-size: 1rem; margin: 18px 0 8px; color: var(--navy); }
+    .agreement h3:first-child { margin-top: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 10px 0; }
+    th, td { border: 1px solid var(--border); padding: 6px 8px; text-align: left; }
+    th { background: #f1f5f9; }
+    .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .sig-grid { grid-template-columns: 1fr; } }
+    .sig-block { border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+    .sig-block h3 { margin: 0 0 10px; font-size: 0.95rem; }
+    .pre-signed {
+      font-family: "Segoe Script", "Brush Script MT", cursive;
+      font-size: 1.35rem;
+      color: var(--navy);
+      margin: 8px 0;
+    }
+    label { display: block; font-weight: 600; font-size: 0.85rem; margin: 12px 0 4px; }
+    input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 120px;
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      background: #fff;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .canvas-actions { margin-top: 8px; }
+    button {
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.secondary { background: #64748b; margin-left: 8px; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .checkbox-row { display: flex; gap: 10px; align-items: flex-start; margin: 16px 0; }
+    .checkbox-row input { margin-top: 4px; }
+    .notice { font-size: 0.85rem; color: var(--muted); }
+    .success {
+      background: #ecfdf5;
+      border: 1px solid #6ee7b7;
+      color: #065f46;
+      padding: 16px;
+      border-radius: 8px;
+      display: none;
+    }
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      display: none;
+    }
+    .gold-bar { height: 4px; background: var(--gold); }
+  </style>
+</head>
+<body>
+  <div class="gold-bar"></div>
+  <header>
+    <h1>Data Privacy Agreement (DPA)</h1>
+    <p>Colonial Heights Public Schools &times; Future Contractors of America LLC — FCA Academy v1.0</p>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <h2>Prepared for countersignature</h2>
+      <p class="notice">
+        This agreement governs student data for the FCA Academy Year 1 pilot. Future Contractors of America LLC
+        has pre-executed the provider signature below. An authorized representative of Colonial Heights Public Schools
+        may complete the district signature block to execute this DPA.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Agreement text (Sections 1–13)</h2>
+      <div class="agreement" id="agreement-text">
+        <h3>1. Purpose</h3>
+        <p>This Data Privacy Agreement ("DPA") governs the collection, use, storage, and disclosure of student data in connection with FCA Academy, used by Colonial Heights Public Schools ("CHPS"). This DPA is entered into pursuant to FERPA, COPPA, SOPIPA (Va. Code § 22.1-287.02), VCDPA, PPRA, and SPPO guidance.</p>
+
+        <h3>2. Definitions</h3>
+        <p><strong>Student Data</strong> includes course enrollment, lesson completion, quiz scores, progress state, and access timestamps. <strong>PII</strong> is defined under FERPA. FCA acts as a <strong>school official</strong> with legitimate educational interest.</p>
+
+        <h3>3. Scope of Data Collection</h3>
+        <table>
+          <tr><th>Data Element</th><th>Purpose</th><th>Retention</th></tr>
+          <tr><td>Non-identifying username (e.g. student-042)</td><td>Account login</td><td>End of school year</td></tr>
+          <tr><td>Role (student, instructor, admin)</td><td>Access control</td><td>End of school year</td></tr>
+          <tr><td>Enrolled course identifier</td><td>Progress tracking</td><td>End of school year</td></tr>
+          <tr><td>Lesson completion status</td><td>Educational progress</td><td>End of school year</td></tr>
+          <tr><td>Quiz/assessment scores</td><td>Educational measurement</td><td>End of school year</td></tr>
+          <tr><td>Access timestamps (hashed, no IP)</td><td>Security audit log</td><td>90 days rolling</td></tr>
+        </table>
+        <p><strong>FCA Academy does NOT collect:</strong> student legal name, DOB, SSN, address, phone, email, parent info, race/ethnicity/religion/disability, behavioral/biometric/geolocation data, device fingerprints, or any data not necessary for educational delivery.</p>
+
+        <h3>4. Use Limitations</h3>
+        <p>FCA uses Student Data solely to provide FCA Academy to CHPS; does not sell Student Data; does not use it for advertising or profiling; does not disclose except as required by law or authorized by CHPS; does not combine with other sources for non-educational purposes.</p>
+
+        <h3>5. FERPA School Official Designation</h3>
+        <p>CHPS designates FCA as a school official under FERPA 34 C.F.R. § 99.31(a)(1). FCA complies with FERPA, uses data only for disclosed purposes, does not re-disclose without authorization, and supports parent/guardian access requests through CHPS.</p>
+
+        <h3>6. COPPA Compliance</h3>
+        <p>Accounts are pre-provisioned; students do not self-register or submit PII. CHPS provides school consent under COPPA 16 C.F.R. § 312.5(b)(1) by executing this DPA.</p>
+
+        <h3>7. Security Safeguards</h3>
+        <p>Session-based auth with HttpOnly/Secure/SameSite=Strict cookies; 8-hour TTL and 30-minute student idle timeout; TLS 1.2+; AES-256 at rest; RBAC; HTTP 401 on unauthenticated protected routes; auth audit logging. Students are provisioned by administrators only.</p>
+
+        <h3>8. Breach Notification</h3>
+        <p>FCA notifies CHPS within 72 hours of discovery; written report within 7 days; cooperates on parent notification per Virginia law; no public statements without CHPS approval.</p>
+
+        <h3>9. Data Retention and Deletion</h3>
+        <p>Data retained for the active school year. Upon termination or CHPS request, deletion within 30 days with written confirmation; backups purged within 60 days.</p>
+
+        <h3>10. Parental Rights</h3>
+        <p>CHPS may request copies, correction, or deletion on behalf of parents; FCA fulfills within 10 business days. Parent requests flow through CHPS.</p>
+
+        <h3>11. Subprocessors</h3>
+        <table>
+          <tr><th>Subprocessor</th><th>Purpose</th><th>Location</th></tr>
+          <tr><td>Microsoft Azure (Table Storage)</td><td>Student progress storage</td><td>US East (Virginia)</td></tr>
+          <tr><td>Microsoft Azure (Static Web Apps)</td><td>Application hosting</td><td>US East</td></tr>
+        </table>
+        <p>30-day prior written notice before adding subprocessors.</p>
+
+        <h3>12. Term and Termination</h3>
+        <p>Effective from countersignature through June 30 of the active school year. Either party may terminate with 30 days notice. CHPS may terminate immediately for material breach.</p>
+
+        <h3>13. Governing Law</h3>
+        <p>Commonwealth of Virginia; disputes in Colonial Heights, Virginia courts.</p>
+      </div>
+      <p class="notice" style="margin-top:10px">Full markdown source: <code>docs/legal/FCA_CHPS_DATA_PRIVACY_AGREEMENT.md</code></p>
+    </div>
+
+    <div class="card">
+      <h2>Section 14 — Signatures</h2>
+      <div class="sig-grid">
+        <div class="sig-block">
+          <h3>Future Contractors of America LLC (pre-executed)</h3>
+          <div class="pre-signed">Michael J. Bartholomew</div>
+          <p><strong>Name:</strong> Michael J. Bartholomew<br />
+          <strong>Title:</strong> Founder &amp; CEO<br />
+          <strong>Date:</strong> <span id="provider-date">2026-06-30</span></p>
+        </div>
+        <div class="sig-block" id="chps-sig-block">
+          <h3>Colonial Heights Public Schools</h3>
+          <div class="checkbox-row">
+            <input type="checkbox" id="authorized" />
+            <label for="authorized" style="margin:0;font-weight:400">
+              I am authorized to bind Colonial Heights Public Schools and have read Sections 1–13 of this DPA.
+            </label>
+          </div>
+          <label for="signatoryName">Printed name</label>
+          <input type="text" id="signatoryName" placeholder="Chrissy Carr" autocomplete="name" />
+          <label for="signatoryTitle">Title</label>
+          <input type="text" id="signatoryTitle" placeholder="Director of Innovative Learning" autocomplete="organization-title" />
+          <label for="signatoryEmail">CHPS email</label>
+          <input type="email" id="signatoryEmail" placeholder="you@colonialhts.net" autocomplete="email" />
+          <label>Signature (draw below)</label>
+          <canvas id="sig-canvas" width="400" height="120"></canvas>
+          <div class="canvas-actions">
+            <button type="button" class="secondary" id="clear-sig">Clear signature</button>
+          </div>
+          <label for="signDate">Date</label>
+          <input type="text" id="signDate" readonly />
+          <div style="margin-top:16px">
+            <button type="button" id="submit-sig">Submit countersignature</button>
+          </div>
+          <div class="error" id="form-error"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="success card" id="success-panel">
+      <h2>DPA executed</h2>
+      <p>Thank you. Your countersignature has been recorded.</p>
+      <p><strong>Confirmation ID:</strong> <span id="confirmation-id"></span></p>
+      <p class="notice">FCA will follow up at auricrux@futurecontractorsofamerica.com with a countersigned copy and committee review instructions.</p>
+    </div>
+
+    <p class="notice" style="text-align:center;margin-top:24px">
+      Questions: <a href="mailto:auricrux@futurecontractorsofamerica.com">auricrux@futurecontractorsofamerica.com</a>
+      &nbsp;|&nbsp; <a href="/legal">Legal Center</a>
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const invite = params.get("invite");
+      const signDate = document.getElementById("signDate");
+      signDate.value = new Date().toISOString().slice(0, 10);
+
+      const canvas = document.getElementById("sig-canvas");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+      let hasStroke = false;
+
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = rect.width * ratio;
+        canvas.height = 120 * ratio;
+        ctx.scale(ratio, ratio);
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "#0f2744";
+      }
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      function pos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const t = e.touches ? e.touches[0] : e;
+        return { x: t.clientX - rect.left, y: t.clientY - rect.top };
+      }
+      function start(e) { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }
+      function move(e) {
+        if (!drawing) return;
+        const p = pos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        hasStroke = true;
+        e.preventDefault();
+      }
+      function end() { drawing = false; }
+
+      canvas.addEventListener("mousedown", start);
+      canvas.addEventListener("mousemove", move);
+      canvas.addEventListener("mouseup", end);
+      canvas.addEventListener("mouseleave", end);
+      canvas.addEventListener("touchstart", start, { passive: false });
+      canvas.addEventListener("touchmove", move, { passive: false });
+      canvas.addEventListener("touchend", end);
+
+      document.getElementById("clear-sig").addEventListener("click", function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hasStroke = false;
+        resizeCanvas();
+      });
+
+      document.getElementById("submit-sig").addEventListener("click", async function () {
+        const err = document.getElementById("form-error");
+        err.style.display = "none";
+        if (!invite) {
+          err.textContent = "Missing invite link. Use the URL provided in your transmittal email.";
+          err.style.display = "block";
+          return;
+        }
+        if (!document.getElementById("authorized").checked) {
+          err.textContent = "Please confirm you are authorized to bind the district.";
+          err.style.display = "block";
+          return;
+        }
+        const signatoryName = document.getElementById("signatoryName").value.trim();
+        const signatoryTitle = document.getElementById("signatoryTitle").value.trim();
+        const signatoryEmail = document.getElementById("signatoryEmail").value.trim();
+        if (!signatoryName || !signatoryTitle || !signatoryEmail) {
+          err.textContent = "Name, title, and CHPS email are required.";
+          err.style.display = "block";
+          return;
+        }
+        if (!hasStroke) {
+          err.textContent = "Please draw your signature in the box provided.";
+          err.style.display = "block";
+          return;
+        }
+        const btn = document.getElementById("submit-sig");
+        btn.disabled = true;
+        try {
+          const res = await fetch("/api/chps-dpa-signature?invite=" + encodeURIComponent(invite), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              signatoryName,
+              signatoryTitle,
+              signatoryEmail,
+              signatureDataUrl: canvas.toDataURL("image/png"),
+              authorizedToBind: true,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok || !data.ok) {
+            throw new Error(data.error || "Submission failed.");
+          }
+          document.getElementById("chps-sig-block").style.display = "none";
+          document.getElementById("confirmation-id").textContent = data.confirmationId;
+          document.getElementById("success-panel").style.display = "block";
+          window.scrollTo({ top: document.getElementById("success-panel").offsetTop - 20, behavior: "smooth" });
+        } catch (e) {
+          err.textContent = e.message || "Unable to submit. Please email auricrux@futurecontractorsofamerica.com.";
+          err.style.display = "block";
+          btn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
