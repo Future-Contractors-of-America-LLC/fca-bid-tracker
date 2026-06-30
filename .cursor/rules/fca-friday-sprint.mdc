@@ -1,0 +1,10 @@
+---
+description: FCA full-catalog Friday sprint — read auricrux-central sprint manifest after sync
+alwaysApply: true
+---
+
+# FCA Friday sprint (shell workspace)
+
+Read `../auricrux-central/docs/FCA_FRIDAY_SPRINT_PLAN.md` and `../auricrux-central/auricrux/system/fca_sprint_manifest.json` before FCA work.
+
+Laptop role: **witness only** — CI triage, live parity, UHD QC spot-check. Calyndra/Root's Garden paused.
