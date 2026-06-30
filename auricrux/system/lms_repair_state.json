@@ -1,8 +1,15 @@
 {
-  "runCount": 101,
+  "runCount": 102,
   "consecutiveSuccesses": 0,
-  "consecutiveFailures": 101,
+  "consecutiveFailures": 102,
   "history": [
+    {
+      "at": "2026-06-30T14:30:24.152Z",
+      "runId": "LMS-WFR-1782829678920",
+      "complete": false,
+      "rounds": 1,
+      "failures": 4
+    },
     {
       "at": "2026-06-30T14:13:21.889Z",
       "runId": "LMS-WFR-1782828569987",
@@ -205,16 +212,9 @@
       "complete": false,
       "rounds": 1,
       "failures": 4
-    },
-    {
-      "at": "2026-06-28T14:14:51.865Z",
-      "runId": "LMS-WFR-1782655949472",
-      "complete": false,
-      "rounds": 1,
-      "failures": 4
     }
   ],
-  "lastRunUtc": "2026-06-30T14:13:21.889Z",
+  "lastRunUtc": "2026-06-30T14:30:24.152Z",
   "lastComplete": false,
-  "lastRunId": "LMS-WFR-1782828569987"
+  "lastRunId": "LMS-WFR-1782829678920"
 }

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-30T14:13:21.889Z",
-  "runId": "LMS-WFR-1782828569987",
+  "generatedAt": "2026-06-30T14:30:24.153Z",
+  "runId": "LMS-WFR-1782829678920",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -84,27 +84,34 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+      "guidance": "I have not personally worked in construction, but I am here to guide you through bids, projects, billing, and training for your contracting business. Ask me about the next move on a bid, project, or jobsite workflow."
     },
     {
       "step": "SWA route /academy",
-      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
     },
     {
       "step": "SWA route /academy/catalog",
-      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
     }
   ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 101.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 102.",
   "state": {
-    "runCount": 101,
+    "runCount": 102,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 101,
+    "consecutiveFailures": 102,
     "history": [
+      {
+        "at": "2026-06-30T14:30:24.152Z",
+        "runId": "LMS-WFR-1782829678920",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-06-30T14:13:21.889Z",
         "runId": "LMS-WFR-1782828569987",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-06-28T14:14:51.865Z",
-        "runId": "LMS-WFR-1782655949472",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-06-30T14:13:21.889Z",
+    "lastRunUtc": "2026-06-30T14:30:24.152Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782828569987"
+    "lastRunId": "LMS-WFR-1782829678920"
   }
 }
