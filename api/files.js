@@ -1,13 +1,6 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { requireAuth, withSessionRefresh } from "./auth-boundary.js";
 import { listFiles, mutateFile, getWorkflowSummary, listAuditEvents, ensureWorkflowReady, workflowBackingSource } from "./workflow-store.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 function resolveLatestAuditEventId(tenantId, projectId, eventType) {
   const items = listAuditEvents(tenantId, { projectId, eventType, actorType: null, q: null });
@@ -19,7 +12,10 @@ app.http("files", {
   authLevel: "anonymous",
   route: "files",
   handler: async (request) => {
-    const tenantId = resolveTenantId(request);
+    const auth = requireAuth(request);
+    if (!auth.ok) return auth.response;
+
+    const tenantId = auth.tenantId;
     await ensureWorkflowReady(tenantId);
     const projectId = request.query.get("projectId") || null;
     const category = request.query.get("category") || null;
@@ -29,18 +25,21 @@ app.http("files", {
     if (request.method === "GET") {
       const items = listFiles(tenantId, { projectId, category, status, q });
 
-      return {
-        status: 200,
-        jsonBody: {
-          ok: true,
-          items,
-          count: items.length,
-          projectId,
-          filters: { category, status, q },
-          summary: getWorkflowSummary(tenantId),
-          backingSource: workflowBackingSource(),
+      return withSessionRefresh(
+        {
+          status: 200,
+          jsonBody: {
+            ok: true,
+            items,
+            count: items.length,
+            projectId,
+            filters: { category, status, q },
+            summary: getWorkflowSummary(tenantId),
+            backingSource: workflowBackingSource(),
+          },
         },
-      };
+        auth,
+      );
     }
 
     const body = await request.json().catch(() => ({}));
@@ -86,15 +85,18 @@ app.http("files", {
           };
         });
 
-        return {
-          status: 200,
-          jsonBody: {
-            ok: true,
-            items: created,
-            auditEventId: resolveLatestAuditEventId(tenantId, ownerObjectId, "file-created"),
-            backingSource: workflowBackingSource(),
+        return withSessionRefresh(
+          {
+            status: 200,
+            jsonBody: {
+              ok: true,
+              items: created,
+              auditEventId: resolveLatestAuditEventId(tenantId, ownerObjectId, "file-created"),
+              backingSource: workflowBackingSource(),
+            },
           },
-        };
+          auth,
+        );
       } catch (error) {
         return {
           status: 400,
@@ -108,14 +110,17 @@ app.http("files", {
 
     try {
       const result = mutateFile(tenantId, body?.action, body);
-      return {
-        status: 200,
-        jsonBody: {
-          ok: true,
-          ...result,
-          backingSource: workflowBackingSource(),
+      return withSessionRefresh(
+        {
+          status: 200,
+          jsonBody: {
+            ok: true,
+            ...result,
+            backingSource: workflowBackingSource(),
+          },
         },
-      };
+        auth,
+      );
     } catch (error) {
       return {
         status: 400,

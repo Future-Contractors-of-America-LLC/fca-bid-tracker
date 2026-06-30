@@ -16,6 +16,25 @@ export function centralApi(path) {
   return `${base}${normalized}`;
 }
 
+const AUTH_EXEMPT_PATHS = ["/api/customer-login", "/api/customer-verify", "/api/customer-logout"];
+
+function isAuthExempt(path) {
+  return AUTH_EXEMPT_PATHS.some((exempt) => path.startsWith(exempt));
+}
+
+function handleApiResponse(response, path) {
+  if (response.status === 401 && !isAuthExempt(path) && typeof window !== "undefined") {
+    const currentPath = window.location.pathname;
+    const isProtected = currentPath.startsWith("/portal") || currentPath.startsWith("/academy");
+    if (isProtected) {
+      const nextParam = encodeURIComponent(currentPath);
+      const loginHref = `/login?session=expired&next=${nextParam}`;
+      window.location.href = loginHref;
+    }
+  }
+  return response;
+}
+
 export function centralFetch(path, options = {}) {
   const isSameOrigin = typeof window !== "undefined" && centralApi(path).startsWith(window.location.origin);
   return fetch(centralApi(path), {
@@ -25,5 +44,5 @@ export function centralFetch(path, options = {}) {
       Accept: "application/json",
       ...(options.headers || {}),
     },
-  });
+  }).then((response) => handleApiResponse(response, path));
 }

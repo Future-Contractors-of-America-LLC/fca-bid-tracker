@@ -1,0 +1,3 @@
+gitSha=f6e399d1a07d0b740a061c131eaa36856fe5c02e
+runId=28454102489
+defaultHost=delightful-mushroom-0de67860f.7.azurestaticapps.net

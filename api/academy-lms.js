@@ -1,61 +1,72 @@
 import { app } from "@azure/functions";
-import { readSessionTokenFromCookieHeader, validateSessionToken } from "./auth-boundary.js";
+import { requireAuth, validateSessionToken, withSessionRefresh } from "./auth-boundary.js";
 import { getAcademySnapshot, mutateAcademy } from "./academy-store.js";
 import { getAcademyProgramDetail } from "./academy-program-modules.js";
-
-function resolveTenantId(request) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
-  const session = validateSessionToken(token);
-  return session?.customerId || "TEN-FCA-001";
-}
 
 app.http("academy-lms", {
   methods: ["GET", "PATCH"],
   authLevel: "anonymous",
   route: "academy-lms",
   handler: async (request) => {
-    const tenantId = resolveTenantId(request);
+    const auth = requireAuth(request);
+    if (!auth.ok) return auth.response;
+
+    const tenantId = auth.tenantId; // session customerId
 
     if (request.method === "GET") {
       const programKey = new URL(request.url).searchParams.get("programKey");
       if (programKey) {
         const detail = getAcademyProgramDetail(programKey);
         if (!detail) {
-          return {
+        return withSessionRefresh(
+          {
             status: 404,
             jsonBody: { ok: false, error: `Program not found: ${programKey}` },
-          };
-        }
-        return {
+          },
+          auth,
+        );
+      }
+      return withSessionRefresh(
+        {
           status: 200,
+          headers: { "Cache-Control": "no-store" },
           jsonBody: { ok: true, ...detail, backingSource: "api-academy-program-modules" },
-        };
+        },
+        auth,
+      );
       }
 
       const snapshot = getAcademySnapshot(tenantId);
-      return {
-        status: 200,
-        jsonBody: {
-          ok: true,
-          ...snapshot,
-          backingSource: "api-academy-store",
+      return withSessionRefresh(
+        {
+          status: 200,
+          headers: { "Cache-Control": "no-store" },
+          jsonBody: {
+            ok: true,
+            ...snapshot,
+            backingSource: "api-academy-store",
+          },
         },
-      };
+        auth,
+      );
     }
 
     const body = await request.json().catch(() => ({}));
 
     try {
       const snapshot = mutateAcademy(tenantId, body?.action, body);
-      return {
-        status: 200,
-        jsonBody: {
-          ok: true,
-          ...snapshot,
-          backingSource: "api-academy-store",
+      return withSessionRefresh(
+        {
+          status: 200,
+          headers: { "Cache-Control": "no-store" },
+          jsonBody: {
+            ok: true,
+            ...snapshot,
+            backingSource: "api-academy-store",
+          },
         },
-      };
+        auth,
+      );
     } catch (error) {
       return {
         status: 400,

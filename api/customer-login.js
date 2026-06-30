@@ -2,6 +2,7 @@ import { app } from "@azure/functions";
 import { validateCustomerCredentials } from "./customer-account-store.js";
 import { buildAuthBoundary, buildServerSession, createSessionCookie } from "./auth-boundary.js";
 import { createLoginChallenge } from "./verification-challenges.js";
+import { writeAuthAuditEvent } from "./auth-audit.js";
 
 function login2faRequired(account) {
   if (["1", "true", "yes"].includes(String(process.env.FCA_DISABLE_LOGIN_2FA || "").toLowerCase())) {
@@ -33,6 +34,7 @@ app.http("customer-login", {
     const account = validateCustomerCredentials(payload?.email, payload?.password);
 
     if (!account) {
+      writeAuthAuditEvent({ eventType: "login_failure", role: null, request, reason: "invalid-credentials" });
       return {
         status: 401,
         jsonBody: {
@@ -57,7 +59,8 @@ app.http("customer-login", {
       };
     }
 
-    const { cookie } = createSessionCookie(account);
+    const { token, cookie } = createSessionCookie(account);
+    writeAuthAuditEvent({ eventType: "login_success", role: account.role, token, request });
 
     return {
       status: 200,
