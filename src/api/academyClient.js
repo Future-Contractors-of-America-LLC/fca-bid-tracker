@@ -1,21 +1,33 @@
 import { centralApi, centralFetch } from "./backendBase";
 import { academyCatalog } from "../academyCatalog.js";
 import { resolveProgramCatalogMeta } from "../academyCatalogTaxonomy.js";
-
-async function readJsonSafe(response) {
-  const contentType = response.headers.get("content-type") || "";
-  if (!contentType.toLowerCase().includes("application/json")) return null;
-
-  try {
-    return await response.json();
-  } catch {
-    return null;
-  }
-}
+import {
+  academyDegradedError,
+  classifyAcademyResponse,
+  readAcademyResponse,
+} from "./academyResponseGuard";
 
 function formatApiError(response, payload, fallbackMessage) {
   const statusSuffix = response.status ? ` (status ${response.status})` : "";
   return payload?.error || `${fallbackMessage}${statusSuffix}.`;
+}
+
+/**
+ * Slice 07 protective wrapper around a central academy fetch. Surfaces a
+ * tagged `academy-degraded` Error when the upstream returns an empty body or
+ * a non-JSON 5xx (the exact pattern reported by the LMS repair loop) so that
+ * AcademyServiceStatusBanner can render a customer-friendly state.
+ */
+async function readAcademyApi(response, fallbackMessage) {
+  const { payload, isEmptyBody } = await readAcademyResponse(response);
+  const degraded = classifyAcademyResponse(response, payload, isEmptyBody);
+  if (degraded) {
+    throw academyDegradedError(degraded, fallbackMessage);
+  }
+  if (!response.ok || !payload?.ok) {
+    throw new Error(formatApiError(response, payload, fallbackMessage));
+  }
+  return payload;
 }
 
 function buildProgramDetailFromCatalog(programKey) {
@@ -71,16 +83,12 @@ export async function fetchAcademyLms(options = {}) {
   if (options.offset != null) params.set("offset", String(options.offset));
   if (options.limit != null) params.set("limit", String(options.limit));
   const response = await centralFetch(`/api/academy-lms?${params.toString()}`, { method: "GET" });
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to load academy state"));
-  }
-  return payload;
+  return readAcademyApi(response, "Unable to load academy state");
 }
 
 export async function fetchAcademyProgram(programKey) {
   const response = await centralFetch(`/api/academy-lms?programKey=${encodeURIComponent(programKey)}`, { method: "GET" });
-  const payload = await readJsonSafe(response);
+  const { payload, isEmptyBody } = await readAcademyResponse(response);
   if (response.ok && payload?.ok) {
     return payload;
   }
@@ -90,6 +98,10 @@ export async function fetchAcademyProgram(programKey) {
     return fallback;
   }
 
+  const degraded = classifyAcademyResponse(response, payload, isEmptyBody);
+  if (degraded) {
+    throw academyDegradedError(degraded, "Unable to load academy program");
+  }
   throw new Error(formatApiError(response, payload, "Unable to load academy program"));
 }
 
@@ -104,11 +116,7 @@ export async function mutateAcademyLms(action, body = {}) {
     body: JSON.stringify({ action, ...body }),
   });
 
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to mutate academy state"));
-  }
-  return payload;
+  return readAcademyApi(response, "Unable to mutate academy state");
 }
 
 export async function exportAcademyTranscript(learnerId) {

@@ -5,20 +5,32 @@ import {
   academyPathwayCheckoutFromCatalog,
   loadStripeCatalog,
 } from "../stripeCatalog.js";
-
-async function readJsonSafe(response) {
-  const contentType = response.headers.get("content-type") || "";
-  if (!contentType.toLowerCase().includes("application/json")) return null;
-  try {
-    return await response.json();
-  } catch {
-    return null;
-  }
-}
+import {
+  academyDegradedError,
+  classifyAcademyResponse,
+  readAcademyResponse,
+} from "./academyResponseGuard";
 
 function formatApiError(response, payload, fallbackMessage) {
   const statusSuffix = response.status ? ` (status ${response.status})` : "";
   return payload?.error || `${fallbackMessage}${statusSuffix}.`;
+}
+
+/**
+ * Slice 07 protective wrapper for academy-commerce reads. See
+ * docs/SLICE_07_ACADEMY_PROTECTION.md for the upstream failure pattern
+ * (auricrux-central /api/academy-commerce returning empty bodies).
+ */
+async function readAcademyCommerceApi(response, fallbackMessage) {
+  const { payload, isEmptyBody } = await readAcademyResponse(response);
+  const degraded = classifyAcademyResponse(response, payload, isEmptyBody);
+  if (degraded) {
+    throw academyDegradedError(degraded, fallbackMessage);
+  }
+  if (!response.ok || !payload?.ok) {
+    throw new Error(formatApiError(response, payload, fallbackMessage));
+  }
+  return payload;
 }
 
 function commerceEndpoints(path) {
@@ -34,6 +46,7 @@ function commerceEndpoints(path) {
 async function postCommerce(path, body) {
   let lastPayload = null;
   let lastStatus = 0;
+  let lastEmptyBody = false;
 
   for (const url of commerceEndpoints(path)) {
     try {
@@ -46,9 +59,10 @@ async function postCommerce(path, body) {
         },
         body: JSON.stringify(body),
       });
-      const payload = await readJsonSafe(response);
+      const { payload, isEmptyBody } = await readAcademyResponse(response);
       lastPayload = payload;
       lastStatus = response.status;
+      lastEmptyBody = isEmptyBody;
 
       if (response.status === 404 || response.status === 405 || response.status === 502) {
         continue;
@@ -62,6 +76,12 @@ async function postCommerce(path, body) {
     }
   }
 
+  if (lastEmptyBody || lastStatus >= 500) {
+    throw academyDegradedError(
+      { kind: lastEmptyBody ? "empty-body" : "upstream-5xx", retriable: true, status: lastStatus },
+      "Unable to start academy checkout",
+    );
+  }
   const message = lastPayload?.error || `Unable to start academy checkout (status ${lastStatus}).`;
   throw new Error(message);
 }
@@ -74,11 +94,7 @@ export async function fetchAcademyCommerceCatalog(options = {}) {
   if (Number.isFinite(options.limit)) params.set("limit", String(options.limit));
   const query = params.toString();
   const response = await centralFetch(`/api/academy-commerce${query ? `?${query}` : ""}`, { method: "GET" });
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to load academy store"));
-  }
-  return payload;
+  return readAcademyCommerceApi(response, "Unable to load academy store");
 }
 
 export async function fetchAcademyCommerceItem({ programKey, pathwayKey } = {}) {
@@ -86,11 +102,7 @@ export async function fetchAcademyCommerceItem({ programKey, pathwayKey } = {}) 
   if (programKey) params.set("programKey", programKey);
   if (pathwayKey) params.set("pathwayKey", pathwayKey);
   const response = await centralFetch(`/api/academy-commerce?${params.toString()}`, { method: "GET" });
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to load store item"));
-  }
-  return payload;
+  return readAcademyCommerceApi(response, "Unable to load store item");
 }
 
 export async function createAcademyCheckout({
@@ -175,11 +187,7 @@ export async function submitAcademyContactSales(body) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action: "contact-sales", ...body }),
   });
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to submit purchase request"));
-  }
-  return payload;
+  return readAcademyCommerceApi(response, "Unable to submit purchase request");
 }
 
 export async function enrollAfterAcademyPurchase(body) {
@@ -188,11 +196,7 @@ export async function enrollAfterAcademyPurchase(body) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action: "enroll-after-purchase", ...body }),
   });
-  const payload = await readJsonSafe(response);
-  if (!response.ok || !payload?.ok) {
-    throw new Error(formatApiError(response, payload, "Unable to confirm enrollment"));
-  }
-  return payload;
+  return readAcademyCommerceApi(response, "Unable to confirm enrollment");
 }
 
 export function formatUsd(amount) {
