@@ -18,11 +18,7 @@
  */
 export function auricruxLiveEnabled(user) {
   if (!user) return false;
-  // CTE program accounts get live Auricrux
-  if (user.cteProgramEnabled === true) return true;
-  if (user.role === "cte-instructor" || user.role === "cte-student") return true;
-  // All other roles (student, instructor, admin) get Auricrux in read-only/static mode
-  return false;
+  return user.cteProgramEnabled === true;
 }
 
 /**

@@ -1,5 +1,5 @@
 import { app } from "@azure/functions";
-import { requireAuth } from "./auth-boundary.js";
+import { CHPS_TENANT_CONFIG, requireAuth, withSessionRefresh } from "./auth-boundary.js";
 import {
   listStudentAccounts,
   getStudentAccount,
@@ -34,15 +34,32 @@ app.http("admin-students-list", {
 
     if (request.method === "GET") {
       const accounts = listStudentAccounts();
-      return {
-        status: 200,
-        jsonBody: {
-          ok: true,
-          accounts,
-          count: accounts.length,
-          backingSource: "api-student-store",
+      return withSessionRefresh(
+        {
+          status: 200,
+          jsonBody: {
+            ok: true,
+            accounts,
+            count: accounts.length,
+            backingSource: "api-student-store",
+          },
         },
-      };
+        auth,
+      );
+    }
+
+    const activeCount = listStudentAccounts().length;
+    if (activeCount >= CHPS_TENANT_CONFIG.maxStudentAccounts) {
+      return withSessionRefresh(
+        {
+          status: 409,
+          jsonBody: {
+            ok: false,
+            error: `CHPS pilot cap reached (${CHPS_TENANT_CONFIG.maxStudentAccounts} active student accounts).`,
+          },
+        },
+        auth,
+      );
     }
 
     // POST — provision a single new student account
@@ -51,14 +68,17 @@ app.http("admin-students-list", {
       const account = provisionStudentAccount({
         enrolledCourse: body?.enrolledCourse || null,
       });
-      return {
-        status: 201,
-        jsonBody: {
-          ok: true,
-          account,
-          backingSource: "api-student-store",
+      return withSessionRefresh(
+        {
+          status: 201,
+          jsonBody: {
+            ok: true,
+            account,
+            backingSource: "api-student-store",
+          },
         },
-      };
+        auth,
+      );
     } catch (error) {
       return {
         status: 400,
@@ -78,21 +98,38 @@ app.http("admin-students-bulk", {
     if (!isAdmin(auth.session)) return ADMIN_REQUIRED_RESPONSE;
 
     const body = await request.json().catch(() => ({}));
-    const count = Math.max(1, Math.min(100, Number(body?.count) || 1));
+    const activeCount = listStudentAccounts().length;
+    const remaining = Math.max(0, CHPS_TENANT_CONFIG.maxStudentAccounts - activeCount);
+    if (remaining === 0) {
+      return withSessionRefresh(
+        {
+          status: 409,
+          jsonBody: {
+            ok: false,
+            error: `CHPS pilot cap reached (${CHPS_TENANT_CONFIG.maxStudentAccounts} active student accounts).`,
+          },
+        },
+        auth,
+      );
+    }
+    const count = Math.max(1, Math.min(remaining, Number(body?.count) || 1));
 
     try {
       const accounts = provisionStudentAccountsBulk(count, {
         enrolledCourse: body?.enrolledCourse || null,
       });
-      return {
-        status: 201,
-        jsonBody: {
-          ok: true,
-          accounts,
-          count: accounts.length,
-          backingSource: "api-student-store",
+      return withSessionRefresh(
+        {
+          status: 201,
+          jsonBody: {
+            ok: true,
+            accounts,
+            count: accounts.length,
+            backingSource: "api-student-store",
+          },
         },
-      };
+        auth,
+      );
     } catch (error) {
       return {
         status: 400,
@@ -122,13 +159,16 @@ app.http("admin-students-deactivate", {
     }
 
     const deactivated = deactivateStudentAccount(id);
-    return {
-      status: 200,
-      jsonBody: {
-        ok: true,
-        account: deactivated,
-        backingSource: "api-student-store",
+    return withSessionRefresh(
+      {
+        status: 200,
+        jsonBody: {
+          ok: true,
+          account: deactivated,
+          backingSource: "api-student-store",
+        },
       },
-    };
+      auth,
+    );
   },
 });

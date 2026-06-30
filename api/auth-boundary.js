@@ -161,8 +161,21 @@ const IDLE_TIMEOUT_RESPONSE = {
   },
 };
 
+export function withSessionRefresh(response, auth) {
+  if (!auth?.ok || !auth.refreshCookie || !response || typeof response !== "object") {
+    return response;
+  }
+  return {
+    ...response,
+    headers: {
+      ...(response.headers || {}),
+      "Set-Cookie": auth.refreshCookie,
+    },
+  };
+}
+
 function isStudentRole(role) {
-  return role === "student";
+  return role === "student" || role === "cte-student";
 }
 
 /**

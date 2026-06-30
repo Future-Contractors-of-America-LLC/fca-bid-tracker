@@ -1,5 +1,5 @@
 import { app } from "@azure/functions";
-import { requireAuth } from "./auth-boundary.js";
+import { requireAuth, withSessionRefresh } from "./auth-boundary.js";
 import { getProjectWorkspace } from "./workspace-read-models.js";
 
 app.http("projects-workspace", {
@@ -15,14 +15,17 @@ app.http("projects-workspace", {
 
     try {
       const item = getProjectWorkspace(tenantId, projectId);
-      return {
-        status: 200,
-        jsonBody: {
-          ok: true,
-          item,
-          backingSource: "api-workflow-store",
+      return withSessionRefresh(
+        {
+          status: 200,
+          jsonBody: {
+            ok: true,
+            item,
+            backingSource: "api-workflow-store",
+          },
         },
-      };
+        auth,
+      );
     } catch (error) {
       return {
         status: 404,

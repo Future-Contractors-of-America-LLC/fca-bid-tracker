@@ -1,5 +1,5 @@
 import { app } from "@azure/functions";
-import { requireAuth } from "./auth-boundary.js";
+import { requireAuth, withSessionRefresh } from "./auth-boundary.js";
 import { listAuditEvents, getWorkflowSummary } from "./workflow-store.js";
 
 app.http("workflow-audit", {
@@ -17,17 +17,20 @@ app.http("workflow-audit", {
     const q = request.query.get("q") || null;
     const items = listAuditEvents(tenantId, { projectId, eventType, actorType, q });
 
-    return {
-      status: 200,
-      jsonBody: {
-        ok: true,
-        items,
-        count: items.length,
-        projectId,
-        filters: { eventType, actorType, q },
-        summary: getWorkflowSummary(tenantId),
-        backingSource: "api-workflow-store",
+    return withSessionRefresh(
+      {
+        status: 200,
+        jsonBody: {
+          ok: true,
+          items,
+          count: items.length,
+          projectId,
+          filters: { eventType, actorType, q },
+          summary: getWorkflowSummary(tenantId),
+          backingSource: "api-workflow-store",
+        },
       },
-    };
+      auth,
+    );
   },
 });

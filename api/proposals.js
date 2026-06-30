@@ -1,5 +1,5 @@
 import { app } from "@azure/functions";
-import { requireAuth } from "./auth-boundary.js";
+import { requireAuth, withSessionRefresh } from "./auth-boundary.js";
 import { listProposals, mutateProposal } from "./commercial-store.js";
 
 app.http("proposals", {
@@ -14,13 +14,19 @@ app.http("proposals", {
 
     if (request.method === "GET") {
       const items = listProposals(tenantId);
-      return { status: 200, jsonBody: { ok: true, items, count: items.length, backingSource: "api-commercial-store" } };
+      return withSessionRefresh(
+        { status: 200, jsonBody: { ok: true, items, count: items.length, backingSource: "api-commercial-store" } },
+        auth,
+      );
     }
 
     const body = await request.json().catch(() => ({}));
     try {
       const result = mutateProposal(tenantId, body?.action, body);
-      return { status: 200, jsonBody: { ok: true, ...result, backingSource: "api-commercial-store" } };
+      return withSessionRefresh(
+        { status: 200, jsonBody: { ok: true, ...result, backingSource: "api-commercial-store" } },
+        auth,
+      );
     } catch (error) {
       return { status: 400, jsonBody: { ok: false, error: error?.message || "Proposal mutation failed." } };
     }

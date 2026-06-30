@@ -1,5 +1,5 @@
 import { app } from "@azure/functions";
-import { requireAuth } from "./auth-boundary.js";
+import { requireAuth, withSessionRefresh } from "./auth-boundary.js";
 import { getFileSummary } from "./workspace-read-models.js";
 
 app.http("files-summary", {
@@ -16,14 +16,17 @@ app.http("files-summary", {
 
     try {
       const summary = getFileSummary(tenantId, ownerObjectType, ownerObjectId);
-      return {
-        status: 200,
-        jsonBody: {
-          ok: true,
-          summary,
-          backingSource: "api-workflow-store",
+      return withSessionRefresh(
+        {
+          status: 200,
+          jsonBody: {
+            ok: true,
+            summary,
+            backingSource: "api-workflow-store",
+          },
         },
-      };
+        auth,
+      );
     } catch (error) {
       return {
         status: 404,
