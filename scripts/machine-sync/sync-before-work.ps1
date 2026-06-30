@@ -4,13 +4,13 @@
 # Usage:
 #   powershell -ExecutionPolicy Bypass -File scripts\sync-before-work.ps1
 
-$githubRoot = "C:\Users\MichaelBartholomew\Documents\GitHub"
-$repoRoot = Split-Path $PSScriptRoot -Parent
-if (Test-Path (Join-Path $repoRoot ".git")) {
-  $detected = Split-Path $repoRoot -Parent
-  if (Test-Path (Join-Path $detected "fca-bid-tracker")) {
-    $githubRoot = $detected
-  }
+# Resolve repo root: $PSScriptRoot is scripts/machine-sync, so go up two levels
+$repoRoot = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+$githubRoot = Split-Path $repoRoot -Parent
+
+# Validate detection — fall back to hardcoded default if the resolved root doesn't look right
+if (-not (Test-Path (Join-Path $repoRoot ".git"))) {
+  $githubRoot = "C:\Users\MichaelBartholomew\Documents\GitHub"
 }
 
 $repos = @(

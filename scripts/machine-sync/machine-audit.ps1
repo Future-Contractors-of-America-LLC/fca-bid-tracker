@@ -10,7 +10,9 @@ function Test-Tool {
     param([string]$Name, [string]$Cmd)
     try {
         $out = Invoke-Expression $Cmd 2>&1 | Out-String
-        return @{ name = $Name; ok = $true; output = $out.Trim() }
+        # Check exit code — non-zero means the tool reported failure even if no exception thrown
+        $ok = ($LASTEXITCODE -eq 0) -or ($LASTEXITCODE -eq $null)
+        return @{ name = $Name; ok = $ok; output = $out.Trim() }
     } catch {
         return @{ name = $Name; ok = $false; output = $_.Exception.Message }
     }

@@ -26,6 +26,11 @@ $ahead = git rev-list --count "@{u}..HEAD"
 if ([int]$ahead -gt 0) {
   Write-Host "Pushing $ahead commit(s) to origin/$branch ..."
   git push origin $branch
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERROR: push failed (exit $LASTEXITCODE). Work is NOT on GitHub. Do NOT switch machines." -ForegroundColor Red
+    exit 1
+  }
+  Write-Host "Push succeeded." -ForegroundColor Green
 } else {
   Write-Host "Already in sync with origin/$branch" -ForegroundColor Green
 }
