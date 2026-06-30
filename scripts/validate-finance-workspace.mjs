@@ -3,9 +3,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = process.env.FCA_CENTRAL_ROOT
-  ? path.resolve(process.env.FCA_CENTRAL_ROOT)
-  : path.resolve(root, "..", "auricrux-central-work");
+const localCoreRoot = path.resolve(root, "core");
+const centralRoot = fs.existsSync(localCoreRoot)
+  ? root
+  : process.env.FCA_CENTRAL_ROOT
+    ? path.resolve(process.env.FCA_CENTRAL_ROOT)
+    : path.resolve(root, "..", "auricrux-central-work");
 const errors = [];
 
 function requireFile(relativePath, baseDir = root) {
