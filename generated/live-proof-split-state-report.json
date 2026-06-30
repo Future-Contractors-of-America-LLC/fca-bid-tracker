@@ -1,13 +1,13 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-30T11:04:02.155Z",
+  "generatedAt": "2026-06-30T14:19:19.949Z",
   "success": false,
-  "witnessCommitSha": "0ff24fb65922e3d4c0786de1079087b839e9454b",
-  "proofCommitSha": "d4f45b221d4dfc512a4e2731088330b32cbdaa7d",
+  "witnessCommitSha": "963d139b4bf07fc1ad36c54e244ee45644ff329d",
+  "proofCommitSha": "8a58f8d27b78d4535ff41f5e9b9326329e7ce05e",
   "metadataState": {
     "provenance": "github_actions_ci",
     "ciPersisted": true,
-    "status": "ci_surface_present_success"
+    "status": "ci_surface_present_with_failures"
   },
   "failures": [
     "CI-backed live deployment proof commit is already observed; split-state lock no longer applies",

@@ -1,9 +1,12 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-30T11:04:00.767Z",
+  "generatedAt": "2026-06-30T14:19:18.721Z",
   "summaryPresent": true,
-  "failureFileEmpty": true,
+  "failureFileEmpty": false,
   "hostCount": 4,
-  "success": true,
-  "failures": []
+  "success": false,
+  "failures": [
+    "current-head live verifier summary still contains host-level failures",
+    "live deployment failures file is non-empty"
+  ]
 }
