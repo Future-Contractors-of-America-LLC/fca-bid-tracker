@@ -1,11 +1,11 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-30T14:33:03.475Z",
+  "generatedAt": "2026-06-30T14:56:09.080Z",
   "provenance": "github_actions_ci",
   "ciPersisted": true,
-  "ciRunId": "28451555898",
-  "ciCommitSha": "3a7fd5808aeb0c342e3f60fd457fde1c9c8f6991",
-  "status": "ci_surface_present_success",
+  "ciRunId": "28452887646",
+  "ciCommitSha": "31f52335b73f6c6153e129b12c15721324e4a40e",
+  "status": "ci_surface_present_with_failures",
   "surface": {
     "summaryPath": "docs/runtime-proof/live-deployment/live_deployment_smoke_summary.json",
     "failuresPath": "docs/runtime-proof/live-deployment/live_deployment_smoke_failures.txt"
