@@ -1,0 +1,110 @@
+{
+  "generatedAt": "2026-07-01T13:26:17.382Z",
+  "total": 17,
+  "passed": 17,
+  "failed": 0,
+  "results": [
+    {
+      "file": "workflow-audit.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "files-summary.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "audit-events-summary.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "files.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "estimates.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "proposals.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "billing-summary.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "change-orders.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "pay-apps.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "closeout-packages.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "warranty-cases.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "academy-lms.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "academy-remediation-summary.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "remediation-links.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "projects-workspace.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "opportunities-workspace.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    },
+    {
+      "file": "opportunity-convert.js",
+      "exists": true,
+      "passed": true,
+      "failures": []
+    }
+  ]
+}
