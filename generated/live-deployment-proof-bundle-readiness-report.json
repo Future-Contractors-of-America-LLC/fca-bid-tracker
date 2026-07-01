@@ -1,13 +1,11 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-07-01T09:39:20.816Z",
-  "success": false,
+  "generatedAt": "2026-07-01T09:51:09.503Z",
+  "success": true,
   "checks": {
     "proofSuitePass": true,
-    "currentHeadVerifierPass": false,
+    "currentHeadVerifierPass": true,
     "metadataTransitionPass": true
   },
-  "failures": [
-    "currentHeadVerifierPass"
-  ]
+  "failures": []
 }
