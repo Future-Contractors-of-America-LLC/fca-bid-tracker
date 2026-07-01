@@ -1,6 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
 
+const nonBlockingMode = process.env.AURICRUX_LIVE_VERIFY_NONBLOCKING === "1";
+
 const configuredHosts = (process.env.AURICRUX_LIVE_VERIFY_HOSTS || "")
   .split(",")
   .map((value) => value.trim())
@@ -251,6 +253,15 @@ if (staleHosts.length === hosts.length) {
     `All hosts remained stale after ${attempts} attempts. This strongly indicates SWA deployment token/resource mismatch or deployment targeting drift. Expected gitSha=${targetGitSha}.`
   );
   await fs.writeFile(failuresPath, `${finalFailures.join("\n")}\n`, "utf8");
+}
+
+if (nonBlockingMode) {
+  console.warn(`::warning::Live deployment smoke verification found ${finalFailures.length} failure(s) after retry budget (non-blocking mode — workflow will continue):`);
+  for (const failure of finalFailures) {
+    console.warn(`::warning:: - ${failure}`);
+  }
+  console.warn("::warning::Post-deploy smoke failures are advisory in non-blocking mode. Check live-deployment-smoke artifact for details.");
+  process.exit(0);
 }
 
 console.error("Live deployment smoke verification failed after retry budget:");
