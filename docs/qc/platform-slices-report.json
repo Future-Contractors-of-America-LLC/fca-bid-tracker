@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-24T18:06:26.492Z",
-  "failed": 0,
+  "generatedAt": "2026-07-01T09:40:21.313Z",
+  "failed": 2,
   "sliceCount": 15,
   "findings": [
     {
@@ -68,9 +68,9 @@
     },
     {
       "slice": "06-comms",
-      "status": "pass",
+      "status": "fail",
       "label": "messages prefer API-sent stream when live",
-      "detail": "src/pages/portal/PortalMessages.jsx",
+      "detail": "missing \"drafts.sent\" in src/pages/portal/PortalMessages.jsx",
       "tag": "mutation"
     },
     {
@@ -166,37 +166,9 @@
     },
     {
       "slice": "15-mobile",
-      "status": "pass",
-      "label": "mobile API client uses customer store",
-      "detail": "src/FcaMobile/Services/FcaApiClient.cs",
-      "tag": "mutation"
-    },
-    {
-      "slice": "15-mobile",
-      "status": "pass",
-      "label": "mobile API client supports sign-out",
-      "detail": "src/FcaMobile/Services/FcaApiClient.cs",
-      "tag": "mutation"
-    },
-    {
-      "slice": "15-mobile",
-      "status": "pass",
-      "label": "mobile qualify mutation",
-      "detail": "src/FcaMobile/Services/FcaApiClient.cs",
-      "tag": "mutation"
-    },
-    {
-      "slice": "15-mobile",
-      "status": "pass",
-      "label": "mobile portal handoff",
-      "detail": "src/FcaMobile/Services/FcaConfig.cs",
-      "tag": "mutation"
-    },
-    {
-      "slice": "15-mobile",
-      "status": "pass",
-      "label": "mobile field tasks read",
-      "detail": "src/FcaMobile/Services/FcaApiClient.cs",
+      "status": "fail",
+      "label": "mobile repo present",
+      "detail": "fca-mobile-maui-work not found",
       "tag": "mutation"
     },
     {
