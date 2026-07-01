@@ -41,12 +41,15 @@ $deleted = 0
 $failed = @()
 
 foreach ($branch in $staleBranches) {
-    try {
-        git push origin --delete $branch 2>&1 | Out-Null
+    $result = git push origin --delete $branch 2>&1
+    if ($LASTEXITCODE -eq 0) {
         Write-Host "✅ Deleted: $branch" -ForegroundColor Green
         $deleted++
-    } catch {
+    } else {
         Write-Host "❌ Failed: $branch" -ForegroundColor Red
+        if ($result) {
+            Write-Host "   $result" -ForegroundColor DarkGray
+        }
         $failed += $branch
     }
 }
