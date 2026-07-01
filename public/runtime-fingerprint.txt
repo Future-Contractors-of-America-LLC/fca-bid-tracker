@@ -1,9 +1,9 @@
 service=fca-bid-tracker
-generatedAt=2026-07-01T08:09:21.754Z
+generatedAt=2026-07-01T09:28:19.534Z
 source=github-actions
-gitRef=refs/heads/main
-gitSha=21eae24b9fac06a3795acb73a3bd2c5118325f4e
-runId=28502839543
+gitRef=refs/heads/copilot/urgent-force-complete-sync
+gitSha=de65570397d03cb173c15b1ef3478787ec61c842
+runId=28506603190
 defaultHost=delightful-mushroom-0de67860f.7.azurestaticapps.net
 expectedHosts=futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
 continuityIntent=governed-public-runtime-fingerprint
