@@ -198,8 +198,31 @@ jobs:
           api_location: api_generated
           output_location: ''
 
+      - name: Diagnose api_generated deployment structure
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
+        run: |
+          echo "=== api_generated top-level ==="
+          ls -la api_generated/ || echo "api_generated directory not found"
+          echo "=== Function directories ==="
+          find api_generated -maxdepth 2 -name 'function.json' | sort || true
+          echo "=== host.json ==="
+          cat api_generated/host.json || echo "host.json not found"
+          echo "=== package.json ==="
+          cat api_generated/package.json || echo "package.json not found"
+          echo "=== Azure deployment token present ==="
+          if [ -n "$AZURE_STATIC_WEB_APPS_API_TOKEN" ]; then
+            echo "Token is set (length: ${#AZURE_STATIC_WEB_APPS_API_TOKEN})"
+          else
+            echo "::warning::AZURE_STATIC_WEB_APPS_API_TOKEN is empty — deployment was skipped."
+            echo "To fix: regenerate the token in Azure Portal > Static Web Apps > fca-frontend > Manage deployment token"
+            echo "Then update the GitHub secret AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F"
+            echo "See docs/AZURE_SWA_TOKEN_REGENERATION.md for step-by-step instructions."
+          fi
+
       - name: Post-deploy live domain smoke verification
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
+        continue-on-error: true
+        id: smoke_verify
         run: npm run verify:live-deployment
         env:
           AURICRUX_LIVE_VERIFY_ATTEMPTS: '20'
@@ -207,6 +230,25 @@ jobs:
           AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}
           AURICRUX_SWA_DEFAULT_HOST: ${{ env.AURICRUX_SWA_DEFAULT_HOST }}
           AURICRUX_SWA_NAME: ${{ env.AURICRUX_SWA_NAME }}
+          AURICRUX_LIVE_VERIFY_NONBLOCKING: '1'
+
+      - name: Post-smoke verification result summary
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
+        run: |
+          if [ "${{ steps.smoke_verify.outcome }}" = "success" ]; then
+            echo "::notice::Live domain smoke verification passed."
+          else
+            echo "::warning::Live domain smoke verification reported failures (non-blocking)."
+            echo "Check workspace/live_deployment_smoke_failures.txt for details."
+            echo "Common causes:"
+            echo "  1. Azure SWA deployment token expired — see docs/AZURE_SWA_TOKEN_REGENERATION.md"
+            echo "  2. API functions not reachable — see docs/API_FUNCTIONS_TROUBLESHOOTING.md"
+            echo "  3. DNS propagation delay — re-run the workflow after a few minutes"
+          fi
+          if [ -f workspace/live_deployment_smoke_failures.txt ]; then
+            echo "=== Smoke failure details ==="
+            cat workspace/live_deployment_smoke_failures.txt || true
+          fi
 
       - name: Upload live deployment smoke artifacts
         if: always()

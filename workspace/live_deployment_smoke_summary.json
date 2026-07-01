@@ -1,0 +1,543 @@
+[
+  {
+    "attempt": 1,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "unconfigured",
+    "targetGitSha": "abc123",
+    "host": "localhost",
+    "deploymentGitSha": "unavailable",
+    "runtimeGitSha": "unavailable",
+    "commitWitnessRoute": "/commit-witness-abc123.txt",
+    "expectedHosts": [],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/warranty",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/referrals",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/leads/index.html",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/leads/new.html",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/config/auricrux-central.js",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/bids/detail.html",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/bids/status.html",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/bids/edit.html",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/bids/bid-checklist.js",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/legal",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/legal/contractor-resources",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/contact",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/portal/legal",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/commit-witness-abc123.txt",
+        "status": 0,
+        "ok": false
+      },
+      {
+        "route": "/index.html",
+        "status": 0,
+        "ok": false
+      }
+    ],
+    "failures": [
+      "https://localhost/deployment-status.json returned 0",
+      "https://localhost/domain-continuity.json returned 0",
+      "https://localhost/runtime-fingerprint.txt returned 0",
+      "https://localhost/commit-witness-abc123.txt returned 0",
+      "https://localhost/deployment-status.json returned 0",
+      "https://localhost/domain-continuity.json returned 0",
+      "https://localhost/runtime-fingerprint.txt returned 0",
+      "https://localhost/live-shell-verification.html returned 0",
+      "https://localhost/host-binding-audit.html returned 0",
+      "https://localhost/api-continuity-audit.html returned 0",
+      "https://localhost/warranty returned 0",
+      "https://localhost/referrals returned 0",
+      "https://localhost/leads/index.html returned 0",
+      "https://localhost/leads/new.html returned 0",
+      "https://localhost/config/auricrux-central.js returned 0",
+      "https://localhost/bids/detail.html returned 0",
+      "https://localhost/bids/status.html returned 0",
+      "https://localhost/bids/edit.html returned 0",
+      "https://localhost/bids/bid-checklist.js returned 0",
+      "https://localhost/legal returned 0",
+      "https://localhost/legal/contractor-resources returned 0",
+      "https://localhost/contact returned 0",
+      "https://localhost/portal/legal returned 0",
+      "https://localhost/commit-witness-abc123.txt returned 0",
+      "https://localhost/index.html returned 0"
+    ]
+  },
+  {
+    "attempt": 1,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "unconfigured",
+    "targetGitSha": "abc123",
+    "host": "futurecontractorsofamerica.com",
+    "deploymentGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "runtimeGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "commitWitnessRoute": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "app.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/index.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/new.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/config/auricrux-central.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/detail.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/status.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/edit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/bid-checklist.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal/contractor-resources",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/contact",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/portal/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-abc123.txt",
+        "status": 404,
+        "ok": false
+      },
+      {
+        "route": "/index.html",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "failures": [
+      "https://futurecontractorsofamerica.com/commit-witness-abc123.txt returned 404",
+      "futurecontractorsofamerica.com is serving stale deployment-status SHA bcdf3e1fdc8a560d38020730568e89c8717beacb; expected abc123",
+      "futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA bcdf3e1fdc8a560d38020730568e89c8717beacb; expected abc123",
+      "futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt; expected /commit-witness-abc123.txt",
+      "futurecontractorsofamerica.com deployment manifest reports unexpected default host delightful-mushroom-0de67860f.7.azurestaticapps.net; expected unconfigured",
+      "futurecontractorsofamerica.com runtime fingerprint reports unexpected default host delightful-mushroom-0de67860f.7.azurestaticapps.net; expected unconfigured",
+      "https://futurecontractorsofamerica.com/commit-witness-abc123.txt returned 404"
+    ]
+  },
+  {
+    "attempt": 1,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "unconfigured",
+    "targetGitSha": "abc123",
+    "host": "www.futurecontractorsofamerica.com",
+    "deploymentGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "runtimeGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "commitWitnessRoute": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "app.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/index.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/new.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/config/auricrux-central.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/detail.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/status.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/edit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/bid-checklist.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal/contractor-resources",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/contact",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/portal/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-abc123.txt",
+        "status": 404,
+        "ok": false
+      },
+      {
+        "route": "/index.html",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "failures": [
+      "https://www.futurecontractorsofamerica.com/commit-witness-abc123.txt returned 404",
+      "www.futurecontractorsofamerica.com is serving stale deployment-status SHA bcdf3e1fdc8a560d38020730568e89c8717beacb; expected abc123",
+      "www.futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA bcdf3e1fdc8a560d38020730568e89c8717beacb; expected abc123",
+      "www.futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt; expected /commit-witness-abc123.txt",
+      "www.futurecontractorsofamerica.com deployment manifest reports unexpected default host delightful-mushroom-0de67860f.7.azurestaticapps.net; expected unconfigured",
+      "www.futurecontractorsofamerica.com runtime fingerprint reports unexpected default host delightful-mushroom-0de67860f.7.azurestaticapps.net; expected unconfigured",
+      "https://www.futurecontractorsofamerica.com/commit-witness-abc123.txt returned 404"
+    ]
+  },
+  {
+    "attempt": 1,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "unconfigured",
+    "targetGitSha": "abc123",
+    "host": "app.futurecontractorsofamerica.com",
+    "deploymentGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "runtimeGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "commitWitnessRoute": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "app.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/index.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/new.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/config/auricrux-central.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/detail.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/status.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/edit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/bid-checklist.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal/contractor-resources",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/contact",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/portal/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-abc123.txt",
+        "status": 404,
+        "ok": false
+      },
+      {
+        "route": "/index.html",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "failures": [
+      "https://app.futurecontractorsofamerica.com/commit-witness-abc123.txt returned 404",
+      "app.futurecontractorsofamerica.com is serving stale deployment-status SHA bcdf3e1fdc8a560d38020730568e89c8717beacb; expected abc123",
+      "app.futurecontractorsofamerica.com is serving stale runtime-fingerprint SHA bcdf3e1fdc8a560d38020730568e89c8717beacb; expected abc123",
+      "app.futurecontractorsofamerica.com deployment manifest reports commit witness /commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt; expected /commit-witness-abc123.txt",
+      "app.futurecontractorsofamerica.com deployment manifest reports unexpected default host delightful-mushroom-0de67860f.7.azurestaticapps.net; expected unconfigured",
+      "app.futurecontractorsofamerica.com runtime fingerprint reports unexpected default host delightful-mushroom-0de67860f.7.azurestaticapps.net; expected unconfigured",
+      "https://app.futurecontractorsofamerica.com/commit-witness-abc123.txt returned 404"
+    ]
+  }
+]

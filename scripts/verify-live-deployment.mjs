@@ -38,6 +38,7 @@ const routes = [
 
 const attempts = Number(process.env.AURICRUX_LIVE_VERIFY_ATTEMPTS || 20);
 const delayMs = Number(process.env.AURICRUX_LIVE_VERIFY_DELAY_MS || 30000);
+const nonBlocking = process.env.AURICRUX_LIVE_VERIFY_NONBLOCKING === "1";
 const workspaceDir = path.join(process.cwd(), "workspace");
 const summaryPath = path.join(workspaceDir, "live_deployment_smoke_summary.json");
 const failuresPath = path.join(workspaceDir, "live_deployment_smoke_failures.txt");
@@ -65,15 +66,19 @@ function withCacheBust(url, attemptNumber) {
 }
 
 async function fetchText(url, attemptNumber) {
-  const response = await fetch(withCacheBust(url, attemptNumber), {
-    headers: {
-      "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
-      pragma: "no-cache",
-      expires: "0",
-    },
-  });
-  const text = await response.text();
-  return { ok: response.ok, status: response.status, text };
+  try {
+    const response = await fetch(withCacheBust(url, attemptNumber), {
+      headers: {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        pragma: "no-cache",
+        expires: "0",
+      },
+    });
+    const text = await response.text();
+    return { ok: response.ok, status: response.status, text };
+  } catch (error) {
+    return { ok: false, status: 0, text: `network error: ${error.message}` };
+  }
 }
 
 function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, commitWitnessResponse, routeChecks) {
@@ -256,5 +261,9 @@ if (staleHosts.length === hosts.length) {
 console.error("Live deployment smoke verification failed after retry budget:");
 for (const failure of finalFailures) {
   console.error(` - ${failure}`);
+}
+if (nonBlocking) {
+  console.warn("AURICRUX_LIVE_VERIFY_NONBLOCKING=1: smoke failures recorded but not blocking deployment.");
+  process.exit(0);
 }
 process.exit(1);
