@@ -1,6 +1,6 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-06-30T21:38:47.527Z",
+  "generatedAt": "2026-07-01T02:49:24.022Z",
   "checks": {
     "witnessCommitObserved": true,
     "ciProofCommitObserved": true,
@@ -10,8 +10,8 @@
   "success": true,
   "failures": [],
   "observed": {
-    "witnessCommitSha": "89261ba5517f9c374b11f0579289a163f5b65f12",
-    "ciProofCommitSha": "84d39f7eb99caf8c4c473e6f68d9090537d67038",
+    "witnessCommitSha": "00dfe2516b9c6d6f703fb2b4c8bd8c89441ca0b3",
+    "ciProofCommitSha": "40dbe37df1b2bd00d37e5192dee66e3b85c091e4",
     "proofMetadataStatus": "ci_surface_present_success"
   }
 }

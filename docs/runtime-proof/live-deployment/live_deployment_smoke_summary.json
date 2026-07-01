@@ -1,13 +1,13 @@
 [
   {
-    "attempt": 11,
+    "attempt": 12,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "targetGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
     "host": "futurecontractorsofamerica.com",
-    "deploymentGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
-    "runtimeGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
-    "commitWitnessRoute": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+    "deploymentGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
+    "runtimeGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
+    "commitWitnessRoute": "/commit-witness-fb70f541abae3dac0859b0f20a085d0f622e6071.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -111,7 +111,7 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+        "route": "/commit-witness-fb70f541abae3dac0859b0f20a085d0f622e6071.txt",
         "status": 200,
         "ok": true
       },
@@ -124,14 +124,14 @@
     "failures": []
   },
   {
-    "attempt": 11,
+    "attempt": 12,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "targetGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
     "host": "www.futurecontractorsofamerica.com",
-    "deploymentGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
-    "runtimeGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
-    "commitWitnessRoute": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+    "deploymentGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
+    "runtimeGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
+    "commitWitnessRoute": "/commit-witness-fb70f541abae3dac0859b0f20a085d0f622e6071.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -235,7 +235,7 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+        "route": "/commit-witness-fb70f541abae3dac0859b0f20a085d0f622e6071.txt",
         "status": 200,
         "ok": true
       },
@@ -248,14 +248,14 @@
     "failures": []
   },
   {
-    "attempt": 11,
+    "attempt": 12,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "targetGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
     "host": "app.futurecontractorsofamerica.com",
-    "deploymentGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
-    "runtimeGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
-    "commitWitnessRoute": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+    "deploymentGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
+    "runtimeGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
+    "commitWitnessRoute": "/commit-witness-fb70f541abae3dac0859b0f20a085d0f622e6071.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -359,7 +359,7 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+        "route": "/commit-witness-fb70f541abae3dac0859b0f20a085d0f622e6071.txt",
         "status": 200,
         "ok": true
       },
@@ -372,14 +372,14 @@
     "failures": []
   },
   {
-    "attempt": 11,
+    "attempt": 12,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
+    "targetGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
     "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "deploymentGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
-    "runtimeGitSha": "bcdf3e1fdc8a560d38020730568e89c8717beacb",
-    "commitWitnessRoute": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+    "deploymentGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
+    "runtimeGitSha": "fb70f541abae3dac0859b0f20a085d0f622e6071",
+    "commitWitnessRoute": "/commit-witness-fb70f541abae3dac0859b0f20a085d0f622e6071.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -483,7 +483,7 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-bcdf3e1fdc8a560d38020730568e89c8717beacb.txt",
+        "route": "/commit-witness-fb70f541abae3dac0859b0f20a085d0f622e6071.txt",
         "status": 200,
         "ok": true
       },
