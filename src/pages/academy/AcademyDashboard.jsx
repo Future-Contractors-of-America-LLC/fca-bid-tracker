@@ -5,7 +5,6 @@ import useAcademyLms from "../../hooks/useAcademyLms";
 import { allowDemoFallbacks } from "../../config/productionMode";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import AcademyAccommodationPicker from "../../components/academy/AcademyAccommodationPicker";
-import useCustomerSession from "../../hooks/useCustomerSession";
 import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, DPOR_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, ELECTRICAL_LICENSURE_UNITS, LICENSURE_PATHWAYS, organizeApiCatalogByLane, APPRENTICESHIP_TRADES, APPRENTICESHIP_TRADE_LEVELS, FCA_HOWTO_SEQUENCE, PROFESSIONAL_PATHWAYS } from "../../academyOfferings";
 import { listPathwayLmsConfigs } from "../../academyPathwayLms";
 import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
@@ -34,7 +33,6 @@ function ProgressBar({ percent }) {
 
 export default function AcademyDashboard() {
   const { session } = useCustomerSession();
-  const { session } = useCustomerSession();
   const learnerId = session?.email || session?.customerId;
   const [accommodations, setAccommodations] = useState([]);
   const [iepBusy, setIepBusy] = useState(false);
@@ -43,7 +41,6 @@ export default function AcademyDashboard() {
   const [transcriptMessage, setTranscriptMessage] = useState("");
   const [showPrintTranscript, setShowPrintTranscript] = useState(false);
   const [exportedTranscript, setExportedTranscript] = useState(null);
-  const learnerId = session?.email || session?.customerId;
   const learnerName = session?.displayName || session?.company || session?.email || "Learner";
 
   const enrollments = useMemo(
