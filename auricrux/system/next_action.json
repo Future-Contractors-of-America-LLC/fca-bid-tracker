@@ -9,7 +9,7 @@
   "priority_band": "critical",
   "failed_step": "script:validate-academy-native-commerce-journey.mjs",
   "target_repo": "auricrux-central",
-  "generated_at": "2026-06-30T22:55:50.431Z",
-  "updatedAtUtc": "2026-07-01T00:20:08.196Z",
-  "trigger_source": "LMS-WFR-1782860073911"
+  "generated_at": "2026-07-01T01:46:07.158Z",
+  "updatedAtUtc": "2026-07-01T01:46:07.158Z",
+  "trigger_source": "LMS-WFR-1782870280546"
 }
