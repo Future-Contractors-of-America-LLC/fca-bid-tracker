@@ -388,7 +388,6 @@ export default function PublicTopNav({ mode = "public" }) {
           <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
             <FcaBrandMark compact showTagline={false} />
             <span className="fca-brand-long" style={brandTextStyle}>Future Contractors of America</span>
-            <span className="fca-brand-short" style={brandTextStyle}>FCA</span>
           </a>
 
           {mode === "portal" ? (
