@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-01T01:46:07.158Z",
-  "runId": "LMS-WFR-1782870280546",
+  "generatedAt": "2026-07-01T02:47:08.374Z",
+  "runId": "LMS-WFR-1782873890723",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -84,27 +84,34 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "I have access to your company data, bids, projects, and more. Ask about the next move on a bid, project, or field task."
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
     },
     {
       "step": "SWA route /academy",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
     },
     {
       "step": "SWA route /academy/catalog",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+      "guidance": "I teach construction license exam prep, safety training, and continuing education for contractors. In this segment on Site Work and Access (SWA), scope and qualifications align with the Building Contractor (BC) and Specialty Contractor (SC) categories. I am walking through Site Work and Access practical lab exercises for survey, demolition, excavation, grading, drainage, and site utilities. Watch "
     }
   ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 112.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 113.",
   "state": {
-    "runCount": 112,
+    "runCount": 113,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 112,
+    "consecutiveFailures": 113,
     "history": [
+      {
+        "at": "2026-07-01T02:47:08.374Z",
+        "runId": "LMS-WFR-1782873890723",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-07-01T01:46:07.158Z",
         "runId": "LMS-WFR-1782870280546",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-06-29T05:17:58.428Z",
-        "runId": "LMS-WFR-1782710200372",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-07-01T01:46:07.158Z",
+    "lastRunUtc": "2026-07-01T02:47:08.374Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782870280546"
+    "lastRunId": "LMS-WFR-1782873890723"
   }
 }
