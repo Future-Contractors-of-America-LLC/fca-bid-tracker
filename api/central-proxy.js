@@ -4,8 +4,16 @@ export const CENTRAL_API =
   "https://api.futurecontractorsofamerica.com/api";
 
 export async function proxyCentralRequest(request, resourcePath) {
-  const url = new URL(request.url);
-  const target = `${CENTRAL_API}${resourcePath}${url.search}`;
+  const requestUrl = new URL(request.url);
+  const [pathPart, resourceQuery = ""] = resourcePath.split("?");
+  const targetUrl = new URL(`${CENTRAL_API}${pathPart}`);
+
+  const merged = new URLSearchParams(resourceQuery);
+  requestUrl.searchParams.forEach((value, key) => {
+    merged.append(key, value);
+  });
+  targetUrl.search = merged.toString();
+  const target = targetUrl.toString();
 
   const init = {
     method: request.method,

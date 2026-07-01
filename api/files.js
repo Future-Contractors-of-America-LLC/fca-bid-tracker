@@ -1,11 +1,6 @@
 import { app } from "@azure/functions";
 import { requireAuth, withSessionRefresh } from "./auth-boundary.js";
-import { listFiles, mutateFile, getWorkflowSummary, listAuditEvents, ensureWorkflowReady, workflowBackingSource } from "./workflow-store.js";
-
-function resolveLatestAuditEventId(tenantId, projectId, eventType) {
-  const items = listAuditEvents(tenantId, { projectId, eventType, actorType: null, q: null });
-  return items?.[0]?.id || null;
-}
+import { proxyCentralRequest } from "./central-proxy.js";
 
 app.http("files", {
   methods: ["GET", "POST", "PATCH"],
@@ -14,121 +9,6 @@ app.http("files", {
   handler: async (request) => {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;
-
-    const tenantId = auth.tenantId;
-    await ensureWorkflowReady(tenantId);
-    const projectId = request.query.get("projectId") || null;
-    const category = request.query.get("category") || null;
-    const status = request.query.get("status") || null;
-    const q = request.query.get("q") || null;
-
-    if (request.method === "GET") {
-      const items = listFiles(tenantId, { projectId, category, status, q });
-
-      return withSessionRefresh(
-        {
-          status: 200,
-          jsonBody: {
-            ok: true,
-            items,
-            count: items.length,
-            projectId,
-            filters: { category, status, q },
-            summary: getWorkflowSummary(tenantId),
-            backingSource: workflowBackingSource(),
-          },
-        },
-        auth,
-      );
-    }
-
-    const body = await request.json().catch(() => ({}));
-
-    if (request.method === "POST") {
-      try {
-        const ownerObjectType = body?.ownerObjectType || "Project";
-        const ownerObjectId = body?.ownerObjectId || projectId || body?.projectId;
-        const uploadedBy = body?.uploadedBy || "system";
-        const files = Array.isArray(body?.files) ? body.files : [];
-
-        if (!ownerObjectId) {
-          throw new Error("ownerObjectId or projectId is required for file registration.");
-        }
-
-        if (!files.length) {
-          throw new Error("At least one file is required for file registration.");
-        }
-
-        const created = files.map((file) => {
-          const detail = `${file.fileName || file.name || "Uploaded file"} registered under governed file spine for ${ownerObjectId}.`;
-          const result = mutateFile(tenantId, "create-file-record", {
-            projectId: ownerObjectId,
-            ownerObjectType,
-            ownerObjectId,
-            name: file.fileName || file.name,
-            category: file.classification?.documentType || file.category || "Document",
-            discipline: file.classification?.discipline || file.discipline || "Document Control",
-            owner: uploadedBy,
-            linkedEvidenceTarget: body?.linkedEvidenceTarget || `${ownerObjectId} governed evidence chain`,
-            detail,
-            status: "uploaded",
-            evidenceStatus: "pending-review",
-            actionLabel: "Review",
-            versionLabel: file.versionLabel || "Rev 1",
-          });
-
-          return {
-            fileId: result.file.fileId,
-            ownerObjectType,
-            ownerObjectId,
-            status: result.file.status,
-          };
-        });
-
-        return withSessionRefresh(
-          {
-            status: 200,
-            jsonBody: {
-              ok: true,
-              items: created,
-              auditEventId: resolveLatestAuditEventId(tenantId, ownerObjectId, "file-created"),
-              backingSource: workflowBackingSource(),
-            },
-          },
-          auth,
-        );
-      } catch (error) {
-        return {
-          status: 400,
-          jsonBody: {
-            ok: false,
-            error: error?.message || "File registration failed.",
-          },
-        };
-      }
-    }
-
-    try {
-      const result = mutateFile(tenantId, body?.action, body);
-      return withSessionRefresh(
-        {
-          status: 200,
-          jsonBody: {
-            ok: true,
-            ...result,
-            backingSource: workflowBackingSource(),
-          },
-        },
-        auth,
-      );
-    } catch (error) {
-      return {
-        status: 400,
-        jsonBody: {
-          ok: false,
-          error: error?.message || "File mutation failed.",
-        },
-      };
-    }
+    return withSessionRefresh(await proxyCentralRequest(request, "/files"), auth);
   },
 });

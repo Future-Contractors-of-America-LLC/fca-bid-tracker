@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-07-01T13:27:36.237Z",
+  "cyclesRequested": 6,
+  "elapsedSeconds": 318,
+  "failOnSoft": true,
+  "softFailureCount": 0,
+  "warnings": [],
+  "cycles": [
+    {
+      "cycle": 1,
+      "elapsedSeconds": 47,
+      "softFailures": []
+    },
+    {
+      "cycle": 2,
+      "elapsedSeconds": 51,
+      "softFailures": []
+    },
+    {
+      "cycle": 3,
+      "elapsedSeconds": 43,
+      "softFailures": []
+    },
+    {
+      "cycle": 4,
+      "elapsedSeconds": 46,
+      "softFailures": []
+    },
+    {
+      "cycle": 5,
+      "elapsedSeconds": 51,
+      "softFailures": []
+    },
+    {
+      "cycle": 6,
+      "elapsedSeconds": 79,
+      "softFailures": []
+    }
+  ]
+}

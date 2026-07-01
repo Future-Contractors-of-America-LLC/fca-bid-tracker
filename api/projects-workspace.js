@@ -1,6 +1,6 @@
 import { app } from "@azure/functions";
 import { requireAuth, withSessionRefresh } from "./auth-boundary.js";
-import { getProjectWorkspace } from "./workspace-read-models.js";
+import { proxyCentralRequest } from "./central-proxy.js";
 
 app.http("projects-workspace", {
   methods: ["GET"],
@@ -10,30 +10,10 @@ app.http("projects-workspace", {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;
 
-    const tenantId = auth.tenantId;
     const projectId = context?.triggerMetadata?.projectId || request.params?.projectId;
-
-    try {
-      const item = getProjectWorkspace(tenantId, projectId);
-      return withSessionRefresh(
-        {
-          status: 200,
-          jsonBody: {
-            ok: true,
-            item,
-            backingSource: "api-workflow-store",
-          },
-        },
-        auth,
-      );
-    } catch (error) {
-      return {
-        status: 404,
-        jsonBody: {
-          ok: false,
-          error: error?.message || "Project workspace not found.",
-        },
-      };
-    }
+    const resourcePath = projectId
+      ? `/projects/${encodeURIComponent(projectId)}/workspace`
+      : "/projects/workspace";
+    return withSessionRefresh(await proxyCentralRequest(request, resourcePath), auth);
   },
 });

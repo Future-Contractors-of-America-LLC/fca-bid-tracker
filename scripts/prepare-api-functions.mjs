@@ -7,12 +7,7 @@ const outRoot = path.join(repoRoot, 'api_generated');
 
 /** Flat legacy handlers — kept for imports only, never deployed as HTTP functions. */
 const LEGACY_FLAT_ONLY = new Set([
-  'workflow-store.js',
-  'workspace-read-models.js',
   'leads-store.js',
-  'finance-store.js',
-  'commercial-store.js',
-  'warranty-store.js',
   'remediation-store.js',
   'customer-account-store.js',
   'academy-store.js',

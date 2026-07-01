@@ -1,6 +1,6 @@
 import { app } from "@azure/functions";
 import { requireAuth, withSessionRefresh } from "./auth-boundary.js";
-import { getOpportunityWorkspace } from "./workspace-read-models.js";
+import { proxyCentralRequest } from "./central-proxy.js";
 
 app.http("opportunities-workspace", {
   methods: ["GET"],
@@ -10,30 +10,10 @@ app.http("opportunities-workspace", {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;
 
-    const tenantId = auth.tenantId;
     const opportunityId = context?.triggerMetadata?.opportunityId || request.params?.opportunityId;
-
-    try {
-      const item = getOpportunityWorkspace(tenantId, opportunityId);
-      return withSessionRefresh(
-        {
-          status: 200,
-          jsonBody: {
-            ok: true,
-            item,
-            backingSource: "api-workflow-store",
-          },
-        },
-        auth,
-      );
-    } catch (error) {
-      return {
-        status: 404,
-        jsonBody: {
-          ok: false,
-          error: error?.message || "Opportunity workspace not found.",
-        },
-      };
-    }
+    const resourcePath = opportunityId
+      ? `/opportunities/${encodeURIComponent(opportunityId)}/workspace`
+      : "/opportunities/workspace";
+    return withSessionRefresh(await proxyCentralRequest(request, resourcePath), auth);
   },
 });
