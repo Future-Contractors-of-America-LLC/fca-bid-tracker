@@ -3,7 +3,7 @@ import PortalShell from "../../components/PortalShell";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { fetchAuricruxActions } from "../../api/auricruxActionsClient";
+import { fetchAuricruxActions, runAuricruxCampaignSequence } from "../../api/auricruxActionsClient";
 import usePortalApiLoad from "../../hooks/usePortalApiLoad";
 import PortalApiStatusBanner from "../../components/portal/PortalApiStatusBanner";
 import { auricruxCommsChannels, auricruxRail, routeStateOverlays } from "../../systemState";
@@ -47,6 +47,9 @@ function normalizeGuidedAction(action) {
 export default function PortalAuricrux() {
   const { session } = useCustomerSession();
   const { state } = useWorkspaceState();
+  const [campaignBusy, setCampaignBusy] = useState(false);
+  const [campaignError, setCampaignError] = useState("");
+  const [campaignResult, setCampaignResult] = useState(null);
   const actionsLoad = usePortalApiLoad(() => fetchAuricruxActions(), []);
   const liveActions = actionsLoad.data?.items || [];
 
@@ -67,6 +70,26 @@ export default function PortalAuricrux() {
     href: `/portal/messages#${item.label.toLowerCase()}`,
     ctaLabel: `Open ${item.label}`,
   }));
+
+  async function runCampaignLaunch() {
+    if (campaignBusy) return;
+    setCampaignBusy(true);
+    setCampaignError("");
+    setCampaignResult(null);
+    try {
+      const result = await runAuricruxCampaignSequence({
+        sourceRoute: "/portal/auricrux",
+        targetObjectId: session?.company || state?.tenant?.name || "fca-campaign-launch",
+        segmentKeys: ["electrical", "general-contractors", "specialty-trades"],
+      });
+      setCampaignResult(result);
+      await actionsLoad.reload();
+    } catch (error) {
+      setCampaignError(error.message || "Auricrux campaign launch execution failed.");
+    } finally {
+      setCampaignBusy(false);
+    }
+  }
 
   return (
     <PortalShell
@@ -93,6 +116,53 @@ export default function PortalAuricrux() {
             ? "Actions below are loaded from your workspace API."
             : "Live actions will appear here once the workspace API responds. Use Ask Auricrux in the header for immediate help."}
         </p>
+      </div>
+
+      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: "4px solid #1d4ed8", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+        <div style={{ ...portalEyebrowStyle, color: "#1d4ed8" }}>Campaign operator</div>
+        <h2 style={{ marginTop: 8, marginBottom: 8 }}>Run Auricrux sales and marketing launch</h2>
+        <p style={{ color: portalTokens.body, lineHeight: 1.6, marginTop: 0 }}>
+          Executes six governed steps: ICP and offer lock, conversion spine, funnel instrumentation, channel pilot launch, sales SLA playbook, and weekly optimization loop.
+        </p>
+        <button
+          type="button"
+          onClick={runCampaignLaunch}
+          disabled={campaignBusy}
+          style={{ ...portalButtonPrimary, border: "none", cursor: campaignBusy ? "not-allowed" : "pointer", opacity: campaignBusy ? 0.65 : 1 }}
+        >
+          {campaignBusy ? "Auricrux launching campaign..." : "Run campaign launch with Auricrux"}
+        </button>
+        {campaignError ? (
+          <p style={{ color: "#b91c1c", marginTop: 10, marginBottom: 0 }}>{campaignError}</p>
+        ) : null}
+        {campaignResult ? (
+          <div style={{ marginTop: 12, border: `1px solid ${portalTokens.border}`, borderRadius: 12, padding: 12, background: "#fff" }}>
+            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 6 }}>
+              {campaignResult.ok ? "Campaign launch executed successfully" : "Campaign launch completed with issues"}
+            </div>
+            <div style={{ color: portalTokens.muted, fontSize: 13, marginBottom: 10 }}>
+              {campaignResult.campaignName} · {campaignResult.segmentKeys.join(" | ")}
+            </div>
+            <div style={{ display: "grid", gap: 8 }}>
+              {(campaignResult.results || []).map((item) => (
+                <div key={item.step} style={{ border: `1px solid ${portalTokens.border}`, borderRadius: 10, padding: 10, background: "#f8fafc" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
+                    <div style={{ fontWeight: 700 }}>{item.capabilityId}</div>
+                    <div style={{ color: item.ok ? "#047857" : "#b91c1c", fontSize: 12, fontWeight: 700 }}>
+                      {item.ok ? "PASS" : "FAIL"}
+                    </div>
+                  </div>
+                  <div style={{ color: portalTokens.muted, fontSize: 12, marginTop: 4 }}>
+                    {item.mode.toUpperCase()} · {item.step}
+                  </div>
+                  {item.guidance ? (
+                    <p style={{ color: portalTokens.body, fontSize: 13, marginBottom: 0, marginTop: 8, lineHeight: 1.55 }}>{item.guidance}</p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid #d4a32a`, background: "linear-gradient(135deg, #fffbeb 0%, #fff 100%)" }}>

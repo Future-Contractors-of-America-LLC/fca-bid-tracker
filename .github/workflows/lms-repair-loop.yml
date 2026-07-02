@@ -123,7 +123,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.AURICRUX_GITHUB_TOKEN || github.token }}
         run: |
-          gh workflow run azure-static-web-apps-delightful-mushroom-0de67860f.yml \
+          if gh workflow run azure-static-web-apps-delightful-mushroom-0de67860f.yml \
             --repo "${{ github.repository }}" \
-            --ref main
-          echo "Dispatched SWA deploy after LMS repair loop advanced main."
+            --ref main; then
+            echo "Dispatched SWA deploy after LMS repair loop advanced main."
+          else
+            echo "SWA dispatch skipped (token/workflow permission). Main was already advanced by this run."
+          fi
