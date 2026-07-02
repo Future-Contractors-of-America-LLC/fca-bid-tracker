@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-02T09:50:23.875Z",
-  "runId": "LMS-WFR-1782985743719",
+  "generatedAt": "2026-07-02T10:40:52.614Z",
+  "runId": "LMS-WFR-1782988774792",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -99,12 +99,19 @@
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 131.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 132.",
   "state": {
-    "runCount": 131,
+    "runCount": 132,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 131,
+    "consecutiveFailures": 132,
     "history": [
+      {
+        "at": "2026-07-02T10:40:52.614Z",
+        "runId": "LMS-WFR-1782988774792",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-07-02T09:50:23.875Z",
         "runId": "LMS-WFR-1782985743719",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-06-30T14:30:24.152Z",
-        "runId": "LMS-WFR-1782829678920",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-07-02T09:50:23.875Z",
+    "lastRunUtc": "2026-07-02T10:40:52.614Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782985743719"
+    "lastRunId": "LMS-WFR-1782988774792"
   }
 }
