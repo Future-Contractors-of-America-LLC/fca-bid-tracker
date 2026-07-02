@@ -10,6 +10,6 @@
   "failed_step": "script:validate-academy-native-commerce-journey.mjs",
   "target_repo": "auricrux-central",
   "generated_at": "2026-07-02T14:48:18.363Z",
-  "updatedAtUtc": "2026-07-02T14:48:18.363Z",
+  "updatedAtUtc": "2026-07-02T15:29:50.580Z",
   "trigger_source": "LMS-WFR-1783003610552"
 }
