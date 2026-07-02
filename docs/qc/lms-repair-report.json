@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-02T13:46:39.578Z",
-  "runId": "LMS-WFR-1782999765160",
+  "generatedAt": "2026-07-02T14:48:18.363Z",
+  "runId": "LMS-WFR-1783003610552",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -84,27 +84,34 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+      "guidance": "I have licensed professional experience across construction trades and project management. In this segment on validating academy native commerce journey, scope the lab to native learner commerce flows. Build the verification script around learner record updates, enrollment validation, and revenue event logging. Confirm lab success with native learner commerce recorded in the LMS."
     },
     {
       "step": "SWA route /academy",
-      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
     },
     {
       "step": "SWA route /academy/catalog",
-      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
     }
   ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 134.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 135.",
   "state": {
-    "runCount": 134,
+    "runCount": 135,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 134,
+    "consecutiveFailures": 135,
     "history": [
+      {
+        "at": "2026-07-02T14:48:18.363Z",
+        "runId": "LMS-WFR-1783003610552",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-07-02T13:46:39.578Z",
         "runId": "LMS-WFR-1782999765160",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-06-30T15:17:46.765Z",
-        "runId": "LMS-WFR-1782832588958",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-07-02T13:46:39.578Z",
+    "lastRunUtc": "2026-07-02T14:48:18.363Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782999765160"
+    "lastRunId": "LMS-WFR-1783003610552"
   }
 }
