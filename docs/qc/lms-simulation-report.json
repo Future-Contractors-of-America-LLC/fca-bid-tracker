@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-02T02:24:19.601Z",
-  "runId": "LMS-SIM-1782959035986",
+  "generatedAt": "2026-07-02T03:33:49.556Z",
+  "runId": "LMS-SIM-1782963148320",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "swaOrigin": "https://futurecontractorsofamerica.com",
   "scope": "FCA Academy LMS simulation",
@@ -1023,7 +1023,7 @@
     {
       "name": "Academy commerce intake",
       "status": "pass",
-      "detail": "INTAKE-1782959057003",
+      "detail": "INTAKE-1782963228048",
       "phase": "learner-workflow"
     },
     {
