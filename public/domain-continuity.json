@@ -1,11 +1,11 @@
 {
   "service": "fca-bid-tracker",
   "witnessType": "domain-continuity",
-  "generatedAt": "2026-07-03T10:32:06.642Z",
+  "generatedAt": "2026-07-03T13:48:04.799Z",
   "source": "github-actions",
   "gitRef": "refs/heads/main",
-  "gitSha": "4d76ce4969c4369d3a870f29bbf2d011bf6df785",
-  "runId": "28654560065",
+  "gitSha": "6f1c8127ba73a999c6c967f4abbc947dbe625044",
+  "runId": "28664403980",
   "defaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
   "expectedHosts": [
     "futurecontractorsofamerica.com",
