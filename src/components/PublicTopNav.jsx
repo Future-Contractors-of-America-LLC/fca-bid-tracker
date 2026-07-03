@@ -497,7 +497,6 @@ export default function PublicTopNav({ mode = "public" }) {
                   {item.label}
                 </a>
               ))}
-            </nav>
             </div>
           ) : null}
           {(mode === "portal" ? portalNavGroups : [{ label: "Site", items: [{ label: "Home", href: "/" }] }, ...NAV_MENUS.map((m) => ({ label: m.label, items: m.items }))]).map((group) => (
