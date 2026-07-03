@@ -28,6 +28,14 @@ export default function ShellFooter() {
         </div>
 
         <div>
+          <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 14 }}>Trust & Governance</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, fontSize: 14, marginBottom: 14 }}>
+            <a href="/login?next=/portal/admin" style={{ color: "#334155", textDecoration: "none", fontWeight: 600 }}>Trust workspace</a>
+            <a href="/portal/audit" style={{ color: "#334155", textDecoration: "none" }}>Immutable audit trail</a>
+            <a href="/security" style={{ color: "#334155", textDecoration: "none" }}>Security and compliance</a>
+            <a href="/privacy" style={{ color: "#334155", textDecoration: "none" }}>Data privacy posture</a>
+          </div>
+
           <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 14 }}>Legal</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, fontSize: 14 }}>
             <a href="/legal" style={{ color: "#334155", textDecoration: "none", fontWeight: 600 }}>Legal Center</a>
