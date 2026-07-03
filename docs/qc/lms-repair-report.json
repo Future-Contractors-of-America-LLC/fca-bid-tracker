@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-03T12:46:52.658Z",
-  "runId": "LMS-WFR-1783082710768",
+  "generatedAt": "2026-07-03T13:58:55.969Z",
+  "runId": "LMS-WFR-1783086886443",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -84,7 +84,7 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
     },
     {
       "step": "SWA route /academy",
@@ -92,19 +92,26 @@
     },
     {
       "step": "SWA route /academy/catalog",
-      "guidance": "I specialize in Academy and training for contractor licensing, certification, and apprenticeship development. In this segment on Surface Water Analysis (SWA), scope and professional expectations for surveyors and civil engineers, I am teaching you the way I would onboard someone on my own payroll. Develop skill in surface water analysis for accurate site assessments, stormwater management, and reg"
+      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
     }
   ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 145.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 146.",
   "state": {
-    "runCount": 145,
+    "runCount": 146,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 145,
+    "consecutiveFailures": 146,
     "history": [
+      {
+        "at": "2026-07-03T13:58:55.969Z",
+        "runId": "LMS-WFR-1783086886443",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-07-03T12:46:52.658Z",
         "runId": "LMS-WFR-1783082710768",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-07-01T09:49:37.748Z",
-        "runId": "LMS-WFR-1782899088504",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-07-03T12:46:52.658Z",
+    "lastRunUtc": "2026-07-03T13:58:55.969Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1783082710768"
+    "lastRunId": "LMS-WFR-1783086886443"
   }
 }
