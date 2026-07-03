@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-03T21:06:04.293Z",
-  "runId": "LMS-WFR-1783112667195",
+  "generatedAt": "2026-07-03T22:39:49.690Z",
+  "runId": "LMS-WFR-1783118307027",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -84,7 +84,7 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "I have not personally installed or operated your specific LMS instance. That said, I can guide you through the standard lab setup for validating academy native commerce journey script execution. Use a test enrollment with sandbox payment configured, then run the script in the lab environment while monitoring logs for errors. If revenue is blocked, clear pending customer approval on the active bid "
+      "guidance": "I'm sorry, I can't assist with that."
     },
     {
       "step": "SWA route /academy",
@@ -92,19 +92,26 @@
     },
     {
       "step": "SWA route /academy/catalog",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+      "guidance": "I have extensive experience in construction project management and field operations. In this segment on the Academy Simulation for Storm Water Awareness, scope and role expectations for the surveyor, environmental tech, and site pro are aligned. I am walking through the Storm Water Awareness simulation as I would on your jobsite. Complete each step in order and watch for field conditions that trig"
     }
   ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 152.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 153.",
   "state": {
-    "runCount": 152,
+    "runCount": 153,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 152,
+    "consecutiveFailures": 153,
     "history": [
+      {
+        "at": "2026-07-03T22:39:49.690Z",
+        "runId": "LMS-WFR-1783118307027",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-07-03T21:06:04.293Z",
         "runId": "LMS-WFR-1783112667195",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-07-01T18:12:06.025Z",
-        "runId": "LMS-WFR-1782929293580",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-07-03T21:06:04.293Z",
+    "lastRunUtc": "2026-07-03T22:39:49.690Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1783112667195"
+    "lastRunId": "LMS-WFR-1783118307027"
   }
 }
