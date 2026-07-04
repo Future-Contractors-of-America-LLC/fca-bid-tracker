@@ -1,11 +1,11 @@
 # Build Evidence Report
 
 - Packet: 062Y
-- Generated: 2026-07-04T02:04:58.427Z
+- Generated: 2026-07-04T03:02:14.938Z
 
 ## Package scripts
 - build:system → npm run build
-- build → npx vite build && node scripts/post-spa-build.mjs
+- build → node scripts/clean-dist.mjs && npx vite build && node scripts/post-spa-build.mjs
 - validate:runtime-smoke → node scripts/runtime_smoke_check.cjs
 - capture:build-evidence → node scripts/build_evidence_capture.cjs
 

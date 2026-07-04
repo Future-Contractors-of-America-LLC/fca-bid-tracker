@@ -1,11 +1,11 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-07-04T02:04:59.163Z",
+  "generatedAt": "2026-07-04T03:02:15.609Z",
   "github": {
     "repository": "Future-Contractors-of-America-LLC/fca-bid-tracker",
     "ref": "refs/heads/main",
-    "sha": "4bfe8e8428bc12b32e132d92be6b4cbfda5295c8",
-    "runId": "28691597430",
+    "sha": "e6084679b032cb505bc4d5c627b18020b0220fde",
+    "runId": "28692887546",
     "workflow": "FCA Runtime Smoke Validation"
   },
   "artifacts": {
@@ -15,7 +15,7 @@
   "buildEvidenceSummary": {
     "packet": "062Y",
     "buildSystem": "npm run build",
-    "build": "npx vite build && node scripts/post-spa-build.mjs",
+    "build": "node scripts/clean-dist.mjs && npx vite build && node scripts/post-spa-build.mjs",
     "hasBuildValidationWorkflow": true,
     "invokesBuildSystem": true
   },
