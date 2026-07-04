@@ -11,7 +11,7 @@ function normalizeProjectRecord(project = {}, index = 0) {
     stage: project.stage || "Estimating",
     nextAction: project.nextAction || "Advance project",
     owner: project.owner || "Unassigned",
-    due: project.due || "TBD",
+    due: project.due || "Schedule date pending confirmation",
     superintendent: project.superintendent || "Pending assignment",
     permitStatus: project.permitStatus || "Permit status pending",
     siteStatus: project.siteStatus || "Site status pending",

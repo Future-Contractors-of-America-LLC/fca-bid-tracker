@@ -8,7 +8,7 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import usePortalApiLoad from "../../hooks/usePortalApiLoad";
 import useWorkflowAudit from "../../hooks/useWorkflowAudit";
 import { fetchPortalMessages } from "../../api/portalClient";
-import { PortalEmptyState } from "../../components/portal/PortalPrimitives";
+import { PortalAlert, PortalEmptyState } from "../../components/portal/PortalPrimitives";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -31,6 +31,7 @@ const badgeStyle = {
 export default function PortalNotifications() {
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { session, isAuthenticated } = useCustomerSession();
+  const accountSource = session?.accountSource || state.meta.accountSource;
   const projectId = state.project?.id || "";
   const { auditEvents, meta: auditMeta, refreshAudit } = useWorkflowAudit(projectId);
   const messagesLoad = usePortalApiLoad(() => fetchPortalMessages(), []);
@@ -116,6 +117,11 @@ export default function PortalNotifications() {
           refreshAudit();
         }}
       />
+      {accountSource === "local-fallback" ? (
+        <PortalAlert tone="warning" title="Workspace continuity mode">
+          Notifications are running in local-fallback mode. Live alerts will resume once connectivity returns.
+        </PortalAlert>
+      ) : null}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
         <div style={cardStyle}>

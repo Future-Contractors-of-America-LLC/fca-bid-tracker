@@ -10,8 +10,9 @@ import {
   fetchPortalMessages,
   sendPortalMessage,
 } from "../../api/portalClient";
+import { createWorkflowAuditEvent } from "../../api/workflowClient";
 import { drainCommsQueue, enqueueTransactionalEmail } from "../../api/commsClient";
-import { PortalEmptyState } from "../../components/portal/PortalPrimitives";
+import { PortalAlert, PortalEmptyState } from "../../components/portal/PortalPrimitives";
 import { auricruxCommsChannels, routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -34,6 +35,29 @@ const channelMap = {
   lecture: ["Lecture"],
 };
 
+const escalationRules = [
+  {
+    className: "E2",
+    reason: "Potential legal escalation",
+    pattern: /(lawsuit|attorney|legal\s+notice|breach\s+of\s+contract|termination\s+for\s+cause)/i,
+  },
+  {
+    className: "E4",
+    reason: "Potential safety escalation",
+    pattern: /(injury|unsafe|osha|safety\s+incident|near\s+miss)/i,
+  },
+  {
+    className: "E1",
+    reason: "High-emotion customer distress",
+    pattern: /(fire\s+you|cancel\s+contract|furious|angry|outrageous|unacceptable)/i,
+  },
+];
+
+function classifyEscalation(subject = "", message = "") {
+  const combined = `${subject}\n${message}`;
+  return escalationRules.find((rule) => rule.pattern.test(combined)) || null;
+}
+
 function readBrandSkin() {
   if (typeof window === "undefined") return { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" };
   try {
@@ -55,10 +79,12 @@ export default function PortalMessages() {
   const brandSkin = readBrandSkin();
   const [drafts, setDrafts] = useState({ subject: "", message: "", channel: "email" });
   const [sendError, setSendError] = useState("");
+  const [escalationNotice, setEscalationNotice] = useState("");
 
   const messagesLoad = usePortalApiLoad(() => fetchPortalMessages(), []);
 
-  const sentItems = messagesLoad.data?.items || [];
+  const sentItems = (messagesLoad.data?.drafts && messagesLoad.data.drafts.sent) || messagesLoad.data?.items || [];
+  const apiBacking = messagesLoad.backingSource || state.meta.backingSource;
 
   useEffect(() => {
     function syncChannel() {
@@ -98,11 +124,13 @@ export default function PortalMessages() {
   function sendMessage() {
     if (!drafts.subject.trim() || !drafts.message.trim()) return;
     setSendError("");
+    setEscalationNotice("");
     const payload = {
       subject: drafts.subject,
       message: drafts.message,
       channel: drafts.channel,
     };
+    const escalation = classifyEscalation(payload.subject, payload.message);
     const emailPromise = payload.channel === "email" && session?.email
       ? enqueueTransactionalEmail({
           subject: payload.subject,
@@ -115,9 +143,24 @@ export default function PortalMessages() {
 
     emailPromise
       .then(() => sendPortalMessage(payload))
+      .then(() => {
+        if (!escalation) return null;
+        return createWorkflowAuditEvent({
+          eventType: "call_human",
+          actorType: "auricrux",
+          severity: escalation.className,
+          note: `${escalation.reason}. Advisory escalation raised in parallel while autonomous execution continued.`,
+          route: "/portal/messages",
+          channel: payload.channel,
+          subject: payload.subject,
+        }).catch(() => null);
+      })
       .then(() => messagesLoad.reload())
       .then(() => {
         setDrafts({ subject: "", message: "", channel: drafts.channel });
+        if (escalation) {
+          setEscalationNotice(`${escalation.className} advisory escalation sent to human oversight queue (non-blocking).`);
+        }
         refreshSyncStamp(`Customer communication sent through ${payload.channel}.`);
       })
       .catch((err) => {
@@ -151,8 +194,18 @@ export default function PortalMessages() {
         onRetry={messagesLoad.reload}
         label="messages"
       />
+      {apiBacking === "local-fallback" ? (
+        <PortalAlert tone="warning" title="Workspace continuity mode">
+          Messages are currently running in local-fallback mode. Continue operations while live API connectivity restores.
+        </PortalAlert>
+      ) : null}
       {sendError ? (
         <PortalEmptyState title="Send failed" detail={sendError} />
+      ) : null}
+      {escalationNotice ? (
+        <PortalAlert tone="info" title="Human oversight notified">
+          {escalationNotice}
+        </PortalAlert>
       ) : null}
       <CustomerCommsLaunchpad session={session} title="Launch customer-enabled communications lanes" />
 

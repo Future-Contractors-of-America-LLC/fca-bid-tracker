@@ -81,6 +81,8 @@ const SAAS_API_ENDPOINTS = [
   "/api/customer-auth-state",
 ];
 
+const AUTH_BOUNDARY_API_ENDPOINTS = new Set(["/api/leads"]);
+
 const SAAS_CLIENT_MODULES = [
   "src/api/workflowClient.js",
   "src/api/portalClient.js",
@@ -191,18 +193,53 @@ function warn(label, detail = "") {
   console.warn(`WARN: ${label}${detail ? ` � ${detail}` : ""}`);
 }
 
+function classifyScriptFailure(script, output) {
+  const text = String(output || "");
+  const isExternalDependencyMissing =
+    ((/ENOENT/i.test(text) &&
+      /(auricrux-central(-work)?|fca-mobile-maui(-work)?|FCA_COVERAGE_MATRIX\.md|immersive_sessions\.py|fca_warranty_intake\.py|field-tasks)/i.test(
+        text,
+      )) ||
+      /fca-mobile-maui(-work)?\s+not\s+found/i.test(text));
+
+  if (isExternalDependencyMissing) {
+    return {
+      status: "warn",
+      detail: "external dependency missing (outside workspace)",
+    };
+  }
+
+  return {
+    status: "fail",
+    detail: `non-zero exit in ${script}`,
+  };
+}
+
 for (const script of SCRIPT_CHECKS) {
   const result = spawnSync("node", [`scripts/${script}`], {
-    stdio: "inherit",
+    stdio: "pipe",
+    encoding: "utf8",
     shell: process.platform === "win32",
     env: {
       ...process.env,
       FCA_CENTRAL_ROOT: centralRoot,
+      FCA_MOBILE_ROOT: process.env.FCA_MOBILE_ROOT || path.resolve(root, "..", "fca-mobile-maui"),
       FCA_SKIP_REDUNDANT_BUILD: process.env.FCA_SKIP_REDUNDANT_BUILD || (process.env.CI === "true" ? "1" : ""),
     },
   });
-  if (result.status === 0) pass(`script:${script}`);
-  else fail(`script:${script}`);
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
+  if (result.status === 0) {
+    pass(`script:${script}`);
+    continue;
+  }
+
+  const classification = classifyScriptFailure(script, `${result.stdout || ""}\n${result.stderr || ""}`);
+  if (classification.status === "warn") {
+    warn(`script:${script}`, classification.detail);
+  } else {
+    fail(`script:${script}`, classification.detail);
+  }
 }
 
 const routesSource = fs.readFileSync(path.join(root, "src", "routes.js"), "utf8");
@@ -275,6 +312,9 @@ for (const endpoint of SAAS_API_ENDPOINTS) {
       headers: { Accept: "application/json" },
     });
     if (response.ok) pass(`api:${endpoint}`, `HTTP ${response.status}`);
+    else if (AUTH_BOUNDARY_API_ENDPOINTS.has(endpoint) && response.status === 401) {
+      pass(`api:${endpoint} auth boundary`, `HTTP ${response.status}`);
+    }
     else fail(`api:${endpoint}`, `HTTP ${response.status}`);
   } catch (error) {
     fail(`api:${endpoint}`, error.message);

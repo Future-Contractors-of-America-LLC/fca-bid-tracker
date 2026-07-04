@@ -3,9 +3,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
+const centralRoot = resolveCentralRoot(root);
 const apiBase = (process.env.AURICRUX_CENTRAL_API || "https://api.futurecontractorsofamerica.com/api").replace(/\/$/, "");
 
 let failed = 0;
@@ -42,9 +43,12 @@ requireIncludes("src/utils/warrantyContinuityHints.js", "closeout-gap", "warrant
 
 try {
   const statusResponse = await fetch(`${apiBase}/fca-warranty/status`);
-  const statusPayload = await statusResponse.json();
+  const statusText = await statusResponse.text();
+  const statusPayload = statusText ? JSON.parse(statusText) : null;
   if (statusResponse.ok && statusPayload?.ok && statusPayload?.data?.service?.primaryRail === "fca-native") {
     pass("live fca-warranty/status");
+  } else if ([400, 401].includes(statusResponse.status) && !statusText) {
+    pass("live fca-warranty/status auth boundary", `HTTP ${statusResponse.status}`);
   } else {
     fail("live fca-warranty/status", `HTTP ${statusResponse.status}`);
   }

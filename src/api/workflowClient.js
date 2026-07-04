@@ -93,6 +93,19 @@ export async function fetchWorkflowAudit(params = {}) {
   return payload;
 }
 
+export async function createWorkflowAuditEvent(body = {}) {
+  const response = await centralFetch("/api/workflow-audit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok) {
+    throw new Error(payload?.error || "Unable to write workflow audit event.");
+  }
+  return payload;
+}
+
 export async function fetchOpportunityWorkspace(opportunityId) {
   const response = await centralFetch(
     `/api/opportunities/${encodeURIComponent(opportunityId)}/workspace`,

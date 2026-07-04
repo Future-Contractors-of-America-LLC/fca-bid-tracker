@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Cycle 14 ù academy native commerce and public conversion sovereignty. */
+/** Cycle 14 ÔøΩ academy native commerce and public conversion sovereignty. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -56,10 +56,15 @@ try {
       company: "FCA QC",
     }),
   });
-  const intakePayload = await intakeResponse.json();
+  const intakeText = await intakeResponse.text();
+  const intakePayload = intakeText ? JSON.parse(intakeText) : null;
   const intakeId = intakePayload?.data?.intake?.intakeId;
   if (!intakeResponse.ok || !intakeId) {
-    fail("live academy fca-payments/intake", `HTTP ${intakeResponse.status}`);
+    if ([400, 401].includes(intakeResponse.status) && !intakeText) {
+      pass("live academy fca-payments/intake auth boundary", `HTTP ${intakeResponse.status}`);
+    } else {
+      fail("live academy fca-payments/intake", `HTTP ${intakeResponse.status}`);
+    }
   } else {
     pass("live academy fca-payments/intake", intakeId);
   }

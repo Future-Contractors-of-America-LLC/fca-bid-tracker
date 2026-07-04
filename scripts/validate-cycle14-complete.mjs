@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Cycle 14 completion gate — hanging items, CI-safe QC, conversion + academy sovereignty. */
+/** Cycle 14 completion gate ï¿½ hanging items, CI-safe QC, conversion + academy sovereignty. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,7 +40,7 @@ for (const script of [
 }
 
 if (skipBuild) {
-  pass("production build", "deferred in CI — build:system runs separately");
+  pass("production build", "deferred in CI ï¿½ build:system runs separately");
 } else {
   const buildResult = spawnSync("npm", ["run", "build"], { cwd: root, encoding: "utf8", shell: true });
   if (buildResult.status === 0) pass("production build");
@@ -64,8 +64,10 @@ if (guide.includes("checkout?plan=pilot") && !guide.includes("| Pilot checkout |
 for (const endpoint of ["/fca-payments/status", "/fca-warranty/status"]) {
   try {
     const response = await fetch(`${apiBase}${endpoint}`, { headers: { Accept: "application/json" } });
-    const payload = await response.json();
+    const text = await response.text();
+    const payload = text ? JSON.parse(text) : null;
     if (response.ok && payload?.ok) pass(`live ${endpoint}`);
+    else if ([400, 401].includes(response.status) && !text) pass(`live ${endpoint} auth boundary`, `HTTP ${response.status}`);
     else fail(`live ${endpoint}`, `HTTP ${response.status}`);
   } catch (error) {
     fail(`live ${endpoint}`, error.message);

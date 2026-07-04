@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-/** Precon sovereignty journey — lead, estimate, proposal, award, briefing, native formats, mobile. */
+/** Precon sovereignty journey ï¿½ lead, estimate, proposal, award, briefing, native formats, mobile. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveMobileRoot } from "./lib/fcaMobileRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const mobileRoot = path.resolve(root, "..", "fca-mobile-maui-work");
+const mobileRoot = resolveMobileRoot(root);
 let failed = 0;
 
 function read(relativePath, base = root) {
@@ -18,7 +19,7 @@ function pass(label) {
 
 function fail(label, detail = "") {
   failed += 1;
-  console.error(`FAIL: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function requireIncludes(relativePath, marker, label, base = root) {
@@ -65,7 +66,7 @@ if (fs.existsSync(path.join(mobileRoot, "src", "FcaMobile", "Services", "FcaApiC
     mobileRoot,
   );
 } else {
-  fail("mobile repo", "fca-mobile-maui-work not found");
+  fail("mobile repo", "fca-mobile-maui not found");
 }
 
 const outputDir = path.join(root, "docs", "qc");

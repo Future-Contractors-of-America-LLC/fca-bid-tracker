@@ -24,7 +24,7 @@ function normalizeBidRecord(bid = {}, index = 0) {
     blocker: bid.blocker || "No blocker recorded",
     estimator: bid.estimator || "Unassigned",
     scopePackage: bid.scopePackage || "Scope pending",
-    dueDate: bid.dueDate || "TBD",
+    dueDate: bid.dueDate || "Schedule date pending confirmation",
     tradeCoverage: bid.tradeCoverage || "Coverage pending",
     nextCommercialMove: bid.nextCommercialMove || "Advance commercial review",
     qualification: normalizeQualification(bid.qualification, bid),
