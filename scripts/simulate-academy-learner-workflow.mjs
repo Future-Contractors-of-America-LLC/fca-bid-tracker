@@ -124,7 +124,7 @@ export async function runAcademyLearnerWorkflow(apiBase, options = {}) {
       const enrollments = lms.payload?.enrollments?.length ?? 0;
       say("pass", "Academy LMS snapshot", `${learners} learners, ${enrollments} enrollments`);
     } else if (lms.response.status === 403) {
-      say("fail", "Academy LMS snapshot", "HTTP 403 ù LMS entitlement missing");
+      say("fail", "Academy LMS snapshot", "HTTP 403 ÔøΩ LMS entitlement missing");
     } else {
       say("fail", "Academy LMS snapshot", `HTTP ${lms.response.status}`);
     }
@@ -179,7 +179,7 @@ export async function runAcademyLearnerWorkflow(apiBase, options = {}) {
       method: "POST",
       body: {
         offerKind: "academy-course",
-        programKey: "lms-sim-qc-course",
+        programKey: "electrical-apprenticeship-level-1",
         email: "lms-sim@futurecontractorsofamerica.com",
         company: "FCA LMS Sim",
       },

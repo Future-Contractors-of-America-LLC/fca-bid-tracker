@@ -49,7 +49,7 @@ if (!apiBase) {
 }
 
 console.log("\n=== Phase 3: Live SWA route probes ===\n");
-const swa = await runLmsSwaProbes({ log: true });
+const swa = await runLmsSwaProbes({ apiBase, log: true });
 mergeSteps(swa.steps);
 
 console.log("\n=== Phase 4: Central academy artifacts (best-effort) ===\n");

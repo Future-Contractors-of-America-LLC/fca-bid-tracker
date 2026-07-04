@@ -1,20 +1,20 @@
 {
-  "generatedAt": "2026-07-04T03:38:50.786Z",
-  "runId": "LMS-SIM-1783136317862",
+  "generatedAt": "2026-07-04T03:46:36.466Z",
+  "runId": "LMS-SIM-1783136769069",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "swaOrigin": "https://futurecontractorsofamerica.com",
   "scope": "FCA Academy LMS simulation",
   "summary": {
-    "passed": 169,
-    "failed": 4,
-    "skipped": 0,
+    "passed": 172,
+    "failed": 0,
+    "skipped": 1,
     "total": 173
   },
-  "complete": false,
+  "complete": true,
   "phases": {
-    "staticQc": 1,
+    "staticQc": 0,
     "learnerWorkflow": 0,
-    "swaProbes": 3,
+    "swaProbes": 0,
     "centralArtifacts": 0
   },
   "steps": [
@@ -56,7 +56,7 @@
     },
     {
       "name": "script:validate-academy-native-commerce-journey.mjs",
-      "status": "fail",
+      "status": "pass",
       "detail": "",
       "phase": "static-qc"
     },
@@ -944,8 +944,8 @@
     },
     {
       "name": "Academy customer login",
-      "status": "pass",
-      "detail": "founder.test@futurecontractorsofamerica.com",
+      "status": "skip",
+      "detail": "Set FCA_SIM_LOGIN_EMAIL/FCA_SIM_LOGIN_PASSWORD or FCA_SIM_ACCOUNTS_FILE (see docs/FOUNDER_PRODUCT_TEST_ACCESS.md)",
       "phase": "learner-workflow"
     },
     {
@@ -1005,7 +1005,7 @@
     {
       "name": "Academy LMS snapshot",
       "status": "pass",
-      "detail": "4 learners, 4 enrollments",
+      "detail": "4 learners, 11 enrollments",
       "phase": "learner-workflow"
     },
     {
@@ -1023,25 +1023,25 @@
     {
       "name": "Academy commerce intake",
       "status": "pass",
-      "detail": "INTAKE-1783136329366",
+      "detail": "INTAKE-1783136792818",
       "phase": "learner-workflow"
     },
     {
       "name": "SWA route /academy",
-      "status": "fail",
-      "detail": "shell OK but API probe failed (404)",
+      "status": "pass",
+      "detail": "200 SPA shell OK",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /academy/catalog",
-      "status": "fail",
-      "detail": "shell OK but API probe failed (404)",
+      "status": "pass",
+      "detail": "200 SPA shell OK",
       "phase": "swa-probes"
     },
     {
       "name": "SWA route /academy/store",
-      "status": "fail",
-      "detail": "shell OK but API probe failed (404)",
+      "status": "pass",
+      "detail": "200 SPA shell OK",
       "phase": "swa-probes"
     },
     {
@@ -1053,7 +1053,7 @@
     {
       "name": "Central academy artifacts",
       "status": "pass",
-      "detail": "skipped - auricrux-central sibling not present",
+      "detail": "verify_academy_media.py --artifacts-only",
       "phase": "central-artifacts"
     }
   ]
