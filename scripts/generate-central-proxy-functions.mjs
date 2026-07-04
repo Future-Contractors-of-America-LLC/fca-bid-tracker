@@ -52,7 +52,7 @@ const PROXIES = [
   { dir: "portal-messages", route: "portal-messages", centralPath: "/portal-messages" },
   { dir: "portal-invoices", route: "portal-invoices", centralPath: "/portal-invoices" },
   { dir: "support-tickets", route: "support-tickets", centralPath: "/support-tickets" },
-  { dir: "academy-lms", route: "academy-lms", centralPath: "/academy-lms" },
+  { dir: "academy-lms", route: "academy-lms", centralPath: "/academy-lms", methods: ["get", "head", "post", "patch", "options"] },
   { dir: "auricrux", route: "auricrux", centralPath: "/auricrux", methods: ["get", "post", "options"] },
   {
     dir: "auricrux-speak",
