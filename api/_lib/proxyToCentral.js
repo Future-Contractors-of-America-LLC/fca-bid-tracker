@@ -5,7 +5,7 @@ const CENTRAL_API =
 const corsHeaders = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, HEAD, POST, PATCH, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Accept",
 };
 
@@ -37,20 +37,22 @@ async function runCentralProxy(context, req, resourcePath) {
 
   const query = buildQuery(req);
   const target = `${CENTRAL_API}${resourcePath}${query}`;
+  const requestMethod = String(req.method || "GET").toUpperCase();
+  const upstreamMethod = requestMethod === "HEAD" ? "GET" : requestMethod;
 
   try {
     const init = {
-      method: req.method || "GET",
+      method: upstreamMethod,
       headers: { Accept: "application/json", "Content-Type": "application/json" },
     };
 
-    if (req.method && !["GET", "HEAD"].includes(req.method.toUpperCase())) {
+    if (!["GET", "HEAD"].includes(requestMethod)) {
       init.body =
         typeof req.body === "string" ? req.body : JSON.stringify(req.body || {});
     }
 
     const response = await fetch(target, init);
-    const payload = await readCentralPayload(response);
+    const payload = requestMethod === "HEAD" ? "" : await readCentralPayload(response);
     context.res = {
       status: response.status,
       headers: corsHeaders,
