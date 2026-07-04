@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-03T22:39:49.690Z",
-  "runId": "LMS-WFR-1783118307027",
+  "generatedAt": "2026-07-04T01:14:31.014Z",
+  "runId": "LMS-WFR-1783127586657",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -84,7 +84,7 @@
   "auricruxReviews": [
     {
       "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "I'm sorry, I can't assist with that."
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
     },
     {
       "step": "SWA route /academy",
@@ -92,19 +92,26 @@
     },
     {
       "step": "SWA route /academy/catalog",
-      "guidance": "I have extensive experience in construction project management and field operations. In this segment on the Academy Simulation for Storm Water Awareness, scope and role expectations for the surveyor, environmental tech, and site pro are aligned. I am walking through the Storm Water Awareness simulation as I would on your jobsite. Complete each step in order and watch for field conditions that trig"
+      "guidance": "I have extensive experience in construction across multiple trades. In this segment on Software for Architects and Engineers, scope the role of software in architectural and engineering workflows, key application categories, and integration with design and construction processes."
     }
   ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 153.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 154.",
   "state": {
-    "runCount": 153,
+    "runCount": 154,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 153,
+    "consecutiveFailures": 154,
     "history": [
+      {
+        "at": "2026-07-04T01:14:31.014Z",
+        "runId": "LMS-WFR-1783127586657",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-07-03T22:39:49.690Z",
         "runId": "LMS-WFR-1783118307027",
@@ -307,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-07-01T21:33:50.403Z",
-        "runId": "LMS-WFR-1782941553323",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-07-03T22:39:49.690Z",
+    "lastRunUtc": "2026-07-04T01:14:31.014Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1783118307027"
+    "lastRunId": "LMS-WFR-1783127586657"
   }
 }
