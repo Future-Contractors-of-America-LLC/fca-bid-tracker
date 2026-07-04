@@ -81,6 +81,8 @@ const SAAS_API_ENDPOINTS = [
   "/api/customer-auth-state",
 ];
 
+const AUTH_BOUNDARY_API_ENDPOINTS = new Set(["/api/leads"]);
+
 const SAAS_CLIENT_MODULES = [
   "src/api/workflowClient.js",
   "src/api/portalClient.js",
@@ -310,6 +312,9 @@ for (const endpoint of SAAS_API_ENDPOINTS) {
       headers: { Accept: "application/json" },
     });
     if (response.ok) pass(`api:${endpoint}`, `HTTP ${response.status}`);
+    else if (AUTH_BOUNDARY_API_ENDPOINTS.has(endpoint) && response.status === 401) {
+      pass(`api:${endpoint} auth boundary`, `HTTP ${response.status}`);
+    }
     else fail(`api:${endpoint}`, `HTTP ${response.status}`);
   } catch (error) {
     fail(`api:${endpoint}`, error.message);
