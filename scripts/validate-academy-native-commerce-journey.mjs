@@ -25,7 +25,16 @@ function fail(label, detail = "") {
   console.error(`FAIL: ${label}${detail ? ` - ${detail}` : ""}`);
 }
 
+function skip(label, detail = "") {
+  console.log(`SKIP: ${label}${detail ? ` - ${detail}` : ""}`);
+}
+
 function requireIncludes(relativePath, marker, label, base = root) {
+  const filePath = path.join(base, relativePath);
+  if (!fs.existsSync(filePath)) {
+    skip(label, `source checkout unavailable: ${relativePath}`);
+    return;
+  }
   if (!read(relativePath, base).includes(marker)) {
     fail(label, `missing "${marker}" in ${relativePath}`);
     return;

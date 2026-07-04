@@ -5,9 +5,9 @@
 import { FCA_MARKETING_ORIGIN } from "../domainHosts.constants.mjs";
 
 const SWA_ROUTES = [
-  { path: "/academy", apiProbe: "/academy-commerce?limit=1" },
-  { path: "/academy/catalog", apiProbe: "/academy-commerce?limit=1" },
-  { path: "/academy/store", apiProbe: "/academy-commerce?limit=1" },
+  { path: "/academy", apiProbe: "/api/academy-commerce?view=catalog&limit=1" },
+  { path: "/academy/catalog", apiProbe: "/api/academy-commerce?view=catalog&limit=1" },
+  { path: "/academy/store", apiProbe: "/api/academy-commerce?view=catalog&limit=1" },
   { path: "/portal/academy", apiProbe: null },
 ];
 
@@ -18,7 +18,7 @@ const SPA_MARKERS = ['id="root"', "Future Contractors of America", "fca-backend-
  */
 export async function runLmsSwaProbes(options = {}) {
   const origin = (options.origin || process.env.FCA_SWA_ORIGIN || FCA_MARKETING_ORIGIN).replace(/\/$/, "");
-  const apiBase = (options.apiBase || process.env.FCA_API_BASE || process.env.AURICRUX_CENTRAL_API || "https://api.futurecontractorsofamerica.com/api").replace(/\/$/, "");
+  const apiBase = (options.apiBase || process.env.FCA_API_BASE || process.env.AURICRUX_CENTRAL_API || "https://api.futurecontractorsofamerica.com").replace(/\/$/, "").replace(/\/api$/, "");
   const log = options.log !== false;
   const steps = [];
 
