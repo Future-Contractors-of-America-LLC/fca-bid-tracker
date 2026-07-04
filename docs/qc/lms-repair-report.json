@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-04T02:16:20.765Z",
-  "runId": "LMS-WFR-1783130998159",
+  "generatedAt": "2026-07-04T03:10:37.747Z",
+  "runId": "LMS-WFR-1783134392188",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
   "complete": false,
@@ -9,7 +9,7 @@
     {
       "round": 1,
       "complete": false,
-      "passed": 168,
+      "passed": 169,
       "total": 173,
       "failures": [
         {
@@ -19,115 +19,21 @@
           "phase": "static-qc"
         },
         {
-          "name": "Academy commerce intake",
-          "status": "fail",
-          "detail": "HTTP 504",
-          "phase": "learner-workflow"
-        },
-        {
           "name": "SWA route /academy",
           "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
+          "detail": "shell OK but API probe failed (404)",
           "phase": "swa-probes"
         },
         {
           "name": "SWA route /academy/catalog",
           "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
+          "detail": "shell OK but API probe failed (404)",
           "phase": "swa-probes"
         },
         {
           "name": "SWA route /academy/store",
           "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
-          "phase": "swa-probes"
-        }
-      ]
-    },
-    {
-      "round": 2,
-      "complete": false,
-      "passed": 149,
-      "total": 155,
-      "failures": [
-        {
-          "name": "script:validate-academy-native-commerce-journey.mjs",
-          "status": "fail",
-          "detail": "",
-          "phase": "static-qc"
-        },
-        {
-          "name": "api:academy-lms",
-          "status": "fail",
-          "detail": "Unexpected end of JSON input",
-          "phase": "static-qc"
-        },
-        {
-          "name": "Academy API reachable",
-          "status": "fail",
-          "detail": "Central API health check failed",
-          "phase": "learner-workflow"
-        },
-        {
-          "name": "SWA route /academy",
-          "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
-          "phase": "swa-probes"
-        },
-        {
-          "name": "SWA route /academy/catalog",
-          "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
-          "phase": "swa-probes"
-        },
-        {
-          "name": "SWA route /academy/store",
-          "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
-          "phase": "swa-probes"
-        }
-      ]
-    },
-    {
-      "round": 3,
-      "complete": false,
-      "passed": 149,
-      "total": 155,
-      "failures": [
-        {
-          "name": "script:validate-academy-native-commerce-journey.mjs",
-          "status": "fail",
-          "detail": "",
-          "phase": "static-qc"
-        },
-        {
-          "name": "api:academy-lms",
-          "status": "fail",
-          "detail": "Unexpected end of JSON input",
-          "phase": "static-qc"
-        },
-        {
-          "name": "Academy API reachable",
-          "status": "fail",
-          "detail": "Central API health check failed",
-          "phase": "learner-workflow"
-        },
-        {
-          "name": "SWA route /academy",
-          "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
-          "phase": "swa-probes"
-        },
-        {
-          "name": "SWA route /academy/catalog",
-          "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
-          "phase": "swa-probes"
-        },
-        {
-          "name": "SWA route /academy/store",
-          "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
+          "detail": "shell OK but API probe failed (404)",
           "phase": "swa-probes"
         }
       ]
@@ -153,24 +59,6 @@
       "outcome": "engineering-queued"
     },
     {
-      "id": "lms-api-transient",
-      "repairClass": "retry-transient",
-      "title": "Transient Academy API failure",
-      "detail": "Retry after backoff when Central or network is warming.",
-      "step": {
-        "name": "Academy commerce intake",
-        "status": "fail",
-        "detail": "HTTP 504",
-        "phase": "learner-workflow"
-      },
-      "autoRepair": "retry-transient",
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "low",
-      "actionId": "LMS-LMS-API-TRANSIENT",
-      "outcome": "scheduled-retry"
-    },
-    {
       "id": "lms-swa-offline",
       "repairClass": "engineering-queue",
       "title": "Academy SWA routes offline or missing markers",
@@ -178,159 +66,7 @@
       "step": {
         "name": "SWA route /academy",
         "status": "fail",
-        "detail": "shell OK but API probe error: Unexpected end of JSON input",
-        "phase": "swa-probes"
-      },
-      "autoRepair": "swa-redeploy",
-      "targetLane": "platform",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "high",
-      "actionId": "LMS-SWA-REDEPLOY",
-      "outcome": "swa-redeploy-queued",
-      "redeploy": {
-        "dispatched": false,
-        "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
-      }
-    },
-    {
-      "id": "lms-commerce-rail",
-      "repairClass": "engineering-queue",
-      "title": "Academy native commerce rail regression",
-      "detail": "Verify /api/fca-payments/intake and academy commerce client wiring on live Central.",
-      "step": {
-        "name": "script:validate-academy-native-commerce-journey.mjs",
-        "status": "fail",
-        "detail": "",
-        "phase": "static-qc"
-      },
-      "autoRepair": null,
-      "targetLane": "revenue",
-      "targetRepo": "auricrux-central",
-      "priority": "critical",
-      "actionId": "LMS-COMMERCE-FIX",
-      "outcome": "engineering-queued"
-    },
-    {
-      "id": "unmapped-failure",
-      "repairClass": "engineering-queue",
-      "title": "Investigate Academy failure: api:academy-lms",
-      "detail": "Unexpected end of JSON input",
-      "step": {
-        "name": "api:academy-lms",
-        "status": "fail",
-        "detail": "Unexpected end of JSON input",
-        "phase": "static-qc"
-      },
-      "autoRepair": null,
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "medium",
-      "actionId": "LMS-TRIAGE",
-      "outcome": "engineering-queued"
-    },
-    {
-      "id": "lms-api-transient",
-      "repairClass": "retry-transient",
-      "title": "Transient Academy API failure",
-      "detail": "Retry after backoff when Central or network is warming.",
-      "step": {
-        "name": "Academy API reachable",
-        "status": "fail",
-        "detail": "Central API health check failed",
-        "phase": "learner-workflow"
-      },
-      "autoRepair": "retry-transient",
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "low",
-      "actionId": "LMS-LMS-API-TRANSIENT",
-      "outcome": "scheduled-retry"
-    },
-    {
-      "id": "lms-swa-offline",
-      "repairClass": "engineering-queue",
-      "title": "Academy SWA routes offline or missing markers",
-      "detail": "Redeploy SWA or restore /academy route files in the shell.",
-      "step": {
-        "name": "SWA route /academy",
-        "status": "fail",
-        "detail": "shell OK but API probe error: Unexpected end of JSON input",
-        "phase": "swa-probes"
-      },
-      "autoRepair": "swa-redeploy",
-      "targetLane": "platform",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "high",
-      "actionId": "LMS-SWA-REDEPLOY",
-      "outcome": "swa-redeploy-queued",
-      "redeploy": {
-        "dispatched": false,
-        "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
-      }
-    },
-    {
-      "id": "lms-commerce-rail",
-      "repairClass": "engineering-queue",
-      "title": "Academy native commerce rail regression",
-      "detail": "Verify /api/fca-payments/intake and academy commerce client wiring on live Central.",
-      "step": {
-        "name": "script:validate-academy-native-commerce-journey.mjs",
-        "status": "fail",
-        "detail": "",
-        "phase": "static-qc"
-      },
-      "autoRepair": null,
-      "targetLane": "revenue",
-      "targetRepo": "auricrux-central",
-      "priority": "critical",
-      "actionId": "LMS-COMMERCE-FIX",
-      "outcome": "engineering-queued"
-    },
-    {
-      "id": "unmapped-failure",
-      "repairClass": "engineering-queue",
-      "title": "Investigate Academy failure: api:academy-lms",
-      "detail": "Unexpected end of JSON input",
-      "step": {
-        "name": "api:academy-lms",
-        "status": "fail",
-        "detail": "Unexpected end of JSON input",
-        "phase": "static-qc"
-      },
-      "autoRepair": null,
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "medium",
-      "actionId": "LMS-TRIAGE",
-      "outcome": "engineering-queued"
-    },
-    {
-      "id": "lms-api-transient",
-      "repairClass": "retry-transient",
-      "title": "Transient Academy API failure",
-      "detail": "Retry after backoff when Central or network is warming.",
-      "step": {
-        "name": "Academy API reachable",
-        "status": "fail",
-        "detail": "Central API health check failed",
-        "phase": "learner-workflow"
-      },
-      "autoRepair": "retry-transient",
-      "targetLane": "product",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "low",
-      "actionId": "LMS-LMS-API-TRANSIENT",
-      "outcome": "scheduled-retry"
-    },
-    {
-      "id": "lms-swa-offline",
-      "repairClass": "engineering-queue",
-      "title": "Academy SWA routes offline or missing markers",
-      "detail": "Redeploy SWA or restore /academy route files in the shell.",
-      "step": {
-        "name": "SWA route /academy",
-        "status": "fail",
-        "detail": "shell OK but API probe error: Unexpected end of JSON input",
+        "detail": "shell OK but API probe failed (404)",
         "phase": "swa-probes"
       },
       "autoRepair": "swa-redeploy",
@@ -345,17 +81,37 @@
       }
     }
   ],
-  "auricruxReviews": [],
+  "auricruxReviews": [
+    {
+      "step": "script:validate-academy-native-commerce-journey.mjs",
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+    },
+    {
+      "step": "SWA route /academy",
+      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
+    },
+    {
+      "step": "SWA route /academy/catalog",
+      "guidance": "Training continuity for your workspace is active in Academy. Assign learners to apprenticeship, certification, degree, or licensure tracks, then advance module progress from the learner dashboard."
+    }
+  ],
   "redeploy": {
     "dispatched": false,
     "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
   },
-  "finalSummary": "Academy LMS simulation still failing after 3 bounded repair round(s). 8 item(s) queued. Consecutive failures: 155.",
+  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 156.",
   "state": {
-    "runCount": 155,
+    "runCount": 156,
     "consecutiveSuccesses": 0,
-    "consecutiveFailures": 155,
+    "consecutiveFailures": 156,
     "history": [
+      {
+        "at": "2026-07-04T03:10:37.747Z",
+        "runId": "LMS-WFR-1783134392188",
+        "complete": false,
+        "rounds": 1,
+        "failures": 4
+      },
       {
         "at": "2026-07-04T02:16:20.765Z",
         "runId": "LMS-WFR-1783130998159",
@@ -558,17 +314,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-07-02T01:38:58.822Z",
-        "runId": "LMS-WFR-1782956259273",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-07-04T02:16:20.765Z",
+    "lastRunUtc": "2026-07-04T03:10:37.747Z",
     "lastComplete": false,
-    "lastRunId": "LMS-WFR-1783130998159"
+    "lastRunId": "LMS-WFR-1783134392188"
   }
 }

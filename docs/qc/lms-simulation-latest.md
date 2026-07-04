@@ -1,10 +1,10 @@
 # FCA Academy LMS Simulation
 
-- **When:** 2026-07-04T02:16:20.076Z
-- **Run ID:** LMS-SIM-1783131376836
+- **When:** 2026-07-04T03:08:34.233Z
+- **Run ID:** LMS-SIM-1783134393336
 - **API:** https://api.futurecontractorsofamerica.com
 - **SWA:** https://futurecontractorsofamerica.com
-- **Result:** 6 FAILURE(S) - 149/155 passed
+- **Result:** 4 FAILURE(S) - 169/173 passed
 
 ## What this proves
 
@@ -163,19 +163,37 @@ This robot exercises Academy catalog depth, live learner API mutations, SWA rout
 - **PASS** legal-program:contractor-business-formation-legal: Contractor Business Formation & Legal Setup
 - **PASS** legal-program:contractor-construction-law-essentials: Construction Law Essentials for Contractors
 - **PASS** legal-api:academy-program-modules: program detail builder present
-- **FAIL** api:academy-lms: Unexpected end of JSON input
+- **PASS** api:academy-lms: programs in API: 1212
+- **PASS** api:catalog-integrity: aligned
+- **PASS** api:academy-learners: 4 learners
+- **PASS** api:academy-enrollments: 11 enrollments
 - **PASS** lms-surface:src/pages/academy/AcademyHome.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyCatalog.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyModuleLesson.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyProgramDetail.jsx
 - **PASS** lms-surface:src/hooks/useAcademyLms.js
 - **PASS** lms-surface:src/api/academyClient.js
-- **FAIL** Academy API reachable: Central API health check failed
-- **FAIL** SWA route /academy: shell OK but API probe error: Unexpected end of JSON input
-- **FAIL** SWA route /academy/catalog: shell OK but API probe error: Unexpected end of JSON input
-- **FAIL** SWA route /academy/store: shell OK but API probe error: Unexpected end of JSON input
+- **PASS** Academy API reachable: https://api.futurecontractorsofamerica.com
+- **PASS** Academy API health: https://api.futurecontractorsofamerica.com
+- **PASS** Academy customer login: founder.test@futurecontractorsofamerica.com
+- **PASS** Academy catalog summary: 1212 programs
+- **PASS** Academy catalog total: 1212
+- **PASS** Academy catalog integrity: aligned
+- **PASS** Academy lane apprenticeship: 207
+- **PASS** Academy lane certification: 88
+- **PASS** Academy lane degree: 803
+- **PASS** Academy lane licensure: 82
+- **PASS** Academy lane professional: 23
+- **PASS** Academy lane fca-how-to: 9
+- **PASS** Academy LMS snapshot: 4 learners, 4 enrollments
+- **PASS** Academy progress PATCH: ENR-001
+- **PASS** Academy lane catalog probe: electrical-core-level-1
+- **PASS** Academy commerce intake: INTAKE-1783134512615
+- **FAIL** SWA route /academy: shell OK but API probe failed (404)
+- **FAIL** SWA route /academy/catalog: shell OK but API probe failed (404)
+- **FAIL** SWA route /academy/store: shell OK but API probe failed (404)
 - **PASS** SWA route /portal/academy: 200 SPA shell OK
-- **PASS** Central academy artifacts: skipped � auricrux-central sibling not present
+- **PASS** Central academy artifacts: skipped - auricrux-central sibling not present
 
 ## For the founder
 
