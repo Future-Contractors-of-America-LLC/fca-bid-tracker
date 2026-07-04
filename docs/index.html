@@ -1,79 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>FCA Bid System</title>
-</head>
-<body>
-
-<h2>FCA Bid Entry</h2>
-
-<input id="projectName" placeholder="Project Name"><br><br>
-<input id="client" placeholder="Client"><br><br>
-<input id="amount" placeholder="Amount (USD)"><br><br>
-
-<button onclick="submitBid()">Submit Bid</button>
-
-<p id="msg"></p>
-
-<hr>
-
-<h3>Submitted Bids</h3>
-<div id="bids"></div>
-
-<script src="/config/auricrux-central.js"></script>
-<script>
-const API = window.FCA_AURICRUX.bidsUrl;
-
-async function submitBid() {
-  const data = {
-    id: "bid-" + Date.now(),
-    company: "FCA Customer",
-    projectName: document.getElementById("projectName").value,
-    customerName: document.getElementById("client").value,
-    value: Number(document.getElementById("amount").value || 0),
-    status: "new"
-  };
-
-  const res = await fetch(API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
-
-  document.getElementById("msg").innerText =
-    res.ok ? "Bid submitted to Auricrux Central" : "Error submitting bid";
-
-  loadBids();
-}
-
-async function loadBids() {
-  try {
-    const res = await fetch(API);
-    const bids = await res.json().catch(function () { return []; });
-    const container = document.getElementById("bids");
-    container.innerHTML = "";
-
-    if (!Array.isArray(bids) || bids.length === 0) {
-      container.innerHTML = "<p>No bids yet</p>";
-      return;
-    }
-
-    bids.forEach(function (b) {
-      container.innerHTML +=
-        "<div style=\"margin-bottom:10px;\">" +
-        "<b>" + (b.projectName || b.project || "—") + "</b> — " +
-        (b.customerName || b.client || b.company || "—") + " — $" +
-        (b.value || b.amount || 0) + " — " + (b.status || "new") +
-        "</div>";
-    });
-  } catch (err) {
-    document.getElementById("bids").innerHTML = "<p>Unable to load bids</p>";
-  }
-}
-
-loadBids();
-</script>
-
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="refresh" content="0; url=https://futurecontractorsofamerica.com/" />
+    <title>Future Contractors of America</title>
+  </head>
+  <body>
+    <p>
+      FCA production hosting runs on Azure Static Web Apps.
+      <a href="https://futurecontractorsofamerica.com/">Open futurecontractorsofamerica.com</a>
+      or the product app at
+      <a href="https://app.futurecontractorsofamerica.com/">app.futurecontractorsofamerica.com</a>.
+    </p>
+  </body>
 </html>
