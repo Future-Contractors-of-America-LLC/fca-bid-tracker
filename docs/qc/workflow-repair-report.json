@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-04T16:59:58.969Z",
-  "runId": "WFR-1783184326923",
+  "generatedAt": "2026-07-04T18:07:44.774Z",
+  "runId": "WFR-1783188400656",
   "protocol": "observe-act-review",
   "complete": true,
   "maxRounds": 3,
@@ -15,12 +15,19 @@
   ],
   "repairPlans": [],
   "auricruxReviews": [],
-  "finalSummary": "Workflow simulation recovered in 1 round(s). Consecutive successes: 123.",
+  "finalSummary": "Workflow simulation recovered in 1 round(s). Consecutive successes: 124.",
   "state": {
-    "runCount": 174,
-    "consecutiveSuccesses": 123,
+    "runCount": 175,
+    "consecutiveSuccesses": 124,
     "consecutiveFailures": 0,
     "history": [
+      {
+        "at": "2026-07-04T18:07:44.774Z",
+        "runId": "WFR-1783188400656",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
       {
         "at": "2026-07-04T16:59:58.969Z",
         "runId": "WFR-1783184326923",
@@ -223,17 +230,10 @@
         "complete": true,
         "rounds": 1,
         "failures": 0
-      },
-      {
-        "at": "2026-07-02T21:04:50.027Z",
-        "runId": "WFR-1783026258185",
-        "complete": true,
-        "rounds": 1,
-        "failures": 0
       }
     ],
-    "lastRunUtc": "2026-07-04T16:59:58.969Z",
+    "lastRunUtc": "2026-07-04T18:07:44.774Z",
     "lastComplete": true,
-    "lastRunId": "WFR-1783184326923"
+    "lastRunId": "WFR-1783188400656"
   }
 }
