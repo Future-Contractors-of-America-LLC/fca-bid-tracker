@@ -1,11 +1,11 @@
 # Live Deployment Transition Target
 
 - Packet: 062Y
-- Generated: 2026-07-04T02:20:56.046Z
+- Generated: 2026-07-04T03:06:48.985Z
 - targetReached: true
 - summaryPresent: true
 - provenance: github_actions_ci
 - ciPersisted: true
-- ciRunId: 28691597406
-- ciCommitSha: 4bfe8e8428bc12b32e132d92be6b4cbfda5295c8
-- status: ci_surface_present_success
+- ciRunId: 28692887593
+- ciCommitSha: e6084679b032cb505bc4d5c627b18020b0220fde
+- status: ci_surface_present_with_failures
