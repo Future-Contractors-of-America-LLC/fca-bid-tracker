@@ -1,19 +1,19 @@
 {
-  "generatedAt": "2026-07-04T01:13:21.950Z",
-  "runId": "LMS-SIM-1783127587187",
+  "generatedAt": "2026-07-04T02:16:20.076Z",
+  "runId": "LMS-SIM-1783131376836",
   "apiBase": "https://api.futurecontractorsofamerica.com",
   "swaOrigin": "https://futurecontractorsofamerica.com",
   "scope": "FCA Academy LMS simulation",
   "summary": {
-    "passed": 169,
-    "failed": 4,
+    "passed": 149,
+    "failed": 6,
     "skipped": 0,
-    "total": 173
+    "total": 155
   },
   "complete": false,
   "phases": {
-    "staticQc": 1,
-    "learnerWorkflow": 0,
+    "staticQc": 2,
+    "learnerWorkflow": 1,
     "swaProbes": 3,
     "centralArtifacts": 0
   },
@@ -872,26 +872,8 @@
     },
     {
       "name": "api:academy-lms",
-      "status": "pass",
-      "detail": "programs in API: 1212",
-      "phase": "static-qc"
-    },
-    {
-      "name": "api:catalog-integrity",
-      "status": "pass",
-      "detail": "aligned",
-      "phase": "static-qc"
-    },
-    {
-      "name": "api:academy-learners",
-      "status": "pass",
-      "detail": "4 learners",
-      "phase": "static-qc"
-    },
-    {
-      "name": "api:academy-enrollments",
-      "status": "pass",
-      "detail": "11 enrollments",
+      "status": "fail",
+      "detail": "Unexpected end of JSON input",
       "phase": "static-qc"
     },
     {
@@ -932,98 +914,8 @@
     },
     {
       "name": "Academy API reachable",
-      "status": "pass",
-      "detail": "https://api.futurecontractorsofamerica.com",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy API health",
-      "status": "pass",
-      "detail": "https://api.futurecontractorsofamerica.com",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy customer login",
-      "status": "pass",
-      "detail": "founder.test@futurecontractorsofamerica.com",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy catalog summary",
-      "status": "pass",
-      "detail": "1212 programs",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy catalog total",
-      "status": "pass",
-      "detail": "1212",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy catalog integrity",
-      "status": "pass",
-      "detail": "aligned",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy lane apprenticeship",
-      "status": "pass",
-      "detail": "207",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy lane certification",
-      "status": "pass",
-      "detail": "88",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy lane degree",
-      "status": "pass",
-      "detail": "803",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy lane licensure",
-      "status": "pass",
-      "detail": "82",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy lane professional",
-      "status": "pass",
-      "detail": "23",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy lane fca-how-to",
-      "status": "pass",
-      "detail": "9",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy LMS snapshot",
-      "status": "pass",
-      "detail": "4 learners, 4 enrollments",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy progress PATCH",
-      "status": "pass",
-      "detail": "ENR-001",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy lane catalog probe",
-      "status": "pass",
-      "detail": "electrical-core-level-1",
-      "phase": "learner-workflow"
-    },
-    {
-      "name": "Academy commerce intake",
-      "status": "pass",
-      "detail": "INTAKE-1783127599784",
+      "status": "fail",
+      "detail": "Central API health check failed",
       "phase": "learner-workflow"
     },
     {
