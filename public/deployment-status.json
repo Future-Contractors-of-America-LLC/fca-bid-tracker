@@ -1,10 +1,10 @@
 {
   "service": "fca-bid-tracker",
-  "generatedAt": "2026-07-04T02:01:35.066Z",
+  "generatedAt": "2026-07-04T06:45:14.082Z",
   "source": "github-actions",
   "gitRef": "refs/heads/main",
-  "gitSha": "69390a5b91ee226986009549390204f490d82138",
-  "runId": "28691411691",
+  "gitSha": "05fd9274f4977c324c33f1901348120a1c1965e8",
+  "runId": "28697992295",
   "defaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
   "expectedHosts": [
     "futurecontractorsofamerica.com",
@@ -17,8 +17,8 @@
     "/api/auricrux",
     "/api/customer-login",
     "/login",
-    "/commit-witness-69390a5b91ee226986009549390204f490d82138.txt"
+    "/commit-witness-05fd9274f4977c324c33f1901348120a1c1965e8.txt"
   ],
-  "commitWitnessRoute": "/commit-witness-69390a5b91ee226986009549390204f490d82138.txt",
+  "commitWitnessRoute": "/commit-witness-05fd9274f4977c324c33f1901348120a1c1965e8.txt",
   "deploymentIntent": "static-web-app-plus-functions"
 }
