@@ -1,8 +1,14 @@
-const Stripe = require("stripe");
 const {
   createAcademyEmbeddedCheckout,
   publishableKey,
 } = require("../_lib/stripeEmbeddedCheckout");
+
+let Stripe;
+
+function stripeClient(secretKey) {
+  if (!Stripe) Stripe = require("stripe");
+  return new Stripe(secretKey);
+}
 
 const CENTRAL_API =
   process.env.AURICRUX_CENTRAL_API ||
@@ -11,7 +17,7 @@ const CENTRAL_API =
 const corsHeaders = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, HEAD, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Accept",
 };
 
@@ -23,12 +29,24 @@ function respond(status, body) {
   };
 }
 
-async function proxyToCentral(body) {
-  const response = await fetch(`${CENTRAL_API}/academy-commerce`, {
-    method: "POST",
+function buildQuery(req) {
+  if (req.url && req.url.includes("?")) {
+    return req.url.slice(req.url.indexOf("?"));
+  }
+  if (req.query && Object.keys(req.query).length) {
+    return `?${new URLSearchParams(req.query).toString()}`;
+  }
+  return "";
+}
+
+async function proxyToCentral(body, options = {}) {
+  const method = String(options.method || "POST").toUpperCase();
+  const response = await fetch(`${CENTRAL_API}/academy-commerce${options.query || ""}`, {
+    method: method === "HEAD" ? "GET" : method,
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify(body),
+    ...(method === "GET" || method === "HEAD" ? {} : { body: JSON.stringify(body) }),
   });
+  if (method === "HEAD") return { status: response.status, payload: "" };
   const text = await response.text();
   let payload = {};
   try {
@@ -43,6 +61,21 @@ module.exports = async function (context, req) {
   if (req.method === "OPTIONS") {
     context.res = respond(204, "");
     return;
+  }
+
+  if (req.method === "GET" || req.method === "HEAD") {
+    try {
+      const proxied = await proxyToCentral(null, { method: req.method, query: buildQuery(req) });
+      context.res = respond(proxied.status, req.method === "HEAD" ? "" : proxied.payload);
+      return;
+    } catch (error) {
+      context.log.error("Central academy-commerce catalog proxy failed:", error);
+      context.res = respond(502, {
+        ok: false,
+        error: error.message || "Academy commerce catalog proxy failure",
+      });
+      return;
+    }
   }
 
   const body = req.body || {};
@@ -79,7 +112,7 @@ module.exports = async function (context, req) {
   }
 
   try {
-    const stripe = new Stripe(secretKey);
+    const stripe = stripeClient(secretKey);
     const sessionPayload = await createAcademyEmbeddedCheckout(stripe, body);
 
     context.res = respond(200, {
