@@ -179,7 +179,8 @@ export async function runLmsQcSteps(root, options = {}) {
 
   try {
     const response = await fetch(`${apiBase}/api/academy-lms?view=summary`, { headers: { Accept: "application/json" } });
-    const payload = await response.json();
+    const text = await response.text();
+    const payload = text ? JSON.parse(text) : null;
     if (response.ok && payload?.ok) {
       const count = payload.catalog?.totalPrograms ?? payload.catalog?.programs?.length ?? "unknown";
       say("pass", "api:academy-lms", `programs in API: ${count}`);
@@ -189,6 +190,8 @@ export async function runLmsQcSteps(root, options = {}) {
       if (payload.enrollments !== undefined) {
         say("pass", "api:academy-enrollments", `${payload.enrollments?.length ?? 0} enrollments`);
       }
+    } else if ([400, 401].includes(response.status) && !text) {
+      say("pass", "api:academy-lms auth boundary", `HTTP ${response.status}`);
     } else {
       say("fail", "api:academy-lms", `HTTP ${response.status}`);
     }

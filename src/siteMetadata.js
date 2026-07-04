@@ -56,6 +56,11 @@ export const routeMetadata = {
     description:
       "Contractor legal resources for licensing, contracts, lien waivers, insurance, and FCA policy references.",
   },
+  "/legal/chps-dpa-sign": {
+    title: "CHPS DPA Signing | Future Contractors of America",
+    description:
+      "Review and sign the FCA student data privacy agreement workflow for CHPS-aligned academy and workspace operations.",
+  },
   "/contact": {
     title: "Contact | Future Contractors of America",
     description:
@@ -275,6 +280,10 @@ export const routeMetadata = {
     title: "Design Workspace | Future Contractors of America",
     description: "Native plan room for markup, takeoff, coordination, and redline continuity.",
   },
+  "/portal/immersive": {
+    title: "Immersive Workspace | Future Contractors of America",
+    description: "Review immersive plan, field, and evidence workflows connected to the FCA design and operations spine.",
+  },
   "/portal/rfis": {
     title: "RFIs | Future Contractors of America",
     description: "Manage requests for information tied to project sheets, markups, and field conditions.",
@@ -298,6 +307,14 @@ export const routeMetadata = {
   "/portal/field-supervision": {
     title: "Field Supervision | Future Contractors of America",
     description: "Capture site photos, compare to plans, annotate conditions, and generate redlines.",
+  },
+  "/portal/punch": {
+    title: "Punch List | Future Contractors of America",
+    description: "Track punch items, responsible owners, evidence, and closeout readiness inside the FCA portal.",
+  },
+  "/portal/job-cost": {
+    title: "Job Cost | Future Contractors of America",
+    description: "Review labor, materials, commitments, and cost posture for active FCA jobs.",
   },
   "/portal/warranty": {
     title: "Warranty | Future Contractors of America",

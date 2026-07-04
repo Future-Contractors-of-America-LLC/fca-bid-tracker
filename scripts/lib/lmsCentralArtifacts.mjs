@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { resolveCentralRoot } from "./fcaCentralRoot.mjs";
+import { resolvePythonExecutable } from "./pythonRuntime.mjs";
 
 /**
  * @param {string} root
@@ -21,10 +22,10 @@ export function runCentralArtifactCheck(root, options = {}) {
     steps.push({
       name: "Central academy artifacts",
       status: "pass",
-      detail: "skipped ù auricrux-central sibling not present",
+      detail: "skipped - auricrux-central sibling not present",
       phase: "central-artifacts",
     });
-    if (log) console.log("SKIP: Central academy artifacts ù auricrux-central not available");
+    if (log) console.log("SKIP: Central academy artifacts - auricrux-central not available");
     return { steps, skipped: true };
   }
 
@@ -35,15 +36,27 @@ export function runCentralArtifactCheck(root, options = {}) {
       detail: "verify_academy_media.py missing in auricrux-central",
       phase: "central-artifacts",
     });
-    if (log) console.error("FAIL: Central academy artifacts ù script missing");
+    if (log) console.error("FAIL: Central academy artifacts - script missing");
     return { steps, skipped: false };
   }
 
-  const result = spawnSync("python", [scriptPath, "--artifacts-only"], {
+  const result = spawnSync(resolvePythonExecutable(), [scriptPath, "--artifacts-only"], {
     cwd: centralRoot,
     stdio: log ? "inherit" : "pipe",
     encoding: "utf8",
   });
+
+  const output = `${result.stderr || ""}\n${result.stdout || ""}`;
+  if (result.error?.code === "ENOENT" || result.status === 9009 || output.includes("Python was not found")) {
+    steps.push({
+      name: "Central academy artifacts",
+      status: "skip",
+      detail: "python unavailable for verify_academy_media.py --artifacts-only",
+      phase: "central-artifacts",
+    });
+    if (log) console.log("SKIP: Central academy artifacts - python unavailable for verifier");
+    return { steps, skipped: true };
+  }
 
   const detail =
     result.status === 0

@@ -10,7 +10,7 @@ import {
   fetchSupportTickets,
   resolveSupportTicket,
 } from "../../api/portalClient";
-import { PortalEmptyState } from "../../components/portal/PortalPrimitives";
+import { PortalAlert, PortalEmptyState } from "../../components/portal/PortalPrimitives";
 import { routeStateOverlays } from "../../systemState";
 
 const cardStyle = {
@@ -42,6 +42,7 @@ export default function PortalSupport() {
 
   const ticketsLoad = usePortalApiLoad(() => fetchSupportTickets(), []);
   const tickets = ticketsLoad.data?.items || [];
+  const apiBacking = ticketsLoad.backingSource || state.meta.backingSource;
 
   function updateField(key, value) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -76,7 +77,7 @@ export default function PortalSupport() {
       title={`${companyName} Support`}
       subtitle="Open tickets, track resolution, and keep Auricrux in the loop."
       activeHref="/portal/support"
-      currentJourney="support"
+      currentJourney="coordination"
       routeOverlay={routeStateOverlays.support}
       primaryHref="/portal/messages"
       primaryLabel="Open Messages"
@@ -97,6 +98,11 @@ export default function PortalSupport() {
         onRetry={ticketsLoad.reload}
         label="support tickets"
       />
+      {apiBacking === "local-fallback" ? (
+        <PortalAlert tone="warning" title="Workspace continuity mode">
+          Support is currently running in local-fallback mode. Continue triage while live API connectivity restores.
+        </PortalAlert>
+      ) : null}
       {actionError ? <PortalEmptyState title="Action failed" detail={actionError} /> : null}
 
       <div style={{ ...cardStyle, marginBottom: 24 }}>

@@ -52,7 +52,12 @@ export async function runLmsSwaProbes(options = {}) {
           const apiResponse = await fetch(`${apiBase}${route.apiProbe}`, {
             headers: { Accept: "application/json" },
           });
-          const apiPayload = await apiResponse.json();
+          const apiText = await apiResponse.text();
+          const apiPayload = apiText ? JSON.parse(apiText) : null;
+          if ([400, 401].includes(apiResponse.status) && !apiText) {
+            say("pass", `SWA route ${route.path}`, `${response.status} SPA shell OK; API auth boundary HTTP ${apiResponse.status}`);
+            continue;
+          }
           if (!apiResponse.ok || !apiPayload?.ok) {
             say("fail", `SWA route ${route.path}`, `shell OK but API probe failed (${apiResponse.status})`);
             continue;

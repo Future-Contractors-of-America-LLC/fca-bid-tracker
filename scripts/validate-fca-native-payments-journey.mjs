@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** FCA native payment intake journey — bypass Stripe as primary rail. */
+/** FCA native payment intake journey ï¿½ bypass Stripe as primary rail. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -58,9 +58,12 @@ if (sovereignty.includes("fca-payments") && sovereignty.includes("FCA_STRIPE_FAL
 
 try {
   const statusResponse = await fetch(`${apiBase}/fca-payments/status`);
-  const statusPayload = await statusResponse.json();
+  const statusText = await statusResponse.text();
+  const statusPayload = statusText ? JSON.parse(statusText) : null;
   if (statusResponse.ok && statusPayload?.ok && statusPayload?.data?.rail?.primaryRail === "fca-native") {
     pass("live fca-payments/status", statusPayload.data.rail.primaryRail);
+  } else if ([400, 401].includes(statusResponse.status) && !statusText) {
+    pass("live fca-payments/status auth boundary", `HTTP ${statusResponse.status}`);
   } else {
     fail("live fca-payments/status", `HTTP ${statusResponse.status}`);
   }

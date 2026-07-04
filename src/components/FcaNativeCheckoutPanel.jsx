@@ -41,7 +41,7 @@ export default function FcaNativeCheckoutPanel({
     <form onSubmit={handleSubmit}>
       <h2 style={{ marginTop: 0 }}>Secure online payment</h2>
       <p style={{ color: "#475569", lineHeight: 1.7 }}>
-        Complete your purchase with an online card payment. FCA records the intake, issues your invoice, and activates your workspace or academy access.
+        Complete your purchase with an online card payment. FCA is the payment rail, records the intake, issues your invoice, and activates your workspace or academy access.
       </p>
 
       <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0", marginBottom: 16 }}>
