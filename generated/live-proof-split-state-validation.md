@@ -1,15 +1,15 @@
 # Live Proof Split State Validation
 
 - Packet: 062Y
-- Generated: 2026-07-04T10:23:05.117Z
+- Generated: 2026-07-04T11:16:30.585Z
 - success: false
-- witnessCommitSha: c66c13b85ccd42c6e7c85cf7cda27bb4f897fd52
-- proofCommitSha: df23bc0618bb9f2c97fc0a9c74722bda840c8519
+- witnessCommitSha: 89e4342056e215230ca3ceaaf8d2d0b786dfb086
+- proofCommitSha: 57940a6447308537ef09fde4b473621a91b55d90
 
 ## Metadata State
 - provenance: github_actions_ci
 - ciPersisted: true
-- status: ci_surface_present_success
+- status: ci_surface_present_with_failures
 
 ## Failures
 - CI-backed live deployment proof commit is already observed; split-state lock no longer applies
