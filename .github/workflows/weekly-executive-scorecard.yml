@@ -1,0 +1,77 @@
+name: Weekly Executive Scorecard
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  schedule:
+    - cron: "0 13 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weekly-executive-scorecard
+  cancel-in-progress: false
+
+jobs:
+  weekly-scorecard:
+    name: weekly-scorecard
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Refresh capability coverage report
+        run: npm run validate:module-capability-coverage
+
+      - name: Refresh competitive module audit report
+        continue-on-error: true
+        run: npm run audit:competitive-modules
+
+      - name: Refresh module competitive ranking report
+        continue-on-error: true
+        run: npm run report:module-competitive-ranking
+
+      - name: Refresh standards freeze report
+        continue-on-error: true
+        run: npm run validate:portal-standards-freeze
+
+      - name: Generate weekly executive scorecard
+        run: npm run generate:weekly-executive-scorecard
+
+      - name: Generate release communication artifacts
+        continue-on-error: true
+        run: npm run generate:release-communications
+
+      - name: Upload weekly executive scorecard artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: weekly-executive-scorecard-artifacts
+          path: |
+            docs/qc/module-capability-coverage-report.json
+            docs/qc/module-capability-coverage-report.md
+            docs/qc/competitive-module-audit-report.json
+            docs/qc/competitive-module-audit-report.md
+            docs/qc/module-competitive-ranking-report.json
+            docs/qc/module-competitive-ranking-report.md
+            docs/qc/portal-standards-freeze-report.json
+            docs/qc/portal-standards-freeze-report.md
+            docs/qc/weekly-executive-scorecard.json
+            docs/qc/weekly-executive-scorecard.md
+            docs/qc/release-claim-proof-map.json
+            docs/qc/release-communications-internal.md
+            docs/qc/release-communications-external.md
