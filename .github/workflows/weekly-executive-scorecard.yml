@@ -35,7 +35,12 @@ jobs:
         run: npm ci
 
       - name: Refresh capability coverage report
-        run: npm run validate:module-capability-coverage
+        run: |
+          if [ -f scripts/validate-module-capability-coverage.mjs ]; then
+            npm run validate:module-capability-coverage
+          else
+            echo "Skip: scripts/validate-module-capability-coverage.mjs not present on this branch."
+          fi
 
       - name: Refresh competitive module audit report
         continue-on-error: true
@@ -61,6 +66,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: weekly-executive-scorecard-artifacts
+          if-no-files-found: warn
           path: |
             docs/qc/module-capability-coverage-report.json
             docs/qc/module-capability-coverage-report.md

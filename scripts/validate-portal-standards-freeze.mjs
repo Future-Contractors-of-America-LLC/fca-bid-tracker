@@ -88,22 +88,30 @@ if (fs.existsSync(capabilityPath)) {
 
       return !completeSignals || item.risk !== "low" || validators.length === 0 || reports.length === 0;
     })
-    .map((item) => ({
-      route: item.route,
-      risk: item.risk,
-      signals: item.signals,
-      validatorCount: (item?.evidence?.validators || []).length,
-      reportCount: (item?.evidence?.reports || []).length,
-    }));
+    .map((item) => {
+      const evidence = item?.evidence || {};
+      const validators = Array.isArray(evidence.validators) ? evidence.validators : [];
+      const reports = Array.isArray(evidence.reports) ? evidence.reports : [];
+
+      return {
+        route: item.route,
+        risk: item.risk,
+        signals: item.signals,
+        validatorCount: validators.length,
+        reportCount: reports.length,
+      };
+    });
 }
 
 const shouldRequireCapabilityReport = !prerequisiteRuns[0]?.skipped;
+const hasHighRiskCounts = riskCounts.blocker > 0 || riskCounts.critical > 0 || riskCounts.high > 0 || riskCounts.medium > 0;
+const capabilityReportReady = Boolean(capability) && findings.length > 0;
 
 const blockers = [
   ...prerequisiteFailures,
   ...(shouldRequireCapabilityReport && !capability ? ["Missing capability report: docs/qc/module-capability-coverage-report.json"] : []),
   ...(shouldRequireCapabilityReport && findings.length === 0 ? ["Capability findings are empty."] : []),
-  ...(riskCounts.blocker > 0 || riskCounts.critical > 0 || riskCounts.high > 0 || riskCounts.medium > 0
+  ...(hasHighRiskCounts
     ? [
         `Capability risk counts are not fully low: blocker=${riskCounts.blocker}, critical=${riskCounts.critical}, high=${riskCounts.high}, medium=${riskCounts.medium}.`,
       ]
@@ -119,8 +127,8 @@ const report = {
   checks: {
     moduleCapabilityCoverage: prerequisiteRuns[0]?.exitCode === 0,
     portalUxSweep: prerequisiteRuns[1]?.exitCode === 0,
-    allRoutesLowRisk: blockers.every((item) => !item.includes("Capability risk counts")),
-    allRoutesStandardsCompliant: nonCompliantRoutes.length === 0,
+    allRoutesLowRisk: !shouldRequireCapabilityReport || (capabilityReportReady && !hasHighRiskCounts),
+    allRoutesStandardsCompliant: !shouldRequireCapabilityReport || (capabilityReportReady && nonCompliantRoutes.length === 0),
   },
   totals: {
     routeCount: findings.length,

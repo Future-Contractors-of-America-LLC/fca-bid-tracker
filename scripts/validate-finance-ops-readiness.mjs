@@ -123,10 +123,24 @@ function readFunctionAppSettingNames() {
   }
 
   const result = spawnSync(
-    `az functionapp config appsettings list --resource-group ${resourceGroup} --name ${appName} --query "[].name" -o tsv`,
+    "az",
+    [
+      "functionapp",
+      "config",
+      "appsettings",
+      "list",
+      "--resource-group",
+      resourceGroup,
+      "--name",
+      appName,
+      "--query",
+      "[].name",
+      "-o",
+      "tsv",
+    ],
     {
       cwd: root,
-      shell: true,
+      shell: false,
       stdio: "pipe",
       encoding: "utf8",
       env: process.env,

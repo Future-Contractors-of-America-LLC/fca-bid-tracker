@@ -41,7 +41,8 @@ jobs:
           if [ -f scripts/validate-module-capability-coverage.mjs ]; then
             npm run validate:module-capability-coverage
           else
-            echo "Skip: scripts/validate-module-capability-coverage.mjs not present on this branch."
+            echo "Fail: scripts/validate-module-capability-coverage.mjs not present on this branch."
+            exit 1
           fi
 
       - name: Required competitive benchmark gate
@@ -49,7 +50,8 @@ jobs:
           if [ -f scripts/run-competitive-module-audit.mjs ]; then
             npm run audit:competitive-modules
           else
-            echo "Skip: scripts/run-competitive-module-audit.mjs not present on this branch."
+            echo "Fail: scripts/run-competitive-module-audit.mjs not present on this branch."
+            exit 1
           fi
 
       - name: Required module ranking gate
@@ -57,7 +59,8 @@ jobs:
           if [ -f scripts/generate-module-competitive-ranking-report.mjs ]; then
             npm run report:module-competitive-ranking
           else
-            echo "Skip: scripts/generate-module-competitive-ranking-report.mjs not present on this branch."
+            echo "Fail: scripts/generate-module-competitive-ranking-report.mjs not present on this branch."
+            exit 1
           fi
 
       - name: Standards freeze gate for portal routes
@@ -89,6 +92,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: module-qc-required-gates-artifacts
+          if-no-files-found: warn
           path: |
             docs/qc/module-capability-coverage-report.json
             docs/qc/module-capability-coverage-report.md
