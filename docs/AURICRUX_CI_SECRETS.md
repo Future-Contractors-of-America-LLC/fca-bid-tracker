@@ -72,3 +72,17 @@ See `auricrux-central/scripts/training/README.md`.
 | `FCA_CUSTOMER_ACCOUNTS_JSON` | Managed customer accounts |
 | `GRAPH_MAIL_SENDER` + Graph app creds | Send login verification email |
 | `FCA_VERIFICATION_DEV_EXPOSE_CODE=1` | Dev only â€” return OTP in login response when email is unavailable |
+
+## Finance readiness secret-store gate
+
+To enforce production finance readiness from secure app settings instead of temporary shell overrides:
+
+1. Configure Function App app settings for all required finance keys.
+2. Ensure workflow identity has Azure access to read app setting names.
+3. Run strict validator:
+
+```bash
+npm run validate:finance-ops-readiness:strict
+```
+
+Reference runbook: `docs/qc/FINANCE_SECRET_STORE_OPERATIONALIZATION.md`.

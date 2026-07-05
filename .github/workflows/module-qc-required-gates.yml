@@ -1,0 +1,105 @@
+name: Module QC Required Gates
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: module-qc-required-gates-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  required-module-qc-gates:
+    name: required-module-qc-gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Required module capability gate
+        run: |
+          if [ -f scripts/validate-module-capability-coverage.mjs ]; then
+            npm run validate:module-capability-coverage
+          else
+            echo "Skip: scripts/validate-module-capability-coverage.mjs not present on this branch."
+          fi
+
+      - name: Required competitive benchmark gate
+        run: |
+          if [ -f scripts/run-competitive-module-audit.mjs ]; then
+            npm run audit:competitive-modules
+          else
+            echo "Skip: scripts/run-competitive-module-audit.mjs not present on this branch."
+          fi
+
+      - name: Required module ranking gate
+        run: |
+          if [ -f scripts/generate-module-competitive-ranking-report.mjs ]; then
+            npm run report:module-competitive-ranking
+          else
+            echo "Skip: scripts/generate-module-competitive-ranking-report.mjs not present on this branch."
+          fi
+
+      - name: Standards freeze gate for portal routes
+        run: |
+          if [ -f scripts/validate-portal-standards-freeze.mjs ]; then
+            npm run validate:portal-standards-freeze
+          else
+            echo "Skip: scripts/validate-portal-standards-freeze.mjs not present on this branch."
+          fi
+
+      - name: Generate weekly executive scorecard
+        run: |
+          if [ -f scripts/generate-weekly-executive-qc-scorecard.mjs ]; then
+            npm run generate:weekly-executive-scorecard
+          else
+            echo "Skip: scripts/generate-weekly-executive-qc-scorecard.mjs not present on this branch."
+          fi
+
+      - name: Generate release communications artifacts
+        run: |
+          if [ -f scripts/generate-release-communications.mjs ]; then
+            npm run generate:release-communications
+          else
+            echo "Skip: scripts/generate-release-communications.mjs not present on this branch."
+          fi
+
+      - name: Upload module QC required gate artifacts
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: module-qc-required-gates-artifacts
+          path: |
+            docs/qc/module-capability-coverage-report.json
+            docs/qc/module-capability-coverage-report.md
+            docs/qc/competitive-module-audit-report.json
+            docs/qc/competitive-module-audit-report.md
+            docs/qc/module-competitive-ranking-report.json
+            docs/qc/module-competitive-ranking-report.md
+            docs/qc/portal-standards-freeze-report.json
+            docs/qc/portal-standards-freeze-report.md
+            docs/qc/weekly-executive-scorecard.json
+            docs/qc/weekly-executive-scorecard.md
+            docs/qc/release-claim-proof-map.json
+            docs/qc/release-communications-internal.md
+            docs/qc/release-communications-external.md
