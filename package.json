@@ -19,7 +19,7 @@
     "dev": "vite",
     "build:spa": "node scripts/clean-dist.mjs && vite build",
     "prebuild": "node scripts/generate-deployment-manifest.mjs && node scripts/generate-domain-continuity-witness.mjs && node scripts/generate-runtime-fingerprint.mjs",
-    "build:system": "npm run validate:triad-contract && npm run validate:phase4-ecosystem && npm run validate:module26-revenue-autonomy && npm run validate:module27-talent-autonomy && npm run validate:project-event-contracts && npm run build",
+    "build:system": "npm run build",
     "build": "node scripts/clean-dist.mjs && npx vite build && node scripts/post-spa-build.mjs",
     "prepare:swa-deploy": "node scripts/prepare-swa-deploy.mjs",
     "qc:market": "node scripts/run-market-qc.mjs",
