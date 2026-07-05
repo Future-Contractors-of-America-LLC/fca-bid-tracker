@@ -1,10 +1,10 @@
 # SaaS Quality Control Report
 
-- Generated: 2026-06-24T12:04:14.457Z
+- Generated: 2026-07-05T10:20:51.515Z
 - API base: https://auricrux-central.azurewebsites.net
-- Passed: 155
+- Passed: 190
 - Failed: 0
-- Warnings: 0
+- Warnings: 16
 
 ## Portal routes checked
 - /portal
@@ -36,6 +36,9 @@
 - /portal/warranty
 - /portal/legal
 - /portal/notifications
+- /portal/punch
+- /portal/job-cost
+- /portal/immersive
 
 ## Findings
 - **PASS** script:validate-routes.mjs
@@ -56,9 +59,28 @@
 - **PASS** script:validate-operations-pipeline.mjs
 - **PASS** script:validate-site-metadata.mjs
 - **PASS** script:validate-auth-session-slice.mjs
-- **PASS** script:validate-platform-slices.mjs
-- **PASS** script:validate-cycle2-complete.mjs
-- **PASS** script:validate-cycle3-complete.mjs
+- **WARN** script:validate-platform-slices.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-cycle2-complete.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-cycle3-complete.mjs: external dependency missing (outside workspace)
+- **PASS** script:validate-lifecycle-journey.mjs
+- **WARN** script:validate-cycle4-complete.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-cycle5-complete.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-cycle6-complete.mjs: external dependency missing (outside workspace)
+- **PASS** script:validate-field-execution-journey.mjs
+- **WARN** script:validate-cycle7-complete.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-immersive-vr-journey.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-cycle8-complete.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-fca-sovereignty.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-precon-sovereignty-journey.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-cycle9-complete.mjs: external dependency missing (outside workspace)
+- **PASS** script:validate-research-extensions-journey.mjs
+- **PASS** script:validate-full-platform-traverse.mjs
+- **WARN** script:validate-cycle10-complete.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-fca-native-payments-journey.mjs: external dependency missing (outside workspace)
+- **WARN** script:validate-warranty-service-journey.mjs: external dependency missing (outside workspace)
+- **PASS** script:validate-portal-auricrux-coverage.mjs
+- **WARN** script:validate-cycle14-complete.mjs: external dependency missing (outside workspace)
+- **PASS** script:verify-post-deploy.mjs
 - **PASS** script:smoke-central-spine.mjs
 - **PASS** route:/portal
 - **PASS** route:/portal/platform
@@ -89,6 +111,9 @@
 - **PASS** route:/portal/warranty
 - **PASS** route:/portal/legal
 - **PASS** route:/portal/notifications
+- **PASS** route:/portal/punch
+- **PASS** route:/portal/job-cost
+- **PASS** route:/portal/immersive
 - **PASS** route-pattern:/portal/opportunities/:opportunityId
 - **PASS** route-pattern:/portal/projects/:projectId
 - **PASS** route-pattern:/portal/billing/:invoiceId
@@ -131,6 +156,7 @@
 - **PASS** page:website/Terms
 - **PASS** page:website/Privacy
 - **PASS** page:website/LegalHub
+- **PASS** page:website/ChpsDpaSign
 - **PASS** page:website/ContractorLegalResources
 - **PASS** page:website/Cookies
 - **PASS** page:website/AcceptableUse
@@ -150,6 +176,7 @@
 - **PASS** page:portal/PlatformDashboard
 - **PASS** page:portal/PortalOperations
 - **PASS** page:portal/PortalPipeline
+- **PASS** page:portal/PortalLeads
 - **PASS** page:portal/PortalProjects
 - **PASS** page:portal/PortalFiles
 - **PASS** page:portal/PortalAudit
@@ -167,12 +194,15 @@
 - **PASS** page:portal/PortalPlans
 - **PASS** page:portal/PortalFinance
 - **PASS** page:portal/PortalDesignWorkspace
+- **PASS** page:portal/PortalImmersive
 - **PASS** page:portal/PortalRfis
 - **PASS** page:portal/PortalChangeOrders
 - **PASS** page:portal/PortalCloseout
 - **PASS** page:portal/PortalScheduling
 - **PASS** page:portal/PortalFieldTasks
 - **PASS** page:portal/PortalFieldSupervision
+- **PASS** page:portal/PortalPunch
+- **PASS** page:portal/PortalJobCost
 - **PASS** page:portal/PortalWarranty
 - **PASS** page:academy/AcademyHome
 - **PASS** page:academy/AcademyCatalog
@@ -188,7 +218,31 @@
 - **PASS** page:academy/AcademyModuleLesson
 - **PASS** page:academy/store/AcademyStoreCourse
 - **PASS** page:academy/store/AcademyStorePathway
-- **PASS** api:live-smoke: deferred â€” Auricrux-Central API unreachable from validator host
+- **PASS** api:/api/health: HTTP 200
+- **PASS** api:/api/bids: HTTP 200
+- **PASS** api:/api/projects: HTTP 200
+- **PASS** api:/api/files: HTTP 200
+- **PASS** api:/api/estimates: HTTP 200
+- **PASS** api:/api/proposals: HTTP 200
+- **PASS** api:/api/portal-messages: HTTP 200
+- **PASS** api:/api/portal-invoices: HTTP 200
+- **PASS** api:/api/billing-summary: HTTP 200
+- **PASS** api:/api/support-tickets: HTTP 200
+- **PASS** api:/api/workflow-audit: HTTP 200
+- **PASS** api:/api/academy-lms: HTTP 200
+- **PASS** api:/api/customer-login: HTTP 200
+- **PASS** api:/api/customer-verify: HTTP 200
+- **PASS** api:/api/leads auth boundary: HTTP 401
+- **PASS** api:/api/change-orders: HTTP 200
+- **PASS** api:/api/job-cost: HTTP 200
+- **PASS** api:/api/closeout-packages: HTTP 200
+- **PASS** api:/api/warranty-cases: HTTP 200
+- **PASS** api:/api/field-photos: HTTP 200
+- **PASS** api:/api/auricrux/actions: HTTP 200
+- **PASS** api:/api/auricrux-comms: HTTP 200
+- **PASS** api:/api/academy-commerce: HTTP 200
+- **PASS** api:/api/commercial-pipeline: HTTP 200
+- **PASS** api:/api/customer-auth-state: HTTP 200
 - **PASS** blueprint:/portal/bids
 - **PASS** blueprint:/portal/projects
 - **PASS** blueprint:/portal/files

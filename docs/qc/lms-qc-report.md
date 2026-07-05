@@ -1,12 +1,12 @@
 # LMS Depth & Content QC Report
 
-- Generated: 2026-06-23T21:28:47.164Z
+- Generated: 2026-07-05T10:21:21.577Z
 - Programs (static slice): 15
 - Total lessons: 71
 - Lessons with full media: 71
 - Lessons pending media: 0
 - Media coverage: 100%
-- Passed: 151 | Failed: 0 | Warnings: 0
+- Passed: 152 | Failed: 0 | Warnings: 0
 
 ## Findings
 - **PASS** script:validate-academy-ctas.mjs
@@ -15,6 +15,7 @@
 - **PASS** script:validate-academy-media.mjs
 - **PASS** script:validate-academy-readiness-overlay.mjs
 - **PASS** script:validate-academy-live-api.mjs
+- **PASS** script:validate-academy-native-commerce-journey.mjs
 - **PASS** program-meta:fca-workspace-quick-start
 - **PASS** program-link:fca-workspace-quick-start: /portal/projects
 - **PASS** course-lessons:ONB-001: 4 lessons
@@ -153,7 +154,7 @@
 - **PASS** api:academy-lms: programs in API: 1212
 - **PASS** api:catalog-integrity: aligned
 - **PASS** api:academy-learners: 4 learners
-- **PASS** api:academy-enrollments: 9 enrollments
+- **PASS** api:academy-enrollments: 11 enrollments
 - **PASS** lms-surface:src/pages/academy/AcademyHome.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyCatalog.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyModuleLesson.jsx

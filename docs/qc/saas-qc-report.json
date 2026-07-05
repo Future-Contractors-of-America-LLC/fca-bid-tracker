@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-24T12:04:14.457Z",
+  "generatedAt": "2026-07-05T10:20:51.515Z",
   "scope": "SaaS QC",
   "apiBase": "https://auricrux-central.azurewebsites.net",
   "summary": {
-    "passed": 155,
+    "passed": 190,
     "failed": 0,
-    "warnings": 0
+    "warnings": 16
   },
-  "portalRouteCount": 29,
+  "portalRouteCount": 32,
   "apiEndpointCount": 25,
   "findings": [
     {
@@ -101,18 +101,113 @@
       "detail": ""
     },
     {
-      "status": "pass",
+      "status": "warn",
       "label": "script:validate-platform-slices.mjs",
-      "detail": ""
+      "detail": "external dependency missing (outside workspace)"
     },
     {
-      "status": "pass",
+      "status": "warn",
       "label": "script:validate-cycle2-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-cycle3-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-lifecycle-journey.mjs",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-cycle4-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-cycle5-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-cycle6-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-field-execution-journey.mjs",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-cycle7-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-immersive-vr-journey.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-cycle8-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-fca-sovereignty.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-precon-sovereignty-journey.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-cycle9-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-research-extensions-journey.mjs",
       "detail": ""
     },
     {
       "status": "pass",
-      "label": "script:validate-cycle3-complete.mjs",
+      "label": "script:validate-full-platform-traverse.mjs",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-cycle10-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-fca-native-payments-journey.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-warranty-service-journey.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-portal-auricrux-coverage.mjs",
+      "detail": ""
+    },
+    {
+      "status": "warn",
+      "label": "script:validate-cycle14-complete.mjs",
+      "detail": "external dependency missing (outside workspace)"
+    },
+    {
+      "status": "pass",
+      "label": "script:verify-post-deploy.mjs",
       "detail": ""
     },
     {
@@ -263,6 +358,21 @@
     {
       "status": "pass",
       "label": "route:/portal/notifications",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/punch",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/job-cost",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/immersive",
       "detail": ""
     },
     {
@@ -477,6 +587,11 @@
     },
     {
       "status": "pass",
+      "label": "page:website/ChpsDpaSign",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:website/ContractorLegalResources",
       "detail": ""
     },
@@ -572,6 +687,11 @@
     },
     {
       "status": "pass",
+      "label": "page:portal/PortalLeads",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PortalProjects",
       "detail": ""
     },
@@ -657,6 +777,11 @@
     },
     {
       "status": "pass",
+      "label": "page:portal/PortalImmersive",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PortalRfis",
       "detail": ""
     },
@@ -683,6 +808,16 @@
     {
       "status": "pass",
       "label": "page:portal/PortalFieldSupervision",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalPunch",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalJobCost",
       "detail": ""
     },
     {
@@ -762,8 +897,128 @@
     },
     {
       "status": "pass",
-      "label": "api:live-smoke",
-      "detail": "deferred — Auricrux-Central API unreachable from validator host"
+      "label": "api:/api/health",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/bids",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/projects",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/files",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/estimates",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/proposals",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/portal-messages",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/portal-invoices",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/billing-summary",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/support-tickets",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/workflow-audit",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/academy-lms",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/customer-login",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/customer-verify",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/leads auth boundary",
+      "detail": "HTTP 401"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/change-orders",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/job-cost",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/closeout-packages",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/warranty-cases",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/field-photos",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/auricrux/actions",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/auricrux-comms",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/academy-commerce",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/commercial-pipeline",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/customer-auth-state",
+      "detail": "HTTP 200"
     },
     {
       "status": "pass",

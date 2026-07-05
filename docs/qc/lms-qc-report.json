@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-06-23T21:28:47.164Z",
+  "generatedAt": "2026-07-05T10:21:21.577Z",
   "scope": "LMS depth + content QC",
-  "apiBase": "https://api.futurecontractorsofamerica.com",
+  "apiBase": "https://auricrux-central.azurewebsites.net",
   "programCount": 15,
   "totalLessons": 71,
   "lessonsWithMedia": 71,
   "lessonsMissingMedia": 0,
   "mediaCoveragePct": 100,
   "summary": {
-    "passed": 151,
+    "passed": 152,
     "failed": 0,
     "warnings": 0
   },
@@ -41,6 +41,11 @@
     {
       "status": "pass",
       "label": "script:validate-academy-live-api.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-native-commerce-journey.mjs",
       "detail": ""
     },
     {
@@ -736,7 +741,7 @@
     {
       "status": "pass",
       "label": "api:academy-enrollments",
-      "detail": "9 enrollments"
+      "detail": "11 enrollments"
     },
     {
       "status": "pass",
