@@ -1,0 +1,11 @@
+<step title="Incoming Request" date="2026-07-06T03:18:05.844" instance="191595" url="/api/deployments/latest" method="GET" type="request" pid="805,1,18" Accept="*/*" Host="auricrux-central.scm.azurewebsites.net" User-Agent="AZURECLI/2.86.0 (MSI)" Accept-Encoding="gzip, deflate" Authorization="Bea..." x-ms-client-request-id="ade9e80f-78e8-11f1-a73f-f8edfc594771" X-ARR-LOG-ID="ade9e80f-78e8-11f1-a73f-f8edfc594771" CLIENT-IP="216.234.197.31:45530" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/deployments/latest" X-Client-IP="216.234.197.31" X-Client-Port="45530" >
+  <step title="Cleanup Xml Logs" date="2026-07-06T03:18:05.854" >
+    <step title="Cleanup Infos" date="2026-07-06T03:18:06.817" totalFiles="7378" totalCleanup="7218" /><!-- duration: 148ms -->
+  </step><!-- duration: 1142ms -->
+  <step title="DeploymentService.GetResult" date="2026-07-06T03:18:07.219" >
+    <step title="DeploymentService.GetLatestDeployment" date="2026-07-06T03:18:07.252" >
+      <step title="DeploymentManager.GetResults" date="2026-07-06T03:18:07.271" /><!-- duration: 1967ms -->
+    </step><!-- duration: 2054ms -->
+  </step><!-- duration: 2109ms -->
+  <step title="Outgoing response" date="2026-07-06T03:18:09.385" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 22ms -->
+</step><!-- duration: 3608ms -->

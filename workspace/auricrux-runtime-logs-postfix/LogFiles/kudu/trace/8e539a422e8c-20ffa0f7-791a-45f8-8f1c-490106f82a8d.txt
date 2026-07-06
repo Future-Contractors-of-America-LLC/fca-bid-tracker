@@ -1,0 +1,1 @@
+2026-06-18T20:30:24  Startup Request, url: /api/settings, method: GET, type: request, pid: 835,1,41, SCM_DO_BUILD_DURING_DEPLOYMENT: true, ScmType: GitHubAction

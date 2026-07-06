@@ -1,0 +1,5 @@
+<step title="Startup Request" date="2026-06-12T23:09:41.841" instance="bbfaab" url="/api/deployments/?$orderby=ReceivedTime%20desc&amp;$top=20&amp;api-version=2022-03-01" method="GET" type="request" pid="803,1,7" ScmType="GitHubAction" SCM_DO_BUILD_DURING_DEPLOYMENT="false" >
+  <step title="Cleanup Xml Logs" date="2026-06-12T23:09:41.849" >
+    <step title="Cleanup Infos" date="2026-06-12T23:09:41.869" totalFiles="255" totalCleanup="95" /><!-- duration: 10ms -->
+  </step><!-- duration: 37ms -->
+</step><!-- duration: 48ms -->

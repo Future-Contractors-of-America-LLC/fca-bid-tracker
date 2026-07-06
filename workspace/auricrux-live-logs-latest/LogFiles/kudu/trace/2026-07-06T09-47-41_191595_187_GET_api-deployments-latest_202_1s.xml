@@ -1,0 +1,8 @@
+<step title="Incoming Request" date="2026-07-06T09:47:41.059" instance="191595" url="/api/deployments/latest" method="GET" type="request" pid="837,1,5" Accept="*/*" Host="auricrux-central.scm.azurewebsites.net" User-Agent="AZURECLI/2.86.0 (MSI)" Accept-Encoding="gzip, deflate" Authorization="Bea..." x-ms-client-request-id="992ba78a-791f-11f1-b51c-f8edfc594771" X-ARR-LOG-ID="992ba78a-791f-11f1-b51c-f8edfc594771" CLIENT-IP="216.234.197.31:16109" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/deployments/latest" X-Client-IP="216.234.197.31" X-Client-Port="16109" >
+  <step title="DeploymentService.GetResult" date="2026-07-06T09:47:41.078" >
+    <step title="DeploymentService.GetLatestDeployment" date="2026-07-06T09:47:41.083" >
+      <step title="DeploymentManager.GetResults" date="2026-07-06T09:47:41.101" /><!-- duration: 819ms -->
+    </step><!-- duration: 844ms -->
+  </step><!-- duration: 856ms -->
+  <step title="Outgoing response" date="2026-07-06T09:47:41.943" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 8ms -->
+</step><!-- duration: 902ms -->

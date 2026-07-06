@@ -1,0 +1,58 @@
+<step title="BackgroundTrace" date="2026-06-24T12:34:38.191" instance="f8f925" url="/api/zipdeploy" method="POST" >
+  <step title="Creating temporary deployment - FetchDeploymentManager" date="2026-06-24T12:34:38.326" /><!-- duration: 12ms -->
+  <step title="Creating temporary deployment" date="2026-06-24T12:34:38.344" /><!-- duration: 188ms -->
+  <step title="Performing fetch based deployment" date="2026-06-24T12:34:38.724" >
+    <step title="Cleaning up temp folders from previous zip deployments and extracting pushed zip file /tmp/zipdeploy/6284dcbc-2168-4c45-a2fb-50b3cd3cbe36.zip (10.11 MB) to /tmp/zipdeploy/extracted" date="2026-06-24T12:34:40.033" >
+      <step title="ChmodRecursive Process exited with total time taken in ms: 308" date="2026-06-24T12:34:44.173" /><!-- duration: 27ms -->
+    </step><!-- duration: 4177ms -->
+    <step title="Deployment timer started" date="2026-06-24T12:34:46.260" >
+      <step title="DeploymentManager.Deploy(id:70cb6bd0-1ace-492c-a546-b7583571edbe)" date="2026-06-24T12:34:46.326" >
+        <step title="Collecting changeset information" date="2026-06-24T12:34:46.493" /><!-- duration: 311ms -->
+        <step title="Updating submodules" date="2026-06-24T12:34:46.901" /><!-- duration: 1620ms -->
+        <step title="Determining deployment builder" date="2026-06-24T12:34:49.277" >
+          <step title="Builder is OryxBuilder" date="2026-06-24T12:34:49.443" /><!-- duration: 19ms -->
+        </step><!-- duration: 225ms -->
+        <step title="PreDeployment: context.CleanOutputPath False" date="2026-06-24T12:34:49.625" >
+          <step title="PreDeployment: context.OutputPath /home/site/wwwroot" date="2026-06-24T12:34:50.024" >
+            <step title="Building" date="2026-06-24T12:34:50.389" >
+              <step title="Executing external process" date="2026-06-24T12:34:51.869" type="process" path="starter.sh" arguments="oryx build /tmp/zipdeploy/extracted -o /tmp/build/expressbuild --platform python --platform-version 3.11 -i /tmp/8ded1ecfb829628 -p packagedir=.python_packages/lib/site-packages" >
+                <step title="Cpu: gzip(938,1.030s)+tar(937,1.040s)+build.sh(898,0.060s)+oryx(857,9.780s)=total(11.900s)" date="2026-06-24T12:38:54.287" /><!-- duration: 117ms -->
+                <step title="starter.sh: no io activity for 61s, prev-cpu=-1.000s, current-cpu=11.900s" date="2026-06-24T12:38:54.859" /><!-- duration: 160ms -->
+                <step title="Cpu: gzip(938,3.100s)+tar(937,2.050s)+build.sh(898,0.060s)+oryx(857,10.590s)=total(15.800s)" date="2026-06-24T12:39:58.115" /><!-- duration: 870ms -->
+                <step title="starter.sh: no io activity for 145s, prev-cpu=11.900s, current-cpu=15.800s" date="2026-06-24T12:39:59.807" /><!-- duration: 205ms -->
+                <step title="Error occurred" date="2026-06-24T12:41:04.896" type="error" text="GetParentProcessLinux (982) failed.: Could not find a part of the path &apos;/proc/982/stat&apos;." stackTrace="   at Interop.ThrowExceptionForIoErrno(ErrorInfo errorInfo, String path, Boolean isDirError)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, UnixFileMode openPermissions, Int64&amp; fileLength, UnixFileMode&amp; filePermissions, Boolean failForSymlink, Boolean&amp; wasSymlink, Func`4 createOpenException)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.StreamReader.ValidateArgsAndOpenPath(String path, Encoding encoding, Int32 bufferSize)
+   at System.IO.File.ReadLines(String path)
+   at Kudu.Core.Infrastructure.ProcessExtensions.GetParentProcessLinux(Process process, ITracer tracer) in /tmp/KuduLite/Kudu.Core/Infrastructure/ProcessExtensions.cs:line 155" /><!-- duration: 629ms -->
+                <step title="Cpu: gzip(938,6.280s)+tar(937,3.450s)+build.sh(898,0.060s)+oryx(857,11.540s)=total(21.290s)" date="2026-06-24T12:41:09.097" /><!-- duration: 944ms -->
+                <step title="starter.sh: no io activity for 210s, prev-cpu=15.800s, current-cpu=21.290s" date="2026-06-24T12:41:11.181" /><!-- duration: 458ms -->
+                <step title="Cpu: python3.11(1101,5.290s)+ts(1102,0.100s)+build.sh(1100,0.000s)+build.sh(1099,0.000s)+build.sh(898,0.120s)+oryx(857,12.540s)=total(18.040s)" date="2026-06-24T12:43:39.001" /><!-- duration: 70ms -->
+                <step title="starter.sh: no io activity for 60s, prev-cpu=-1.000s, current-cpu=18.040s" date="2026-06-24T12:43:39.199" /><!-- duration: 48ms -->
+                <step title="Cpu: python3.11(1101,17.610s)+ts(1102,0.110s)+build.sh(1100,0.000s)+build.sh(1099,0.000s)+build.sh(898,0.120s)+oryx(857,12.600s)=total(30.430s)" date="2026-06-24T12:44:40.709" /><!-- duration: 20ms -->
+                <step title="starter.sh: no io activity for 122s, prev-cpu=18.040s, current-cpu=30.430s" date="2026-06-24T12:44:40.770" /><!-- duration: 28ms -->
+                <step title="Cpu: python3.11(1101,31.390s)+ts(1102,0.110s)+build.sh(1100,0.000s)+build.sh(1099,0.000s)+build.sh(898,0.120s)+oryx(857,13.710s)=total(45.330s)" date="2026-06-24T12:45:41.389" /><!-- duration: 60ms -->
+                <step title="starter.sh: no io activity for 183s, prev-cpu=30.430s, current-cpu=45.330s" date="2026-06-24T12:45:41.548" /><!-- duration: 69ms -->
+                <step title="Cpu: rsync(1190,2.310s)+rsync(1189,0.320s)+rsync(1188,2.380s)+build.sh(898,0.140s)+oryx(857,14.430s)=total(19.560s)" date="2026-06-24T12:47:33.360" /><!-- duration: 159ms -->
+                <step title="starter.sh: no io activity for 60s, prev-cpu=-1.000s, current-cpu=19.560s" date="2026-06-24T12:47:34.921" /><!-- duration: 115ms -->
+              </step><!-- duration: 803842ms -->
+              <step title="Executing external process" date="2026-06-24T12:48:17.009" type="process" path="starter.sh" arguments="zip --symlinks -r -0 -q /tmp/build/expressbuild/20260624124815.zip ." /><!-- duration: 18903ms -->
+              <step title="Executing external process" date="2026-06-24T12:48:36.068" type="process" path="starter.sh" arguments="rsync -av /tmp/build/expressbuild/20260624124815.zip /home/data/SitePackages/20260624124815.zip" /><!-- duration: 8595ms -->
+              <step title="Deleting outdated zip file /home/data/SitePackages/20260624121552.zip" date="2026-06-24T12:48:45.053" /><!-- duration: 49ms -->
+              <step title="Triggering recycle (preview mode disabled)." date="2026-06-24T12:48:47.139" /><!-- duration: 27ms -->
+              <step title="Modified file to trigger a restart of the app container." date="2026-06-24T12:48:47.274" /><!-- duration: 21ms -->
+              <step title="Skip function trigger and logicapp sync because sku (Standard) is not dynamic (consumption plan)." date="2026-06-24T12:48:47.590" /><!-- duration: 8ms -->
+              <step title="Purge deployment items" date="2026-06-24T12:48:54.403" >
+                <step title="Remove 96c1b2c6-, Success, received at 06/23/2026 17:01:06" date="2026-06-24T12:48:55.905" /><!-- duration: 207ms -->
+              </step><!-- duration: 1816ms -->
+            </step><!-- duration: 847387ms -->
+          </step><!-- duration: 847780ms -->
+          <step title="Cleaning up temp files" date="2026-06-24T12:48:57.825" /><!-- duration: 22641ms -->
+          <step title="Cleaning up temp files" date="2026-06-24T12:49:20.483" /><!-- duration: 633ms -->
+          <step title="Reloading status file with latest updates" date="2026-06-24T12:49:21.452" >
+            <step title="WebHooksManager.PublishEventAsync: PostDeployment" date="2026-06-24T12:49:21.628" /><!-- duration: 2712ms -->
+          </step><!-- duration: 2942ms -->
+          <step title="Cleaning up temporary deployment - fetch deployment was successful" date="2026-06-24T12:49:24.493" /><!-- duration: 3ms -->
+        </step><!-- duration: 875002ms -->
+      </step><!-- duration: 878899ms -->

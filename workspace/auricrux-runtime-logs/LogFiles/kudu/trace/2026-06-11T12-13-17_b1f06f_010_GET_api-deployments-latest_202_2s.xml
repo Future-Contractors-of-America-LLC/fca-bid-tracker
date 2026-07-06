@@ -1,0 +1,9 @@
+<step title="Incoming Request" date="2026-06-11T12:13:17.356" instance="b1f06f" url="/api/deployments/latest?deployer=GITHUB_ZIP_DEPLOY_FUNCTIONS_V1&amp;time=2026-06-11_12-12-41Z" method="GET" type="request" pid="803,1,17" Host="auricrux-central.scm.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployFunctionAppToAzure_4d3bab13dfbb8631511dc7f3b870b1b680c5a1fe90f3ffcd25faade51203ced5+GITHUBACTIONS_DeployFunctionAppToAzure_4d3bab13dfbb8631511dc7f3b870b1b680c5a1fe90f3ffcd25faade51203ced5" Authorization="Bea..." Content-Type="application/json; charset=utf-8" Cookie="ARRAffinity=b1f06f725bded0b7a2079e20ce6f459823afa9d9e9774a45a2cbc6b445769c3a;Path=/;HttpOnly;Secure;Domain=auricrux-central.scm.azurewebsites.net; ARRAffinitySameSite=b1f06f725bded0b7a2079e20ce6f459823afa9d9e9774a45a2cbc6b445769c3a;Path=/;HttpOnly;SameSite=None;Secure;Domain=auricrux-central.scm.azurewebsites.net" Content-Length="0" X-ARR-LOG-ID="b4c79401-49a6-4381-a473-f1bcc0e8fbc3" CLIENT-IP="172.174.190.117:61505" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/deployments/latest?deployer=GITHUB_ZIP_DEPLOY_FUNCTIONS_V1&amp;time=2026-06-11_12-12-41Z" X-Client-IP="172.174.190.117" X-Client-Port="61505" >
+  <step title="Cleanup Xml Logs" date="2026-06-11T12:13:17.358" /><!-- duration: 15ms -->
+  <step title="DeploymentService.GetResult" date="2026-06-11T12:13:17.404" >
+    <step title="DeploymentService.GetLatestDeployment" date="2026-06-11T12:13:17.419" >
+      <step title="DeploymentManager.GetResults" date="2026-06-11T12:13:17.427" /><!-- duration: 1626ms -->
+    </step><!-- duration: 1661ms -->
+  </step><!-- duration: 1687ms -->
+  <step title="Outgoing response" date="2026-06-11T12:13:19.111" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 12ms -->
+</step><!-- duration: 1775ms -->

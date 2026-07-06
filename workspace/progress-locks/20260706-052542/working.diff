@@ -1,0 +1,139 @@
+diff --git a/api/cte-program.js b/api/cte-program.js
+index dc55deca3..4033c1e61 100644
+--- a/api/cte-program.js
++++ b/api/cte-program.js
+@@ -1,5 +1,5 @@
+ import { app } from "@azure/functions";
+-import { buildVirginiaCteAcademyPrograms } from "../src/virginiaCteCourses.js";
++import { buildVirginiaCteAcademyPrograms } from "./_lib/virginiaCteCourses.js";
+ 
+ app.http("cte-program", {
+   methods: ["GET"],
+diff --git a/api/package.json b/api/package.json
+index 6069dd1bf..db092018d 100644
+--- a/api/package.json
++++ b/api/package.json
+@@ -1,7 +1,9 @@
+ {
+   "name": "fca-bid-tracker-api",
+   "version": "1.0.0",
++  "type": "module",
+   "dependencies": {
++    "@azure/functions": "^4.6.0",
+     "@azure/data-tables": "^13.3.1",
+     "stripe": "^16.0.0"
+   }
+diff --git a/docs/operations/live-execution-status.md b/docs/operations/live-execution-status.md
+index 0fae02909..f69e1d0bd 100644
+--- a/docs/operations/live-execution-status.md
++++ b/docs/operations/live-execution-status.md
+@@ -2,7 +2,7 @@
+ 
+ - Status: ACTIVE
+ - Mode: Continuous autonomous execution
+-- Last updated: 2026-07-06T02:42:13.842Z
++- Last updated: 2026-07-06T09:25:27.348Z
+ - Current wave: Wave 0 foundation hardening
+ 
+ ## Current lane
+diff --git a/public/deployment-status.json b/public/deployment-status.json
+index d512801ef..bd23fbce3 100644
+--- a/public/deployment-status.json
++++ b/public/deployment-status.json
+@@ -1,6 +1,6 @@
+ {
+   "service": "fca-bid-tracker",
+-  "generatedAt": "2026-07-06T02:22:01.518Z",
++  "generatedAt": "2026-07-06T02:56:43.060Z",
+   "source": "local-build",
+   "gitRef": "local",
+   "gitSha": "local",
+diff --git a/public/domain-continuity.json b/public/domain-continuity.json
+index 54f63cbba..827f0a366 100644
+--- a/public/domain-continuity.json
++++ b/public/domain-continuity.json
+@@ -1,7 +1,7 @@
+ {
+   "service": "fca-bid-tracker",
+   "witnessType": "domain-continuity",
+-  "generatedAt": "2026-07-06T02:22:01.576Z",
++  "generatedAt": "2026-07-06T02:56:43.118Z",
+   "source": "local-build",
+   "gitRef": "local",
+   "gitSha": "local",
+diff --git a/public/runtime-fingerprint.txt b/public/runtime-fingerprint.txt
+index d3285e813..054f062df 100644
+--- a/public/runtime-fingerprint.txt
++++ b/public/runtime-fingerprint.txt
+@@ -1,5 +1,5 @@
+ service=fca-bid-tracker
+-generatedAt=2026-07-06T02:22:01.635Z
++generatedAt=2026-07-06T02:56:43.177Z
+ source=local-build
+ gitRef=local
+ gitSha=local
+diff --git a/scripts/prepare-api-functions.mjs b/scripts/prepare-api-functions.mjs
+index 019d7e6ab..7ab922313 100644
+--- a/scripts/prepare-api-functions.mjs
++++ b/scripts/prepare-api-functions.mjs
+@@ -23,6 +23,25 @@ function writeJson(filePath, value) {
+   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+ }
+ 
++function extractHttpConfig(source, fallbackRoute) {
++  const methodsMatch = source.match(/methods\s*:\s*\[([^\]]+)\]/m);
++  const routeMatch = source.match(/route\s*:\s*['"]([^'"]+)['"]/m);
++  const authMatch = source.match(/authLevel\s*:\s*['"]([^'"]+)['"]/m);
++
++  const methods = methodsMatch
++    ? methodsMatch[1]
++        .split(',')
++        .map((token) => token.replace(/['"\s]/g, '').toLowerCase())
++        .filter(Boolean)
++    : ['get', 'post', 'put', 'patch', 'delete', 'options'];
++
++  return {
++    methods,
++    route: routeMatch ? routeMatch[1] : fallbackRoute,
++    authLevel: authMatch ? authMatch[1] : 'anonymous',
++  };
++}
++
+ function hasCentralProxyIndex(dirName) {
+   const indexPath = path.join(apiRoot, dirName, 'index.js');
+   if (!fs.existsSync(indexPath)) return false;
+@@ -113,7 +132,33 @@ function main() {
+     // which would create duplicate route declarations at runtime.
+     if (canonicalFunctionDirs.has(baseName)) continue;
+ 
+-    fs.copyFileSync(path.join(apiRoot, entry.name), path.join(outRoot, entry.name));
++    const flatSourcePath = path.join(apiRoot, entry.name);
++    const generatedFlatPath = path.join(outRoot, entry.name);
++    fs.copyFileSync(flatSourcePath, generatedFlatPath);
++
++    // Materialize flat handlers as Functions folders so SWA discovers routes.
++    const generatedFunctionDir = path.join(outRoot, baseName);
++    ensureDir(generatedFunctionDir);
++    const source = fs.readFileSync(flatSourcePath, 'utf8');
++    const httpConfig = extractHttpConfig(source, baseName);
++    writeJson(path.join(generatedFunctionDir, 'function.json'), {
++      bindings: [
++        {
++          authLevel: httpConfig.authLevel,
++          type: 'httpTrigger',
++          direction: 'in',
++          name: 'req',
++          methods: httpConfig.methods,
++          route: httpConfig.route,
++        },
++        {
++          type: 'http',
++          direction: 'out',
++          name: 'res',
++        },
++      ],
++      scriptFile: `../${entry.name}`,
++    });
+   }
+ 
+   console.log(`Prepared Azure Functions backend at api_generated (${canonicalFunctionDirs.size} central proxy routes).`);

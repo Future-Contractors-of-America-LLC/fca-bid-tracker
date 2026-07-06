@@ -1,0 +1,5 @@
+<step title="Incoming Request" date="2026-06-10T19:59:29.086" instance="b1f06f" url="/logstream" method="GET" type="request" pid="832,1,7" Host="auricrux-central.scm.azurewebsites.net" User-Agent="AZURECLI/2.86.0 (RPM)" Accept-Encoding="identity" Authorization="Bea..." x-ms-client-request-id="d48fc360-6506-11f1-a4fb-00155d582d1d" X-ARR-LOG-ID="d48fc360-6506-11f1-a4fb-00155d582d1d" CLIENT-IP="40.71.199.151:37171" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/logstream" X-Client-IP="40.71.199.151" X-Client-Port="37171" >
+  <step title="LogStreamHandlerMiddleware.Invoke" date="2026-06-10T19:59:29.191" /><!-- duration: 84ms -->
+  <step title="Error occurred" date="2026-06-10T20:01:30.060" type="error" text="LogStreamManager: ProcessRequest end" /><!-- duration: 69ms -->
+  <step title="Outgoing response" date="2026-06-10T20:01:30.284" type="response" statusCode="200" statusText="OK" /><!-- duration: 8ms -->
+</step><!-- duration: 121215ms -->

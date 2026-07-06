@@ -1,0 +1,1 @@
+<step title="Startup Request" date="2026-06-25T20:40:24.674" instance="191595" url="/api/deployments/latest?deployer=GITHUB_ZIP_DEPLOY_FUNCTIONS_V1&amp;time=2026-06-25_20-36-51Z" method="GET" type="request" pid="839,1,5" SCM_DO_BUILD_DURING_DEPLOYMENT="true" ScmType="GitHubAction" /><!-- duration: 70ms -->

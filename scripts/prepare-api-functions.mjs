@@ -23,11 +23,60 @@ function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
+function extractHttpConfig(source, fallbackRoute) {
+  const methodsMatch = source.match(/methods\s*:\s*\[([^\]]+)\]/m);
+  const routeMatch = source.match(/route\s*:\s*['"]([^'"]+)['"]/m);
+  const authMatch = source.match(/authLevel\s*:\s*['"]([^'"]+)['"]/m);
+
+  const methods = methodsMatch
+    ? methodsMatch[1]
+        .split(',')
+        .map((token) => token.replace(/['"\s]/g, '').toLowerCase())
+        .filter(Boolean)
+    : ['get', 'post', 'put', 'patch', 'delete', 'options'];
+
+  return {
+    methods,
+    route: routeMatch ? routeMatch[1] : fallbackRoute,
+    authLevel: authMatch ? authMatch[1] : 'anonymous',
+  };
+}
+
 function hasCentralProxyIndex(dirName) {
   const indexPath = path.join(apiRoot, dirName, 'index.js');
   if (!fs.existsSync(indexPath)) return false;
   const source = fs.readFileSync(indexPath, 'utf8');
   return source.includes('createCentralProxy') || source.includes('createCentralPathProxy');
+}
+
+function rewriteCanonicalFunctionScriptsForModulePackage(functionDir) {
+  const functionJsonPath = path.join(functionDir, 'function.json');
+  if (!fs.existsSync(functionJsonPath)) return;
+
+  const functionJson = JSON.parse(fs.readFileSync(functionJsonPath, 'utf8'));
+  let scriptFile = typeof functionJson.scriptFile === 'string' && functionJson.scriptFile.trim()
+    ? functionJson.scriptFile.trim()
+    : 'index.js';
+
+  // Normalize script file path to avoid platform-specific separators.
+  scriptFile = scriptFile.replace(/\\/g, '/');
+
+  if (!scriptFile.toLowerCase().endsWith('.js')) {
+    return;
+  }
+
+  const currentScriptPath = path.join(functionDir, scriptFile);
+  if (!fs.existsSync(currentScriptPath)) {
+    return;
+  }
+
+  // Keep canonical handlers as .js and force CommonJS semantics locally.
+  const functionPackageJsonPath = path.join(functionDir, 'package.json');
+  const functionPackageJson = fs.existsSync(functionPackageJsonPath)
+    ? JSON.parse(fs.readFileSync(functionPackageJsonPath, 'utf8'))
+    : {};
+  functionPackageJson.type = 'commonjs';
+  writeJson(functionPackageJsonPath, functionPackageJson);
 }
 
 function main() {
@@ -45,11 +94,12 @@ function main() {
     writeJson(path.join(outRoot, 'host.json'), { version: '2.0' });
   }
 
-  if (fs.existsSync(path.join(apiRoot, 'package.json'))) {
-    fs.copyFileSync(path.join(apiRoot, 'package.json'), path.join(outRoot, 'package.json'));
-  } else {
-    writeJson(path.join(outRoot, 'package.json'), { name: 'fca-bid-tracker-api-generated', version: '1.0.0' });
-  }
+  const generatedPackageJson = fs.existsSync(path.join(apiRoot, 'package.json'))
+    ? JSON.parse(fs.readFileSync(path.join(apiRoot, 'package.json'), 'utf8'))
+    : {
+        name: 'fca-bid-tracker-api-generated',
+        version: '1.0.0',
+      };
 
   const libDir = path.join(apiRoot, '_lib');
   if (fs.existsSync(libDir)) {
@@ -93,14 +143,27 @@ function main() {
       .map((entry) => entry.name),
   );
 
+  const shimmedCanonicalRoutes = new Set([
+    'academy-lms',
+    'auricrux',
+    'diag-canary',
+    'projects',
+    'stripe-checkout',
+  ]);
+
   for (const entry of apiEntries) {
     if (!entry.isDirectory()) continue;
     if (entry.name === '_lib') continue;
+    if (shimmedCanonicalRoutes.has(entry.name)) continue;
     const functionJsonPath = path.join(apiRoot, entry.name, 'function.json');
     if (fs.existsSync(functionJsonPath)) {
-      fs.cpSync(path.join(apiRoot, entry.name), path.join(outRoot, entry.name), { recursive: true });
+      const generatedFunctionDir = path.join(outRoot, entry.name);
+      fs.cpSync(path.join(apiRoot, entry.name), generatedFunctionDir, { recursive: true });
+      rewriteCanonicalFunctionScriptsForModulePackage(generatedFunctionDir);
     }
   }
+
+  const copiedFlatHandlers = [];
 
   for (const entry of apiEntries) {
     if (!entry.isFile()) continue;
@@ -109,11 +172,28 @@ function main() {
 
     const baseName = entry.name.replace(/\.js$/i, '');
 
-    // Avoid copying flat files that have canonical function directories,
-    // which would create duplicate route declarations at runtime.
+    // Canonical function directories take precedence when both styles exist.
     if (canonicalFunctionDirs.has(baseName)) continue;
 
-    fs.copyFileSync(path.join(apiRoot, entry.name), path.join(outRoot, entry.name));
+    const flatSourcePath = path.join(apiRoot, entry.name);
+    const generatedFlatPath = path.join(outRoot, entry.name);
+    fs.copyFileSync(flatSourcePath, generatedFlatPath);
+    copiedFlatHandlers.push(entry.name);
+  }
+
+  const bootstrapSource = copiedFlatHandlers
+    .sort((a, b) => a.localeCompare(b))
+    .map((fileName) => `import './${fileName}';`)
+    .join('\n');
+
+  fs.writeFileSync(path.join(outRoot, 'index.mjs'), `${bootstrapSource}\n`, 'utf8');
+
+  // Force explicit flat handler bootstrap so v4 indexing does not depend on wildcard main behavior.
+  generatedPackageJson.main = 'index.mjs';
+  writeJson(path.join(outRoot, 'package.json'), generatedPackageJson);
+
+  if (copiedFlatHandlers.length === 0) {
+    console.warn('No flat handlers were copied into api_generated; only canonical function.json routes are available.');
   }
 
   console.log(`Prepared Azure Functions backend at api_generated (${canonicalFunctionDirs.size} central proxy routes).`);

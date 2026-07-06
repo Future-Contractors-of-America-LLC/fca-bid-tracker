@@ -3,15 +3,13 @@ const {
   enqueueInstructorReview,
   listInstructorReviewQueue,
   resolveInstructorReviewItem,
-} = require("../_lib/runtime/cteSafeModeStore");
-const {
-  corsHeaders,
-} = require("../_lib/runtime/cteShadowEnvironment");
+} = require("../_lib/runtime/cteSafeModeStore.cjs");
+const { corsHeaders } = require("../_lib/runtime/cteShadowEnvironment.cjs");
 const {
   buildSecureProxyHeaders,
   enforceSecurityHardening,
   writeTamperEvidentSecurityEvent,
-} = require("../_lib/runtime/securityHardeningControls");
+} = require("../_lib/runtime/securityHardeningControls.cjs");
 
 const secureCorsHeaders = buildSecureProxyHeaders(corsHeaders);
 

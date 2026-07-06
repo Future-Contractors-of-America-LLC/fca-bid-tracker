@@ -3,11 +3,11 @@
     "attempt": 1,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "719df3a550cadcd897589074fb8c3c52c5c813e4",
+    "targetGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
     "host": "futurecontractorsofamerica.com",
-    "deploymentGitSha": "719df3a550cadcd897589074fb8c3c52c5c813e4",
-    "runtimeGitSha": "719df3a550cadcd897589074fb8c3c52c5c813e4",
-    "commitWitnessRoute": "/commit-witness-719df3a550cadcd897589074fb8c3c52c5c813e4.txt",
+    "deploymentGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
+    "runtimeGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
+    "commitWitnessRoute": "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -111,7 +111,7 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-719df3a550cadcd897589074fb8c3c52c5c813e4.txt",
+        "route": "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt",
         "status": 200,
         "ok": true
       },
@@ -124,7 +124,7 @@
     "apiRouteChecks": [
       {
         "route": "/api/academy-lms?view=summary",
-        "status": 200,
+        "status": 403,
         "ok": true
       }
     ],
@@ -134,11 +134,11 @@
     "attempt": 1,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "719df3a550cadcd897589074fb8c3c52c5c813e4",
+    "targetGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
     "host": "www.futurecontractorsofamerica.com",
-    "deploymentGitSha": "719df3a550cadcd897589074fb8c3c52c5c813e4",
-    "runtimeGitSha": "719df3a550cadcd897589074fb8c3c52c5c813e4",
-    "commitWitnessRoute": "/commit-witness-719df3a550cadcd897589074fb8c3c52c5c813e4.txt",
+    "deploymentGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
+    "runtimeGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
+    "commitWitnessRoute": "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -242,7 +242,7 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-719df3a550cadcd897589074fb8c3c52c5c813e4.txt",
+        "route": "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt",
         "status": 200,
         "ok": true
       },
@@ -255,7 +255,7 @@
     "apiRouteChecks": [
       {
         "route": "/api/academy-lms?view=summary",
-        "status": 200,
+        "status": 403,
         "ok": true
       }
     ],
@@ -265,11 +265,11 @@
     "attempt": 1,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "719df3a550cadcd897589074fb8c3c52c5c813e4",
+    "targetGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
     "host": "app.futurecontractorsofamerica.com",
-    "deploymentGitSha": "719df3a550cadcd897589074fb8c3c52c5c813e4",
-    "runtimeGitSha": "719df3a550cadcd897589074fb8c3c52c5c813e4",
-    "commitWitnessRoute": "/commit-witness-719df3a550cadcd897589074fb8c3c52c5c813e4.txt",
+    "deploymentGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
+    "runtimeGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
+    "commitWitnessRoute": "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -373,7 +373,7 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-719df3a550cadcd897589074fb8c3c52c5c813e4.txt",
+        "route": "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt",
         "status": 200,
         "ok": true
       },
@@ -386,7 +386,138 @@
     "apiRouteChecks": [
       {
         "route": "/api/academy-lms?view=summary",
+        "status": 403,
+        "ok": true
+      }
+    ],
+    "failures": []
+  },
+  {
+    "attempt": 1,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+    "targetGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
+    "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+    "deploymentGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
+    "runtimeGitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
+    "commitWitnessRoute": "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "app.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
         "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/index.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/new.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/config/auricrux-central.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/detail.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/status.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/edit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/bid-checklist.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal/contractor-resources",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/contact",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/portal/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/index.html",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "apiRouteChecks": [
+      {
+        "route": "/api/academy-lms?view=summary",
+        "status": 403,
         "ok": true
       }
     ],

@@ -5,11 +5,11 @@ const require = createRequire(import.meta.url);
 const {
   enforceSecurityHardeningForFetchRequest,
   toFetchSecurityResponse,
-} = require("./_lib/runtime/securityHardeningControls.js");
+} = require("./_lib/runtime/securityHardeningControls.cjs");
 const {
   isCteShadowRequest,
   buildCteShadowResponse,
-} = require("./_lib/runtime/cteShadowEnvironment.js");
+} = require("./_lib/runtime/cteShadowEnvironment.cjs");
 
 export const CENTRAL_API =
   process.env.AURICRUX_CENTRAL_API ||

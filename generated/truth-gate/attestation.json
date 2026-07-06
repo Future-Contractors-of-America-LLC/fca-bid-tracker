@@ -1,0 +1,171 @@
+{
+  "generatedAt": "2026-07-06T15:55:04.487Z",
+  "context": {
+    "resourceGroup": "Auricrux_group",
+    "functionAppName": "Auricrux-Central",
+    "baseUrl": "https://auricrux-central.azurewebsites.net",
+    "artifactDir": "api_generated",
+    "expectedRoutesFile": "docs/runtime-proof/truth-gate/expected-routes.json",
+    "intentChecksFile": "docs/runtime-proof/truth-gate/intent-checks.json",
+    "criticalFiles": [
+      "index.mjs",
+      "admin-payroll-profile.js",
+      "admin-payroll-directory.js",
+      "admin-students.js",
+      "internal-company-profile.js",
+      "internal-employee-directory.js",
+      "internal-record-audit.js",
+      "internal-admin-ping-v4.js"
+    ],
+    "runFromPackageValue": "1",
+    "latestDeploymentId": null
+  },
+  "immutablePackageAttestation": {
+    "pass": true,
+    "settingName": "WEBSITE_RUN_FROM_PACKAGE",
+    "settingValue": "1"
+  },
+  "fileAttestation": [
+    {
+      "path": "index.mjs",
+      "localHash": "5411dc8b1f527a5d78a4463f3dcdbfac5a9423ea7a550b09ea07d04e727f6efe",
+      "liveHash": "5411dc8b1f527a5d78a4463f3dcdbfac5a9423ea7a550b09ea07d04e727f6efe",
+      "match": true,
+      "error": null
+    },
+    {
+      "path": "admin-payroll-profile.js",
+      "localHash": "b78d005de2eed767df4bd314c797c34fa4946b43ba4880d85b5a02323257db8f",
+      "liveHash": "b78d005de2eed767df4bd314c797c34fa4946b43ba4880d85b5a02323257db8f",
+      "match": true,
+      "error": null
+    },
+    {
+      "path": "admin-payroll-directory.js",
+      "localHash": "947add1838ea5f70e8355c3f4d3e0593aa6ab914a158f623e5118d40e4755bc0",
+      "liveHash": "947add1838ea5f70e8355c3f4d3e0593aa6ab914a158f623e5118d40e4755bc0",
+      "match": true,
+      "error": null
+    },
+    {
+      "path": "admin-students.js",
+      "localHash": "67b52f52882c764d571d1dfabbea1c82e8166ed3948545229fd6cd670f458d8e",
+      "liveHash": "67b52f52882c764d571d1dfabbea1c82e8166ed3948545229fd6cd670f458d8e",
+      "match": true,
+      "error": null
+    },
+    {
+      "path": "internal-company-profile.js",
+      "localHash": "e0f72550fdead2823d47e7b88c5bc65f9675f57733757a5ff9ab5915e52fe134",
+      "liveHash": "e0f72550fdead2823d47e7b88c5bc65f9675f57733757a5ff9ab5915e52fe134",
+      "match": true,
+      "error": null
+    },
+    {
+      "path": "internal-employee-directory.js",
+      "localHash": "ee89d10af346c99bc1e81b6d612693a71caab4e1517de67c89cfc6aefffbace3",
+      "liveHash": "ee89d10af346c99bc1e81b6d612693a71caab4e1517de67c89cfc6aefffbace3",
+      "match": true,
+      "error": null
+    },
+    {
+      "path": "internal-record-audit.js",
+      "localHash": "dd22772b0de90dd6784a3a2ada0ee6d053a9d754ea5c9c1235c71bfde925daa7",
+      "liveHash": "dd22772b0de90dd6784a3a2ada0ee6d053a9d754ea5c9c1235c71bfde925daa7",
+      "match": true,
+      "error": null
+    },
+    {
+      "path": "internal-admin-ping-v4.js",
+      "localHash": "55a3b382aeb9f6831d4c31bc24eddd1e7dae12d6c33506e6b2d04da0cedb716e",
+      "liveHash": "55a3b382aeb9f6831d4c31bc24eddd1e7dae12d6c33506e6b2d04da0cedb716e",
+      "match": true,
+      "error": null
+    }
+  ],
+  "routeAttestation": {
+    "expectedCount": 14,
+    "actualCount": 24,
+    "missing": [],
+    "methodMismatch": []
+  },
+  "intentChecks": [
+    {
+      "name": "diag canary reachable",
+      "method": "GET",
+      "path": "/api/diag-canary",
+      "allowedStatus": [
+        200
+      ],
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "projects route auth boundary",
+      "method": "GET",
+      "path": "/api/projects",
+      "allowedStatus": [
+        200,
+        401,
+        403
+      ],
+      "status": 403,
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "auricrux route auth boundary",
+      "method": "GET",
+      "path": "/api/auricrux",
+      "allowedStatus": [
+        200,
+        401,
+        403
+      ],
+      "status": 403,
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "customer login contract",
+      "method": "POST",
+      "path": "/api/customer-login",
+      "allowedStatus": [
+        200,
+        400,
+        401
+      ],
+      "status": 401,
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "internal-admin ping reachable",
+      "method": "GET",
+      "path": "/api/internal-admin/ping",
+      "allowedStatus": [
+        200,
+        401,
+        403
+      ],
+      "status": 200,
+      "ok": true,
+      "error": null
+    },
+    {
+      "name": "internal-admin payroll profile boundary",
+      "method": "GET",
+      "path": "/api/internal-admin/payroll-profile",
+      "allowedStatus": [
+        200,
+        401,
+        403
+      ],
+      "status": 401,
+      "ok": true,
+      "error": null
+    }
+  ],
+  "overallPass": true
+}

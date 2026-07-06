@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import {
   TEST_CUSTOMER_ACCOUNTS,
   sanitizeSeededCustomerAccount,
-} from "../src/customerAccounts.js";
+} from "./_lib/customerAccounts.js";
 
 function sha256(value = "") {
   return crypto.createHash("sha256").update(String(value)).digest("hex");

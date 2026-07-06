@@ -10,7 +10,7 @@ const ADMIN_REQUIRED = {
 app.http("admin-payroll-profile", {
   methods: ["GET", "POST"],
   authLevel: "anonymous",
-  route: "admin/payroll-profile",
+  route: "internal-admin/payroll-profile",
   handler: async (request) => {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;

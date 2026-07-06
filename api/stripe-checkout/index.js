@@ -6,11 +6,11 @@ const {
   corsHeaders,
   isCteShadowRequest,
   buildCteMockPaymentPayload,
-} = require("../_lib/runtime/cteShadowEnvironment");
+} = require("../_lib/runtime/cteShadowEnvironment.cjs");
 const {
   buildSecureProxyHeaders,
   enforceSecurityHardening,
-} = require("../_lib/runtime/securityHardeningControls");
+} = require("../_lib/runtime/securityHardeningControls.cjs");
 
 const secureCorsHeaders = buildSecureProxyHeaders(corsHeaders);
 

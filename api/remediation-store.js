@@ -1,4 +1,4 @@
-import { academyCatalog } from "../src/academyCatalog.js";
+import { academyCatalog } from "./_lib/academyCatalog.js";
 
 const STORE_KEY = "__FCA_REMEDIATION_STORE__";
 const DEFAULT_TENANT_ID = "TEN-FCA-001";

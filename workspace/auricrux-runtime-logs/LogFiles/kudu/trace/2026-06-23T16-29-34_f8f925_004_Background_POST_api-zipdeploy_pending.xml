@@ -1,0 +1,40 @@
+<step title="BackgroundTrace" date="2026-06-23T16:29:34.186" instance="f8f925" url="/api/zipdeploy" method="POST" >
+  <step title="Creating temporary deployment - FetchDeploymentManager" date="2026-06-23T16:29:34.298" /><!-- duration: 2ms -->
+  <step title="Creating temporary deployment" date="2026-06-23T16:29:34.305" /><!-- duration: 220ms -->
+  <step title="Performing fetch based deployment" date="2026-06-23T16:29:34.641" >
+    <step title="Cleaning up temp folders from previous zip deployments and extracting pushed zip file /tmp/zipdeploy/9bb8587a-5d99-4b6c-a525-134e7623fc07.zip (17.66 MB) to /tmp/zipdeploy/extracted" date="2026-06-23T16:29:35.901" >
+      <step title="ChmodRecursive Process exited with total time taken in ms: 324" date="2026-06-23T16:29:42.555" /><!-- duration: 17ms -->
+    </step><!-- duration: 6683ms -->
+    <step title="Deployment timer started" date="2026-06-23T16:29:44.612" >
+      <step title="DeploymentManager.Deploy(id:eea63ab6-9149-445f-86bc-99e0a836d45d)" date="2026-06-23T16:29:44.644" >
+        <step title="Collecting changeset information" date="2026-06-23T16:29:44.667" /><!-- duration: 167ms -->
+        <step title="Updating submodules" date="2026-06-23T16:29:44.840" /><!-- duration: 1142ms -->
+        <step title="Determining deployment builder" date="2026-06-23T16:29:46.264" >
+          <step title="Builder is OryxBuilder" date="2026-06-23T16:29:46.290" /><!-- duration: 9ms -->
+        </step><!-- duration: 40ms -->
+        <step title="PreDeployment: context.CleanOutputPath False" date="2026-06-23T16:29:46.450" >
+          <step title="PreDeployment: context.OutputPath /home/site/wwwroot" date="2026-06-23T16:29:46.612" >
+            <step title="Building" date="2026-06-23T16:29:46.780" >
+              <step title="Executing external process" date="2026-06-23T16:29:47.142" type="process" path="starter.sh" arguments="oryx build /tmp/zipdeploy/extracted -o /tmp/build/expressbuild --platform python --platform-version 3.11 -i /tmp/8ded144a3701712 -p packagedir=.python_packages/lib/site-packages" >
+                <step title="Cpu: python3.11(1815,35.600s)+ts(1816,0.160s)+build.sh(1814,0.000s)+build.sh(1813,0.000s)+build.sh(1699,0.060s)+oryx(1677,8.420s)=total(44.230s)" date="2026-06-23T16:32:01.139" /><!-- duration: 9ms -->
+                <step title="starter.sh: no io activity for 60s, prev-cpu=-1.000s, current-cpu=44.230s" date="2026-06-23T16:32:01.186" /><!-- duration: 21ms -->
+              </step><!-- duration: 179731ms -->
+              <step title="Executing external process" date="2026-06-23T16:32:47.195" type="process" path="starter.sh" arguments="zip --symlinks -r -0 -q /tmp/build/expressbuild/20260623163246.zip ." /><!-- duration: 10096ms -->
+              <step title="Executing external process" date="2026-06-23T16:32:57.324" type="process" path="starter.sh" arguments="rsync -av /tmp/build/expressbuild/20260623163246.zip /home/data/SitePackages/20260623163246.zip" /><!-- duration: 9050ms -->
+              <step title="Deleting outdated zip file /home/data/SitePackages/20260623022408.zip" date="2026-06-23T16:33:06.614" /><!-- duration: 26ms -->
+              <step title="Triggering recycle (preview mode disabled)." date="2026-06-23T16:33:07.602" /><!-- duration: 6ms -->
+              <step title="Modified file to trigger a restart of the app container." date="2026-06-23T16:33:07.639" /><!-- duration: 8ms -->
+              <step title="Skip function trigger and logicapp sync because sku (Standard) is not dynamic (consumption plan)." date="2026-06-23T16:33:07.719" /><!-- duration: 4ms -->
+              <step title="Purge deployment items" date="2026-06-23T16:33:09.120" >
+                <step title="Remove 5b67d9a6-, Success, received at 06/22/2026 17:08:27" date="2026-06-23T16:33:09.190" /><!-- duration: 3ms -->
+              </step><!-- duration: 78ms -->
+            </step><!-- duration: 202535ms -->
+          </step><!-- duration: 202707ms -->
+          <step title="Cleaning up temp files" date="2026-06-23T16:33:09.322" /><!-- duration: 1648ms -->
+          <step title="Cleaning up temp files" date="2026-06-23T16:33:10.981" /><!-- duration: 529ms -->
+          <step title="Reloading status file with latest updates" date="2026-06-23T16:33:11.533" >
+            <step title="WebHooksManager.PublishEventAsync: PostDeployment" date="2026-06-23T16:33:11.544" /><!-- duration: 110ms -->
+          </step><!-- duration: 123ms -->
+          <step title="Cleaning up temporary deployment - fetch deployment was successful" date="2026-06-23T16:33:11.664" /><!-- duration: 3ms -->
+        </step><!-- duration: 205280ms -->
+      </step><!-- duration: 207107ms -->

@@ -1,0 +1,15 @@
+<step title="Incoming Request" date="2026-07-06T12:30:35.404" instance="a666aa" url="/api/zipdeploy?isAsync=true&amp;Deployer=az_cli_functions" method="POST" type="request" pid="831,1,25" Accept="*/*" Host="auricrux-central.scm.azurewebsites.net" User-Agent="AZURECLI/2.86.0 (MSI)" Accept-Encoding="gzip, deflate" Authorization="Bea..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="6046854" x-ms-client-request-id="696f9d8a-7936-11f1-bdc9-f8edfc594771" X-ARR-LOG-ID="696f9d8a-7936-11f1-bdc9-f8edfc594771" CLIENT-IP="216.234.197.31:31669" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true&amp;Deployer=az_cli_functions" X-Client-IP="216.234.197.31" X-Client-Port="31669" >
+  <step title="ZipPushDeploy" date="2026-07-06T12:30:35.498" >
+    <step title="Functions App ZipDeploy. Extract zip." date="2026-07-06T12:30:35.506" /><!-- duration: 2ms -->
+    <step title="Starting PushDeployAsync" date="2026-07-06T12:30:35.513" /><!-- duration: 4ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/c7647051-698c-42c4-97fa-b971b35deb7f.zip" date="2026-07-06T12:30:35.664" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/c7647051-698c-42c4-97fa-b971b35deb7f.zip" date="2026-07-06T12:30:35.667" /><!-- duration: 5ms -->
+      <step title="Writing zip file to /tmp/zipdeploy/c7647051-698c-42c4-97fa-b971b35deb7f.zip" date="2026-07-06T12:30:35.676" /><!-- duration: 5145ms -->
+    </step><!-- duration: 5178ms -->
+    <step title="Start deployment in the background" date="2026-07-06T12:30:40.919" >
+      <step title="Acquiring Deployment Lock" date="2026-07-06T12:30:40.981" /><!-- duration: 31ms -->
+      <step title="Acquired Deployment Lock" date="2026-07-06T12:30:41.394" /><!-- duration: 30ms -->
+    </step><!-- duration: 747ms -->
+  </step><!-- duration: 6180ms -->
+  <step title="Outgoing response" date="2026-07-06T12:30:41.682" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 3ms -->
+</step><!-- duration: 6284ms -->

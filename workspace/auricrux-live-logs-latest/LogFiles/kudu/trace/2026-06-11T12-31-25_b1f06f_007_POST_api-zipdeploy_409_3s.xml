@@ -1,0 +1,16 @@
+<step title="Incoming Request" date="2026-06-11T12:31:25.425" instance="b1f06f" url="/api/zipdeploy?isAsync=true&amp;Deployer=az_cli_functions" method="POST" type="request" pid="832,1,17" Accept="*/*" Host="auricrux-central.scm.azurewebsites.net" User-Agent="AZURECLI/2.86.0 (RPM)" Accept-Encoding="gzip, deflate" Authorization="Bea..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="906" x-ms-client-request-id="4378a87a-6591-11f1-934f-00155dc91e86" X-ARR-LOG-ID="4378a87a-6591-11f1-934f-00155dc91e86" CLIENT-IP="4.151.48.133:31349" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true&amp;Deployer=az_cli_functions" X-Client-IP="4.151.48.133" X-Client-Port="31349" >
+  <step title="ZipPushDeploy" date="2026-06-11T12:31:26.173" >
+    <step title="Functions App ZipDeploy. Extract zip." date="2026-06-11T12:31:26.310" /><!-- duration: 186ms -->
+    <step title="Starting PushDeployAsync" date="2026-06-11T12:31:26.944" /><!-- duration: 9ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/5a48de91-aa10-49d6-81cf-c62e73f21340.zip" date="2026-06-11T12:31:27.628" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/5a48de91-aa10-49d6-81cf-c62e73f21340.zip" date="2026-06-11T12:31:27.771" /><!-- duration: 30ms -->
+      <step title="Writing zip file to /tmp/zipdeploy/5a48de91-aa10-49d6-81cf-c62e73f21340.zip" date="2026-06-11T12:31:27.920" /><!-- duration: 50ms -->
+    </step><!-- duration: 362ms -->
+    <step title="Start deployment in the background" date="2026-06-11T12:31:28.011" >
+      <step title="Acquiring Deployment Lock" date="2026-06-11T12:31:28.052" /><!-- duration: 10ms -->
+      <step title="Cannot Acquire Deployment Lock already held" date="2026-06-11T12:31:28.100" /><!-- duration: 20ms -->
+    </step><!-- duration: 411ms -->
+    <step title="There is a deployment currently in progress. Please try again when it completes." date="2026-06-11T12:31:28.442" /><!-- duration: 12ms -->
+  </step><!-- duration: 2319ms -->
+  <step title="Outgoing response" date="2026-06-11T12:31:28.582" type="response" statusCode="409" statusText="Conflict" /><!-- duration: 20ms -->
+</step><!-- duration: 3230ms -->

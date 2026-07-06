@@ -1,0 +1,11 @@
+ M api/cte-program.js
+ M api/package.json
+ M docs/operations/live-execution-status.md
+ M public/deployment-status.json
+ M public/domain-continuity.json
+ M public/runtime-fingerprint.txt
+ M scripts/prepare-api-functions.mjs
+?? workspace/api_generated_deploy.zip
+?? workspace/progress-locks/
+?? workspace/set-linuxfx-node.json
+?? workspace/set-linuxfx-python.json

@@ -7,12 +7,12 @@ const {
   enqueueInstructorReview,
   listInstructorReviewQueue,
   resolveInstructorReviewItem,
-} = require("./_lib/runtime/cteSafeModeStore.js");
+} = require("./_lib/runtime/cteSafeModeStore.cjs");
 const {
   enforceSecurityHardeningForFetchRequest,
   toFetchSecurityResponse,
   writeTamperEvidentSecurityEvent,
-} = require("./_lib/runtime/securityHardeningControls.js");
+} = require("./_lib/runtime/securityHardeningControls.cjs");
 
 function parsePositiveInt(value, fallback) {
   const parsed = Number.parseInt(String(value || ""), 10);

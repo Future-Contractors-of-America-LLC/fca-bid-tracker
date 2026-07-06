@@ -26,7 +26,7 @@ const ADMIN_REQUIRED_RESPONSE = {
 app.http("admin-students-list", {
   methods: ["GET", "POST"],
   authLevel: "anonymous",
-  route: "admin/students",
+  route: "internal-admin/students",
   handler: async (request) => {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;
@@ -91,7 +91,7 @@ app.http("admin-students-list", {
 app.http("admin-students-bulk", {
   methods: ["POST"],
   authLevel: "anonymous",
-  route: "admin/students/bulk",
+  route: "internal-admin/students/bulk",
   handler: async (request) => {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;
@@ -142,7 +142,7 @@ app.http("admin-students-bulk", {
 app.http("admin-students-deactivate", {
   methods: ["DELETE"],
   authLevel: "anonymous",
-  route: "admin/students/{id}",
+  route: "internal-admin/students/{id}",
   handler: async (request, context) => {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;

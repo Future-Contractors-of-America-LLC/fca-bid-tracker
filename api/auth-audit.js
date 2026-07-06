@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
-const { writeTamperEvidentSecurityEvent } = require("./_lib/runtime/securityHardeningControls.js");
+const { writeTamperEvidentSecurityEvent } = require("./_lib/runtime/securityHardeningControls.cjs");
 
 /**
  * Auth event audit logger for FCA/CHPS compliance.

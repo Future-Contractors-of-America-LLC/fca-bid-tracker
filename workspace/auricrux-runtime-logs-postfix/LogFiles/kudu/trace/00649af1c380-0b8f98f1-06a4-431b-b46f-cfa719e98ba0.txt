@@ -1,0 +1,1 @@
+2026-07-06T03:17:40  Startup Request, url: /api/zipdeploy?isAsync=true&Deployer=az_cli_functions, method: POST, type: request, pid: 805,1,5, ScmType: GitHubAction, SCM_DO_BUILD_DURING_DEPLOYMENT: false

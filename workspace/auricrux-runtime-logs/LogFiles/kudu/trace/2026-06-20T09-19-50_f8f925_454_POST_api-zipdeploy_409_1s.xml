@@ -1,0 +1,16 @@
+<step title="Incoming Request" date="2026-06-20T09:19:50.951" instance="f8f925" url="/api/zipdeploy?isAsync=true&amp;deployer=GITHUB_ZIP_DEPLOY_FUNCTIONS_V1&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%22007935aa23c3d1b411d234042b5bcf588c71724a%22%2C%22repoName%22%3A%22Future-Contractors-of-America-LLC%2Fauricrux-central%22%2C%22actor%22%3A%22Auricrux%22%2C%22slotName%22%3A%22production%22%7D" method="POST" type="request" pid="832,1,23" Host="auricrux-central.scm.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployFunctionAppToAzure_4d3bab13dfbb8631511dc7f3b870b1b680c5a1fe90f3ffcd25faade51203ced5+GITHUBACTIONS_DeployFunctionAppToAzure_4d3bab13dfbb8631511dc7f3b870b1b680c5a1fe90f3ffcd25faade51203ced5" Authorization="Bea..." Content-Type="application/octet-stream" Cookie="ARRAffinity=f8f9256783c926223799dc593171fa3ef38a62fe018e98b19a09df27f9df439e;Path=/;HttpOnly;Secure;Domain=auricrux-central.scm.azurewebsites.net; ARRAffinitySameSite=f8f9256783c926223799dc593171fa3ef38a62fe018e98b19a09df27f9df439e;Path=/;HttpOnly;SameSite=None;Secure;Domain=auricrux-central.scm.azurewebsites.net" Transfer-Encoding="chunked" X-ARR-LOG-ID="f0d3c127-11f0-43c7-84b1-a2f9bdab6a1e" CLIENT-IP="20.168.4.0:9280" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true&amp;deployer=GITHUB_ZIP_DEPLOY_FUNCTIONS_V1&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%22007935aa23c3d1b411d234042b5bcf588c71724a%22%2C%22repoName%22%3A%22Future-Contractors-of-America-LLC%2Fauricrux-central%22%2C%22actor%22%3A%22Auricrux%22%2C%22slotName%22%3A%22production%22%7D" X-Client-IP="20.168.4.0" X-Client-Port="9280" >
+  <step title="ZipPushDeploy" date="2026-06-20T09:19:50.966" >
+    <step title="Functions App ZipDeploy. Extract zip. Remote build." date="2026-06-20T09:19:50.999" /><!-- duration: 11ms -->
+    <step title="Starting PushDeployAsync" date="2026-06-20T09:19:51.024" /><!-- duration: 19ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/b6e6de07-43d6-4c3a-a392-85845996c826.zip" date="2026-06-20T09:19:51.112" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/b6e6de07-43d6-4c3a-a392-85845996c826.zip" date="2026-06-20T09:19:51.121" /><!-- duration: 47ms -->
+      <step title="Writing zip file to /tmp/zipdeploy/b6e6de07-43d6-4c3a-a392-85845996c826.zip" date="2026-06-20T09:19:51.207" /><!-- duration: 361ms -->
+    </step><!-- duration: 486ms -->
+    <step title="Start deployment in the background" date="2026-06-20T09:19:51.611" >
+      <step title="Acquiring Deployment Lock" date="2026-06-20T09:19:51.646" /><!-- duration: 3ms -->
+      <step title="Cannot Acquire Deployment Lock already held" date="2026-06-20T09:19:51.655" /><!-- duration: 4ms -->
+    </step><!-- duration: 137ms -->
+    <step title="There is a deployment currently in progress. Please try again when it completes." date="2026-06-20T09:19:51.767" /><!-- duration: 11ms -->
+  </step><!-- duration: 836ms -->
+  <step title="Outgoing response" date="2026-06-20T09:19:51.809" type="response" statusCode="409" statusText="Conflict" /><!-- duration: 11ms -->
+</step><!-- duration: 901ms -->

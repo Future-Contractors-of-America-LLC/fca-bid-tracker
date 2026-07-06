@@ -1,0 +1,30 @@
+<step title="BackgroundTrace" date="2026-06-17T17:43:19.500" instance="4b36de" url="/api/zipdeploy" method="POST" >
+  <step title="Creating temporary deployment - FetchDeploymentManager" date="2026-06-17T17:43:19.585" /><!-- duration: 9ms -->
+  <step title="Creating temporary deployment" date="2026-06-17T17:43:19.603" /><!-- duration: 87ms -->
+  <step title="Performing fetch based deployment" date="2026-06-17T17:43:19.716" >
+    <step title="Deployment timer started" date="2026-06-17T17:43:23.828" >
+      <step title="DeploymentManager.Deploy(id:71b6de36-1938-4065-b945-638b66d9134f)" date="2026-06-17T17:43:23.856" >
+        <step title="Collecting changeset information" date="2026-06-17T17:43:23.905" /><!-- duration: 185ms -->
+        <step title="Updating submodules" date="2026-06-17T17:43:24.094" /><!-- duration: 1151ms -->
+        <step title="Determining deployment builder" date="2026-06-17T17:43:25.488" >
+          <step title="Builder is RunFromZipSiteBuilder" date="2026-06-17T17:43:25.497" /><!-- duration: 11ms -->
+        </step><!-- duration: 28ms -->
+        <step title="PreDeployment: context.CleanOutputPath False" date="2026-06-17T17:43:25.595" >
+          <step title="PreDeployment: context.OutputPath /home/site/wwwroot" date="2026-06-17T17:43:25.776" >
+            <step title="Building" date="2026-06-17T17:43:25.938" >
+              <step title="Triggering recycle (preview mode disabled)." date="2026-06-17T17:43:27.178" /><!-- duration: 7ms -->
+              <step title="Modified file to trigger a restart of the app container." date="2026-06-17T17:43:27.233" /><!-- duration: 3ms -->
+              <step title="Skip function trigger and logicapp sync because sku (Basic) is not dynamic (consumption plan)." date="2026-06-17T17:43:27.244" /><!-- duration: 13ms -->
+              <step title="Purge deployment items" date="2026-06-17T17:43:28.625" >
+                <step title="Remove 99f84599-, Success, received at 06/17/2026 16:08:22" date="2026-06-17T17:43:28.687" /><!-- duration: 4ms -->
+              </step><!-- duration: 70ms -->
+            </step><!-- duration: 2851ms -->
+          </step><!-- duration: 3017ms -->
+          <step title="Cleaning up temp files" date="2026-06-17T17:43:28.798" /><!-- duration: 5ms -->
+          <step title="Cleaning up temp files" date="2026-06-17T17:43:28.814" /><!-- duration: 516ms -->
+          <step title="Reloading status file with latest updates" date="2026-06-17T17:43:29.438" >
+            <step title="WebHooksManager.PublishEventAsync: PostDeployment" date="2026-06-17T17:43:29.483" /><!-- duration: 142ms -->
+          </step><!-- duration: 193ms -->
+          <step title="Cleaning up temporary deployment - fetch deployment was successful" date="2026-06-17T17:43:29.639" /><!-- duration: 3ms -->
+        </step><!-- duration: 4142ms -->
+      </step><!-- duration: 5907ms -->

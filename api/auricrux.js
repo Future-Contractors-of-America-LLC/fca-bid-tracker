@@ -5,16 +5,16 @@ const {
   isSafeModeEnabled,
   buildStaticAuricruxPayload,
   buildStaticTrainingPayload,
-} = require("./_lib/runtime/cteSafeModeStore");
+} = require("./_lib/runtime/cteSafeModeStore.cjs");
 const {
   corsHeaders,
   isCteShadowRequest,
   buildCteMockAuricruxPayload,
-} = require("./_lib/runtime/cteShadowEnvironment");
+} = require("./_lib/runtime/cteShadowEnvironment.cjs");
 const {
   buildSecureProxyHeaders,
   enforceSecurityHardening,
-} = require("./_lib/runtime/securityHardeningControls");
+} = require("./_lib/runtime/securityHardeningControls.cjs");
 
 const secureCorsHeaders = buildSecureProxyHeaders(corsHeaders);
 

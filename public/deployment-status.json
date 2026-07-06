@@ -1,9 +1,9 @@
 {
   "service": "fca-bid-tracker",
-  "generatedAt": "2026-07-06T02:22:01.518Z",
+  "generatedAt": "2026-07-06T17:28:43.570Z",
   "source": "local-build",
   "gitRef": "local",
-  "gitSha": "local",
+  "gitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
   "runId": "local",
   "defaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
   "expectedHosts": [
@@ -17,8 +17,8 @@
     "/api/auricrux",
     "/api/customer-login",
     "/login",
-    "/commit-witness-local.txt"
+    "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt"
   ],
-  "commitWitnessRoute": "/commit-witness-local.txt",
+  "commitWitnessRoute": "/commit-witness-5800249e4a22ed737c5af53dff2b2f253700c650.txt",
   "deploymentIntent": "static-web-app-plus-functions"
 }

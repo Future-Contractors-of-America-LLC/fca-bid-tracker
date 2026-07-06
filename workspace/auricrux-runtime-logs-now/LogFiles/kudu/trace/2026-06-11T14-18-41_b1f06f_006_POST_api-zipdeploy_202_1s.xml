@@ -1,0 +1,15 @@
+<step title="Incoming Request" date="2026-06-11T14:18:41.249" instance="b1f06f" url="/api/zipdeploy?isAsync=true&amp;Deployer=az_cli_functions" method="POST" type="request" pid="832,1,27" Accept="*/*" Host="auricrux-central.scm.azurewebsites.net" User-Agent="AZURECLI/2.86.0 (RPM)" Accept-Encoding="gzip, deflate" Authorization="Bea..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="2138" x-ms-client-request-id="67cc2e18-65a0-11f1-819d-00155d533f90" X-ARR-LOG-ID="67cc2e18-65a0-11f1-819d-00155d533f90" CLIENT-IP="4.151.247.81:30885" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true&amp;Deployer=az_cli_functions" X-Client-IP="4.151.247.81" X-Client-Port="30885" >
+  <step title="ZipPushDeploy" date="2026-06-11T14:18:41.344" >
+    <step title="Functions App ZipDeploy. Extract zip." date="2026-06-11T14:18:41.359" /><!-- duration: 2ms -->
+    <step title="Starting PushDeployAsync" date="2026-06-11T14:18:41.402" /><!-- duration: 2ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/0b54e542-bee9-403e-9c36-2457d8dddaef.zip" date="2026-06-11T14:18:41.416" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/0b54e542-bee9-403e-9c36-2457d8dddaef.zip" date="2026-06-11T14:18:41.418" /><!-- duration: 6ms -->
+      <step title="Writing zip file to /tmp/zipdeploy/0b54e542-bee9-403e-9c36-2457d8dddaef.zip" date="2026-06-11T14:18:41.427" /><!-- duration: 64ms -->
+    </step><!-- duration: 91ms -->
+    <step title="Start deployment in the background" date="2026-06-11T14:18:41.520" >
+      <step title="Acquiring Deployment Lock" date="2026-06-11T14:18:41.567" /><!-- duration: 3ms -->
+      <step title="Acquired Deployment Lock" date="2026-06-11T14:18:41.823" /><!-- duration: 33ms -->
+    </step><!-- duration: 415ms -->
+  </step><!-- duration: 600ms -->
+  <step title="Outgoing response" date="2026-06-11T14:18:41.948" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 2ms -->
+</step><!-- duration: 702ms -->

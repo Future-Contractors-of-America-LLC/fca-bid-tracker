@@ -1,0 +1,16 @@
+<step title="Incoming Request" date="2026-06-17T22:12:50.986" instance="f8f925" url="/api/zipdeploy?isAsync=true&amp;deployer=GITHUB_ZIP_DEPLOY_FUNCTIONS_V1&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%22866aff113c5ae5a09003924a129dcf509e490f7b%22%2C%22repoName%22%3A%22Future-Contractors-of-America-LLC%2Fauricrux-central%22%2C%22actor%22%3A%22Auricrux%22%2C%22slotName%22%3A%22production%22%7D" method="POST" type="request" pid="832,1,3" Host="auricrux-central.scm.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployFunctionAppToAzure_4d3bab13dfbb8631511dc7f3b870b1b680c5a1fe90f3ffcd25faade51203ced5+GITHUBACTIONS_DeployFunctionAppToAzure_4d3bab13dfbb8631511dc7f3b870b1b680c5a1fe90f3ffcd25faade51203ced5" Authorization="Bea..." Content-Type="application/octet-stream" Cookie="ARRAffinity=f8f9256783c926223799dc593171fa3ef38a62fe018e98b19a09df27f9df439e;Path=/;HttpOnly;Secure;Domain=auricrux-central.scm.azurewebsites.net; ARRAffinitySameSite=f8f9256783c926223799dc593171fa3ef38a62fe018e98b19a09df27f9df439e;Path=/;HttpOnly;SameSite=None;Secure;Domain=auricrux-central.scm.azurewebsites.net" Transfer-Encoding="chunked" X-ARR-LOG-ID="38445b40-861c-4c94-9520-9a6a7cba33e0" CLIENT-IP="172.184.211.23:55296" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true&amp;deployer=GITHUB_ZIP_DEPLOY_FUNCTIONS_V1&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%22866aff113c5ae5a09003924a129dcf509e490f7b%22%2C%22repoName%22%3A%22Future-Contractors-of-America-LLC%2Fauricrux-central%22%2C%22actor%22%3A%22Auricrux%22%2C%22slotName%22%3A%22production%22%7D" X-Client-IP="172.184.211.23" X-Client-Port="55296" >
+  <step title="ZipPushDeploy" date="2026-06-17T22:12:51.022" >
+    <step title="Functions App ZipDeploy. Run from package." date="2026-06-17T22:12:51.026" /><!-- duration: 4ms -->
+    <step title="Starting PushDeployAsync" date="2026-06-17T22:12:51.036" /><!-- duration: 3ms -->
+    <step title="WEBSITE_RUN_FROM_PACKAGE is set to 1. Writing zip to SitePackagesPath" date="2026-06-17T22:12:51.043" /><!-- duration: 4ms -->
+    <step title="Copying zip to SitePackages /home/data/SitePackages/20260617221251.zip from request body" date="2026-06-17T22:12:51.052" /><!-- duration: 3ms -->
+    <step title="Writing multipart request body to /home/data/SitePackages/20260617221251.zip" date="2026-06-17T22:12:51.077" /><!-- duration: 3ms -->
+    <step title="Writing zip file to /home/data/SitePackages/20260617221251.zip" date="2026-06-17T22:12:51.105" /><!-- duration: 168ms -->
+    <step title="Deleting outdated zip file /home/data/SitePackages/20260617210053.zip" date="2026-06-17T22:12:51.359" /><!-- duration: 19ms -->
+    <step title="Start deployment in the background" date="2026-06-17T22:12:51.401" >
+      <step title="Acquiring Deployment Lock" date="2026-06-17T22:12:51.496" /><!-- duration: 12ms -->
+      <step title="Acquired Deployment Lock" date="2026-06-17T22:12:51.577" /><!-- duration: 9ms -->
+    </step><!-- duration: 327ms -->
+  </step><!-- duration: 715ms -->
+  <step title="Outgoing response" date="2026-06-17T22:12:51.746" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 3ms -->
+</step><!-- duration: 765ms -->

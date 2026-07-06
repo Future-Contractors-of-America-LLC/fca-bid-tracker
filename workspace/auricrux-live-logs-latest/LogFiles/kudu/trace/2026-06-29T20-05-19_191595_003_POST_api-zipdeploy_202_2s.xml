@@ -1,0 +1,18 @@
+<step title="Incoming Request" date="2026-06-29T20:05:19.432" instance="191595" url="/api/zipdeploy?isAsync=true&amp;deployer=GITHUB_ZIP_DEPLOY_FUNCTIONS_V1&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%224b69ea8a2068572b1ff568b8057ff32769d50482%22%2C%22repoName%22%3A%22Future-Contractors-of-America-LLC%2Fauricrux-central%22%2C%22actor%22%3A%22Auricrux%22%2C%22slotName%22%3A%22production%22%7D" method="POST" type="request" pid="835,1,5" Host="auricrux-central.scm.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployFunctionAppToAzure_4d3bab13dfbb8631511dc7f3b870b1b680c5a1fe90f3ffcd25faade51203ced5+GITHUBACTIONS_DeployFunctionAppToAzure_4d3bab13dfbb8631511dc7f3b870b1b680c5a1fe90f3ffcd25faade51203ced5" Authorization="Bea..." Content-Type="application/octet-stream" Cookie="ARRAffinity=191595139f75a5f3d47ad308b45f1cac18147a5008d74263e23da43f53c26d6a;Path=/;HttpOnly;Secure;Domain=auricrux-central.scm.azurewebsites.net; ARRAffinitySameSite=191595139f75a5f3d47ad308b45f1cac18147a5008d74263e23da43f53c26d6a;Path=/;HttpOnly;SameSite=None;Secure;Domain=auricrux-central.scm.azurewebsites.net" Transfer-Encoding="chunked" X-ARR-LOG-ID="7c8a51ec-6a4e-435b-a978-cbfeca114282" CLIENT-IP="52.176.138.198:36920" X-SITE-DEPLOYMENT-ID="Auricrux-Central" WAS-DEFAULT-HOSTNAME="auricrux-central.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true&amp;deployer=GITHUB_ZIP_DEPLOY_FUNCTIONS_V1&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%224b69ea8a2068572b1ff568b8057ff32769d50482%22%2C%22repoName%22%3A%22Future-Contractors-of-America-LLC%2Fauricrux-central%22%2C%22actor%22%3A%22Auricrux%22%2C%22slotName%22%3A%22production%22%7D" X-Client-IP="52.176.138.198" X-Client-Port="36920" >
+  <step title="ZipPushDeploy" date="2026-06-29T20:05:19.543" >
+    <step title="Functions App ZipDeploy. Extract zip. Remote build." date="2026-06-29T20:05:19.555" /><!-- duration: 4ms -->
+    <step title="None repository commit" date="2026-06-29T20:05:19.567" >
+      <step title="Commit id: bd51a7ff-9989-4a27-aca5-be3e914489b8" date="2026-06-29T20:05:19.570" Message="N/A" AuthorName="N/A" AuthorEmail="N/A" /><!-- duration: 3ms -->
+    </step><!-- duration: 10ms -->
+    <step title="Starting PushDeployAsync" date="2026-06-29T20:05:19.580" /><!-- duration: 3ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/5a139aa3-bbcc-4970-a59d-7744768d3d5b.zip" date="2026-06-29T20:05:19.615" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/5a139aa3-bbcc-4970-a59d-7744768d3d5b.zip" date="2026-06-29T20:05:19.620" /><!-- duration: 4ms -->
+      <step title="Writing zip file to /tmp/zipdeploy/5a139aa3-bbcc-4970-a59d-7744768d3d5b.zip" date="2026-06-29T20:05:19.635" /><!-- duration: 431ms -->
+    </step><!-- duration: 460ms -->
+    <step title="Start deployment in the background" date="2026-06-29T20:05:20.086" >
+      <step title="Acquiring Deployment Lock" date="2026-06-29T20:05:20.161" /><!-- duration: 8ms -->
+      <step title="Acquired Deployment Lock" date="2026-06-29T20:05:20.321" /><!-- duration: 47ms -->
+    </step><!-- duration: 702ms -->
+  </step><!-- duration: 1254ms -->
+  <step title="Outgoing response" date="2026-06-29T20:05:20.881" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 46ms -->
+</step><!-- duration: 1517ms -->

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<deployment>
+  <id>530d114a-8c13-496b-b022-d80cf806328f</id>
+  <author>N/A</author>
+  <deployer>GITHUB_ZIP_DEPLOY_FUNCTIONS_V1</deployer>
+  <authorEmail>N/A</authorEmail>
+  <message>{"type":"deployment","sha":"695d7ac1da717ed869805e32dcc7595e9484a094","repoName":"Future-Contractors-of-America-LLC/auricrux-central","actor":"Auricrux","slotName":"production"}</message>
+  <progress></progress>
+  <status>Success</status>
+  <statusText></statusText>
+  <lastSuccessEndTime>2026-07-05T16:38:40.7288581Z</lastSuccessEndTime>
+  <receivedTime>2026-07-05T16:35:45.5084343Z</receivedTime>
+  <startTime>2026-07-05T16:35:47.1433914Z</startTime>
+  <endTime>2026-07-05T16:38:40.7288581Z</endTime>
+  <complete>True</complete>
+  <is_temp>False</is_temp>
+  <is_readonly>True</is_readonly>
+  <containerId>88c1f0f7b20c</containerId>
+  <buildSummary />
+</deployment>

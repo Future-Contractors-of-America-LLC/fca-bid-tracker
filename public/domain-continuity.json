@@ -1,10 +1,10 @@
 {
   "service": "fca-bid-tracker",
   "witnessType": "domain-continuity",
-  "generatedAt": "2026-07-06T02:22:01.576Z",
+  "generatedAt": "2026-07-06T17:28:43.627Z",
   "source": "local-build",
   "gitRef": "local",
-  "gitSha": "local",
+  "gitSha": "5800249e4a22ed737c5af53dff2b2f253700c650",
   "runId": "local",
   "defaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
   "expectedHosts": [

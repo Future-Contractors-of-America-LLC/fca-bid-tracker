@@ -4,11 +4,11 @@ const CENTRAL_API =
 const {
   isCteShadowRequest,
   buildCteShadowResponse,
-} = require("./runtime/cteShadowEnvironment");
+} = require("./runtime/cteShadowEnvironment.cjs");
 const {
   buildSecureProxyHeaders,
   enforceSecurityHardening,
-} = require("./runtime/securityHardeningControls");
+} = require("./runtime/securityHardeningControls.cjs");
 
 const corsHeaders = {
   "Content-Type": "application/json",

@@ -1,0 +1,24 @@
+<step title="BackgroundTrace" date="2026-06-23T18:01:48.365" instance="f8f925" url="/api/zipdeploy" method="POST" >
+  <step title="Creating temporary deployment - FetchDeploymentManager" date="2026-06-23T18:01:49.136" /><!-- duration: 9ms -->
+  <step title="Creating temporary deployment" date="2026-06-23T18:01:49.174" /><!-- duration: 782ms -->
+  <step title="Performing fetch based deployment" date="2026-06-23T18:01:50.234" >
+    <step title="Cleaning up temp folders from previous zip deployments and extracting pushed zip file /tmp/zipdeploy/f59522bb-a1aa-4a89-a38b-47c28083a51a.zip (17.67 MB) to /tmp/zipdeploy/extracted" date="2026-06-23T18:01:52.066" >
+      <step title="ChmodRecursive Process exited with total time taken in ms: 325" date="2026-06-23T18:01:59.826" /><!-- duration: 8ms -->
+    </step><!-- duration: 7774ms -->
+    <step title="Deployment timer started" date="2026-06-23T18:02:02.286" >
+      <step title="DeploymentManager.Deploy(id:473fdc45-b0a0-49cd-8941-2d928773c0f5)" date="2026-06-23T18:02:02.322" >
+        <step title="Collecting changeset information" date="2026-06-23T18:02:02.402" /><!-- duration: 278ms -->
+        <step title="Updating submodules" date="2026-06-23T18:02:02.693" /><!-- duration: 1301ms -->
+        <step title="Determining deployment builder" date="2026-06-23T18:02:05.162" >
+          <step title="Builder is OryxBuilder" date="2026-06-23T18:02:05.329" /><!-- duration: 11ms -->
+        </step><!-- duration: 193ms -->
+        <step title="PreDeployment: context.CleanOutputPath False" date="2026-06-23T18:02:05.513" >
+          <step title="PreDeployment: context.OutputPath /home/site/wwwroot" date="2026-06-23T18:02:05.874" >
+            <step title="Building" date="2026-06-23T18:02:06.170" >
+              <step title="Executing external process" date="2026-06-23T18:02:07.609" type="process" path="starter.sh" arguments="oryx build /tmp/zipdeploy/extracted -o /tmp/build/expressbuild --platform python --platform-version 3.11 -i /tmp/8ded15188f912bc -p packagedir=.python_packages/lib/site-packages" >
+                <step title="Cpu: python3.11(1168,28.420s)+ts(1169,0.150s)+build.sh(1167,0.010s)+build.sh(1166,0.000s)+build.sh(1049,0.110s)+oryx(1016,10.600s)=total(39.290s)" date="2026-06-23T18:04:52.589" /><!-- duration: 67ms -->
+                <step title="starter.sh: no io activity for 61s, prev-cpu=-1.000s, current-cpu=39.290s" date="2026-06-23T18:04:52.767" /><!-- duration: 29ms -->
+                <step title="Cpu: python3.11(1168,33.240s)+ts(1169,0.150s)+build.sh(1167,0.010s)+build.sh(1166,0.000s)+build.sh(1049,0.110s)+oryx(1016,11.140s)=total(44.650s)" date="2026-06-23T18:05:54.412" /><!-- duration: 69ms -->
+                <step title="starter.sh: no io activity for 123s, prev-cpu=39.290s, current-cpu=44.650s" date="2026-06-23T18:05:54.710" /><!-- duration: 27ms -->
+                <step title="Cpu: python3.11(1168,37.890s)+ts(1169,0.150s)+build.sh(1167,0.010s)+build.sh(1166,0.000s)+build.sh(1049,0.110s)+oryx(1016,11.710s)=total(49.870s)" date="2026-06-23T18:06:55.828" /><!-- duration: 335ms -->
+                <step title="starter.sh: no io activity for 185s, prev-cpu=44.650s, current-cpu=49.870s" date="2026-06-23T18:06:56.910" /><!-- duration: 160ms -->

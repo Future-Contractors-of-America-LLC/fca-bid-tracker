@@ -16,15 +16,27 @@ function assertOk(response, payload, fallbackMessage) {
   }
 }
 
+async function fetchAdminWithFallback(pathSuffix, init) {
+  const primaryPath = `/api/admin/${pathSuffix}`;
+  const fallbackPath = `/api/internal-admin/${pathSuffix}`;
+
+  const primaryResponse = await centralFetch(primaryPath, init);
+  if (primaryResponse.status !== 404) {
+    return primaryResponse;
+  }
+
+  return centralFetch(fallbackPath, init);
+}
+
 export async function fetchAdminPayrollProfile() {
-  const response = await centralFetch("/api/admin/payroll-profile", { method: "GET" });
+  const response = await fetchAdminWithFallback("payroll-profile", { method: "GET" });
   const payload = await readJsonSafe(response);
   assertOk(response, payload, "Unable to load admin payroll profile.");
   return payload;
 }
 
 export async function saveAdminPayrollProfile(item) {
-  const response = await centralFetch("/api/admin/payroll-profile", {
+  const response = await fetchAdminWithFallback("payroll-profile", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item || {}),
@@ -35,14 +47,14 @@ export async function saveAdminPayrollProfile(item) {
 }
 
 export async function fetchAdminPayrollDirectory() {
-  const response = await centralFetch("/api/admin/payroll-directory", { method: "GET" });
+  const response = await fetchAdminWithFallback("payroll-directory", { method: "GET" });
   const payload = await readJsonSafe(response);
   assertOk(response, payload, "Unable to load admin payroll directory.");
   return payload;
 }
 
 export async function saveAdminPayrollDirectory(items = []) {
-  const response = await centralFetch("/api/admin/payroll-directory", {
+  const response = await fetchAdminWithFallback("payroll-directory", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ items }),
@@ -77,14 +89,14 @@ export async function saveEmployeePayrollProfile(item = {}, { submit = false } =
 }
 
 export async function fetchInternalCompanyProfile() {
-  const response = await centralFetch("/api/admin/internal-company-profile", { method: "GET" });
+  const response = await fetchAdminWithFallback("internal-company-profile", { method: "GET" });
   const payload = await readJsonSafe(response);
   assertOk(response, payload, "Unable to load internal company profile.");
   return payload;
 }
 
 export async function saveInternalCompanyProfile(item = {}) {
-  const response = await centralFetch("/api/admin/internal-company-profile", {
+  const response = await fetchAdminWithFallback("internal-company-profile", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item),
@@ -95,14 +107,14 @@ export async function saveInternalCompanyProfile(item = {}) {
 }
 
 export async function fetchInternalEmployeeDirectory() {
-  const response = await centralFetch("/api/admin/internal-employee-directory", { method: "GET" });
+  const response = await fetchAdminWithFallback("internal-employee-directory", { method: "GET" });
   const payload = await readJsonSafe(response);
   assertOk(response, payload, "Unable to load internal employee directory.");
   return payload;
 }
 
 export async function saveInternalEmployeeDirectory(items = []) {
-  const response = await centralFetch("/api/admin/internal-employee-directory", {
+  const response = await fetchAdminWithFallback("internal-employee-directory", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ items }),
