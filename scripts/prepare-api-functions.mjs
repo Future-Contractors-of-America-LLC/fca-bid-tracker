@@ -5,12 +5,10 @@ const repoRoot = process.cwd();
 const apiRoot = path.join(repoRoot, 'api');
 const outRoot = path.join(repoRoot, 'api_generated');
 
-/** Flat legacy handlers — kept for imports only, never deployed as HTTP functions. */
-const LEGACY_FLAT_ONLY = new Set([
-  'leads-store.js',
-  'remediation-store.js',
-  'customer-account-store.js',
-  'academy-store.js',
+/** Flat files that should never be copied to deployment package. */
+const EXCLUDED_FLAT_FILES = new Set([
+  'host.json',
+  'package.json',
 ]);
 
 function rmrf(target) {
@@ -59,11 +57,27 @@ function main() {
   }
 
   const academyCatalogSource = path.join(repoRoot, 'src', 'academyCatalog.js');
+  const academyCourseStandardsSource = path.join(repoRoot, 'src', 'academyCourseStandards.js');
+  const virginiaCteCoursesSource = path.join(repoRoot, 'src', 'virginiaCteCourses.js');
+  const cteExternalAlignmentSourcesSource = path.join(repoRoot, 'src', 'cteExternalAlignmentSources.js');
+  const vdoeCteSourceManifestSource = path.join(repoRoot, 'src', 'vdoeCteSourceManifest.js');
   const entityInfoSource = path.join(repoRoot, 'src', 'legal', 'entityInfo.js');
   const generatedLibDir = path.join(outRoot, '_lib');
   ensureDir(generatedLibDir);
   if (fs.existsSync(academyCatalogSource)) {
     fs.copyFileSync(academyCatalogSource, path.join(generatedLibDir, 'academyCatalog.js'));
+  }
+  if (fs.existsSync(academyCourseStandardsSource)) {
+    fs.copyFileSync(academyCourseStandardsSource, path.join(generatedLibDir, 'academyCourseStandards.js'));
+  }
+  if (fs.existsSync(virginiaCteCoursesSource)) {
+    fs.copyFileSync(virginiaCteCoursesSource, path.join(generatedLibDir, 'virginiaCteCourses.js'));
+  }
+  if (fs.existsSync(cteExternalAlignmentSourcesSource)) {
+    fs.copyFileSync(cteExternalAlignmentSourcesSource, path.join(generatedLibDir, 'cteExternalAlignmentSources.js'));
+  }
+  if (fs.existsSync(vdoeCteSourceManifestSource)) {
+    fs.copyFileSync(vdoeCteSourceManifestSource, path.join(generatedLibDir, 'vdoeCteSourceManifest.js'));
   }
   if (fs.existsSync(entityInfoSource)) {
     const apiEntityInfo = `/** API copy of src/legal/entityInfo.js */\n${fs.readFileSync(entityInfoSource, 'utf8')}`;
@@ -91,9 +105,15 @@ function main() {
   for (const entry of apiEntries) {
     if (!entry.isFile()) continue;
     if (!entry.name.endsWith('.js')) continue;
-    if (LEGACY_FLAT_ONLY.has(entry.name)) {
-      fs.copyFileSync(path.join(apiRoot, entry.name), path.join(outRoot, entry.name));
-    }
+    if (EXCLUDED_FLAT_FILES.has(entry.name)) continue;
+
+    const baseName = entry.name.replace(/\.js$/i, '');
+
+    // Avoid copying flat files that have canonical function directories,
+    // which would create duplicate route declarations at runtime.
+    if (canonicalFunctionDirs.has(baseName)) continue;
+
+    fs.copyFileSync(path.join(apiRoot, entry.name), path.join(outRoot, entry.name));
   }
 
   console.log(`Prepared Azure Functions backend at api_generated (${canonicalFunctionDirs.size} central proxy routes).`);
