@@ -22,7 +22,7 @@ export default function CteStudentHub() {
         eyebrow="CTE Student Portal"
         title="Protected CTE Learning Pathway"
         subtitle="Minor-compliant student access area for CTE coursework, progress, and credential milestones."
-        primaryHref="/academy/pathway?pathway=certification"
+        primaryHref="/academy/pathway?pathway=cte"
         primaryLabel="Open CTE pathways"
         secondaryHref="/academy/catalog"
         secondaryLabel="View catalog"

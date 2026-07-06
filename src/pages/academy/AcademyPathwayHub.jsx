@@ -111,6 +111,7 @@ const PATHWAY_DEFAULT_SEQUENCE_TOPIC = {
   certification: "safety-osha",
   licensure: "electrical-licensure",
   degree: "aas-construction-management",
+  cte: "cte-design-drafting",
 };
 
 export default function AcademyPathwayHub() {

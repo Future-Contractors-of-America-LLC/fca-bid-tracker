@@ -423,7 +423,7 @@ export default function PublicTopNav({ mode = "public" }) {
                 Contact
               </a>
               <a
-                href="/academy/pathway?pathway=certification"
+                href="/academy/pathway?pathway=cte"
                 style={{
                   ...linkStyle,
                   display: "inline-block",
