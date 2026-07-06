@@ -53,6 +53,7 @@ const desktopActionsStyle = {
 };
 
 const mobileActionsStyle = {
+  display: "flex",
   alignItems: "center",
   gap: 8,
   flexShrink: 0,
@@ -180,7 +181,7 @@ const NAV_MENUS = [
       { label: "CTE program evidence", href: "/cte/program" },
       { label: "Course catalog", href: "/academy/catalog" },
       { label: "Academy store", href: "/academy/store" },
-      { label: "CTE student portal", href: "/cte/login?next=/cte" },
+      { label: "Sign in for LMS", href: "/login?next=/academy" },
     ],
   },
   {
@@ -349,10 +350,16 @@ export default function PublicTopNav({ mode = "public" }) {
   ) : (
     <>
       <AuricruxAssistantButton />
+      <a href={loginHref} style={signInStyle} onClick={closeMobile}>Sign in</a>
+      <a href="/intake" style={primaryCtaStyle} onClick={closeMobile}>Get started</a>
+    </>
+  );
+
   return (
     <>
       <style>{`
         .fca-nav-desktop { display: none; }
+        .fca-nav-mobile-actions { display: flex; }
         @media (min-width: 960px) {
           .fca-nav-desktop { display: flex; flex-wrap: wrap; row-gap: 4px; }
           .fca-nav-mobile-actions { display: none; }
@@ -434,7 +441,7 @@ export default function PublicTopNav({ mode = "public" }) {
             {authActions}
           </div>
 
-          <div className="fca-nav-mobile-actions" style={{ ...mobileActionsStyle, display: isDesktop ? "none" : "flex" }}>
+          <div className="fca-nav-mobile-actions" style={mobileActionsStyle}>
             {!session?.authenticated ? (
               <a href={loginHref} style={{ ...primaryCtaStyle, padding: "8px 12px" }}>Sign in</a>
             ) : (
