@@ -1,0 +1,16 @@
+[
+  { "route": "customer-login", "methods": ["POST"] },
+  { "route": "customer-verify", "methods": ["POST"] },
+  { "route": "customer-session", "methods": ["GET"] },
+  { "route": "cte-program", "methods": ["GET"] },
+  { "route": "instructor-review", "methods": ["GET", "POST", "PATCH"] },
+  { "route": "projects", "methods": ["GET"] },
+  { "route": "auricrux", "methods": ["GET"] },
+  { "route": "academy-lms", "methods": ["GET"] },
+  { "route": "diag-canary", "methods": ["GET"] },
+  { "route": "stripe-checkout", "methods": ["POST"] },
+  { "route": "internal-admin/ping", "methods": ["GET"] },
+  { "route": "internal-admin/payroll-profile", "methods": ["GET"] },
+  { "route": "internal-admin/payroll-directory", "methods": ["GET"] },
+  { "route": "internal-admin/students", "methods": ["GET"] }
+]

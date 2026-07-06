@@ -1,0 +1,96 @@
+name: FCA Deployment Truth Gate
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+on:
+  workflow_dispatch:
+    inputs:
+      wave_name:
+        description: Deployment wave name (for attestation context)
+        required: true
+        default: wave-1
+      critical_files:
+        description: Optional comma-separated file list to hash-compare (api_generated-relative)
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fca-deployment-truth-gate-${{ github.ref }}-${{ github.event.inputs.wave_name || 'manual' }}
+  cancel-in-progress: false
+
+jobs:
+  truth-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build canonical API package
+        run: |
+          node scripts/prepare-api-functions.mjs
+          npm --prefix api_generated ci --omit=dev
+
+      - name: Build deployment zip + SHA256
+        run: |
+          mkdir -p workspace generated/truth-gate
+          (cd api_generated && zip -r ../workspace/api_generated.truth-gate.zip .)
+          sha256sum workspace/api_generated.truth-gate.zip | tee generated/truth-gate/artifact.sha256
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set Azure subscription
+        run: az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+
+      - name: Run truth attestation (artifact/live/routes/intent)
+        env:
+          AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          AZURE_FUNCTION_APP: ${{ secrets.AZURE_FUNCTION_APP }}
+          FCA_API_BASE: ${{ secrets.FCA_API_BASE || 'https://auricrux-central.azurewebsites.net' }}
+          ARTIFACT_DIR: api_generated
+          EXPECTED_ROUTES_FILE: docs/runtime-proof/truth-gate/expected-routes.json
+          INTENT_CHECKS_FILE: docs/runtime-proof/truth-gate/intent-checks.json
+          CRITICAL_FILES: ${{ github.event.inputs.critical_files }}
+          WAVE_NAME: ${{ github.event.inputs.wave_name }}
+        run: node scripts/ci/attest-azure-functions-truth.mjs
+
+      - name: Publish truth gate summary
+        if: always()
+        run: |
+          echo "## FCA Deployment Truth Gate" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Wave: ${{ github.event.inputs.wave_name }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f generated/truth-gate/attestation.md ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            cat generated/truth-gate/attestation.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Attestation markdown missing" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload truth gate artifacts
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: deployment-truth-gate-${{ github.run_id }}
+          path: |
+            generated/truth-gate/attestation.json
+            generated/truth-gate/attestation.md
+            generated/truth-gate/artifact.sha256
+            workspace/api_generated.truth-gate.zip
+          if-no-files-found: warn

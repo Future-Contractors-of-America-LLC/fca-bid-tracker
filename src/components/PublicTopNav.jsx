@@ -423,15 +423,15 @@ export default function PublicTopNav({ mode = "public" }) {
                 Contact
               </a>
               <a
-                href="/pricing"
+                href="/academy/pathway?pathway=certification"
                 style={{
                   ...linkStyle,
                   display: "inline-block",
-                  color: currentPath === "/pricing" ? "#1d4ed8" : "#334155",
-                  background: currentPath === "/pricing" ? "#eff6ff" : "transparent",
+                  color: currentPath.startsWith("/academy/pathway") || currentPath === "/cte" || currentPath === "/cte/program" ? "#1d4ed8" : "#334155",
+                  background: currentPath.startsWith("/academy/pathway") || currentPath === "/cte" || currentPath === "/cte/program" ? "#eff6ff" : "transparent",
                 }}
               >
-                Pricing
+                CTE Pathway
               </a>
             </nav>
           )}

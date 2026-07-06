@@ -1,0 +1,40 @@
+[
+  {
+    "name": "diag canary reachable",
+    "path": "/api/diag-canary",
+    "method": "GET",
+    "allowedStatus": [200]
+  },
+  {
+    "name": "projects route auth boundary",
+    "path": "/api/projects",
+    "method": "GET",
+    "allowedStatus": [200, 401, 403]
+  },
+  {
+    "name": "auricrux route auth boundary",
+    "path": "/api/auricrux",
+    "method": "GET",
+    "allowedStatus": [200, 401, 403]
+  },
+  {
+    "name": "customer login contract",
+    "path": "/api/customer-login",
+    "method": "POST",
+    "headers": { "Content-Type": "application/json" },
+    "body": {},
+    "allowedStatus": [200, 400, 401]
+  },
+  {
+    "name": "internal-admin ping reachable",
+    "path": "/api/internal-admin/ping",
+    "method": "GET",
+    "allowedStatus": [200, 401, 403]
+  },
+  {
+    "name": "internal-admin payroll profile boundary",
+    "path": "/api/internal-admin/payroll-profile",
+    "method": "GET",
+    "allowedStatus": [200, 401, 403]
+  }
+]

@@ -324,6 +324,7 @@ export default function Home() {
               ) : null}
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 28 }}>
                 <a href="/intake" style={heroCtaOnDark}>Get started</a>
+                <a href="/academy/pathway?pathway=certification" style={heroCtaSecondaryOnDark}>Explore CTE pathway</a>
                 <a href="/contact" style={heroCtaSecondaryOnDark}>Talk to our team</a>
               </div>
             </div>
