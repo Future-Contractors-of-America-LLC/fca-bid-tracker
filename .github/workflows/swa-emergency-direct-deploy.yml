@@ -84,16 +84,15 @@ jobs:
           FCA_ACADEMY_MEDIA_CDN_BASE: ${{ vars.FCA_ACADEMY_MEDIA_CDN_BASE }}
         run: npm run prepare:swa-deploy
 
-      - name: Deploy static app and api directly
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: upload
-          skip_app_build: true
-          app_location: dist
-          api_location: api_generated
-          output_location: ''
+      - name: Deploy static app and api directly (SWA CLI token deploy)
+        env:
+          AZURE_STATIC_WEB_APPS_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_DELIGHTFUL_MUSHROOM_0DE67860F }}
+        run: |
+          set -euo pipefail
+          npx -y @azure/static-web-apps-cli@2.0.2 deploy dist \
+            --api-location api_generated \
+            --deployment-token "$AZURE_STATIC_WEB_APPS_API_TOKEN" \
+            --env production
 
       - name: Mandatory post-deploy host verification gate
         run: npm run verify:live-deployment
