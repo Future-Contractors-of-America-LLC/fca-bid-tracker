@@ -177,16 +177,10 @@ const NAV_MENUS = [
   {
     label: "Academy",
     items: [
-<<<<<<< HEAD
-      { label: "Course catalog", href: "/academy/catalog" },
-      { label: "Academy store", href: "/academy/store" },
-      { label: "Sign in for LMS", href: "/login?next=/academy" },
-=======
       { label: "CTE program evidence", href: "/cte/program" },
       { label: "Course catalog", href: "/academy/catalog" },
       { label: "Academy store", href: "/academy/store" },
       { label: "CTE student portal", href: "/cte/login?next=/cte" },
->>>>>>> d26f9df5a (fix(auth,cte): return session tokens and expose public CTE evidence surface)
     ],
   },
   {
