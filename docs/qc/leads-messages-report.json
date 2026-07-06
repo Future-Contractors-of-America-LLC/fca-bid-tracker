@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-07-05T00:33:43.853Z",
+  "ok": true,
+  "modules": [
+    "/portal/leads",
+    "/portal/messages"
+  ],
+  "checks": {
+    "leadsApiAndWorkflowCoverage": true,
+    "messagesApiAndWorkflowCoverage": true
+  },
+  "errors": []
+}

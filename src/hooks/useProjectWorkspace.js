@@ -8,6 +8,8 @@ import {
   writeProjectWorkspace,
 } from "../projectWorkspaceStore";
 import { fetchWorkflowProjects, mutateWorkflowProject } from "../api/workflowClient";
+import { publishProjectEvent } from "../projectEventBus";
+import { PROJECT_EVENT_TYPES } from "../projectEventContracts";
 
 export default function useProjectWorkspace() {
   const [projects, setProjects] = useState([]);
@@ -89,6 +91,15 @@ export default function useProjectWorkspace() {
           if (selected) {
             appendAutomationLog({ type: "project-context", title: `${selected.id} set as active project`, detail, route: "/portal/projects" });
             appendCommercialLog({ type: "project-context", title: `${selected.id} selected as project root`, detail, route: "/portal/projects" });
+            await publishProjectEvent(PROJECT_EVENT_TYPES.CONTEXT_SELECTED, {
+              projectId: selected.id,
+              stage: selected.stage,
+              detail,
+              route: "/portal/projects",
+              data: {
+                source: "useProjectWorkspace.selectActiveProject",
+              },
+            });
           }
           return selected || null;
         } catch (err) {
@@ -102,6 +113,16 @@ export default function useProjectWorkspace() {
       async advanceProjectStage(projectId, stage, detail) {
         try {
           const payload = await mutateWorkflowProject("advance-stage", { projectId, stage, detail });
+          if (payload?.pendingReview) {
+            setMeta((current) => ({
+              ...current,
+              persistenceState: payload.message || "Safe-Mode active: action queued for instructor review.",
+              loadError: "",
+              lastSyncedAt: new Date().toISOString(),
+            }));
+            return projects;
+          }
+
           const saved = updateProjectWorkspace((current) => current.map((project) => (project.id === projectId ? payload.project : project)));
           setProjects(saved);
           setActiveProjectId(readActiveProjectWorkspace(saved)?.id || null);
@@ -109,6 +130,15 @@ export default function useProjectWorkspace() {
           const updated = payload.project;
           appendAutomationLog({ type: "project-stage", title: `${updated.id} moved to ${stage}`, detail: detail || `Auricrux advanced ${updated.id} to ${stage}.`, route: "/portal/projects" });
           appendCommercialLog({ type: "project-stage", title: `${updated.id} execution posture advanced`, detail: detail || `Auricrux advanced ${updated.id} to ${stage} and preserved cross-lane delivery continuity.`, route: "/portal/projects" });
+          await publishProjectEvent(PROJECT_EVENT_TYPES.STAGE_ADVANCED, {
+            projectId,
+            stage,
+            detail: detail || `Auricrux advanced ${projectId} to ${stage}.`,
+            route: "/portal/projects",
+            data: {
+              source: "useProjectWorkspace.advanceProjectStage",
+            },
+          });
           return saved;
         } catch (err) {
           setMeta((current) => ({
@@ -121,6 +151,16 @@ export default function useProjectWorkspace() {
       async clearPermitBlocker(projectId, detail = "Permit dependency cleared and project routed toward mobilization.") {
         try {
           const payload = await mutateWorkflowProject("clear-permit-blocker", { projectId, detail });
+          if (payload?.pendingReview) {
+            setMeta((current) => ({
+              ...current,
+              persistenceState: payload.message || "Safe-Mode active: action queued for instructor review.",
+              loadError: "",
+              lastSyncedAt: new Date().toISOString(),
+            }));
+            return projects;
+          }
+
           const saved = updateProjectWorkspace((current) => current.map((project) => (project.id === projectId ? payload.project : project)));
           setProjects(saved);
           setActiveProjectId(readActiveProjectWorkspace(saved)?.id || null);
@@ -128,6 +168,15 @@ export default function useProjectWorkspace() {
           const updated = payload.project;
           appendAutomationLog({ type: "project-repair", title: `${updated.id} permit blocker cleared`, detail, route: "/portal/projects" });
           appendCommercialLog({ type: "project-repair", title: `${updated.id} mobilization path restored`, detail, route: "/portal/projects" });
+          await publishProjectEvent(PROJECT_EVENT_TYPES.PERMIT_BLOCKER_CLEARED, {
+            projectId,
+            stage: updated.stage,
+            detail,
+            route: "/portal/projects",
+            data: {
+              source: "useProjectWorkspace.clearPermitBlocker",
+            },
+          });
           return saved;
         } catch (err) {
           setMeta((current) => ({
@@ -148,6 +197,17 @@ export default function useProjectWorkspace() {
           const saved = updateProjectWorkspace((current) => current.map((project) => (project.id === projectId ? payload.project : project)));
           setProjects(saved);
           setMeta({ backingSource: payload.backingSource || "api-workflow-store", persistenceState: "API project mutation active", loadError: "", lastSyncedAt: new Date().toISOString() });
+          await publishProjectEvent(PROJECT_EVENT_TYPES.COMMAND_NOTES_UPDATED, {
+            projectId,
+            stage: payload.project?.stage || "",
+            detail,
+            route: "/portal/projects",
+            data: {
+              ownerNote,
+              customerMilestone,
+              source: "useProjectWorkspace.updateProjectCommandNotes",
+            },
+          });
           return payload.project;
         } catch (err) {
           setMeta((current) => ({

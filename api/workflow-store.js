@@ -1,4 +1,3 @@
-import { portalBids, portalProjects, portalFiles, projectAuditEvents } from "../src/systemState.js";
 import {
   ensureWorkflowHydrated,
   scheduleTenantPersist,
@@ -38,7 +37,7 @@ function normalizeBidRecord(bid = {}, index = 0) {
     blocker: bid.blocker || "No blocker recorded",
     estimator: bid.estimator || "Unassigned",
     scopePackage: bid.scopePackage || "Scope pending",
-    dueDate: bid.dueDate || "TBD",
+    dueDate: bid.dueDate || "Schedule date pending confirmation",
     tradeCoverage: bid.tradeCoverage || "Coverage pending",
     nextCommercialMove: bid.nextCommercialMove || "Advance commercial review",
     qualification: normalizeQualification(bid.qualification, bid),
@@ -57,7 +56,7 @@ function normalizeProjectRecord(project = {}, index = 0) {
     stage: project.stage || "Estimating",
     nextAction: project.nextAction || "Advance project",
     owner: project.owner || "Unassigned",
-    due: project.due || "TBD",
+    due: project.due || "Schedule date pending confirmation",
     superintendent: project.superintendent || "Pending assignment",
     permitStatus: project.permitStatus || "Permit status pending",
     siteStatus: project.siteStatus || "Site status pending",
@@ -158,41 +157,24 @@ function normalizeRfiRecord(item = {}, index = 0) {
 }
 
 function seedBids() {
-  return portalBids.map((bid, index) =>
-    normalizeBidRecord(
-      {
-        ...bid,
-        id: `BID-${index + 1}`,
-        qualification: {
-          score: index === 0 ? "84/100" : index === 1 ? "71/100" : "63/100",
-          status: index === 0 ? "Ready for estimate" : index === 1 ? "Budget review" : "Discovery in progress",
-          budgetFit: index === 0 ? "Confirmed" : index === 1 ? "Pending buyer confirmation" : "Budget not verified",
-          scopeFit: bid.scopePackage,
-          jurisdiction: index === 0 ? "Licensed coverage verified" : "Municipal review pending",
-          travel: index === 0 ? "Inside standard travel zone" : "Travel premium review pending",
-          evidence: index === 0 ? "Plans, photos, and buyer notes attached" : "Awaiting full evidence packet",
-          nextGate: index === 0 ? "Route to estimator handoff" : "Complete qualification command review",
-        },
-      },
-      index,
-    ),
-  );
+  return [];
 }
 
 function seedProjects() {
-  return portalProjects.map((project, index) => normalizeProjectRecord(project, index));
+  return [];
 }
 
 function seedFiles() {
-  return portalFiles.map((file, index) => normalizeFileRecord(file, index));
+  return [];
 }
 
 function seedAudit() {
-  return projectAuditEvents.map((event, index) => normalizeAuditEvent(event, index));
+  return [];
 }
 
 function seedTakeoffs(projects) {
   const primaryProjectId = projects[0]?.id || "PRJ-1";
+  if (!projects.length) return [];
   return [
     normalizeTakeoffRecord(
       {
@@ -218,6 +200,7 @@ function seedTakeoffs(projects) {
 
 function seedRfis(projects) {
   const primaryProjectId = projects[0]?.id || "PRJ-1";
+  if (!projects.length) return [];
   return [
     normalizeRfiRecord(
       {
@@ -423,7 +406,7 @@ export function createProject(tenantId, payload = {}) {
       stage: "Lead",
       nextAction: payload.description || "Complete project qualification and setup.",
       owner: "Auricrux",
-      due: "TBD",
+      due: "Schedule date pending confirmation",
       superintendent: "Pending assignment",
       permitStatus: "Permit review pending",
       siteStatus: payload.siteAddress || "Site not yet verified",
@@ -825,7 +808,7 @@ export function mutateBid(tenantId, action, payload = {}) {
           stage: "Job Setup",
           nextAction: payload.projectNextAction || "Release baseline kickoff checklist",
           owner: payload.projectOwner || currentBid.estimator || "Project Coordinator",
-          due: payload.projectDue || currentBid.dueDate || "TBD",
+          due: payload.projectDue || currentBid.dueDate || "Schedule date pending confirmation",
           superintendent: "Pending assignment",
           permitStatus: "Permit intake pending",
           siteStatus: "Startup packet ready for mobilization planning",

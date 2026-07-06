@@ -6,6 +6,9 @@ export const CUSTOMER_SESSION_EXPIRED_EVENT = "fca-customer-session-expired";
 
 const DEFAULT_POST_LOGIN_HREF = "/portal/platform";
 
+const ADMIN_PAYROLL_ROUTE_PREFIXES = ["/portal/admin", "/portal/admin/payroll"];
+const EMPLOYEE_PAYROLL_ROUTE_PREFIXES = ["/portal/employee", "/portal/employee/payroll", "/portal/employee/internal"];
+
 let hydrateSessionPromise = null;
 
 const DEFAULT_AUTH_BOUNDARY = {
@@ -14,7 +17,7 @@ const DEFAULT_AUTH_BOUNDARY = {
   identityProvider: "fca-native-auth",
   tenantIsolation: "single-repo-account-store",
   sessionValidation: "signed-http-only-cookie",
-  nextBuildStep: "Move customer accounts and session secret into managed identity-backed storage.",
+  nextBuildStep: "Verify managed account onboarding, session secret rotation, and tenant-level access controls.",
 };
 
 function normalizeEnabledProducts(enabledProducts) {
@@ -42,6 +45,56 @@ function normalizeAuthBoundary(authBoundary) {
     ...DEFAULT_AUTH_BOUNDARY,
     ...(authBoundary || {}),
   };
+}
+
+function isCteStudentRole(role = "") {
+  const normalized = String(role || "").trim().toLowerCase().replace(/_/g, "-");
+  return normalized === "student" || normalized === "cte-student" || normalized === "minor" || (normalized.includes("cte") && normalized.includes("student"));
+}
+
+function normalizeRoleToken(role = "") {
+  return String(role || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isAdminRole(role = "") {
+  const normalized = normalizeRoleToken(role);
+  if (!normalized) return false;
+  return [
+    "owner",
+    "admin",
+    "founder",
+    "system admin",
+    "accounting",
+    "payroll admin",
+    "hr",
+  ].some((token) => normalized.includes(token));
+}
+
+function isEmployeeRole(role = "") {
+  const normalized = normalizeRoleToken(role);
+  if (!normalized) return false;
+  return [
+    "employee",
+    "project coordinator",
+    "superintendent",
+    "field operations",
+    "estimator",
+  ].some((token) => normalized.includes(token));
+}
+
+export function isCteProtectedRoute(pathname = "/") {
+  if (pathname === "/cte/login" || pathname.startsWith("/cte/login/")) return false;
+  return pathname === "/cte" || pathname.startsWith("/cte/");
+}
+
+export function isCteOnlySession(session = null) {
+  if (!session?.authenticated) return false;
+  return session.cteProgramEnabled === true || isCteStudentRole(session.role);
 }
 
 function broadcastCustomerSessionUpdate() {
@@ -75,8 +128,9 @@ export function readCustomerSession() {
       role: parsed.role || "Owner / Admin",
       customerId: parsed.customerId || "CUST-FCA-LIVE-001",
       selectedPlan: parsed.selectedPlan || "startup",
-      accountSource: parsed.accountSource || "workspace-shell",
-      accountMode: parsed.accountMode || "seeded",
+      accountSource: parsed.accountSource || "server-session",
+      accountMode: parsed.accountMode || (isCteStudentRole(parsed.role) ? "cte-shadow" : "live"),
+      cteProgramEnabled: parsed.cteProgramEnabled === true || isCteStudentRole(parsed.role),
       authBoundary: normalizeAuthBoundary(parsed.authBoundary),
       enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
       enabledComms: normalizeEnabledComms(parsed.enabledComms),
@@ -99,8 +153,14 @@ export function writeCustomerSession(session) {
     lastLoginAt: session.lastLoginAt || new Date().toISOString(),
     nextHref: session.nextHref || "/portal/platform",
     selectedPlan: session.selectedPlan || "startup",
-    accountSource: session.accountSource || "workspace-shell",
-    accountMode: session.accountMode || "seeded",
+    accountSource: session.accountSource || "server-session",
+    accountMode: session.accountMode || (isCteStudentRole(session.role) ? "cte-shadow" : "live"),
+    cteProgramEnabled: session.cteProgramEnabled === true || isCteStudentRole(session.role),
+    issuedAt: session.issuedAt,
+    accessTokenExpiresAt: session.accessTokenExpiresAt,
+    refreshTokenExpiresAt: session.refreshTokenExpiresAt,
+    authEpoch: session.authEpoch,
+    sessionVersion: session.sessionVersion,
     authBoundary: normalizeAuthBoundary(session.authBoundary),
     enabledProducts: normalizeEnabledProducts(session.enabledProducts),
     enabledComms: normalizeEnabledComms(session.enabledComms),
@@ -246,15 +306,16 @@ export function isAcademyProtectedRoute(pathname = "/") {
 }
 
 export function isProtectedCustomerRoute(pathname = "/") {
-  return pathname.startsWith("/portal") || isAcademyProtectedRoute(pathname);
+  return pathname.startsWith("/portal") || isAcademyProtectedRoute(pathname) || isCteProtectedRoute(pathname);
 }
 
 export function isAllowedPostLoginHref(href = "/") {
   if (!href || typeof href !== "string") return false;
-  return href.startsWith("/portal") || isAcademyProtectedRoute(href) || href.startsWith("/academy/programs/");
+  return href.startsWith("/portal") || isAcademyProtectedRoute(href) || href.startsWith("/academy/programs/") || isCteProtectedRoute(href);
 }
 
 export function resolveCustomerProduct(pathname = "/") {
+  if (isCteProtectedRoute(pathname)) return "cte";
   if (isAcademyProtectedRoute(pathname) || pathname.startsWith("/portal/academy")) return "lms";
   if (pathname.startsWith("/portal/auricrux")) return "auricrux";
   if (pathname.startsWith("/portal") || pathname === "/login") return "saas";
@@ -266,11 +327,51 @@ export function hasCustomerProductAccess(session, pathname = "/") {
   const product = resolveCustomerProduct(pathname);
   if (product === "public") return true;
   if (!session?.authenticated) return false;
+
+  if (isCteOnlySession(session)) {
+    return product === "cte";
+  }
+
+  if (product === "cte") {
+    return false;
+  }
+
   return session.enabledProducts?.[product] !== false;
+}
+
+export function isAdminPayrollRoute(pathname = "/") {
+  return ADMIN_PAYROLL_ROUTE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+}
+
+export function isEmployeePayrollRoute(pathname = "/") {
+  return EMPLOYEE_PAYROLL_ROUTE_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+}
+
+export function isPayrollAdminSession(session = readCustomerSession()) {
+  if (!session?.authenticated) return false;
+  if (isCteOnlySession(session)) return false;
+  return isAdminRole(session.role);
+}
+
+export function isPayrollEmployeeSession(session = readCustomerSession()) {
+  if (!session?.authenticated) return false;
+  if (isCteOnlySession(session)) return false;
+  if (isPayrollAdminSession(session)) return false;
+  return isEmployeeRole(session.role);
+}
+
+export function hasRoleRouteAccess(session, pathname = "/") {
+  if (!isAdminPayrollRoute(pathname) && !isEmployeePayrollRoute(pathname)) return true;
+  if (isAdminPayrollRoute(pathname)) return isPayrollAdminSession(session);
+  if (isEmployeePayrollRoute(pathname)) return isPayrollEmployeeSession(session);
+  return true;
 }
 
 export function resolveLoginHref(nextPath = null) {
   if (nextPath && isProtectedCustomerRoute(nextPath)) {
+    if (isCteProtectedRoute(nextPath)) {
+      return `/cte/login?next=${encodeURIComponent(nextPath)}`;
+    }
     return `/login?next=${encodeURIComponent(nextPath)}`;
   }
   return "/login";
@@ -312,10 +413,12 @@ export function resolveProfileHref(session = readCustomerSession()) {
 
 export function resolveDefaultPostLoginHref(session = readCustomerSession()) {
   if (!session?.authenticated) return DEFAULT_POST_LOGIN_HREF;
+  if (isCteOnlySession(session) && hasCustomerProductAccess(session, "/cte")) return "/cte";
   if (hasCustomerProductAccess(session, DEFAULT_POST_LOGIN_HREF)) return DEFAULT_POST_LOGIN_HREF;
   if (hasCustomerProductAccess(session, "/portal/pipeline")) return "/portal/pipeline";
   if (hasCustomerProductAccess(session, "/portal/auricrux")) return "/portal/auricrux";
   if (hasCustomerProductAccess(session, "/academy")) return "/academy";
+  if (hasCustomerProductAccess(session, "/cte")) return "/cte";
   return "/portal/profile";
 }
 

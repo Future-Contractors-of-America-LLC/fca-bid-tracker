@@ -1,10 +1,10 @@
 export const MICHAEL_FOUNDER_ACCOUNT = {
-  email: "michael@futurecontractorsofamerica.com",
-  password: "MyGodiswithme01!",
-  company: "Future Contractors of America",
-  role: "Founder / Owner",
-  customerId: "CUST-FCA-FOUNDER-MICHAEL-001",
-  workspaceLabel: "Michael — FCA Founder Workspace",
+  email: "local.founder@localhost.invalid",
+  password: "local-dev-only",
+  company: "Local Founder Workspace",
+  role: "Owner / Admin",
+  customerId: "CUST-LOCAL-FOUNDER-001",
+  workspaceLabel: "Local Founder Workspace",
   selectedPlan: "enterprise",
   enabledProducts: {
     saas: true,
@@ -23,12 +23,12 @@ export const MICHAEL_FOUNDER_ACCOUNT = {
 };
 
 export const PRIMARY_TEST_ACCOUNT = {
-  email: "founder.test@futurecontractorsofamerica.com",
-  password: "FCA-HandsOff-2026!",
-  company: "Future Contractors of America Test Workspace",
+  email: "local.test@localhost.invalid",
+  password: "local-dev-only",
+  company: "Local Test Workspace",
   role: "Owner / Admin",
-  customerId: "CUST-FCA-TEST-001",
-  workspaceLabel: "FCA Founder Test Workspace",
+  customerId: "CUST-LOCAL-TEST-001",
+  workspaceLabel: "Local Test Workspace",
   selectedPlan: "enterprise",
   enabledProducts: {
     saas: true,
@@ -47,12 +47,12 @@ export const PRIMARY_TEST_ACCOUNT = {
 };
 
 export const ADMIN_BACKEND_ACCOUNT = {
-  email: "admin@futurecontractorsofamerica.com",
-  password: "FCA-Admin-2026!",
-  company: "FCA System Administration",
-  role: "FCA System Admin",
-  customerId: "CUST-FCA-ADMIN-001",
-  workspaceLabel: "FCA Backend Administration",
+  email: "local.admin@localhost.invalid",
+  password: "local-dev-only",
+  company: "Local Admin Workspace",
+  role: "System Admin",
+  customerId: "CUST-LOCAL-ADMIN-001",
+  workspaceLabel: "Local Admin Workspace",
   selectedPlan: "enterprise",
   enabledProducts: {
     saas: true,
@@ -71,12 +71,60 @@ export const ADMIN_BACKEND_ACCOUNT = {
 };
 
 export const LAUNCH_SINGLE_USER_ACCOUNT = {
-  email: "launch.customer@futurecontractorsofamerica.com",
-  password: "FCA-Launch-2026!",
-  company: "Future Contractors of America Launch Customer",
+  email: "local.launch@localhost.invalid",
+  password: "local-dev-only",
+  company: "Local Launch Workspace",
   role: "Owner / Admin",
-  customerId: "CUST-FCA-LAUNCH-001",
-  workspaceLabel: "FCA Launch Customer Workspace",
+  customerId: "CUST-LOCAL-LAUNCH-001",
+  workspaceLabel: "Local Launch Workspace",
+  selectedPlan: "enterprise",
+  enabledProducts: {
+    saas: true,
+    lms: true,
+    auricrux: true,
+  },
+  enabledComms: {
+    chat: true,
+    sms: true,
+    phone: true,
+    email: true,
+    teams: true,
+    conference: true,
+    lecture: true,
+  },
+};
+
+export const MICHAEL_EMPLOYEE_ACCOUNT = {
+  email: "local.michael.employee@localhost.invalid",
+  password: "local-dev-only",
+  company: "FCA Employee Workspace",
+  role: "Employee",
+  customerId: "CUST-LOCAL-EMPLOYEE-001",
+  workspaceLabel: "FCA Employee Workspace",
+  selectedPlan: "enterprise",
+  enabledProducts: {
+    saas: true,
+    lms: true,
+    auricrux: true,
+  },
+  enabledComms: {
+    chat: true,
+    sms: true,
+    phone: true,
+    email: true,
+    teams: true,
+    conference: true,
+    lecture: true,
+  },
+};
+
+export const AMANDA_EMPLOYEE_ACCOUNT = {
+  email: "local.amanda.employee@localhost.invalid",
+  password: "local-dev-only",
+  company: "FCA Employee Workspace",
+  role: "Employee",
+  customerId: "CUST-LOCAL-EMPLOYEE-002",
+  workspaceLabel: "FCA Employee Workspace",
   selectedPlan: "enterprise",
   enabledProducts: {
     saas: true,
@@ -100,6 +148,10 @@ export const SEEDED_ACCOUNT_KEYS = {
   michael: MICHAEL_FOUNDER_ACCOUNT,
   admin: ADMIN_BACKEND_ACCOUNT,
   launch: LAUNCH_SINGLE_USER_ACCOUNT,
+  michaelemployee: MICHAEL_EMPLOYEE_ACCOUNT,
+  amandaemployee: AMANDA_EMPLOYEE_ACCOUNT,
+  employee: MICHAEL_EMPLOYEE_ACCOUNT,
+  amanda: AMANDA_EMPLOYEE_ACCOUNT,
 };
 
 export const TEST_CUSTOMER_ACCOUNTS = [
@@ -107,6 +159,8 @@ export const TEST_CUSTOMER_ACCOUNTS = [
   MICHAEL_FOUNDER_ACCOUNT,
   LAUNCH_SINGLE_USER_ACCOUNT,
   ADMIN_BACKEND_ACCOUNT,
+  MICHAEL_EMPLOYEE_ACCOUNT,
+  AMANDA_EMPLOYEE_ACCOUNT,
 ];
 
 export function resolveSeededAccountByKey(key = "test") {

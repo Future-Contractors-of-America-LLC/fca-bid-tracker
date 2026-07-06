@@ -1,0 +1,101 @@
+# Backend Capability Registry
+
+- Generated: 2026-07-01T15:33:38
+- Scope: non-LMS api handlers
+- Total handlers: 76
+
+## Status summary
+- implemented: 40
+- proxied: 36
+
+## Domain summary
+- auricrux-governance | implemented: 4
+- auricrux-governance | proxied: 7
+- customer-os | implemented: 8
+- customer-os | proxied: 2
+- delivery-core | implemented: 8
+- delivery-core | proxied: 13
+- finance-core | implemented: 6
+- finance-core | proxied: 4
+- platform-core | implemented: 9
+- platform-core | proxied: 4
+- revenue-core | implemented: 5
+- revenue-core | proxied: 6
+
+## Handlers
+- implemented | auricrux-governance | api\audit-events-summary.js
+- implemented | auricrux-governance | api\auricrux.js
+- implemented | auricrux-governance | api\workflow-audit.js
+- implemented | auricrux-governance | api\workflow-store.js
+- proxied | auricrux-governance | api\audit-events-summary\index.js
+- proxied | auricrux-governance | api\auricrux-actions-alias\index.js
+- proxied | auricrux-governance | api\auricrux-actions\index.js
+- proxied | auricrux-governance | api\auricrux-speak\index.js
+- proxied | auricrux-governance | api\auricrux-spine\index.js
+- proxied | auricrux-governance | api\auricrux\index.js
+- proxied | auricrux-governance | api\workflow-audit\index.js
+- implemented | customer-os | api\admin-students.js
+- implemented | customer-os | api\auth-audit.js
+- implemented | customer-os | api\auth-boundary.js
+- implemented | customer-os | api\customer-account-store.js
+- implemented | customer-os | api\customer-auth-state.js
+- implemented | customer-os | api\customer-login.js
+- implemented | customer-os | api\customer-session.js
+- implemented | customer-os | api\customer-verify.js
+- proxied | customer-os | api\portal-messages\index.js
+- proxied | customer-os | api\support-tickets\index.js
+- implemented | delivery-core | api\change-orders.js
+- implemented | delivery-core | api\closeout-packages.js
+- implemented | delivery-core | api\files-summary.js
+- implemented | delivery-core | api\files.js
+- implemented | delivery-core | api\projects-workspace.js
+- implemented | delivery-core | api\projects.js
+- implemented | delivery-core | api\warranty-cases.js
+- implemented | delivery-core | api\warranty-store.js
+- proxied | delivery-core | api\change-orders\index.js
+- proxied | delivery-core | api\closeout-packages\index.js
+- proxied | delivery-core | api\field-photos\index.js
+- proxied | delivery-core | api\field-schedule\index.js
+- proxied | delivery-core | api\field-tasks\index.js
+- proxied | delivery-core | api\files-summary\index.js
+- proxied | delivery-core | api\files\index.js
+- proxied | delivery-core | api\project-detail\index.js
+- proxied | delivery-core | api\project-rfis\index.js
+- proxied | delivery-core | api\project-takeoffs\index.js
+- proxied | delivery-core | api\projects-workspace\index.js
+- proxied | delivery-core | api\projects\index.js
+- proxied | delivery-core | api\warranty-cases\index.js
+- implemented | finance-core | api\billing-summary.js
+- implemented | finance-core | api\finance-store.js
+- implemented | finance-core | api\job-cost.js
+- implemented | finance-core | api\pay-apps.js
+- implemented | finance-core | api\stripe-checkout\index.js
+- implemented | finance-core | api\stripe-webhook\index.js
+- proxied | finance-core | api\billing-summary\index.js
+- proxied | finance-core | api\job-cost\index.js
+- proxied | finance-core | api\pay-apps\index.js
+- proxied | finance-core | api\portal-invoices\index.js
+- implemented | platform-core | api\central-proxy.js
+- implemented | platform-core | api\chps-dpa-signature.js
+- implemented | platform-core | api\commercial-store.js
+- implemented | platform-core | api\leads-store.js
+- implemented | platform-core | api\remediation-links.js
+- implemented | platform-core | api\remediation-store.js
+- implemented | platform-core | api\student-stores.js
+- implemented | platform-core | api\verification-challenges.js
+- implemented | platform-core | api\workspace-read-models.js
+- proxied | platform-core | api\commercial-pipeline\index.js
+- proxied | platform-core | api\financial-workspace\index.js
+- proxied | platform-core | api\leads\index.js
+- proxied | platform-core | api\remediation-links\index.js
+- implemented | revenue-core | api\bids.js
+- implemented | revenue-core | api\estimates.js
+- implemented | revenue-core | api\opportunities-workspace.js
+- implemented | revenue-core | api\opportunity-convert.js
+- implemented | revenue-core | api\proposals.js
+- proxied | revenue-core | api\bid-doteach-workflow\index.js
+- proxied | revenue-core | api\bids\index.js
+- proxied | revenue-core | api\estimates\index.js
+- proxied | revenue-core | api\opportunities-workspace\index.js
+- proxied | revenue-core | api\opportunity-convert\index.js
+- proxied | revenue-core | api\proposals\index.js

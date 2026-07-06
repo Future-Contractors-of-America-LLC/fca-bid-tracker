@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-07-04T18:54:36.360Z",
+  "ok": true,
+  "modules": [
+    "/portal/estimates",
+    "/portal/files"
+  ],
+  "checks": {
+    "estimatesApiAndWorkflowCoverage": true,
+    "filesApiAndWorkflowCoverage": true
+  },
+  "errors": []
+}

@@ -6,11 +6,34 @@ const crypto = require("crypto");
 
 const SESSION_COOKIE_NAME = "fca_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 8;
+const ACCESS_TOKEN_TTL_SECONDS = 10 * 60;
+const MAX_ACCESS_TOKEN_WINDOW_MS = 15 * 60 * 1000;
 const STUDENT_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
 const DEFAULT_SESSION_SECRET = "FCA_SERVER_SESSION_DEV_ONLY_CHANGE_ME";
 
+function envFlagEnabled(value = "") {
+  return ["1", "true", "yes", "on"].includes(String(value || "").trim().toLowerCase());
+}
+
+function envFlagDisabled(value = "") {
+  return ["0", "false", "no", "off"].includes(String(value || "").trim().toLowerCase());
+}
+
+function isProductionRuntime() {
+  return envFlagEnabled(process.env.FCA_PRODUCTION_RUNTIME) || String(process.env.NODE_ENV || "").toLowerCase() === "production";
+}
+
+function requiresManagedSessionSecret() {
+  if (envFlagDisabled(process.env.FCA_ENFORCE_MANAGED_SESSION_SECRET)) return false;
+  return isProductionRuntime() || envFlagEnabled(process.env.FCA_ENFORCE_MANAGED_SESSION_SECRET);
+}
+
 function getSessionSecret() {
-  return process.env.FCA_SESSION_SECRET || DEFAULT_SESSION_SECRET;
+  if (process.env.FCA_SESSION_SECRET) return process.env.FCA_SESSION_SECRET;
+  if (requiresManagedSessionSecret()) {
+    throw new Error("FCA_SESSION_SECRET_REQUIRED: managed session signing secret is required in production runtime.");
+  }
+  return DEFAULT_SESSION_SECRET;
 }
 
 function base64UrlEncode(value) {
@@ -35,13 +58,19 @@ function readSessionToken(req) {
   return match ? match.slice(SESSION_COOKIE_NAME.length + 1) : null;
 }
 
-function isStudentRole(role) {
-  return role === "student" || role === "cte-student";
+function isStudentRole(role = "") {
+  const normalized = String(role || "").trim().toLowerCase().replace(/_/g, "-");
+  return normalized === "student" || normalized === "cte-student" || normalized === "minor" || (normalized.includes("cte") && normalized.includes("student"));
 }
 
 function createSessionCookie(account, now = Date.now()) {
   const payload = JSON.stringify({
     ...account,
+    issuedAt: now,
+    accessTokenExpiresAt: now + ACCESS_TOKEN_TTL_SECONDS * 1000,
+    refreshTokenExpiresAt: now + SESSION_TTL_SECONDS * 1000,
+    authEpoch: account.authEpoch || now,
+    sessionVersion: "phase3-zero-trust-v1",
     lastActiveAt: now,
     exp: now + SESSION_TTL_SECONDS * 1000,
   });
@@ -59,6 +88,8 @@ function validateSessionToken(token, now = Date.now()) {
   try {
     const payload = JSON.parse(base64UrlDecode(encodedPayload));
     if (!payload?.exp || payload.exp < now) return null;
+    if (!payload?.accessTokenExpiresAt || payload.accessTokenExpiresAt < now) return null;
+    if (payload.accessTokenExpiresAt - now > MAX_ACCESS_TOKEN_WINDOW_MS) return null;
     if (isStudentRole(payload.role)) {
       const lastActive = payload.lastActiveAt || 0;
       if (now - lastActive > STUDENT_IDLE_TIMEOUT_MS) {

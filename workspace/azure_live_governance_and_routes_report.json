@@ -1,0 +1,171 @@
+{
+  "ok": false,
+  "governance": {
+    "swa": {
+      "resource": "fca-frontend_group/fca-frontend",
+      "flags": {
+        "FCA_AURICRUX_LIVE_ENABLED": "1",
+        "FCA_FORCE_LIVE_MODE": "1",
+        "FCA_IMMUTABLE_AUDIT_ENABLED": "1",
+        "VITE_FCA_FORCE_LIVE_MODE": "1",
+        "VITE_AURICRUX_AUTORUN_CAMPAIGNS": "1"
+      },
+      "secretLike": {
+        "FCA_SESSION_SECRET": true,
+        "FCA_IMMUTABLE_AUDIT_SINK": true
+      }
+    },
+    "functionApp": {
+      "resource": "Auricrux_group/Auricrux-Central",
+      "flags": {
+        "FCA_AURICRUX_LIVE_ENABLED": "1",
+        "FCA_FORCE_LIVE_MODE": "1",
+        "FCA_IMMUTABLE_AUDIT_ENABLED": "1",
+        "VITE_FCA_FORCE_LIVE_MODE": "1",
+        "VITE_AURICRUX_AUTORUN_CAMPAIGNS": "1"
+      },
+      "secretLike": {
+        "FCA_SESSION_SECRET": true,
+        "FCA_IMMUTABLE_AUDIT_SINK": true
+      }
+    },
+    "linkage": {
+      "linkedBackends": [
+        {
+          "name": "Auricrux-Central",
+          "provisioningState": "Succeeded",
+          "backendResourceId": "/subscriptions/2d35643e-8a14-49d0-adf8-a5e8d291fc42/resourceGroups/Auricrux_group/providers/Microsoft.Web/sites/Auricrux-Central"
+        }
+      ],
+      "hasExpectedBackend": true
+    }
+  },
+  "routeHealth": {
+    "hosts": [
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+      "www.futurecontractorsofamerica.com",
+      "futurecontractorsofamerica.com",
+      "app.futurecontractorsofamerica.com"
+    ],
+    "checks": [
+      {
+        "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+        "route": "/",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/"
+      },
+      {
+        "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+        "route": "/deployment-status.json",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "{\n  \"status\": \"live-react-spa-v1-portal-routes-active\",\n  \"shell\": \"FCA Contractor Command React SPA\",\n  \"execution\": \"A"
+      },
+      {
+        "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+        "route": "/api/customer-auth-state",
+        "ok": false,
+        "status": 404,
+        "bodyPreview": ""
+      },
+      {
+        "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+        "route": "/api/academy-lms?view=summary",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "{\n  \"ok\": true,\n  \"learners\": [\n    {\n      \"learnerId\": \"LRN-001\",\n      \"fullName\": \"Jordan Mercer\",\n      \"role\": \"Pr"
+      },
+      {
+        "host": "www.futurecontractorsofamerica.com",
+        "route": "/",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/"
+      },
+      {
+        "host": "www.futurecontractorsofamerica.com",
+        "route": "/deployment-status.json",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "{\n  \"status\": \"live-react-spa-v1-portal-routes-active\",\n  \"shell\": \"FCA Contractor Command React SPA\",\n  \"execution\": \"A"
+      },
+      {
+        "host": "www.futurecontractorsofamerica.com",
+        "route": "/api/customer-auth-state",
+        "ok": false,
+        "status": 404,
+        "bodyPreview": ""
+      },
+      {
+        "host": "www.futurecontractorsofamerica.com",
+        "route": "/api/academy-lms?view=summary",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "{\n  \"ok\": true,\n  \"learners\": [\n    {\n      \"learnerId\": \"LRN-001\",\n      \"fullName\": \"Jordan Mercer\",\n      \"role\": \"Pr"
+      },
+      {
+        "host": "futurecontractorsofamerica.com",
+        "route": "/",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/"
+      },
+      {
+        "host": "futurecontractorsofamerica.com",
+        "route": "/deployment-status.json",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "{\n  \"status\": \"live-react-spa-v1-portal-routes-active\",\n  \"shell\": \"FCA Contractor Command React SPA\",\n  \"execution\": \"A"
+      },
+      {
+        "host": "futurecontractorsofamerica.com",
+        "route": "/api/customer-auth-state",
+        "ok": false,
+        "status": 404,
+        "bodyPreview": ""
+      },
+      {
+        "host": "futurecontractorsofamerica.com",
+        "route": "/api/academy-lms?view=summary",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "{\n  \"ok\": true,\n  \"learners\": [\n    {\n      \"learnerId\": \"LRN-001\",\n      \"fullName\": \"Jordan Mercer\",\n      \"role\": \"Pr"
+      },
+      {
+        "host": "app.futurecontractorsofamerica.com",
+        "route": "/",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/"
+      },
+      {
+        "host": "app.futurecontractorsofamerica.com",
+        "route": "/deployment-status.json",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "{\n  \"status\": \"live-react-spa-v1-portal-routes-active\",\n  \"shell\": \"FCA Contractor Command React SPA\",\n  \"execution\": \"A"
+      },
+      {
+        "host": "app.futurecontractorsofamerica.com",
+        "route": "/api/customer-auth-state",
+        "ok": false,
+        "status": 404,
+        "bodyPreview": ""
+      },
+      {
+        "host": "app.futurecontractorsofamerica.com",
+        "route": "/api/academy-lms?view=summary",
+        "ok": true,
+        "status": 200,
+        "bodyPreview": "{\n  \"ok\": true,\n  \"learners\": [\n    {\n      \"learnerId\": \"LRN-001\",\n      \"fullName\": \"Jordan Mercer\",\n      \"role\": \"Pr"
+      }
+    ]
+  },
+  "failures": [
+    "API route /api/customer-auth-state failed on delightful-mushroom-0de67860f.7.azurestaticapps.net with status 404.",
+    "API route /api/customer-auth-state failed on www.futurecontractorsofamerica.com with status 404.",
+    "API route /api/customer-auth-state failed on futurecontractorsofamerica.com with status 404.",
+    "API route /api/customer-auth-state failed on app.futurecontractorsofamerica.com with status 404."
+  ]
+}

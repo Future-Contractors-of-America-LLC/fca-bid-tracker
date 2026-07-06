@@ -1,20 +1,28 @@
 # LMS Depth & Content QC Report
 
-- Generated: 2026-06-23T21:28:47.164Z
-- Programs (static slice): 15
-- Total lessons: 71
-- Lessons with full media: 71
+- Generated: 2026-07-05T18:37:44.150Z
+- Programs (static slice): 48
+- Total lessons: 323
+- Lessons with full media: 323
 - Lessons pending media: 0
 - Media coverage: 100%
-- Passed: 151 | Failed: 0 | Warnings: 0
+- Passed: 541 | Failed: 0 | Warnings: 0
+- Benchmark status: PASS
+- Benchmark scores: Quality 9.9 | Capability 9.9 | Customer Experience 9.9 | Visual/Presentation 9.9 | Composite 9.9
 
 ## Findings
 - **PASS** script:validate-academy-ctas.mjs
 - **PASS** script:validate-academy-catalog.mjs
+- **PASS** script:validate-academy-excellence.mjs
+- **PASS** script:validate-academy-cte-curriculum.mjs
+- **PASS** script:validate-cte-shadow-environment.mjs
+- **PASS** script:validate-system-security-hardening.mjs
+- **PASS** script:validate-phase3-zero-trust-audit.mjs
 - **PASS** script:validate-catalog-balance.mjs
 - **PASS** script:validate-academy-media.mjs
 - **PASS** script:validate-academy-readiness-overlay.mjs
 - **PASS** script:validate-academy-live-api.mjs
+- **PASS** script:validate-academy-native-commerce-journey.mjs
 - **PASS** program-meta:fca-workspace-quick-start
 - **PASS** program-link:fca-workspace-quick-start: /portal/projects
 - **PASS** course-lessons:ONB-001: 4 lessons
@@ -146,6 +154,390 @@
 - **PASS** lesson-media:LEGAL-CONST-301:2: lecture+lab
 - **PASS** lesson-media:LEGAL-CONST-301:3: lecture+lab
 - **PASS** lesson-media:LEGAL-CONST-301:4: lecture+lab
+- **PASS** program-meta:cte-va-architectural-drawing-design-18wk
+- **PASS** program-link:cte-va-architectural-drawing-design-18wk: /portal/design
+- **PASS** course-lessons:VDOE-8492: 4 lessons
+- **PASS** course-titles:VDOE-8492
+- **PASS** lesson-media:VDOE-8492:1: lecture+lab
+- **PASS** lesson-media:VDOE-8492:2: lecture+lab
+- **PASS** lesson-media:VDOE-8492:3: lecture+lab
+- **PASS** lesson-media:VDOE-8492:4: lecture+lab
+- **PASS** program-meta:cte-va-architectural-drawing-design-36wk
+- **PASS** program-link:cte-va-architectural-drawing-design-36wk: /portal/design
+- **PASS** course-lessons:VDOE-8437: 8 lessons
+- **PASS** course-titles:VDOE-8437
+- **PASS** lesson-media:VDOE-8437:1: lecture+lab
+- **PASS** lesson-media:VDOE-8437:2: lecture+lab
+- **PASS** lesson-media:VDOE-8437:3: lecture+lab
+- **PASS** lesson-media:VDOE-8437:4: lecture+lab
+- **PASS** lesson-media:VDOE-8437:5: lecture+lab
+- **PASS** lesson-media:VDOE-8437:6: lecture+lab
+- **PASS** lesson-media:VDOE-8437:7: lecture+lab
+- **PASS** lesson-media:VDOE-8437:8: lecture+lab
+- **PASS** program-meta:cte-va-building-management-i
+- **PASS** program-link:cte-va-building-management-i: /portal/projects
+- **PASS** course-lessons:VDOE-8590: 8 lessons
+- **PASS** course-titles:VDOE-8590
+- **PASS** lesson-media:VDOE-8590:1: lecture+lab
+- **PASS** lesson-media:VDOE-8590:2: lecture+lab
+- **PASS** lesson-media:VDOE-8590:3: lecture+lab
+- **PASS** lesson-media:VDOE-8590:4: lecture+lab
+- **PASS** lesson-media:VDOE-8590:5: lecture+lab
+- **PASS** lesson-media:VDOE-8590:6: lecture+lab
+- **PASS** lesson-media:VDOE-8590:7: lecture+lab
+- **PASS** lesson-media:VDOE-8590:8: lecture+lab
+- **PASS** program-meta:cte-va-building-management-ii
+- **PASS** program-link:cte-va-building-management-ii: /portal/projects
+- **PASS** course-lessons:VDOE-8591: 8 lessons
+- **PASS** course-titles:VDOE-8591
+- **PASS** lesson-media:VDOE-8591:1: lecture+lab
+- **PASS** lesson-media:VDOE-8591:2: lecture+lab
+- **PASS** lesson-media:VDOE-8591:3: lecture+lab
+- **PASS** lesson-media:VDOE-8591:4: lecture+lab
+- **PASS** lesson-media:VDOE-8591:5: lecture+lab
+- **PASS** lesson-media:VDOE-8591:6: lecture+lab
+- **PASS** lesson-media:VDOE-8591:7: lecture+lab
+- **PASS** lesson-media:VDOE-8591:8: lecture+lab
+- **PASS** program-meta:cte-va-building-management-iii
+- **PASS** program-link:cte-va-building-management-iii: /portal/projects
+- **PASS** course-lessons:VDOE-8592: 8 lessons
+- **PASS** course-titles:VDOE-8592
+- **PASS** lesson-media:VDOE-8592:1: lecture+lab
+- **PASS** lesson-media:VDOE-8592:2: lecture+lab
+- **PASS** lesson-media:VDOE-8592:3: lecture+lab
+- **PASS** lesson-media:VDOE-8592:4: lecture+lab
+- **PASS** lesson-media:VDOE-8592:5: lecture+lab
+- **PASS** lesson-media:VDOE-8592:6: lecture+lab
+- **PASS** lesson-media:VDOE-8592:7: lecture+lab
+- **PASS** lesson-media:VDOE-8592:8: lecture+lab
+- **PASS** program-meta:cte-va-building-trades-i
+- **PASS** program-link:cte-va-building-trades-i: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8515: 8 lessons
+- **PASS** course-titles:VDOE-8515
+- **PASS** lesson-media:VDOE-8515:1: lecture+lab
+- **PASS** lesson-media:VDOE-8515:2: lecture+lab
+- **PASS** lesson-media:VDOE-8515:3: lecture+lab
+- **PASS** lesson-media:VDOE-8515:4: lecture+lab
+- **PASS** lesson-media:VDOE-8515:5: lecture+lab
+- **PASS** lesson-media:VDOE-8515:6: lecture+lab
+- **PASS** lesson-media:VDOE-8515:7: lecture+lab
+- **PASS** lesson-media:VDOE-8515:8: lecture+lab
+- **PASS** program-meta:cte-va-building-trades-ii
+- **PASS** program-link:cte-va-building-trades-ii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8516: 8 lessons
+- **PASS** course-titles:VDOE-8516
+- **PASS** lesson-media:VDOE-8516:1: lecture+lab
+- **PASS** lesson-media:VDOE-8516:2: lecture+lab
+- **PASS** lesson-media:VDOE-8516:3: lecture+lab
+- **PASS** lesson-media:VDOE-8516:4: lecture+lab
+- **PASS** lesson-media:VDOE-8516:5: lecture+lab
+- **PASS** lesson-media:VDOE-8516:6: lecture+lab
+- **PASS** lesson-media:VDOE-8516:7: lecture+lab
+- **PASS** lesson-media:VDOE-8516:8: lecture+lab
+- **PASS** program-meta:cte-va-building-trades-iii
+- **PASS** program-link:cte-va-building-trades-iii: /portal/field-supervision
+- **PASS** course-lessons:CTE-VA-BUILDING-TRADES-III: 8 lessons
+- **PASS** course-titles:CTE-VA-BUILDING-TRADES-III
+- **PASS** lesson-media:CTE-VA-BUILDING-TRADES-III:1: lecture+lab
+- **PASS** lesson-media:CTE-VA-BUILDING-TRADES-III:2: lecture+lab
+- **PASS** lesson-media:CTE-VA-BUILDING-TRADES-III:3: lecture+lab
+- **PASS** lesson-media:CTE-VA-BUILDING-TRADES-III:4: lecture+lab
+- **PASS** lesson-media:CTE-VA-BUILDING-TRADES-III:5: lecture+lab
+- **PASS** lesson-media:CTE-VA-BUILDING-TRADES-III:6: lecture+lab
+- **PASS** lesson-media:CTE-VA-BUILDING-TRADES-III:7: lecture+lab
+- **PASS** lesson-media:CTE-VA-BUILDING-TRADES-III:8: lecture+lab
+- **PASS** program-meta:cte-va-cabinetmaking-i
+- **PASS** program-link:cte-va-cabinetmaking-i: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8604: 8 lessons
+- **PASS** course-titles:VDOE-8604
+- **PASS** lesson-media:VDOE-8604:1: lecture+lab
+- **PASS** lesson-media:VDOE-8604:2: lecture+lab
+- **PASS** lesson-media:VDOE-8604:3: lecture+lab
+- **PASS** lesson-media:VDOE-8604:4: lecture+lab
+- **PASS** lesson-media:VDOE-8604:5: lecture+lab
+- **PASS** lesson-media:VDOE-8604:6: lecture+lab
+- **PASS** lesson-media:VDOE-8604:7: lecture+lab
+- **PASS** lesson-media:VDOE-8604:8: lecture+lab
+- **PASS** program-meta:cte-va-cabinetmaking-ii
+- **PASS** program-link:cte-va-cabinetmaking-ii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8605: 8 lessons
+- **PASS** course-titles:VDOE-8605
+- **PASS** lesson-media:VDOE-8605:1: lecture+lab
+- **PASS** lesson-media:VDOE-8605:2: lecture+lab
+- **PASS** lesson-media:VDOE-8605:3: lecture+lab
+- **PASS** lesson-media:VDOE-8605:4: lecture+lab
+- **PASS** lesson-media:VDOE-8605:5: lecture+lab
+- **PASS** lesson-media:VDOE-8605:6: lecture+lab
+- **PASS** lesson-media:VDOE-8605:7: lecture+lab
+- **PASS** lesson-media:VDOE-8605:8: lecture+lab
+- **PASS** program-meta:cte-va-carpentry-i
+- **PASS** program-link:cte-va-carpentry-i: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8601: 8 lessons
+- **PASS** course-titles:VDOE-8601
+- **PASS** lesson-media:VDOE-8601:1: lecture+lab
+- **PASS** lesson-media:VDOE-8601:2: lecture+lab
+- **PASS** lesson-media:VDOE-8601:3: lecture+lab
+- **PASS** lesson-media:VDOE-8601:4: lecture+lab
+- **PASS** lesson-media:VDOE-8601:5: lecture+lab
+- **PASS** lesson-media:VDOE-8601:6: lecture+lab
+- **PASS** lesson-media:VDOE-8601:7: lecture+lab
+- **PASS** lesson-media:VDOE-8601:8: lecture+lab
+- **PASS** program-meta:cte-va-carpentry-ii
+- **PASS** program-link:cte-va-carpentry-ii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8602: 8 lessons
+- **PASS** course-titles:VDOE-8602
+- **PASS** lesson-media:VDOE-8602:1: lecture+lab
+- **PASS** lesson-media:VDOE-8602:2: lecture+lab
+- **PASS** lesson-media:VDOE-8602:3: lecture+lab
+- **PASS** lesson-media:VDOE-8602:4: lecture+lab
+- **PASS** lesson-media:VDOE-8602:5: lecture+lab
+- **PASS** lesson-media:VDOE-8602:6: lecture+lab
+- **PASS** lesson-media:VDOE-8602:7: lecture+lab
+- **PASS** lesson-media:VDOE-8602:8: lecture+lab
+- **PASS** program-meta:cte-va-carpentry-iii
+- **PASS** program-link:cte-va-carpentry-iii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8603: 8 lessons
+- **PASS** course-titles:VDOE-8603
+- **PASS** lesson-media:VDOE-8603:1: lecture+lab
+- **PASS** lesson-media:VDOE-8603:2: lecture+lab
+- **PASS** lesson-media:VDOE-8603:3: lecture+lab
+- **PASS** lesson-media:VDOE-8603:4: lecture+lab
+- **PASS** lesson-media:VDOE-8603:5: lecture+lab
+- **PASS** lesson-media:VDOE-8603:6: lecture+lab
+- **PASS** lesson-media:VDOE-8603:7: lecture+lab
+- **PASS** lesson-media:VDOE-8603:8: lecture+lab
+- **PASS** program-meta:cte-va-civil-engineering-architecture-pltw
+- **PASS** program-link:cte-va-civil-engineering-architecture-pltw: /portal/design
+- **PASS** course-lessons:VDOE-8430: 8 lessons
+- **PASS** course-titles:VDOE-8430
+- **PASS** lesson-media:VDOE-8430:1: lecture+lab
+- **PASS** lesson-media:VDOE-8430:2: lecture+lab
+- **PASS** lesson-media:VDOE-8430:3: lecture+lab
+- **PASS** lesson-media:VDOE-8430:4: lecture+lab
+- **PASS** lesson-media:VDOE-8430:5: lecture+lab
+- **PASS** lesson-media:VDOE-8430:6: lecture+lab
+- **PASS** lesson-media:VDOE-8430:7: lecture+lab
+- **PASS** lesson-media:VDOE-8430:8: lecture+lab
+- **PASS** program-meta:cte-va-construction-technology-36wk
+- **PASS** program-link:cte-va-construction-technology-36wk: /portal/projects
+- **PASS** course-lessons:VDOE-8431: 8 lessons
+- **PASS** course-titles:VDOE-8431
+- **PASS** lesson-media:VDOE-8431:1: lecture+lab
+- **PASS** lesson-media:VDOE-8431:2: lecture+lab
+- **PASS** lesson-media:VDOE-8431:3: lecture+lab
+- **PASS** lesson-media:VDOE-8431:4: lecture+lab
+- **PASS** lesson-media:VDOE-8431:5: lecture+lab
+- **PASS** lesson-media:VDOE-8431:6: lecture+lab
+- **PASS** lesson-media:VDOE-8431:7: lecture+lab
+- **PASS** lesson-media:VDOE-8431:8: lecture+lab
+- **PASS** program-meta:cte-va-construction-technology-18wk
+- **PASS** program-link:cte-va-construction-technology-18wk: /portal/projects
+- **PASS** course-lessons:VDOE-8432: 4 lessons
+- **PASS** course-titles:VDOE-8432
+- **PASS** lesson-media:VDOE-8432:1: lecture+lab
+- **PASS** lesson-media:VDOE-8432:2: lecture+lab
+- **PASS** lesson-media:VDOE-8432:3: lecture+lab
+- **PASS** lesson-media:VDOE-8432:4: lecture+lab
+- **PASS** program-meta:cte-va-drafting-36wk
+- **PASS** program-link:cte-va-drafting-36wk: /portal/design
+- **PASS** course-lessons:VDOE-8530: 8 lessons
+- **PASS** course-titles:VDOE-8530
+- **PASS** lesson-media:VDOE-8530:1: lecture+lab
+- **PASS** lesson-media:VDOE-8530:2: lecture+lab
+- **PASS** lesson-media:VDOE-8530:3: lecture+lab
+- **PASS** lesson-media:VDOE-8530:4: lecture+lab
+- **PASS** lesson-media:VDOE-8530:5: lecture+lab
+- **PASS** lesson-media:VDOE-8530:6: lecture+lab
+- **PASS** lesson-media:VDOE-8530:7: lecture+lab
+- **PASS** lesson-media:VDOE-8530:8: lecture+lab
+- **PASS** program-meta:cte-va-drafting-advanced
+- **PASS** program-link:cte-va-drafting-advanced: /portal/design
+- **PASS** course-lessons:VDOE-8562: 8 lessons
+- **PASS** course-titles:VDOE-8562
+- **PASS** lesson-media:VDOE-8562:1: lecture+lab
+- **PASS** lesson-media:VDOE-8562:2: lecture+lab
+- **PASS** lesson-media:VDOE-8562:3: lecture+lab
+- **PASS** lesson-media:VDOE-8562:4: lecture+lab
+- **PASS** lesson-media:VDOE-8562:5: lecture+lab
+- **PASS** lesson-media:VDOE-8562:6: lecture+lab
+- **PASS** lesson-media:VDOE-8562:7: lecture+lab
+- **PASS** lesson-media:VDOE-8562:8: lecture+lab
+- **PASS** program-meta:cte-va-drafting-architectural
+- **PASS** program-link:cte-va-drafting-architectural: /portal/design
+- **PASS** course-lessons:VDOE-8532: 8 lessons
+- **PASS** course-titles:VDOE-8532
+- **PASS** lesson-media:VDOE-8532:1: lecture+lab
+- **PASS** lesson-media:VDOE-8532:2: lecture+lab
+- **PASS** lesson-media:VDOE-8532:3: lecture+lab
+- **PASS** lesson-media:VDOE-8532:4: lecture+lab
+- **PASS** lesson-media:VDOE-8532:5: lecture+lab
+- **PASS** lesson-media:VDOE-8532:6: lecture+lab
+- **PASS** lesson-media:VDOE-8532:7: lecture+lab
+- **PASS** lesson-media:VDOE-8532:8: lecture+lab
+- **PASS** program-meta:cte-va-drafting-mechanical
+- **PASS** program-link:cte-va-drafting-mechanical: /portal/design
+- **PASS** course-lessons:VDOE-8531: 8 lessons
+- **PASS** course-titles:VDOE-8531
+- **PASS** lesson-media:VDOE-8531:1: lecture+lab
+- **PASS** lesson-media:VDOE-8531:2: lecture+lab
+- **PASS** lesson-media:VDOE-8531:3: lecture+lab
+- **PASS** lesson-media:VDOE-8531:4: lecture+lab
+- **PASS** lesson-media:VDOE-8531:5: lecture+lab
+- **PASS** lesson-media:VDOE-8531:6: lecture+lab
+- **PASS** lesson-media:VDOE-8531:7: lecture+lab
+- **PASS** lesson-media:VDOE-8531:8: lecture+lab
+- **PASS** program-meta:cte-va-electricity-i
+- **PASS** program-link:cte-va-electricity-i: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8533: 8 lessons
+- **PASS** course-titles:VDOE-8533
+- **PASS** lesson-media:VDOE-8533:1: lecture+lab
+- **PASS** lesson-media:VDOE-8533:2: lecture+lab
+- **PASS** lesson-media:VDOE-8533:3: lecture+lab
+- **PASS** lesson-media:VDOE-8533:4: lecture+lab
+- **PASS** lesson-media:VDOE-8533:5: lecture+lab
+- **PASS** lesson-media:VDOE-8533:6: lecture+lab
+- **PASS** lesson-media:VDOE-8533:7: lecture+lab
+- **PASS** lesson-media:VDOE-8533:8: lecture+lab
+- **PASS** program-meta:cte-va-electricity-ii
+- **PASS** program-link:cte-va-electricity-ii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8534: 8 lessons
+- **PASS** course-titles:VDOE-8534
+- **PASS** lesson-media:VDOE-8534:1: lecture+lab
+- **PASS** lesson-media:VDOE-8534:2: lecture+lab
+- **PASS** lesson-media:VDOE-8534:3: lecture+lab
+- **PASS** lesson-media:VDOE-8534:4: lecture+lab
+- **PASS** lesson-media:VDOE-8534:5: lecture+lab
+- **PASS** lesson-media:VDOE-8534:6: lecture+lab
+- **PASS** lesson-media:VDOE-8534:7: lecture+lab
+- **PASS** lesson-media:VDOE-8534:8: lecture+lab
+- **PASS** program-meta:cte-va-electricity-iii
+- **PASS** program-link:cte-va-electricity-iii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8535: 8 lessons
+- **PASS** course-titles:VDOE-8535
+- **PASS** lesson-media:VDOE-8535:1: lecture+lab
+- **PASS** lesson-media:VDOE-8535:2: lecture+lab
+- **PASS** lesson-media:VDOE-8535:3: lecture+lab
+- **PASS** lesson-media:VDOE-8535:4: lecture+lab
+- **PASS** lesson-media:VDOE-8535:5: lecture+lab
+- **PASS** lesson-media:VDOE-8535:6: lecture+lab
+- **PASS** lesson-media:VDOE-8535:7: lecture+lab
+- **PASS** lesson-media:VDOE-8535:8: lecture+lab
+- **PASS** program-meta:cte-va-green-building-infusion-units
+- **PASS** program-link:cte-va-green-building-infusion-units: /portal/audit
+- **PASS** course-lessons:VDOE-GBIU: 4 lessons
+- **PASS** course-titles:VDOE-GBIU
+- **PASS** lesson-media:VDOE-GBIU:1: lecture+lab
+- **PASS** lesson-media:VDOE-GBIU:2: lecture+lab
+- **PASS** lesson-media:VDOE-GBIU:3: lecture+lab
+- **PASS** lesson-media:VDOE-GBIU:4: lecture+lab
+- **PASS** program-meta:cte-va-hvacr-i
+- **PASS** program-link:cte-va-hvacr-i: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8503: 8 lessons
+- **PASS** course-titles:VDOE-8503
+- **PASS** lesson-media:VDOE-8503:1: lecture+lab
+- **PASS** lesson-media:VDOE-8503:2: lecture+lab
+- **PASS** lesson-media:VDOE-8503:3: lecture+lab
+- **PASS** lesson-media:VDOE-8503:4: lecture+lab
+- **PASS** lesson-media:VDOE-8503:5: lecture+lab
+- **PASS** lesson-media:VDOE-8503:6: lecture+lab
+- **PASS** lesson-media:VDOE-8503:7: lecture+lab
+- **PASS** lesson-media:VDOE-8503:8: lecture+lab
+- **PASS** program-meta:cte-va-hvacr-ii
+- **PASS** program-link:cte-va-hvacr-ii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8504: 8 lessons
+- **PASS** course-titles:VDOE-8504
+- **PASS** lesson-media:VDOE-8504:1: lecture+lab
+- **PASS** lesson-media:VDOE-8504:2: lecture+lab
+- **PASS** lesson-media:VDOE-8504:3: lecture+lab
+- **PASS** lesson-media:VDOE-8504:4: lecture+lab
+- **PASS** lesson-media:VDOE-8504:5: lecture+lab
+- **PASS** lesson-media:VDOE-8504:6: lecture+lab
+- **PASS** lesson-media:VDOE-8504:7: lecture+lab
+- **PASS** lesson-media:VDOE-8504:8: lecture+lab
+- **PASS** program-meta:cte-va-masonry-i
+- **PASS** program-link:cte-va-masonry-i: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8512: 8 lessons
+- **PASS** course-titles:VDOE-8512
+- **PASS** lesson-media:VDOE-8512:1: lecture+lab
+- **PASS** lesson-media:VDOE-8512:2: lecture+lab
+- **PASS** lesson-media:VDOE-8512:3: lecture+lab
+- **PASS** lesson-media:VDOE-8512:4: lecture+lab
+- **PASS** lesson-media:VDOE-8512:5: lecture+lab
+- **PASS** lesson-media:VDOE-8512:6: lecture+lab
+- **PASS** lesson-media:VDOE-8512:7: lecture+lab
+- **PASS** lesson-media:VDOE-8512:8: lecture+lab
+- **PASS** program-meta:cte-va-masonry-ii
+- **PASS** program-link:cte-va-masonry-ii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8513: 8 lessons
+- **PASS** course-titles:VDOE-8513
+- **PASS** lesson-media:VDOE-8513:1: lecture+lab
+- **PASS** lesson-media:VDOE-8513:2: lecture+lab
+- **PASS** lesson-media:VDOE-8513:3: lecture+lab
+- **PASS** lesson-media:VDOE-8513:4: lecture+lab
+- **PASS** lesson-media:VDOE-8513:5: lecture+lab
+- **PASS** lesson-media:VDOE-8513:6: lecture+lab
+- **PASS** lesson-media:VDOE-8513:7: lecture+lab
+- **PASS** lesson-media:VDOE-8513:8: lecture+lab
+- **PASS** program-meta:cte-va-masonry-iii
+- **PASS** program-link:cte-va-masonry-iii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8514: 8 lessons
+- **PASS** course-titles:VDOE-8514
+- **PASS** lesson-media:VDOE-8514:1: lecture+lab
+- **PASS** lesson-media:VDOE-8514:2: lecture+lab
+- **PASS** lesson-media:VDOE-8514:3: lecture+lab
+- **PASS** lesson-media:VDOE-8514:4: lecture+lab
+- **PASS** lesson-media:VDOE-8514:5: lecture+lab
+- **PASS** lesson-media:VDOE-8514:6: lecture+lab
+- **PASS** lesson-media:VDOE-8514:7: lecture+lab
+- **PASS** lesson-media:VDOE-8514:8: lecture+lab
+- **PASS** program-meta:cte-va-plumbing-i
+- **PASS** program-link:cte-va-plumbing-i: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8551: 8 lessons
+- **PASS** course-titles:VDOE-8551
+- **PASS** lesson-media:VDOE-8551:1: lecture+lab
+- **PASS** lesson-media:VDOE-8551:2: lecture+lab
+- **PASS** lesson-media:VDOE-8551:3: lecture+lab
+- **PASS** lesson-media:VDOE-8551:4: lecture+lab
+- **PASS** lesson-media:VDOE-8551:5: lecture+lab
+- **PASS** lesson-media:VDOE-8551:6: lecture+lab
+- **PASS** lesson-media:VDOE-8551:7: lecture+lab
+- **PASS** lesson-media:VDOE-8551:8: lecture+lab
+- **PASS** program-meta:cte-va-plumbing-ii
+- **PASS** program-link:cte-va-plumbing-ii: /portal/field-supervision
+- **PASS** course-lessons:VDOE-8552: 8 lessons
+- **PASS** course-titles:VDOE-8552
+- **PASS** lesson-media:VDOE-8552:1: lecture+lab
+- **PASS** lesson-media:VDOE-8552:2: lecture+lab
+- **PASS** lesson-media:VDOE-8552:3: lecture+lab
+- **PASS** lesson-media:VDOE-8552:4: lecture+lab
+- **PASS** lesson-media:VDOE-8552:5: lecture+lab
+- **PASS** lesson-media:VDOE-8552:6: lecture+lab
+- **PASS** lesson-media:VDOE-8552:7: lecture+lab
+- **PASS** lesson-media:VDOE-8552:8: lecture+lab
+- **PASS** program-meta:cte-va-utility-heavy-construction-i
+- **PASS** program-link:cte-va-utility-heavy-construction-i: /portal/projects
+- **PASS** course-lessons:VDOE-8616: 8 lessons
+- **PASS** course-titles:VDOE-8616
+- **PASS** lesson-media:VDOE-8616:1: lecture+lab
+- **PASS** lesson-media:VDOE-8616:2: lecture+lab
+- **PASS** lesson-media:VDOE-8616:3: lecture+lab
+- **PASS** lesson-media:VDOE-8616:4: lecture+lab
+- **PASS** lesson-media:VDOE-8616:5: lecture+lab
+- **PASS** lesson-media:VDOE-8616:6: lecture+lab
+- **PASS** lesson-media:VDOE-8616:7: lecture+lab
+- **PASS** lesson-media:VDOE-8616:8: lecture+lab
+- **PASS** program-meta:cte-va-utility-heavy-construction-ii
+- **PASS** program-link:cte-va-utility-heavy-construction-ii: /portal/projects
+- **PASS** course-lessons:VDOE-8617: 8 lessons
+- **PASS** course-titles:VDOE-8617
+- **PASS** lesson-media:VDOE-8617:1: lecture+lab
+- **PASS** lesson-media:VDOE-8617:2: lecture+lab
+- **PASS** lesson-media:VDOE-8617:3: lecture+lab
+- **PASS** lesson-media:VDOE-8617:4: lecture+lab
+- **PASS** lesson-media:VDOE-8617:5: lecture+lab
+- **PASS** lesson-media:VDOE-8617:6: lecture+lab
+- **PASS** lesson-media:VDOE-8617:7: lecture+lab
+- **PASS** lesson-media:VDOE-8617:8: lecture+lab
 - **PASS** pathways: 3 defined
 - **PASS** legal-program:contractor-business-formation-legal: Contractor Business Formation & Legal Setup
 - **PASS** legal-program:contractor-construction-law-essentials: Construction Law Essentials for Contractors
@@ -153,10 +545,13 @@
 - **PASS** api:academy-lms: programs in API: 1212
 - **PASS** api:catalog-integrity: aligned
 - **PASS** api:academy-learners: 4 learners
-- **PASS** api:academy-enrollments: 9 enrollments
+- **PASS** api:academy-enrollments: 11 enrollments
 - **PASS** lms-surface:src/pages/academy/AcademyHome.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyCatalog.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyModuleLesson.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyProgramDetail.jsx
 - **PASS** lms-surface:src/hooks/useAcademyLms.js
 - **PASS** lms-surface:src/api/academyClient.js
+
+## Benchmark Advancement
+- All benchmark minimums met (9.7+ across all dimensions).

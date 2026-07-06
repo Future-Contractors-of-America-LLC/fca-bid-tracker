@@ -3,13 +3,32 @@ import { allowSeededCustomerFallback, hasManagedCustomerAccounts } from "./custo
 
 const SESSION_COOKIE_NAME = "fca_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 8;
+const ACCESS_TOKEN_TTL_SECONDS = 10 * 60;
+const MAX_ACCESS_TOKEN_WINDOW_MS = 15 * 60 * 1000;
 const STUDENT_IDLE_TIMEOUT_MS = 30 * 60 * 1000;
 const DEFAULT_SESSION_SECRET = "FCA_SERVER_SESSION_DEV_ONLY_CHANGE_ME";
+
+function envFlagEnabled(value = "") {
+  return ["1", "true", "yes", "on"].includes(String(value || "").trim().toLowerCase());
+}
+
+function envFlagDisabled(value = "") {
+  return ["0", "false", "no", "off"].includes(String(value || "").trim().toLowerCase());
+}
+
+function isProductionRuntime() {
+  return envFlagEnabled(process.env.FCA_PRODUCTION_RUNTIME) || String(process.env.NODE_ENV || "").toLowerCase() === "production";
+}
+
+function requiresManagedSessionSecret() {
+  if (envFlagDisabled(process.env.FCA_ENFORCE_MANAGED_SESSION_SECRET)) return false;
+  return isProductionRuntime() || envFlagEnabled(process.env.FCA_ENFORCE_MANAGED_SESSION_SECRET);
+}
 
 export const CHPS_TENANT_CONFIG = {
   tenantId: "TEN-CHPS-PILOT-001",
   schoolYear: "2026-2027",
-  auricruxLiveEnabled: false,
+  auricruxLiveEnabled: ["1", "true", "yes", "on"].includes(String(process.env.FCA_AURICRUX_LIVE_ENABLED || "").toLowerCase()),
   cteProgramAuricruxEnabled: true,
   maxStudentAccounts: 80,
   sessionIdleTimeoutMinutes: 30,
@@ -18,7 +37,11 @@ export const CHPS_TENANT_CONFIG = {
 };
 
 function getSessionSecret() {
-  return process.env.FCA_SESSION_SECRET || DEFAULT_SESSION_SECRET;
+  if (process.env.FCA_SESSION_SECRET) return process.env.FCA_SESSION_SECRET;
+  if (requiresManagedSessionSecret()) {
+    throw new Error("FCA_SESSION_SECRET_REQUIRED: managed session signing secret is required in production runtime.");
+  }
+  return DEFAULT_SESSION_SECRET;
 }
 
 function hasManagedSessionSecret() {
@@ -40,21 +63,40 @@ function signPayload(payload) {
 export function buildAuthBoundary(overrides = {}) {
   const managedAccountsReady = hasManagedCustomerAccounts();
   const managedSecretReady = hasManagedSessionSecret();
+  const managedSecretRequired = requiresManagedSessionSecret();
   const productionAuthReady = managedAccountsReady && managedSecretReady;
+  const missingRequiredSecret = managedSecretRequired && !managedSecretReady;
+  const activeMode = missingRequiredSecret
+    ? "managed-server-session-misconfigured-missing-secret"
+    : productionAuthReady
+      ? "managed-server-session"
+      : managedAccountsReady
+        ? "managed-server-session-with-fallback-secret"
+        : "managed-accounts-not-configured";
 
   return {
     productionAuthReady,
-    activeMode: productionAuthReady ? "managed-server-session" : managedAccountsReady ? "managed-server-session-with-fallback-secret" : "seeded-server-session",
+    activeMode,
     identityProvider: "fca-native-auth",
     tenantIsolation: managedAccountsReady ? "managed-customer-account-store" : "single-repo-account-store",
-    sessionValidation: "signed-http-only-cookie",
-    usingFallbackSecret: !managedSecretReady,
+    sessionValidation: "signed-http-only-cookie-with-short-lived-access-window",
+    continuousAuthentication: {
+      accessTokenTtlSeconds: ACCESS_TOKEN_TTL_SECONDS,
+      refreshTokenTtlSeconds: SESSION_TTL_SECONDS,
+      refreshMode: "secure-http-only-cookie-refresh",
+      staleAccessTokenPolicy: "deny-and-require-reauthentication",
+    },
+    usingFallbackSecret: !managedSecretReady && !managedSecretRequired,
+    managedSecretRequired,
+    missingRequiredManagedSecret: missingRequiredSecret,
     seededFallbackEnabled: allowSeededCustomerFallback(),
     nextBuildStep: productionAuthReady
       ? "Managed customer auth is live in repo configuration; verify runtime and rotate credentials through controlled onboarding."
-      : managedAccountsReady
+      : missingRequiredSecret
+        ? "Set FCA_SESSION_SECRET immediately; runtime is configured to deny fallback session signing in production."
+        : managedAccountsReady
         ? "Set FCA_SESSION_SECRET in the deployment environment to promote managed customer auth out of fallback-secret mode."
-        : "Set FCA_CUSTOMER_ACCOUNTS_JSON and FCA_SESSION_SECRET to activate managed customer authentication.",
+        : "Provision FCA_CUSTOMER_ACCOUNTS_JSON and FCA_SESSION_SECRET to enable managed customer authentication.",
     ...overrides,
     timestamp: new Date().toISOString(),
   };
@@ -81,13 +123,18 @@ export function buildServerSession(account = null) {
       selectedPlan: account.selectedPlan,
       enabledProducts: account.enabledProducts,
       enabledComms: account.enabledComms,
-      accountMode: account.accountMode || "seeded",
+      accountMode: account.accountMode || "managed",
+      issuedAt: account.issuedAt,
+      accessTokenExpiresAt: account.accessTokenExpiresAt,
+      refreshTokenExpiresAt: account.refreshTokenExpiresAt,
+      authEpoch: account.authEpoch,
+      sessionVersion: account.sessionVersion,
     },
   };
 }
 
 export function createSessionCookie(account, now = Date.now()) {
-  const payload = JSON.stringify({
+  const sessionPayload = {
     email: account.email,
     customerId: account.customerId,
     company: account.company,
@@ -97,17 +144,24 @@ export function createSessionCookie(account, now = Date.now()) {
     selectedPlan: account.selectedPlan,
     enabledProducts: account.enabledProducts,
     enabledComms: account.enabledComms,
-    accountMode: account.accountMode || "seeded",
+    accountMode: account.accountMode || "managed",
+    issuedAt: now,
+    accessTokenExpiresAt: now + ACCESS_TOKEN_TTL_SECONDS * 1000,
+    refreshTokenExpiresAt: now + SESSION_TTL_SECONDS * 1000,
+    authEpoch: account.authEpoch || now,
+    sessionVersion: "phase3-zero-trust-v1",
     lastActiveAt: now,
     exp: now + SESSION_TTL_SECONDS * 1000,
-  });
+  };
+
+  const payload = JSON.stringify(sessionPayload);
 
   const encodedPayload = base64UrlEncode(payload);
   const signature = signPayload(encodedPayload);
   const token = `${encodedPayload}.${signature}`;
   const cookie = `${SESSION_COOKIE_NAME}=${token}; HttpOnly; Path=/; Max-Age=${SESSION_TTL_SECONDS}; SameSite=Strict; Secure`;
 
-  return { token, cookie };
+  return { token, cookie, session: sessionPayload };
 }
 
 export function clearSessionCookie() {
@@ -135,6 +189,8 @@ export function validateSessionToken(token) {
   try {
     const payload = JSON.parse(base64UrlDecode(encodedPayload));
     if (!payload?.exp || payload.exp < Date.now()) return null;
+    if (!payload?.accessTokenExpiresAt || payload.accessTokenExpiresAt < Date.now()) return null;
+    if (payload.accessTokenExpiresAt - Date.now() > MAX_ACCESS_TOKEN_WINDOW_MS) return null;
     return payload;
   } catch {
     return null;
@@ -174,8 +230,9 @@ export function withSessionRefresh(response, auth) {
   };
 }
 
-function isStudentRole(role) {
-  return role === "student" || role === "cte-student";
+function isStudentRole(role = "") {
+  const normalized = String(role || "").trim().toLowerCase().replace(/_/g, "-");
+  return normalized === "student" || normalized === "cte-student" || normalized === "minor" || (normalized.includes("cte") && normalized.includes("student"));
 }
 
 /**

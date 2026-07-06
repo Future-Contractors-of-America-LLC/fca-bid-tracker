@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-07-05T18:27:12.212Z",
+  "target": "src/api/backendBase.js",
+  "failed": 0,
+  "findings": [
+    {
+      "marker": "x-fca-tenant-id",
+      "ok": true
+    },
+    {
+      "marker": "x-fca-customer-id",
+      "ok": true
+    },
+    {
+      "marker": "x-fca-user-id",
+      "ok": true
+    },
+    {
+      "marker": "x-fca-user-role",
+      "ok": true
+    },
+    {
+      "marker": "x-fca-route",
+      "ok": true
+    },
+    {
+      "marker": "buildExecutionContextHeaders",
+      "ok": true
+    },
+    {
+      "marker": "...buildExecutionContextHeaders()",
+      "ok": true
+    }
+  ]
+}

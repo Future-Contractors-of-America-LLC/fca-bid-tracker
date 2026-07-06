@@ -1,0 +1,564 @@
+{
+  "summary": {
+    "generatedAt": "2026-07-04T23:49:36.445Z",
+    "strictCompetitiveStatus": "PASS",
+    "moduleCapabilityRiskCounts": {
+      "blocker": 0,
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 42
+    },
+    "totalModules": 42,
+    "higherCount": 42,
+    "needsWorkCount": 0
+  },
+  "modules": [
+    {
+      "route": "/portal",
+      "token": "overview",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/academy",
+      "token": "academy",
+      "competitors": [
+        "Pearson",
+        "Procore Learning"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/admin",
+      "token": "admin",
+      "competitors": [
+        "Point-solution copilots",
+        "Procore Platform"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/admin/internal",
+      "token": "internal",
+      "competitors": [
+        "Intuit QuickBooks",
+        "Gusto"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/admin/payroll",
+      "token": "payroll",
+      "competitors": [
+        "Intuit QuickBooks",
+        "Gusto"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/audit",
+      "token": "audit",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/auricrux",
+      "token": "auricrux",
+      "competitors": [
+        "Point-solution copilots",
+        "Procore Platform"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/bids",
+      "token": "bids",
+      "competitors": [
+        "BuildingConnected",
+        "PlanHub"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/billing",
+      "token": "billing",
+      "competitors": [
+        "Intuit QuickBooks",
+        "Gusto"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/change-orders",
+      "token": "change-orders",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/closeout",
+      "token": "closeout",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/command-tower",
+      "token": "command-tower",
+      "competitors": [
+        "Point-solution copilots",
+        "Procore Platform"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/communications",
+      "token": "communications",
+      "competitors": [
+        "Microsoft Teams",
+        "Procore Communications"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/decision-queue",
+      "token": "decision-queue",
+      "competitors": [
+        "Point-solution copilots",
+        "Procore Platform"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/design",
+      "token": "design",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/employee/internal",
+      "token": "internal",
+      "competitors": [
+        "Intuit QuickBooks",
+        "Gusto"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/employee/payroll",
+      "token": "payroll",
+      "competitors": [
+        "Intuit QuickBooks",
+        "Gusto"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/estimates",
+      "token": "estimates",
+      "competitors": [
+        "BuildingConnected",
+        "PlanHub"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/field-supervision",
+      "token": "field-supervision",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/field-tasks",
+      "token": "field-tasks",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/files",
+      "token": "files",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/finance",
+      "token": "finance",
+      "competitors": [
+        "Intuit QuickBooks",
+        "Gusto"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/hiring",
+      "token": "hiring",
+      "competitors": [
+        "Point-solution copilots",
+        "Procore Platform"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/immersive",
+      "token": "immersive",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/job-cost",
+      "token": "job-cost",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/leads",
+      "token": "leads",
+      "competitors": [
+        "BuildingConnected",
+        "PlanHub"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/legal",
+      "token": "legal",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/messages",
+      "token": "messages",
+      "competitors": [
+        "Microsoft Teams",
+        "Procore Communications"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/notifications",
+      "token": "notifications",
+      "competitors": [
+        "Microsoft Teams",
+        "Procore Communications"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/operations",
+      "token": "operations",
+      "competitors": [
+        "Point-solution copilots",
+        "Procore Platform"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/pipeline",
+      "token": "pipeline",
+      "competitors": [
+        "BuildingConnected",
+        "PlanHub"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/plans",
+      "token": "plans",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/platform",
+      "token": "platform",
+      "competitors": [
+        "Point-solution copilots",
+        "Procore Platform"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/profile",
+      "token": "profile",
+      "competitors": [
+        "Intuit QuickBooks",
+        "Gusto"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/projects",
+      "token": "projects",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/proposals",
+      "token": "proposals",
+      "competitors": [
+        "BuildingConnected",
+        "PlanHub"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/punch",
+      "token": "punch",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/revenue-engine",
+      "token": "revenue-engine",
+      "competitors": [
+        "Point-solution copilots",
+        "Procore Platform"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/rfis",
+      "token": "rfis",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/scheduling",
+      "token": "scheduling",
+      "competitors": [
+        "Point-solution copilots",
+        "Procore Platform"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/support",
+      "token": "support",
+      "competitors": [
+        "Microsoft Teams",
+        "Procore Communications"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    },
+    {
+      "route": "/portal/warranty",
+      "token": "warranty",
+      "competitors": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "risk": "low",
+      "score": 1,
+      "coverageComplete": true,
+      "rank": "HIGHER",
+      "justification": "Route has full FCA capability coverage (UI+auth+role+API+validator+report) and competitive benchmark strict pass."
+    }
+  ]
+}

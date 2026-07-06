@@ -6,16 +6,6 @@ export const publicActionCatalog = {
     href: "/login",
     variant: "primary",
   },
-  liveTestLogin: {
-    label: "Open Live Test Login",
-    href: "/login?seeded=1",
-    variant: "secondary",
-  },
-  instantTestWorkspace: {
-    label: "Instant Test Workspace",
-    href: "/login?seeded=1&autologin=1&next=/portal/platform",
-    variant: "secondary",
-  },
   platform: {
     label: "Open Platform Dashboard",
     href: "/portal/platform",
@@ -504,8 +494,6 @@ export const shellPrimaryNav = [
 
 export const shellWorkspaceRoutes = [
   { label: "Enter Workspace", href: "/login" },
-  { label: "Live Test Login", href: "/login?seeded=1" },
-  { label: "Instant Test Workspace", href: "/login?seeded=1&autologin=1&next=/portal/platform" },
   { label: "Unified Platform Dashboard", href: "/portal/platform" },
   { label: "Commercial Pipeline", href: "/portal/pipeline" },
   { label: "Workspace", href: "/portal/platform" },
@@ -521,7 +509,7 @@ export const shellCompatibilityRoutes = [
 
 export const shellProductionActions = [publicActionCatalog.workspace, publicActionCatalog.pricing, publicActionCatalog.walkthrough];
 
-export const shellFounderActions = [publicActionCatalog.liveTestLogin, publicActionCatalog.instantTestWorkspace, publicActionCatalog.platform];
+export const shellFounderActions = [publicActionCatalog.workspace, publicActionCatalog.platform, publicActionCatalog.contact];
 
 export const publicRouteCtas = {
   public: { primaryHref: "/intake", primaryLabel: "Get started", secondaryHref: "/login", secondaryLabel: "Sign in" },

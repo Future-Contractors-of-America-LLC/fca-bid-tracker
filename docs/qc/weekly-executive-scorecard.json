@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-07-05T19:04:54.745Z",
+  "grade": "GREEN",
+  "totals": {
+    "modules": 42,
+    "rankedHigher": 42,
+    "needsWork": 0
+  },
+  "gates": {
+    "capabilityAllLow": true,
+    "strictCompetitivePass": true,
+    "allModulesRankedHigher": true,
+    "financeReadinessPass": true
+  },
+  "riskCounts": {
+    "blocker": 0,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 42
+  },
+  "finance": {
+    "status": "PASS",
+    "missing": 0,
+    "mode": {
+      "requireFunctionApp": false,
+      "description": "Standard mode: key can be present in local shell env or Function App settings."
+    }
+  },
+  "sourceReports": {
+    "capability": "docs/qc/module-capability-coverage-report.json",
+    "competitive": "docs/qc/competitive-module-audit-report.json",
+    "ranking": "docs/qc/module-competitive-ranking-report.json",
+    "finance": "docs/qc/finance-ops-readiness-report.json"
+  },
+  "blockers": []
+}

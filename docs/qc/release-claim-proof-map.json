@@ -1,0 +1,104 @@
+{
+  "generatedAt": "2026-07-05T00:33:14.112Z",
+  "claims": [
+    {
+      "claim": "All portal modules are low risk in capability matrix.",
+      "evidence": {
+        "report": "docs/qc/module-capability-coverage-report.json",
+        "fields": [
+          "summary.totalModules",
+          "summary.riskCounts",
+          "summary.failingRouteCount"
+        ]
+      },
+      "current": {
+        "totalModules": 42,
+        "riskCounts": {
+          "blocker": 0,
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "low": 42
+        }
+      }
+    },
+    {
+      "claim": "Competitive strict benchmark passes against mapped industry leaders.",
+      "evidence": {
+        "report": "docs/qc/competitive-module-audit-report.json",
+        "fields": [
+          "strictStatus",
+          "aggregateScore",
+          "modules"
+        ]
+      },
+      "current": {
+        "strictStatus": "PASS",
+        "aggregateScore": 100
+      }
+    },
+    {
+      "claim": "Every portal module ranks higher than mapped competitor set.",
+      "evidence": {
+        "report": "docs/qc/module-competitive-ranking-report.json",
+        "fields": [
+          "summary.totalModules",
+          "summary.higherCount",
+          "summary.needsWorkCount"
+        ]
+      },
+      "current": {
+        "higherCount": 42,
+        "needsWorkCount": 0
+      }
+    },
+    {
+      "claim": "Leadership weekly scorecard is generated from objective QC evidence.",
+      "evidence": {
+        "report": "docs/qc/weekly-executive-scorecard.json",
+        "fields": [
+          "grade",
+          "gates",
+          "totals"
+        ]
+      },
+      "current": {
+        "generatedAt": "2026-07-05T00:33:13.744Z",
+        "grade": "GREEN",
+        "totals": {
+          "modules": 42,
+          "rankedHigher": 42,
+          "needsWork": 0
+        },
+        "gates": {
+          "capabilityAllLow": true,
+          "strictCompetitivePass": true,
+          "allModulesRankedHigher": true,
+          "financeReadinessPass": true
+        },
+        "riskCounts": {
+          "blocker": 0,
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "low": 42
+        },
+        "finance": {
+          "status": "PASS",
+          "missing": 0,
+          "mode": {
+            "requireFunctionApp": false,
+            "description": "Standard mode: key can be present in local shell env or Function App settings."
+          }
+        },
+        "sourceReports": {
+          "capability": "docs/qc/module-capability-coverage-report.json",
+          "competitive": "docs/qc/competitive-module-audit-report.json",
+          "ranking": "docs/qc/module-competitive-ranking-report.json",
+          "finance": "docs/qc/finance-ops-readiness-report.json"
+        },
+        "blockers": []
+      }
+    }
+  ]
+}

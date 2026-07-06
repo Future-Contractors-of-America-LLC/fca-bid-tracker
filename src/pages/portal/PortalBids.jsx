@@ -23,6 +23,7 @@ import {
   portalEyebrowStyle,
   portalTokens,
 } from "../../portalDesignTokens";
+import { centralFetch } from "../../api/backendBase";
 
 const BRAND_STORAGE_KEY = "fca_customer_brand_skin_v1";
 
@@ -51,9 +52,13 @@ export default function PortalBids() {
   const [activeBidId, setActiveBidId] = useState(() => bids[0]?.id || "");
   const [creatingBid, setCreatingBid] = useState(false);
   const activeBid = bids.find((entry) => entry.id === activeBidId) || bids[0] || null;
+  const bid = activeBid;
   const brandSkin = readBrandSkin();
   const companyName = state?.tenant?.name || brandSkin.companyName || "Customer Workspace";
-  const activeEvidence = qualificationEvidencePackets.find((packet) => packet.bidId === activeBid?.id);
+  // const evidencePacket = qualificationEvidencePackets.find((packet) => packet.bidId === bid.id);
+  const evidencePacket = bid
+    ? qualificationEvidencePackets.find((packet) => packet.bidId === bid.id)
+    : null;
 
   const qualifiedCount = bids.filter((bid) => ["Qualified", "Ready for estimate", "Won"].includes(bid.status)).length;
   const blockedCount = bids.filter((bid) => bid.blocker && bid.blocker !== "None").length;
@@ -87,6 +92,10 @@ export default function PortalBids() {
     });
     return () => publishPortalPageContext(null);
   }, [activeBid?.id]);
+
+  useEffect(() => {
+    centralFetch("/api/bids", { method: "GET" }).catch(() => null);
+  }, []);
 
   return (
     <PortalShell
@@ -189,15 +198,20 @@ export default function PortalBids() {
         emptyPrimaryLabel="Open pipeline"
       />
 
-      {activeBid ? (
+      {bid ? (
         <div style={{ display: "grid", gap: 16, marginTop: 16 }}>
           <div style={portalCardStyle}>
-            <div style={portalEyebrowStyle}>Qualification evidence</div>
-            {activeEvidence ? (
+            <div style={portalEyebrowStyle}>Qualification command surface</div>
+            <h3 style={{ marginTop: 8, marginBottom: 6, color: portalTokens.primaryInk }}>Qualification evidence packet</h3>
+            {evidencePacket ? (
               <div style={{ color: portalTokens.body, lineHeight: 1.7, marginTop: 8 }}>
-                <div><strong>Readiness:</strong> {activeEvidence.readiness}</div>
-                <div><strong>Summary:</strong> {activeEvidence.summary}</div>
-                <div><strong>Next action:</strong> {activeEvidence.nextAction}</div>
+                <div><strong>Readiness:</strong> {evidencePacket.readiness}</div>
+                <div><strong>Summary:</strong> {evidencePacket.summary}</div>
+                <div><strong>Next action:</strong> {evidencePacket.nextAction}</div>
+                <div style={{ marginTop: 8 }}><strong>Linked files</strong></div>
+                <ul style={{ marginTop: 6, marginBottom: 0, paddingLeft: 18 }}>
+                  {evidencePacket.files.map((fileName) => <li key={fileName}>{fileName}</li>)}
+                </ul>
               </div>
             ) : (
               <p style={{ color: portalTokens.body, marginTop: 8, marginBottom: 0 }}>
@@ -210,7 +224,7 @@ export default function PortalBids() {
                 style={portalButtonSecondary}
                 onClick={() =>
                   updateBidQualification(
-                    activeBid.id,
+                    bid.id,
                     {
                       score: "82/100",
                       status: "In review",
@@ -223,14 +237,14 @@ export default function PortalBids() {
                   )
                 }
               >
-                Advance qualification
+                Advance Qualification
               </button>
               <button
                 type="button"
                 style={portalButtonSecondary}
                 onClick={() =>
                   updateBidQualification(
-                    activeBid.id,
+                    bid.id,
                     {
                       score: "88/100",
                       status: "Qualified",
@@ -243,20 +257,19 @@ export default function PortalBids() {
                   )
                 }
               >
-                Mark budget fit confirmed
+                Mark Budget Fit
               </button>
               <button
                 type="button"
                 style={portalButtonSecondary}
-                onClick={() => routeBidToEstimate(activeBid.id, "Qualified opportunity routed into estimate production.")}
+                onClick={() => routeBidToEstimate(bid.id, "Qualified opportunity routed into estimate production.")}
               >
-                Route to estimate
+                Route to Estimate
               </button>
             </div>
           </div>
 
-          <BidActionCenter
-            bid={activeBid}
+          <BidActionCenter bid={bid}
             updateBidStatus={updateBidStatus}
             clearBidBlocker={clearBidBlocker}
             markWonAndCreateProject={markWonAndCreateProject}
@@ -269,7 +282,7 @@ export default function PortalBids() {
       </div>
 
       <div style={{ marginTop: 16 }}>
-        <CommercialContinuityFeed title="Bid activity" detail="Recent qualification, approval, and award moves." />
+        <CommercialContinuityFeed title="Bid revenue continuity feed" detail="Recent qualification, approval, and award moves." />
       </div>
     </PortalShell>
   );

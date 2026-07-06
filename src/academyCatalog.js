@@ -1,3 +1,6 @@
+import { applyAcademyCourseStandards } from "./academyCourseStandards.js";
+import { buildVirginiaCteAcademyPrograms } from "./virginiaCteCourses.js";
+
 export const academyCatalog = {
   programs: [
     {
@@ -475,7 +478,8 @@ export const academyCatalog = {
       ],
       linkedSurface: "/portal/legal",
       linkedLabel: "Open Legal Workspace"
-    }
+    },
+    ...buildVirginiaCteAcademyPrograms()
   ],
   pathways: [
     {
@@ -498,6 +502,8 @@ export const academyCatalog = {
     }
   ]
 };
+
+applyAcademyCourseStandards(academyCatalog.programs);
 
 for (const program of academyCatalog.programs) {
   for (const course of program.courses || []) {

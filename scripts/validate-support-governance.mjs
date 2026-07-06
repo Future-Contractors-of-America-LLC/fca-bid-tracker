@@ -53,9 +53,10 @@ for (const [index, action] of (supportGovernance.commsRecoveryActions || []).ent
 }
 
 const requiredMarkers = [
-  "supportGovernance.lanes.map((lane)",
-  "supportGovernance.responseSignals.map((signal)",
-  "supportGovernance.commsRecoveryActions",
+  "Auricrux Support Intelligence",
+  "Support is currently running in local-fallback mode",
+  "Create support ticket",
+  "Open tickets",
 ];
 
 for (const marker of requiredMarkers) {

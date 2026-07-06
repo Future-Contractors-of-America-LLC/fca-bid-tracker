@@ -10,7 +10,7 @@ export default function Portal() {
       primaryCta={{ href: '/portal/projects', label: 'Open Active Projects' }}
       secondaryCta={{ href: '/portal/messages', label: 'Review Customer Communications' }}
       proofPoints={[
-        { value: 'Workspace-first', label: 'Authenticated users land in operational flow instead of a generic dashboard placeholder.' },
+        { value: 'Workspace-first', label: 'Authenticated users land in operational flow instead of a generic dashboard shell.' },
         { value: 'Connected modules', label: 'Projects, files, messages, finance, and Academy behave like one contractor system.' },
         { value: 'Auricrux-guided', label: 'Next actions should be visible immediately, not buried after navigation friction.' },
       ]}

@@ -5,6 +5,9 @@ Owner: Auricrux Exec
 Repository: `Future-Contractors-of-America-LLC/fca-bid-tracker`
 Deployment Target: `061Z`
 
+Canonical Source: `../auricrux-central/FCA_COVERAGE_MATRIX.md`
+This matrix is a shell-scoped derivative view for `fca-bid-tracker` execution.
+
 ---
 
 ## System Requirement

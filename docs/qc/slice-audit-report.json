@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-07-04T18:05:51.651Z",
+  "status": "FAIL",
+  "slices": [
+    {
+      "id": "finance-ops",
+      "status": "BLOCKED",
+      "command": "npm run validate:finance-ops-readiness",
+      "blockerCount": 6,
+      "blockers": [
+        "FCA_BANK_NAME",
+        "FCA_BANK_ROUTING_FINGERPRINT",
+        "FCA_BANK_ACCOUNT_FINGERPRINT",
+        "FCA_PAYOUT_DESTINATION_ID",
+        "FCA_PAYROLL_EMPLOYEE_MICHAEL_ID",
+        "FCA_PAYROLL_EMPLOYEE_AMANDA_ID"
+      ],
+      "note": "Missing readiness keys: FCA_BANK_NAME, FCA_BANK_ROUTING_FINGERPRINT, FCA_BANK_ACCOUNT_FINGERPRINT, FCA_PAYOUT_DESTINATION_ID, FCA_PAYROLL_EMPLOYEE_MICHAEL_ID, FCA_PAYROLL_EMPLOYEE_AMANDA_ID"
+    },
+    {
+      "id": "commerce-journey",
+      "status": "PASS",
+      "command": "node scripts/validate-fca-native-payments-journey.mjs",
+      "blockerCount": 0,
+      "blockers": [],
+      "note": "Native payments journey checks passed."
+    },
+    {
+      "id": "central-runtime",
+      "status": "PASS",
+      "command": "npm run smoke:central-spine",
+      "blockerCount": 0,
+      "blockers": [],
+      "note": "Central spine smoke checks passed."
+    },
+    {
+      "id": "central-api-contract",
+      "status": "PASS",
+      "command": "npm run verify:central-api",
+      "blockerCount": 0,
+      "blockers": [],
+      "note": "Central API route verification passed."
+    },
+    {
+      "id": "identity-graph-tenant",
+      "status": "PASS",
+      "command": "Auricrux_group/Auricrux-Central settings + npm run verify:central-api",
+      "blockerCount": 0,
+      "blockers": [],
+      "note": "M365/Graph connection readiness proven from deployed settings and route health."
+    },
+    {
+      "id": "code-integrity",
+      "status": "PASS",
+      "command": "npm run validate:fca-total-integrity",
+      "blockerCount": 0,
+      "blockers": [],
+      "note": "Strict integrity gate passed."
+    }
+  ],
+  "blockedSlices": [
+    {
+      "id": "finance-ops",
+      "blockerCount": 6,
+      "blockers": [
+        "FCA_BANK_NAME",
+        "FCA_BANK_ROUTING_FINGERPRINT",
+        "FCA_BANK_ACCOUNT_FINGERPRINT",
+        "FCA_PAYOUT_DESTINATION_ID",
+        "FCA_PAYROLL_EMPLOYEE_MICHAEL_ID",
+        "FCA_PAYROLL_EMPLOYEE_AMANDA_ID"
+      ]
+    }
+  ]
+}

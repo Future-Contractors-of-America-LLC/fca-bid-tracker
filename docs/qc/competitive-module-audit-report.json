@@ -1,0 +1,193 @@
+{
+  "generatedAt": "2026-07-04T23:49:36.071Z",
+  "strictStatus": "PASS",
+  "statusWithDeferredFinance": "PASS",
+  "aggregateScore": 100,
+  "deferredFinancePolicy": {
+    "enabled": true,
+    "appliesWhenOnlyKnownBankAndPayrollIdsAreMissing": true,
+    "keys": [
+      "FCA_BANK_NAME",
+      "FCA_BANK_ROUTING_FINGERPRINT",
+      "FCA_BANK_ACCOUNT_FINGERPRINT",
+      "FCA_PAYOUT_DESTINATION_ID",
+      "FCA_PAYROLL_EMPLOYEE_MICHAEL_ID",
+      "FCA_PAYROLL_EMPLOYEE_AMANDA_ID"
+    ]
+  },
+  "modules": [
+    {
+      "id": "project-intelligence-and-cde",
+      "label": "Project information continuity, design coordination, and CDE behavior",
+      "competitorSet": [
+        "Procore",
+        "Autodesk Construction Cloud"
+      ],
+      "score": 100,
+      "targetScore": 90,
+      "scoreStatus": "MEETS_TARGET",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run validate:design-workspace",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run verify:central-api",
+          "exitCode": 0
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "id": "preconstruction-bid-intelligence",
+      "label": "Bid qualification, routing, and precon continuity",
+      "competitorSet": [
+        "BuildingConnected",
+        "PlanHub"
+      ],
+      "score": 100,
+      "targetScore": 90,
+      "scoreStatus": "MEETS_TARGET",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run validate:operations-pipeline",
+          "exitCode": 0
+        },
+        {
+          "command": "node scripts/validate-bid-workspace.mjs",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run verify:central-api",
+          "exitCode": 0
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "id": "enterprise-finance-and-controls",
+      "label": "Finance, payroll, AP/tax controls, and payout readiness",
+      "competitorSet": [
+        "Intuit QuickBooks",
+        "Gusto"
+      ],
+      "score": 100,
+      "targetScore": 90,
+      "scoreStatus": "MEETS_TARGET",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run validate:finance-workspace",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run validate:finance-ops-readiness",
+          "exitCode": 0
+        },
+        {
+          "command": "node scripts/validate-fca-native-payments-journey.mjs",
+          "exitCode": 0
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "id": "integrated-workforce-academy",
+      "label": "Embedded training, certification continuity, and workforce development",
+      "competitorSet": [
+        "Pearson",
+        "Procore Learning"
+      ],
+      "score": 100,
+      "targetScore": 90,
+      "scoreStatus": "MEETS_TARGET",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run qc:lms",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run validate:lms-benchmark-advancement",
+          "exitCode": 0
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "id": "field-intelligence-and-execution",
+      "label": "Field-first execution, intelligence capture, and governed actions",
+      "competitorSet": [
+        "Procore Field",
+        "Autodesk Build"
+      ],
+      "score": 100,
+      "targetScore": 90,
+      "scoreStatus": "MEETS_TARGET",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run smoke:central-spine",
+          "exitCode": 0
+        },
+        {
+          "command": "node scripts/validate-field-execution-journey.mjs",
+          "exitCode": 0
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "id": "ai-continuity-layer",
+      "label": "Auricrux continuity reasoning and cross-workflow orchestration",
+      "competitorSet": [
+        "Point-solution copilots"
+      ],
+      "score": 100,
+      "targetScore": 90,
+      "scoreStatus": "MEETS_TARGET",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run audit:ai-glue",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run validate:execution-context-propagation",
+          "exitCode": 0
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "id": "api-first-open-ecosystem",
+      "label": "API alignment, contract envelope continuity, and integration posture",
+      "competitorSet": [
+        "Fragmented point integrations"
+      ],
+      "score": 100,
+      "targetScore": 90,
+      "scoreStatus": "MEETS_TARGET",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run validate:flat-api-proxy-alignment",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run validate:nonlms-contract-envelope",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run verify:central-api",
+          "exitCode": 0
+        }
+      ],
+      "blockers": []
+    }
+  ],
+  "blockedModules": [],
+  "blockedModulesExcludingDeferredFinance": []
+}

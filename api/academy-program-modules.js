@@ -13,7 +13,7 @@ const LEGAL_MODULE_CONTENT = {
         "Record entity choice rationale in /portal/legal entity profile",
       ],
       practicalLab: "Open /portal/legal and draft your entity name, type, and state of formation before SCC filing.",
-      contentHtml: `<p>Virginia contractors typically form an <strong>LLC</strong> to separate personal assets from project liability. Document your structure choice in <a href="/portal/legal">Contractor Legal Command</a> before filing.</p><ul><li>LLC: flexible taxation, limited liability, common for Class A/B and residential builders</li><li>Sole prop: simplest start, no liability shield ù rarely appropriate at scale</li><li>S-Corp election: tax planning after counsel and CPA review</li></ul><p>FCA reference entity: <strong>${FCA_ENTITY_REFERENCE}</strong>.</p>`,
+      contentHtml: `<p>Virginia contractors typically form an <strong>LLC</strong> to separate personal assets from project liability. Document your structure choice in <a href="/portal/legal">Contractor Legal Command</a> before filing.</p><ul><li>LLC: flexible taxation, limited liability, common for Class A/B and residential builders</li><li>Sole prop: simplest start, no liability shield ÔøΩ rarely appropriate at scale</li><li>S-Corp election: tax planning after counsel and CPA review</li></ul><p>FCA reference entity: <strong>${FCA_ENTITY_REFERENCE}</strong>.</p>`,
     },
     2: {
       objective: "Complete Virginia State Corporation Commission (SCC) LLC formation and store the Certificate of Fact.",
@@ -22,8 +22,8 @@ const LEGAL_MODULE_CONTENT = {
         "Appoint registered agent with Virginia street address",
         "Obtain Certificate of Fact for banking, insurance, and Google org verification",
       ],
-      practicalLab: "Use docs/legal/contractor/BUSINESS_FORMATION_VA_LLC_CHECKLIST.md and upload SCC certificates to /portal/files under Legal ù Formation.",
-      contentHtml: `<p>Module 2 walks the <strong>Virginia SCC LLC formation</strong> path. After filing, request a <strong>Certificate of Fact</strong> ù this is the proof-of-organization document commonly required for banking and vendor verification.</p><ol><li>Reserve or confirm entity name availability</li><li>File Articles of Organization online</li><li>Designate registered agent (Virginia physical address)</li><li>Download Certificate of Fact and register in <a href="/portal/files">Files</a></li></ol><p>Track completion in the <a href="/portal/legal">legal compliance checklist</a>.</p>`,
+      practicalLab: "Use docs/legal/contractor/BUSINESS_FORMATION_VA_LLC_CHECKLIST.md and upload SCC certificates to /portal/files under Legal ÔøΩ Formation.",
+      contentHtml: `<p>Module 2 walks the <strong>Virginia SCC LLC formation</strong> path. After filing, request a <strong>Certificate of Fact</strong> ÔøΩ this is the proof-of-organization document commonly required for banking and vendor verification.</p><ol><li>Reserve or confirm entity name availability</li><li>File Articles of Organization online</li><li>Designate registered agent (Virginia physical address)</li><li>Download Certificate of Fact and register in <a href="/portal/files">Files</a></li></ol><p>Track completion in the <a href="/portal/legal">legal compliance checklist</a>.</p>`,
     },
     3: {
       objective: "Obtain EIN, open business banking, and align NAICS codes with your contracting scope.",
@@ -33,7 +33,7 @@ const LEGAL_MODULE_CONTENT = {
         "Select NAICS codes matching your DPOR classification and trade scope",
       ],
       practicalLab: "Add EIN confirmation and banking milestone notes in /portal/legal checklist item 'Federal EIN obtained'.",
-      contentHtml: `<p>Your <strong>EIN</strong> is the tax identity for contracts, 1099s, and insurance applications. Never commingle personal and project funds.</p><p>Store EIN letter and bank resolution documents on the project file spine under <code>Legal ù Formation</code>.</p>`,
+      contentHtml: `<p>Your <strong>EIN</strong> is the tax identity for contracts, 1099s, and insurance applications. Never commingle personal and project funds.</p><p>Store EIN letter and bank resolution documents on the project file spine under <code>Legal ÔøΩ Formation</code>.</p>`,
     },
     4: {
       objective: "Execute operating agreement discipline, initial insurance, and load credentials into FCA.",
@@ -55,7 +55,7 @@ const LEGAL_MODULE_CONTENT = {
         "Scope, price, schedule, and warranty terms in owner agreements",
       ],
       practicalLab: "Open OWNER_CONTRACT_VA_RESIDENTIAL_TEMPLATE.md and create a draft agreement record in /portal/legal.",
-      contentHtml: `<p>Virginia residential contractors must maintain <strong>written agreements</strong> with consumer-protection notices. Use the FCA <a href="/legal/contractor-resources">template library</a> ù not verbal scope alone.</p>`,
+      contentHtml: `<p>Virginia residential contractors must maintain <strong>written agreements</strong> with consumer-protection notices. Use the FCA <a href="/legal/contractor-resources">template library</a> ÔøΩ not verbal scope alone.</p>`,
     },
     2: {
       objective: "Manage subcontractor agreements, indemnity, and certificate of insurance collection.",
@@ -75,7 +75,7 @@ const LEGAL_MODULE_CONTENT = {
         "Lien waiver register linked to billing and project files",
       ],
       practicalLab: "Log a conditional lien waiver in /portal/legal tied to a progress draw.",
-      contentHtml: `<p><strong>Conditional</strong> waivers become effective upon receipt of payment. <strong>Unconditional</strong> waivers follow cleared funds ù never sign early.</p>`,
+      contentHtml: `<p><strong>Conditional</strong> waivers become effective upon receipt of payment. <strong>Unconditional</strong> waivers follow cleared funds ÔøΩ never sign early.</p>`,
     },
     4: {
       objective: "Close projects with documentation discipline and dispute prevention.",
@@ -122,6 +122,18 @@ function attachModuleMedia(program, moduleNumber, module) {
 
 function buildModules(program) {
   const course = program.courses?.[0];
+  if (Array.isArray(course?.moduleOutlines) && course.moduleOutlines.length > 0) {
+    return course.moduleOutlines.map((outline, index) => attachModuleMedia(program, index + 1, {
+      ...outline,
+      moduleNumber: outline.moduleNumber || index + 1,
+      title: outline.title || course.lessonTitles?.[index] || `Module ${index + 1}`,
+      lab: course.lab,
+      knowledgeCheck: outline.knowledgeCheck || {
+        passingScore: outline.assessment?.passingScore || 80,
+        questionCount: 5,
+      },
+    }));
+  }
   const titles = course?.lessonTitles || [];
   const count = parseModuleCount(program);
   const legalContent = LEGAL_MODULE_CONTENT[program.key] || {};
@@ -129,7 +141,7 @@ function buildModules(program) {
   return Array.from({ length: count }, (_, index) => {
     const moduleNumber = index + 1;
     const titleFromCatalog = titles[index] || `Module ${moduleNumber}`;
-    const title = titleFromCatalog.replace(/^Module \d+ ù\s*/i, "").replace(/^Lesson \d+ ù\s*/i, "");
+    const title = titleFromCatalog.replace(/^Module \d+ ÔøΩ\s*/i, "").replace(/^Lesson \d+ ÔøΩ\s*/i, "");
     const enriched = legalContent[moduleNumber] || {};
 
     return attachModuleMedia(program, moduleNumber, {
@@ -166,6 +178,12 @@ export function getAcademyProgramDetail(programKey) {
       linkedSurface: program.linkedSurface,
       linkedLabel: program.linkedLabel,
       deliveryModel: program.format,
+      stateCode: program.stateCode,
+      pathwayKey: program.pathwayKey,
+      topicKey: program.topicKey,
+      vdoe: program.vdoe,
+      proposedTrack: program.proposedTrack,
+      apprenticeshipTrack: program.apprenticeshipTrack,
       completionRule: "Complete all modules with knowledge checks at 80% or higher.",
     },
     modules,
@@ -174,6 +192,9 @@ export function getAcademyProgramDetail(programKey) {
       knowledgeCheckPassingScore: "80%",
       practicalLab: "Complete linked portal lab surfaces where indicated.",
       credential: program.credential,
+      vdoeStudentCompetencyRecord: program.vdoe?.studentCompetencyRecordRequired === true,
+      hqwblEvidence: program.vdoe?.hqwblRequired === true,
+      safetyGate: program.vdoe?.oshaComplianceRequired === true,
     },
   };
 }

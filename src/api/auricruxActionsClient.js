@@ -1,4 +1,7 @@
 import { centralFetch } from "./backendBase";
+import { isCteSafeModeEnabled } from "../lib/cteSafeModeConfig";
+import { buildStaticActionPayload } from "../lib/educationalLogicProvider";
+import { enqueueInstructorReview, listInstructorReviewQueue } from "../lib/instructorReviewQueue";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
@@ -16,6 +19,36 @@ function formatApiError(response, payload, fallbackMessage) {
 }
 
 export async function fetchAuricruxActions() {
+  if (isCteSafeModeEnabled()) {
+    const queuedItems = await listInstructorReviewQueue({ limit: 30 });
+    const queued = queuedItems.slice(0, 30).map((row) => ({
+      id: row.id,
+      mode: "review",
+      targetObjectType: row.targetObjectType || "LearningObjective",
+      targetObjectId: row.targetObjectId || "",
+      rationale: row.summary || "Pending instructor review",
+      sourceRoute: row.sourceRoute || "/portal/auricrux",
+      createdAt: row.createdAt,
+    }));
+
+    return {
+      ok: true,
+      deterministic: true,
+      items: [
+        {
+          id: "cte-safe-mode-1",
+          mode: "recommend",
+          targetObjectType: "LearningObjective",
+          targetObjectId: "8515.002",
+          rationale: "Complete safety competency evidence and submit for instructor verification.",
+          sourceRoute: "/portal/auricrux",
+          createdAt: new Date().toISOString(),
+        },
+        ...queued,
+      ],
+    };
+  }
+
   const response = await centralFetch("/api/auricrux/actions", { method: "GET" });
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
@@ -34,6 +67,42 @@ export async function submitAuricruxAction({
   beforeSnapshotJson,
   afterSnapshotJson,
 }) {
+  if (isCteSafeModeEnabled()) {
+    const payload = buildStaticActionPayload({
+      mode,
+      targetObjectType,
+      targetObjectId,
+      rationale,
+      sourceRoute,
+      courseCode: "8515",
+    });
+
+    if (mode === "execute" || mode === "teach") {
+      const reviewItem = await enqueueInstructorReview({
+        actionType: "auricrux-action",
+        sourceRoute,
+        targetObjectType,
+        targetObjectId,
+        summary: `Instructor review required for ${mode} action: ${rationale || capabilityId || targetObjectType}`,
+        feedbackPayload: payload?.guidance?.reply || "",
+        payload: {
+          mode,
+          capabilityId,
+          beforeSnapshotJson,
+          afterSnapshotJson,
+        },
+      });
+
+      return {
+        ...payload,
+        pendingReview: true,
+        reviewItem,
+      };
+    }
+
+    return payload;
+  }
+
   const response = await centralFetch("/api/auricrux/actions", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

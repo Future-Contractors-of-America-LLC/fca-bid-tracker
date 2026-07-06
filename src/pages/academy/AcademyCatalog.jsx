@@ -12,6 +12,7 @@ import { getPathwayLmsConfig } from "../../academyPathwayLms";
 import { getCertificationAgencyAlignment, getApprenticeshipCompliance, getDegreeAccreditationFootnote } from "../../academyCatalogTaxonomy";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
+import { adminGovernance } from "../../adminGovernance";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -53,6 +54,7 @@ function moduleCount(program) {
 
 function CourseCard({ program, topicKey, pathwayKey }) {
   const enrollment = program.enrollment || {};
+  const vdoe = program.vdoe;
   const syllabusLines = program.moduleTitles
     || program.courses?.[0]?.lessonTitles
     || program.modules?.map((module) => module.title)
@@ -100,6 +102,17 @@ function CourseCard({ program, topicKey, pathwayKey }) {
             <div style={{ color: "#92400e", fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
               {program.licensureBoard}
               {program.examPrerequisites ? <span style={{ fontWeight: 500, color: "#78350f" }}> · {program.examPrerequisites}</span> : null}
+            </div>
+          ) : null}
+          {vdoe ? (
+            <div style={{ color: "#075985", fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
+              VDOE {vdoe.cluster}
+              {vdoe.courseCode ? ` · Course ${vdoe.courseCode}` : ""}
+              {vdoe.scedCode ? ` · SCED ${vdoe.scedCode}` : ""}
+              {vdoe.proposedTrack ? " · Proposed board track" : ""}
+              <div style={{ color: "#475569", fontWeight: 500, marginTop: 4 }}>
+                Grades {vdoe.gradeLevel?.join(", ") || "District configured"} · {vdoe.instructionalHours || "District configured"} hours · SCR + HQWBL evidence required
+              </div>
             </div>
           ) : null}
           <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
@@ -210,6 +223,10 @@ function matchesSearch(program, query) {
     program.accreditationBody,
     program.apprenticeshipSponsor,
     program.stateCode,
+    program.vdoe?.courseCode,
+    program.vdoe?.cluster,
+    program.vdoe?.source,
+    program.vdoe?.ctso,
     ...(program.governingBodies || []),
     ...(program.moduleTitles || []),
   ].filter(Boolean).join(" ").toLowerCase();
@@ -339,6 +356,40 @@ export default function AcademyCatalog() {
           <a href="/academy/store" style={{ display: "inline-block", marginLeft: 12, color: "#7c3aed", fontWeight: 700, textDecoration: "none" }}>
             Open store
           </a>
+        </div>
+
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "#eff6ff" }}>
+          <strong style={{ color: "#1d4ed8" }}>Qualification Engine</strong>
+          <p style={{ color: "#475569", lineHeight: 1.7, marginTop: 8, marginBottom: 10 }}>
+            This catalog is now a qualification system, not a passive training library. Authority gates are driven by validated credentials and role pathways.
+          </p>
+          <div style={{ color: "#334155", fontSize: 14, lineHeight: 1.7 }}>
+            Critical competencies: {(adminGovernance.academyGovernance?.workforceModeling?.criticalCompetencies || []).join(", ")}
+          </div>
+          {adminGovernance.academyGovernance?.subcontractorAcademyProgram?.enabled ? (
+            <div style={{ color: "#334155", fontSize: 14, lineHeight: 1.7, marginTop: 6 }}>
+              Subcontractor expansion enabled: {adminGovernance.academyGovernance.subcontractorAcademyProgram.label}
+            </div>
+          ) : null}
+        </div>
+
+        <div style={{ ...cardStyle, marginBottom: 24 }}>
+          <h3 style={{ marginTop: 0, marginBottom: 10 }}>Full-Stack Academy Integration</h3>
+          <div style={{ display: "grid", gap: 8 }}>
+            {[
+              { offer: "Apprenticeship School", glue: "PortalFieldTasks", value: "Tracks field progression and labor-rate readiness." },
+              { offer: "OSHA / Safety Center", glue: "PortalFieldSupervision", value: "Hard-stop locks when safety credentials are expired." },
+              { offer: "Licensure / Cert Prep", glue: "PortalAdmin", value: "Verifies sign-off authority for governed actions." },
+              { offer: "FCA System Training", glue: "PlatformDashboard", value: "Unlocks advanced module features with skill growth." },
+              { offer: "Professional Development", glue: "PortalOperations", value: "Supports succession planning and high-potential matching." },
+            ].map((row) => (
+              <div key={row.offer} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 10, background: "#fff" }}>
+                <strong>{row.offer}</strong>
+                <div style={{ color: "#475569", fontSize: 13, marginTop: 4 }}>Glue: {row.glue}</div>
+                <div style={{ color: "#334155", fontSize: 13, marginTop: 4 }}>{row.value}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {pathwayLms && selectedPathway && !selectedTopic ? (

@@ -1,0 +1,10 @@
+{
+  "allowedBlockers": [],
+  "allowedCritical": [
+    "/portal/command-tower",
+    "/portal/decision-queue",
+    "/portal/legal"
+  ],
+  "notes": "Generated from current repository state. Reduce and remove entries as modules are remediated.",
+  "generatedAt": "2026-07-04T18:45:10.285Z"
+}

@@ -9,6 +9,8 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { routeStateOverlays } from "../../systemState";
 import { pricingPlanOptions } from "../../pricingPlans";
 import { isDemoAccountSource } from "../../config/authSources";
+import { isPayrollAdminSession, isPayrollEmployeeSession } from "../../customerSession";
+import { centralFetch } from "../../api/backendBase";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -76,6 +78,10 @@ export default function PortalProfile() {
     refreshSyncStamp("Persisted customer profile state active");
   }, [refreshSyncStamp]);
 
+  useEffect(() => {
+    centralFetch("/api/customer-session", { method: "GET" }).catch(() => null);
+  }, []);
+
   const sessionCompany = session?.company || state.tenant.name;
   const sessionEmail = session?.email || state.meta.customerSessionEmail || "workspace@futurecontractorsofamerica.com";
   const sessionWorkspace = session?.workspaceLabel || state.meta.customerWorkspaceLabel || `${sessionCompany} Workspace`;
@@ -88,6 +94,8 @@ export default function PortalProfile() {
   const accountSource = session?.accountSource || "workspace-shell";
   const securityStatus = resolveAccountSecurityLabel(accountSource, authState.authBoundary);
   const verificationStatus = resolveVerificationLabel(authState.authBoundary);
+  const isAdminPayroll = isPayrollAdminSession(session);
+  const isEmployeePayroll = isPayrollEmployeeSession(session);
 
   function toggleProduct(productKey, enabled) {
     setProductAccess(productKey, !enabled);
@@ -161,6 +169,67 @@ export default function PortalProfile() {
         <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginBottom: 0, marginTop: 12 }}>
           Sign out from shared devices using the Sign out button on the login page. Enterprise SSO is available on request for multi-user teams.
         </p>
+      </div>
+
+      <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%)" }}>
+        <div style={{ color: "#075985", fontWeight: 700, marginBottom: 8 }}>Payroll workspace lanes</div>
+        <div style={{ color: "#475569", lineHeight: 1.8, marginBottom: 12 }}>
+          FCA now separates payroll access by role: admin lane for company bank/provider settings and employee lane for personal direct deposit and W-4 inputs.
+        </div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <a
+            href={isAdminPayroll ? "/portal/admin/payroll" : "/portal/profile"}
+            style={{
+              textDecoration: "none",
+              background: isAdminPayroll ? "#0f766e" : "#cbd5e1",
+              color: isAdminPayroll ? "#ffffff" : "#475569",
+              padding: "10px 14px",
+              borderRadius: 10,
+              fontWeight: 700,
+            }}
+          >
+            {isAdminPayroll ? "Open Admin Payroll Portal" : "Admin Payroll Portal (restricted)"}
+          </a>
+          <a
+            href={isEmployeePayroll ? "/portal/employee/payroll" : "/portal/profile"}
+            style={{
+              textDecoration: "none",
+              background: isEmployeePayroll ? "#1d4ed8" : "#cbd5e1",
+              color: isEmployeePayroll ? "#ffffff" : "#475569",
+              padding: "10px 14px",
+              borderRadius: 10,
+              fontWeight: 700,
+            }}
+          >
+            {isEmployeePayroll ? "Open Employee Payroll Portal" : "Employee Payroll Portal (restricted)"}
+          </a>
+          <a
+            href={isAdminPayroll ? "/portal/admin/internal" : "/portal/profile"}
+            style={{
+              textDecoration: "none",
+              background: isAdminPayroll ? "#0f766e" : "#cbd5e1",
+              color: isAdminPayroll ? "#ffffff" : "#475569",
+              padding: "10px 14px",
+              borderRadius: 10,
+              fontWeight: 700,
+            }}
+          >
+            {isAdminPayroll ? "Open Internal Company Records" : "Internal Company Records (restricted)"}
+          </a>
+          <a
+            href={isEmployeePayroll ? "/portal/employee/internal" : "/portal/profile"}
+            style={{
+              textDecoration: "none",
+              background: isEmployeePayroll ? "#1d4ed8" : "#cbd5e1",
+              color: isEmployeePayroll ? "#ffffff" : "#475569",
+              padding: "10px 14px",
+              borderRadius: 10,
+              fontWeight: 700,
+            }}
+          >
+            {isEmployeePayroll ? "Open Employee Internal Profile" : "Employee Internal Profile (restricted)"}
+          </a>
+        </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 16 }}>

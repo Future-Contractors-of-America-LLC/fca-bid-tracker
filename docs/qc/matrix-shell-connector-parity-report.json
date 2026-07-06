@@ -1,0 +1,135 @@
+{
+  "generatedAt": "2026-07-04T11:32:54.849Z",
+  "failed": 0,
+  "checked": 12,
+  "findings": [
+    {
+      "capability": "lead-opportunity",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Lead / Opportunity"
+      ]
+    },
+    {
+      "capability": "bid-estimate-proposal-award",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Bid / Estimate",
+        "Proposal",
+        "Award"
+      ]
+    },
+    {
+      "capability": "project-setup",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Project Setup"
+      ]
+    },
+    {
+      "capability": "document-control",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Document Control (Plans / Specs)"
+      ]
+    },
+    {
+      "capability": "takeoff-rfi-redline",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Takeoff / Quantity",
+        "RFIs / Redlines"
+      ]
+    },
+    {
+      "capability": "change-order",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Change Orders"
+      ]
+    },
+    {
+      "capability": "scheduling-field",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Scheduling",
+        "Field Execution"
+      ]
+    },
+    {
+      "capability": "quality-punch-closeout",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Quality Control",
+        "Punch / Closeout"
+      ]
+    },
+    {
+      "capability": "billing-payapps-jobcost-accounting",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Billing / Pay Applications",
+        "Job Cost / Accounting"
+      ]
+    },
+    {
+      "capability": "warranty",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Warranty / Recurring Work"
+      ]
+    },
+    {
+      "capability": "admin-portal-governance",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Customer Portal",
+        "Admin Control",
+        "Audit / Governance / Continuity"
+      ]
+    },
+    {
+      "capability": "website-conversion",
+      "status": "pass",
+      "matrixOk": true,
+      "routeOrShellOk": true,
+      "connectorOrApiOk": true,
+      "matrixTerms": [
+        "Website / Public Conversion"
+      ]
+    }
+  ]
+}

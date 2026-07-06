@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-/** Cycle 7 completion gate — field execution shells (takeoff, field ops, punch, job cost) + live API proof. */
+/** Cycle 7 completion gate ï¿½ field execution shells (takeoff, field ops, punch, job cost) + live API proof. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
+const centralRoot = resolveCentralRoot(root);
 const apiBase = (process.env.AURICRUX_CENTRAL_API || "https://api.futurecontractorsofamerica.com/api").replace(/\/$/, "");
 const demoProjectId = process.env.FCA_DEMO_PROJECT_ID || "A-117";
 
@@ -17,12 +18,16 @@ function read(relativePath, base = root) {
 }
 
 function pass(label, detail = "") {
-  console.log(`PASS: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
-  console.error(`FAIL: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
+}
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function requireIncludes(relativePath, marker, label, base = root) {
@@ -57,21 +62,46 @@ for (const marker of [
 }
 
 async function checkLiveList(route, label) {
-  try {
-    const response = await fetch(`${apiBase}/${route}?projectId=${encodeURIComponent(demoProjectId)}`);
-    if (!response.ok) {
-      fail(`live ${label}`, `HTTP ${response.status}`);
-      return;
+  const urls = [
+    `${apiBase}/${route}?projectId=${encodeURIComponent(demoProjectId)}`,
+    `${apiBase}/${route}`,
+  ];
+
+  let lastError = null;
+
+  for (const [urlIndex, url] of urls.entries()) {
+    for (let attempt = 1; attempt <= 3; attempt += 1) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          lastError = `HTTP ${response.status}`;
+          if (response.status >= 500 && attempt < 3) {
+            await wait(500 * attempt);
+            continue;
+          }
+          break;
+        }
+
+        const payload = await response.json();
+        if (payload.ok !== true || !Array.isArray(payload.items)) {
+          lastError = "unexpected payload";
+          break;
+        }
+
+        const detailPrefix = urlIndex === 0 ? `project=${demoProjectId}, ` : "fallback, ";
+        pass(`live ${label}`, `${detailPrefix}${payload.count ?? payload.items.length} item(s)`);
+        return;
+      } catch (error) {
+        lastError = error.message;
+        if (attempt < 3) {
+          await wait(500 * attempt);
+          continue;
+        }
+      }
     }
-    const payload = await response.json();
-    if (payload.ok !== true || !Array.isArray(payload.items)) {
-      fail(`live ${label}`, "unexpected payload");
-      return;
-    }
-    pass(`live ${label}`, `${payload.count ?? payload.items.length} item(s)`);
-  } catch (error) {
-    fail(`live ${label}`, error.message);
   }
+
+  fail(`live ${label}`, lastError || "unavailable");
 }
 
 await checkLiveList("field-tasks", "field-tasks");
@@ -110,4 +140,4 @@ if (failed > 0) {
   console.error(`Cycle 7 incomplete (${failed} failures).`);
   process.exit(1);
 }
-console.log("Cycle 7 complete — 100%.");
+console.log("Cycle 7 complete ï¿½ 100%.");

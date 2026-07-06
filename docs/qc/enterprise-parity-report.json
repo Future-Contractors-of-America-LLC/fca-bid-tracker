@@ -1,0 +1,103 @@
+{
+  "generatedAt": "2026-07-05T18:32:40.879Z",
+  "centralRoot": "C:\\Users\\Auricrux\\Documents\\GitHub\\auricrux-central",
+  "failed": 0,
+  "statementCount": 5,
+  "statements": [
+    {
+      "platform": "PlanHub",
+      "status": "pass",
+      "benchmarkOk": true,
+      "capabilityOk": true,
+      "requires": [
+        "pipeline-bid-estimate-proposal",
+        "project-delivery-execution"
+      ]
+    },
+    {
+      "platform": "Procore",
+      "status": "pass",
+      "benchmarkOk": true,
+      "capabilityOk": true,
+      "requires": [
+        "project-delivery-execution",
+        "finance-and-accounting",
+        "m365-collaboration"
+      ]
+    },
+    {
+      "platform": "BuildingConnected/Construction Cloud/Revit/AutoCAD",
+      "status": "pass",
+      "benchmarkOk": true,
+      "capabilityOk": true,
+      "requires": [
+        "pipeline-bid-estimate-proposal",
+        "design-bim-cad",
+        "project-delivery-execution"
+      ]
+    },
+    {
+      "platform": "Intuit Enterprise Suite (Construction Edition)",
+      "status": "pass",
+      "benchmarkOk": true,
+      "capabilityOk": true,
+      "requires": [
+        "finance-and-accounting",
+        "project-delivery-execution"
+      ]
+    },
+    {
+      "platform": "Microsoft 365",
+      "status": "pass",
+      "benchmarkOk": true,
+      "capabilityOk": true,
+      "requires": [
+        "m365-collaboration",
+        "project-delivery-execution",
+        "finance-and-accounting"
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "pipeline-bid-estimate-proposal",
+      "status": "pass",
+      "routeOk": true,
+      "productOk": true,
+      "apiOk": true,
+      "assistOk": true
+    },
+    {
+      "id": "project-delivery-execution",
+      "status": "pass",
+      "routeOk": true,
+      "productOk": true,
+      "apiOk": true,
+      "assistOk": true
+    },
+    {
+      "id": "design-bim-cad",
+      "status": "pass",
+      "routeOk": true,
+      "productOk": true,
+      "apiOk": true,
+      "assistOk": true
+    },
+    {
+      "id": "finance-and-accounting",
+      "status": "pass",
+      "routeOk": true,
+      "productOk": true,
+      "apiOk": true,
+      "assistOk": true
+    },
+    {
+      "id": "m365-collaboration",
+      "status": "pass",
+      "routeOk": true,
+      "productOk": true,
+      "apiOk": true,
+      "assistOk": true
+    }
+  ]
+}

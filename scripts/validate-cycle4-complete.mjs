@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-/** Cycle 4 completion gate — lifecycle journey, legal persistence, SharePoint upload, deploy proof. */
+/** Cycle 4 completion gate ï¿½ lifecycle journey, legal persistence, SharePoint upload, deploy proof. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
+const centralRoot = resolveCentralRoot(root);
 let failed = 0;
 
 function read(relativePath, base = root) {
@@ -14,12 +15,12 @@ function read(relativePath, base = root) {
 }
 
 function pass(label, detail = "") {
-  console.log(`PASS: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
-  console.error(`FAIL: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function requireIncludes(relativePath, marker, label, base = root) {
@@ -60,4 +61,4 @@ if (failed > 0) {
   console.error(`Cycle 4 incomplete (${failed} failures).`);
   process.exit(1);
 }
-console.log("Cycle 4 complete — 100%.");
+console.log("Cycle 4 complete ï¿½ 100%.");

@@ -1,4 +1,4 @@
-import { centralApi } from "./backendBase";
+import { buildExecutionContextHeaders, centralApi } from "./backendBase";
 import { loadStripeCatalog, workspaceCheckoutFromCatalog } from "../stripeCatalog.js";
 
 async function readJsonSafe(response) {
@@ -38,6 +38,7 @@ async function postCommerce(path, body) {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          ...buildExecutionContextHeaders(),
         },
         body: JSON.stringify(body),
       });

@@ -1,4 +1,19 @@
 import { centralFetch } from "./backendBase";
+import { isCteSafeModeEnabled } from "../lib/cteSafeModeConfig";
+import { enqueueInstructorReview } from "../lib/instructorReviewQueue";
+
+async function queueSafeModeWorkflowReview(action, body, route) {
+  const objectType = route === "/portal/projects" ? "ProjectWorkflow" : route === "/portal/bids" ? "BidWorkflow" : "FileWorkflow";
+  const objectId = String(body?.projectId || body?.bidId || body?.fileId || body?.ownerObjectId || "");
+  return enqueueInstructorReview({
+    actionType: `workflow-${action}`,
+    sourceRoute: route,
+    targetObjectType: objectType,
+    targetObjectId: objectId,
+    summary: `Workflow action ${action} requires instructor approval in CTE Safe-Mode.`,
+    payload: body,
+  });
+}
 
 export async function fetchWorkflowBids() {
   const response = await centralFetch("/api/bids", { method: "GET" });
@@ -16,6 +31,17 @@ export async function fetchWorkflowBids() {
 }
 
 export async function mutateWorkflowBid(action, body = {}) {
+  if (isCteSafeModeEnabled() && ["update-status", "route-to-estimate", "mark-won-create-project"].includes(String(action))) {
+    const reviewItem = await queueSafeModeWorkflowReview(action, body, "/portal/bids");
+    return {
+      ok: true,
+      deterministic: true,
+      pendingReview: true,
+      reviewItem,
+      message: `Safe-Mode active: bid workflow action ${action} queued for instructor review.`,
+    };
+  }
+
   const response = await centralFetch("/api/bids", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -38,6 +64,17 @@ export async function fetchWorkflowProjects() {
 }
 
 export async function mutateWorkflowProject(action, body = {}) {
+  if (isCteSafeModeEnabled() && ["advance-stage", "clear-permit-blocker"].includes(String(action))) {
+    const reviewItem = await queueSafeModeWorkflowReview(action, body, "/portal/projects");
+    return {
+      ok: true,
+      deterministic: true,
+      pendingReview: true,
+      reviewItem,
+      message: `Safe-Mode active: project workflow action ${action} queued for instructor review.`,
+    };
+  }
+
   const response = await centralFetch("/api/projects", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -66,6 +103,17 @@ export async function fetchWorkflowFiles(params = {}) {
 }
 
 export async function mutateWorkflowFile(action, body = {}) {
+  if (isCteSafeModeEnabled() && ["resolve-punch-item"].includes(String(action))) {
+    const reviewItem = await queueSafeModeWorkflowReview(action, body, "/portal/files");
+    return {
+      ok: true,
+      deterministic: true,
+      pendingReview: true,
+      reviewItem,
+      message: `Safe-Mode active: file workflow action ${action} queued for instructor review.`,
+    };
+  }
+
   const response = await centralFetch("/api/files", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -89,6 +137,19 @@ export async function fetchWorkflowAudit(params = {}) {
   const payload = await response.json().catch(() => ({}));
   if (!response.ok || !payload?.ok) {
     throw new Error(payload?.error || "Unable to load workflow audit state.");
+  }
+  return payload;
+}
+
+export async function createWorkflowAuditEvent(body = {}) {
+  const response = await centralFetch("/api/workflow-audit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload?.ok) {
+    throw new Error(payload?.error || "Unable to write workflow audit event.");
   }
   return payload;
 }

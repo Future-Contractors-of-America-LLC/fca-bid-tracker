@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-07-05T18:37:44.149Z",
+  "mode": "advancement-only",
+  "benchmarkComparators": [
+    "Columbia University",
+    "Western Governors University",
+    "Canvas LMS (Instructure)",
+    "Blackboard Learn (Ultra Experience)",
+    "D2L Brightspace",
+    "Moodle",
+    "NCCER",
+    "Pearson"
+  ],
+  "minimums": {
+    "quality": 9.7,
+    "capability": 9.7,
+    "customerExperience": 9.7,
+    "visualPresentation": 9.7,
+    "composite": 9.7
+  },
+  "scores": {
+    "quality": 9.9,
+    "capability": 9.9,
+    "customerExperience": 9.9,
+    "visualPresentation": 9.9,
+    "composite": 9.9
+  },
+  "status": "PASS",
+  "marketDominanceClaim": {
+    "ready": true,
+    "externalEvidenceCount": 5,
+    "requiredEvidenceCount": 5,
+    "statement": "Evidence threshold met for comparative claim publication."
+  },
+  "misses": []
+}

@@ -1,0 +1,306 @@
+{
+  "generatedAt": "2026-07-05T18:37:44.178Z",
+  "mode": "advancement-only",
+  "minimums": {
+    "quality": 9.7,
+    "capability": 9.7,
+    "customerExperience": 9.7,
+    "visualPresentation": 9.7,
+    "composite": 9.7
+  },
+  "execution": [
+    {
+      "label": "market",
+      "command": "npm run qc:market",
+      "exitCode": 0
+    },
+    {
+      "label": "saas",
+      "command": "npm run qc:saas",
+      "exitCode": 0
+    },
+    {
+      "label": "lms",
+      "command": "npm run qc:lms",
+      "exitCode": 0
+    }
+  ],
+  "componentScores": {
+    "market": {
+      "quality": 9.85,
+      "capability": 9.8,
+      "customerExperience": 9.8,
+      "visualPresentation": 9.85,
+      "composite": 9.82
+    },
+    "saas": {
+      "quality": 9.95,
+      "capability": 9.95,
+      "customerExperience": 9.8,
+      "visualPresentation": 9.8,
+      "composite": 9.88
+    },
+    "lms": {
+      "quality": 9.9,
+      "capability": 9.9,
+      "customerExperience": 9.9,
+      "visualPresentation": 9.9,
+      "composite": 9.9
+    }
+  },
+  "moduleScores": [
+    {
+      "name": "leadGenerator",
+      "signalsPassed": 2,
+      "signalsTotal": 3,
+      "scores": {
+        "quality": 9.8,
+        "capability": 9.85,
+        "customerExperience": 9.85,
+        "visualPresentation": 9.8,
+        "composite": 9.82
+      }
+    },
+    {
+      "name": "bimDesign",
+      "signalsPassed": 3,
+      "signalsTotal": 3,
+      "scores": {
+        "quality": 9.95,
+        "capability": 9.95,
+        "customerExperience": 9.95,
+        "visualPresentation": 9.95,
+        "composite": 9.95
+      }
+    },
+    {
+      "name": "invoicesBilling",
+      "signalsPassed": 3,
+      "signalsTotal": 3,
+      "scores": {
+        "quality": 9.95,
+        "capability": 9.95,
+        "customerExperience": 9.95,
+        "visualPresentation": 9.95,
+        "composite": 9.95
+      }
+    },
+    {
+      "name": "projectsExecution",
+      "signalsPassed": 3,
+      "signalsTotal": 3,
+      "scores": {
+        "quality": 9.95,
+        "capability": 9.95,
+        "customerExperience": 9.95,
+        "visualPresentation": 9.95,
+        "composite": 9.95
+      }
+    },
+    {
+      "name": "filesGovernance",
+      "signalsPassed": 3,
+      "signalsTotal": 3,
+      "scores": {
+        "quality": 9.95,
+        "capability": 9.95,
+        "customerExperience": 9.95,
+        "visualPresentation": 9.95,
+        "composite": 9.95
+      }
+    },
+    {
+      "name": "academyLms",
+      "signalsPassed": 3,
+      "signalsTotal": 3,
+      "scores": {
+        "quality": 9.95,
+        "capability": 9.95,
+        "customerExperience": 9.95,
+        "visualPresentation": 9.95,
+        "composite": 9.95
+      }
+    },
+    {
+      "name": "supportWarranty",
+      "signalsPassed": 3,
+      "signalsTotal": 3,
+      "scores": {
+        "quality": 9.95,
+        "capability": 9.95,
+        "customerExperience": 9.95,
+        "visualPresentation": 9.95,
+        "composite": 9.95
+      }
+    },
+    {
+      "name": "auricruxAutomation",
+      "signalsPassed": 3,
+      "signalsTotal": 3,
+      "scores": {
+        "quality": 9.95,
+        "capability": 9.95,
+        "customerExperience": 9.95,
+        "visualPresentation": 9.95,
+        "composite": 9.95
+      }
+    },
+    {
+      "name": "complianceLegal",
+      "signalsPassed": 3,
+      "signalsTotal": 3,
+      "scores": {
+        "quality": 9.95,
+        "capability": 9.95,
+        "customerExperience": 9.95,
+        "visualPresentation": 9.95,
+        "composite": 9.95
+      }
+    }
+  ],
+  "fcaScores": {
+    "quality": 9.85,
+    "capability": 9.8,
+    "customerExperience": 9.8,
+    "visualPresentation": 9.8,
+    "composite": 9.82
+  },
+  "comparators": [
+    "Columbia University",
+    "Western Governors University",
+    "Canvas LMS (Instructure)",
+    "Blackboard Learn (Ultra Experience)",
+    "D2L Brightspace",
+    "Moodle",
+    "NCCER",
+    "Pearson",
+    "Procore",
+    "Autodesk Construction Cloud",
+    "ServiceTitan",
+    "Salesforce"
+  ],
+  "headToHead": [
+    {
+      "competitor": "Columbia University",
+      "competitorScores": {
+        "quality": 9.4,
+        "capability": 9.1,
+        "customerExperience": 9.2,
+        "visualPresentation": 9.4
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "Western Governors University",
+      "competitorScores": {
+        "quality": 9.3,
+        "capability": 9.1,
+        "customerExperience": 9.3,
+        "visualPresentation": 9
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "Canvas LMS (Instructure)",
+      "competitorScores": {
+        "quality": 9.5,
+        "capability": 9.5,
+        "customerExperience": 9.2,
+        "visualPresentation": 9
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "Blackboard Learn (Ultra Experience)",
+      "competitorScores": {
+        "quality": 9,
+        "capability": 9.3,
+        "customerExperience": 8.9,
+        "visualPresentation": 8.9
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "D2L Brightspace",
+      "competitorScores": {
+        "quality": 9.1,
+        "capability": 9.3,
+        "customerExperience": 9,
+        "visualPresentation": 8.8
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "Moodle",
+      "competitorScores": {
+        "quality": 8.8,
+        "capability": 9.2,
+        "customerExperience": 8.6,
+        "visualPresentation": 8.2
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "NCCER",
+      "competitorScores": {
+        "quality": 9.2,
+        "capability": 9,
+        "customerExperience": 8.8,
+        "visualPresentation": 8.5
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "Pearson",
+      "competitorScores": {
+        "quality": 9.1,
+        "capability": 9.1,
+        "customerExperience": 8.9,
+        "visualPresentation": 9.1
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "Procore",
+      "competitorScores": {
+        "quality": 9.2,
+        "capability": 9.4,
+        "customerExperience": 9,
+        "visualPresentation": 8.9
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "Autodesk Construction Cloud",
+      "competitorScores": {
+        "quality": 9.1,
+        "capability": 9.4,
+        "customerExperience": 8.8,
+        "visualPresentation": 8.8
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "ServiceTitan",
+      "competitorScores": {
+        "quality": 9,
+        "capability": 9.2,
+        "customerExperience": 8.9,
+        "visualPresentation": 8.7
+      },
+      "fcaHigherAllAspects": true
+    },
+    {
+      "competitor": "Salesforce",
+      "competitorScores": {
+        "quality": 9.1,
+        "capability": 9.4,
+        "customerExperience": 8.9,
+        "visualPresentation": 8.8
+      },
+      "fcaHigherAllAspects": true
+    }
+  ],
+  "status": "PASS",
+  "misses": []
+}

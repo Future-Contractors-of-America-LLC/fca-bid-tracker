@@ -1,4 +1,6 @@
 import { centralFetch } from "./backendBase";
+import { isCteSafeModeEnabled } from "../lib/cteSafeModeConfig";
+import { enqueueInstructorReview } from "../lib/instructorReviewQueue";
 
 async function readJsonSafe(response) {
   try {
@@ -47,6 +49,24 @@ export async function createCloseoutPackage(body) {
 }
 
 export async function advanceCloseoutPackage(body) {
+  if (isCteSafeModeEnabled()) {
+    const reviewItem = await enqueueInstructorReview({
+      actionType: "advance-closeout-package",
+      sourceRoute: body?.sourceRoute || "/portal/closeout",
+      targetObjectType: "CloseoutPackage",
+      targetObjectId: String(body?.closeoutPackageId || ""),
+      summary: `Closeout package requires instructor approval before status change (${body?.status || "in_progress"}).`,
+      payload: body,
+    });
+    return {
+      ok: true,
+      deterministic: true,
+      pendingReview: true,
+      reviewItem,
+      message: "Safe-Mode active: closeout advancement queued for instructor review.",
+    };
+  }
+
   const response = await centralFetch("/api/closeout-packages", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -77,6 +97,24 @@ export async function createWarrantyCase(body) {
 }
 
 export async function advanceWarrantyCase(body) {
+  if (isCteSafeModeEnabled()) {
+    const reviewItem = await enqueueInstructorReview({
+      actionType: "advance-warranty-case",
+      sourceRoute: body?.sourceRoute || "/portal/warranty",
+      targetObjectType: "WarrantyCase",
+      targetObjectId: String(body?.warrantyCaseId || ""),
+      summary: `Warranty case requires instructor approval before status change (${body?.status || "in_progress"}).`,
+      payload: body,
+    });
+    return {
+      ok: true,
+      deterministic: true,
+      pendingReview: true,
+      reviewItem,
+      message: "Safe-Mode active: warranty progression queued for instructor review.",
+    };
+  }
+
   const response = await centralFetch("/api/warranty-cases", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -136,6 +174,24 @@ export async function createChangeOrder(body) {
 }
 
 export async function advanceChangeOrder(body) {
+  if (isCteSafeModeEnabled()) {
+    const reviewItem = await enqueueInstructorReview({
+      actionType: "advance-change-order",
+      sourceRoute: body?.sourceRoute || "/portal/change-orders",
+      targetObjectType: "ChangeOrder",
+      targetObjectId: String(body?.changeOrderId || ""),
+      summary: `Change-order signoff requires instructor approval before financial finality (${body?.status || "approved"}).`,
+      payload: body,
+    });
+    return {
+      ok: true,
+      deterministic: true,
+      pendingReview: true,
+      reviewItem,
+      message: "Safe-Mode active: change-order advancement queued for instructor review.",
+    };
+  }
+
   const response = await centralFetch("/api/change-orders", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },

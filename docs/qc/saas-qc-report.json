@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-24T12:04:14.457Z",
+  "generatedAt": "2026-07-05T18:37:26.807Z",
   "scope": "SaaS QC",
   "apiBase": "https://auricrux-central.azurewebsites.net",
   "summary": {
-    "passed": 155,
+    "passed": 219,
     "failed": 0,
     "warnings": 0
   },
-  "portalRouteCount": 29,
+  "portalRouteCount": 32,
   "apiEndpointCount": 25,
   "findings": [
     {
@@ -23,6 +23,11 @@
     {
       "status": "pass",
       "label": "script:validate-public-package-route-groups.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-enterprise-parity.mjs",
       "detail": ""
     },
     {
@@ -82,6 +87,11 @@
     },
     {
       "status": "pass",
+      "label": "script:validate-ux-language-quality.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "script:validate-product-readiness-surfaces.mjs",
       "detail": ""
     },
@@ -113,6 +123,101 @@
     {
       "status": "pass",
       "label": "script:validate-cycle3-complete.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-lifecycle-journey.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-cycle4-complete.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-cycle5-complete.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-cycle6-complete.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-field-execution-journey.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-cycle7-complete.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-immersive-vr-journey.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-cycle8-complete.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-fca-sovereignty.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-precon-sovereignty-journey.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-cycle9-complete.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-research-extensions-journey.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-full-platform-traverse.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-cycle10-complete.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-fca-native-payments-journey.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-warranty-service-journey.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-portal-auricrux-coverage.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-cycle14-complete.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:verify-post-deploy.mjs",
       "detail": ""
     },
     {
@@ -267,6 +372,21 @@
     },
     {
       "status": "pass",
+      "label": "route:/portal/punch",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/job-cost",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "route:/portal/immersive",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "route-pattern:/portal/opportunities/:opportunityId",
       "detail": ""
     },
@@ -412,6 +532,11 @@
     },
     {
       "status": "pass",
+      "label": "page:website/CteLogin",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:website/Intake",
       "detail": ""
     },
@@ -473,6 +598,11 @@
     {
       "status": "pass",
       "label": "page:website/LegalHub",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:website/ChpsDpaSign",
       "detail": ""
     },
     {
@@ -562,12 +692,32 @@
     },
     {
       "status": "pass",
+      "label": "page:portal/PortalCommandTower",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalDecisionQueue",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PortalOperations",
       "detail": ""
     },
     {
       "status": "pass",
       "label": "page:portal/PortalPipeline",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalLeads",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalRevenueEngine",
       "detail": ""
     },
     {
@@ -592,6 +742,11 @@
     },
     {
       "status": "pass",
+      "label": "page:portal/PortalCommunications",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PortalNotifications",
       "detail": ""
     },
@@ -612,6 +767,11 @@
     },
     {
       "status": "pass",
+      "label": "page:portal/PortalHiring",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PortalBilling",
       "detail": ""
     },
@@ -627,7 +787,27 @@
     },
     {
       "status": "pass",
+      "label": "page:portal/PortalPayrollAdmin",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalInternalCompany",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PortalProfile",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalEmployeePayroll",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalEmployeeInternalProfile",
       "detail": ""
     },
     {
@@ -653,6 +833,11 @@
     {
       "status": "pass",
       "label": "page:portal/PortalDesignWorkspace",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalImmersive",
       "detail": ""
     },
     {
@@ -683,6 +868,16 @@
     {
       "status": "pass",
       "label": "page:portal/PortalFieldSupervision",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalPunch",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "page:portal/PortalJobCost",
       "detail": ""
     },
     {
@@ -727,6 +922,11 @@
     },
     {
       "status": "pass",
+      "label": "page:academy/CteStudentHub",
+      "detail": ""
+    },
+    {
+      "status": "pass",
       "label": "page:portal/PortalOpportunityDetail",
       "detail": ""
     },
@@ -762,8 +962,128 @@
     },
     {
       "status": "pass",
-      "label": "api:live-smoke",
-      "detail": "deferred — Auricrux-Central API unreachable from validator host"
+      "label": "api:/api/health",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/bids",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/projects",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/files",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/estimates",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/proposals",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/portal-messages",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/portal-invoices",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/billing-summary",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/support-tickets",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/workflow-audit",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/academy-lms",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/customer-login",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/customer-verify",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/leads",
+      "detail": "HTTP 401"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/change-orders",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/job-cost",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/closeout-packages",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/warranty-cases",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/field-photos",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/auricrux/actions",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/auricrux-comms",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/academy-commerce",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/commercial-pipeline",
+      "detail": "HTTP 200"
+    },
+    {
+      "status": "pass",
+      "label": "api:/api/customer-auth-state",
+      "detail": "HTTP 200"
     },
     {
       "status": "pass",

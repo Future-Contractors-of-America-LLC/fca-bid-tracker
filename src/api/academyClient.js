@@ -25,14 +25,22 @@ function buildProgramDetailFromCatalog(programKey) {
   const course = program.courses?.[0];
   const lessonTitles = Array.isArray(course?.lessonTitles) ? course.lessonTitles : [];
   const catalogMeta = resolveProgramCatalogMeta(program);
-  const modules = lessonTitles.map((title, index) => ({
-    moduleNumber: index + 1,
-    title,
-    objective: title,
-    lessons: 1,
-    practicalLab: course?.lab,
-    knowledgeCheck: { passingScore: 80, questionCount: 5 },
-  }));
+  const modules = Array.isArray(course?.moduleOutlines) && course.moduleOutlines.length > 0
+    ? course.moduleOutlines.map((outline, index) => ({
+      ...outline,
+      moduleNumber: outline.moduleNumber || index + 1,
+      title: outline.title || lessonTitles[index] || `Module ${index + 1}`,
+      lab: course?.lab,
+      knowledgeCheck: outline.knowledgeCheck || { passingScore: outline.assessment?.passingScore || 80, questionCount: 5 },
+    }))
+    : lessonTitles.map((title, index) => ({
+      moduleNumber: index + 1,
+      title,
+      objective: title,
+      lessons: 1,
+      practicalLab: course?.lab,
+      knowledgeCheck: { passingScore: 80, questionCount: 5 },
+    }));
 
   return {
     ok: true,
@@ -52,6 +60,10 @@ function buildProgramDetailFromCatalog(programKey) {
       pathwayKey: catalogMeta.pathwayKey,
       topicKey: catalogMeta.topicKey,
       enrollment: catalogMeta.enrollment,
+      stateCode: program.stateCode,
+      vdoe: program.vdoe,
+      proposedTrack: program.proposedTrack,
+      apprenticeshipTrack: program.apprenticeshipTrack,
     },
     modules,
     completionRequirements: {
@@ -59,6 +71,9 @@ function buildProgramDetailFromCatalog(programKey) {
       knowledgeCheckPassingScore: "80%",
       practicalLab: course?.lab || "Complete linked portal lab surfaces where indicated.",
       credential: program.credential,
+      vdoeStudentCompetencyRecord: program.vdoe?.studentCompetencyRecordRequired === true,
+      hqwblEvidence: program.vdoe?.hqwblRequired === true,
+      safetyGate: program.vdoe?.oshaComplianceRequired === true,
     },
     backingSource: "client-academy-catalog-fallback",
   };

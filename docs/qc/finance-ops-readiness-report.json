@@ -1,0 +1,192 @@
+{
+  "generatedAt": "2026-07-05T20:26:05.265Z",
+  "status": "PASS",
+  "mode": {
+    "requireFunctionApp": false,
+    "description": "Standard mode: key can be present in local shell env or Function App settings."
+  },
+  "evidenceSources": {
+    "functionApp": {
+      "enabled": true,
+      "note": "Function App evidence loaded from Auricrux_group/Auricrux-Central.",
+      "settingNameCount": 86
+    }
+  },
+  "totals": {
+    "required": 17,
+    "present": 17,
+    "missing": 0
+  },
+  "checks": [
+    {
+      "key": "STRIPE_SECRET_KEY",
+      "domain": "commerce-receipts",
+      "description": "Stripe secret key configured for checkout and settlement event handling.",
+      "sensitive": true,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (sensitive)"
+    },
+    {
+      "key": "STRIPE_WEBHOOK_SECRET",
+      "domain": "commerce-receipts",
+      "description": "Stripe webhook signature validation secret configured.",
+      "sensitive": true,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (sensitive)"
+    },
+    {
+      "key": "FCA_BANK_NAME",
+      "domain": "bank-routing",
+      "description": "Destination financial institution name for operating receipts.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_BANK_ROUTING_FINGERPRINT",
+      "domain": "bank-routing",
+      "description": "Masked routing proof (for example last4 or hashed fingerprint).",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_BANK_ACCOUNT_FINGERPRINT",
+      "domain": "bank-routing",
+      "description": "Masked account proof (for example last4 or hashed fingerprint).",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_PAYOUT_DESTINATION_ID",
+      "domain": "bank-routing",
+      "description": "Provider destination id that receives receipts (for example Stripe account/external account id).",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_PAYROLL_PROVIDER",
+      "domain": "payroll",
+      "description": "Payroll system name used for payroll runs and filing.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_PAYROLL_COMPANY_ID",
+      "domain": "payroll",
+      "description": "Payroll company identifier in provider.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_PAYROLL_EMPLOYEE_MICHAEL_ID",
+      "domain": "payroll",
+      "description": "Provider employee id for Michael Bartholomew.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_PAYROLL_EMPLOYEE_AMANDA_ID",
+      "domain": "payroll",
+      "description": "Provider employee id for Amanda Bartholomew.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_AP_PROVIDER",
+      "domain": "payables",
+      "description": "Accounts payable provider/system name used to pay invoices/services.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_AP_COMPANY_ID",
+      "domain": "payables",
+      "description": "Accounts payable company identifier in provider.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_TAX_PROVIDER",
+      "domain": "tax",
+      "description": "Tax filing system/provider name.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_TAX_ACCOUNT_ID",
+      "domain": "tax",
+      "description": "Tax provider account identifier.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_REFUND_POLICY_MODE",
+      "domain": "refunds",
+      "description": "Refund policy mode for commerce surfaces (for example manual-approval or auto-under-threshold).",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_REFUND_APPROVER_EMAIL",
+      "domain": "refunds",
+      "description": "Refund approver distribution email or mailbox.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    },
+    {
+      "key": "FCA_FINANCE_CONTROLLER_EMAIL",
+      "domain": "governance",
+      "description": "Controller/owner mailbox for reconciliation and exceptions.",
+      "sensitive": false,
+      "present": true,
+      "source": "function-app-setting",
+      "strictFunctionAppSatisfied": true,
+      "valuePreview": "configured (function-app-setting)"
+    }
+  ]
+}

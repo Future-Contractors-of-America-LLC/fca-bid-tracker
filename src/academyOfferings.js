@@ -46,6 +46,12 @@ export const OFFERING_LANES = [
     description: "Live portal operator guides for Contractor Command — Auricrux-led mini-LMS for FCA workflows.",
     credentialType: "FCA Operator Certificate",
   },
+  {
+    key: "cte",
+    label: "Virginia CTE",
+    description: "VDOE CTE Resource Center Architecture & Construction courses with FCA Academy LMS, SCR, HQWBL, safety, and credential evidence.",
+    credentialType: "CTE Completion Certificate",
+  },
 ];
 
 const STATIC_LANE_BY_PROGRAM_KEY = {
@@ -67,6 +73,7 @@ const STATIC_LANE_BY_PROGRAM_KEY = {
 };
 
 const FCA_HOWTO_PREFIXES = ["fca-"];
+const CTE_PREFIXES = ["cte-"];
 
 const CERTIFICATION_PREFIXES = ["cert-", "project-controls", "precon-estimating", "field-readiness"];
 const DEGREE_PREFIXES = ["deg-"];
@@ -292,6 +299,7 @@ export const FCA_HOWTO_SEQUENCE = [
 function resolveProgramLane(program) {
   if (program.lane) return program.lane;
   if (STATIC_LANE_BY_PROGRAM_KEY[program.key]) return STATIC_LANE_BY_PROGRAM_KEY[program.key];
+  if (CTE_PREFIXES.some((prefix) => program.key?.startsWith(prefix))) return "cte";
   if (APPRENTICESHIP_PREFIXES.some((prefix) => program.key?.startsWith(prefix))) return "apprenticeship";
   if (program.pathway?.includes("Apprenticeship")) return "apprenticeship";
   if (CERTIFICATION_PREFIXES.some((prefix) => program.key?.startsWith(prefix) || program.key === prefix)) return "certification";

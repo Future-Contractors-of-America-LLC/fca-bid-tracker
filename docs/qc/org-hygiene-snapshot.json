@@ -1,0 +1,202 @@
+{
+  "generatedAt": "2026-07-01T18:11:56.8464524Z",
+  "org": "Future-Contractors-of-America-LLC",
+  "decommissionedRepos": [
+    "Future-Contractors-of-America-LLC/fca-mobile"
+  ],
+  "repoCountActive": 17,
+  "reposWithOpenPrs": 0,
+  "reposWithLatestWorkflowFailures": 4,
+  "reposWithInProgressWorkflows": 2,
+  "repos": [
+    {
+      "repo": "Future-Contractors-of-America-LLC/fca-bid-tracker",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 8,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/auricrux-central",
+      "openPrs": 0,
+      "latestFailedWorkflows": 6,
+      "latestInProgressWorkflows": 3,
+      "latestFailedDetails": [
+        {
+          "workflow": "Auricrux Automation Build Smoke",
+          "runId": 28527712290,
+          "url": "https://github.com/Future-Contractors-of-America-LLC/auricrux-central/actions/runs/28527712290",
+          "conclusion": "failure",
+          "status": "completed"
+        },
+        {
+          "workflow": "Auricrux Automation Loops",
+          "runId": 28537816403,
+          "url": "https://github.com/Future-Contractors-of-America-LLC/auricrux-central/actions/runs/28537816403",
+          "conclusion": "failure",
+          "status": "completed"
+        },
+        {
+          "workflow": "Auricrux Execution Operate Loop",
+          "runId": 28537817781,
+          "url": "https://github.com/Future-Contractors-of-America-LLC/auricrux-central/actions/runs/28537817781",
+          "conclusion": "failure",
+          "status": "completed"
+        },
+        {
+          "workflow": "Auricrux Local Training Loop",
+          "runId": 28525544734,
+          "url": "https://github.com/Future-Contractors-of-America-LLC/auricrux-central/actions/runs/28525544734",
+          "conclusion": "failure",
+          "status": "completed"
+        },
+        {
+          "workflow": "Ecosystem Operate Loop",
+          "runId": 28531567105,
+          "url": "https://github.com/Future-Contractors-of-America-LLC/auricrux-central/actions/runs/28531567105",
+          "conclusion": "failure",
+          "status": "completed"
+        },
+        {
+          "workflow": "FCA Ecosystem Health",
+          "runId": 28523697444,
+          "url": "https://github.com/Future-Contractors-of-America-LLC/auricrux-central/actions/runs/28523697444",
+          "conclusion": "failure",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/calyndra-central",
+      "openPrs": 0,
+      "latestFailedWorkflows": 1,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": {
+        "workflow": "Calyndra Automation Loops",
+        "runId": 28537819499,
+        "url": "https://github.com/Future-Contractors-of-America-LLC/calyndra-central/actions/runs/28537819499",
+        "conclusion": "failure",
+        "status": "completed"
+      }
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/fca-mobile-maui",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/calyndra-mobile-flutter",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/calyndra-app",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/.github-private",
+      "openPrs": 0,
+      "latestFailedWorkflows": 1,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": {
+        "workflow": "Build and deploy Node.js app to Azure Web App",
+        "runId": 28537821137,
+        "url": "https://github.com/Future-Contractors-of-America-LLC/.github-private/actions/runs/28537821137",
+        "conclusion": "failure",
+        "status": "completed"
+      }
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/calyndra-content",
+      "openPrs": 0,
+      "latestFailedWorkflows": 2,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": [
+        {
+          "workflow": "Calyndra Content QC",
+          "runId": 28537822562,
+          "url": "https://github.com/Future-Contractors-of-America-LLC/calyndra-content/actions/runs/28537822562",
+          "conclusion": "failure",
+          "status": "completed"
+        },
+        {
+          "workflow": "Ship Calyndra Ecosystem",
+          "runId": 28299089613,
+          "url": "https://github.com/Future-Contractors-of-America-LLC/calyndra-content/actions/runs/28299089613",
+          "conclusion": "failure",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/calyndra-agent",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/roots-garden-central",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/roots-garden-app",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/roots-garden-content",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/calyndra-mobile",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/calyndra-system-law",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/calyndra-ip",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/auricrux-bid-api-node",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    },
+    {
+      "repo": "Future-Contractors-of-America-LLC/demo-repository",
+      "openPrs": 0,
+      "latestFailedWorkflows": 0,
+      "latestInProgressWorkflows": 0,
+      "latestFailedDetails": null
+    }
+  ]
+}

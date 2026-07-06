@@ -1,13 +1,15 @@
 #!/usr/bin/env node
-/** Cycle 5 completion gate — coverage matrix tags, live Entra config, mobile PR merge proof. */
+/** Cycle 5 completion gate ï¿½ coverage matrix tags, live Entra config, mobile PR merge proof. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
+import { resolveMobileRoot } from "./lib/fcaMobileRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
-const mobileRoot = path.resolve(root, "..", "fca-mobile-maui-work");
+const centralRoot = resolveCentralRoot(root);
+const mobileRoot = resolveMobileRoot(root);
 const apiBase = (process.env.AURICRUX_CENTRAL_API || "https://api.futurecontractorsofamerica.com/api").replace(/\/$/, "");
 
 let failed = 0;
@@ -17,12 +19,12 @@ function read(relativePath, base = root) {
 }
 
 function pass(label, detail = "") {
-  console.log(`PASS: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
-  console.error(`FAIL: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function requireIncludes(relativePath, marker, label, base = root) {
@@ -95,7 +97,7 @@ const mainHasMicrosoft = spawnSync(
 if (mainHasMicrosoft.stdout?.includes("Sign in with Microsoft")) {
   pass("mobile main contains Microsoft sign-in", mainLog.stdout?.trim());
 } else {
-  fail("mobile main merge", "origin/main missing Microsoft sign-in — merge mobile PR first");
+  fail("mobile main merge", "origin/main missing Microsoft sign-in ï¿½ merge mobile PR first");
 }
 
 const outputDir = path.join(root, "docs", "qc");
@@ -109,4 +111,4 @@ if (failed > 0) {
   console.error(`Cycle 5 incomplete (${failed} failures).`);
   process.exit(1);
 }
-console.log("Cycle 5 complete — 100%.");
+console.log("Cycle 5 complete ï¿½ 100%.");

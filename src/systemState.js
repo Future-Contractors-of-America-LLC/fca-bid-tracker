@@ -1,13 +1,13 @@
 export const portalTenant = {
   id: "TEN-FCA-001",
-  name: "FCA Pilot Customer",
-  roleSummary: "Owner/Admin workspace with customer portal, billing visibility, and academy continuity enabled.",
+  name: "Active Customer Workspace",
+  roleSummary: "Owner/admin workspace with portal, billing visibility, and academy continuity enabled.",
 };
 
 export const currentProject = {
   id: "PRJ-A117",
-  name: "FCA Pilot Customer Tenant Improvement",
-  customer: "FCA Pilot Customer",
+  name: "Current Customer Tenant Improvement",
+  customer: "Current Customer",
   stage: "Estimating → Execution Handoff",
   fileSetLabel: "18 linked files and onboarding artifacts",
   fileSpineStatus: "Bid package summary, onboarding roster, and closeout checklist are attached to the same project context.",
@@ -135,6 +135,17 @@ export const routeStateOverlays = {
     auricruxRole: "Qualify and route",
     auricruxDetail: "Auricrux reviews lead evidence and recommends qualify-or-reject with audit trail.",
   },
+  revenueEngine: {
+    title: "Revenue engine state",
+    summary: "Revenue Engine unifies campaign attribution, predictive lead scoring, proposal marketing, and RevOps escalation for FCA and customer growth lanes.",
+    status: "Revenue engine active",
+    primaryFocus: "Relationship orchestration",
+    primaryDetail: "This route transforms marketing touchpoints into governed lead entries, proposal kits, and retention actions without manual handoff.",
+    dependency: "Leads, messages, Academy, and project continuity",
+    dependencyDetail: "Revenue orchestration depends on marketing attribution, communication sentiment, credential posture, and project history staying connected.",
+    auricruxRole: "Predict and orchestrate",
+    auricruxDetail: "Auricrux scores readiness, personalizes campaign motion, and routes high-intent accounts into the next commercial action.",
+  },
   projects: {
     title: "Project route state",
     summary: "Projects specialize the shared state around delivery coordination, stage ownership, and execution handoff readiness.",
@@ -190,6 +201,17 @@ export const routeStateOverlays = {
     auricruxRole: "Escalate and clarify",
     auricruxDetail: "Auricrux uses message state to explain urgency, preserve continuity, and route the customer forward.",
   },
+  communications: {
+    title: "Communications neural state",
+    summary: "Communications aggregates omnichannel interactions, normalizes intent into operational actions, and preserves immutable records.",
+    status: "Communications state active",
+    primaryFocus: "Omnichannel orchestration",
+    primaryDetail: "This route transforms unstructured communication into prioritized, project-linked execution tasks and transparent stakeholder updates.",
+    dependency: "Messages, projects, field tasks, finance, and audit continuity",
+    dependencyDetail: "Communications depends on cross-module context so each thread remains linked to live business objects and risk state.",
+    auricruxRole: "Interpret, influence, and record",
+    auricruxDetail: "Auricrux normalizes signals, drafts autonomous responses with governance controls, and hashes interaction records for defensible history.",
+  },
   notifications: {
     title: "Notification route state",
     summary: "Notifications specialize the shared state around alert visibility, recent activity awareness, and continuity cues tied to the same customer workspace.",
@@ -222,6 +244,17 @@ export const routeStateOverlays = {
     dependencyDetail: "Academy continuity depends on shared tenant, project, file, and next-action data rather than isolated LMS state.",
     auricruxRole: "Coach and align",
     auricruxDetail: "Auricrux uses operational state to recommend learning actions and align workforce readiness to live work.",
+  },
+  hiring: {
+    title: "Hiring route state",
+    summary: "Hiring orchestrates credential-verified recruiting, autonomous onboarding, retention intelligence, and labor-capacity balancing.",
+    status: "Hiring state active",
+    primaryFocus: "Competency-verified workforce pipeline",
+    primaryDetail: "This route links Academy credentials and live work demand to deploy qualified capabilities instead of resume-only staffing.",
+    dependency: "Academy, scheduling, field tasks, and operations continuity",
+    dependencyDetail: "Hiring depends on credential evidence, delivery demand, and operations thresholds staying synchronized.",
+    auricruxRole: "Match and orchestrate",
+    auricruxDetail: "Auricrux scores fit, automates screening and onboarding, and triggers retention or recruitment drives before shortages escalate.",
   },
   support: {
     title: "Support route state",
@@ -530,7 +563,7 @@ export const portalBilling = [
   },
   {
     invoice: "INV-1044",
-    customer: "FCA Pilot Customer",
+    customer: "Current customer account",
     amount: "$6,500",
     status: "Ready for review",
     billingBasis: "Preconstruction / startup packet",
@@ -575,6 +608,11 @@ export const portalModules = [
     description: "Guided bid-to-billing workflow in one place",
   },
   {
+    href: "/portal/revenue-engine",
+    label: "Revenue Engine",
+    description: "Sales, marketing, and RevOps orchestration across Academy and project growth",
+  },
+  {
     href: "/portal/files",
     label: "Files",
     description: "Bid packages, permits, legal docs, and onboarding artifacts",
@@ -595,6 +633,11 @@ export const portalModules = [
     description: "Customer communications and Auricrux updates",
   },
   {
+    href: "/portal/communications",
+    label: "Communications",
+    description: "Omnichannel interpretation, autonomous proxying, and immutable interaction records",
+  },
+  {
     href: "/portal/notifications",
     label: "Notifications",
     description: "Alert stream for messages, audits, and continuity signals",
@@ -613,6 +656,11 @@ export const portalModules = [
     href: "/portal/proposals",
     label: "Proposals",
     description: "Customer-ready proposal handoff and delivery",
+  },
+  {
+    href: "/portal/hiring",
+    label: "Hiring",
+    description: "Credential-verified workforce pipeline and onboarding orchestration",
   },
   {
     href: "/portal/plans",
@@ -714,11 +762,10 @@ export const PORTAL_SUBTITLE_MAX = 120;
 /** Always-visible portal shortcuts: workspace, products entry, setup, Auricrux. */
 export const portalNavPrimary = [
   { label: "Workspace", href: "/portal/platform" },
-  { label: "Leads", href: "/portal/leads" },
   { label: "Pipeline", href: "/portal/pipeline" },
   { label: "Projects", href: "/portal/projects" },
   { label: "Files", href: "/portal/files" },
-  { label: "Setup", href: "/portal/admin" },
+  { label: "Billing", href: "/portal/billing" },
   { label: "Auricrux", href: "/portal/auricrux" },
 ];
 
@@ -728,10 +775,12 @@ export const portalNavGroups = [
     label: "Sell and bid",
     items: [
       { label: "Leads board", href: "/portal/leads" },
+      { label: "Revenue engine", href: "/portal/revenue-engine" },
       { label: "Commercial pipeline", href: "/portal/pipeline" },
       { label: "Bids", href: "/portal/bids" },
       { label: "Estimates", href: "/portal/estimates" },
       { label: "Proposals", href: "/portal/proposals" },
+      { label: "Hiring", href: "/portal/hiring" },
     ],
   },
   {
@@ -741,6 +790,7 @@ export const portalNavGroups = [
       { label: "Field supervision", href: "/portal/field-supervision" },
       { label: "Scheduling", href: "/portal/scheduling" },
       { label: "Field tasks", href: "/portal/field-tasks" },
+      { label: "Hiring", href: "/portal/hiring" },
       { label: "RFIs", href: "/portal/rfis" },
       { label: "Change orders", href: "/portal/change-orders" },
       { label: "Closeout", href: "/portal/closeout" },
@@ -755,6 +805,7 @@ export const portalNavGroups = [
       { label: "Design workspace", href: "/portal/design" },
       { label: "Legal", href: "/portal/legal" },
       { label: "Messages", href: "/portal/messages" },
+      { label: "Communications", href: "/portal/communications" },
       { label: "Notifications", href: "/portal/notifications" },
     ],
   },
@@ -788,6 +839,7 @@ export const portalNavGroups = [
 export const portalHubModules = [
   { href: "/portal/auricrux", label: "Auricrux", description: "What to do next" },
   { href: "/portal/leads", label: "Leads", description: "Intake and qualification" },
+  { href: "/portal/revenue-engine", label: "Revenue", description: "Sales and marketing" },
   { href: "/portal/pipeline", label: "Pipeline", description: "Bid through payment" },
   { href: "/portal/bids", label: "Bids", description: "Qualify and award" },
   { href: "/portal/projects", label: "Projects", description: "Job execution" },
@@ -795,6 +847,8 @@ export const portalHubModules = [
   { href: "/portal/files", label: "Files", description: "Document control" },
   { href: "/portal/billing", label: "Billing", description: "Invoices and collections" },
   { href: "/portal/messages", label: "Messages", description: "Team coordination" },
+  { href: "/portal/communications", label: "Comms", description: "Omnichannel neural network" },
+  { href: "/portal/hiring", label: "Hiring", description: "Talent pipeline" },
   { href: "/portal/academy", label: "Academy", description: "Training and certs" },
   { href: "/portal/admin", label: "Setup", description: "Admin and rollout" },
 ];

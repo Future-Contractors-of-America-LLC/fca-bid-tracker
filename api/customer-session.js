@@ -39,6 +39,13 @@ app.http("customer-session", {
       selectedPlan: payload.selectedPlan,
       enabledProducts: payload.enabledProducts,
       enabledComms: payload.enabledComms,
+      accountMode: payload.accountMode,
+      cteProgramEnabled: payload.cteProgramEnabled === true,
+      issuedAt: payload.issuedAt,
+      accessTokenExpiresAt: payload.accessTokenExpiresAt,
+      refreshTokenExpiresAt: payload.refreshTokenExpiresAt,
+      authEpoch: payload.authEpoch,
+      sessionVersion: payload.sessionVersion,
     };
 
     return {

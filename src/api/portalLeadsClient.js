@@ -60,3 +60,16 @@ export async function qualifyPortalLead(leadId, payload = {}) {
   }
   return body;
 }
+
+export async function createPortalLead(payload = {}) {
+  const response = await centralFetch("/api/leads", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || body?.ok === false) {
+    throw new Error(body?.error || `Lead creation failed (HTTP ${response.status})`);
+  }
+  return body;
+}

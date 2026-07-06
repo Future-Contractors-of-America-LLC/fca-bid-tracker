@@ -15,7 +15,7 @@ import {
   readEntraExchangeFromLocation,
   startEntraSignIn,
 } from "../../api/entraAuthClient";
-import { isAllowedPostLoginHref, isFounderSession, resolveWorkspaceEntryHref } from "../../customerSession";
+import { isAllowedPostLoginHref, isCteOnlySession, isFounderSession, resolveWorkspaceEntryHref } from "../../customerSession";
 import { navigateTo } from "../../navigation";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { resolveSeededCustomerAccount, resolveSeededAccountByKey } from "../../customerAccounts";
@@ -41,6 +41,12 @@ const EMPTY_FORM = {
   enabledComms: { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true },
 };
 
+function allowSeededMode() {
+  if (typeof window === "undefined") return !import.meta.env.PROD;
+  const host = (window.location.hostname || "").toLowerCase();
+  return host.includes("localhost") || host.includes("127.0.0.1");
+}
+
 function readLoginQueryState() {
   if (typeof window === "undefined") {
     return { seeded: false, autologin: false, internal: false, nextHref: null, accountKey: "test", sessionExpired: false, resetRequested: false };
@@ -48,7 +54,8 @@ function readLoginQueryState() {
   const params = new URLSearchParams(window.location.search);
   const accountParam = params.get("account");
   const accountKey = accountParam || "test";
-  const seeded = params.get("seeded") === "1" || Boolean(accountParam);
+  const seededRequested = params.get("seeded") === "1" || Boolean(accountParam);
+  const seeded = allowSeededMode() && seededRequested;
   const autologin = params.get("autologin") === "1" && seeded;
   const internal = params.get("mode") === "internal" || seeded;
   const nextHref = params.get("next");
@@ -57,7 +64,8 @@ function readLoginQueryState() {
   return { seeded, autologin, internal, nextHref, accountKey, sessionExpired, resetRequested };
 }
 
-function resolveLocalFallbackAccount(email, password) {
+function resolveLocalFallbackAccount(email, password, enabled) {
+  if (!enabled) return null;
   const fallbackAccount = resolveSeededCustomerAccount(email, password);
   if (!fallbackAccount) return null;
   return {
@@ -68,8 +76,8 @@ function resolveLocalFallbackAccount(email, password) {
   };
 }
 
-async function authenticateWorkspaceAccount(email, password) {
-  const localFallback = resolveLocalFallbackAccount(email, password);
+async function authenticateWorkspaceAccount(email, password, allowFallback = false) {
+  const localFallback = resolveLocalFallbackAccount(email, password, allowFallback);
   try {
     const response = await centralFetch("/api/customer-login", {
       method: "POST",
@@ -101,7 +109,7 @@ async function authenticateWorkspaceAccount(email, password) {
   }
 }
 
-export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
+export default function Login({ requestedPath = "/portal/platform", accessMode = "direct", defaultMode = "standard" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
   const [form, setForm] = useState(EMPTY_FORM);
   const [verificationCode, setVerificationCode] = useState("");
@@ -116,12 +124,14 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const internalMode = queryState.internal;
   const seededAccount = resolveSeededAccountByKey(queryState.accountKey);
 
+  const isCteMode = defaultMode === "cte";
+  const fallbackPath = isCteMode ? "/cte" : "/portal/platform";
   const requestedWorkspaceHref = accessMode === "protected"
     ? requestedPath
-    : queryState.nextHref || "/portal/platform";
+    : queryState.nextHref || fallbackPath;
   const nextHref = isAllowedPostLoginHref(requestedWorkspaceHref)
     ? requestedWorkspaceHref
-    : "/portal/platform";
+    : fallbackPath;
 
   useEffect(() => {
     let active = true;
@@ -215,7 +225,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     autologinAttemptedRef.current = true;
     async function runAutologin() {
       try {
-        const authenticatedAccount = await authenticateWorkspaceAccount(seededAccount.email, seededAccount.password);
+        const authenticatedAccount = await authenticateWorkspaceAccount(seededAccount.email, seededAccount.password, queryState.seeded);
         const result = login({
           email: authenticatedAccount.email || seededAccount.email,
           company: authenticatedAccount.company || seededAccount.company,
@@ -242,6 +252,10 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   }, [login, nextHref, queryState.autologin, queryState.seeded, seededAccount]);
 
   function completeLogin(authenticatedAccount) {
+    if (isCteMode && !isCteOnlySession({ ...authenticatedAccount, authenticated: true })) {
+      throw new Error("CTE student login required for this portal.");
+    }
+
     const result = login({
       email: authenticatedAccount.email || form.email,
       company: authenticatedAccount.company || form.company || "Customer Workspace",
@@ -276,7 +290,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     }
     setAuthStatus("authenticating");
     try {
-      const authenticatedAccount = await authenticateWorkspaceAccount(form.email, form.password);
+      const authenticatedAccount = await authenticateWorkspaceAccount(form.email, form.password, queryState.seeded);
       if (authenticatedAccount?.requiresVerification) {
         setPendingChallenge(authenticatedAccount);
         setVerificationCode("");
@@ -368,9 +382,11 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
           onSubmit={authStatus === "awaiting-verification" ? handleVerifyCode : handleSubmit}
           autoComplete="off"
         >
-          <h1 style={{ marginTop: 0, marginBottom: 6, fontSize: 22 }}>Sign in</h1>
+          <h1 style={{ marginTop: 0, marginBottom: 6, fontSize: 22 }}>{isCteMode ? "CTE student sign in" : "Sign in"}</h1>
           <p style={{ color: "#64748b", marginTop: 0, marginBottom: 20, lineHeight: 1.55, fontSize: 14 }}>
-            Access your FCA workspace — pipeline, projects, billing, and Academy training in one place.
+            {isCteMode
+              ? "Use your CTE student credentials to enter the protected minor-compliant learning portal."
+              : "Access your FCA workspace — pipeline, projects, billing, and Academy training in one place."}
           </p>
 
           {queryState.sessionExpired ? (
@@ -449,6 +465,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             New to FCA? <a href="/intake" style={{ color: "#1d4ed8", fontWeight: 600 }}>Get started</a>
             {" | "}
             <a href="mailto:support@futurecontractorsofamerica.com" style={{ color: "#1d4ed8" }}>Support</a>
+            {isCteMode ? " | " : null}
+            {isCteMode ? <a href="/login" style={{ color: "#1d4ed8" }}>Contractor login</a> : null}
           </p>
         </form>
 

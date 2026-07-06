@@ -1,0 +1,724 @@
+{
+  "generatedAt": "2026-07-04T23:49:32.905Z",
+  "checked": 89,
+  "failed": 0,
+  "summary": {
+    "normalized": 40,
+    "proxy-pass-through": 36,
+    "partial": 13
+  },
+  "findings": [
+    {
+      "file": "api/admin-payroll-directory.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/admin-payroll-profile.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/admin-students.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/audit-events-summary.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/audit-events-summary/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/auricrux-actions-alias/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/auricrux-actions/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": true,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": true
+    },
+    {
+      "file": "api/auricrux-speak/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/auricrux-spine/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/auricrux.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/auricrux/actions/index.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/auricrux/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/auth-audit.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/auth-boundary.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/bid-doteach-workflow/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/bids.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/bids/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/billing-summary.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/billing-summary/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/central-proxy.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/change-orders.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/change-orders/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/chps-dpa-signature.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/closeout-packages.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/closeout-packages/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/commercial-pipeline/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/commercial-store.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/customer-account-store.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/customer-auth-state.js",
+      "contractState": "partial",
+      "hasOk": true,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/customer-login.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/customer-session.js",
+      "contractState": "partial",
+      "hasOk": true,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/customer-verify.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/employee-internal-profile.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/employee-payroll-profile.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/estimates.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/estimates/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/field-photos/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/field-schedule/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/field-tasks/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/files-summary.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/files-summary/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/files.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/files/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/finance-store.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/financial-workspace/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/instructor-review.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/instructor-review/index.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/internal-company-profile.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/internal-employee-directory.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/internal-record-audit.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/job-cost.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/job-cost/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/leads-store.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/leads/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/opportunities-workspace.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/opportunities-workspace/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/opportunity-convert.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/opportunity-convert/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/pay-apps.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/pay-apps/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/portal-invoices/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/portal-messages/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/project-detail/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/project-rfis/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/project-takeoffs/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/projects-workspace.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/projects-workspace/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/projects.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/projects/[projectId].js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/projects/[projectId]/rfis/index.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/projects/[projectId]/takeoffs/index.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/projects/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/proposals.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/proposals/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/remediation-links.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/remediation-links/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/remediation-store.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/stripe-checkout/index.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/stripe-webhook/index.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/student-stores.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/support-tickets/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/verification-challenges.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/warranty-cases.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/warranty-cases/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/warranty-store.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/workflow-audit.js",
+      "contractState": "normalized",
+      "hasOk": true,
+      "hasError": true,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/workflow-audit/index.js",
+      "contractState": "proxy-pass-through",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": false,
+      "proxy": true
+    },
+    {
+      "file": "api/workflow-store.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    },
+    {
+      "file": "api/workspace-read-models.js",
+      "contractState": "partial",
+      "hasOk": false,
+      "hasError": false,
+      "hasStatus": true,
+      "proxy": false
+    }
+  ]
+}

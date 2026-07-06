@@ -1,4 +1,4 @@
 const { createCentralProxy } = require("../_lib/proxyToCentral");
-const { withSwaSessionAuth } = require("../_lib/swaSessionAuth.cjs");
 
-module.exports = withSwaSessionAuth(createCentralProxy("/estimates"));
+/** SWA proxy: forwards /api/estimates → Auricrux Central /estimates. */
+module.exports = createCentralProxy("/estimates");

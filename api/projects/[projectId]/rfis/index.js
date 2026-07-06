@@ -3,22 +3,33 @@ const { assertValid } = require('../../../_lib/validation/assertValid')
 const { makeApiSuccess, makeApiError } = require('../../../_lib/contracts/fcaContracts')
 const { getProject, listRFIs, createRFI, respondRFI } = require('../../../_lib/runtime/fcaRuntimeStore')
 
+function contractEnvelope(payload, status) {
+  const safeStatus = Number(status) || 500
+  return {
+    ...(payload || {}),
+    status: safeStatus,
+    ok: safeStatus >= 200 && safeStatus < 400,
+    error: safeStatus >= 200 && safeStatus < 400 ? null : payload?.error || 'REQUEST_FAILED',
+  }
+}
+
 module.exports = async function handler(req, res) {
   const { projectId } = req.query || {}
 
   if (!projectId) {
-    return res.status(400).json(makeApiError('MISSING_PROJECT_ID', 'projectId is required'))
+    return res.status(400).json(contractEnvelope(makeApiError('MISSING_PROJECT_ID', 'projectId is required'), 400))
   }
 
   const project = getProject(projectId)
   if (!project) {
-    return res.status(404).json(makeApiError('PROJECT_NOT_FOUND', `Project not found: ${projectId}`))
+    return res.status(404).json(contractEnvelope(makeApiError('PROJECT_NOT_FOUND', `Project not found: ${projectId}`), 404))
   }
 
   if (req.method === 'GET') {
     const items = listRFIs(projectId)
     return res.status(200).json(
-      makeApiSuccess(
+      contractEnvelope(
+        makeApiSuccess(
         {
           route: `/api/projects/${projectId}/rfis`,
           projectId,
@@ -31,6 +42,8 @@ module.exports = async function handler(req, res) {
           backingSource: 'fca-runtime-store',
         },
       ),
+      200,
+      ),
     )
   }
 
@@ -40,7 +53,8 @@ module.exports = async function handler(req, res) {
       const item = createRFI(projectId, payload)
 
       return res.status(202).json(
-        makeApiSuccess(
+        contractEnvelope(
+          makeApiSuccess(
           {
             route: `/api/projects/${projectId}/rfis`,
             projectId,
@@ -52,10 +66,12 @@ module.exports = async function handler(req, res) {
             backingSource: 'fca-runtime-store',
           },
         ),
+        202,
+        ),
       )
     } catch (error) {
       return res.status(error.statusCode || 500).json(
-        makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
+        contractEnvelope(makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details), error.statusCode || 500),
       )
     }
   }
@@ -70,7 +86,8 @@ module.exports = async function handler(req, res) {
       }
       const item = respondRFI(projectId, rfiId, { response })
       return res.status(200).json(
-        makeApiSuccess(
+        contractEnvelope(
+          makeApiSuccess(
           {
             route: `/api/projects/${projectId}/rfis`,
             projectId,
@@ -82,13 +99,15 @@ module.exports = async function handler(req, res) {
             backingSource: 'fca-runtime-store',
           },
         ),
+        200,
+        ),
       )
     } catch (error) {
       return res.status(error.statusCode || 500).json(
-        makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details),
+        contractEnvelope(makeApiError(error.code || 'UNHANDLED_ERROR', error.message, error.details), error.statusCode || 500),
       )
     }
   }
 
-  return res.status(405).json(makeApiError('METHOD_NOT_ALLOWED', 'Method not allowed'))
+  return res.status(405).json(contractEnvelope(makeApiError('METHOD_NOT_ALLOWED', 'Method not allowed'), 405))
 }

@@ -1,0 +1,239 @@
+{
+  "generatedAt": "2026-07-02T02:28:16.654Z",
+  "runId": "WFR-1782959178134",
+  "protocol": "observe-act-review",
+  "complete": true,
+  "maxRounds": 3,
+  "rounds": [
+    {
+      "round": 1,
+      "complete": true,
+      "passed": 16,
+      "total": 16,
+      "failures": []
+    }
+  ],
+  "repairPlans": [],
+  "auricruxReviews": [],
+  "finalSummary": "Workflow simulation recovered in 1 round(s). Consecutive successes: 78.",
+  "state": {
+    "runCount": 129,
+    "consecutiveSuccesses": 78,
+    "consecutiveFailures": 0,
+    "history": [
+      {
+        "at": "2026-07-02T02:28:16.654Z",
+        "runId": "WFR-1782959178134",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T17:55:14.262Z",
+        "runId": "WFR-1782928486823",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T17:32:33.825Z",
+        "runId": "WFR-1782927016965",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T15:42:47.239Z",
+        "runId": "WFR-1782920512733",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T14:24:24.882Z",
+        "runId": "WFR-1782915723251",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T12:34:43.330Z",
+        "runId": "WFR-1782909254372",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T11:03:17.488Z",
+        "runId": "WFR-1782903674719",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T09:49:02.045Z",
+        "runId": "WFR-1782899209542",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T09:36:42.999Z",
+        "runId": "WFR-1782898528696",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T08:17:41.515Z",
+        "runId": "WFR-1782893766093",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T05:22:59.434Z",
+        "runId": "WFR-1782883320599",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T02:47:18.931Z",
+        "runId": "WFR-1782873918287",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-07-01T00:06:35.237Z",
+        "runId": "WFR-1782864366012",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T22:17:07.262Z",
+        "runId": "WFR-1782857801110",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T21:36:31.508Z",
+        "runId": "WFR-1782855269578",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T20:59:39.509Z",
+        "runId": "WFR-1782853154512",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T19:50:48.832Z",
+        "runId": "WFR-1782848984104",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T18:58:04.555Z",
+        "runId": "WFR-1782845852612",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T18:14:25.238Z",
+        "runId": "WFR-1782843142753",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T18:01:53.256Z",
+        "runId": "WFR-1782842411979",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T16:25:02.271Z",
+        "runId": "WFR-1782836673485",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T15:01:46.618Z",
+        "runId": "WFR-1782831668844",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T14:55:41.491Z",
+        "runId": "WFR-1782831312211",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T14:28:12.999Z",
+        "runId": "WFR-1782829662997",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T14:11:22.464Z",
+        "runId": "WFR-1782828560943",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T13:12:36.281Z",
+        "runId": "WFR-1782825110490",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T10:56:45.948Z",
+        "runId": "WFR-1782816971214",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T07:50:40.276Z",
+        "runId": "WFR-1782805808953",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T03:45:55.257Z",
+        "runId": "WFR-1782791129226",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
+      {
+        "at": "2026-06-30T02:40:17.696Z",
+        "runId": "WFR-1782787097444",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      }
+    ],
+    "lastRunUtc": "2026-07-02T02:28:16.654Z",
+    "lastComplete": true,
+    "lastRunId": "WFR-1782959178134"
+  }
+}

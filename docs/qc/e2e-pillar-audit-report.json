@@ -1,0 +1,147 @@
+{
+  "generatedAt": "2026-07-04T18:08:51.341Z",
+  "status": "FAIL",
+  "slices": [
+    {
+      "id": "unified-project-information-management",
+      "pillar": 1,
+      "label": "Common data environment, BIM/design continuity, and workflow routing",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run validate:design-workspace",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run validate:operations-pipeline",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run verify:central-api",
+          "exitCode": 0
+        }
+      ],
+      "blockers": [],
+      "note": "Common data environment, BIM/design continuity, and workflow routing validated."
+    },
+    {
+      "id": "advanced-preconstruction-bid-intelligence",
+      "pillar": 2,
+      "label": "Bid intelligence, precon flow, and estimate routing",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run verify:central-api",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run validate:operations-pipeline",
+          "exitCode": 0
+        }
+      ],
+      "blockers": [],
+      "note": "Bid intelligence, precon flow, and estimate routing validated."
+    },
+    {
+      "id": "enterprise-financials-resource-control",
+      "pillar": 3,
+      "label": "Construction financial controls, payroll/AP/tax, and payout readiness",
+      "status": "BLOCKED",
+      "commands": [
+        {
+          "command": "npm run validate:finance-workspace",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run validate:finance-ops-readiness",
+          "exitCode": 1
+        },
+        {
+          "command": "node scripts/validate-fca-native-payments-journey.mjs",
+          "exitCode": 0
+        }
+      ],
+      "blockers": [
+        "Missing readiness keys: FCA_BANK_NAME, FCA_BANK_ROUTING_FINGERPRINT, FCA_BANK_ACCOUNT_FINGERPRINT, FCA_PAYOUT_DESTINATION_ID, FCA_PAYROLL_EMPLOYEE_MICHAEL_ID, FCA_PAYROLL_EMPLOYEE_AMANDA_ID"
+      ],
+      "note": "Construction financial controls, payroll/AP/tax, and payout readiness blocked."
+    },
+    {
+      "id": "integrated-learning-workforce-development",
+      "pillar": 4,
+      "label": "In-workflow learning and workforce certification continuity",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run qc:lms",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run smoke:central-spine",
+          "exitCode": 0
+        }
+      ],
+      "blockers": [],
+      "note": "In-workflow learning and workforce certification continuity validated."
+    },
+    {
+      "id": "intelligence-analytics-field-operations",
+      "pillar": 5,
+      "label": "Field-first operations, execution context, and predictive continuity",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run smoke:central-spine",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run validate:execution-context-propagation",
+          "exitCode": 0
+        }
+      ],
+      "blockers": [],
+      "note": "Field-first operations, execution context, and predictive continuity validated."
+    },
+    {
+      "id": "api-first-open-architecture",
+      "pillar": 6,
+      "label": "API-first architecture and M365/Graph enterprise app connection readiness",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run validate:flat-api-proxy-alignment",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run verify:central-api",
+          "exitCode": 0
+        }
+      ],
+      "blockers": [],
+      "note": "API-first architecture and M365/Graph enterprise app connection readiness validated."
+    },
+    {
+      "id": "ai-glue-system-intelligence",
+      "pillar": 7,
+      "label": "AI-as-glue reasoning across lifecycle, predictive risk, JIT assistance, admin automation, and knowledge architecture",
+      "status": "PASS",
+      "commands": [
+        {
+          "command": "npm run audit:ai-glue",
+          "exitCode": 0
+        }
+      ],
+      "blockers": [],
+      "note": "AI-as-glue reasoning across lifecycle, predictive risk, JIT assistance, admin automation, and knowledge architecture validated."
+    }
+  ],
+  "blockedSlices": [
+    {
+      "id": "enterprise-financials-resource-control",
+      "pillar": 3,
+      "blockers": [
+        "Missing readiness keys: FCA_BANK_NAME, FCA_BANK_ROUTING_FINGERPRINT, FCA_BANK_ACCOUNT_FINGERPRINT, FCA_PAYOUT_DESTINATION_ID, FCA_PAYROLL_EMPLOYEE_MICHAEL_ID, FCA_PAYROLL_EMPLOYEE_AMANDA_ID"
+      ]
+    }
+  ]
+}

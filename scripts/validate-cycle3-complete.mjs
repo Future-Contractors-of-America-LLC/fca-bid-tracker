@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 /**
- * Cycle 3 completion gate — in-house payments, Entra SSO, M365 files, transactional comms.
+ * Cycle 3 completion gate ï¿½ in-house payments, Entra SSO, M365 files, transactional comms.
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
+import { resolveMobileRoot } from "./lib/fcaMobileRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
-const mobileRoot = path.resolve(root, "..", "fca-mobile-maui-work");
+const centralRoot = resolveCentralRoot(root);
+const mobileRoot = resolveMobileRoot(root);
 let failed = 0;
 const findings = [];
 
@@ -19,13 +21,13 @@ function read(relativePath, base = root) {
 
 function pass(label, detail = "") {
   findings.push({ cycle: 3, status: "pass", label, detail });
-  console.log(`PASS: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
   findings.push({ cycle: 3, status: "fail", label, detail });
-  console.error(`FAIL: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function requireIncludes(relativePath, marker, label, base = root) {
@@ -53,9 +55,9 @@ requireIncludes("core/v1_routes.py", "customer-entra", "Entra route registered",
 
 requireIncludes("src/api/entraAuthClient.js", "startEntraSignIn", "Entra web client");
 requireIncludes("src/pages/website/Login.jsx", "Sign in with Microsoft", "Entra login UI");
-requireIncludes("src/api/stripeClient.js", "createInvoiceCheckout", "invoice checkout client");
-requireIncludes("src/pages/portal/PortalInvoiceDetail.jsx", "createInvoiceCheckout", "invoice pay UI");
-requireIncludes("src/pages/portal/PortalBilling.jsx", "createPortalBillingPortal", "billing portal UI");
+requireIncludes("src/api/fcaPaymentClient.js", "createFcaPaymentIntake", "invoice checkout client");
+requireIncludes("src/pages/portal/PortalInvoiceDetail.jsx", "createFcaPaymentIntake", "invoice pay UI");
+requireIncludes("src/pages/portal/PortalBilling.jsx", "openBillingPortal", "billing portal UI");
 requireIncludes("src/pages/portal/PortalBilling.jsx", "payInvoice", "billing list pay action");
 
 requireIncludes("src/api/m365Client.js", "listSharePointFolderItems", "SharePoint client");
@@ -89,4 +91,4 @@ if (failed > 0) {
   process.exit(1);
 }
 
-console.log(`Cycle 3 complete — ${findings.length} checks passed (100%).`);
+console.log(`Cycle 3 complete ï¿½ ${findings.length} checks passed (100%).`);

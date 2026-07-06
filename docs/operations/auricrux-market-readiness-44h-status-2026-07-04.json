@@ -1,0 +1,45 @@
+{
+  "status": "ACTIVE",
+  "mode": "continuous-autonomous-execution",
+  "windowHours": 44,
+  "startedAt": "2026-07-04T00:00:00Z",
+  "target": "Monday EOB",
+  "currentWave": "Wave 1 - Launch Baseline Lock",
+  "lastCompletedActions": [
+    "patched scripts/validate-fca-total-integrity.mjs default timeout to 1200000ms",
+    "npm run validate:auricrux-live-campaign-readiness:strict",
+    "npm run validate:claim-certainty",
+    "npm run generate:website-market-readiness-report",
+    "npm run generate:weekly-executive-scorecard",
+    "npm run validate:auricrux-live-campaign-readiness:strict (durable env source)",
+    "npm run validate:fca-total-integrity (FCA_TOTAL_INTEGRITY_CHECK_TIMEOUT_MS=1200000)",
+    "npm run validate:claim-certainty (timeout aligned)",
+    "npm run validate:fca-total-integrity (FCA_TOTAL_INTEGRITY_CHECK_TIMEOUT_MS=1200000)",
+    "npm run validate:claim-certainty",
+    "npm run validate:auricrux-live-campaign-readiness",
+    "npm run generate:website-market-readiness-report",
+    "npm run generate:weekly-executive-scorecard",
+    "npm run generate:release-communications",
+    "npm run validate:public-conversion-surface-route-truth",
+    "npm run validate:leads-messages"
+  ],
+  "latestSignals": {
+    "campaignReadiness": "PASS_WITH_WARNINGS",
+    "campaignReadinessStrict": "PASS_DURABLE_ENV_SOURCE",
+    "claimCertainty": "PASS",
+    "strictIntegrity": "PASS",
+    "saasQc": "PASS_219_0",
+    "siteMetadata": "PASS",
+    "financeOpsReadiness": "PASS",
+    "weeklyExecutiveScorecard": "GREEN",
+    "releaseComms": "GENERATED",
+    "marketReadinessReport": "GENERATED"
+  },
+  "blockers": [],
+  "nextPacket": [
+    "npm run validate:auricrux-live-campaign-readiness:strict",
+    "npm run validate:claim-certainty",
+    "npm run generate:website-market-readiness-report",
+    "npm run generate:weekly-executive-scorecard"
+  ]
+}

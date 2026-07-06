@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:34:07.140Z",
+  "generatedAt": "2026-07-05T18:34:33.192Z",
   "cycle": 3,
   "complete": true,
   "failed": 0,
@@ -44,7 +44,7 @@
       "cycle": 3,
       "status": "pass",
       "label": "invoice checkout client",
-      "detail": "src/api/stripeClient.js"
+      "detail": "src/api/fcaPaymentClient.js"
     },
     {
       "cycle": 3,

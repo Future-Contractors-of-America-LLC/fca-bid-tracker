@@ -1,0 +1,610 @@
+{
+  "generatedAt": "2026-07-01T15:33:37",
+  "total": 76,
+  "summary": [
+    {
+      "status": "implemented",
+      "count": 40
+    },
+    {
+      "status": "proxied",
+      "count": 36
+    }
+  ],
+  "domainSummary": [
+    {
+      "domain": "auricrux-governance",
+      "status": "implemented",
+      "count": 4
+    },
+    {
+      "domain": "auricrux-governance",
+      "status": "proxied",
+      "count": 7
+    },
+    {
+      "domain": "customer-os",
+      "status": "implemented",
+      "count": 8
+    },
+    {
+      "domain": "customer-os",
+      "status": "proxied",
+      "count": 2
+    },
+    {
+      "domain": "delivery-core",
+      "status": "implemented",
+      "count": 8
+    },
+    {
+      "domain": "delivery-core",
+      "status": "proxied",
+      "count": 13
+    },
+    {
+      "domain": "finance-core",
+      "status": "implemented",
+      "count": 6
+    },
+    {
+      "domain": "finance-core",
+      "status": "proxied",
+      "count": 4
+    },
+    {
+      "domain": "platform-core",
+      "status": "implemented",
+      "count": 9
+    },
+    {
+      "domain": "platform-core",
+      "status": "proxied",
+      "count": 4
+    },
+    {
+      "domain": "revenue-core",
+      "status": "implemented",
+      "count": 5
+    },
+    {
+      "domain": "revenue-core",
+      "status": "proxied",
+      "count": 6
+    }
+  ],
+  "items": [
+    {
+      "endpointFile": "api\\audit-events-summary.js",
+      "status": "implemented",
+      "domain": "auricrux-governance",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\auricrux.js",
+      "status": "implemented",
+      "domain": "auricrux-governance",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\workflow-audit.js",
+      "status": "implemented",
+      "domain": "auricrux-governance",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\workflow-store.js",
+      "status": "implemented",
+      "domain": "auricrux-governance",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\audit-events-summary\\index.js",
+      "status": "proxied",
+      "domain": "auricrux-governance",
+      "proxy": true,
+      "authWrapped": true
+    },
+    {
+      "endpointFile": "api\\auricrux-actions-alias\\index.js",
+      "status": "proxied",
+      "domain": "auricrux-governance",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\auricrux-actions\\index.js",
+      "status": "proxied",
+      "domain": "auricrux-governance",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\auricrux-speak\\index.js",
+      "status": "proxied",
+      "domain": "auricrux-governance",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\auricrux-spine\\index.js",
+      "status": "proxied",
+      "domain": "auricrux-governance",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\auricrux\\index.js",
+      "status": "proxied",
+      "domain": "auricrux-governance",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\workflow-audit\\index.js",
+      "status": "proxied",
+      "domain": "auricrux-governance",
+      "proxy": true,
+      "authWrapped": true
+    },
+    {
+      "endpointFile": "api\\admin-students.js",
+      "status": "implemented",
+      "domain": "customer-os",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\auth-audit.js",
+      "status": "implemented",
+      "domain": "customer-os",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\auth-boundary.js",
+      "status": "implemented",
+      "domain": "customer-os",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\customer-account-store.js",
+      "status": "implemented",
+      "domain": "customer-os",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\customer-auth-state.js",
+      "status": "implemented",
+      "domain": "customer-os",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\customer-login.js",
+      "status": "implemented",
+      "domain": "customer-os",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\customer-session.js",
+      "status": "implemented",
+      "domain": "customer-os",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\customer-verify.js",
+      "status": "implemented",
+      "domain": "customer-os",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\portal-messages\\index.js",
+      "status": "proxied",
+      "domain": "customer-os",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\support-tickets\\index.js",
+      "status": "proxied",
+      "domain": "customer-os",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\change-orders.js",
+      "status": "implemented",
+      "domain": "delivery-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\closeout-packages.js",
+      "status": "implemented",
+      "domain": "delivery-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\files-summary.js",
+      "status": "implemented",
+      "domain": "delivery-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\files.js",
+      "status": "implemented",
+      "domain": "delivery-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\projects-workspace.js",
+      "status": "implemented",
+      "domain": "delivery-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\projects.js",
+      "status": "implemented",
+      "domain": "delivery-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\warranty-cases.js",
+      "status": "implemented",
+      "domain": "delivery-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\warranty-store.js",
+      "status": "implemented",
+      "domain": "delivery-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\change-orders\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\closeout-packages\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\field-photos\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\field-schedule\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\field-tasks\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\files-summary\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": true
+    },
+    {
+      "endpointFile": "api\\files\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": true
+    },
+    {
+      "endpointFile": "api\\project-detail\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\project-rfis\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\project-takeoffs\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\projects-workspace\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\projects\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": true
+    },
+    {
+      "endpointFile": "api\\warranty-cases\\index.js",
+      "status": "proxied",
+      "domain": "delivery-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\billing-summary.js",
+      "status": "implemented",
+      "domain": "finance-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\finance-store.js",
+      "status": "implemented",
+      "domain": "finance-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\job-cost.js",
+      "status": "implemented",
+      "domain": "finance-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\pay-apps.js",
+      "status": "implemented",
+      "domain": "finance-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\stripe-checkout\\index.js",
+      "status": "implemented",
+      "domain": "finance-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\stripe-webhook\\index.js",
+      "status": "implemented",
+      "domain": "finance-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\billing-summary\\index.js",
+      "status": "proxied",
+      "domain": "finance-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\job-cost\\index.js",
+      "status": "proxied",
+      "domain": "finance-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\pay-apps\\index.js",
+      "status": "proxied",
+      "domain": "finance-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\portal-invoices\\index.js",
+      "status": "proxied",
+      "domain": "finance-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\central-proxy.js",
+      "status": "implemented",
+      "domain": "platform-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\chps-dpa-signature.js",
+      "status": "implemented",
+      "domain": "platform-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\commercial-store.js",
+      "status": "implemented",
+      "domain": "platform-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\leads-store.js",
+      "status": "implemented",
+      "domain": "platform-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\remediation-links.js",
+      "status": "implemented",
+      "domain": "platform-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\remediation-store.js",
+      "status": "implemented",
+      "domain": "platform-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\student-stores.js",
+      "status": "implemented",
+      "domain": "platform-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\verification-challenges.js",
+      "status": "implemented",
+      "domain": "platform-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\workspace-read-models.js",
+      "status": "implemented",
+      "domain": "platform-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\commercial-pipeline\\index.js",
+      "status": "proxied",
+      "domain": "platform-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\financial-workspace\\index.js",
+      "status": "proxied",
+      "domain": "platform-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\leads\\index.js",
+      "status": "proxied",
+      "domain": "platform-core",
+      "proxy": true,
+      "authWrapped": true
+    },
+    {
+      "endpointFile": "api\\remediation-links\\index.js",
+      "status": "proxied",
+      "domain": "platform-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\bids.js",
+      "status": "implemented",
+      "domain": "revenue-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\estimates.js",
+      "status": "implemented",
+      "domain": "revenue-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\opportunities-workspace.js",
+      "status": "implemented",
+      "domain": "revenue-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\opportunity-convert.js",
+      "status": "implemented",
+      "domain": "revenue-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\proposals.js",
+      "status": "implemented",
+      "domain": "revenue-core",
+      "proxy": false,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\bid-doteach-workflow\\index.js",
+      "status": "proxied",
+      "domain": "revenue-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\bids\\index.js",
+      "status": "proxied",
+      "domain": "revenue-core",
+      "proxy": true,
+      "authWrapped": true
+    },
+    {
+      "endpointFile": "api\\estimates\\index.js",
+      "status": "proxied",
+      "domain": "revenue-core",
+      "proxy": true,
+      "authWrapped": true
+    },
+    {
+      "endpointFile": "api\\opportunities-workspace\\index.js",
+      "status": "proxied",
+      "domain": "revenue-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\opportunity-convert\\index.js",
+      "status": "proxied",
+      "domain": "revenue-core",
+      "proxy": true,
+      "authWrapped": false
+    },
+    {
+      "endpointFile": "api\\proposals\\index.js",
+      "status": "proxied",
+      "domain": "revenue-core",
+      "proxy": true,
+      "authWrapped": true
+    }
+  ]
+}

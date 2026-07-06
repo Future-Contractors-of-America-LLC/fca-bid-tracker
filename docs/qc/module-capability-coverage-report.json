@@ -1,0 +1,1162 @@
+{
+  "ok": true,
+  "summary": {
+    "generatedAt": "2026-07-04T23:49:36.963Z",
+    "totalModules": 42,
+    "riskCounts": {
+      "blocker": 0,
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 42
+    },
+    "failingRouteCount": 0,
+    "failingRoutes": []
+  },
+  "findings": [
+    {
+      "route": "/portal",
+      "token": "overview",
+      "pageFile": "src/pages/portal/PortalWorkspaceRedirect.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-full-platform-traverse.mjs",
+          "scripts/validate-live-customer-portal-identity.mjs",
+          "scripts/validate-platform-command-center.mjs",
+          "scripts/validate-platform-qc-matrix.mjs",
+          "scripts/validate-platform-slices.mjs",
+          "scripts/validate-portal-auricrux-coverage.mjs",
+          "scripts/validate-portal-auricrux-wiring.mjs",
+          "scripts/validate-portal-narrative-ctas.mjs",
+          "scripts/validate-portal-shell-primary-actions.mjs",
+          "scripts/validate-portal-standards-freeze.mjs",
+          "scripts/validate-portal-ux-sweep.mjs"
+        ],
+        "reports": [
+          "docs/qc/full-platform-traverse-report.json",
+          "docs/qc/platform-qc-matrix-report.json",
+          "docs/qc/platform-slices-report.json",
+          "docs/qc/portal-auricrux-coverage-report.json",
+          "docs/qc/portal-standards-freeze-report.json",
+          "docs/qc/portal-standards-freeze-report.md"
+        ]
+      }
+    },
+    {
+      "route": "/portal/academy",
+      "token": "academy",
+      "pageFile": "src/pages/academy/AcademyHome.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-academy-catalog.mjs",
+          "scripts/validate-academy-ctas.mjs",
+          "scripts/validate-academy-cte-curriculum.mjs",
+          "scripts/validate-academy-excellence.mjs",
+          "scripts/validate-academy-live-api.mjs",
+          "scripts/validate-academy-media.mjs",
+          "scripts/validate-academy-native-commerce-journey.mjs",
+          "scripts/validate-academy-readiness-overlay.mjs",
+          "scripts/validate-lms-benchmark-advancement.mjs",
+          "scripts/validate-lms-repair-loop.mjs",
+          "scripts/validate-nonlms-contract-envelope.mjs"
+        ],
+        "reports": [
+          "docs/qc/academy-native-commerce-journey-report.json",
+          "docs/qc/lms-benchmark-advancement-report.json",
+          "docs/qc/lms-benchmark-advancement-report.md",
+          "docs/qc/lms-qc-report.json",
+          "docs/qc/lms-qc-report.md",
+          "docs/qc/lms-repair-latest.md",
+          "docs/qc/lms-repair-report.json",
+          "docs/qc/lms-simulation-latest.md",
+          "docs/qc/lms-simulation-report.json",
+          "docs/qc/nonlms-contract-envelope-report.json",
+          "docs/qc/nonlms-contract-envelope-report.md"
+        ]
+      }
+    },
+    {
+      "route": "/portal/admin",
+      "token": "admin",
+      "pageFile": "src/pages/portal/PortalAdmin.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-access-recovery-center.mjs",
+          "scripts/validate-admin-action-center.mjs",
+          "scripts/validate-admin-governance.mjs",
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-azure-live-governance-and-routes.mjs",
+          "scripts/validate-billing-governance.mjs",
+          "scripts/validate-file-governance.mjs",
+          "scripts/validate-support-governance.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/admin/internal",
+      "token": "internal",
+      "pageFile": "src/pages/portal/PortalInternalCompany.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-access-recovery-center.mjs",
+          "scripts/validate-admin-action-center.mjs",
+          "scripts/validate-admin-governance.mjs",
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-azure-live-governance-and-routes.mjs",
+          "scripts/validate-billing-governance.mjs",
+          "scripts/validate-file-governance.mjs",
+          "scripts/validate-support-governance.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json",
+          "docs/qc/release-communications-internal.md"
+        ]
+      }
+    },
+    {
+      "route": "/portal/admin/payroll",
+      "token": "payroll",
+      "pageFile": "src/pages/portal/PortalPayrollAdmin.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-access-recovery-center.mjs",
+          "scripts/validate-admin-action-center.mjs",
+          "scripts/validate-admin-governance.mjs",
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-azure-live-governance-and-routes.mjs",
+          "scripts/validate-billing-governance.mjs",
+          "scripts/validate-file-governance.mjs",
+          "scripts/validate-finance-ops-readiness.mjs",
+          "scripts/validate-finance-workspace.mjs",
+          "scripts/validate-support-governance.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json",
+          "docs/qc/finance-ops-readiness-report.json",
+          "docs/qc/finance-ops-readiness-report.md",
+          "docs/qc/FINANCE_SECRET_STORE_OPERATIONALIZATION.md"
+        ]
+      }
+    },
+    {
+      "route": "/portal/audit",
+      "token": "audit",
+      "pageFile": "src/pages/portal/PortalAudit.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-auricrux-file-audit-layer.mjs",
+          "scripts/validate-phase3-zero-trust-audit.mjs"
+        ],
+        "reports": [
+          "docs/qc/ai-glue-audit-report.json",
+          "docs/qc/ai-glue-audit-report.md",
+          "docs/qc/competitive-module-audit-report.json",
+          "docs/qc/competitive-module-audit-report.md",
+          "docs/qc/cross-system-integrity-audit-2026-07-02.md",
+          "docs/qc/cursor-ecosystem-vision-audit-2026-07-04.md",
+          "docs/qc/e2e-pillar-audit-report.json",
+          "docs/qc/e2e-pillar-audit-report.md",
+          "docs/qc/slice-audit-report.json",
+          "docs/qc/slice-audit-report.md"
+        ]
+      }
+    },
+    {
+      "route": "/portal/auricrux",
+      "token": "auricrux",
+      "pageFile": "src/pages/portal/PortalAuricrux.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-auricrux-action-primitives.mjs",
+          "scripts/validate-auricrux-comms-surface.mjs",
+          "scripts/validate-auricrux-context-rails.mjs",
+          "scripts/validate-auricrux-control-plane-topology.mjs",
+          "scripts/validate-auricrux-embedment.mjs",
+          "scripts/validate-auricrux-executive-command-layer.mjs",
+          "scripts/validate-auricrux-file-audit-layer.mjs",
+          "scripts/validate-auricrux-journey-layer.mjs",
+          "scripts/validate-auricrux-live-campaign-readiness.mjs",
+          "scripts/validate-auricrux-navigation-layer.mjs",
+          "scripts/validate-auricrux-project-spine.mjs",
+          "scripts/validate-auricrux-state-layer.mjs",
+          "scripts/validate-auricrux-trust-readiness-layer.mjs",
+          "scripts/validate-portal-auricrux-coverage.mjs",
+          "scripts/validate-portal-auricrux-wiring.mjs"
+        ],
+        "reports": [
+          "docs/qc/portal-auricrux-coverage-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/bids",
+      "token": "bids",
+      "pageFile": "src/pages/portal/PortalBids.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-bid-workspace.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/billing",
+      "token": "billing",
+      "pageFile": "src/pages/portal/PortalBilling.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-billing-action-center.mjs",
+          "scripts/validate-billing-governance.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/change-orders",
+      "token": "change-orders",
+      "pageFile": "src/pages/portal/PortalChangeOrders.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-change-orders-closeout.mjs"
+        ],
+        "reports": [
+          "docs/qc/change-orders-closeout-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/closeout",
+      "token": "closeout",
+      "pageFile": "src/pages/portal/PortalCloseout.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-change-orders-closeout.mjs"
+        ],
+        "reports": [
+          "docs/qc/change-orders-closeout-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/command-tower",
+      "token": "command-tower",
+      "pageFile": "src/pages/portal/PortalCommandTower.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-command-tower-decision-queue-legal.mjs"
+        ],
+        "reports": [
+          "docs/qc/command-tower-decision-queue-legal-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/communications",
+      "token": "communications",
+      "pageFile": "src/pages/portal/PortalCommunications.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-auricrux-comms-surface.mjs",
+          "scripts/validate-leads-messages.mjs"
+        ],
+        "reports": [
+          "docs/qc/leads-messages-report.json",
+          "docs/qc/release-communications-external.md",
+          "docs/qc/release-communications-internal.md"
+        ]
+      }
+    },
+    {
+      "route": "/portal/decision-queue",
+      "token": "decision-queue",
+      "pageFile": "src/pages/portal/PortalDecisionQueue.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-command-tower-decision-queue-legal.mjs"
+        ],
+        "reports": [
+          "docs/qc/command-tower-decision-queue-legal-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/design",
+      "token": "design",
+      "pageFile": "src/pages/portal/PortalDesignWorkspace.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-design-workspace.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/employee/internal",
+      "token": "internal",
+      "pageFile": "src/pages/portal/PortalEmployeeInternalProfile.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-governance.mjs",
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-azure-live-governance-and-routes.mjs",
+          "scripts/validate-billing-governance.mjs",
+          "scripts/validate-file-governance.mjs",
+          "scripts/validate-support-governance.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json",
+          "docs/qc/release-communications-internal.md"
+        ]
+      }
+    },
+    {
+      "route": "/portal/employee/payroll",
+      "token": "payroll",
+      "pageFile": "src/pages/portal/PortalEmployeePayroll.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-finance-ops-readiness.mjs",
+          "scripts/validate-finance-workspace.mjs"
+        ],
+        "reports": [
+          "docs/qc/finance-ops-readiness-report.json",
+          "docs/qc/finance-ops-readiness-report.md",
+          "docs/qc/FINANCE_SECRET_STORE_OPERATIONALIZATION.md"
+        ]
+      }
+    },
+    {
+      "route": "/portal/estimates",
+      "token": "estimates",
+      "pageFile": "src/pages/portal/PortalEstimates.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-estimates-files.mjs"
+        ],
+        "reports": [
+          "docs/qc/estimates-files-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/field-supervision",
+      "token": "field-supervision",
+      "pageFile": "src/pages/portal/PortalFieldSupervision.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-field-execution-journey.mjs"
+        ],
+        "reports": [
+          "docs/qc/field-execution-journey-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/field-tasks",
+      "token": "field-tasks",
+      "pageFile": "src/pages/portal/PortalFieldTasks.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-field-execution-journey.mjs"
+        ],
+        "reports": [
+          "docs/qc/field-execution-journey-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/files",
+      "token": "files",
+      "pageFile": "src/pages/portal/PortalFiles.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-estimates-files.mjs"
+        ],
+        "reports": [
+          "docs/qc/estimates-files-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/finance",
+      "token": "finance",
+      "pageFile": "src/pages/portal/PortalFinance.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-billing-action-center.mjs",
+          "scripts/validate-billing-governance.mjs",
+          "scripts/validate-fca-native-payments-journey.mjs",
+          "scripts/validate-finance-ops-readiness.mjs",
+          "scripts/validate-finance-workspace.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json",
+          "docs/qc/fca-native-payments-journey-report.json",
+          "docs/qc/finance-ops-readiness-report.json",
+          "docs/qc/finance-ops-readiness-report.md",
+          "docs/qc/FINANCE_SECRET_STORE_OPERATIONALIZATION.md"
+        ]
+      }
+    },
+    {
+      "route": "/portal/hiring",
+      "token": "hiring",
+      "pageFile": "src/pages/portal/PortalHiring.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-hiring-job-cost.mjs"
+        ],
+        "reports": [
+          "docs/qc/hiring-job-cost-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/immersive",
+      "token": "immersive",
+      "pageFile": "src/pages/portal/PortalImmersive.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-immersive-vr-journey.mjs"
+        ],
+        "reports": [
+          "docs/qc/immersive-vr-journey-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/job-cost",
+      "token": "job-cost",
+      "pageFile": "src/pages/portal/PortalJobCost.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-hiring-job-cost.mjs"
+        ],
+        "reports": [
+          "docs/qc/hiring-job-cost-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/leads",
+      "token": "leads",
+      "pageFile": "src/pages/portal/PortalLeads.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-leads-messages.mjs"
+        ],
+        "reports": [
+          "docs/qc/leads-messages-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/legal",
+      "token": "legal",
+      "pageFile": "src/pages/portal/PortalLegal.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-command-tower-decision-queue-legal.mjs"
+        ],
+        "reports": [
+          "docs/qc/command-tower-decision-queue-legal-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/messages",
+      "token": "messages",
+      "pageFile": "src/pages/portal/PortalMessages.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-leads-messages.mjs"
+        ],
+        "reports": [
+          "docs/qc/leads-messages-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/notifications",
+      "token": "notifications",
+      "pageFile": "src/pages/portal/PortalNotifications.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-live-notifications-route.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/operations",
+      "token": "operations",
+      "pageFile": "src/pages/portal/PortalOperations.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-operations-pipeline.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/pipeline",
+      "token": "pipeline",
+      "pageFile": "src/pages/portal/PortalPipeline.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-operations-pipeline.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/plans",
+      "token": "plans",
+      "pageFile": "src/pages/portal/PortalPlans.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-auricrux-control-plane-topology.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/platform",
+      "token": "platform",
+      "pageFile": "src/pages/portal/PlatformDashboard.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-full-platform-traverse.mjs",
+          "scripts/validate-platform-command-center.mjs",
+          "scripts/validate-platform-qc-matrix.mjs",
+          "scripts/validate-platform-slices.mjs"
+        ],
+        "reports": [
+          "docs/qc/full-platform-traverse-report.json",
+          "docs/qc/platform-qc-matrix-report.json",
+          "docs/qc/platform-slices-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/profile",
+      "token": "profile",
+      "pageFile": "src/pages/portal/PortalProfile.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-access-recovery-center.mjs",
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-live-customer-login.mjs",
+          "scripts/validate-login-action-center.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/projects",
+      "token": "projects",
+      "pageFile": "src/pages/portal/PortalProjects.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-projects-proposals-punch-rfis-scheduling.mjs"
+        ],
+        "reports": [
+          "docs/qc/projects-proposals-punch-rfis-scheduling-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/proposals",
+      "token": "proposals",
+      "pageFile": "src/pages/portal/PortalProposals.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-projects-proposals-punch-rfis-scheduling.mjs"
+        ],
+        "reports": [
+          "docs/qc/projects-proposals-punch-rfis-scheduling-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/punch",
+      "token": "punch",
+      "pageFile": "src/pages/portal/PortalPunch.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-projects-proposals-punch-rfis-scheduling.mjs"
+        ],
+        "reports": [
+          "docs/qc/projects-proposals-punch-rfis-scheduling-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/revenue-engine",
+      "token": "revenue-engine",
+      "pageFile": "src/pages/portal/PortalRevenueEngine.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-module26-revenue-autonomy.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/rfis",
+      "token": "rfis",
+      "pageFile": "src/pages/portal/PortalRfis.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-projects-proposals-punch-rfis-scheduling.mjs"
+        ],
+        "reports": [
+          "docs/qc/projects-proposals-punch-rfis-scheduling-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/scheduling",
+      "token": "scheduling",
+      "pageFile": "src/pages/portal/PortalScheduling.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-projects-proposals-punch-rfis-scheduling.mjs"
+        ],
+        "reports": [
+          "docs/qc/projects-proposals-punch-rfis-scheduling-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/support",
+      "token": "support",
+      "pageFile": "src/pages/portal/PortalSupport.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile.mjs",
+          "scripts/validate-support-action-center.mjs",
+          "scripts/validate-support-governance.mjs"
+        ],
+        "reports": [
+          "docs/qc/admin-internal-billing-design-notifications-operations-pipeline-plans-revenue-engine-support-bids-profile-report.json"
+        ]
+      }
+    },
+    {
+      "route": "/portal/warranty",
+      "token": "warranty",
+      "pageFile": "src/pages/portal/PortalWarranty.jsx",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "score": 1,
+      "risk": "low",
+      "gaps": [],
+      "evidence": {
+        "validators": [
+          "scripts/validate-warranty-service-journey.mjs"
+        ],
+        "reports": [
+          "docs/qc/warranty-service-journey-report.json"
+        ]
+      }
+    }
+  ],
+  "baseline": {
+    "allowedBlockers": [],
+    "allowedCritical": [
+      "/portal/command-tower",
+      "/portal/decision-queue",
+      "/portal/legal"
+    ],
+    "notes": "Generated from current repository state. Reduce and remove entries as modules are remediated.",
+    "generatedAt": "2026-07-04T18:45:10.285Z"
+  }
+}

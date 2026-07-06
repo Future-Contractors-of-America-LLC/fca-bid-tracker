@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 /**
- * Cycle 2 completion gate ù deeper mutation, UX polish, perf, and cross-slice continuity.
+ * Cycle 2 completion gate ÔøΩ deeper mutation, UX polish, perf, and cross-slice continuity.
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { resolveMobileRoot } from "./lib/fcaMobileRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const mobileRoot = path.resolve(root, "..", "fca-mobile-maui-work");
+const mobileRoot = resolveMobileRoot(root);
 let failed = 0;
 const findings = [];
 
@@ -18,13 +19,13 @@ function read(relativePath, base = root) {
 
 function pass(label, detail = "") {
   findings.push({ cycle: 2, status: "pass", label, detail });
-  console.log(`PASS: ${label}${detail ? ` ù ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? ` ÔøΩ ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
   findings.push({ cycle: 2, status: "fail", label, detail });
-  console.error(`FAIL: ${label}${detail ? ` ù ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ÔøΩ ${detail}` : ""}`);
 }
 
 function requireIncludes(relativePath, marker, label, base = root) {
@@ -111,4 +112,4 @@ if (failed > 0) {
   process.exit(1);
 }
 
-console.log(`Cycle 2 complete ù ${findings.length} checks passed (100%).`);
+console.log(`Cycle 2 complete ÔøΩ ${findings.length} checks passed (100%).`);

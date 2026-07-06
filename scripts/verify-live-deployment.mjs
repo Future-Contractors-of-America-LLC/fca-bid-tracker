@@ -36,15 +36,19 @@ const routes = [
   "/portal/legal",
 ];
 
+const apiRoutes = [
+  "/api/academy-lms?view=summary",
+];
+
 const attempts = Number(process.env.AURICRUX_LIVE_VERIFY_ATTEMPTS || 20);
 const delayMs = Number(process.env.AURICRUX_LIVE_VERIFY_DELAY_MS || 30000);
 const workspaceDir = path.join(process.cwd(), "workspace");
 const summaryPath = path.join(workspaceDir, "live_deployment_smoke_summary.json");
 const failuresPath = path.join(workspaceDir, "live_deployment_smoke_failures.txt");
 const targetSwaName = process.env.AURICRUX_SWA_NAME || "fca-frontend";
-const targetDefaultHost = process.env.AURICRUX_SWA_DEFAULT_HOST || "unconfigured";
-const targetGitSha = process.env.GITHUB_SHA || "unconfigured";
-const targetCommitWitnessRoute = `/commit-witness-${targetGitSha}.txt`;
+let targetDefaultHost = (process.env.AURICRUX_SWA_DEFAULT_HOST || process.env.AURICRUX_EXPECTED_DEFAULT_HOST || "").trim();
+let targetGitSha = (process.env.GITHUB_SHA || process.env.AURICRUX_EXPECTED_GIT_SHA || "").trim();
+let targetCommitWitnessRoute = targetGitSha ? `/commit-witness-${targetGitSha}.txt` : "";
 
 function parseFingerprint(text) {
   return text.trim().split("\n").reduce((acc, line) => {
@@ -76,7 +80,79 @@ async function fetchText(url, attemptNumber) {
   return { ok: response.ok, status: response.status, text };
 }
 
-function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, commitWitnessResponse, routeChecks) {
+async function resolveExpectationsFromLiveBaseline() {
+  const needsGitSha = !targetGitSha;
+  const needsDefaultHost = !targetDefaultHost;
+  if (!needsGitSha && !needsDefaultHost) {
+    if (!targetCommitWitnessRoute) {
+      targetCommitWitnessRoute = `/commit-witness-${targetGitSha}.txt`;
+    }
+    return;
+  }
+
+  const baselineHost = (
+    process.env.AURICRUX_LIVE_VERIFY_BASELINE_HOST
+    || hosts.find((host) => host === "app.futurecontractorsofamerica.com")
+    || hosts[0]
+  );
+
+  const deploymentResponse = await fetchText(`https://${baselineHost}/deployment-status.json`, 0);
+  const fingerprintResponse = await fetchText(`https://${baselineHost}/runtime-fingerprint.txt`, 0);
+
+  let deployment = null;
+  let fingerprint = null;
+
+  if (deploymentResponse.ok) {
+    try {
+      deployment = JSON.parse(deploymentResponse.text);
+    } catch {
+      deployment = null;
+    }
+  }
+
+  if (fingerprintResponse.ok) {
+    fingerprint = parseFingerprint(fingerprintResponse.text);
+  }
+
+  if (!targetGitSha) {
+    targetGitSha = String(
+      deployment?.gitSha
+      || fingerprint?.gitSha
+      || ""
+    ).trim();
+  }
+
+  if (!targetDefaultHost) {
+    targetDefaultHost = String(
+      deployment?.defaultHost
+      || fingerprint?.defaultHost
+      || ""
+    ).trim();
+  }
+
+  if (!targetCommitWitnessRoute) {
+    targetCommitWitnessRoute = String(
+      deployment?.commitWitnessRoute
+      || (targetGitSha ? `/commit-witness-${targetGitSha}.txt` : "")
+    ).trim();
+  }
+
+  if (!targetGitSha) {
+    targetGitSha = "unconfigured";
+  }
+  if (!targetDefaultHost) {
+    targetDefaultHost = "unconfigured";
+  }
+  if (!targetCommitWitnessRoute) {
+    targetCommitWitnessRoute = `/commit-witness-${targetGitSha}.txt`;
+  }
+
+  console.log(
+    `[live-deployment-verify] baseline ${baselineHost} -> gitSha=${targetGitSha}, defaultHost=${targetDefaultHost}, commitWitness=${targetCommitWitnessRoute}`,
+  );
+}
+
+function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, commitWitnessResponse, routeChecks, apiRouteChecks) {
   const failures = [];
   let deployment = null;
   let continuity = null;
@@ -162,6 +238,12 @@ function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintR
     }
   }
 
+  for (const check of apiRouteChecks) {
+    if (check.status === 404) {
+      failures.push(`https://${host}${check.route} returned 404; generated SWA Functions API is not serving`);
+    }
+  }
+
   return {
     host,
     deploymentGitSha: deployment?.gitSha || "unavailable",
@@ -169,6 +251,7 @@ function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintR
     commitWitnessRoute: deployment?.commitWitnessRoute || targetCommitWitnessRoute,
     expectedHosts: continuity?.expectedHosts || [],
     routeChecks,
+    apiRouteChecks,
     failures,
   };
 }
@@ -195,6 +278,13 @@ async function runAttempt(attemptNumber) {
       routeChecks.push({ route, status: response.status, ok: response.ok });
     }
 
+    const apiRouteChecks = [];
+    for (const route of apiRoutes) {
+      const url = `https://${host}${route}`;
+      const response = await fetchText(url, attemptNumber);
+      apiRouteChecks.push({ route, status: response.status, ok: response.status !== 404 });
+    }
+
     const indexShellResponse = await fetchText(`https://${host}/index.html`, attemptNumber);
     const spaBoot = {
       route: "/index.html",
@@ -205,7 +295,7 @@ async function runAttempt(attemptNumber) {
     };
     routeChecks.push(spaBoot);
 
-    const hostResult = evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, commitWitnessResponse, routeChecks);
+    const hostResult = evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, commitWitnessResponse, routeChecks, apiRouteChecks);
     summary.push({
       attempt: attemptNumber,
       targetSwaName,
@@ -220,6 +310,7 @@ async function runAttempt(attemptNumber) {
 }
 
 await fs.mkdir(workspaceDir, { recursive: true });
+await resolveExpectationsFromLiveBaseline();
 
 let finalSummary = [];
 let finalFailures = [];

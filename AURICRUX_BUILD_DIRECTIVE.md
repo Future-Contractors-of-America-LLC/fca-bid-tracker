@@ -22,6 +22,13 @@ Current System State:
 Current Live API:
 https://auricrux-central.azurewebsites.net/api/bids
 
+Canonical Phase Alignment:
+This file is a repo-local execution directive. Canonical phase ordering is defined in:
+- `../auricrux-central/FCA_BUILD_SEQUENCE.md`
+- `../auricrux-central/GOVERNANCE_PRECEDENCE.md`
+
+If phase labels conflict between this file and canonical governance, canonical governance wins.
+
 Primary Rule:
 Auricrux should not wait for Founder approval on every small implementation step.
 

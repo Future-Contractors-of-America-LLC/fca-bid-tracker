@@ -1,15 +1,12 @@
 {
   "contract_version": "1.0.0",
-  "action_id": "LMS-COMMERCE-FIX",
+  "action_id": null,
   "source_workflow": "lms-repair-loop",
-  "action_summary": "Academy native commerce rail regression",
-  "action_detail": "Verify /api/fca-payments/intake and academy commerce client wiring on live Central.",
-  "action_type": "bounded-corrective-step",
-  "status": "ready",
-  "priority_band": "critical",
-  "failed_step": "script:validate-academy-native-commerce-journey.mjs",
-  "target_repo": "auricrux-central",
-  "generated_at": "2026-07-01T18:00:32.218Z",
-  "updatedAtUtc": "2026-07-01T18:00:32.218Z",
-  "trigger_source": "LMS-WFR-1782928750550"
+  "action_summary": "Academy LMS simulation green � no corrective action required.",
+  "action_type": "none",
+  "status": "idle",
+  "priority_band": "normal",
+  "generated_at": "2026-07-04T01:41:33.385Z",
+  "updatedAtUtc": "2026-07-04T01:41:33.385Z",
+  "trigger_source": "LMS-WFR-1783129262134"
 }

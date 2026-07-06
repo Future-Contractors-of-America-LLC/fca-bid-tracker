@@ -1,10 +1,12 @@
 import fs from "fs/promises";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDir, "..");
-const centralRoot = path.resolve(process.env.FCA_CENTRAL_ROOT || path.join(root, "..", "auricrux-central-work"), "core");
+const centralRepoRoot = process.env.FCA_CENTRAL_ROOT ? path.resolve(process.env.FCA_CENTRAL_ROOT) : resolveCentralRoot(root);
+const centralRoot = path.resolve(centralRepoRoot, "core");
 
 import fsSync from "fs";
 if (!fsSync.existsSync(centralRoot)) {

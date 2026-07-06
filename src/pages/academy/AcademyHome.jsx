@@ -12,6 +12,7 @@ import { academyCtaSets, executiveSignalCtaSets, publicBodyCtaSets, shellHeaderC
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useAcademyLms from "../../hooks/useAcademyLms";
+import usePortalApiLoad from "../../hooks/usePortalApiLoad";
 import { flattenCatalogLessons, getProgramsByLane, OFFERING_LANES } from "../../academyOfferings";
 import { filterVisibleLanes, hasAcademySubscription } from "../../academySubscriptionAccess";
 import { academyCatalog } from "../../academyCatalog";
@@ -19,6 +20,8 @@ import { academyClassrooms } from "../../productBlueprint";
 import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
 import { academyPageStyle } from "../../academyDesignSystem";
 import { pageShellStyle } from "../../publicShellStyles";
+import { adminGovernance } from "../../adminGovernance";
+import { fetchWorkflowProjects } from "../../api/workflowClient";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -29,6 +32,7 @@ const cardStyle = {
 };
 
 const COURSE_PROGRESS_KEY = "fca_academy_customer_courses_v10";
+const JIT_CO_FIRST_USE_KEY = "fca_jit_co_first_use_v1";
 
 const classrooms = [
   {
@@ -177,11 +181,17 @@ function writeCourseProgress(progress) {
   }
 }
 
+function normalize(text) {
+  return String(text || "").toLowerCase().replace(/[^a-z0-9\s-]/g, " ").replace(/\s+/g, " ").trim();
+}
+
 export default function AcademyHome() {
   const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const { refreshSyncStamp } = useWorkspaceState();
   const { academyState, meta, advanceProgress } = useAcademyLms();
   const [progress, setProgress] = useState(() => readCourseProgress());
+  const projectsLoad = usePortalApiLoad(() => fetchWorkflowProjects(), []);
+  const projectCount = (projectsLoad.data?.items || []).length;
 
   const apiPrograms = academyState?.catalog?.programs ?? [];
   const enrollments = academyState?.enrollments ?? [];
@@ -225,6 +235,21 @@ export default function AcademyHome() {
     };
   }), [progress]);
 
+  const normalizedRole = normalize(session?.role || "owner");
+  const roleRequirements = adminGovernance.academyGovernance?.qualificationEngine?.rolePathwayRequirements || {};
+  const requiredCredentials = roleRequirements[normalizedRole]
+    || roleRequirements[Object.keys(roleRequirements).find((key) => normalizedRole.includes(key)) || ""]
+    || [];
+
+  const jitConfig = adminGovernance.academyGovernance?.qualificationEngine?.justInTimeMicroLearning?.changeOrderFirstUse;
+  const showJitCard = Boolean(jitConfig && !readLocalJson(JIT_CO_FIRST_USE_KEY, false));
+
+  const competencyPositioning = useMemo(() => {
+    const completed = Object.values(progress).filter(Boolean).length;
+    const competencyScore = catalogLessons.length ? Math.round((completed / catalogLessons.length) * 100) : 0;
+    return { completed, competencyScore };
+  }, [progress, catalogLessons.length]);
+
   return (
     <div style={{ ...pageShellStyle, ...academyPageStyle() }}>
       <ShellHeader
@@ -255,6 +280,47 @@ export default function AcademyHome() {
       <CustomerCommsLaunchpad session={session} title="Launch training and customer communications from one place" />
       <PublicCtaRow actions={publicBodyCtaSets.academyEntry} style={{ marginBottom: 24 }} />
       <AcademyLmsControlPanel />
+
+      <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bbf7d0", background: "linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)" }}>
+        <strong style={{ color: "#15803d" }}>Qualification Engine Mode</strong>
+        <p style={{ color: "#475569", lineHeight: 1.7, marginBottom: 0, marginTop: 8 }}>
+          Academy is enforcing competency-based performance: knowledge = capability = authorization.
+          Current competency score is <strong>{competencyPositioning.competencyScore}%</strong> across {catalogLessons.length} tracked lessons.
+          {` `}This workforce currently supports {projectCount} active project context(s).
+        </p>
+      </div>
+
+      {showJitCard ? (
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "#eff6ff" }}>
+          <strong style={{ color: "#1d4ed8" }}>Just-in-Time Micro-Learning</strong>
+          <p style={{ color: "#334155", lineHeight: 1.65, marginBottom: 10 }}>
+            First-use detection found a high-risk workflow that needs guided onboarding before action.
+            Launch the 2-minute Change Order governance tutorial directly from here.
+          </p>
+          <a href={jitConfig?.linkedHref || "/academy/catalog"} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
+            {jitConfig?.title || "Open guided micro-learning"}
+          </a>
+        </div>
+      ) : null}
+
+      <div style={{ ...cardStyle, marginBottom: 24 }}>
+        <h2 style={{ marginTop: 0 }}>Workflow-linked pathway assignments</h2>
+        <p style={{ color: "#475569", lineHeight: 1.65 }}>
+          Role-aware pathways auto-prioritize by operational responsibility so learning is triggered by actual execution risk.
+        </p>
+        <div style={{ display: "grid", gap: 10 }}>
+          {requiredCredentials.length ? requiredCredentials.map((credential) => (
+            <div key={credential} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: "#f8fafc" }}>
+              <strong>{credential}</strong>
+              <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
+                Required for role: {session?.role || "Owner"} · linked to live workflow authority gates.
+              </div>
+            </div>
+          )) : (
+            <div style={{ color: "#64748b" }}>No mandatory role pathway found. Default professional development sequence is active.</div>
+          )}
+        </div>
+      </div>
 
       {(apiPrograms.length > 0 || enrollments.length > 0) && (
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>

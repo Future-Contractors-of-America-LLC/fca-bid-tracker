@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-/** Immersive / VR advancement journey — portal hub, WebXR probe, session mutations. */
+/** Immersive / VR advancement journey ï¿½ portal hub, WebXR probe, session mutations. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
+const centralRoot = resolveCentralRoot(root);
 let failed = 0;
 
 function read(relativePath, base = root) {
@@ -18,7 +19,7 @@ function pass(label) {
 
 function fail(label, detail = "") {
   failed += 1;
-  console.error(`FAIL: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function requireIncludes(relativePath, marker, label, base = root) {

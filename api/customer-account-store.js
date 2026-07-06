@@ -12,6 +12,11 @@ function normalizeBoolean(value) {
   return value === true || value === "true" || value === "1";
 }
 
+function isCteStudentRole(role = "") {
+  const normalized = String(role || "").trim().toLowerCase().replace(/_/g, "-");
+  return normalized === "student" || normalized === "cte-student" || normalized === "minor" || (normalized.includes("cte") && normalized.includes("student"));
+}
+
 function normalizeManagedAccount(raw = {}, index = 0) {
   const email = String(raw.email || "").trim().toLowerCase();
   if (!email) {
@@ -28,11 +33,14 @@ function normalizeManagedAccount(raw = {}, index = 0) {
     throw new Error(`Managed customer account ${email} is missing passwordHash/password.`);
   }
 
+  const role = raw.role || "Owner / Admin";
+  const cteProgramEnabled = normalizeBoolean(raw.cteProgramEnabled) || isCteStudentRole(role);
+
   return {
     email,
     passwordHash,
     company: raw.company || raw.workspaceLabel || "FCA Customer Workspace",
-    role: raw.role || "Owner / Admin",
+    role,
     customerId: raw.customerId || `CUST-MANAGED-${index + 1}`,
     workspaceLabel: raw.workspaceLabel || raw.company || "FCA Managed Workspace",
     selectedPlan: raw.selectedPlan || "enterprise",
@@ -50,7 +58,8 @@ function normalizeManagedAccount(raw = {}, index = 0) {
       conference: raw.enabledComms?.conference !== false,
       lecture: raw.enabledComms?.lecture !== false,
     },
-    accountMode: "managed",
+    accountMode: cteProgramEnabled ? "cte-shadow" : "managed",
+    cteProgramEnabled,
   };
 }
 
@@ -59,7 +68,7 @@ export function hasManagedCustomerAccounts() {
 }
 
 export function allowSeededCustomerFallback() {
-  if (!hasManagedCustomerAccounts()) return true;
+  // Seeded fallback must be explicitly enabled in runtime configuration.
   return normalizeBoolean(process.env.FCA_ALLOW_SEEDED_LOGIN_FALLBACK);
 }
 
@@ -107,4 +116,16 @@ export function validateCustomerCredentials(email = "", password = "") {
   }
 
   return null;
+}
+
+export function customerAccountStoreEnvelope() {
+  const managedAccounts = readManagedCustomerAccounts();
+  return {
+    status: 200,
+    ok: true,
+    error: null,
+    managedAccountCount: managedAccounts.length,
+    seededFallbackEnabled: allowSeededCustomerFallback(),
+    managedAccountsConfigured: hasManagedCustomerAccounts(),
+  };
 }

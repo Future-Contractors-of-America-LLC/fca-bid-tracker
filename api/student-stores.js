@@ -110,3 +110,14 @@ export function markAccessCodeUsed(id) {
   account.accessCodeUsed = true;
   return { ...account };
 }
+
+export function studentStoreEnvelope() {
+  const items = listStudentAccounts();
+  return {
+    status: 200,
+    ok: true,
+    error: null,
+    count: items.length,
+    items,
+  };
+}

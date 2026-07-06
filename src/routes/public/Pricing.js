@@ -6,7 +6,7 @@ export default function Pricing() {
     <RouteExperienceShell
       eyebrow="Plans & Rollout"
       title="FCA pricing should move a customer from curiosity into rollout planning, workspace entry, and guided adoption."
-      lead="This route now behaves like a continuity-grade pricing surface instead of a demo placeholder, giving a clear path into contact, platform review, and workspace progression."
+      lead="This route now behaves like a continuity-grade pricing surface instead of a demo shell, giving a clear path into contact, platform review, and workspace progression."
       primaryCta={{ href: '/contact', label: 'Open Contact & Rollout' }}
       secondaryCta={{ href: '/platform', label: 'Platform Overview' }}
       cards={[

@@ -10,9 +10,8 @@ export const publicPackageRouteGroups = [
       { href: "/portal/projects", label: "Project Flow" },
       { href: "/portal/files", label: "File Spine" },
       { href: "/portal/design", label: "Design Workspace" },
-      { href: "/portal/billing", label: "Billing Command" },
-      { href: "/portal/pipeline", label: "Commercial Pipeline" },
-      { href: "/portal/legal", label: "Contractor Legal Command" }
+      { href: "/portal/billing", label: "Billing Workspace" },
+      { href: "/portal/legal", label: "Legal Workspace" }
     ]
   },
   {
@@ -22,7 +21,7 @@ export const publicPackageRouteGroups = [
     routes: [
       { href: "/legal", label: "Legal Center" },
       { href: "/legal/contractor-resources", label: "Contractor Legal Resources" },
-      { href: "/portal/legal", label: "Portal Legal Command" },
+      { href: "/portal/legal", label: "Portal Legal Workspace" },
       { href: "/privacy", label: "Privacy Policy" }
     ]
   },
@@ -59,8 +58,8 @@ export const publicPackageRouteGroups = [
     routes: [
       { href: "/portal/auricrux", label: "Auricrux Workspace" },
       { href: "/portal/messages", label: "Messages" },
-      { href: "/portal/support", label: "Support Command" },
-      { href: "/portal/admin", label: "Admin Controls" }
+      { href: "/portal/support", label: "Support" },
+      { href: "/portal/admin", label: "Admin" }
     ]
   },
   {

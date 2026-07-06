@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-/** Cycle 8 completion gate ù immersive / VR advancement + live session API proof. */
+/** Cycle 8 completion gate ÔøΩ immersive / VR advancement + live session API proof. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
+const centralRoot = resolveCentralRoot(root);
 const apiBase = (process.env.AURICRUX_CENTRAL_API || "https://api.futurecontractorsofamerica.com/api").replace(/\/$/, "");
 const demoProjectId = process.env.FCA_DEMO_PROJECT_ID || "A-117";
 
@@ -17,12 +18,12 @@ function read(relativePath, base = root) {
 }
 
 function pass(label, detail = "") {
-  console.log(`PASS: ${label}${detail ? ` ù ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? ` ÔøΩ ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
-  console.error(`FAIL: ${label}${detail ? ` ù ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ÔøΩ ${detail}` : ""}`);
 }
 
 for (const script of ["validate-cycle7-complete.mjs", "validate-immersive-vr-journey.mjs"]) {
@@ -70,7 +71,7 @@ try {
     body: JSON.stringify({
       action: "record-evidence",
       sessionId,
-      note: "Cycle 8 VR advancement smoke ù overlay alignment verified.",
+      note: "Cycle 8 VR advancement smoke ÔøΩ overlay alignment verified.",
       vrMode: "immersive-vr",
     }),
   });
@@ -100,4 +101,4 @@ if (failed > 0) {
   console.error(`Cycle 8 incomplete (${failed} failures).`);
   process.exit(1);
 }
-console.log("Cycle 8 complete ù 100%.");
+console.log("Cycle 8 complete ÔøΩ 100%.");

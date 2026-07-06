@@ -10,7 +10,7 @@ function resolveMessage(authBoundary) {
     return "Managed customer accounts are configured, but the deployment is still using a fallback session secret. Set FCA_SESSION_SECRET to finish the auth promotion.";
   }
 
-  return "Managed customer authentication is not configured yet. Seeded sandbox validation remains the active fallback mode.";
+  return "Managed customer authentication is not configured yet. Configure managed accounts and session secret to activate live sign-in.";
 }
 
 app.http("customer-auth-state", {

@@ -12,6 +12,7 @@ const {
   CATALOG_PATHWAYS,
   CATALOG_TOPICS,
   PROGRAM_CATALOG_META,
+  resolveProgramCatalogMeta,
 } = taxonomyModule;
 const { organizeCatalogHierarchy } = offeringsModule;
 
@@ -28,16 +29,15 @@ if (!academyCatalog?.programs?.length) {
 }
 
 for (const program of academyCatalog.programs) {
-  if (!PROGRAM_CATALOG_META[program.key]) {
-    failures.push(`PROGRAM_CATALOG_META missing placement for ${program.key}`);
-    continue;
-  }
-  const meta = PROGRAM_CATALOG_META[program.key];
+  const meta = resolveProgramCatalogMeta(program);
   if (!meta.pathwayKey || !meta.topicKey || !meta.enrollment) {
-    failures.push(`PROGRAM_CATALOG_META[${program.key}] is incomplete.`);
+    failures.push(`Catalog placement for ${program.key} is incomplete.`);
   }
   if (meta.enrollment.syllabusPublic !== true) {
-    failures.push(`PROGRAM_CATALOG_META[${program.key}] must keep syllabusPublic: true.`);
+    failures.push(`Catalog placement for ${program.key} must keep syllabusPublic: true.`);
+  }
+  if (!PROGRAM_CATALOG_META[program.key] && !program.pathwayKey && !program.topicKey && !program.lane) {
+    failures.push(`Catalog placement for ${program.key} must be declared statically or on the program.`);
   }
 }
 

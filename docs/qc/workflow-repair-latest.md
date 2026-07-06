@@ -1,22 +1,22 @@
 # FCA Workflow Repair Loop
 
-- **When:** 2026-07-01T17:55:14.262Z
-- **Run ID:** WFR-1782928486823
+- **When:** 2026-07-04T01:46:11.680Z
+- **Run ID:** WFR-1783129570983
 - **Protocol:** Observe -> Act -> Review (FCA/Auricrux coverage law)
-- **Result:** RECOVERED � workflow simulation green
+- **Result:** OPEN � failures remain after bounded repair
 
 ## Rounds
 
-### Round 1 � PASS (16/16 steps)
-- (no failures)
+### Round 1 � FAIL (1/2 steps)
+- Customer login: Set FCA_SIM_LOGIN_EMAIL and FCA_SIM_LOGIN_PASSWORD (QA account in docs/FOUNDER_PRODUCT_TEST_ACCESS.md)
 
 ## Repair actions taken
 
-- No automated repairs applied
+- **founder-action** Configure workflow simulation login secrets: founder-action-queued
 
 ## Summary
 
-Workflow simulation recovered in 1 round(s). Consecutive successes: 77.
+Workflow simulation still failing after 1 bounded repair round(s). 1 item(s) queued. Consecutive failures: 1.
 
 ## For the founder
 

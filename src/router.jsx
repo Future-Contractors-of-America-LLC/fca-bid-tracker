@@ -3,6 +3,7 @@ import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import NotFound from "./pages/website/NotFound";
 
 const Login = lazy(() => import("./pages/website/Login"));
+const CteLogin = lazy(() => import("./pages/website/CteLogin"));
 const AccessRestricted = lazy(() => import("./pages/website/AccessRestricted"));
 const AuricruxFrontendDock = lazy(() => import("./components/AuricruxFrontendDock"));
 import {
@@ -12,6 +13,8 @@ import {
   hydrateCustomerSession,
   canRenderProtectedRouteImmediately,
   hasCustomerProductAccess,
+  hasRoleRouteAccess,
+  isCteProtectedRoute,
   isProtectedCustomerRoute,
   resolveSessionExpiredLoginHref,
 } from "./customerSession";
@@ -42,11 +45,13 @@ export default function Router() {
   const activeSession = sessionReady ? session : readCustomerSession();
   const needsCustomerLogin = sessionReady && isProtectedCustomerRoute(normalizedPath) && !activeSession?.authenticated;
   const lacksProductAccess = sessionReady && !needsCustomerLogin && isProtectedCustomerRoute(normalizedPath) && !hasCustomerProductAccess(activeSession, normalizedPath);
+  const lacksRoleAccess = sessionReady && !needsCustomerLogin && !lacksProductAccess && isProtectedCustomerRoute(normalizedPath) && !hasRoleRouteAccess(activeSession, normalizedPath);
+  const loginPage = isCteProtectedRoute(normalizedPath) ? CteLogin : Login;
   const Page = !sessionReady
     ? LoadingRoute
     : needsCustomerLogin
-      ? Login
-      : lacksProductAccess
+      ? loginPage
+      : (lacksProductAccess || lacksRoleAccess)
         ? AccessRestricted
         : routeMatch?.Page || NotFound;
 
@@ -142,7 +147,7 @@ export default function Router() {
           requestedPath={normalizedPath}
           routeParams={routeMatch?.params || {}}
           matchedPattern={routeMatch?.pattern || normalizedPath}
-          accessMode={needsCustomerLogin ? "protected" : lacksProductAccess ? "restricted" : "direct"}
+          accessMode={needsCustomerLogin ? "protected" : (lacksProductAccess || lacksRoleAccess) ? "restricted" : "direct"}
         />
       </Suspense>
       <Suspense fallback={null}>

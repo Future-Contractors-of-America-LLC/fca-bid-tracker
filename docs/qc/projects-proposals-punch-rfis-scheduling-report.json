@@ -1,0 +1,19 @@
+{
+  "generatedAt": "2026-07-04T19:01:15.308Z",
+  "ok": true,
+  "modules": [
+    "/portal/projects",
+    "/portal/proposals",
+    "/portal/punch",
+    "/portal/rfis",
+    "/portal/scheduling"
+  ],
+  "checks": {
+    "/portal/projects": true,
+    "/portal/proposals": true,
+    "/portal/punch": true,
+    "/portal/rfis": true,
+    "/portal/scheduling": true
+  },
+  "errors": []
+}

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const localCoreRoot = path.resolve(root, "core");
@@ -8,7 +9,7 @@ const centralRoot = fs.existsSync(localCoreRoot)
   ? root
   : process.env.FCA_CENTRAL_ROOT
     ? path.resolve(process.env.FCA_CENTRAL_ROOT)
-    : path.resolve(root, "..", "auricrux-central-work");
+    : resolveCentralRoot(root);
 const errors = [];
 
 function requireFile(relativePath, baseDir = root) {

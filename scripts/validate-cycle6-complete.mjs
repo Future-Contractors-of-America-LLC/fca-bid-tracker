@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-/** Cycle 6 completion gate — execution tail (change orders, closeout, warranty) lifecycle + live API proof. */
+/** Cycle 6 completion gate ï¿½ execution tail (change orders, closeout, warranty) lifecycle + live API proof. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
+const centralRoot = resolveCentralRoot(root);
 const apiBase = (process.env.AURICRUX_CENTRAL_API || "https://api.futurecontractorsofamerica.com/api").replace(/\/$/, "");
 const demoProjectId = process.env.FCA_DEMO_PROJECT_ID || "A-117";
 
@@ -17,12 +18,12 @@ function read(relativePath, base = root) {
 }
 
 function pass(label, detail = "") {
-  console.log(`PASS: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.log(`PASS: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function fail(label, detail = "") {
   failed += 1;
-  console.error(`FAIL: ${label}${detail ? ` — ${detail}` : ""}`);
+  console.error(`FAIL: ${label}${detail ? ` ï¿½ ${detail}` : ""}`);
 }
 
 function requireIncludes(relativePath, marker, label, base = root) {
@@ -53,7 +54,7 @@ for (const row of [
   "| 16 | Closeout / Warranty |",
   "`product-complete` | `docs/qc/cycle6-completion-report.json`",
 ]) {
-  if (matrix.includes(row)) pass(`coverage matrix row: ${row.slice(0, 40)}…`);
+  if (matrix.includes(row)) pass(`coverage matrix row: ${row.slice(0, 40)}ï¿½`);
   else fail(`coverage matrix row`, row);
 }
 
@@ -94,4 +95,4 @@ if (failed > 0) {
   console.error(`Cycle 6 incomplete (${failed} failures).`);
   process.exit(1);
 }
-console.log("Cycle 6 complete — 100%.");
+console.log("Cycle 6 complete ï¿½ 100%.");

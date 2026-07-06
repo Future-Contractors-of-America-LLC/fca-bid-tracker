@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import ShellHeader from "../../components/ShellHeader";
 import ShellFooter from "../../components/ShellFooter";
 import useAcademyLms from "../../hooks/useAcademyLms";
+import usePortalApiLoad from "../../hooks/usePortalApiLoad";
 import { allowDemoFallbacks } from "../../config/productionMode";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { AAS_CONSTRUCTION_MANAGEMENT_TERMS, BS_CONSTRUCTION_MANAGEMENT_YEARS, DEGREE_PATHWAYS, DPOR_LICENSURE_UNITS, ELECTRICAL_APPRENTICESHIP_LEVELS, ELECTRICAL_LICENSURE_UNITS, LICENSURE_PATHWAYS, organizeApiCatalogByLane, APPRENTICESHIP_TRADES, APPRENTICESHIP_TRADE_LEVELS, FCA_HOWTO_SEQUENCE, PROFESSIONAL_PATHWAYS } from "../../academyOfferings";
@@ -13,6 +14,8 @@ import { TRANSCRIPT_COMPLIANCE_DISCLAIMER, buildTranscriptComplianceFootnotes, t
 import AcademyPathwaySequenceWizard from "../../components/academy/AcademyPathwaySequenceWizard";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
+import { fetchWorkflowAudit, fetchWorkflowProjects } from "../../api/workflowClient";
+import { adminGovernance } from "../../adminGovernance";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -39,6 +42,8 @@ export default function AcademyDashboard() {
   const [exportedTranscript, setExportedTranscript] = useState(null);
   const learnerId = session?.email || session?.customerId;
   const learnerName = session?.displayName || session?.company || session?.email || "Learner";
+  const projectsLoad = usePortalApiLoad(() => fetchWorkflowProjects(), []);
+  const auditLoad = usePortalApiLoad(() => fetchWorkflowAudit({}), []);
 
   const enrollments = useMemo(
     () => (academyState.enrollments || []).filter((item) => !learnerId || item.learnerId === learnerId),
@@ -53,11 +58,64 @@ export default function AcademyDashboard() {
   const apiPrograms = academyState?.catalog?.programs || [];
   const catalogIntegrity = getCatalogIntegrity(academyState);
   const lanes = organizeApiCatalogByLane(apiPrograms);
+  const projects = projectsLoad.data?.items || [];
+  const auditItems = auditLoad.data?.items || [];
   const includeOperatorGuides = hasAcademySubscription(session);
   const visiblePathwayConfigs = useMemo(
     () => listPathwayLmsConfigs().filter((config) => shouldShowMemberOnlyPathway(config.key, session)),
     [session],
   );
+
+  const credentialCatalog = useMemo(() => {
+    const rows = [
+      ...(academyState?.learners || []),
+      ...(academyState?.items || []),
+      ...(academyState?.summary?.learners || []),
+    ];
+    return rows.map((row) => ({
+      who: String(row.email || row.name || row.learnerId || row.id || "").toLowerCase(),
+      certs: Array.isArray(row.certifications)
+        ? row.certifications
+        : Array.isArray(row.credentials)
+        ? row.credentials
+        : row.badges
+        ? (Array.isArray(row.badges) ? row.badges : [row.badges])
+        : [],
+    }));
+  }, [academyState]);
+
+  const skillsGapModel = useMemo(() => {
+    const critical = adminGovernance.academyGovernance?.workforceModeling?.criticalCompetencies || [];
+    const upcomingDemand = projects.length ? Math.max(1, Math.round(projects.length * 1.2)) : 1;
+    return critical.map((competency) => {
+      const certified = credentialCatalog.filter((row) => row.certs.some((cert) => String(cert).toLowerCase().includes(competency.toLowerCase()))).length;
+      const coveragePct = Math.round((certified / upcomingDemand) * 100);
+      return {
+        competency,
+        certified,
+        demand: upcomingDemand,
+        coveragePct,
+        gap: Math.max(0, upcomingDemand - certified),
+      };
+    });
+  }, [credentialCatalog, projects.length]);
+
+  const competencyOutcome = useMemo(() => {
+    const pmCertified = credentialCatalog.filter((row) => row.certs.some((cert) => String(cert).toLowerCase().includes("certified professional"))).map((row) => row.who);
+    const rfiEvents = auditItems.filter((event) => /rfi/i.test(`${event.summary || ""} ${event.detail || ""}`));
+    const punchEvents = auditItems.filter((event) => /punch/i.test(`${event.summary || ""} ${event.detail || ""}`));
+    const certifiedEvents = auditItems.filter((event) => pmCertified.some((id) => `${event.actorId || ""} ${event.actor || ""}`.toLowerCase().includes(id))).length;
+    const baseline = Math.max(1, rfiEvents.length + punchEvents.length);
+    const certifiedRate = Math.round((certifiedEvents / baseline) * 100);
+    return {
+      baseline,
+      certifiedEvents,
+      certifiedRate,
+      signal: certifiedRate > 35 ? "Positive correlation" : "Insufficient evidence",
+    };
+  }, [auditItems, credentialCatalog]);
+
+  const authorityGates = adminGovernance.academyGovernance?.qualificationEngine?.authorityGates || [];
 
   const electricalPathway = ELECTRICAL_APPRENTICESHIP_LEVELS.map((level) => {
     const enrollment = enrollments.find((item) => item.programKey === level.key);
@@ -244,6 +302,64 @@ export default function AcademyDashboard() {
             </a>
           </section>
         ) : null}
+
+        <section style={{ ...cardStyle, marginBottom: 24, border: "1px solid #bfdbfe", background: "#eff6ff" }}>
+          <h2 style={{ marginTop: 0 }}>Credential-Gated Authority</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            Operational authority is earned through validated Academy credentials. These gates are enforced by governance policy.
+          </p>
+          <div style={{ display: "grid", gap: 8 }}>
+            {authorityGates.map((gate) => (
+              <div key={gate.action} style={{ border: "1px solid #dbeafe", borderRadius: 10, padding: 10, background: "#fff" }}>
+                <strong>{gate.action}</strong>
+                <div style={{ color: "#475569", fontSize: 13, marginTop: 4 }}>
+                  Required credential: {gate.requiredCredential}{gate.thresholdUsd ? ` · threshold ${gate.thresholdUsd.toLocaleString()} USD` : ""}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Auricrux Skills Gap Analysis</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            Capacity-to-project matching forecasts where credential coverage is below upcoming project demand.
+          </p>
+          <div style={{ display: "grid", gap: 8 }}>
+            {skillsGapModel.map((row) => (
+              <div key={row.competency} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 10, background: "#fff" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+                  <strong>{row.competency}</strong>
+                  <span style={{ color: row.coveragePct >= 70 ? "#15803d" : "#b45309", fontWeight: 700 }}>{row.coveragePct}% covered</span>
+                </div>
+                <div style={{ color: "#64748b", fontSize: 13, marginTop: 4 }}>
+                  Certified {row.certified} / Demand {row.demand} · Gap {row.gap}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ ...cardStyle, marginBottom: 24 }}>
+          <h2 style={{ marginTop: 0 }}>Competency-to-Outcome Linkage</h2>
+          <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+            Training ROI is measured by correlating credentialed leadership with quality signals across audit events.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
+            <div style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 10, background: "#fff" }}>
+              <div style={{ color: "#64748b", fontSize: 12 }}>Audit Quality Baseline</div>
+              <strong>{competencyOutcome.baseline}</strong>
+            </div>
+            <div style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 10, background: "#fff" }}>
+              <div style={{ color: "#64748b", fontSize: 12 }}>Certified-Managed Events</div>
+              <strong>{competencyOutcome.certifiedEvents}</strong>
+            </div>
+            <div style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 10, background: "#fff" }}>
+              <div style={{ color: "#64748b", fontSize: 12 }}>Correlation Signal</div>
+              <strong>{competencyOutcome.signal}</strong>
+            </div>
+          </div>
+        </section>
 
         <section style={{ ...cardStyle, marginBottom: 24 }}>
           <h2 style={{ marginTop: 0 }}>Pathway mini-LMS experiences</h2>

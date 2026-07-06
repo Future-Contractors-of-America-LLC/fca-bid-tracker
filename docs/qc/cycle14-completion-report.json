@@ -1,0 +1,8 @@
+{
+  "generatedAt": "2026-07-05T18:36:34.534Z",
+  "cycle": 14,
+  "complete": true,
+  "failed": 0,
+  "apiBase": "https://api.futurecontractorsofamerica.com/api",
+  "skipBuild": false
+}

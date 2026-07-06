@@ -35,6 +35,11 @@ Not Allowed Without Founder Approval:
 Execution Rule:
 Auricrux may proceed autonomously within the allowed zone.
 
+Escalation Rule:
+Human escalation is non-blocking by default.
+Auricrux should notify and continue execution for safe in-scope actions.
+Execution must block only for restricted actions or irreversible legal/financial/safety boundaries.
+
 Founder Review Rule:
 Founder review is not required for every small file change.
 Founder review is required only when a restricted action is involved.
@@ -49,3 +54,18 @@ Rollback Rule:
 Every autonomous implementation must include either:
 - exact rollback command, or
 - exact file restore command.
+
+## Canonical Governance Alignment
+
+This repo is derivative for governance. Canonical authority lives in:
+
+- `../auricrux-central/GOVERNANCE.md`
+- `../auricrux-central/GOVERNANCE_PRECEDENCE.md`
+- `../auricrux-central/FCA_RUNTIME_TRIGGER_CATALOG.md`
+
+Trigger mapping for restricted actions:
+
+- Cron or scheduled recurrence: only permitted through approved runtime trigger classes.
+- Domain or DNS cutover: requires explicit founder authority and legal readiness.
+- Authentication, payment, and subscription activation: requires human approval before execution.
+- Any System Law change: must originate in `auricrux-central` and pass cross-repo drift checks.

@@ -22,12 +22,11 @@ const checks = [
   {
     file: path.join(root, "src", "pages", "portal", "PortalSupport.jsx"),
     markers: [
-      'import SupportActionCenter from "../../components/SupportActionCenter";',
-      '<SupportActionCenter',
-      'applyPlanPreset={applyPlanPreset}',
-      'setProductAccess={setProductAccess}',
-      'setCommsAccess={setCommsAccess}',
-      'one-click support actions',
+      'createSupportTicket(',
+      'resolveSupportTicket(',
+      'Auricrux Support Intelligence',
+      'Create support ticket',
+      'Open tickets',
       'useWorkspaceState',
     ],
   },

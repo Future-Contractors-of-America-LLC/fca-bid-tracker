@@ -1,0 +1,82 @@
+﻿[
+    {
+        "gate":  "validate:claim-certainty",
+        "status":  "FAIL",
+        "exitCode":  1
+    },
+    {
+        "gate":  "validate:auricrux-live-campaign-readiness:strict",
+        "status":  "FAIL",
+        "exitCode":  1
+    },
+    {
+        "gate":  "validate:managed-auth-commercial-runtime",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:phase3-zero-trust-audit",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:phase4-ecosystem",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:system-security-hardening",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:matrix-shell-connector-parity",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:project-event-contracts",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:nonlms-contract-envelope",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:triad-contract",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:runtime-proof-integrity",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:runtime-smoke-proof-lane",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:runtime-smoke-report-emission",
+        "status":  "PASS",
+        "exitCode":  0
+    },
+    {
+        "gate":  "validate:azure-live-governance-and-routes",
+        "status":  "FAIL",
+        "exitCode":  1
+    },
+    {
+        "gate":  "test:ecosystem",
+        "status":  "FAIL",
+        "exitCode":  1
+    },
+    {
+        "gate":  "test:ecosystem:live",
+        "status":  "FAIL",
+        "exitCode":  1
+    }
+]

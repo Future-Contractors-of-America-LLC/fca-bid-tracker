@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { navigateTo } from "../../navigation";
+import { centralFetch } from "../../api/backendBase";
 
 export default function PortalWorkspaceRedirect({ target = "/portal/platform" }) {
   useEffect(() => {
+    centralFetch("/api/customer-session", { method: "GET" }).catch(() => null);
     navigateTo(target);
   }, [target]);
 

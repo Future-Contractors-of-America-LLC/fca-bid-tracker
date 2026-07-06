@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shared lease helpers — resolves coordination root across sibling repos."""
+"""Shared lease helpers ï¿½ resolves coordination root across sibling repos."""
 
 from __future__ import annotations
 

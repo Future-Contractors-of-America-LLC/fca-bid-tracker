@@ -103,6 +103,12 @@ for (const [index, source] of configSources.entries()) {
   for (const marker of ['"route": "/commit-witness-*.txt"', '"/*.txt"']) {
     if (!source.includes(marker)) failures.push(`${relativeFile} is missing required deployment hardening marker: ${marker}`);
   }
+  if (!source.includes('"route": "/api/*"')) {
+    failures.push(`${relativeFile} is missing generated SWA API route header coverage.`);
+  }
+  if (source.includes('"rewrite": "/api/*"')) {
+    failures.push(`${relativeFile} must not rewrite /api/* as static content because generated Azure Functions own that route space.`);
+  }
 }
 
 if (rootConfigSource !== publicConfigSource) {

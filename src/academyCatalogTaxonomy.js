@@ -94,6 +94,69 @@ export const CATALOG_PATHWAYS = [
     operatedBy: "Auricrux",
     miniLms: true,
   },
+  {
+    key: "cte",
+    label: "Virginia CTE — Architecture & Construction",
+    description: "Official Virginia VDOE CTE Resource Center Architecture & Construction Career Cluster courses, plus FCA's proposed Building Trades III apprenticeship specialization track.",
+    credentialType: "CTE Completion Certificate",
+    jurisdiction: "va",
+    vdoeCluster: "Architecture & Construction",
+    cteResourceUrl: "https://www.cteresource.org/career-clusters/architecture-construction/",
+  },
+];
+
+const CTE_TOPICS = [
+  {
+    key: "cte-design-drafting",
+    label: "Design, Drafting & Architecture",
+    description: "Architectural drawing, drafting, civil engineering (PLTW), and design foundations — grades 10–12.",
+  },
+  {
+    key: "cte-building-trades",
+    label: "Building Trades",
+    description: "Building Trades I, II, and the proposed FCA Building Trades III pre-apprenticeship capstone — grades 10–12.",
+    includesProposedTrack: true,
+  },
+  {
+    key: "cte-carpentry-woodworking",
+    label: "Carpentry & Cabinetmaking",
+    description: "Carpentry I–III and Cabinetmaking I–II trade sequences — grades 10–12.",
+  },
+  {
+    key: "cte-electrical",
+    label: "Electrical",
+    description: "Electricity I, II, and III — foundational through advanced residential and commercial electrical — grades 10–12.",
+  },
+  {
+    key: "cte-hvacr",
+    label: "HVACR",
+    description: "Heating, Ventilation, Air Conditioning, and Refrigeration I & II — grades 10–12.",
+  },
+  {
+    key: "cte-masonry",
+    label: "Masonry",
+    description: "Masonry I, II, and III trade sequences — grades 10–12.",
+  },
+  {
+    key: "cte-plumbing",
+    label: "Plumbing",
+    description: "Plumbing I and II — residential and commercial plumbing trade foundations — grades 10–12.",
+  },
+  {
+    key: "cte-construction-management",
+    label: "Construction Technology & Management",
+    description: "Construction Technology (18- and 36-week) and Building Management I, II, III — grades 10–12.",
+  },
+  {
+    key: "cte-civil-heavy",
+    label: "Civil Engineering & Heavy Construction",
+    description: "Utility/Heavy Construction I and II — grades 10–12.",
+  },
+  {
+    key: "cte-sustainability",
+    label: "Green Building & Sustainability",
+    description: "Green Building Infusion Units — grades 9–12.",
+  },
 ];
 
 const APPRENTICESHIP_TOPICS = [
@@ -292,6 +355,7 @@ function buildLicensureStateTopics() {
 }
 
 export const CATALOG_TOPICS = [
+  ...CTE_TOPICS.map((topic) => ({ ...topic, pathwayKey: "cte" })),
   ...APPRENTICESHIP_TOPICS.map((topic) => ({ ...topic, pathwayKey: "apprenticeship" })),
   ...DEGREE_TOPICS.map((topic) => ({ ...topic, pathwayKey: "degree" })),
   ...CERTIFICATION_TOPICS.map((topic) => ({ ...topic, pathwayKey: "certification" })),
@@ -639,6 +703,7 @@ function resolvePathwayKey(program) {
   if (program.pathwayKey) return program.pathwayKey;
 
   const key = program.key || "";
+  if (key.startsWith("cte-")) return "cte";
   if (resolveApprenticeshipTopic(key)) return "apprenticeship";
   if (key.startsWith("deg-") || key.startsWith("degree-")) return "degree";
   if (key.startsWith("cert-") || key.endsWith("-certification") || key === "project-controls" || key === "precon-estimating" || key === "field-readiness") {
@@ -661,6 +726,12 @@ export function resolveTopicKeyFromProgram(program) {
   const key = program.key || "";
 
   if (program.topicKey) return program.topicKey;
+
+  if (key.startsWith("cte-")) {
+    const cteTopic = CTE_TOPICS.find((t) => key.startsWith(t.key) || key.includes(t.key.replace("cte-", "")));
+    if (cteTopic) return cteTopic.key;
+    return "cte-construction-management";
+  }
 
   const apprenticeshipTopic = resolveApprenticeshipTopic(key);
   if (apprenticeshipTopic) return apprenticeshipTopic;

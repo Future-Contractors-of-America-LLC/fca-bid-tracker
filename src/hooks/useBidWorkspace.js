@@ -55,6 +55,16 @@ export default function useBidWorkspace() {
       async updateBidStatus(bidId, status, detail) {
         try {
           const payload = await mutateWorkflowBid("update-status", { bidId, status, detail });
+          if (payload?.pendingReview) {
+            setMeta((current) => ({
+              ...current,
+              persistenceState: payload.message || "Safe-Mode active: action queued for instructor review.",
+              loadError: "",
+              lastSyncedAt: new Date().toISOString(),
+            }));
+            return bids;
+          }
+
           const saved = updateBidWorkspace((current) =>
             current.map((bid) => (bid.id === bidId ? payload.bid : bid))
           );
@@ -135,6 +145,16 @@ export default function useBidWorkspace() {
       async routeBidToEstimate(bidId, detail = "Qualified opportunity routed into estimate production.") {
         try {
           const payload = await mutateWorkflowBid("route-to-estimate", { bidId, detail });
+          if (payload?.pendingReview) {
+            setMeta((current) => ({
+              ...current,
+              persistenceState: payload.message || "Safe-Mode active: action queued for instructor review.",
+              loadError: "",
+              lastSyncedAt: new Date().toISOString(),
+            }));
+            return bids;
+          }
+
           const saved = updateBidWorkspace((current) =>
             current.map((bid) => (bid.id === bidId ? payload.bid : bid))
           );
@@ -187,6 +207,16 @@ export default function useBidWorkspace() {
       async markWonAndCreateProject(bidId, detail = "Won work converted into job setup.") {
         try {
           const payload = await mutateWorkflowBid("mark-won-create-project", { bidId, detail });
+          if (payload?.pendingReview) {
+            setMeta((current) => ({
+              ...current,
+              persistenceState: payload.message || "Safe-Mode active: action queued for instructor review.",
+              loadError: "",
+              lastSyncedAt: new Date().toISOString(),
+            }));
+            return payload;
+          }
+
           const saved = updateBidWorkspace((current) =>
             current.map((bid) => (bid.id === bidId ? payload.bid : bid))
           );

@@ -1,0 +1,101 @@
+# Non-LMS Contract Envelope Report
+
+- Generated: 2026-07-04T23:49:32.905Z
+- Checked: 89
+- Failed: 0
+
+## Summary
+- normalized: 40
+- proxy-pass-through: 36
+- partial: 13
+
+## Files
+- normalized | api/admin-payroll-directory.js
+- normalized | api/admin-payroll-profile.js
+- normalized | api/admin-students.js
+- normalized | api/audit-events-summary.js
+- proxy-pass-through | api/audit-events-summary/index.js
+- proxy-pass-through | api/auricrux-actions-alias/index.js
+- proxy-pass-through | api/auricrux-actions/index.js
+- proxy-pass-through | api/auricrux-speak/index.js
+- proxy-pass-through | api/auricrux-spine/index.js
+- normalized | api/auricrux.js
+- partial | api/auricrux/actions/index.js
+- proxy-pass-through | api/auricrux/index.js
+- normalized | api/auth-audit.js
+- normalized | api/auth-boundary.js
+- proxy-pass-through | api/bid-doteach-workflow/index.js
+- partial | api/bids.js
+- proxy-pass-through | api/bids/index.js
+- normalized | api/billing-summary.js
+- proxy-pass-through | api/billing-summary/index.js
+- normalized | api/central-proxy.js
+- normalized | api/change-orders.js
+- proxy-pass-through | api/change-orders/index.js
+- normalized | api/chps-dpa-signature.js
+- normalized | api/closeout-packages.js
+- proxy-pass-through | api/closeout-packages/index.js
+- proxy-pass-through | api/commercial-pipeline/index.js
+- partial | api/commercial-store.js
+- normalized | api/customer-account-store.js
+- partial | api/customer-auth-state.js
+- normalized | api/customer-login.js
+- partial | api/customer-session.js
+- normalized | api/customer-verify.js
+- normalized | api/employee-internal-profile.js
+- normalized | api/employee-payroll-profile.js
+- normalized | api/estimates.js
+- proxy-pass-through | api/estimates/index.js
+- proxy-pass-through | api/field-photos/index.js
+- proxy-pass-through | api/field-schedule/index.js
+- proxy-pass-through | api/field-tasks/index.js
+- normalized | api/files-summary.js
+- proxy-pass-through | api/files-summary/index.js
+- normalized | api/files.js
+- proxy-pass-through | api/files/index.js
+- partial | api/finance-store.js
+- proxy-pass-through | api/financial-workspace/index.js
+- normalized | api/instructor-review.js
+- normalized | api/instructor-review/index.js
+- normalized | api/internal-company-profile.js
+- normalized | api/internal-employee-directory.js
+- normalized | api/internal-record-audit.js
+- partial | api/job-cost.js
+- proxy-pass-through | api/job-cost/index.js
+- partial | api/leads-store.js
+- proxy-pass-through | api/leads/index.js
+- normalized | api/opportunities-workspace.js
+- proxy-pass-through | api/opportunities-workspace/index.js
+- normalized | api/opportunity-convert.js
+- proxy-pass-through | api/opportunity-convert/index.js
+- normalized | api/pay-apps.js
+- proxy-pass-through | api/pay-apps/index.js
+- proxy-pass-through | api/portal-invoices/index.js
+- proxy-pass-through | api/portal-messages/index.js
+- proxy-pass-through | api/project-detail/index.js
+- proxy-pass-through | api/project-rfis/index.js
+- proxy-pass-through | api/project-takeoffs/index.js
+- normalized | api/projects-workspace.js
+- proxy-pass-through | api/projects-workspace/index.js
+- partial | api/projects.js
+- normalized | api/projects/[projectId].js
+- normalized | api/projects/[projectId]/rfis/index.js
+- normalized | api/projects/[projectId]/takeoffs/index.js
+- proxy-pass-through | api/projects/index.js
+- normalized | api/proposals.js
+- proxy-pass-through | api/proposals/index.js
+- normalized | api/remediation-links.js
+- proxy-pass-through | api/remediation-links/index.js
+- partial | api/remediation-store.js
+- normalized | api/stripe-checkout/index.js
+- normalized | api/stripe-webhook/index.js
+- normalized | api/student-stores.js
+- proxy-pass-through | api/support-tickets/index.js
+- normalized | api/verification-challenges.js
+- normalized | api/warranty-cases.js
+- proxy-pass-through | api/warranty-cases/index.js
+- partial | api/warranty-store.js
+- normalized | api/workflow-audit.js
+- proxy-pass-through | api/workflow-audit/index.js
+- partial | api/workflow-store.js
+- partial | api/workspace-read-models.js

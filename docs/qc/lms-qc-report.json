@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-06-23T21:28:47.164Z",
+  "generatedAt": "2026-07-05T18:37:44.150Z",
   "scope": "LMS depth + content QC",
-  "apiBase": "https://api.futurecontractorsofamerica.com",
-  "programCount": 15,
-  "totalLessons": 71,
-  "lessonsWithMedia": 71,
+  "apiBase": "https://auricrux-central.azurewebsites.net",
+  "programCount": 48,
+  "totalLessons": 323,
+  "lessonsWithMedia": 323,
   "lessonsMissingMedia": 0,
   "mediaCoveragePct": 100,
   "summary": {
-    "passed": 151,
+    "passed": 541,
     "failed": 0,
     "warnings": 0
   },
@@ -21,6 +21,31 @@
     {
       "status": "pass",
       "label": "script:validate-academy-catalog.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-excellence.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-cte-curriculum.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-cte-shadow-environment.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-system-security-hardening.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-phase3-zero-trust-audit.mjs",
       "detail": ""
     },
     {
@@ -41,6 +66,11 @@
     {
       "status": "pass",
       "label": "script:validate-academy-live-api.mjs",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "script:validate-academy-native-commerce-journey.mjs",
       "detail": ""
     },
     {
@@ -700,6 +730,1926 @@
     },
     {
       "status": "pass",
+      "label": "program-meta:cte-va-architectural-drawing-design-18wk",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-architectural-drawing-design-18wk",
+      "detail": "/portal/design"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8492",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8492",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8492:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8492:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8492:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8492:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-architectural-drawing-design-36wk",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-architectural-drawing-design-36wk",
+      "detail": "/portal/design"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8437",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8437",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8437:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8437:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8437:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8437:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8437:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8437:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8437:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8437:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-building-management-i",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-building-management-i",
+      "detail": "/portal/projects"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8590",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8590",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8590:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8590:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8590:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8590:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8590:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8590:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8590:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8590:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-building-management-ii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-building-management-ii",
+      "detail": "/portal/projects"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8591",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8591",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8591:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8591:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8591:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8591:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8591:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8591:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8591:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8591:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-building-management-iii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-building-management-iii",
+      "detail": "/portal/projects"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8592",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8592",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8592:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8592:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8592:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8592:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8592:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8592:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8592:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8592:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-building-trades-i",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-building-trades-i",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8515",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8515",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8515:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8515:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8515:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8515:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8515:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8515:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8515:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8515:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-building-trades-ii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-building-trades-ii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8516",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8516",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8516:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8516:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8516:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8516:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8516:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8516:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8516:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8516:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-building-trades-iii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-building-trades-iii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:CTE-VA-BUILDING-TRADES-III",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:CTE-VA-BUILDING-TRADES-III",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:CTE-VA-BUILDING-TRADES-III:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:CTE-VA-BUILDING-TRADES-III:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:CTE-VA-BUILDING-TRADES-III:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:CTE-VA-BUILDING-TRADES-III:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:CTE-VA-BUILDING-TRADES-III:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:CTE-VA-BUILDING-TRADES-III:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:CTE-VA-BUILDING-TRADES-III:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:CTE-VA-BUILDING-TRADES-III:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-cabinetmaking-i",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-cabinetmaking-i",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8604",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8604",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8604:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8604:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8604:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8604:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8604:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8604:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8604:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8604:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-cabinetmaking-ii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-cabinetmaking-ii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8605",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8605",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8605:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8605:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8605:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8605:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8605:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8605:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8605:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8605:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-carpentry-i",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-carpentry-i",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8601",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8601",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8601:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8601:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8601:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8601:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8601:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8601:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8601:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8601:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-carpentry-ii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-carpentry-ii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8602",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8602",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8602:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8602:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8602:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8602:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8602:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8602:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8602:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8602:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-carpentry-iii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-carpentry-iii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8603",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8603",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8603:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8603:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8603:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8603:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8603:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8603:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8603:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8603:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-civil-engineering-architecture-pltw",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-civil-engineering-architecture-pltw",
+      "detail": "/portal/design"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8430",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8430",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8430:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8430:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8430:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8430:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8430:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8430:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8430:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8430:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-construction-technology-36wk",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-construction-technology-36wk",
+      "detail": "/portal/projects"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8431",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8431",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8431:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8431:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8431:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8431:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8431:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8431:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8431:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8431:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-construction-technology-18wk",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-construction-technology-18wk",
+      "detail": "/portal/projects"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8432",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8432",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8432:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8432:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8432:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8432:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-drafting-36wk",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-drafting-36wk",
+      "detail": "/portal/design"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8530",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8530",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8530:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8530:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8530:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8530:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8530:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8530:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8530:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8530:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-drafting-advanced",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-drafting-advanced",
+      "detail": "/portal/design"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8562",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8562",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8562:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8562:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8562:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8562:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8562:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8562:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8562:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8562:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-drafting-architectural",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-drafting-architectural",
+      "detail": "/portal/design"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8532",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8532",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8532:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8532:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8532:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8532:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8532:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8532:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8532:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8532:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-drafting-mechanical",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-drafting-mechanical",
+      "detail": "/portal/design"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8531",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8531",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8531:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8531:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8531:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8531:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8531:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8531:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8531:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8531:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-electricity-i",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-electricity-i",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8533",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8533",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8533:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8533:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8533:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8533:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8533:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8533:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8533:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8533:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-electricity-ii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-electricity-ii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8534",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8534",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8534:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8534:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8534:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8534:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8534:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8534:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8534:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8534:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-electricity-iii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-electricity-iii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8535",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8535",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8535:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8535:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8535:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8535:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8535:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8535:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8535:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8535:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-green-building-infusion-units",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-green-building-infusion-units",
+      "detail": "/portal/audit"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-GBIU",
+      "detail": "4 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-GBIU",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-GBIU:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-GBIU:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-GBIU:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-GBIU:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-hvacr-i",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-hvacr-i",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8503",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8503",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8503:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8503:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8503:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8503:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8503:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8503:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8503:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8503:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-hvacr-ii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-hvacr-ii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8504",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8504",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8504:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8504:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8504:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8504:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8504:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8504:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8504:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8504:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-masonry-i",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-masonry-i",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8512",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8512",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8512:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8512:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8512:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8512:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8512:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8512:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8512:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8512:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-masonry-ii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-masonry-ii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8513",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8513",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8513:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8513:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8513:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8513:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8513:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8513:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8513:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8513:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-masonry-iii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-masonry-iii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8514",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8514",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8514:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8514:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8514:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8514:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8514:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8514:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8514:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8514:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-plumbing-i",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-plumbing-i",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8551",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8551",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8551:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8551:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8551:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8551:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8551:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8551:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8551:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8551:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-plumbing-ii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-plumbing-ii",
+      "detail": "/portal/field-supervision"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8552",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8552",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8552:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8552:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8552:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8552:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8552:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8552:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8552:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8552:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-utility-heavy-construction-i",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-utility-heavy-construction-i",
+      "detail": "/portal/projects"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8616",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8616",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8616:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8616:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8616:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8616:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8616:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8616:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8616:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8616:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "program-meta:cte-va-utility-heavy-construction-ii",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "program-link:cte-va-utility-heavy-construction-ii",
+      "detail": "/portal/projects"
+    },
+    {
+      "status": "pass",
+      "label": "course-lessons:VDOE-8617",
+      "detail": "8 lessons"
+    },
+    {
+      "status": "pass",
+      "label": "course-titles:VDOE-8617",
+      "detail": ""
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8617:1",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8617:2",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8617:3",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8617:4",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8617:5",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8617:6",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8617:7",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
+      "label": "lesson-media:VDOE-8617:8",
+      "detail": "lecture+lab"
+    },
+    {
+      "status": "pass",
       "label": "pathways",
       "detail": "3 defined"
     },
@@ -736,7 +2686,7 @@
     {
       "status": "pass",
       "label": "api:academy-enrollments",
-      "detail": "9 enrollments"
+      "detail": "11 enrollments"
     },
     {
       "status": "pass",
@@ -768,5 +2718,41 @@
       "label": "lms-surface:src/api/academyClient.js",
       "detail": ""
     }
-  ]
+  ],
+  "benchmark": {
+    "generatedAt": "2026-07-05T18:37:44.149Z",
+    "mode": "advancement-only",
+    "benchmarkComparators": [
+      "Columbia University",
+      "Western Governors University",
+      "Canvas LMS (Instructure)",
+      "Blackboard Learn (Ultra Experience)",
+      "D2L Brightspace",
+      "Moodle",
+      "NCCER",
+      "Pearson"
+    ],
+    "minimums": {
+      "quality": 9.7,
+      "capability": 9.7,
+      "customerExperience": 9.7,
+      "visualPresentation": 9.7,
+      "composite": 9.7
+    },
+    "scores": {
+      "quality": 9.9,
+      "capability": 9.9,
+      "customerExperience": 9.9,
+      "visualPresentation": 9.9,
+      "composite": 9.9
+    },
+    "status": "PASS",
+    "marketDominanceClaim": {
+      "ready": true,
+      "externalEvidenceCount": 5,
+      "requiredEvidenceCount": 5,
+      "statement": "Evidence threshold met for comparative claim publication."
+    },
+    "misses": []
+  }
 }

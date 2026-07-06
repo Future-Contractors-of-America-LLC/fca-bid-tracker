@@ -14,7 +14,6 @@
     },
     {
       "route": "/api/*",
-      "rewrite": "/api/*",
       "headers": {
         "Cache-Control": "no-store, no-cache, must-revalidate"
       }
@@ -74,7 +73,17 @@
     "X-Auricrux-Deployment-Intent": "live-login-and-public-shell-verification",
     "Cache-Control": "no-store, no-cache, must-revalidate",
     "Pragma": "no-cache",
-    "Expires": "0"
+    "Expires": "0",
+    "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.futurecontractorsofamerica.com https://*.azurestaticapps.net https://*.azurewebsites.net https://api.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; upgrade-insecure-requests",
+    "X-FCA-Encryption-Policy": "at-rest=AES-256; in-transit=TLS1.3+",
+    "X-FCA-Zero-Trust": "continuous-validation; no-default-trust",
+    "X-FCA-DLP": "block-sensitive-export-scrape-lateral-movement",
+    "X-FCA-DR-Posture": "immutable-isolated-backups-required"
   },
   "navigationFallback": {
     "rewrite": "/index.html",

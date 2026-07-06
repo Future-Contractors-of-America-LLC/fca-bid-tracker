@@ -1,0 +1,267 @@
+{
+  "meta": {
+    "generatedBy": "src/cteExternalAlignmentSources.js",
+    "sourceGovernance": "external resources are reference and alignment sources only",
+    "fcaMaterialStandard": "FCA Academy honors-collegiate seminar standard, designed to meet or exceed Ivy League undergraduate rigor while remaining age-appropriate for CTE learners.",
+    "sourceCount": 14
+  },
+  "originalityPolicy": {
+    "policyKey": "fca-cte-original-materials-reference-only-alignment",
+    "ownership": "FCA original curriculum, assessments, labs, rubrics, lectures, and learner artifacts",
+    "externalUse": "reference-and-alignment-only",
+    "doNotCopyExternalCurriculumText": true,
+    "doNotIngestRestrictedBlueprintCompetencies": true,
+    "licensedContentRequiresWrittenAgreement": true,
+    "requiredAttribution": "Store source name, URL, artifact type, access status, retrieval evidence, and alignment purpose only.",
+    "academicStandard": "FCA Academy honors-collegiate seminar standard, designed to meet or exceed Ivy League undergraduate rigor while remaining age-appropriate for CTE learners."
+  },
+  "academicRigorRequirements": [
+    "Primary-source technical reading with annotated evidence notes",
+    "Quantitative reasoning through estimates, measurements, schedules, tolerances, loads, energy, or production rates",
+    "Code, standard, specification, or drawing interpretation with defensible citations",
+    "Original design, field, or shop lab artifact with revision history and instructor critique",
+    "Technical writing using claim-evidence-reasoning and professional documentation conventions",
+    "Seminar-style oral defense, peer critique, and reflective revision",
+    "Ethics, safety, labor, accessibility, sustainability, and civic impact analysis",
+    "Capstone performance task assessed by analytic rubric at honors-collegiate expectations"
+  ],
+  "sources": [
+    {
+      "id": "va-vdoe-cte-resource-center",
+      "name": "Virginia CTE Resource Center - Architecture & Construction",
+      "owner": "Virginia Department of Education / Virginia CTE Resource Center",
+      "sourceType": "official-state-doe",
+      "jurisdiction": "VA",
+      "sourceUrl": "https://www.cteresource.org/career-clusters/architecture-construction/",
+      "artifactTypes": [
+        "course metadata",
+        "SCR availability",
+        "Canvas curriculum link availability",
+        "common cartridge availability",
+        "industry credentials"
+      ],
+      "accessStatus": "public-metadata-mixed-public-artifacts",
+      "ingestionPolicy": "metadata-and-artifact-witness-only",
+      "alignmentUse": "Virginia course adoption metadata, SCR requirement tracking, and official source verification"
+    },
+    {
+      "id": "fl-fdoe-architecture-construction-frameworks",
+      "name": "Florida DOE 2024-25 Architecture & Construction Curriculum Frameworks",
+      "owner": "Florida Department of Education",
+      "sourceType": "official-state-doe",
+      "jurisdiction": "FL",
+      "sourceUrl": "https://www.fldoe.org/academics/career-adult-edu/career-tech-edu/curriculum-frameworks/2024-25-frameworks/architecture-construction.stml",
+      "artifactTypes": [
+        "RTF curriculum framework index",
+        "course and program codes",
+        "secondary programs",
+        "career certificate programs",
+        "degree/certificate programs",
+        "supplemental OJT courses"
+      ],
+      "accessStatus": "public-index-direct-file-access-may-be-blocked",
+      "ingestionPolicy": "metadata-and-source-url-only-until-artifact-access-is-confirmed",
+      "alignmentUse": "Cross-state course coverage and program-code comparison for building trades, drafting, construction management, electrical, HVACR, masonry, plumbing, and carpentry"
+    },
+    {
+      "id": "tx-tea-programs-of-study",
+      "name": "Texas TEA CTE Programs of Study - Architecture & Construction",
+      "owner": "Texas Education Agency",
+      "sourceType": "official-state-doe",
+      "jurisdiction": "TX",
+      "sourceUrl": "https://tea.texas.gov/student-readiness-and-high-school/college-career-and-military-prep/career-and-technical-education/cte-programs-study",
+      "artifactTypes": [
+        "program-of-study PDFs",
+        "course sequences",
+        "industry-based certification alignment",
+        "work-based learning references"
+      ],
+      "accessStatus": "public",
+      "ingestionPolicy": "metadata-crosswalk-and-artifact-witness-only",
+      "alignmentUse": "Reference pathways for architectural drafting and design, carpentry, construction management and inspection, electrical, HVAC and sheet metal, masonry, and plumbing/pipefitting"
+    },
+    {
+      "id": "tx-tea-cte-teks",
+      "name": "Texas Essential Knowledge and Skills for CTE",
+      "owner": "Texas Education Agency",
+      "sourceType": "official-state-doe",
+      "jurisdiction": "TX",
+      "sourceUrl": "https://tea.texas.gov/curriculum-and-instruction/curriculum-standards/teks-review/career-and-technical-education-texas-essential-knowledge-and-skills",
+      "artifactTypes": [
+        "TEKS standards PDFs",
+        "Architecture and Construction recommendations",
+        "course standard references"
+      ],
+      "accessStatus": "public",
+      "ingestionPolicy": "standard-reference-and-citation-only",
+      "alignmentUse": "External standards crosswalk and evidence that FCA original outcomes meet or exceed public CTE standards"
+    },
+    {
+      "id": "tx-tea-industry-based-certifications",
+      "name": "Texas TEA Industry-Based Certifications",
+      "owner": "Texas Education Agency",
+      "sourceType": "official-state-doe",
+      "jurisdiction": "TX",
+      "sourceUrl": "https://tea.texas.gov/student-readiness-and-high-school/college-career-and-military-prep/career-and-technical-education/industry-based-certifications",
+      "artifactTypes": [
+        "IBC list",
+        "program-of-study crosswalk",
+        "credential accountability references"
+      ],
+      "accessStatus": "public",
+      "ingestionPolicy": "credential-metadata-and-crosswalk-only",
+      "alignmentUse": "Credential-option comparison and accountability-aligned credential readiness"
+    },
+    {
+      "id": "nc-dpi-cte-curriculum",
+      "name": "North Carolina DPI CTE Curriculum and Course Inventory",
+      "owner": "North Carolina Department of Public Instruction",
+      "sourceType": "official-state-doe",
+      "jurisdiction": "NC",
+      "sourceUrl": "https://www.dpi.nc.gov/districts-schools/classroom-resources/career-and-technical-education/curriculum",
+      "artifactTypes": [
+        "course inventory PDF",
+        "curriculum management references",
+        "cluster references"
+      ],
+      "accessStatus": "public",
+      "ingestionPolicy": "course-inventory-metadata-and-source-url-only",
+      "alignmentUse": "Course inventory comparison and gap analysis against FCA Academy CTE course families"
+    },
+    {
+      "id": "nc-dpi-cte-course-management-system",
+      "name": "North Carolina CTE Course Management System",
+      "owner": "North Carolina Department of Public Instruction / NC State hosted CMS",
+      "sourceType": "official-state-doe-course-management",
+      "jurisdiction": "NC",
+      "sourceUrl": "https://center.ncsu.edu/nccte-cms/index.php",
+      "artifactTypes": [
+        "course information",
+        "course standards",
+        "course credentials",
+        "pathways"
+      ],
+      "accessStatus": "public-web-application",
+      "ingestionPolicy": "metadata-and-manual-artifact-witness-pending-crawler-support",
+      "alignmentUse": "Reference course information, standards, and credentials without copying curriculum body text"
+    },
+    {
+      "id": "ca-cde-model-curriculum-standards",
+      "name": "California CDE CTE Model Curriculum Standards",
+      "owner": "California Department of Education",
+      "sourceType": "official-state-doe",
+      "jurisdiction": "CA",
+      "sourceUrl": "https://www.cde.ca.gov/ci/ct/sf/ctemcstandards.asp",
+      "artifactTypes": [
+        "sector standards PDFs",
+        "Building and Construction Trades",
+        "Engineering and Architecture",
+        "career ready practice standards"
+      ],
+      "accessStatus": "public",
+      "ingestionPolicy": "sector-standard-reference-and-crosswalk-only",
+      "alignmentUse": "Rigor benchmark for sector standards, engineering/architecture integration, and career-ready practice alignment"
+    },
+    {
+      "id": "pa-doe-career-technical-education",
+      "name": "Pennsylvania DOE Career and Technical Education",
+      "owner": "Pennsylvania Department of Education",
+      "sourceType": "official-state-doe",
+      "jurisdiction": "PA",
+      "sourceUrl": "https://www.pa.gov/agencies/education/programs-and-services/instruction/elementary-and-secondary-education/career-and-technical-education",
+      "artifactTypes": [
+        "programs of study",
+        "SOAR references",
+        "industry-recognized credentials",
+        "work-based learning toolkit"
+      ],
+      "accessStatus": "public-new-portal",
+      "ingestionPolicy": "metadata-and-source-url-only-pending-second-pass-crawl",
+      "alignmentUse": "Cross-state CTE program approval, credential, and work-based learning comparison"
+    },
+    {
+      "id": "ga-doe-ctae",
+      "name": "Georgia DOE Career, Technical, and Agricultural Education",
+      "owner": "Georgia Department of Education",
+      "sourceType": "official-state-doe",
+      "jurisdiction": "GA",
+      "sourceUrl": "https://gadoe.org/ctae/",
+      "artifactTypes": [
+        "career clusters",
+        "pathways",
+        "work-based learning diploma references",
+        "CTSO references"
+      ],
+      "accessStatus": "public-portal",
+      "ingestionPolicy": "metadata-and-source-url-only-pending-second-level-crawl",
+      "alignmentUse": "Regional CTE pathway comparison and work-based learning policy monitoring"
+    },
+    {
+      "id": "nccer-craft-catalog",
+      "name": "NCCER Craft Catalog and Programs & Crafts",
+      "owner": "NCCER",
+      "sourceType": "industry-curriculum-provider",
+      "jurisdiction": "US",
+      "sourceUrl": "https://www.nccer.org/craft-catalog/",
+      "artifactTypes": [
+        "craft catalog",
+        "craft titles",
+        "program pages",
+        "order books/modules references"
+      ],
+      "accessStatus": "public-catalog-licensed-curriculum",
+      "ingestionPolicy": "metadata-source-url-and-credential-alignment-only-no-curriculum-copying",
+      "alignmentUse": "Industry-recognized craft pathway alignment and credential ecosystem mapping"
+    },
+    {
+      "id": "nccer-assessments-accreditation",
+      "name": "NCCER Assessments and Accreditation Standards",
+      "owner": "NCCER",
+      "sourceType": "industry-credential-and-accreditation-provider",
+      "jurisdiction": "US",
+      "sourceUrl": "https://www.nccer.org/assessments/",
+      "artifactTypes": [
+        "knowledge assessments",
+        "performance verifications",
+        "training plans",
+        "industry-recognized credentials",
+        "accreditation standards references"
+      ],
+      "accessStatus": "public-overview-licensed-testing-ecosystem",
+      "ingestionPolicy": "overview-metadata-and-requirement-reference-only",
+      "alignmentUse": "Assessment architecture and credential readiness benchmarking without copying protected tests or modules"
+    },
+    {
+      "id": "nocti-blueprints",
+      "name": "NOCTI Blueprint Index and Credential Categories",
+      "owner": "NOCTI",
+      "sourceType": "credential-blueprint-provider",
+      "jurisdiction": "US",
+      "sourceUrl": "https://www.nocti.org/credentials/blueprints/",
+      "artifactTypes": [
+        "credential categories",
+        "blueprint index",
+        "sample question and performance-job references"
+      ],
+      "accessStatus": "public-index-copyright-restricted-blueprints",
+      "ingestionPolicy": "credential-metadata-only-do-not-reproduce-blueprint-competencies",
+      "alignmentUse": "Credential category and assessment-design awareness; no incorporation of protected blueprint competencies"
+    },
+    {
+      "id": "pearson-nccer-course-platforms",
+      "name": "Pearson / NCCER Course Platform References",
+      "owner": "Pearson and/or NCCER depending on product",
+      "sourceType": "licensed-course-platform-provider",
+      "jurisdiction": "US",
+      "sourceUrl": "https://www.pearson.com/en-us.html",
+      "artifactTypes": [
+        "course platform references",
+        "publisher product metadata",
+        "licensed curriculum references"
+      ],
+      "accessStatus": "manual-verification-or-licensed-access-required",
+      "ingestionPolicy": "source-url-and-contract-status-only-until-written-rights-exist",
+      "alignmentUse": "Publisher-market awareness only; FCA curriculum remains original unless a written license permits deeper use"
+    }
+  ]
+}

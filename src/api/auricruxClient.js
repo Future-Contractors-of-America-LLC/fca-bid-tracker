@@ -1,4 +1,9 @@
 import { centralFetch } from "./backendBase";
+import { isCteSafeModeEnabled } from "../lib/cteSafeModeConfig";
+import {
+  buildStaticAuricruxMessagePayload,
+  buildStaticTrainingStatus,
+} from "../lib/educationalLogicProvider";
 
 async function readJsonSafe(response) {
   const contentType = response.headers.get("content-type") || "";
@@ -16,6 +21,14 @@ function formatApiError(response, payload, fallbackMessage) {
 }
 
 export async function sendAuricruxMessage({ message, route, context, tenantId }) {
+  if (isCteSafeModeEnabled()) {
+    return buildStaticAuricruxMessagePayload({
+      message,
+      route,
+      context: { ...(context || {}), tenantId },
+    });
+  }
+
   const response = await centralFetch("/api/auricrux", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -29,6 +42,22 @@ export async function sendAuricruxMessage({ message, route, context, tenantId })
 }
 
 export async function sendAuricruxFeedback({ rating, message, reply, route, context, correction }) {
+  if (isCteSafeModeEnabled()) {
+    return {
+      ok: true,
+      deterministic: true,
+      storedLocally: true,
+      feedback: {
+        rating,
+        message,
+        reply,
+        route,
+        context,
+        correction,
+      },
+    };
+  }
+
   const response = await centralFetch("/api/auricrux", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -42,6 +71,10 @@ export async function sendAuricruxFeedback({ rating, message, reply, route, cont
 }
 
 export async function fetchAuricruxTrainingStatus() {
+  if (isCteSafeModeEnabled()) {
+    return buildStaticTrainingStatus();
+  }
+
   const response = await centralFetch("/api/auricrux?scope=training", { method: "GET" });
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {

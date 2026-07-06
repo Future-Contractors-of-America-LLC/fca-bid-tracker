@@ -1,0 +1,34 @@
+{
+  "generatedAt": "2026-07-04T23:49:37.065Z",
+  "status": "PASS",
+  "checks": {
+    "moduleCapabilityCoverage": true,
+    "portalUxSweep": true,
+    "allRoutesLowRisk": true,
+    "allRoutesStandardsCompliant": true
+  },
+  "totals": {
+    "routeCount": 42,
+    "nonCompliantRouteCount": 0,
+    "blockerCount": 0
+  },
+  "riskCounts": {
+    "blocker": 0,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 42
+  },
+  "nonCompliantRoutes": [],
+  "prerequisiteRuns": [
+    {
+      "command": "node scripts/validate-module-capability-coverage.mjs",
+      "exitCode": 0
+    },
+    {
+      "command": "node scripts/validate-portal-ux-sweep.mjs",
+      "exitCode": 0
+    }
+  ],
+  "blockers": []
+}

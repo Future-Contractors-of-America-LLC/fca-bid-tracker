@@ -54,6 +54,15 @@ export function verifyLoginChallenge(challengeId, code) {
   return challenge.account;
 }
 
+export function verificationChallengeEnvelope(challengeState = null) {
+  return {
+    status: 200,
+    ok: true,
+    error: null,
+    challengeState,
+  };
+}
+
 function maskEmail(email) {
   const [local, domain] = String(email || "").split("@");
   if (!domain) return email;

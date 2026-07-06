@@ -1,11 +1,13 @@
 #!/usr/bin/env node
-/** Cycle 13 — per-slice QC matrix across website, portal, central, and mobile. */
+/** Cycle 13 ï¿½ per-slice QC matrix across website, portal, central, and mobile. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { resolveMobileRoot } from "./lib/fcaMobileRoot.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const mobileRoot = resolveMobileRoot(root);
 
 const SLICE_MATRIX = [
   { slice: "02-16-slices", scripts: ["validate-platform-slices.mjs"] },
@@ -16,7 +18,14 @@ const SLICE_MATRIX = [
   { slice: "12-warranty", scripts: ["validate-warranty-service-journey.mjs"] },
   { slice: "13-platform", scripts: ["validate-portal-auricrux-coverage.mjs", "validate-fca-sovereignty.mjs"] },
   { slice: "14-auricrux", scripts: ["validate-portal-auricrux-wiring.mjs"] },
-  { slice: "15-mobile", marker: { path: "../fca-mobile-maui-work/src/FcaMobile/Services/FcaConfig.cs", token: "checkout?plan=pilot" } },
+  {
+    slice: "15-mobile",
+    marker: {
+      path: path.join(mobileRoot, "src", "FcaMobile", "Services", "FcaConfig.cs"),
+      token: "checkout?plan=pilot",
+      isAbsolute: true,
+    },
+  },
   { slice: "traverse", scripts: ["validate-full-platform-traverse.mjs"] },
 ];
 
@@ -43,7 +52,7 @@ for (const entry of SLICE_MATRIX) {
     }
   }
   if (entry.marker) {
-    const full = path.resolve(root, entry.marker.path);
+    const full = entry.marker.isAbsolute ? entry.marker.path : path.resolve(root, entry.marker.path);
     if (!fs.existsSync(full)) {
       fail(entry.slice, entry.marker.path, "file missing");
       continue;

@@ -1,4 +1,8 @@
 import crypto from "node:crypto";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+const { writeTamperEvidentSecurityEvent } = require("./_lib/runtime/securityHardeningControls.js");
 
 /**
  * Auth event audit logger for FCA/CHPS compliance.
@@ -49,6 +53,26 @@ function resolveIp(request) {
 export function writeAuthAuditEvent({ eventType, role = null, token = null, request = null, reason = null }) {
   const log = getAuditLog();
   const ip = resolveIp(request);
+  const securityEvent = writeTamperEvidentSecurityEvent({
+    eventType: `auth_${eventType}`,
+    action: "auth-boundary",
+    actorType: "human-user",
+    principal: {
+      authenticated: eventType === "login_success",
+      actorType: "human-user",
+      role: role || "anonymous",
+      route: "auth-boundary",
+      tenantHash: null,
+      actorHash: sessionIdPrefix(token) || hashIp(ip) || null,
+      trustState: eventType === "login_success" ? "continuously-validated" : "untrusted",
+    },
+    resourcePath: "/customer-login",
+    outcome: eventType === "login_success" ? "allowed" : "blocked",
+    severity: eventType === "login_success" ? "info" : "medium",
+    reason,
+    payload: { eventType, role, ipHash: hashIp(ip), sessionIdPrefix: sessionIdPrefix(token) },
+    request,
+  });
   const entry = {
     id: `AUTH-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
     eventType,
@@ -57,6 +81,10 @@ export function writeAuthAuditEvent({ eventType, role = null, token = null, requ
     ipHash: hashIp(ip),
     reason: reason || null,
     timestamp: new Date().toISOString(),
+    tamperEvident: true,
+    previousHash: securityEvent.previousHash,
+    eventHash: securityEvent.eventHash,
+    immutableSink: securityEvent.immutableSink,
   };
   log.unshift(entry);
   // Keep log bounded to last 2000 entries in memory
@@ -66,4 +94,15 @@ export function writeAuthAuditEvent({ eventType, role = null, token = null, requ
 
 export function listAuthAuditEvents({ limit = 100 } = {}) {
   return getAuditLog().slice(0, limit);
+}
+
+export function listAuthAuditEnvelope({ limit = 100 } = {}) {
+  const items = listAuthAuditEvents({ limit });
+  return {
+    status: 200,
+    ok: true,
+    error: null,
+    tamperEvident: true,
+    items,
+  };
 }

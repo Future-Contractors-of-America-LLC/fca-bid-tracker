@@ -1,0 +1,35 @@
+{
+  "generatedAt": "2026-07-04T19:01:15.793Z",
+  "ok": true,
+  "modules": [
+    "/portal/admin",
+    "/portal/admin/internal",
+    "/portal/employee/internal",
+    "/portal/billing",
+    "/portal/design",
+    "/portal/notifications",
+    "/portal/operations",
+    "/portal/pipeline",
+    "/portal/plans",
+    "/portal/revenue-engine",
+    "/portal/support",
+    "/portal/bids",
+    "/portal/profile"
+  ],
+  "checks": {
+    "/portal/admin": true,
+    "/portal/admin/internal": true,
+    "/portal/employee/internal": true,
+    "/portal/billing": true,
+    "/portal/design": true,
+    "/portal/notifications": true,
+    "/portal/operations": true,
+    "/portal/pipeline": true,
+    "/portal/plans": true,
+    "/portal/revenue-engine": true,
+    "/portal/support": true,
+    "/portal/bids": true,
+    "/portal/profile": true
+  },
+  "errors": []
+}

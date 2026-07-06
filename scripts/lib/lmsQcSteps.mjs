@@ -9,6 +9,11 @@ import { academyCatalog } from "../../src/academyCatalog.js";
 export const ACADEMY_SCRIPTS = [
   "validate-academy-ctas.mjs",
   "validate-academy-catalog.mjs",
+  "validate-academy-excellence.mjs",
+  "validate-academy-cte-curriculum.mjs",
+  "validate-cte-shadow-environment.mjs",
+  "validate-system-security-hardening.mjs",
+  "validate-phase3-zero-trust-audit.mjs",
   "validate-catalog-balance.mjs",
   "validate-academy-media.mjs",
   "validate-academy-readiness-overlay.mjs",

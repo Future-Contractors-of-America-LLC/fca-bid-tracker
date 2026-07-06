@@ -129,7 +129,7 @@ export default function useCustomerSession() {
         enabledComms,
         customerId,
         workspaceLabel,
-        accountSource = "workspace-shell",
+        accountSource = "server-session",
         authBoundary,
       }) {
         const normalizedEmail = (email || "").trim().toLowerCase();

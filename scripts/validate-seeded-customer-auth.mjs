@@ -1,8 +1,9 @@
 import fs from "fs/promises";
 import path from "path";
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 
 const root = process.cwd();
-const centralRoot = path.join(root, "..", "auricrux-central-work");
+const centralRoot = resolveCentralRoot(root);
 
 const checks = [
   {

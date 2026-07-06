@@ -95,6 +95,25 @@ export default function AcademyProgramDetail({ routeParams = {} }) {
       if (program.renewalPolicy) lines.push({ label: "Renewal policy", value: program.renewalPolicy });
       if (program.licensureScope === "multi-state") lines.push({ label: "Scope", value: "Multi-state shared prep course" });
     }
+    if (pathwayKey === "cte" && program.vdoe) {
+      const vdoe = program.vdoe;
+      lines.push({ label: "VDOE cluster", value: `${vdoe.cluster} · ${vdoe.source}` });
+      if (vdoe.courseCode) lines.push({ label: "VDOE course code", value: vdoe.courseCode });
+      if (vdoe.scedCode) lines.push({ label: "SCED code", value: vdoe.scedCode });
+      if (vdoe.gradeLevel?.length) lines.push({ label: "Suggested grade level", value: vdoe.gradeLevel.join(", ") });
+      if (vdoe.instructionalHours) lines.push({ label: "Instructional time", value: `${vdoe.instructionalHours} hours` });
+      lines.push({ label: "VDOE evidence", value: "Student Competency Record, HQWBL evidence, safety documentation, and instructor verification" });
+      if (vdoe.sourceManifestKey) lines.push({ label: "Official source manifest", value: vdoe.sourceManifestKey });
+      if (vdoe.officialArtifacts?.curriculumAvailability) lines.push({ label: "Official curriculum", value: vdoe.officialArtifacts.curriculumAvailability.replace(/-/g, " ") });
+      if (vdoe.officialArtifacts?.studentCompetencyRecordAvailability) lines.push({ label: "Student competency record", value: vdoe.officialArtifacts.studentCompetencyRecordAvailability.replace(/-/g, " ") });
+      if (vdoe.officialArtifacts?.cartridgeAvailability) lines.push({ label: "Common cartridge", value: vdoe.officialArtifacts.cartridgeAvailability.replace(/-/g, " ") });
+      if (vdoe.officialArtifacts?.cartridge?.sha256) {
+        lines.push({ label: "Cartridge witness", value: `${vdoe.officialArtifacts.cartridge.sha256.slice(0, 12)}... · ${vdoe.officialArtifacts.cartridge.imsManifestTitleCount || 0} IMS titles` });
+      }
+      if (vdoe.oshaComplianceRequired) lines.push({ label: "OSHA compliance", value: "Required" });
+      if (vdoe.ctso) lines.push({ label: "CTSO", value: vdoe.ctso });
+      if (vdoe.proposedTrack) lines.push({ label: "Board pitch status", value: `${program.title} is an FCA proposed specialized apprenticeship track pending VDOE CTE Curriculum Board review.` });
+    }
     return lines;
   }, [program, catalogMeta]);
 

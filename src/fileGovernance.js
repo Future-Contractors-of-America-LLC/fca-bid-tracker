@@ -40,4 +40,73 @@ export const fileGovernance = {
     "Missing response deadlines",
     "Closeout readiness posture",
   ],
+  retentionPolicies: [
+    {
+      projectType: "Public Infrastructure",
+      category: "Legal",
+      years: 12,
+      rationale: "Long-tail claims and public contract audit exposure.",
+    },
+    {
+      projectType: "Public Infrastructure",
+      category: "Drawing",
+      years: 10,
+      rationale: "As-built and design liability retention window.",
+    },
+    {
+      projectType: "Commercial",
+      category: "Submittal",
+      years: 7,
+      rationale: "Standard commercial documentation retention for disputes.",
+    },
+    {
+      projectType: "Commercial",
+      category: "Photo",
+      years: 6,
+      rationale: "Field condition evidence retained through warranty runway.",
+    },
+    {
+      projectType: "Residential",
+      category: "Warranty",
+      years: 10,
+      rationale: "Warranty and latent defect evidence retention.",
+    },
+    {
+      projectType: "Any",
+      category: "Default",
+      years: 5,
+      rationale: "Default retention policy when no stricter mapping exists.",
+    },
+  ],
 };
+
+export function resolveRetentionPolicy(projectType, category) {
+  const normalizedProjectType = String(projectType || "Any").toLowerCase();
+  const normalizedCategory = String(category || "Default").toLowerCase();
+
+  const exact = fileGovernance.retentionPolicies.find((policy) =>
+    policy.projectType.toLowerCase() === normalizedProjectType && policy.category.toLowerCase() === normalizedCategory,
+  );
+  if (exact) return exact;
+
+  const projectDefault = fileGovernance.retentionPolicies.find((policy) =>
+    policy.projectType.toLowerCase() === normalizedProjectType && policy.category.toLowerCase() === "default",
+  );
+  if (projectDefault) return projectDefault;
+
+  const globalDefault = fileGovernance.retentionPolicies.find((policy) =>
+    policy.projectType.toLowerCase() === "any" && policy.category.toLowerCase() === "default",
+  );
+  return globalDefault || { projectType: "Any", category: "Default", years: 5, rationale: "Fallback retention policy." };
+}
+
+export function computeRetentionDates({ projectType, category, recordedAt }) {
+  const policy = resolveRetentionPolicy(projectType, category);
+  const origin = recordedAt ? new Date(recordedAt) : new Date();
+  const retainUntil = new Date(origin);
+  retainUntil.setFullYear(retainUntil.getFullYear() + Number(policy.years || 0));
+  return {
+    policy,
+    retainUntil: retainUntil.toISOString(),
+  };
+}

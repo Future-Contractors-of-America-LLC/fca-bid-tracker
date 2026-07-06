@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-07-04T18:58:44.852Z",
+  "ok": true,
+  "modules": [
+    "/portal/hiring",
+    "/portal/job-cost"
+  ],
+  "checks": {
+    "hiringApiAndWorkflowCoverage": true,
+    "jobCostApiAndWorkflowCoverage": true
+  },
+  "errors": []
+}

@@ -19,6 +19,7 @@ import {
 } from "../../contractorLegal/contractorLegalStorage";
 import { routeStateOverlays } from "../../systemState";
 import { FCA_ENTITY, formatPrincipalOffice } from "../../legal/entityInfo";
+import { probeLegalCapability } from "../../api/moduleCapabilityClient";
 
 const card = {
   border: "1px solid #e5e7eb",
@@ -56,6 +57,7 @@ export default function PortalLegal() {
   const { state: workspaceState } = useWorkspaceState();
   const [state, setState] = useState(() => readContractorLegalState());
   const [apiBacked, setApiBacked] = useState(false);
+  const [apiSpineStatus, setApiSpineStatus] = useState("checking");
 
   useEffect(() => {
     let active = true;
@@ -76,6 +78,21 @@ export default function PortalLegal() {
   useEffect(() => {
     writeContractorLegalState(state);
   }, [state]);
+
+  useEffect(() => {
+    let active = true;
+    probeLegalCapability()
+      .then((probe) => {
+        if (!active) return;
+        setApiSpineStatus(probe.ok ? "connected" : "offline");
+      })
+      .catch(() => {
+        if (active) setApiSpineStatus("offline");
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const completedCount = state.checklist.filter((c) => c.completed).length;
   const checklistPct = Math.round((completedCount / state.checklist.length) * 100);
@@ -125,6 +142,9 @@ export default function PortalLegal() {
             workspace to track <em>your</em> contractor entity, Virginia DPOR credentials, insurance, agreements, and lien
             waiver discipline before customer delivery.
           </p>
+          <div style={{ color: "#1e3a8a", fontWeight: 600 }}>
+            API spine: {apiSpineStatus}. Workspace backing: {apiBacked ? "centralized" : "local fallback"}.
+          </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginTop: 12 }}>
             <div style={{ padding: 12, borderRadius: 10, background: "#fff", border: "1px solid #dbe3ef", minWidth: 140 }}>
               <div style={{ fontSize: 12, color: "#64748b" }}>Compliance checklist</div>

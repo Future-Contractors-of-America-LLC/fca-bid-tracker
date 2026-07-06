@@ -1,5 +1,3 @@
-import { portalProjects } from "./systemState";
-
 export const PROJECT_WORKSPACE_KEY = "fca_project_workspace_v1";
 export const ACTIVE_PROJECT_KEY = "fca_active_project_v1";
 
@@ -11,7 +9,7 @@ function normalizeProjectRecord(project = {}, index = 0) {
     stage: project.stage || "Estimating",
     nextAction: project.nextAction || "Advance project",
     owner: project.owner || "Unassigned",
-    due: project.due || "TBD",
+    due: project.due || "Schedule date pending confirmation",
     superintendent: project.superintendent || "Pending assignment",
     permitStatus: project.permitStatus || "Permit status pending",
     siteStatus: project.siteStatus || "Site status pending",
@@ -34,7 +32,7 @@ function normalizeProjectRecord(project = {}, index = 0) {
 }
 
 function seedProjectWorkspace() {
-  return portalProjects.map((project, index) => normalizeProjectRecord(project, index));
+  return [];
 }
 
 function resolveActiveProjectId(projects) {

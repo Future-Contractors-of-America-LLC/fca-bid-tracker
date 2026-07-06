@@ -191,6 +191,45 @@ export default function AcademyModuleLesson({ routeParams = {} }) {
             <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>{module.deliverable}</p>
           </div>
         ) : null}
+        {Array.isArray(module.vdoeCompetencies) && module.vdoeCompetencies.length > 0 ? (
+          <div style={{ padding: 14, borderRadius: 12, background: "#f0f9ff", border: "1px solid #bae6fd" }}>
+            <strong style={{ color: "#0369a1" }}>VDOE evidence alignment</strong>
+            <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", marginBottom: 0 }}>
+              {module.vdoeCompetencies.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        {module.officialEvidence ? (
+          <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #cbd5e1" }}>
+            <strong style={{ color: "#0f172a" }}>Official source requirements</strong>
+            <p style={{ color: "#475569", lineHeight: 1.7, margin: "8px 0 0" }}>
+              Manifest: {module.officialEvidence.manifestKey}
+              {module.officialEvidence.courseCode ? ` · Course ${module.officialEvidence.courseCode}` : ""}
+              {module.officialEvidence.scedCode ? ` · SCED ${module.officialEvidence.scedCode}` : ""}
+              {module.officialEvidence.cartridgeSha256 ? ` · Cartridge ${module.officialEvidence.cartridgeSha256.slice(0, 12)}...` : ""}
+            </p>
+            <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", marginBottom: 0 }}>
+              {(module.officialEvidence.requiredArtifacts || []).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        {module.assessment?.rubric?.length ? (
+          <div style={{ padding: 14, borderRadius: 12, background: "#f8fafc", border: "1px solid #e2e8f0" }}>
+            <strong style={{ color: "#0f172a" }}>Assessment rubric</strong>
+            <p style={{ color: "#475569", lineHeight: 1.7, margin: "8px 0 0" }}>
+              Passing score: {module.assessment.passingScore || 80}% · {module.assessment.type || "performance assessment"}
+            </p>
+            <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", marginBottom: 0 }}>
+              {module.assessment.rubric.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </div>
     );
   }

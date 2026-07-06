@@ -1,24 +1,27 @@
-const Stripe = require("stripe");
 const {
   createPlanEmbeddedCheckout,
   publishableKey,
 } = require("../_lib/stripeEmbeddedCheckout");
+const {
+  corsHeaders,
+  isCteShadowRequest,
+  buildCteMockPaymentPayload,
+} = require("../_lib/runtime/cteShadowEnvironment");
+const {
+  buildSecureProxyHeaders,
+  enforceSecurityHardening,
+} = require("../_lib/runtime/securityHardeningControls");
+
+const secureCorsHeaders = buildSecureProxyHeaders(corsHeaders);
 
 const CENTRAL_API =
   process.env.AURICRUX_CENTRAL_API ||
   "https://auricrux-central.azurewebsites.net/api";
 
-const corsHeaders = {
-  "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Accept",
-};
-
 function respond(status, body) {
   return {
     status,
-    headers: corsHeaders,
+    headers: secureCorsHeaders,
     body,
   };
 }
@@ -46,6 +49,26 @@ module.exports = async function (context, req) {
   }
 
   const body = req.body || {};
+
+  const security = enforceSecurityHardening(req, {
+    resourcePath: "/stripe-checkout",
+    body,
+    allowAnonymous: true,
+    operation: "payment-checkout",
+  });
+  if (!security.allowed) {
+    context.res = {
+      ...security.response,
+      headers: buildSecureProxyHeaders({ ...corsHeaders, ...(security.response.headers || {}) }),
+    };
+    return;
+  }
+
+  if (isCteShadowRequest(req)) {
+    context.res = respond(200, buildCteMockPaymentPayload(req, body));
+    return;
+  }
+
   const wantsEmbedded = body.uiMode === "embedded" || body.embedded === true;
 
   if (!wantsEmbedded) {
@@ -79,6 +102,7 @@ module.exports = async function (context, req) {
   }
 
   try {
+    const Stripe = require("stripe");
     const stripe = new Stripe(secretKey);
     let sessionPayload;
 

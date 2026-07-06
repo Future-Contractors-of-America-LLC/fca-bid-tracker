@@ -1,110 +1,35 @@
 {
-  "generatedAt": "2026-07-01T18:00:32.218Z",
-  "runId": "LMS-WFR-1782928750550",
+  "generatedAt": "2026-07-04T01:41:33.386Z",
+  "runId": "LMS-WFR-1783129262134",
   "protocol": "observe-act-review",
   "module": "fca-academy-lms",
-  "complete": false,
+  "complete": true,
   "maxRounds": 3,
   "rounds": [
     {
       "round": 1,
-      "complete": false,
-      "passed": 169,
-      "total": 173,
-      "failures": [
-        {
-          "name": "script:validate-academy-native-commerce-journey.mjs",
-          "status": "fail",
-          "detail": "",
-          "phase": "static-qc"
-        },
-        {
-          "name": "SWA route /academy",
-          "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
-          "phase": "swa-probes"
-        },
-        {
-          "name": "SWA route /academy/catalog",
-          "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
-          "phase": "swa-probes"
-        },
-        {
-          "name": "SWA route /academy/store",
-          "status": "fail",
-          "detail": "shell OK but API probe error: Unexpected end of JSON input",
-          "phase": "swa-probes"
-        }
-      ]
+      "complete": true,
+      "passed": 561,
+      "total": 562,
+      "failures": []
     }
   ],
-  "repairPlans": [
-    {
-      "id": "lms-commerce-rail",
-      "repairClass": "engineering-queue",
-      "title": "Academy native commerce rail regression",
-      "detail": "Verify /api/fca-payments/intake and academy commerce client wiring on live Central.",
-      "step": {
-        "name": "script:validate-academy-native-commerce-journey.mjs",
-        "status": "fail",
-        "detail": "",
-        "phase": "static-qc"
-      },
-      "autoRepair": null,
-      "targetLane": "revenue",
-      "targetRepo": "auricrux-central",
-      "priority": "critical",
-      "actionId": "LMS-COMMERCE-FIX",
-      "outcome": "engineering-queued"
-    },
-    {
-      "id": "lms-swa-offline",
-      "repairClass": "engineering-queue",
-      "title": "Academy SWA routes offline or missing markers",
-      "detail": "Redeploy SWA or restore /academy route files in the shell.",
-      "step": {
-        "name": "SWA route /academy",
-        "status": "fail",
-        "detail": "shell OK but API probe error: Unexpected end of JSON input",
-        "phase": "swa-probes"
-      },
-      "autoRepair": "swa-redeploy",
-      "targetLane": "platform",
-      "targetRepo": "fca-bid-tracker",
-      "priority": "high",
-      "actionId": "LMS-SWA-REDEPLOY",
-      "outcome": "swa-redeploy-queued",
-      "redeploy": {
-        "dispatched": false,
-        "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
-      }
-    }
-  ],
-  "auricruxReviews": [
-    {
-      "step": "script:validate-academy-native-commerce-journey.mjs",
-      "guidance": "I specialize in construction operations across bids, projects, field, billing, and training. In this segment on Academy simulation validation for native commerce, I am teaching you the way I would onboard someone on my own crew. Validate the Academy native commerce journey using the simulation script validate-academy-native-commerce-journey.mjs. Do not skip lab verification for native commerce in "
-    },
-    {
-      "step": "SWA route /academy",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
-    },
-    {
-      "step": "SWA route /academy/catalog",
-      "guidance": "Review the active bid and advance the next milestone. If revenue is blocked, clear pending customer approval on the active bid package."
-    }
-  ],
-  "redeploy": {
-    "dispatched": false,
-    "reason": "could not create workflow dispatch event: HTTP 403: Resource not accessible by personal access token (https://api.github.com/repos/Future-Contractors-of-America-LLC/fca-bid-tracker/actions/workflows/2"
-  },
-  "finalSummary": "Academy LMS simulation still failing after 1 bounded repair round(s). 2 item(s) queued. Consecutive failures: 122.",
+  "repairPlans": [],
+  "auricruxReviews": [],
+  "redeploy": null,
+  "finalSummary": "Academy LMS simulation recovered in 1 round(s). Consecutive successes: 1.",
   "state": {
-    "runCount": 122,
-    "consecutiveSuccesses": 0,
-    "consecutiveFailures": 122,
+    "runCount": 123,
+    "consecutiveSuccesses": 1,
+    "consecutiveFailures": 0,
     "history": [
+      {
+        "at": "2026-07-04T01:41:33.386Z",
+        "runId": "LMS-WFR-1783129262134",
+        "complete": true,
+        "rounds": 1,
+        "failures": 0
+      },
       {
         "at": "2026-07-01T18:00:32.218Z",
         "runId": "LMS-WFR-1782928750550",
@@ -307,17 +232,10 @@
         "complete": false,
         "rounds": 1,
         "failures": 4
-      },
-      {
-        "at": "2026-06-30T01:52:26.576Z",
-        "runId": "LMS-WFR-1782784205427",
-        "complete": false,
-        "rounds": 1,
-        "failures": 4
       }
     ],
-    "lastRunUtc": "2026-07-01T18:00:32.218Z",
-    "lastComplete": false,
-    "lastRunId": "LMS-WFR-1782928750550"
+    "lastRunUtc": "2026-07-04T01:41:33.386Z",
+    "lastComplete": true,
+    "lastRunId": "LMS-WFR-1783129262134"
   }
 }

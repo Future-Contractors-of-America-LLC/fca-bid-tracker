@@ -1,4 +1,5 @@
 import { publicPackageRouteGroups } from "../publicPackageRouteGroups";
+import { isProtectedCustomerRoute, resolveLoginHref } from "../customerSession";
 
 const containerStyle = {
   border: "1px solid #dbe3ef",
@@ -14,6 +15,8 @@ export default function PublicPackageRouteGroupsPanel({
   detail = "Every package claim below maps to routes that already exist in repo truth so public conversion stays aligned with real product slices.",
   groups = publicPackageRouteGroups,
 }) {
+  const mapPublicHref = (href) => (isProtectedCustomerRoute(href) ? resolveLoginHref(href) : href);
+
   return (
     <section style={containerStyle}>
       <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>{eyebrow}</div>
@@ -27,7 +30,7 @@ export default function PublicPackageRouteGroupsPanel({
             <div style={{ color: "#475569", lineHeight: 1.7, marginBottom: 10 }}>{group.detail}</div>
             <div style={{ display: "grid", gap: 8 }}>
               {group.routes.map((route) => (
-                <a key={`${group.key}-${route.href}`} href={route.href} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
+                <a key={`${group.key}-${route.href}`} href={mapPublicHref(route.href)} style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>
                   {route.label}
                 </a>
               ))}

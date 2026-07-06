@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
@@ -10,6 +10,40 @@ import { auricruxCommsChannels, auricruxRail, routeStateOverlays } from "../../s
 import { openAuricruxAssistant } from "../../auricruxAssistant";
 import { auricruxPersona } from "../../config/auricruxPersona";
 import { portalButtonPrimary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
+import { auricruxLiveEnabled } from "../../lib/auricruxPermissions";
+import { auricruxCampaignLiveReady, isCteSafeModeEnabled } from "../../lib/cteSafeModeConfig";
+
+const CAMPAIGN_AUTORUN_COOLDOWN_MS = 6 * 60 * 60 * 1000;
+
+function envFlagEnabled(value = "") {
+  return ["1", "true", "yes", "on"].includes(String(value || "").trim().toLowerCase());
+}
+
+function campaignAutoRunKey(tenantKey = "default") {
+  return `fca_auricrux_campaign_autorun_${tenantKey}`;
+}
+
+function shouldAutoRunCampaign(tenantKey) {
+  if (typeof window === "undefined") return false;
+  try {
+    const raw = window.localStorage.getItem(campaignAutoRunKey(tenantKey));
+    if (!raw) return true;
+    const lastRunAt = Number(raw);
+    if (!Number.isFinite(lastRunAt)) return true;
+    return Date.now() - lastRunAt >= CAMPAIGN_AUTORUN_COOLDOWN_MS;
+  } catch {
+    return true;
+  }
+}
+
+function stampAutoRun(tenantKey) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(campaignAutoRunKey(tenantKey), String(Date.now()));
+  } catch {
+    // best effort only
+  }
+}
 
 const actionRouteMap = {
   Project: "/portal/projects",
@@ -58,6 +92,10 @@ export default function PortalAuricrux() {
     [liveActions],
   );
 
+  const liveEnabled = auricruxLiveEnabled(session?.customer);
+  const liveCampaignReady = auricruxCampaignLiveReady({ liveEnabled });
+  const tenantKey = session?.customer?.customerId || session?.company || "fca-default";
+
   const blocker = state.auricrux?.currentBlocker || auricruxRail.currentBlocker;
   const nextAction = state.workspace?.currentNextAction || auricruxRail.nextRecommendedAction;
 
@@ -73,6 +111,14 @@ export default function PortalAuricrux() {
 
   async function runCampaignLaunch() {
     if (campaignBusy) return;
+    if (!liveCampaignReady) {
+      setCampaignError(
+        isCteSafeModeEnabled()
+          ? "Live campaign launch is blocked while CTE Safe-Mode is enabled. Disable sandbox mode or set force-live runtime for commercial execution."
+          : "Live campaign launch is blocked for this account. Enable Auricrux product access for commercial runtime.",
+      );
+      return;
+    }
     setCampaignBusy(true);
     setCampaignError("");
     setCampaignResult(null);
@@ -90,6 +136,24 @@ export default function PortalAuricrux() {
       setCampaignBusy(false);
     }
   }
+
+  useEffect(() => {
+    if (!liveCampaignReady || campaignBusy) return;
+    if (!envFlagEnabled(import.meta?.env?.VITE_AURICRUX_AUTORUN_CAMPAIGNS)) return;
+    if (!shouldAutoRunCampaign(tenantKey)) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        await runCampaignLaunch();
+        if (!cancelled) stampAutoRun(tenantKey);
+      } catch {
+        // runCampaignLaunch already updates user-facing error state
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [liveCampaignReady, tenantKey, campaignBusy]);
 
   return (
     <PortalShell
@@ -127,11 +191,18 @@ export default function PortalAuricrux() {
         <button
           type="button"
           onClick={runCampaignLaunch}
-          disabled={campaignBusy}
+          disabled={campaignBusy || !liveCampaignReady}
           style={{ ...portalButtonPrimary, border: "none", cursor: campaignBusy ? "not-allowed" : "pointer", opacity: campaignBusy ? 0.65 : 1 }}
         >
-          {campaignBusy ? "Auricrux launching campaign..." : "Run campaign launch with Auricrux"}
+          {campaignBusy ? "Auricrux launching campaign..." : !liveCampaignReady ? "Live campaign blocked by runtime policy" : "Run campaign launch with Auricrux"}
         </button>
+        {!liveCampaignReady ? (
+          <p style={{ color: "#b45309", marginTop: 10, marginBottom: 0 }}>
+            {isCteSafeModeEnabled()
+              ? "CTE Safe-Mode is active. Live campaign execution is intentionally blocked until sandbox mode is disabled."
+              : "This account is not currently eligible for live campaign execution. Enable commercial Auricrux access and retry."}
+          </p>
+        ) : null}
         {campaignError ? (
           <p style={{ color: "#b91c1c", marginTop: 10, marginBottom: 0 }}>{campaignError}</p>
         ) : null}
