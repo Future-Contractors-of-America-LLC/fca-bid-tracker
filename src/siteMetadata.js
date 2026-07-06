@@ -56,6 +56,11 @@ export const routeMetadata = {
     description:
       "Contractor legal resources for licensing, contracts, lien waivers, insurance, and FCA policy references.",
   },
+  "/legal/chps-dpa-sign": {
+    title: "CHPS DPA Signature | Future Contractors of America",
+    description:
+      "Review and sign CHPS data processing and privacy commitments in the FCA legal center.",
+  },
   "/contact": {
     title: "Contact | Future Contractors of America",
     description:
@@ -75,6 +80,21 @@ export const routeMetadata = {
     title: "Login | Future Contractors of America",
     description:
       "Access the FCA workspace, customer portal, academy continuity, and Auricrux-supported operations.",
+  },
+  "/cte/login": {
+    title: "CTE Student Login | Future Contractors of America",
+    description:
+      "Sign in to the protected CTE student portal with minor-compliant access boundaries and guided academy progression.",
+  },
+  "/cte/program": {
+    title: "CTE Program Evidence | Future Contractors of America",
+    description:
+      "Public evidence surface showing FCA Academy CTE program coverage, VDOE alignment, and live backend verification feed.",
+  },
+  "/cte": {
+    title: "CTE Student Portal | Future Contractors of America",
+    description:
+      "Access protected CTE coursework, credential progression, and student-safe learning pathways in FCA Academy.",
   },
   "/job-board": {
     title: "Job Board | Future Contractors of America",
@@ -106,6 +126,16 @@ export const routeMetadata = {
     description:
       "Review FCA's contractor operations pipeline spanning intake, qualification, preconstruction, award, document control, billing, closeout, warranty, and referral continuity.",
   },
+  "/portal/command-tower": {
+    title: "Command Tower | Future Contractors of America",
+    description:
+      "Monitor triad flywheel health, cross-persona handoffs, and command-level operational continuity from the Auricrux command surface.",
+  },
+  "/portal/decision-queue": {
+    title: "Decision Queue | Future Contractors of America",
+    description:
+      "Review, approve, or override AI decisions with accountable rationale and reinforcement governance in the FCA portal.",
+  },
   "/portal/projects": {
     title: "Projects | Future Contractors of America",
     description:
@@ -125,6 +155,11 @@ export const routeMetadata = {
     title: "Messages | Future Contractors of America",
     description:
       "Maintain customer, team, and operational communication continuity across FCA workflows.",
+  },
+  "/portal/communications": {
+    title: "Auricrux Communications | Future Contractors of America",
+    description:
+      "Orchestrate omnichannel communication, semantic normalization, autonomous proxying, and immutable interaction records across the FCA operating system.",
   },
   "/portal/notifications": {
     title: "Notifications | Future Contractors of America",
@@ -151,10 +186,30 @@ export const routeMetadata = {
     description:
       "Review tenant controls, permissions, and executive administration across the FCA operating surface.",
   },
+  "/portal/admin/payroll": {
+    title: "Payroll Admin | Future Contractors of America",
+    description:
+      "Manage company payroll controls, banking fingerprints, and tax readiness in the FCA admin workspace.",
+  },
+  "/portal/admin/internal": {
+    title: "Internal Company Records | Future Contractors of America",
+    description:
+      "Maintain internal company records and employee roster data in the FCA admin governance lane.",
+  },
   "/portal/profile": {
     title: "Profile | Future Contractors of America",
     description:
       "Review account identity, workspace access, and customer profile continuity inside the FCA portal.",
+  },
+  "/portal/employee/payroll": {
+    title: "Employee Payroll | Future Contractors of America",
+    description:
+      "Complete employee payroll profile, direct-deposit fingerprints, and W-4 readiness inside the FCA portal.",
+  },
+  "/portal/employee/internal": {
+    title: "Employee Internal Profile | Future Contractors of America",
+    description:
+      "Maintain internal employee contact and emergency profile details in the FCA operations workspace.",
   },
   "/portal/auricrux": {
     title: "Portal Auricrux | Future Contractors of America",
@@ -255,6 +310,10 @@ export const routeMetadata = {
     title: "Proposals | Future Contractors of America",
     description: "Package and deliver customer proposals from the FCA portal.",
   },
+  "/portal/hiring": {
+    title: "Hiring and Employment | Future Contractors of America",
+    description: "Run a competency-verified workforce pipeline with Academy-linked profiles, AI candidate matching, autonomous onboarding, and retention intelligence.",
+  },
   "/portal/pipeline": {
     title: "Commercial Pipeline | Future Contractors of America",
     description: "Run the guided bid-to-billing pipeline inside the FCA contractor workspace.",
@@ -262,6 +321,10 @@ export const routeMetadata = {
   "/portal/leads": {
     title: "Leads Board | Future Contractors of America",
     description: "Review, qualify, and route intake leads into opportunities on the FCA commercial spine.",
+  },
+  "/portal/revenue-engine": {
+    title: "Sales and Marketing Engine | Future Contractors of America",
+    description: "Run construction-specific marketing attribution, predictive lead scoring, proposal marketing kits, and RevOps orchestration in one FCA module.",
   },
   "/portal/plans": {
     title: "Plans | Future Contractors of America",
@@ -274,6 +337,10 @@ export const routeMetadata = {
   "/portal/design": {
     title: "Design Workspace | Future Contractors of America",
     description: "Native plan room for markup, takeoff, coordination, and redline continuity.",
+  },
+  "/portal/immersive": {
+    title: "Immersive Workspace | Future Contractors of America",
+    description: "Run immersive design, field, and coordination workflows connected to active projects.",
   },
   "/portal/rfis": {
     title: "RFIs | Future Contractors of America",
@@ -298,6 +365,14 @@ export const routeMetadata = {
   "/portal/field-supervision": {
     title: "Field Supervision | Future Contractors of America",
     description: "Capture site photos, compare to plans, annotate conditions, and generate redlines.",
+  },
+  "/portal/punch": {
+    title: "Punch List | Future Contractors of America",
+    description: "Track punch-list items, closeout punch status, and field completion readiness.",
+  },
+  "/portal/job-cost": {
+    title: "Job Cost | Future Contractors of America",
+    description: "Monitor committed cost, forecast variance, and cost continuity across active jobs.",
   },
   "/portal/warranty": {
     title: "Warranty | Future Contractors of America",

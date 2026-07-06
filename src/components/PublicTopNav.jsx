@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import FcaBrandMark from "./FcaBrandMark";
 import {
   clearCustomerSession,
+  isProtectedCustomerRoute,
   readCustomerSession,
   resolveAdminWorkspaceHref,
   resolveLoginHref,
@@ -52,7 +53,6 @@ const desktopActionsStyle = {
 };
 
 const mobileActionsStyle = {
-  display: "flex",
   alignItems: "center",
   gap: 8,
   flexShrink: 0,
@@ -157,54 +157,40 @@ const mobileDrawerPanel = {
 
 const NAV_MENUS = [
   {
-    label: "Product",
+    label: "Platform",
     items: [
-      { label: "Product overview", href: "/platform" },
+      { label: "Operating system overview", href: "/platform" },
       { label: "Features", href: "/features" },
       { label: "Solutions", href: "/solutions" },
-      { label: "Auricrux Intelligence", href: "/auricrux" },
+      { label: "Auricrux intelligence", href: "/auricrux" },
     ],
   },
   {
-    label: "Commercial",
+    label: "Decision Paths",
     items: [
-      { label: "Pricing", href: "/pricing" },
-      { label: "Job board", href: "/job-board" },
-      { label: "Get Started", href: "/intake" },
+      { label: "Owner / Executive", href: "/#owner-executive" },
+      { label: "Operations Director", href: "/#operations-director" },
+      { label: "Field Superintendent", href: "/#field-superintendent" },
+      { label: "Pricing and rollout", href: "/pricing" },
     ],
   },
   {
     label: "Academy",
     items: [
-      { label: "Course Catalog", href: "/academy/catalog" },
-      { label: "Academy Store", href: "/academy/store" },
-      { label: "Sign in for LMS", href: "/login?next=/academy" },
+      { label: "CTE program evidence", href: "/cte/program" },
+      { label: "Course catalog", href: "/academy/catalog" },
+      { label: "Academy store", href: "/academy/store" },
+      { label: "CTE student portal", href: "/cte/login?next=/cte" },
     ],
   },
   {
-    label: "Company",
+    label: "Trust & Governance",
     items: [
-      { label: "Contact", href: "/contact" },
-      { label: "Warranty", href: "/warranty" },
-      { label: "Referrals", href: "/referrals" },
-    ],
-  },
-  {
-    label: "Legal",
-    items: [
-      { label: "Legal Center", href: "/legal" },
-      { label: "Contractor Legal Resources", href: "/legal/contractor-resources" },
-      { label: "Terms of Service", href: "/terms" },
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Cookie Policy", href: "/cookies" },
-      { label: "Acceptable Use", href: "/acceptable-use" },
+      { label: "Trust workspace", href: "/login?next=/portal/admin" },
+      { label: "Audit trail", href: "/portal/audit" },
       { label: "Security", href: "/security" },
-      { label: "Subprocessors", href: "/subprocessors" },
-      { label: "AI Data Use", href: "/ai-policy" },
-      { label: "Accessibility", href: "/accessibility" },
-      { label: "DMCA", href: "/dmca" },
-      { label: "Refunds & Billing", href: "/refunds" },
-      { label: "Intellectual Property", href: "/ip" },
+      { label: "Legal center", href: "/legal" },
+      { label: "Data privacy", href: "/privacy" },
     ],
   },
 ];
@@ -338,6 +324,11 @@ export default function PublicTopNav({ mode = "public" }) {
   const adminWorkspaceHref = resolveAdminWorkspaceHref(session);
   const workspaceHref = resolveWorkspaceEntryHref(session, "/portal/platform");
 
+  function resolveGuestSafeHref(href) {
+    if (!href || session?.authenticated) return href;
+    return isProtectedCustomerRoute(href) ? resolveLoginHref(href) : href;
+  }
+
   async function handleLogout(event) {
     event.preventDefault();
     await clearCustomerSession({ server: true });
@@ -359,9 +350,6 @@ export default function PublicTopNav({ mode = "public" }) {
     <>
       <AuricruxAssistantButton />
       <a href={loginHref} style={signInStyle} onClick={closeMobile}>Sign in</a>
-      {!isDesktop ? null : (
-        <a href={adminWorkspaceHref} style={signInStyle} onClick={closeMobile}>Admin</a>
-      )}
       <a href="/intake" style={primaryCtaStyle} onClick={closeMobile}>Get started</a>
     </>
   );
@@ -395,7 +383,7 @@ export default function PublicTopNav({ mode = "public" }) {
               {portalNavPrimary.map((item) => (
                 <a
                   key={item.href}
-                  href={item.href}
+                  href={resolveGuestSafeHref(item.href)}
                   style={{
                     ...linkStyle,
                     display: "inline-block",
@@ -405,9 +393,6 @@ export default function PublicTopNav({ mode = "public" }) {
                 >
                   {item.label}
                 </a>
-              ))}
-              {portalNavGroups.map((group) => (
-                <NavDropdown key={group.label} menu={group} currentPath={currentPath} />
               ))}
             </nav>
           ) : (
@@ -424,8 +409,30 @@ export default function PublicTopNav({ mode = "public" }) {
                 Home
               </a>
               {NAV_MENUS.map((menu) => (
-                <NavDropdown key={menu.label} menu={menu} currentPath={currentPath} />
+                <NavDropdown key={menu.label} menu={menu} currentPath={currentPath} onNavigate={closeMobile} />
               ))}
+              <a
+                href="/contact"
+                style={{
+                  ...linkStyle,
+                  display: "inline-block",
+                  color: currentPath === "/contact" ? "#1d4ed8" : "#334155",
+                  background: currentPath === "/contact" ? "#eff6ff" : "transparent",
+                }}
+              >
+                Contact
+              </a>
+              <a
+                href="/pricing"
+                style={{
+                  ...linkStyle,
+                  display: "inline-block",
+                  color: currentPath === "/pricing" ? "#1d4ed8" : "#334155",
+                  background: currentPath === "/pricing" ? "#eff6ff" : "transparent",
+                }}
+              >
+                Pricing
+              </a>
             </nav>
           )}
 
@@ -433,7 +440,7 @@ export default function PublicTopNav({ mode = "public" }) {
             {authActions}
           </div>
 
-          <div className="fca-nav-mobile-actions" style={mobileActionsStyle}>
+          <div className="fca-nav-mobile-actions" style={{ ...mobileActionsStyle, display: isDesktop ? "none" : "flex" }}>
             {!session?.authenticated ? (
               <a href={loginHref} style={{ ...primaryCtaStyle, padding: "8px 12px" }}>Sign in</a>
             ) : (
@@ -462,8 +469,8 @@ export default function PublicTopNav({ mode = "public" }) {
             </>
           ) : (
             <>
+              <AuricruxAssistantButton onNavigate={closeMobile} />
               <a href={loginHref} style={primaryCtaStyle} onClick={closeMobile}>Sign in</a>
-              <a href={adminWorkspaceHref} style={signInStyle} onClick={closeMobile}>Admin workspace</a>
               <a href="/intake" style={signInStyle} onClick={closeMobile}>Get started</a>
             </>
           )}
@@ -478,14 +485,14 @@ export default function PublicTopNav({ mode = "public" }) {
               {portalNavPrimary.map((item) => (
                 <a
                   key={item.href}
-                  href={item.href}
-                  onClick={closeMobile}
+                  href={resolveGuestSafeHref(item.href)}
                   style={{
                     ...linkStyle,
                     padding: "10px 12px",
                     color: isNavActive(currentPath, item.href) ? "#1d4ed8" : "#0f172a",
                     background: isNavActive(currentPath, item.href) ? "#eff6ff" : "transparent",
                   }}
+                  onClick={closeMobile}
                 >
                   {item.label}
                 </a>
@@ -500,7 +507,7 @@ export default function PublicTopNav({ mode = "public" }) {
               {group.items.map((item) => (
                 <a
                   key={item.href}
-                  href={item.href}
+                  href={resolveGuestSafeHref(item.href)}
                   onClick={closeMobile}
                   style={{
                     ...linkStyle,

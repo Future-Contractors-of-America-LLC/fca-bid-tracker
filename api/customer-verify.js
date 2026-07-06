@@ -46,7 +46,7 @@ app.http("customer-verify", {
       };
     }
 
-    const { cookie } = createSessionCookie(account);
+    const { token, cookie } = createSessionCookie(account);
     return {
       status: 200,
       headers: {
@@ -55,6 +55,8 @@ app.http("customer-verify", {
       },
       jsonBody: {
         ok: true,
+        sessionToken: token,
+        accessToken: token,
         account,
         session: buildServerSession(account),
         authBoundary: buildAuthBoundary(),

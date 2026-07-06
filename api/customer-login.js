@@ -59,7 +59,15 @@ app.http("customer-login", {
       };
     }
 
-    const { token, cookie } = createSessionCookie(account);
+    const { token, cookie, session } = createSessionCookie(account);
+    const accountWithSession = {
+      ...account,
+      issuedAt: session.issuedAt,
+      accessTokenExpiresAt: session.accessTokenExpiresAt,
+      refreshTokenExpiresAt: session.refreshTokenExpiresAt,
+      authEpoch: session.authEpoch,
+      sessionVersion: session.sessionVersion,
+    };
     writeAuthAuditEvent({ eventType: "login_success", role: account.role, token, request });
 
     return {
@@ -70,8 +78,10 @@ app.http("customer-login", {
       },
       jsonBody: {
         ok: true,
-        account,
-        session: buildServerSession(account),
+        sessionToken: token,
+        accessToken: token,
+        account: accountWithSession,
+        session: buildServerSession(accountWithSession),
         authBoundary: buildAuthBoundary(),
         authenticationMode: account.authenticationMode || "server-session",
         timestamp: new Date().toISOString(),
