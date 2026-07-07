@@ -4,6 +4,68 @@ import { buildAuthBoundary, buildServerSession, createSessionCookie } from "./au
 import { createLoginChallenge } from "./verification-challenges.js";
 import { writeAuthAuditEvent } from "./auth-audit.js";
 
+function readString(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function parseJsonPayload(rawBody) {
+  const parsed = JSON.parse(rawBody);
+  return {
+    email: readString(parsed?.email).toLowerCase(),
+    password: readString(parsed?.password),
+  };
+}
+
+function parseFormPayload(rawBody) {
+  const params = new URLSearchParams(rawBody);
+  return {
+    email: readString(params.get("email")).toLowerCase(),
+    password: readString(params.get("password")),
+  };
+}
+
+async function readCredentials(request) {
+  const url = new URL(request.url);
+  const queryEmail = readString(url.searchParams.get("email")).toLowerCase();
+  const queryPassword = readString(url.searchParams.get("password"));
+  const contentType = (request.headers.get("content-type") || "").toLowerCase();
+  const rawBody = await request.text();
+  const trimmedBody = readString(rawBody);
+
+  if (!trimmedBody) {
+    return { email: queryEmail, password: queryPassword, parseError: null };
+  }
+
+  const shouldParseAsJson = contentType.includes("application/json") || trimmedBody.startsWith("{");
+  if (shouldParseAsJson) {
+    try {
+      const parsed = parseJsonPayload(trimmedBody);
+      return {
+        email: parsed.email || queryEmail,
+        password: parsed.password || queryPassword,
+        parseError: null,
+      };
+    } catch {
+      return {
+        email: queryEmail,
+        password: queryPassword,
+        parseError: "Invalid JSON body. Send {\"email\":\"...\",\"password\":\"...\"} or form-encoded values.",
+      };
+    }
+  }
+
+  if (contentType.includes("application/x-www-form-urlencoded") || trimmedBody.includes("=")) {
+    const parsed = parseFormPayload(trimmedBody);
+    return {
+      email: parsed.email || queryEmail,
+      password: parsed.password || queryPassword,
+      parseError: null,
+    };
+  }
+
+  return { email: queryEmail, password: queryPassword, parseError: null };
+}
+
 function login2faRequired(account) {
   if (["1", "true", "yes"].includes(String(process.env.FCA_DISABLE_LOGIN_2FA || "").toLowerCase())) {
     return false;
@@ -16,22 +78,31 @@ app.http("customer-login", {
   authLevel: "anonymous",
   route: "customer-login",
   handler: async (request) => {
-    let payload;
+    const { email, password, parseError } = await readCredentials(request);
 
-    try {
-      payload = await request.json();
-    } catch {
+    if (parseError) {
       return {
         status: 400,
         jsonBody: {
           ok: false,
-          error: "A valid JSON payload is required.",
+          error: parseError,
           authBoundary: buildAuthBoundary(),
         },
       };
     }
 
-    const account = validateCustomerCredentials(payload?.email, payload?.password);
+    if (!email || !password) {
+      return {
+        status: 400,
+        jsonBody: {
+          ok: false,
+          error: "Email and password are required.",
+          authBoundary: buildAuthBoundary(),
+        },
+      };
+    }
+
+    const account = validateCustomerCredentials(email, password);
 
     if (!account) {
       writeAuthAuditEvent({ eventType: "login_failure", role: null, request, reason: "invalid-credentials" });

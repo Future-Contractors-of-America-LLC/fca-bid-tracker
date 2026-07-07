@@ -76,6 +76,9 @@ export const routes = {
   "/academy/credentials": lazyPage(() => import("./pages/academy/AcademyCredentials")),
   "/academy/store": lazyPage(() => import("./pages/academy/store/AcademyStore")),
   "/academy/store/success": lazyPage(() => import("./pages/academy/store/AcademyStoreSuccess")),
+  "/academy/student-portal": lazyPage(() => import("./pages/academy/AcademyStudentPortal")),
+  "/cte/portal": lazyPage(() => import("./pages/academy/CteProgramPortal")),
+  "/cte/program": lazyPage(() => import("./pages/academy/CteProgram")),
 };
 
 export const routePatterns = [

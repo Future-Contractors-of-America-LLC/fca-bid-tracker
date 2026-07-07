@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const shellStyles = {
   page: {
@@ -164,14 +163,14 @@ export default function RouteExperienceShell({
           <p style={shellStyles.lead}>{lead}</p>
           <div style={shellStyles.ctas}>
             {primaryCta ? (
-              <Link to={primaryCta.href} style={shellStyles.primary}>
+              <a href={primaryCta.href} style={shellStyles.primary}>
                 {primaryCta.label}
-              </Link>
+              </a>
             ) : null}
             {secondaryCta ? (
-              <Link to={secondaryCta.href} style={shellStyles.secondary}>
+              <a href={secondaryCta.href} style={shellStyles.secondary}>
                 {secondaryCta.label}
-              </Link>
+              </a>
             ) : null}
           </div>
           {proofPoints.length ? (

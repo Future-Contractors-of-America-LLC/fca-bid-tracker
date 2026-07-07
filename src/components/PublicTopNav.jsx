@@ -180,7 +180,8 @@ const NAV_MENUS = [
     items: [
       { label: "Course catalog", href: "/academy/catalog" },
       { label: "Academy store", href: "/academy/store" },
-      { label: "Sign in for LMS", href: "/login?next=/academy" },
+      { label: "FCA Academy Student Portal", href: "/academy/student-portal" },
+      { label: "CTE Program Portal", href: "/cte/portal" },
     ],
   },
   {

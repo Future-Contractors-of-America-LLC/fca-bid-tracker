@@ -179,7 +179,7 @@ export const routeMetadata = {
   "/academy/catalog": {
     title: "Academy Course Catalog | Future Contractors of America",
     description:
-      "Browse FCA Academy by pathway, topic, and course. Syllabi are public; enrollment follows subscription, add-on, and prerequisite rules.",
+      "Browse all FCA pathways and courses in a pricing-free catalog. Syllabi are public and enrollment follows subscription/add-on rules.",
   },
   "/academy/pathway": {
     title: "Academy Pathway | Future Contractors of America",
@@ -189,7 +189,7 @@ export const routeMetadata = {
   "/academy/store": {
     title: "Academy Store | Future Contractors of America",
     description:
-      "Purchase Academy courses, pathways, and credentials connected to your FCA workspace and workforce readiness goals.",
+      "Purchase Academy courses and pathways with non-CTE pricing. Contact FCA directly for CTE teacher and administrator rollout enrollment.",
   },
   "/academy/store/success": {
     title: "Academy Purchase Confirmed | Future Contractors of America",
@@ -327,6 +327,18 @@ export const routeMetadata = {
   "/academy/credentials": {
     title: "Academy Credentials | Future Contractors of America",
     description: "Review earned credentials, certificates, and workforce readiness outcomes.",
+  },
+  "/academy/student-portal": {
+    title: "FCA Academy Student Portal | Future Contractors of America",
+    description: "Student portal for FCA Academy classroom entry, pathway progress, and credential tracking.",
+  },
+  "/cte/portal": {
+    title: "CTE Program Portal | Future Contractors of America",
+    description: "CTE Program Portal with dedicated access paths for teacher, administrator, substitute, and student roles.",
+  },
+  "/cte/program": {
+    title: "CTE Program | Future Contractors of America",
+    description: "CTE Program pathway with role-specific login routes and student progression visibility.",
   },
 };
 

@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-07-07T00:00:00.000Z",
+  "summary": {
+    "totalModules": 1,
+    "higherCount": 1,
+    "needsWorkCount": 0
+  },
+  "rankings": [
+    {
+      "route": "/cte/portal",
+      "rank": "HIGHER"
+    }
+  ]
+}

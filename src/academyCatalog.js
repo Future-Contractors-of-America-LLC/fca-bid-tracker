@@ -479,6 +479,12 @@ export const academyCatalog = {
   ],
   pathways: [
     {
+      title: "CTE program pathway",
+      description: "Role-based CTE delivery with dedicated teacher, administrator, substitute, and student access lanes.",
+      route: "/cte/portal",
+      label: "Open CTE Program Portal",
+    },
+    {
       title: "Apprenticeship pathway",
       description: "Field-readiness training tied to support, safety, files, and project continuity.",
       route: "/portal/support",

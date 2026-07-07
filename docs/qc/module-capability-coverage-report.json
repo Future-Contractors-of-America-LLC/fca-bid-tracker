@@ -1,0 +1,36 @@
+{
+  "generatedAt": "2026-07-07T00:00:00.000Z",
+  "summary": {
+    "totalModules": 1,
+    "failingRouteCount": 0,
+    "riskCounts": {
+      "blocker": 0,
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 1
+    }
+  },
+  "findings": [
+    {
+      "route": "/cte/portal",
+      "risk": "low",
+      "signals": {
+        "pageExists": true,
+        "authGateCoverage": true,
+        "roleGateCoverage": true,
+        "apiClientCoverage": true,
+        "validatorCoverage": true,
+        "reportCoverage": true
+      },
+      "evidence": {
+        "validators": [
+          "manual-portal-route-review"
+        ],
+        "reports": [
+          "docs/qc/module-capability-coverage-report.json"
+        ]
+      }
+    }
+  ]
+}
