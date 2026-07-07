@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PortalShell from "../../components/PortalShell";
 import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
@@ -32,6 +32,15 @@ const toggleButtonStyle = {
   cursor: "pointer",
   background: "#f8fafc",
   color: "#0f172a",
+};
+
+const formInputStyle = {
+  border: "1px solid #cbd5e1",
+  borderRadius: 10,
+  padding: "10px 12px",
+  font: "inherit",
+  color: "#0f172a",
+  background: "#fff",
 };
 
 const planButtonStyle = (active) => ({
@@ -68,7 +77,7 @@ function resolveVerificationLabel(authBoundary) {
 }
 
 export default function PortalProfile() {
-  const { session, isAuthenticated, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
+  const { session, isAuthenticated, setProductAccess, setCommsAccess, applyPlanPreset, updateSession } = useCustomerSession();
   const { state, refreshSyncStamp } = useWorkspaceState();
   const { state: authState } = useCustomerAuthState();
 
@@ -88,6 +97,43 @@ export default function PortalProfile() {
   const accountSource = session?.accountSource || "workspace-shell";
   const securityStatus = resolveAccountSecurityLabel(accountSource, authState.authBoundary);
   const verificationStatus = resolveVerificationLabel(authState.authBoundary);
+  const profile = session?.profile || {};
+  const companySettings = session?.companySettings || {};
+  const [profileDraft, setProfileDraft] = useState({
+    fullName: "",
+    title: "",
+    phone: "",
+    companyName: "",
+    workspaceLabel: "",
+    supportEmail: "",
+    supportPhone: "",
+    website: "",
+  });
+  const [profileMessage, setProfileMessage] = useState("");
+
+  useEffect(() => {
+    setProfileDraft({
+      fullName: profile.fullName || "",
+      title: profile.title || workspaceRole,
+      phone: profile.phone || "",
+      companyName: sessionCompany,
+      workspaceLabel: sessionWorkspace,
+      supportEmail: companySettings.supportEmail || sessionEmail,
+      supportPhone: companySettings.phone || "",
+      website: companySettings.website || "",
+    });
+  }, [
+    profile.fullName,
+    profile.title,
+    profile.phone,
+    workspaceRole,
+    sessionCompany,
+    sessionWorkspace,
+    companySettings.supportEmail,
+    companySettings.phone,
+    companySettings.website,
+    sessionEmail,
+  ]);
 
   function toggleProduct(productKey, enabled) {
     setProductAccess(productKey, !enabled);
@@ -99,6 +145,36 @@ export default function PortalProfile() {
 
   function handlePlanPreset(planKey) {
     applyPlanPreset(planKey);
+  }
+
+  function handleProfileFieldChange(event) {
+    const { name, value } = event.target;
+    setProfileDraft((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  }
+
+  function handleProfileSave(event) {
+    event.preventDefault();
+    const normalizedCompanyName = profileDraft.companyName.trim() || sessionCompany;
+    const result = updateSession({
+      company: normalizedCompanyName,
+      workspaceLabel: profileDraft.workspaceLabel.trim() || `${normalizedCompanyName} Workspace`,
+      role: profileDraft.title.trim() || workspaceRole,
+      profile: {
+        fullName: profileDraft.fullName.trim(),
+        title: profileDraft.title.trim(),
+        phone: profileDraft.phone.trim(),
+      },
+      companySettings: {
+        supportEmail: profileDraft.supportEmail.trim().toLowerCase(),
+        phone: profileDraft.supportPhone.trim(),
+        website: profileDraft.website.trim(),
+      },
+    });
+
+    setProfileMessage(result.ok ? "Profile and company settings saved." : result.error || "Unable to save profile settings.");
   }
 
   const productCards = [
@@ -172,6 +248,11 @@ export default function PortalProfile() {
             <div><strong>Customer ID:</strong> {customerId}</div>
             <div><strong>Customer email:</strong> {sessionEmail}</div>
             <div><strong>Workspace role:</strong> {workspaceRole}</div>
+            <div><strong>Profile name:</strong> {profile.fullName || "Not set"}</div>
+            <div><strong>Profile phone:</strong> {profile.phone || "Not set"}</div>
+            <div><strong>Support contact:</strong> {companySettings.supportEmail || sessionEmail}</div>
+            <div><strong>Company phone:</strong> {companySettings.phone || "Not set"}</div>
+            <div><strong>Company website:</strong> {companySettings.website || "Not set"}</div>
             <div><strong>Selected plan:</strong> {selectedPlan}</div>
             <div><strong>Account status:</strong> {securityStatus}</div>
             <div><strong>Session status:</strong> {isAuthenticated ? "Signed in" : "Not signed in"}</div>
@@ -191,6 +272,55 @@ export default function PortalProfile() {
       </div>
 
       <div style={{ marginTop: 16 }}>
+        <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Profile and company settings</div>
+          <div style={{ color: "#475569", lineHeight: 1.8, marginBottom: 14 }}>
+            Update your profile identity and company contact settings. These settings stay active for your authenticated workspace on this device.
+          </div>
+          <form onSubmit={handleProfileSave} style={{ display: "grid", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+              <label style={{ display: "grid", gap: 6 }}>
+                <span style={{ color: "#334155", fontWeight: 600 }}>Profile name</span>
+                <input name="fullName" value={profileDraft.fullName} onChange={handleProfileFieldChange} style={formInputStyle} />
+              </label>
+              <label style={{ display: "grid", gap: 6 }}>
+                <span style={{ color: "#334155", fontWeight: 600 }}>Profile title / role</span>
+                <input name="title" value={profileDraft.title} onChange={handleProfileFieldChange} style={formInputStyle} />
+              </label>
+              <label style={{ display: "grid", gap: 6 }}>
+                <span style={{ color: "#334155", fontWeight: 600 }}>Profile phone</span>
+                <input name="phone" value={profileDraft.phone} onChange={handleProfileFieldChange} style={formInputStyle} />
+              </label>
+              <label style={{ display: "grid", gap: 6 }}>
+                <span style={{ color: "#334155", fontWeight: 600 }}>Company name</span>
+                <input name="companyName" value={profileDraft.companyName} onChange={handleProfileFieldChange} style={formInputStyle} />
+              </label>
+              <label style={{ display: "grid", gap: 6 }}>
+                <span style={{ color: "#334155", fontWeight: 600 }}>Workspace label</span>
+                <input name="workspaceLabel" value={profileDraft.workspaceLabel} onChange={handleProfileFieldChange} style={formInputStyle} />
+              </label>
+              <label style={{ display: "grid", gap: 6 }}>
+                <span style={{ color: "#334155", fontWeight: 600 }}>Support email</span>
+                <input name="supportEmail" type="email" value={profileDraft.supportEmail} onChange={handleProfileFieldChange} style={formInputStyle} />
+              </label>
+              <label style={{ display: "grid", gap: 6 }}>
+                <span style={{ color: "#334155", fontWeight: 600 }}>Company phone</span>
+                <input name="supportPhone" value={profileDraft.supportPhone} onChange={handleProfileFieldChange} style={formInputStyle} />
+              </label>
+              <label style={{ display: "grid", gap: 6 }}>
+                <span style={{ color: "#334155", fontWeight: 600 }}>Company website</span>
+                <input name="website" value={profileDraft.website} onChange={handleProfileFieldChange} style={formInputStyle} />
+              </label>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+              <button type="submit" style={{ ...toggleButtonStyle, background: "#2563eb", borderColor: "#1d4ed8", color: "#fff" }}>
+                Save profile settings
+              </button>
+              <span style={{ color: "#475569", fontSize: 14 }}>{profileMessage}</span>
+            </div>
+          </form>
+        </div>
+
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Plan-aware customer activation</div>
           <div style={{ color: "#475569", lineHeight: 1.8, marginBottom: 14 }}>

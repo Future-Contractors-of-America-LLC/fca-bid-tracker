@@ -44,6 +44,24 @@ function normalizeAuthBoundary(authBoundary) {
   };
 }
 
+function normalizeProfile(profile, session = {}) {
+  const email = (session?.email || "").trim().toLowerCase();
+  const fallbackName = email.includes("@") ? email.split("@")[0].replace(/[._-]+/g, " ") : "";
+  return {
+    fullName: (profile?.fullName || fallbackName || "").trim(),
+    title: (profile?.title || session?.role || "Owner / Admin").trim(),
+    phone: (profile?.phone || "").trim(),
+  };
+}
+
+function normalizeCompanySettings(companySettings, session = {}) {
+  return {
+    supportEmail: (companySettings?.supportEmail || session?.email || "").trim().toLowerCase(),
+    phone: (companySettings?.phone || "").trim(),
+    website: (companySettings?.website || "").trim(),
+  };
+}
+
 function broadcastCustomerSessionUpdate() {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_EVENT));
@@ -80,6 +98,8 @@ export function readCustomerSession() {
       authBoundary: normalizeAuthBoundary(parsed.authBoundary),
       enabledProducts: normalizeEnabledProducts(parsed.enabledProducts),
       enabledComms: normalizeEnabledComms(parsed.enabledComms),
+      profile: normalizeProfile(parsed.profile, parsed),
+      companySettings: normalizeCompanySettings(parsed.companySettings, parsed),
     };
   } catch {
     return null;
@@ -104,6 +124,8 @@ export function writeCustomerSession(session) {
     authBoundary: normalizeAuthBoundary(session.authBoundary),
     enabledProducts: normalizeEnabledProducts(session.enabledProducts),
     enabledComms: normalizeEnabledComms(session.enabledComms),
+    profile: normalizeProfile(session.profile, session),
+    companySettings: normalizeCompanySettings(session.companySettings, session),
   };
 
   try {
@@ -140,9 +162,16 @@ export async function syncCustomerSessionFromServer() {
     const payload = await readJsonSafe(response);
 
     if (response.ok && payload?.ok && payload?.authenticated && payload?.account) {
+      const preservedProfile = localSession?.profile || null;
+      const preservedCompanySettings = localSession?.companySettings || null;
       return writeCustomerSession({
         ...payload.account,
         authenticated: true,
+        company: localSession?.company || payload.account.company,
+        role: localSession?.role || payload.account.role,
+        workspaceLabel: localSession?.workspaceLabel || payload.account.workspaceLabel,
+        profile: payload.account.profile || preservedProfile,
+        companySettings: payload.account.companySettings || preservedCompanySettings,
         accountSource: payload.session?.sessionSource || payload.authenticationMode || "server-session",
         accountMode: payload.account?.accountMode || "seeded",
         authBoundary: payload.authBoundary,
@@ -202,6 +231,20 @@ export function updateCustomerSession(updates = {}) {
     enabledComms: normalizeEnabledComms({
       ...currentSession.enabledComms,
       ...updates.enabledComms,
+    }),
+    profile: normalizeProfile({
+      ...currentSession.profile,
+      ...updates.profile,
+    }, {
+      ...currentSession,
+      ...updates,
+    }),
+    companySettings: normalizeCompanySettings({
+      ...currentSession.companySettings,
+      ...updates.companySettings,
+    }, {
+      ...currentSession,
+      ...updates,
     }),
   });
 }
