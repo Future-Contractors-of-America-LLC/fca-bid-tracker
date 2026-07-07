@@ -76,7 +76,14 @@ async function authenticateWorkspaceAccount(email, password) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-    const payload = await response.json();
+    if (response.status === 503 || response.status === 502) {
+      if (localFallback) return localFallback;
+      throw new Error(
+        "Authentication service is temporarily unavailable. Please try again in a moment."
+      );
+    }
+    const contentType = response.headers.get("content-type") || "";
+    const payload = contentType.includes("application/json") ? await response.json().catch(() => null) : null;
     if (response.ok && payload?.ok && payload?.requiresVerification) {
       return {
         requiresVerification: true,

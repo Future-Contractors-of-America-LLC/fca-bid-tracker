@@ -10,8 +10,16 @@ async function readJsonSafe(response) {
   }
 }
 
+function unavailableError(status) {
+  return new Error(
+    `Authentication service is temporarily unavailable (HTTP ${status}). ` +
+    "Please try again in a moment or use your saved workspace credentials."
+  );
+}
+
 export async function fetchCustomerAuthState() {
   const response = await centralFetch("/api/customer-auth-state", { method: "GET" });
+  if (response.status === 503 || response.status === 502) throw unavailableError(response.status);
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
     const statusSuffix = response.status ? ` (status ${response.status})` : "";
@@ -26,6 +34,7 @@ export async function verifyCustomerLogin({ challengeId, code }) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ challengeId, code }),
   });
+  if (response.status === 503 || response.status === 502) throw unavailableError(response.status);
   const payload = await readJsonSafe(response);
   if (!response.ok || !payload?.ok) {
     throw new Error(payload?.error || "Invalid or expired verification code.");
