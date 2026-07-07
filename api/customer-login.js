@@ -1,110 +1,153 @@
-const TEST_ACCOUNTS = [
-  {
-    email: "founder.test@futurecontractorsofamerica.com",
-    password: "FCA-HandsOff-2026!",
-    company: "Future Contractors of America Test Workspace",
-    role: "Owner / Admin",
-    customerId: "CUST-FCA-TEST-001",
-    workspaceLabel: "FCA Founder Test Workspace",
-    selectedPlan: "enterprise",
-    enabledProducts: { saas: true, lms: true, auricrux: true },
-    enabledComms: { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true },
-    accountMode: "seeded",
-    authenticationMode: "seeded-server-session"
-  },
-  {
-    email: "launch.customer@futurecontractorsofamerica.com",
-    password: "FCA-Launch-2026!",
-    company: "Future Contractors of America Launch Customer",
-    role: "Owner / Admin",
-    customerId: "CUST-FCA-LAUNCH-001",
-    workspaceLabel: "FCA Launch Customer Workspace",
-    selectedPlan: "enterprise",
-    enabledProducts: { saas: true, lms: false, auricrux: true },
-    enabledComms: { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: false },
-    accountMode: "seeded",
-    authenticationMode: "seeded-server-session"
-  }
-];
+import { app } from "@azure/functions";
+import { buildAuthBoundary, createSessionCookie } from "./auth-boundary.js";
+import { validateCustomerCredentials } from "./customer-account-store.js";
 
-function sanitizeAccount(account) {
-  if (!account) return null;
-  const { password, ...safe } = account;
-  return safe;
+function readString(value) {
+  return typeof value === "string" ? value.trim() : "";
 }
 
-function createSessionToken(account) {
-  return Buffer.from(JSON.stringify({
-    email: account.email,
-    customerId: account.customerId,
-    company: account.company,
-    role: account.role,
-    workspaceLabel: account.workspaceLabel,
-    selectedPlan: account.selectedPlan,
-    enabledProducts: account.enabledProducts,
-    enabledComms: account.enabledComms,
-    accountMode: account.accountMode,
-    authenticationMode: account.authenticationMode,
-    exp: Date.now() + (8 * 60 * 60 * 1000)
-  })).toString("base64");
+function readQueryCredentials(request) {
+  const url = new URL(request.url);
+  return {
+    email: readString(url.searchParams.get("email")).toLowerCase(),
+    password: readString(url.searchParams.get("password")),
+  };
 }
 
-module.exports = async function (context, req) {
-  if ((req.method || "GET").toUpperCase() !== "POST") {
-    context.res = {
-      status: 200,
-      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-      body: {
-        ok: true,
-        route: "customer-login",
-        activeMode: "seeded-server-session",
-        message: "POST credentials to authenticate against the seeded FCA validation accounts."
-      }
-    };
-    return;
+function parseFormBody(rawBody) {
+  const params = new URLSearchParams(rawBody);
+  return {
+    email: readString(params.get("email")).toLowerCase(),
+    password: readString(params.get("password")),
+  };
+}
+
+function parseJsonBody(rawBody) {
+  const parsed = JSON.parse(rawBody);
+  return {
+    email: readString(parsed?.email).toLowerCase(),
+    password: readString(parsed?.password),
+  };
+}
+
+async function readCredentials(request) {
+  const contentType = (request.headers.get("content-type") || "").toLowerCase();
+  const queryCredentials = readQueryCredentials(request);
+  const rawBody = await request.text();
+  const trimmedBody = readString(rawBody);
+
+  if (!trimmedBody) {
+    return { ...queryCredentials, parseError: null };
   }
 
-  const body = req.body || {};
-  const email = String(body.email || "").trim().toLowerCase();
-  const password = String(body.password || "").trim();
-
-  const account = TEST_ACCOUNTS.find((item) => item.email.toLowerCase() === email && item.password === password);
-
-  if (!account) {
-    context.res = {
-      status: 401,
-      headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
-      body: {
-        ok: false,
-        error: "Invalid FCA customer credentials.",
-        route: "customer-login",
-        activeMode: "seeded-server-session"
-      }
-    };
-    return;
+  const shouldParseAsJson = contentType.includes("application/json") || trimmedBody.startsWith("{");
+  if (shouldParseAsJson) {
+    try {
+      const bodyCredentials = parseJsonBody(trimmedBody);
+      return {
+        email: bodyCredentials.email || queryCredentials.email,
+        password: bodyCredentials.password || queryCredentials.password,
+        parseError: null,
+      };
+    } catch {
+      return {
+        email: queryCredentials.email,
+        password: queryCredentials.password,
+        parseError: "Invalid JSON body. Send {\"email\":\"...\",\"password\":\"...\"} or form-encoded values.",
+      };
+    }
   }
 
-  const safeAccount = sanitizeAccount(account);
-  const token = createSessionToken(account);
+  if (contentType.includes("application/x-www-form-urlencoded") || trimmedBody.includes("=")) {
+    const bodyCredentials = parseFormBody(trimmedBody);
+    return {
+      email: bodyCredentials.email || queryCredentials.email,
+      password: bodyCredentials.password || queryCredentials.password,
+      parseError: null,
+    };
+  }
 
-  context.res = {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-store",
-      "Set-Cookie": `fca_customer_session=${token}; Path=/; Max-Age=28800; SameSite=Lax; Secure`
-    },
-    body: {
-      ok: true,
+  return { ...queryCredentials, parseError: null };
+}
+
+function buildUnauthorizedResponse() {
+  return {
+    status: 401,
+    headers: { "Cache-Control": "no-store" },
+    jsonBody: {
+      ok: false,
+      error: "Invalid FCA customer credentials.",
       route: "customer-login",
       activeMode: "seeded-server-session",
-      account: safeAccount,
-      authBoundary: {
-        productionAuthReady: false,
-        identityProvider: "fca-native-auth",
-        sessionValidation: "seeded-session-cookie",
-        nextBuildStep: "Promote from seeded validation login to managed customer authentication without regressing public access."
-      }
-    }
+    },
   };
-};
+}
+
+app.http("customer-login", {
+  methods: ["GET", "POST"],
+  authLevel: "anonymous",
+  route: "customer-login",
+  handler: async (request) => {
+    if (request.method.toUpperCase() !== "POST") {
+      return {
+        status: 200,
+        headers: { "Cache-Control": "no-store" },
+        jsonBody: {
+          ok: true,
+          route: "customer-login",
+          activeMode: "seeded-server-session",
+          message: "POST credentials to authenticate against managed or seeded FCA validation accounts.",
+        },
+      };
+    }
+
+    const { email, password, parseError } = await readCredentials(request);
+
+    if (parseError) {
+      return {
+        status: 400,
+        headers: { "Cache-Control": "no-store" },
+        jsonBody: {
+          ok: false,
+          error: parseError,
+          route: "customer-login",
+          activeMode: "seeded-server-session",
+        },
+      };
+    }
+
+    if (!email || !password) {
+      return {
+        status: 400,
+        headers: { "Cache-Control": "no-store" },
+        jsonBody: {
+          ok: false,
+          error: "Email and password are required.",
+          route: "customer-login",
+          activeMode: "seeded-server-session",
+        },
+      };
+    }
+
+    const account = validateCustomerCredentials(email, password);
+    if (!account) return buildUnauthorizedResponse();
+
+    const { cookie } = createSessionCookie(account);
+
+    return {
+      status: 200,
+      headers: {
+        "Set-Cookie": cookie,
+        "Cache-Control": "no-store",
+      },
+      jsonBody: {
+        ok: true,
+        route: "customer-login",
+        activeMode: account.authenticationMode || "seeded-server-session",
+        authenticationMode: account.authenticationMode || "seeded-server-session",
+        account,
+        authBoundary: buildAuthBoundary(),
+      },
+    };
+  },
+});

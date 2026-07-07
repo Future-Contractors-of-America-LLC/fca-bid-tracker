@@ -136,6 +136,31 @@ export const routeMetadata = {
     description:
       "Explore FCA Academy training, certification, and operational readiness connected to the broader platform shell.",
   },
+  "/academy/catalog": {
+    title: "Course Catalog | Future Contractors of America",
+    description:
+      "Browse all FCA Academy and CTE courses/pathways in a pricing-free catalog experience.",
+  },
+  "/academy/store": {
+    title: "Academy Store | Future Contractors of America",
+    description:
+      "Review Academy Store pricing for non-CTE pathways and contact FCA for CTE teacher/administrator rollout support.",
+  },
+  "/academy/student-portal": {
+    title: "FCA Academy Student Portal | Future Contractors of America",
+    description:
+      "Access the FCA Academy student portal for classroom progression and credential readiness.",
+  },
+  "/cte/portal": {
+    title: "CTE Program Portal | Future Contractors of America",
+    description:
+      "Open the CTE Program Portal with role-based access for teacher, administrator, substitute, and student pathways.",
+  },
+  "/cte/program": {
+    title: "CTE Program | Future Contractors of America",
+    description:
+      "Use the CTE Program pathway with dedicated teacher, administrator, substitute, and student login routes.",
+  },
 };
 
 function ensureTag(selector, createTag) {

@@ -30,6 +30,11 @@ import PortalOpportunityDetail from "./pages/portal/PortalOpportunityDetail";
 import PortalProjectDetail from "./pages/portal/PortalProjectDetail";
 
 import AcademyHome from "./pages/academy/AcademyHome";
+import AcademyCatalog from "./pages/academy/AcademyCatalog";
+import AcademyStore from "./pages/academy/AcademyStore";
+import AcademyStudentPortal from "./pages/academy/AcademyStudentPortal";
+import CteProgramPortal from "./pages/academy/CteProgramPortal";
+import CteProgram from "./pages/academy/CteProgram";
 
 export const routes = {
   "/": Home,
@@ -63,6 +68,11 @@ export const routes = {
   "/portal/academy": AcademyHome,
 
   "/academy": AcademyHome,
+  "/academy/catalog": AcademyCatalog,
+  "/academy/store": AcademyStore,
+  "/academy/student-portal": AcademyStudentPortal,
+  "/cte/portal": CteProgramPortal,
+  "/cte/program": CteProgram,
 };
 
 export const routePatterns = [

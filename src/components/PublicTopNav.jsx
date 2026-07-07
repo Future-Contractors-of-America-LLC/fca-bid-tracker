@@ -76,8 +76,12 @@ const publicNavGroups = [
     items: [
       { label: "Home", href: "/" },
       { label: "Platform", href: "/platform" },
-      { label: "Pricing", href: "/pricing" },
       { label: "Academy", href: "/academy" },
+      { label: "Course Catalog", href: "/academy/catalog" },
+      { label: "Academy Store", href: "/academy/store" },
+      { label: "FCA Academy Student Portal", href: "/academy/student-portal" },
+      { label: "CTE Program Portal", href: "/cte/portal" },
+      { label: "Pricing", href: "/pricing" },
       { label: "Contact", href: "/contact" },
     ],
   },
@@ -126,6 +130,11 @@ function resolveRouteCue(pathname, mode) {
   }
 
   if (pathname === "/platform") return "Platform framing active";
+  if (pathname === "/academy/catalog") return "Course catalog route active";
+  if (pathname === "/academy/store") return "Academy store route active";
+  if (pathname === "/academy/student-portal") return "Academy student portal route active";
+  if (pathname === "/cte/portal") return "CTE program portal route active";
+  if (pathname === "/cte/program") return "CTE pathway route active";
   if (pathname === "/pricing") return "Commercial rollout active";
   if (pathname === "/academy") return "Academy continuity active";
   if (pathname === "/contact") return "Guided contact route active";
