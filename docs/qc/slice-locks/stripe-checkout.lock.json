@@ -1,0 +1,43 @@
+{
+  "slice": "stripe-checkout",
+  "lockedAt": "2026-07-07T16:03:56.597Z",
+  "programPath": "backend-dotnet/Fca.BidTracker.Api/Program.cs",
+  "programHash": "402281bce6506cea21b736ea62a578be06420d04fe87c0a9f60bc88fe361f510",
+  "expectedRoutes": [
+    {
+      "method": "OPTIONS",
+      "routePath": "/api/stripe-checkout",
+      "expectedStatus": 204
+    },
+    {
+      "method": "POST",
+      "routePath": "/api/stripe-checkout",
+      "expectedStatus": 200
+    },
+    {
+      "method": "POST",
+      "routePath": "/api/stripe-checkout",
+      "expectedStatus": 200
+    },
+    {
+      "method": "POST",
+      "routePath": "/api/stripe-checkout",
+      "expectedStatus": 503
+    },
+    {
+      "method": "GET",
+      "routePath": "/api/stripe-checkout",
+      "expectedStatus": 405
+    },
+    {
+      "method": "DELETE",
+      "routePath": "/api/stripe-checkout",
+      "expectedStatus": 405
+    }
+  ],
+  "requiredSignals": [
+    "hasExpectedContent",
+    "selfContainedSignal",
+    "stripeOptionSignal"
+  ]
+}

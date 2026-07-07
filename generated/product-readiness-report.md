@@ -1,6 +1,6 @@
 # FCA Product Readiness Report
 
-- Generated at: 2026-07-07T16:03:37.284Z
+- Generated at: 2026-07-07T16:04:04.981Z
 - Route count: 83
 - SaaS pathways: 4
 - Academy classrooms: 4

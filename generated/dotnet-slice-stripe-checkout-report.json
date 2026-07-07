@@ -1,0 +1,120 @@
+{
+  "generatedAt": "2026-07-07T16:03:58.278Z",
+  "slice": "stripe-checkout",
+  "baseUrl": "http://127.0.0.1:9302",
+  "programPath": "backend-dotnet/Fca.BidTracker.Api/Program.cs",
+  "programHash": "402281bce6506cea21b736ea62a578be06420d04fe87c0a9f60bc88fe361f510",
+  "totalChecks": 6,
+  "passedChecks": 6,
+  "failedChecks": 0,
+  "checks": [
+    {
+      "name": "stripe_options",
+      "method": "OPTIONS",
+      "routePath": "/api/stripe-checkout",
+      "expected": 204,
+      "actual": 204,
+      "statusOk": true,
+      "noStackTraceLeak": true,
+      "json": null,
+      "ok": true
+    },
+    {
+      "name": "stripe_post_standard",
+      "method": "POST",
+      "routePath": "/api/stripe-checkout",
+      "expected": 200,
+      "actual": 200,
+      "statusOk": true,
+      "noStackTraceLeak": true,
+      "json": {
+        "ok": true,
+        "route": "/api/stripe-checkout",
+        "uiMode": "standard",
+        "primary": true,
+        "checkoutProvider": "fca-local",
+        "selfContained": true,
+        "sessionId": "fca-local-standard-session",
+        "publishableKey": "fca-local",
+        "backingSource": "dotnet-runtime-store"
+      },
+      "ok": true,
+      "hasExpectedContent": true
+    },
+    {
+      "name": "stripe_post_embedded_no_key",
+      "method": "POST",
+      "routePath": "/api/stripe-checkout",
+      "expected": 200,
+      "actual": 200,
+      "statusOk": true,
+      "noStackTraceLeak": true,
+      "json": {
+        "ok": true,
+        "route": "/api/stripe-checkout",
+        "uiMode": "embedded",
+        "primary": true,
+        "checkoutProvider": "fca-local",
+        "selfContained": true,
+        "sessionId": "fca-local-plan-session",
+        "publishableKey": "fca-local",
+        "backingSource": "dotnet-runtime-store"
+      },
+      "ok": true,
+      "selfContainedSignal": true
+    },
+    {
+      "name": "stripe_post_explicit_option_no_key",
+      "method": "POST",
+      "routePath": "/api/stripe-checkout",
+      "expected": 503,
+      "actual": 503,
+      "statusOk": true,
+      "noStackTraceLeak": true,
+      "json": {
+        "ok": false,
+        "error": "Stripe option unavailable: STRIPE_SECRET_KEY is not configured.",
+        "checkoutProvider": "stripe",
+        "optionUnavailable": true,
+        "fallbackProvider": "fca-local",
+        "fallbackAvailable": true
+      },
+      "ok": true,
+      "stripeOptionSignal": true
+    },
+    {
+      "name": "stripe_get_guard",
+      "method": "GET",
+      "routePath": "/api/stripe-checkout",
+      "expected": 405,
+      "actual": 405,
+      "statusOk": true,
+      "noStackTraceLeak": true,
+      "json": {
+        "success": false,
+        "error": {
+          "code": "METHOD_NOT_ALLOWED",
+          "message": "Method not allowed"
+        }
+      },
+      "ok": true
+    },
+    {
+      "name": "stripe_delete_guard",
+      "method": "DELETE",
+      "routePath": "/api/stripe-checkout",
+      "expected": 405,
+      "actual": 405,
+      "statusOk": true,
+      "noStackTraceLeak": true,
+      "json": {
+        "success": false,
+        "error": {
+          "code": "METHOD_NOT_ALLOWED",
+          "message": "Method not allowed"
+        }
+      },
+      "ok": true
+    }
+  ]
+}
