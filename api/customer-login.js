@@ -4,6 +4,13 @@ import { buildAuthBoundary, buildServerSession, createSessionCookie } from "./au
 import { createLoginChallenge } from "./verification-challenges.js";
 import { writeAuthAuditEvent } from "./auth-audit.js";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Accept",
+  "Access-Control-Max-Age": "86400",
+};
+
 function readString(value) {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -82,15 +89,20 @@ function login2faRequired(account) {
 }
 
 app.http("customer-login", {
-  methods: ["POST"],
+  methods: ["POST", "OPTIONS"],
   authLevel: "anonymous",
   route: "customer-login",
   handler: async (request) => {
+    if (request.method === "OPTIONS") {
+      return { status: 204, headers: CORS_HEADERS };
+    }
+
     const { email, password, parseError } = await readCredentials(request);
 
     if (parseError) {
       return {
         status: 400,
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: false,
           error: parseError,
@@ -102,6 +114,7 @@ app.http("customer-login", {
     if (!email || !password) {
       return {
         status: 400,
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: false,
           error: "Email and password are required.",
@@ -116,6 +129,7 @@ app.http("customer-login", {
       writeAuthAuditEvent({ eventType: "login_failure", role: null, request, reason: "invalid-credentials" });
       return {
         status: 401,
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: false,
           error: "The customer email or password is invalid.",
@@ -128,6 +142,7 @@ app.http("customer-login", {
       const challenge = createLoginChallenge(account);
       return {
         status: 200,
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: true,
           requiresVerification: true,
@@ -146,6 +161,7 @@ app.http("customer-login", {
       headers: {
         "Set-Cookie": cookie,
         "Cache-Control": "no-store",
+        ...CORS_HEADERS,
       },
       jsonBody: {
         ok: true,

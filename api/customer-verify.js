@@ -2,17 +2,33 @@ import { app } from "@azure/functions";
 import { buildAuthBoundary, buildServerSession, createSessionCookie } from "./auth-boundary.js";
 import { verifyLoginChallenge } from "./verification-challenges.js";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Accept",
+  "Access-Control-Max-Age": "86400",
+};
+
 app.http("customer-verify", {
-  methods: ["POST"],
+  methods: ["POST", "OPTIONS"],
   authLevel: "anonymous",
   route: "customer-verify",
   handler: async (request) => {
+    if (request.method === "OPTIONS") {
+      return { status: 204, headers: CORS_HEADERS };
+    }
+
     let payload;
+    // Use request.text() + manual parse instead of request.json() for mobile
+    // cross-origin compatibility — request.json() can fail when Content-Type is
+    // missing or the stream is not fully buffered before parsing.
+    const rawBody = await request.text();
     try {
-      payload = await request.json();
+      payload = rawBody ? JSON.parse(rawBody) : {};
     } catch {
       return {
         status: 400,
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: false,
           error: "A valid JSON payload is required.",
@@ -26,6 +42,7 @@ app.http("customer-verify", {
     if (!challengeId || !code) {
       return {
         status: 400,
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: false,
           error: "challengeId and code are required.",
@@ -38,6 +55,7 @@ app.http("customer-verify", {
     if (!account) {
       return {
         status: 401,
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: false,
           error: "Invalid or expired verification code.",
@@ -52,6 +70,7 @@ app.http("customer-verify", {
       headers: {
         "Set-Cookie": cookie,
         "Cache-Control": "no-store",
+        ...CORS_HEADERS,
       },
       jsonBody: {
         ok: true,
