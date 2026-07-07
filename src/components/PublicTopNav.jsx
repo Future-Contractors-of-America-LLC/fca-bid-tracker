@@ -182,7 +182,6 @@ const NAV_MENUS = [
       { label: "Academy store", href: "/academy/store" },
       { label: "FCA Academy Student Portal", href: "/academy/student-portal" },
       { label: "CTE Program Portal", href: "/cte/portal" },
-      { label: "Contact us for CTE", href: "/contact?topic=cte" },
     ],
   },
   {
