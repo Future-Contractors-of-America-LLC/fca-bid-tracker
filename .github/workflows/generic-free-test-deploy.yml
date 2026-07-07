@@ -1,6 +1,9 @@
 name: Generic Free Test Deploy
 
 on:
+  push:
+    branches:
+      - backup/full-system-preserve-20260705-223752
   workflow_dispatch:
 
 permissions:
