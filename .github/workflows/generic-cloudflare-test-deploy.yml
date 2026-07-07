@@ -1,0 +1,62 @@
+name: Generic Cloudflare Test Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - backup/full-system-preserve-20260705-223752
+
+permissions:
+  contents: read
+
+concurrency:
+  group: generic-cloudflare-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Assert Cloudflare config exists
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test -n "$CLOUDFLARE_PAGES_PROJECT"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static test bundle (isolated)
+        env:
+          AURICRUX_PRIMARY_DOMAIN: localhost
+          AURICRUX_DEPLOY_DEFAULT_HOST: localhost
+          AURICRUX_EXPECTED_HOSTS: localhost
+        run: npm run build
+
+      - name: Add SPA fallback
+        run: cp dist/index.html dist/404.html
+
+      - name: Deploy to Cloudflare Pages (generic domain)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ vars.CLOUDFLARE_PAGES_PROJECT }} --branch=${{ github.ref_name }}
