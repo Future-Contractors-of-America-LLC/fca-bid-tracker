@@ -1,0 +1,121 @@
+{
+  "generatedAt": "2026-07-07T16:03:32.194Z",
+  "baseUrl": "http://127.0.0.1:6402",
+  "total": 14,
+  "passed": 14,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "academy_options",
+      "method": "OPTIONS",
+      "path": "/api/academy-commerce",
+      "expected": 204,
+      "actual": 204,
+      "ok": true
+    },
+    {
+      "name": "academy_get",
+      "method": "GET",
+      "path": "/api/academy-commerce",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "academy_head",
+      "method": "HEAD",
+      "path": "/api/academy-commerce",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "academy_post_standard",
+      "method": "POST",
+      "path": "/api/academy-commerce",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "academy_post_embedded_no_key",
+      "method": "POST",
+      "path": "/api/academy-commerce",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "academy_post_explicit_stripe_no_key",
+      "method": "POST",
+      "path": "/api/academy-commerce",
+      "expected": 503,
+      "actual": 503,
+      "ok": true
+    },
+    {
+      "name": "stripe_options",
+      "method": "OPTIONS",
+      "path": "/api/stripe-checkout",
+      "expected": 204,
+      "actual": 204,
+      "ok": true
+    },
+    {
+      "name": "stripe_post_standard",
+      "method": "POST",
+      "path": "/api/stripe-checkout",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "stripe_post_embedded_no_key",
+      "method": "POST",
+      "path": "/api/stripe-checkout",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "stripe_post_explicit_stripe_no_key",
+      "method": "POST",
+      "path": "/api/stripe-checkout",
+      "expected": 503,
+      "actual": 503,
+      "ok": true
+    },
+    {
+      "name": "stripe_get_guard",
+      "method": "GET",
+      "path": "/api/stripe-checkout",
+      "expected": 405,
+      "actual": 405,
+      "ok": true
+    },
+    {
+      "name": "central_proxy_options",
+      "method": "OPTIONS",
+      "path": "/api/central-proxy/projects",
+      "expected": 204,
+      "actual": 204,
+      "ok": true
+    },
+    {
+      "name": "central_proxy_get",
+      "method": "GET",
+      "path": "/api/central-proxy/projects",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "central_proxy_post",
+      "method": "POST",
+      "path": "/api/central-proxy/auricrux/actions",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    }
+  ]
+}

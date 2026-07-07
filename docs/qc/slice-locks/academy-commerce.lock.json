@@ -1,0 +1,43 @@
+{
+  "slice": "academy-commerce",
+  "lockedAt": "2026-07-07T16:03:28.747Z",
+  "programPath": "backend-dotnet/Fca.BidTracker.Api/Program.cs",
+  "programHash": "402281bce6506cea21b736ea62a578be06420d04fe87c0a9f60bc88fe361f510",
+  "expectedRoutes": [
+    {
+      "method": "OPTIONS",
+      "routePath": "/api/academy-commerce",
+      "expectedStatus": 204
+    },
+    {
+      "method": "GET",
+      "routePath": "/api/academy-commerce",
+      "expectedStatus": 200
+    },
+    {
+      "method": "HEAD",
+      "routePath": "/api/academy-commerce",
+      "expectedStatus": 200
+    },
+    {
+      "method": "POST",
+      "routePath": "/api/academy-commerce",
+      "expectedStatus": 200
+    },
+    {
+      "method": "POST",
+      "routePath": "/api/academy-commerce",
+      "expectedStatus": 200
+    },
+    {
+      "method": "POST",
+      "routePath": "/api/academy-commerce",
+      "expectedStatus": 503
+    }
+  ],
+  "requiredSignals": [
+    "hasExpectedContent",
+    "selfContainedSignal",
+    "stripeOptionSignal"
+  ]
+}

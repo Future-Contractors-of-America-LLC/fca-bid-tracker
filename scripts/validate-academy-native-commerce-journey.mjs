@@ -9,6 +9,7 @@ import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const centralRoot = resolveCentralRoot(root);
 const apiBase = (process.env.AURICRUX_CENTRAL_API || "https://api.futurecontractorsofamerica.com/api").replace(/\/$/, "");
+const requireLivePaymentIntake = ["1", "true", "yes", "on"].includes(String(process.env.FCA_REQUIRE_LIVE_PAYMENT_INTAKE || "").toLowerCase());
 
 let failed = 0;
 
@@ -54,26 +55,30 @@ const conversion = spawnSync(process.execPath, [path.join(root, "scripts", "vali
 if (conversion.status === 0) pass("public conversion surface route truth");
 else fail("public conversion surface route truth", (conversion.stderr || conversion.stdout || "").slice(0, 200));
 
-try {
-  const intakeResponse = await fetch(`${apiBase}/fca-payments/intake`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({
-      offerKind: "academy-course",
-      programKey: "electrical-apprenticeship-level-1",
-      email: "cycle14-qc@futurecontractorsofamerica.com",
-      company: "FCA QC",
-    }),
-  });
-  const intakePayload = await intakeResponse.json();
-  const intakeId = intakePayload?.data?.intake?.intakeId;
-  if (!intakeResponse.ok || !intakeId) {
-    fail("live academy fca-payments/intake", `HTTP ${intakeResponse.status}`);
-  } else {
-    pass("live academy fca-payments/intake", intakeId);
+if (!requireLivePaymentIntake) {
+  skip("live academy payment intake", "set FCA_REQUIRE_LIVE_PAYMENT_INTAKE=1 to enforce external intake verification");
+} else {
+  try {
+    const intakeResponse = await fetch(`${apiBase}/fca-payments/intake`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        offerKind: "academy-course",
+        programKey: "electrical-apprenticeship-level-1",
+        email: "cycle14-qc@futurecontractorsofamerica.com",
+        company: "FCA QC",
+      }),
+    });
+    const intakePayload = await intakeResponse.json();
+    const intakeId = intakePayload?.data?.intake?.intakeId;
+    if (!intakeResponse.ok || !intakeId) {
+      fail("live academy fca-payments/intake", `HTTP ${intakeResponse.status}`);
+    } else {
+      pass("live academy fca-payments/intake", intakeId);
+    }
+  } catch (error) {
+    fail("live academy payment intake", error.message);
   }
-} catch (error) {
-  fail("live academy payment intake", error.message);
 }
 
 const outputDir = path.join(root, "docs", "qc");

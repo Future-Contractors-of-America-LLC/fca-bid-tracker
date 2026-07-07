@@ -85,12 +85,30 @@ async function main() {
     checks.push(await check({ name: "academy_options", method: "OPTIONS", path: "/api/academy-commerce", expected: 204 }));
     checks.push(await check({ name: "academy_get", method: "GET", path: "/api/academy-commerce", expected: 200 }));
     checks.push(await check({ name: "academy_head", method: "HEAD", path: "/api/academy-commerce", expected: 200 }));
-    checks.push(await check({ name: "academy_post_standard", method: "POST", path: "/api/academy-commerce", expected: 202, body: { uiMode: "standard" } }));
-    checks.push(await check({ name: "academy_post_embedded_no_key", method: "POST", path: "/api/academy-commerce", expected: 503, body: { uiMode: "embedded" } }));
+    checks.push(await check({ name: "academy_post_standard", method: "POST", path: "/api/academy-commerce", expected: 200, body: { uiMode: "standard" } }));
+    checks.push(await check({ name: "academy_post_embedded_no_key", method: "POST", path: "/api/academy-commerce", expected: 200, body: { uiMode: "embedded" } }));
+    checks.push(
+      await check({
+        name: "academy_post_explicit_stripe_no_key",
+        method: "POST",
+        path: "/api/academy-commerce",
+        expected: 503,
+        body: { uiMode: "embedded", checkoutProvider: "stripe" },
+      }),
+    );
 
     checks.push(await check({ name: "stripe_options", method: "OPTIONS", path: "/api/stripe-checkout", expected: 204 }));
-    checks.push(await check({ name: "stripe_post_standard", method: "POST", path: "/api/stripe-checkout", expected: 202, body: { action: "plan" } }));
-    checks.push(await check({ name: "stripe_post_embedded_no_key", method: "POST", path: "/api/stripe-checkout", expected: 503, body: { uiMode: "embedded", action: "plan" } }));
+    checks.push(await check({ name: "stripe_post_standard", method: "POST", path: "/api/stripe-checkout", expected: 200, body: { action: "plan" } }));
+    checks.push(await check({ name: "stripe_post_embedded_no_key", method: "POST", path: "/api/stripe-checkout", expected: 200, body: { uiMode: "embedded", action: "plan" } }));
+    checks.push(
+      await check({
+        name: "stripe_post_explicit_stripe_no_key",
+        method: "POST",
+        path: "/api/stripe-checkout",
+        expected: 503,
+        body: { uiMode: "embedded", action: "plan", checkoutProvider: "stripe" },
+      }),
+    );
     checks.push(await check({ name: "stripe_get_guard", method: "GET", path: "/api/stripe-checkout", expected: 405 }));
 
     checks.push(await check({ name: "central_proxy_options", method: "OPTIONS", path: "/api/central-proxy/projects", expected: 204 }));
