@@ -1,0 +1,36 @@
+{
+  "slice": "central-proxy",
+  "lockedAt": "2026-07-07T16:08:13.149Z",
+  "programPath": "backend-dotnet/Fca.BidTracker.Api/Program.cs",
+  "programHash": "402281bce6506cea21b736ea62a578be06420d04fe87c0a9f60bc88fe361f510",
+  "expectedRoutes": [
+    {
+      "method": "OPTIONS",
+      "routePath": "/api/central-proxy/projects",
+      "expectedStatus": 204
+    },
+    {
+      "method": "GET",
+      "routePath": "/api/central-proxy/projects",
+      "expectedStatus": 200
+    },
+    {
+      "method": "POST",
+      "routePath": "/api/central-proxy/auricrux/actions",
+      "expectedStatus": 200
+    },
+    {
+      "method": "PATCH",
+      "routePath": "/api/central-proxy/projects/PRJ-001",
+      "expectedStatus": 200
+    },
+    {
+      "method": "DELETE",
+      "routePath": "/api/central-proxy/projects/PRJ-001",
+      "expectedStatus": 200
+    }
+  ],
+  "requiredSignals": [
+    "hasExpectedContent"
+  ]
+}
