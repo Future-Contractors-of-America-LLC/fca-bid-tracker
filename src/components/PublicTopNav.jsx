@@ -158,40 +158,13 @@ const mobileDrawerPanel = {
 
 const NAV_MENUS = [
   {
-    label: "Platform",
-    items: [
-      { label: "Operating system overview", href: "/platform" },
-      { label: "Features", href: "/features" },
-      { label: "Solutions", href: "/solutions" },
-      { label: "Auricrux intelligence", href: "/auricrux" },
-    ],
-  },
-  {
-    label: "Decision Paths",
-    items: [
-      { label: "Owner / Executive", href: "/#owner-executive" },
-      { label: "Operations Director", href: "/#operations-director" },
-      { label: "Field Superintendent", href: "/#field-superintendent" },
-      { label: "Pricing and rollout", href: "/pricing" },
-    ],
-  },
-  {
     label: "Academy",
     items: [
+      { label: "Academy home", href: "/academy" },
       { label: "Course catalog", href: "/academy/catalog" },
       { label: "Academy store", href: "/academy/store" },
       { label: "FCA Academy Student Portal", href: "/academy/student-portal" },
       { label: "CTE Program Portal", href: "/cte/portal" },
-    ],
-  },
-  {
-    label: "Trust & Governance",
-    items: [
-      { label: "Trust workspace", href: "/login?next=/portal/admin" },
-      { label: "Audit trail", href: "/portal/audit" },
-      { label: "Security", href: "/security" },
-      { label: "Legal center", href: "/legal" },
-      { label: "Data privacy", href: "/privacy" },
     ],
   },
 ];
@@ -409,6 +382,17 @@ export default function PublicTopNav({ mode = "public" }) {
               >
                 Home
               </a>
+              <a
+                href="/platform"
+                style={{
+                  ...linkStyle,
+                  display: "inline-block",
+                  color: currentPath === "/platform" ? "#1d4ed8" : "#334155",
+                  background: currentPath === "/platform" ? "#eff6ff" : "transparent",
+                }}
+              >
+                Platform
+              </a>
               {NAV_MENUS.map((menu) => (
                 <NavDropdown key={menu.label} menu={menu} currentPath={currentPath} onNavigate={closeMobile} />
               ))}
@@ -500,7 +484,20 @@ export default function PublicTopNav({ mode = "public" }) {
               ))}
             </div>
           ) : null}
-          {(mode === "portal" ? portalNavGroups : [{ label: "Site", items: [{ label: "Home", href: "/" }] }, ...NAV_MENUS.map((m) => ({ label: m.label, items: m.items }))]).map((group) => (
+          {(mode === "portal"
+            ? portalNavGroups
+            : [
+                {
+                  label: "Site",
+                  items: [
+                    { label: "Home", href: "/" },
+                    { label: "Platform", href: "/platform" },
+                    { label: "Pricing", href: "/pricing" },
+                    { label: "Contact", href: "/contact" },
+                  ],
+                },
+                ...NAV_MENUS.map((m) => ({ label: m.label, items: m.items })),
+              ]).map((group) => (
             <div key={group.label} style={{ marginBottom: 16 }}>
               <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", padding: "8px 12px 4px" }}>
                 {group.label}

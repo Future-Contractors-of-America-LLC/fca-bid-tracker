@@ -142,6 +142,11 @@ const shellStyles = {
   listItem: {
     marginBottom: '0.45rem',
   },
+  listLink: {
+    color: '#93c5fd',
+    textDecoration: 'none',
+    fontWeight: 700,
+  },
 };
 
 export default function RouteExperienceShell({
@@ -203,7 +208,11 @@ export default function RouteExperienceShell({
                 {section.items?.length ? (
                   <ul style={shellStyles.list}>
                     {section.items.map((item) => (
-                      <li key={item} style={shellStyles.listItem}>{item}</li>
+                      <li key={typeof item === "string" ? item : `${item.label}-${item.href || ""}`} style={shellStyles.listItem}>
+                        {typeof item === "string" ? item : item.href ? (
+                          <a href={item.href} style={shellStyles.listLink}>{item.label}</a>
+                        ) : item.label}
+                      </li>
                     ))}
                   </ul>
                 ) : null}
