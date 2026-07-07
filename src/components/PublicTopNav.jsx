@@ -160,7 +160,6 @@ const NAV_MENUS = [
   {
     label: "Academy",
     items: [
-      { label: "Academy home", href: "/academy" },
       { label: "Course catalog", href: "/academy/catalog" },
       { label: "Academy store", href: "/academy/store" },
       { label: "FCA Academy Student Portal", href: "/academy/student-portal" },
@@ -297,6 +296,7 @@ export default function PublicTopNav({ mode = "public" }) {
   const loginHref = resolveLoginHref();
   const adminWorkspaceHref = resolveAdminWorkspaceHref(session);
   const workspaceHref = resolveWorkspaceEntryHref(session, "/portal/platform");
+  const profileHref = resolveGuestSafeHref("/portal/profile");
 
   function resolveGuestSafeHref(href) {
     if (!href || session?.authenticated) return href;
@@ -317,6 +317,7 @@ export default function PublicTopNav({ mode = "public" }) {
   const authActions = session?.authenticated ? (
     <>
       <AuricruxAssistantButton />
+      <a href={profileHref} style={signInStyle} onClick={closeMobile}>Profile</a>
       <a href={workspaceHref} style={signInStyle} onClick={closeMobile}>Workspace</a>
       <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>
     </>
@@ -448,6 +449,7 @@ export default function PublicTopNav({ mode = "public" }) {
           {session?.authenticated ? (
             <>
               <AuricruxAssistantButton onNavigate={closeMobile} />
+              <a href={profileHref} style={signInStyle} onClick={closeMobile}>Profile</a>
               <a href={workspaceHref} style={primaryCtaStyle} onClick={closeMobile}>Open workspace</a>
               <a href={adminWorkspaceHref} style={signInStyle} onClick={closeMobile}>Admin workspace</a>
               <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>
@@ -462,28 +464,6 @@ export default function PublicTopNav({ mode = "public" }) {
         </div>
 
         <div style={{ padding: "8px 8px 24px", overflow: "auto", flex: 1 }}>
-          {mode === "portal" ? (
-            <div style={{ marginBottom: 12, padding: "0 8px" }}>
-              <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", color: "#64748b", padding: "8px 12px 4px" }}>
-                Quick links
-              </div>
-              {portalNavPrimary.map((item) => (
-                <a
-                  key={item.href}
-                  href={resolveGuestSafeHref(item.href)}
-                  style={{
-                    ...linkStyle,
-                    padding: "10px 12px",
-                    color: isNavActive(currentPath, item.href) ? "#1d4ed8" : "#0f172a",
-                    background: isNavActive(currentPath, item.href) ? "#eff6ff" : "transparent",
-                  }}
-                  onClick={closeMobile}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          ) : null}
           {(mode === "portal"
             ? portalNavGroups
             : [

@@ -147,6 +147,13 @@ const shellStyles = {
     textDecoration: 'none',
     fontWeight: 700,
   },
+  cardCta: {
+    display: 'inline-flex',
+    marginTop: '0.8rem',
+    color: '#93c5fd',
+    textDecoration: 'none',
+    fontWeight: 700,
+  },
 };
 
 export default function RouteExperienceShell({
@@ -195,6 +202,11 @@ export default function RouteExperienceShell({
               <article key={card.title} style={shellStyles.card}>
                 <h2 style={shellStyles.cardTitle}>{card.title}</h2>
                 <p style={shellStyles.cardBody}>{card.detail}</p>
+                {card.ctaHref && card.ctaLabel ? (
+                  <a href={card.ctaHref} style={shellStyles.cardCta}>
+                    {card.ctaLabel}
+                  </a>
+                ) : null}
               </article>
             ))}
           </div>

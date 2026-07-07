@@ -17,28 +17,38 @@ export default function CteProgramPortal() {
         {
           title: "Teacher login",
           detail: "Launch curriculum delivery, evidence review, and classroom progression controls.",
+          ctaHref: "/login?role=cte-teacher&next=/cte/portal#teacher-login",
+          ctaLabel: "Open Teacher Login",
         },
         {
           title: "Administrator login",
           detail: "Open governance controls, implementation posture, and cohort oversight.",
+          ctaHref: "/login?role=cte-admin&next=/cte/portal#administrator-login",
+          ctaLabel: "Open Administrator Login",
         },
         {
           title: "Substitute login",
           detail: "Access continuity tools and handoff context for active classroom coverage.",
+          ctaHref: "/login?role=cte-substitute&next=/cte/portal#substitute-login",
+          ctaLabel: "Open Substitute Login",
         },
         {
           title: "Student login",
           detail: "Continue assigned pathway steps, coursework, and completion checkpoints.",
+          ctaHref: "/login?role=cte-student&next=/cte/portal#student-login",
+          ctaLabel: "Open Student Login",
         },
       ]}
       sections={[
         {
-          title: "Role-based login routes",
+          title: "CTE role and support routes",
           items: [
             { label: "Teacher login", href: "/login?role=cte-teacher&next=/cte/portal#teacher-login" },
             { label: "Administrator login", href: "/login?role=cte-admin&next=/cte/portal#administrator-login" },
             { label: "Substitute login", href: "/login?role=cte-substitute&next=/cte/portal#substitute-login" },
             { label: "Student login", href: "/login?role=cte-student&next=/cte/portal#student-login" },
+            { label: "CTE contact for teachers and administrators", href: "/contact?topic=cte" },
+            { label: "FCA Academy Student Portal", href: "/academy/student-portal" },
           ],
         },
       ]}
