@@ -93,6 +93,8 @@ jobs:
           skip_app_build: true
           app_location: dist
           api_location: api_generated
+          api_language: node
+          api_language_version: '22'
           output_location: ''
 
       - name: Mandatory post-deploy host verification gate

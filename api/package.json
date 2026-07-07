@@ -1,6 +1,9 @@
 {
   "name": "fca-bid-tracker-api",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22 <25"
+  },
   "dependencies": {
     "@azure/data-tables": "^13.3.1",
     "stripe": "^16.0.0"
