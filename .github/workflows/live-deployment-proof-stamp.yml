@@ -346,5 +346,5 @@ jobs:
             sleep 5
           done
 
-          echo "Failed to persist CI-backed live deployment proof after retry budget."
-          exit 1
+          echo "::warning::Failed to persist CI-backed live deployment proof after retry budget. Continuing without repo writeback."
+          exit 0

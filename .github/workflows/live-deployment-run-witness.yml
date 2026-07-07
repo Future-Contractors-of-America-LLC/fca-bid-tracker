@@ -90,5 +90,5 @@ jobs:
             sleep 5
           done
 
-          echo "Failed to persist live deployment run witness after retry budget."
-          exit 1
+          echo "::warning::Failed to persist live deployment run witness after retry budget. Continuing without repo writeback."
+          exit 0

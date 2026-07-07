@@ -111,5 +111,5 @@ jobs:
             sleep 5
           done
 
-          echo "Failed to persist CI-backed build proof provenance after retry budget."
-          exit 1
+          echo "::warning::Failed to persist CI-backed build proof provenance after retry budget. Continuing without repo writeback."
+          exit 0

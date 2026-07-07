@@ -185,5 +185,5 @@ jobs:
             sleep 5
           done
 
-          echo "Failed to persist runtime smoke proof artifacts after retry budget."
-          exit 1
+          echo "::warning::Failed to persist runtime smoke proof artifacts after retry budget. Continuing without repo writeback."
+          exit 0

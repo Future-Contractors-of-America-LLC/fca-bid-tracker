@@ -46,6 +46,14 @@ async function readCredentials(request) {
         parseError: null,
       };
     } catch {
+      if (trimmedBody.includes("=")) {
+        const parsed = parseFormPayload(trimmedBody);
+        return {
+          email: parsed.email || queryEmail,
+          password: parsed.password || queryPassword,
+          parseError: null,
+        };
+      }
       return {
         email: queryEmail,
         password: queryPassword,
