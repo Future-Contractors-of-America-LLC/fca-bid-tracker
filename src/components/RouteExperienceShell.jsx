@@ -143,6 +143,18 @@ const shellStyles = {
   listItem: {
     marginBottom: '0.45rem',
   },
+  listLink: {
+    color: '#93c5fd',
+    textDecoration: 'none',
+    fontWeight: 700,
+  },
+  cardCta: {
+    display: 'inline-flex',
+    marginTop: '0.8rem',
+    color: '#93c5fd',
+    textDecoration: 'none',
+    fontWeight: 700,
+  },
 };
 
 export default function RouteExperienceShell({
@@ -191,6 +203,11 @@ export default function RouteExperienceShell({
               <article key={card.title} style={shellStyles.card}>
                 <h2 style={shellStyles.cardTitle}>{card.title}</h2>
                 <p style={shellStyles.cardBody}>{card.detail}</p>
+                {card.ctaHref && card.ctaLabel ? (
+                  <Link to={card.ctaHref} style={shellStyles.cardCta}>
+                    {card.ctaLabel}
+                  </Link>
+                ) : null}
               </article>
             ))}
           </div>
@@ -203,9 +220,19 @@ export default function RouteExperienceShell({
                 {section.lead ? <p style={shellStyles.sectionLead}>{section.lead}</p> : null}
                 {section.items?.length ? (
                   <ul style={shellStyles.list}>
-                    {section.items.map((item) => (
-                      <li key={item} style={shellStyles.listItem}>{item}</li>
-                    ))}
+                    {section.items.map((item) => {
+                      if (item && typeof item === 'object' && item.href && item.label) {
+                        const itemKey = `${section.title}-${item.label}-${item.href}`;
+                        return (
+                          <li key={itemKey} style={shellStyles.listItem}>
+                            <Link to={item.href} style={shellStyles.listLink}>
+                              {item.label}
+                            </Link>
+                          </li>
+                        );
+                      }
+                      return <li key={`${section.title}-${item}`} style={shellStyles.listItem}>{item}</li>;
+                    })}
                   </ul>
                 ) : null}
               </section>

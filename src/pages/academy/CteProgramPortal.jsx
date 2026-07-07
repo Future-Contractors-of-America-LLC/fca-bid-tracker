@@ -4,27 +4,50 @@ export default function CteProgramPortal() {
   return (
     <RouteExperienceShell
       eyebrow="CTE Program Portal"
-      title="CTE program operations portal"
-      lead="CTE Program Portal provides role-based entry for teachers, administrators, substitutes, and students with a shared evidence and pathway framework."
-      primaryCta={{ href: "/cte/program", label: "Open CTE Program" }}
+      title="CTE portal with role-based login"
+      lead="Use this single portal as the CTE entry point, then continue through dedicated teacher, administrator, substitute, and student sign-in lanes."
+      primaryCta={{ href: "/login?role=cte-teacher&next=/cte/portal#teacher", label: "Teacher Login" }}
       secondaryCta={{ href: "/contact?topic=cte", label: "Contact CTE Team" }}
       proofPoints={[
+        { value: "1 portal", label: "Single CTE entry route for all roles" },
         { value: "4 roles", label: "Teacher, administrator, substitute, and student login lanes" },
-        { value: "1 hub", label: "Unified CTE pathway and evidence operations surface" },
-        { value: "Direct", label: "No legacy certification-institute detours" },
+        { value: "Direct", label: "No legacy certification institute detours" },
       ]}
       cards={[
         {
-          title: "Teacher and substitute operations",
-          detail: "Manage classroom delivery and continuity coverage while tracking student progress and readiness signals.",
+          title: "Teacher login",
+          detail: "Manage curriculum delivery, grading evidence, and classroom progression.",
+          ctaHref: "/login?role=cte-teacher&next=/cte/portal#teacher",
+          ctaLabel: "Open Teacher Login",
         },
         {
-          title: "Administrator controls",
-          detail: "Oversee implementation, governance, and cohort posture with route-level continuity insight.",
+          title: "Administrator login",
+          detail: "Control program governance, cohorts, and implementation posture.",
+          ctaHref: "/login?role=cte-admin&next=/cte/portal#administrator",
+          ctaLabel: "Open Administrator Login",
         },
         {
-          title: "Student pathway lane",
-          detail: "Students receive direct access into active pathway assignments and completion checkpoints.",
+          title: "Substitute login",
+          detail: "Access continuity classroom handoff context and substitute coverage tools.",
+          ctaHref: "/login?role=cte-substitute&next=/cte/portal#substitute",
+          ctaLabel: "Open Substitute Login",
+        },
+        {
+          title: "Student login",
+          detail: "Continue assigned pathway work, coursework checkpoints, and progress completion.",
+          ctaHref: "/login?role=cte-student&next=/cte/portal#student",
+          ctaLabel: "Open Student Login",
+        },
+      ]}
+      sections={[
+        {
+          title: "CTE route map",
+          lead: "This keeps CTE in one portal entry and separates role access only at login.",
+          items: [
+            { label: "CTE Program Portal (single entry)", href: "/cte/portal" },
+            { label: "CTE contact for teachers and administrators", href: "/contact?topic=cte" },
+            { label: "FCA Academy Student Portal", href: "/academy/student-portal" },
+          ],
         },
       ]}
     />

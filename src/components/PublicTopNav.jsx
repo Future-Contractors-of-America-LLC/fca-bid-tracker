@@ -6,7 +6,7 @@ import {
   resolveWorkspaceEntryHref,
 } from "../customerSession";
 import { navigateTo } from "../navigation";
-import { portalModules, workspaceContext as systemWorkspaceContext } from "../systemState";
+import { workspaceContext as systemWorkspaceContext } from "../systemState";
 import { publicActionCatalog } from "../websiteShell";
 
 const navShellStyle = {
@@ -76,7 +76,6 @@ const publicNavGroups = [
     items: [
       { label: "Home", href: "/" },
       { label: "Platform", href: "/platform" },
-      { label: "Academy", href: "/academy" },
       { label: "Course Catalog", href: "/academy/catalog" },
       { label: "Academy Store", href: "/academy/store" },
       { label: "FCA Academy Student Portal", href: "/academy/student-portal" },
@@ -101,7 +100,10 @@ const portalNavGroups = [
       { label: "Messages", href: "/portal/messages" },
       { label: "Billing", href: "/portal/billing" },
       { label: "Academy", href: "/portal/academy" },
+      { label: "Auricrux", href: "/portal/auricrux" },
       { label: "Support", href: "/portal/support" },
+      { label: "Profile", href: "/portal/profile" },
+      { label: "Admin", href: "/portal/admin" },
     ],
   },
 ];
@@ -222,18 +224,7 @@ export default function PublicTopNav({ mode = "public" }) {
         </nav>
 
         {mode === "portal" ? (
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            {[...portalModules.slice(0, 2), { href: "/portal/estimates", label: "Estimates" }, { href: "/portal/proposals", label: "Proposals" }].map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                style={isActivePath(currentPath, item.href) ? activeUtilityLinkStyle : utilityLinkStyle}
-                title={item.description || item.label}
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }} />
         ) : (
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             {showInternalLinks
@@ -245,7 +236,7 @@ export default function PublicTopNav({ mode = "public" }) {
                 })
               : null}
             <a href="/auricrux" style={isActivePath(currentPath, "/auricrux") ? activeUtilityLinkStyle : utilityLinkStyle}>Auricrux</a>
-            <a href="/login" style={isActivePath(currentPath, "/login") ? activeUtilityLinkStyle : utilityLinkStyle}>Login</a>
+            <a href={profileHref} style={isActivePath(currentPath, "/portal/profile") ? activeUtilityLinkStyle : utilityLinkStyle}>Profile</a>
           </div>
         )}
       </div>
