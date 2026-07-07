@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-07-07T00:00:00.000Z",
+  "strictStatus": "PASS",
+  "aggregateScore": 100,
+  "modules": [
+    {
+      "route": "/cte/portal",
+      "score": 100,
+      "status": "HIGHER"
+    }
+  ]
+}
