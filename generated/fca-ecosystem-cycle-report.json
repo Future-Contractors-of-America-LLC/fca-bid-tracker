@@ -1,0 +1,136 @@
+{
+  "generatedAt": "2026-07-07T15:38:41.686Z",
+  "workspaceCycle": false,
+  "steps": [
+    {
+      "stepId": "step1-architecture-contract",
+      "commands": [
+        {
+          "command": "npm run validate:backend-stack",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "npm run validate:triad-contract",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "node scripts/validate-unified-architecture-contract.mjs",
+          "exitCode": 0,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "stepId": "step2-vertical-slice",
+      "commands": [
+        {
+          "command": "npm run validate:phase4-ecosystem",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "npm run validate:bid-workspace",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "npm run validate:project-workspace",
+          "exitCode": 0,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "stepId": "step3-capability-gates",
+      "commands": [
+        {
+          "command": "npm run validate:module-capability-coverage",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "npm run validate:product-surfaces",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "node scripts/validate-routes.mjs",
+          "exitCode": 0,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "stepId": "step4-fragmentation-elimination",
+      "commands": [
+        {
+          "command": "node scripts/validate-fragmentation-paths.mjs",
+          "exitCode": 0,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "stepId": "step5-ci-truth-rules",
+      "commands": [
+        {
+          "command": "node scripts/validate-ci-truth-gates.mjs",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "npm run validate:runtime-proof-integrity",
+          "exitCode": 0,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "stepId": "step6-release-readiness-score",
+      "commands": [
+        {
+          "command": "npm run generate:runtime-proof-integrity-report",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "npm run generate:product-readiness-report",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "npm run validate:build-validation-live-proof-coverage",
+          "exitCode": 0,
+          "passed": true
+        },
+        {
+          "command": "node scripts/calculate-release-readiness-score.mjs",
+          "exitCode": 0,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "stepId": "step7-controlled-live-trial",
+      "commands": [
+        {
+          "command": "npm run verify:live-deployment",
+          "exitCode": 0,
+          "passed": true,
+          "skipped": true,
+          "note": "No explicit live targets configured (AURICRUX_LIVE_VERIFY_HOSTS/AURICRUX_EXPECTED_HOSTS)."
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true
+}

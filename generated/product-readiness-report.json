@@ -1,0 +1,77 @@
+{
+  "generatedAt": "2026-07-07T15:38:46.558Z",
+  "routeCount": 83,
+  "saasPathwayCount": 4,
+  "academyClassroomCount": 4,
+  "websiteEnterpriseProofCount": 3,
+  "saasPathways": [
+    {
+      "title": "Lead intake and qualification pipeline",
+      "audience": "Owners, sales coordinators, and preconstruction teams",
+      "href": "/portal/bids",
+      "moduleCount": 4
+    },
+    {
+      "title": "Preconstruction and estimating workspace",
+      "audience": "Estimators, project executives, and operations leads",
+      "href": "/portal/projects",
+      "moduleCount": 4
+    },
+    {
+      "title": "Project delivery and document control",
+      "audience": "Project managers, field coordinators, and customer stakeholders",
+      "href": "/portal/files",
+      "moduleCount": 4
+    },
+    {
+      "title": "Warranty, service, and referral continuity",
+      "audience": "Service coordinators, customer-success teams, and leadership",
+      "href": "/portal/warranty",
+      "moduleCount": 4
+    }
+  ],
+  "academyClassrooms": [
+    {
+      "title": "Construction Operations Foundations",
+      "credential": "FCA Core Operations Certificate",
+      "cadence": "4-week guided cohort",
+      "linkedSurface": "/portal/platform",
+      "moduleCount": 4
+    },
+    {
+      "title": "Estimating, Bidding, and Margin Control",
+      "credential": "Preconstruction Readiness Certificate",
+      "cadence": "6-module classroom",
+      "linkedSurface": "/portal/bids",
+      "moduleCount": 4
+    },
+    {
+      "title": "Document Control, RFIs, and Submittals",
+      "credential": "Project Controls Certificate",
+      "cadence": "5-part technical lab",
+      "linkedSurface": "/portal/files",
+      "moduleCount": 4
+    },
+    {
+      "title": "Field Safety, Mobilization, and Readiness",
+      "credential": "Field Readiness Badge",
+      "cadence": "3-week mobilization sprint",
+      "linkedSurface": "/portal/support",
+      "moduleCount": 4
+    }
+  ],
+  "websiteEnterpriseProof": [
+    {
+      "title": "Construction-native operating system framing",
+      "detail": "Every public route now ties back to contractor workflows: intake, estimating, document control, billing readiness, field execution, training, warranty, and referral growth."
+    },
+    {
+      "title": "Product-backed sales narrative",
+      "detail": "Website readers can move from positioning into live login, platform dashboard, portal workflows, academy classrooms, and rollout conversations without leaving the FCA shell."
+    },
+    {
+      "title": "Embedded Auricrux execution layer",
+      "detail": "Auricrux remains present as the guidance and operating layer across workspace, academy, and customer-facing execution rather than being isolated as a marketing concept."
+    }
+  ]
+}

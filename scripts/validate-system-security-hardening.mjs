@@ -40,7 +40,7 @@ function buildSignedSessionHeaders({ role = "Owner / Admin", email = "owner@exam
   };
 }
 
-const controls = require("../api/_lib/runtime/securityHardeningControls.js");
+const controls = require("../api/_lib/runtime/securityHardeningControls.cjs");
 const { createCentralProxy } = require("../api/_lib/proxyToCentral.js");
 const auricruxActions = require("../api/auricrux-actions/index.js");
 

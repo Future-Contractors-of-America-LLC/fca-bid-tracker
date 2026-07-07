@@ -20,7 +20,7 @@ function readSource(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), "utf8");
 }
 
-const shadow = require("../api/_lib/runtime/cteShadowEnvironment.js");
+const shadow = require("../api/_lib/runtime/cteShadowEnvironment.cjs");
 const { createCentralProxy } = require("../api/_lib/proxyToCentral.js");
 const auricruxActions = require("../api/auricrux-actions/index.js");
 const auricrux = require("../api/auricrux.js");

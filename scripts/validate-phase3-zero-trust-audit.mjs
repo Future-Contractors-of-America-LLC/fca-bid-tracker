@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import { createSessionCookie } from "../api/auth-boundary.js";
 
 const require = createRequire(import.meta.url);
-const controls = require("../api/_lib/runtime/securityHardeningControls.js");
+const controls = require("../api/_lib/runtime/securityHardeningControls.cjs");
 const failures = [];
 
 const {

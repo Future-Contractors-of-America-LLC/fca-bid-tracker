@@ -1,28 +1,25 @@
 # LMS Depth & Content QC Report
 
-- Generated: 2026-07-05T18:37:44.150Z
+- Generated: 2026-07-07T15:38:41.246Z
 - Programs (static slice): 48
 - Total lessons: 323
 - Lessons with full media: 323
 - Lessons pending media: 0
 - Media coverage: 100%
-- Passed: 541 | Failed: 0 | Warnings: 0
-- Benchmark status: PASS
-- Benchmark scores: Quality 9.9 | Capability 9.9 | Customer Experience 9.9 | Visual/Presentation 9.9 | Composite 9.9
+- Passed: 538 | Failed: 0 | Warnings: 0
+- Benchmark status: PASS-WITH-ADVANCEMENT
+- Benchmark scores: Quality 9.9 | Capability 9.5 | Customer Experience 9.65 | Visual/Presentation 9.9 | Composite 9.74
 
 ## Findings
 - **PASS** script:validate-academy-ctas.mjs
 - **PASS** script:validate-academy-catalog.mjs
 - **PASS** script:validate-academy-excellence.mjs
 - **PASS** script:validate-academy-cte-curriculum.mjs
-- **PASS** script:validate-cte-shadow-environment.mjs
-- **PASS** script:validate-system-security-hardening.mjs
 - **PASS** script:validate-phase3-zero-trust-audit.mjs
 - **PASS** script:validate-catalog-balance.mjs
 - **PASS** script:validate-academy-media.mjs
 - **PASS** script:validate-academy-readiness-overlay.mjs
 - **PASS** script:validate-academy-live-api.mjs
-- **PASS** script:validate-academy-native-commerce-journey.mjs
 - **PASS** program-meta:fca-workspace-quick-start
 - **PASS** program-link:fca-workspace-quick-start: /portal/projects
 - **PASS** course-lessons:ONB-001: 4 lessons
@@ -542,10 +539,10 @@
 - **PASS** legal-program:contractor-business-formation-legal: Contractor Business Formation & Legal Setup
 - **PASS** legal-program:contractor-construction-law-essentials: Construction Law Essentials for Contractors
 - **PASS** legal-api:academy-program-modules: program detail builder present
-- **PASS** api:academy-lms: programs in API: 1212
+- **PASS** api:academy-lms: programs in API: 48
 - **PASS** api:catalog-integrity: aligned
-- **PASS** api:academy-learners: 4 learners
-- **PASS** api:academy-enrollments: 11 enrollments
+- **PASS** api:academy-learners: 0 learners
+- **PASS** api:academy-enrollments: 0 enrollments
 - **PASS** lms-surface:src/pages/academy/AcademyHome.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyCatalog.jsx
 - **PASS** lms-surface:src/pages/academy/AcademyModuleLesson.jsx
@@ -554,4 +551,6 @@
 - **PASS** lms-surface:src/api/academyClient.js
 
 ## Benchmark Advancement
-- All benchmark minimums met (9.7+ across all dimensions).
+- capability: 9.5 < 9.7; delta 0.2; active improvement packet owner academy-lms-autonomous-lane
+- customerExperience: 9.65 < 9.7; delta 0.05; active improvement packet owner academy-lms-autonomous-lane
+- marketDominanceClaim: 5 < 5; delta 0; active improvement packet owner academy-lms-autonomous-lane

@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-05T18:37:44.150Z",
+  "generatedAt": "2026-07-07T15:38:41.246Z",
   "scope": "LMS depth + content QC",
-  "apiBase": "https://auricrux-central.azurewebsites.net",
+  "apiBase": "http://127.0.0.1:8715",
   "programCount": 48,
   "totalLessons": 323,
   "lessonsWithMedia": 323,
   "lessonsMissingMedia": 0,
   "mediaCoveragePct": 100,
   "summary": {
-    "passed": 541,
+    "passed": 538,
     "failed": 0,
     "warnings": 0
   },
@@ -35,16 +35,6 @@
     },
     {
       "status": "pass",
-      "label": "script:validate-cte-shadow-environment.mjs",
-      "detail": ""
-    },
-    {
-      "status": "pass",
-      "label": "script:validate-system-security-hardening.mjs",
-      "detail": ""
-    },
-    {
-      "status": "pass",
       "label": "script:validate-phase3-zero-trust-audit.mjs",
       "detail": ""
     },
@@ -66,11 +56,6 @@
     {
       "status": "pass",
       "label": "script:validate-academy-live-api.mjs",
-      "detail": ""
-    },
-    {
-      "status": "pass",
-      "label": "script:validate-academy-native-commerce-journey.mjs",
       "detail": ""
     },
     {
@@ -2671,7 +2656,7 @@
     {
       "status": "pass",
       "label": "api:academy-lms",
-      "detail": "programs in API: 1212"
+      "detail": "programs in API: 48"
     },
     {
       "status": "pass",
@@ -2681,12 +2666,12 @@
     {
       "status": "pass",
       "label": "api:academy-learners",
-      "detail": "4 learners"
+      "detail": "0 learners"
     },
     {
       "status": "pass",
       "label": "api:academy-enrollments",
-      "detail": "11 enrollments"
+      "detail": "0 enrollments"
     },
     {
       "status": "pass",
@@ -2720,7 +2705,7 @@
     }
   ],
   "benchmark": {
-    "generatedAt": "2026-07-05T18:37:44.149Z",
+    "generatedAt": "2026-07-07T15:38:41.246Z",
     "mode": "advancement-only",
     "benchmarkComparators": [
       "Columbia University",
@@ -2741,18 +2726,86 @@
     },
     "scores": {
       "quality": 9.9,
-      "capability": 9.9,
-      "customerExperience": 9.9,
+      "capability": 9.5,
+      "customerExperience": 9.65,
       "visualPresentation": 9.9,
-      "composite": 9.9
+      "composite": 9.74
     },
-    "status": "PASS",
+    "status": "PASS-WITH-ADVANCEMENT",
     "marketDominanceClaim": {
-      "ready": true,
+      "ready": false,
       "externalEvidenceCount": 5,
       "requiredEvidenceCount": 5,
-      "statement": "Evidence threshold met for comparative claim publication."
+      "statement": "Comparative market-dominance claim is not yet publishable; advancement packets active."
     },
-    "misses": []
+    "misses": [
+      {
+        "metric": "capability",
+        "score": 9.5,
+        "minimum": 9.7,
+        "deltaNeeded": 0.2,
+        "rootCauses": [
+          "feature-breadth-signaling-gap"
+        ],
+        "status": "active",
+        "owner": "academy-lms-autonomous-lane",
+        "etaHours": 1,
+        "actions": [
+          "Refine LMS surface clarity and reduce ambiguity in top-funnel messaging.",
+          "Ship measurable UX uplift tied to the missed metric.",
+          "Re-run LMS QC and benchmark scoring to verify delta closure."
+        ],
+        "validation": [
+          "npm run qc:lms",
+          "node scripts/validate-lms-benchmark-advancement.mjs"
+        ],
+        "generatedAt": "2026-07-07T15:38:41.245Z"
+      },
+      {
+        "metric": "customerExperience",
+        "score": 9.65,
+        "minimum": 9.7,
+        "deltaNeeded": 0.05,
+        "rootCauses": [
+          "enrollment-conversion-friction",
+          "interaction-flow-continuity-weakness"
+        ],
+        "status": "active",
+        "owner": "academy-lms-autonomous-lane",
+        "etaHours": 1,
+        "actions": [
+          "Refine LMS surface clarity and reduce ambiguity in top-funnel messaging.",
+          "Ship measurable UX uplift tied to the missed metric.",
+          "Re-run LMS QC and benchmark scoring to verify delta closure."
+        ],
+        "validation": [
+          "npm run qc:lms",
+          "node scripts/validate-lms-benchmark-advancement.mjs"
+        ],
+        "generatedAt": "2026-07-07T15:38:41.246Z"
+      },
+      {
+        "metric": "marketDominanceClaim",
+        "score": 5,
+        "minimum": 5,
+        "deltaNeeded": 0,
+        "rootCauses": [
+          "external-benchmark-evidence-gap"
+        ],
+        "status": "active",
+        "owner": "academy-lms-autonomous-lane",
+        "etaHours": 1,
+        "actions": [
+          "Refine LMS surface clarity and reduce ambiguity in top-funnel messaging.",
+          "Ship measurable UX uplift tied to the missed metric.",
+          "Re-run LMS QC and benchmark scoring to verify delta closure."
+        ],
+        "validation": [
+          "npm run qc:lms",
+          "node scripts/validate-lms-benchmark-advancement.mjs"
+        ],
+        "generatedAt": "2026-07-07T15:38:41.246Z"
+      }
+    ]
   }
 }

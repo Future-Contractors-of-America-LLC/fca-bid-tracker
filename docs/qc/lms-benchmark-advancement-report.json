@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-05T18:37:44.149Z",
+  "generatedAt": "2026-07-07T15:38:41.246Z",
   "mode": "advancement-only",
   "benchmarkComparators": [
     "Columbia University",
@@ -20,17 +20,85 @@
   },
   "scores": {
     "quality": 9.9,
-    "capability": 9.9,
-    "customerExperience": 9.9,
+    "capability": 9.5,
+    "customerExperience": 9.65,
     "visualPresentation": 9.9,
-    "composite": 9.9
+    "composite": 9.74
   },
-  "status": "PASS",
+  "status": "PASS-WITH-ADVANCEMENT",
   "marketDominanceClaim": {
-    "ready": true,
+    "ready": false,
     "externalEvidenceCount": 5,
     "requiredEvidenceCount": 5,
-    "statement": "Evidence threshold met for comparative claim publication."
+    "statement": "Comparative market-dominance claim is not yet publishable; advancement packets active."
   },
-  "misses": []
+  "misses": [
+    {
+      "metric": "capability",
+      "score": 9.5,
+      "minimum": 9.7,
+      "deltaNeeded": 0.2,
+      "rootCauses": [
+        "feature-breadth-signaling-gap"
+      ],
+      "status": "active",
+      "owner": "academy-lms-autonomous-lane",
+      "etaHours": 1,
+      "actions": [
+        "Refine LMS surface clarity and reduce ambiguity in top-funnel messaging.",
+        "Ship measurable UX uplift tied to the missed metric.",
+        "Re-run LMS QC and benchmark scoring to verify delta closure."
+      ],
+      "validation": [
+        "npm run qc:lms",
+        "node scripts/validate-lms-benchmark-advancement.mjs"
+      ],
+      "generatedAt": "2026-07-07T15:38:41.245Z"
+    },
+    {
+      "metric": "customerExperience",
+      "score": 9.65,
+      "minimum": 9.7,
+      "deltaNeeded": 0.05,
+      "rootCauses": [
+        "enrollment-conversion-friction",
+        "interaction-flow-continuity-weakness"
+      ],
+      "status": "active",
+      "owner": "academy-lms-autonomous-lane",
+      "etaHours": 1,
+      "actions": [
+        "Refine LMS surface clarity and reduce ambiguity in top-funnel messaging.",
+        "Ship measurable UX uplift tied to the missed metric.",
+        "Re-run LMS QC and benchmark scoring to verify delta closure."
+      ],
+      "validation": [
+        "npm run qc:lms",
+        "node scripts/validate-lms-benchmark-advancement.mjs"
+      ],
+      "generatedAt": "2026-07-07T15:38:41.246Z"
+    },
+    {
+      "metric": "marketDominanceClaim",
+      "score": 5,
+      "minimum": 5,
+      "deltaNeeded": 0,
+      "rootCauses": [
+        "external-benchmark-evidence-gap"
+      ],
+      "status": "active",
+      "owner": "academy-lms-autonomous-lane",
+      "etaHours": 1,
+      "actions": [
+        "Refine LMS surface clarity and reduce ambiguity in top-funnel messaging.",
+        "Ship measurable UX uplift tied to the missed metric.",
+        "Re-run LMS QC and benchmark scoring to verify delta closure."
+      ],
+      "validation": [
+        "npm run qc:lms",
+        "node scripts/validate-lms-benchmark-advancement.mjs"
+      ],
+      "generatedAt": "2026-07-07T15:38:41.246Z"
+    }
+  ]
 }

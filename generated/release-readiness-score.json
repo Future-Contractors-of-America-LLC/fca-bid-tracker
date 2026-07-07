@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-07-07T15:38:47.096Z",
+  "threshold": 0.9,
+  "score": 1,
+  "passed": true,
+  "breakdown": [
+    {
+      "id": "runtimeProofIntegrity",
+      "file": "generated/runtime-proof-integrity-report.json",
+      "weight": 0.25,
+      "passed": true
+    },
+    {
+      "id": "moduleCapabilityCoverage",
+      "file": "docs/qc/module-capability-coverage-report.json",
+      "weight": 0.25,
+      "passed": true
+    },
+    {
+      "id": "routeAndSurfaceIntegrity",
+      "file": "generated/product-readiness-report.json",
+      "weight": 0.2,
+      "passed": true
+    },
+    {
+      "id": "liveDeploymentProofCoverage",
+      "file": "generated/build-validation-live-proof-coverage-validation.json",
+      "weight": 0.3,
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "slice": "academy-lms",
+  "lockedAt": "2026-07-07T15:38:34.839Z",
+  "programPath": "backend-dotnet/Fca.BidTracker.Api/Program.cs",
+  "programHash": "402281bce6506cea21b736ea62a578be06420d04fe87c0a9f60bc88fe361f510",
+  "expectedRoutes": [
+    {
+      "method": "OPTIONS",
+      "routePath": "/api/academy-lms",
+      "expectedStatus": 204
+    },
+    {
+      "method": "GET",
+      "routePath": "/api/academy-lms",
+      "expectedStatus": 200
+    },
+    {
+      "method": "PATCH",
+      "routePath": "/api/academy-lms",
+      "expectedStatus": 200
+    },
+    {
+      "method": "POST",
+      "routePath": "/api/academy-lms",
+      "expectedStatus": 405
+    },
+    {
+      "method": "DELETE",
+      "routePath": "/api/academy-lms",
+      "expectedStatus": 405
+    }
+  ]
+}

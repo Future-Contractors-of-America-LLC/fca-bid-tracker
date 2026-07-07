@@ -1,0 +1,81 @@
+{
+  "generatedAt": "2026-07-07T15:36:32.791Z",
+  "baseUrl": "http://127.0.0.1:7446",
+  "total": 9,
+  "passed": 9,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "lms_options",
+      "method": "OPTIONS",
+      "path": "/api/academy-lms",
+      "expected": 204,
+      "actual": 204,
+      "ok": true
+    },
+    {
+      "name": "lms_get",
+      "method": "GET",
+      "path": "/api/academy-lms",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "lms_patch",
+      "method": "PATCH",
+      "path": "/api/academy-lms",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "lms_post_guard",
+      "method": "POST",
+      "path": "/api/academy-lms",
+      "expected": 405,
+      "actual": 405,
+      "ok": true
+    },
+    {
+      "name": "auricrux_options",
+      "method": "OPTIONS",
+      "path": "/api/auricrux",
+      "expected": 204,
+      "actual": 204,
+      "ok": true
+    },
+    {
+      "name": "auricrux_get",
+      "method": "GET",
+      "path": "/api/auricrux",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "auricrux_training_get",
+      "method": "GET",
+      "path": "/api/auricrux?scope=training",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "auricrux_post",
+      "method": "POST",
+      "path": "/api/auricrux",
+      "expected": 200,
+      "actual": 200,
+      "ok": true
+    },
+    {
+      "name": "auricrux_delete_guard",
+      "method": "DELETE",
+      "path": "/api/auricrux",
+      "expected": 405,
+      "actual": 405,
+      "ok": true
+    }
+  ]
+}
