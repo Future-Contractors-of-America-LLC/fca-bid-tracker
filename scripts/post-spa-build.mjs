@@ -9,7 +9,9 @@ const dataDir = path.join(distRoot, "data");
 
 const gitSha = process.env.GITHUB_SHA || "local-dev";
 const defaultHost =
-  process.env.AURICRUX_SWA_DEFAULT_HOST || "delightful-mushroom-0de67860f.7.azurestaticapps.net";
+  process.env.AURICRUX_DEPLOY_DEFAULT_HOST
+  || process.env.AURICRUX_SWA_DEFAULT_HOST
+  || "delightful-mushroom-0de67860f.7.azurestaticapps.net";
 const expectedHosts = FCA_EXPECTED_SWA_HOSTS_CSV;
 const commitWitnessRoute = `/commit-witness-${gitSha}.txt`;
 const buildMarkerDate = "June 18, 2026";

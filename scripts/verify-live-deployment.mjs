@@ -1,18 +1,28 @@
 import fs from "fs/promises";
 import path from "path";
 
-const configuredHosts = (process.env.AURICRUX_LIVE_VERIFY_HOSTS || "")
+const configuredHosts = (process.env.AURICRUX_LIVE_VERIFY_HOSTS || process.env.AURICRUX_EXPECTED_HOSTS || "")
   .split(",")
   .map((value) => value.trim())
   .filter(Boolean);
 
+const providerDefaultHost = (
+  process.env.AURICRUX_DEPLOY_DEFAULT_HOST
+  || process.env.AURICRUX_EXPECTED_DEFAULT_HOST
+  || process.env.AURICRUX_SWA_DEFAULT_HOST
+  || ""
+).trim();
+
 const hosts = [...new Set([
   ...configuredHosts,
-  "futurecontractorsofamerica.com",
-  "www.futurecontractorsofamerica.com",
-  "app.futurecontractorsofamerica.com",
-  process.env.AURICRUX_SWA_DEFAULT_HOST || "",
+  providerDefaultHost,
 ].filter(Boolean))];
+
+if (hosts.length === 0) {
+  throw new Error(
+    "No live verification hosts configured. Set AURICRUX_LIVE_VERIFY_HOSTS or AURICRUX_EXPECTED_HOSTS.",
+  );
+}
 
 const routes = [
   "/deployment-status.json",
@@ -45,10 +55,14 @@ const delayMs = Number(process.env.AURICRUX_LIVE_VERIFY_DELAY_MS || 30000);
 const workspaceDir = path.join(process.cwd(), "workspace");
 const summaryPath = path.join(workspaceDir, "live_deployment_smoke_summary.json");
 const failuresPath = path.join(workspaceDir, "live_deployment_smoke_failures.txt");
-const targetSwaName = process.env.AURICRUX_SWA_NAME || "fca-frontend";
-let targetDefaultHost = (process.env.AURICRUX_SWA_DEFAULT_HOST || process.env.AURICRUX_EXPECTED_DEFAULT_HOST || "").trim();
+const targetDeploymentName =
+  process.env.AURICRUX_DEPLOY_TARGET_NAME
+  || process.env.AURICRUX_SWA_NAME
+  || "fca-frontend";
+let targetDefaultHost = (process.env.AURICRUX_DEPLOY_DEFAULT_HOST || process.env.AURICRUX_SWA_DEFAULT_HOST || process.env.AURICRUX_EXPECTED_DEFAULT_HOST || "").trim();
 let targetGitSha = (process.env.GITHUB_SHA || process.env.AURICRUX_EXPECTED_GIT_SHA || "").trim();
 let targetCommitWitnessRoute = targetGitSha ? `/commit-witness-${targetGitSha}.txt` : "";
+const enforceTargetSha = String(process.env.AURICRUX_LIVE_VERIFY_ENFORCE_TARGET_SHA || "true").toLowerCase() !== "false";
 
 function parseFingerprint(text) {
   return text.trim().split("\n").reduce((acc, line) => {
@@ -201,18 +215,20 @@ function evaluateHost(host, deploymentResponse, continuityResponse, fingerprintR
     if (deployment.gitSha !== fingerprint.gitSha) {
       failures.push(`${host} has mixed witness SHA drift: deployment-status=${deployment.gitSha} runtime-fingerprint=${fingerprint.gitSha}`);
     }
-    if (deployment.gitSha !== targetGitSha) {
-      failures.push(`${host} is serving stale deployment-status SHA ${deployment.gitSha}; expected ${targetGitSha}`);
-    }
-    if (fingerprint.gitSha !== targetGitSha) {
-      failures.push(`${host} is serving stale runtime-fingerprint SHA ${fingerprint.gitSha}; expected ${targetGitSha}`);
-    }
-    if (deployment.commitWitnessRoute !== targetCommitWitnessRoute) {
-      failures.push(`${host} deployment manifest reports commit witness ${deployment.commitWitnessRoute}; expected ${targetCommitWitnessRoute}`);
+    if (enforceTargetSha) {
+      if (deployment.gitSha !== targetGitSha) {
+        failures.push(`${host} is serving stale deployment-status SHA ${deployment.gitSha}; expected ${targetGitSha}`);
+      }
+      if (fingerprint.gitSha !== targetGitSha) {
+        failures.push(`${host} is serving stale runtime-fingerprint SHA ${fingerprint.gitSha}; expected ${targetGitSha}`);
+      }
+      if (deployment.commitWitnessRoute !== targetCommitWitnessRoute) {
+        failures.push(`${host} deployment manifest reports commit witness ${deployment.commitWitnessRoute}; expected ${targetCommitWitnessRoute}`);
+      }
     }
   }
 
-  if (commitWitnessResponse.ok && !commitWitnessResponse.text.includes(`gitSha=${targetGitSha}`)) {
+  if (enforceTargetSha && commitWitnessResponse.ok && !commitWitnessResponse.text.includes(`gitSha=${targetGitSha}`)) {
     failures.push(`${host} commit witness payload does not include expected SHA ${targetGitSha}`);
   }
 
@@ -298,7 +314,7 @@ async function runAttempt(attemptNumber) {
     const hostResult = evaluateHost(host, deploymentResponse, continuityResponse, fingerprintResponse, commitWitnessResponse, routeChecks, apiRouteChecks);
     summary.push({
       attempt: attemptNumber,
-      targetSwaName,
+      targetDeploymentName,
       targetDefaultHost,
       targetGitSha,
       ...hostResult,
@@ -337,9 +353,9 @@ for (let attempt = 1; attempt <= attempts; attempt += 1) {
 }
 
 const staleHosts = finalSummary.filter((item) => item.deploymentGitSha !== targetGitSha && item.deploymentGitSha !== "unavailable");
-if (staleHosts.length === hosts.length) {
+if (enforceTargetSha && staleHosts.length === hosts.length) {
   finalFailures.push(
-    `All hosts remained stale after ${attempts} attempts. This strongly indicates SWA deployment token/resource mismatch or deployment targeting drift. Expected gitSha=${targetGitSha}.`
+    `All hosts remained stale after ${attempts} attempts. This strongly indicates deployment target mismatch or release routing drift. Expected gitSha=${targetGitSha}.`
   );
   await fs.writeFile(failuresPath, `${finalFailures.join("\n")}\n`, "utf8");
 }

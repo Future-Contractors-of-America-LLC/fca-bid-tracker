@@ -4,7 +4,10 @@ import path from "path";
 const root = process.cwd();
 const publicDir = path.join(root, "public");
 const target = path.join(publicDir, "deployment-status.json");
-const defaultHost = "delightful-mushroom-0de67860f.7.azurestaticapps.net";
+const defaultHost =
+  process.env.AURICRUX_DEPLOY_DEFAULT_HOST
+  || process.env.AURICRUX_SWA_DEFAULT_HOST
+  || "delightful-mushroom-0de67860f.7.azurestaticapps.net";
 const gitSha = process.env.GITHUB_SHA || "local";
 const commitWitnessRoute = `/commit-witness-${gitSha}.txt`;
 
@@ -16,11 +19,10 @@ const payload = {
   gitSha,
   runId: process.env.GITHUB_RUN_ID || "local",
   defaultHost,
-  expectedHosts: [
-    "futurecontractorsofamerica.com",
-    "www.futurecontractorsofamerica.com",
-    defaultHost,
-  ],
+  expectedHosts: (process.env.AURICRUX_EXPECTED_HOSTS || `futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,${defaultHost}`)
+    .split(",")
+    .map((host) => host.trim())
+    .filter(Boolean),
   verificationRoutes: [
     "/deployment-status.json",
     "/live-shell-verification.html",

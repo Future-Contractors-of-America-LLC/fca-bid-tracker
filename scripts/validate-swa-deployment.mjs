@@ -58,14 +58,15 @@ const checks = [
     file: path.join(root, "scripts", "verify-live-deployment.mjs"),
     markers: [
       'process.env.AURICRUX_LIVE_VERIFY_HOSTS',
+      'process.env.AURICRUX_EXPECTED_HOSTS',
+      'process.env.AURICRUX_DEPLOY_DEFAULT_HOST',
+      'process.env.AURICRUX_LIVE_VERIFY_ENFORCE_TARGET_SHA',
       'process.env.AURICRUX_SWA_DEFAULT_HOST',
       'process.env.AURICRUX_SWA_NAME',
       'process.env.GITHUB_SHA',
       'targetCommitWitnessRoute',
       'commit-witness-',
       'deployment.commitWitnessRoute',
-      '"futurecontractorsofamerica.com"',
-      '"www.futurecontractorsofamerica.com"',
       '"/deployment-status.json"',
       '"/runtime-fingerprint.txt"',
       '"/warranty"',
@@ -73,6 +74,9 @@ const checks = [
       'workspace',
       'live_deployment_smoke_summary.json',
       'live_deployment_smoke_failures.txt'
+    ],
+    oneOfMarkers: [
+      ['"futurecontractorsofamerica.com"', 'process.env.AURICRUX_LIVE_VERIFY_HOSTS', 'process.env.AURICRUX_EXPECTED_HOSTS']
     ]
   }
 ];

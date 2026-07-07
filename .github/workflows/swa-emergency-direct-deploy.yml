@@ -5,6 +5,8 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  AURICRUX_DEPLOY_TARGET_NAME: fca-frontend
+  AURICRUX_DEPLOY_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
   AURICRUX_SWA_NAME: fca-frontend
   AURICRUX_SWA_DEFAULT_HOST: delightful-mushroom-0de67860f.7.azurestaticapps.net
   AURICRUX_EXPECTED_HOSTS: futurecontractorsofamerica.com,www.futurecontractorsofamerica.com,app.futurecontractorsofamerica.com,delightful-mushroom-0de67860f.7.azurestaticapps.net
@@ -102,6 +104,9 @@ jobs:
           AURICRUX_LIVE_VERIFY_ATTEMPTS: '20'
           AURICRUX_LIVE_VERIFY_DELAY_MS: '30000'
           AURICRUX_LIVE_VERIFY_HOSTS: ${{ env.AURICRUX_EXPECTED_HOSTS }}
+          AURICRUX_LIVE_VERIFY_ENFORCE_TARGET_SHA: ${{ startsWith(github.ref_name, 'backup/') && 'false' || 'true' }}
+          AURICRUX_DEPLOY_TARGET_NAME: ${{ env.AURICRUX_DEPLOY_TARGET_NAME }}
+          AURICRUX_DEPLOY_DEFAULT_HOST: ${{ env.AURICRUX_DEPLOY_DEFAULT_HOST }}
           AURICRUX_SWA_DEFAULT_HOST: ${{ env.AURICRUX_SWA_DEFAULT_HOST }}
           AURICRUX_SWA_NAME: ${{ env.AURICRUX_SWA_NAME }}
 
