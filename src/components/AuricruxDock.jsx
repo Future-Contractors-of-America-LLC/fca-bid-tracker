@@ -250,6 +250,9 @@ export default function AuricruxDock() {
   const [lastReply, setLastReply] = useState("");
   const [lastPrompt, setLastPrompt] = useState("");
   const [feedbackState, setFeedbackState] = useState("");
+  const [thinkingMode, setThinkingMode] = useState("auto");
+  const [searchScope, setSearchScope] = useState("both");
+  const [autoSpeak, setAutoSpeak] = useState(true);
   const { supported: voiceSupported, speaking, speak, stop } = useAuricruxVoice();
 
   const speechTier = useMemo(() => {
@@ -375,6 +378,8 @@ export default function AuricruxDock() {
           designParams,
           pageProjectId,
           recentTurns: buildRecentTurns(log),
+          thinkingMode,
+          searchScope,
         }),
       });
       setMode(data.operational ? data.mode || "workflow-execute" : data.poweredByLlm || data.mode === "llm-assistant" ? "live" : "fallback");
