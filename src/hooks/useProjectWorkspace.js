@@ -31,7 +31,8 @@ export default function useProjectWorkspace() {
       const saved = writeProjectWorkspace(payload.items || []);
       setProjects(saved);
       setActiveProjectId(
-        (payload.items || []).find((project) => project.isActive)?.id ||
+        (payload.items || []).find((project) => project.isActive)?.projectId ||
+          (payload.items || []).find((project) => project.isActive)?.id ||
           readActiveProjectWorkspace(saved)?.id ||
           null
       );
@@ -73,6 +74,7 @@ export default function useProjectWorkspace() {
           const refreshed = await fetchWorkflowProjects();
           const saved = writeProjectWorkspace(refreshed.items || []);
           const nextId =
+            (refreshed.items || []).find((project) => project.isActive)?.projectId ||
             (refreshed.items || []).find((project) => project.isActive)?.id ||
             payload.activeProjectId ||
             projectId;

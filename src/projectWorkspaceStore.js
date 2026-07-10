@@ -4,10 +4,17 @@ export const PROJECT_WORKSPACE_KEY = "fca_project_workspace_v1";
 export const ACTIVE_PROJECT_KEY = "fca_active_project_v1";
 
 function normalizeProjectRecord(project = {}, index = 0) {
+  const id = project.projectId || project.id || `PRJ-${index + 1}`;
+  const name =
+    project.projectName ||
+    project.name ||
+    `${project.customer || project.clientName || project.clientId || "Unassigned customer"} Project Workspace`;
+  const customer = project.customer || project.clientName || project.clientId || "Unassigned customer";
   return {
-    id: project.id || `PRJ-${index + 1}`,
-    name: project.name || `${project.customer || "Unassigned customer"} Project Workspace`,
-    customer: project.customer || "Unassigned customer",
+    ...project,
+    id,
+    name,
+    customer,
     stage: project.stage || "Estimating",
     nextAction: project.nextAction || "Advance project",
     owner: project.owner || "Unassigned",

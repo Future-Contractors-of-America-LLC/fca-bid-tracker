@@ -58,7 +58,7 @@ export default function useWorkflowEvidence(projectId) {
     try {
       const [filesPayload, auditPayload] = await Promise.all([
         fetchWorkflowFiles({ projectId, ...filters }),
-        fetchWorkflowAudit(projectId),
+        fetchWorkflowAudit({ projectId }),
       ]);
 
       setFiles(Array.isArray(filesPayload.items) ? filesPayload.items : []);
@@ -97,7 +97,7 @@ export default function useWorkflowEvidence(projectId) {
       try {
         const [filesPayload, auditPayload] = await Promise.all([
           fetchWorkflowFiles({ projectId, ...filters }),
-          fetchWorkflowAudit(projectId),
+          fetchWorkflowAudit({ projectId }),
         ]);
 
         if (!active) return;

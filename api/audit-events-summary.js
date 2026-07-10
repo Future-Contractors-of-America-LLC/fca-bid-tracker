@@ -9,6 +9,6 @@ app.http("audit-events-summary", {
   handler: async (request) => {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;
-    return withSessionRefresh(await proxyCentralRequest(request, "/audit-events-summary"), auth);
+    return withSessionRefresh(await proxyCentralRequest(request, "/audit-events/summary"), auth);
   },
 });

@@ -12,6 +12,7 @@ const EXPECTED_LANES = {
   licensure: 82,
   professional: 23,
   "fca-how-to": 9,
+  "vdoe-cte": 33,
 };
 
 const LANE_COMPLIANCE_FIELD = {

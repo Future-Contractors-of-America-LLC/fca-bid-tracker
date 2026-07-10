@@ -7,9 +7,15 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
+import { resolveCentralRoot } from "./lib/fcaCentralRoot.mjs";
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const centralRoot = path.resolve(root, "..", "auricrux-central-work");
-const mobileRoot = path.resolve(root, "..", "fca-mobile-maui-work");
+const centralRoot = resolveCentralRoot(root);
+const mobileCandidates = [
+  path.resolve(root, "..", "fca-mobile-maui"),
+  path.resolve(root, "..", "fca-mobile-maui-work"),
+];
+const mobileRoot = mobileCandidates.find((candidate) => fs.existsSync(candidate)) || mobileCandidates[0];
 let failed = 0;
 const findings = [];
 
@@ -38,6 +44,17 @@ function requireIncludes(relativePath, marker, label, base = root) {
   return true;
 }
 
+function requireAnyIncludes(relativePath, markers, label, base = root) {
+  const source = read(relativePath, base);
+  const hit = markers.find((marker) => source.includes(marker));
+  if (!hit) {
+    fail(label, `missing one of ${markers.map((m) => `"${m}"`).join(", ")} in ${relativePath}`);
+    return false;
+  }
+  pass(label, `${relativePath} (${hit})`);
+  return true;
+}
+
 for (const script of ["validate-cycle2-complete.mjs"]) {
   const result = spawnSync(process.execPath, [path.join(root, "scripts", script)], { stdio: "pipe", encoding: "utf8" });
   if (result.status === 0) {
@@ -53,9 +70,9 @@ requireIncludes("core/v1_routes.py", "customer-entra", "Entra route registered",
 
 requireIncludes("src/api/entraAuthClient.js", "startEntraSignIn", "Entra web client");
 requireIncludes("src/pages/website/Login.jsx", "Sign in with Microsoft", "Entra login UI");
-requireIncludes("src/api/stripeClient.js", "createInvoiceCheckout", "invoice checkout client");
-requireIncludes("src/pages/portal/PortalInvoiceDetail.jsx", "createInvoiceCheckout", "invoice pay UI");
-requireIncludes("src/pages/portal/PortalBilling.jsx", "createPortalBillingPortal", "billing portal UI");
+requireAnyIncludes("src/api/fcaPaymentClient.js", ["createFcaPaymentIntake", "submitFcaNativeCheckout"], "FCA native invoice checkout client");
+requireAnyIncludes("src/pages/portal/PortalInvoiceDetail.jsx", ["createFcaPaymentIntake", "submitFcaNativeCheckout"], "invoice pay UI");
+requireAnyIncludes("src/pages/portal/PortalBilling.jsx", ["createFcaPaymentIntake", "submitFcaNativeCheckout", "createPortalBillingPortal"], "billing portal UI");
 requireIncludes("src/pages/portal/PortalBilling.jsx", "payInvoice", "billing list pay action");
 
 requireIncludes("src/api/m365Client.js", "listSharePointFolderItems", "SharePoint client");

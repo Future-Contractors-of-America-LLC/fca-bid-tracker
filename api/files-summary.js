@@ -9,6 +9,6 @@ app.http("files-summary", {
   handler: async (request) => {
     const auth = requireAuth(request);
     if (!auth.ok) return auth.response;
-    return withSessionRefresh(await proxyCentralRequest(request, "/files-summary"), auth);
+    return withSessionRefresh(await proxyCentralRequest(request, "/files/summary"), auth);
   },
 });

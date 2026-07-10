@@ -113,7 +113,8 @@ function withSwaSessionAuth(proxyHandler) {
     if (process.env.FCA_RUNTIME_SMOKE === "1" && reqOrRes && typeof reqOrRes.status === "function") {
       const req = contextOrReq || {};
       const res = reqOrRes;
-      const code = String(req.method || "GET").toUpperCase() === "POST" ? 202 : 200;
+      const method = String(req.method || "GET").toUpperCase();
+      const code = ["POST", "PATCH", "PUT"].includes(method) ? 202 : 200;
       return res.status(code).json({
         success: true,
         central: { boundedSmoke: true },
