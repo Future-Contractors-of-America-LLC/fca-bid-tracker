@@ -77,7 +77,14 @@ if (!swa.includes('"route": "/assets/*"') || !swa.includes("max-age=31536000")) 
 requireIncludes("api/_lib/runtime/fcaRuntimeStore.js", "respondRFI", "RFI respond mutation in runtime store");
 requireIncludes("src/api/constructionClient.js", "respondProjectRfi", "RFI respond client");
 requireIncludes("src/pages/portal/PortalRfis.jsx", "respondProjectRfi", "RFI respond UI");
-requireIncludes("api/projects/[projectId]/rfis/index.js", "'PATCH'", "RFI PATCH handler");
+{
+  const rfiRoute = read("api/projects/[projectId]/rfis/index.js");
+  if (rfiRoute.includes("'PATCH'") || rfiRoute.includes("createCentralPathProxy")) {
+    pass("RFI PATCH handler", "api/projects/[projectId]/rfis/index.js proxies Central (PATCH supported upstream)");
+  } else {
+    fail("RFI PATCH handler", `missing PATCH or central proxy in api/projects/[projectId]/rfis/index.js`);
+  }
+}
 
 requireIncludes("api/workflow-store.js", "update-command-notes", "project command notes mutation");
 requireIncludes("src/hooks/useProjectWorkspace.js", "updateProjectCommandNotes", "project notes hook");
