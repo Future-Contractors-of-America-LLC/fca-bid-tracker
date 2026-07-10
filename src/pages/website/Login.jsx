@@ -101,6 +101,7 @@ async function authenticateWorkspaceAccount(email, password, allowSeededFallback
         ...payload.account,
         authBoundary: payload.authBoundary,
         accountSource: payload.authenticationMode || "api",
+        sessionToken: payload.sessionToken || null,
       };
     }
     if (localFallback) return localFallback;
@@ -245,6 +246,10 @@ export default function Login({ requestedPath = FOUNDER_PROOF_PATH, accessMode =
           accountSource: authenticatedAccount.accountSource,
           accountMode: authenticatedAccount.accountMode,
           authBoundary: authenticatedAccount.authBoundary,
+          sessionToken: authenticatedAccount.sessionToken || null,
+          profile: authenticatedAccount.profile || null,
+          companySettings: authenticatedAccount.companySettings || null,
+          brandSkin: authenticatedAccount.brandSkin || null,
         });
         if (!result.ok) throw new Error(result.error);
         setAuthStatus("authenticated");
@@ -271,6 +276,10 @@ export default function Login({ requestedPath = FOUNDER_PROOF_PATH, accessMode =
       accountSource: authenticatedAccount.accountSource,
       accountMode: authenticatedAccount.accountMode,
       authBoundary: authenticatedAccount.authBoundary,
+      sessionToken: authenticatedAccount.sessionToken || null,
+      profile: authenticatedAccount.profile || null,
+      companySettings: authenticatedAccount.companySettings || null,
+      brandSkin: authenticatedAccount.brandSkin || null,
     });
     if (!result.ok) throw new Error(result.error);
     setAuthStatus("authenticated");

@@ -62,6 +62,15 @@ function normalizeCompanySettings(companySettings, session = {}) {
   };
 }
 
+function normalizeBrandSkin(brandSkin = {}, session = {}) {
+  return {
+    companyName: (brandSkin?.companyName || session?.company || "").trim(),
+    welcomeMessage: (brandSkin?.welcomeMessage || "").trim(),
+    accent: (brandSkin?.accent || "#1d4ed8").trim() || "#1d4ed8",
+    surface: (brandSkin?.surface || "#eff6ff").trim() || "#eff6ff",
+  };
+}
+
 function broadcastCustomerSessionUpdate() {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new CustomEvent(CUSTOMER_SESSION_EVENT));
@@ -100,6 +109,8 @@ export function readCustomerSession() {
       enabledComms: normalizeEnabledComms(parsed.enabledComms),
       profile: normalizeProfile(parsed.profile, parsed),
       companySettings: normalizeCompanySettings(parsed.companySettings, parsed),
+      brandSkin: normalizeBrandSkin(parsed.brandSkin, parsed),
+      sessionToken: parsed.sessionToken || null,
     };
   } catch {
     return null;
@@ -126,6 +137,8 @@ export function writeCustomerSession(session) {
     enabledComms: normalizeEnabledComms(session.enabledComms),
     profile: normalizeProfile(session.profile, session),
     companySettings: normalizeCompanySettings(session.companySettings, session),
+    brandSkin: normalizeBrandSkin(session.brandSkin, session),
+    sessionToken: session.sessionToken || null,
   };
 
   try {
@@ -162,16 +175,16 @@ export async function syncCustomerSessionFromServer() {
     const payload = await readJsonSafe(response);
 
     if (response.ok && payload?.ok && payload?.authenticated && payload?.account) {
-      const preservedProfile = localSession?.profile || null;
-      const preservedCompanySettings = localSession?.companySettings || null;
       return writeCustomerSession({
         ...payload.account,
         authenticated: true,
-        company: localSession?.company || payload.account.company,
-        role: localSession?.role || payload.account.role,
-        workspaceLabel: localSession?.workspaceLabel || payload.account.workspaceLabel,
-        profile: payload.account.profile || preservedProfile,
-        companySettings: payload.account.companySettings || preservedCompanySettings,
+        company: payload.account.company || localSession?.company,
+        role: payload.account.role || localSession?.role,
+        workspaceLabel: payload.account.workspaceLabel || localSession?.workspaceLabel,
+        profile: payload.account.profile || localSession?.profile || null,
+        companySettings: payload.account.companySettings || localSession?.companySettings || null,
+        brandSkin: payload.account.brandSkin || localSession?.brandSkin || null,
+        sessionToken: payload.sessionToken || localSession?.sessionToken || null,
         accountSource: payload.session?.sessionSource || payload.authenticationMode || "server-session",
         accountMode: payload.account?.accountMode || "seeded",
         authBoundary: payload.authBoundary,
@@ -246,7 +259,68 @@ export function updateCustomerSession(updates = {}) {
       ...currentSession,
       ...updates,
     }),
+    brandSkin: normalizeBrandSkin({
+      ...currentSession.brandSkin,
+      ...updates.brandSkin,
+    }, {
+      ...currentSession,
+      ...updates,
+    }),
+    sessionToken: updates.sessionToken || currentSession.sessionToken || null,
   });
+}
+
+export async function persistCustomerPreferences(updates = {}) {
+  const currentSession = readCustomerSession();
+  if (!currentSession?.authenticated) {
+    return { ok: false, error: "No authenticated customer session was found." };
+  }
+
+  const optimistic = updateCustomerSession(updates);
+
+  try {
+    const response = await centralFetch("/api/customer-session", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        company: updates.company,
+        workspaceLabel: updates.workspaceLabel,
+        role: updates.role,
+        profile: updates.profile,
+        companySettings: updates.companySettings,
+        brandSkin: updates.brandSkin,
+      }),
+    });
+    const payload = await readJsonSafe(response);
+    if (!response.ok || !payload?.ok || !payload?.account) {
+      return {
+        ok: Boolean(optimistic),
+        session: optimistic,
+        warning: payload?.error || "Saved on this device only. Server preference sync is unavailable.",
+        backingSource: "local-session",
+      };
+    }
+
+    const saved = writeCustomerSession({
+      ...optimistic,
+      ...payload.account,
+      sessionToken: payload.sessionToken || optimistic?.sessionToken || currentSession.sessionToken,
+      authBoundary: payload.authBoundary || optimistic?.authBoundary,
+      accountSource: payload.session?.sessionSource || optimistic?.accountSource,
+    });
+    return {
+      ok: true,
+      session: saved,
+      backingSource: payload.backingSource || "customer-preferences",
+    };
+  } catch (error) {
+    return {
+      ok: Boolean(optimistic),
+      session: optimistic,
+      warning: error?.message || "Saved on this device only. Server preference sync failed.",
+      backingSource: "local-session",
+    };
+  }
 }
 
 export async function clearCustomerSession({ server = false } = {}) {

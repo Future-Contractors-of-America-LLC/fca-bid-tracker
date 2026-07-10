@@ -560,9 +560,9 @@ export const portalModules = [
     description: "One live job spine: project → files → takeoff → RFI → invoice → Auricrux",
   },
   {
-    href: "/portal",
-    label: "Overview",
-    description: "Customer account summary and next actions",
+    href: "/portal/profile",
+    label: "Profile & look",
+    description: "Account settings, brand look, and communications preferences",
   },
   {
     href: "/portal/projects",

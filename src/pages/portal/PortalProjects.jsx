@@ -175,7 +175,12 @@ export default function PortalProjects() {
             render: (row) => (
               <button
                 type="button"
-                onClick={() => setSelectedProjectId(row.id)}
+                onClick={async () => {
+                  setSelectedProjectId(row.id);
+                  const selected = await selectActiveProject(row.id, `${row.id} selected as active project.`);
+                  syncActiveProject(selected || row.project, `Active project updated to ${row.id}`);
+                  window.location.href = `/portal/projects/${encodeURIComponent(row.id)}`;
+                }}
                 style={{ border: "none", background: "transparent", padding: 0, textAlign: "left", cursor: "pointer", font: "inherit", color: portalTokens.primaryInk, fontWeight: 700 }}
               >
                 {row.name}
@@ -235,10 +240,25 @@ export default function PortalProjects() {
                 const selected = await selectActiveProject(visibleProject.id, `${visibleProject.id} selected as active project.`);
                 syncActiveProject(selected || visibleProject, `Active project updated to ${visibleProject.id}`);
                 refreshSyncStamp(`Project root synchronized to ${visibleProject.id}`);
+                window.location.href = `/portal/projects/${encodeURIComponent(visibleProject.id)}`;
+              }}
+            >
+              Open / run project
+            </button>
+            <button
+              type="button"
+              style={portalButtonSecondary}
+              onClick={async () => {
+                const selected = await selectActiveProject(visibleProject.id, `${visibleProject.id} selected as active project.`);
+                syncActiveProject(selected || visibleProject, `Active project updated to ${visibleProject.id}`);
+                refreshSyncStamp(`Project root synchronized to ${visibleProject.id}`);
               }}
             >
               Set as active project
             </button>
+            <a href={`/portal/files?projectId=${encodeURIComponent(visibleProject.id)}`} style={portalButtonSecondary}>
+              Open files
+            </a>
             <button type="button" style={portalButtonSecondary} onClick={() => advanceProjectStage(visibleProject.id, "Mobilization", `${draft.customerMilestone || "Mobilization"} confirmed.`)}>
               Advance to mobilization
             </button>

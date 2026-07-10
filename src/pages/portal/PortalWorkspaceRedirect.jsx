@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { navigateTo } from "../../navigation";
 
-export default function PortalWorkspaceRedirect({ target = "/portal/platform" }) {
+export default function PortalWorkspaceRedirect({ target = "/portal/proof" }) {
   useEffect(() => {
     navigateTo(target);
   }, [target]);

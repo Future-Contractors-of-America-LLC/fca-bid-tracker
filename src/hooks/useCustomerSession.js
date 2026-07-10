@@ -5,6 +5,7 @@ import {
   readCustomerSession,
   hydrateCustomerSession,
   updateCustomerSession,
+  persistCustomerPreferences,
   writeCustomerSession,
 } from "../customerSession";
 import { appendAutomationLog, clearAutomationLog } from "../sessionAutomationLog";
@@ -130,7 +131,12 @@ export default function useCustomerSession() {
         customerId,
         workspaceLabel,
         accountSource = "workspace-shell",
+        accountMode,
         authBoundary,
+        sessionToken = null,
+        profile = null,
+        companySettings = null,
+        brandSkin = null,
       }) {
         const normalizedEmail = (email || "").trim().toLowerCase();
         const normalizedCompany = (company || "").trim();
@@ -162,9 +168,14 @@ export default function useCustomerSession() {
           lastLoginAt: new Date().toISOString(),
           selectedPlan: planPreset.key,
           accountSource,
+          accountMode,
           authBoundary,
           enabledProducts: normalizedProducts,
           enabledComms: normalizedComms,
+          sessionToken,
+          profile,
+          companySettings,
+          brandSkin,
         });
 
         setSession(saved);
@@ -172,16 +183,33 @@ export default function useCustomerSession() {
         logCommercialEvent("workspace-activation", `${planPreset.name} workspace activated`, `Auricrux turned a commercial entry into a live authenticated workspace for ${normalizedCompany}.`, nextHref === "/portal/platform" ? "/pricing" : nextHref);
         return { ok: true, session: saved };
       },
-      updateSession(updates = {}) {
-        const saved = updateCustomerSession(updates);
-        if (!saved) {
-          return { ok: false, error: "No authenticated customer session was found." };
+      async updateSession(updates = {}) {
+        const result = await persistCustomerPreferences(updates);
+        if (!result.ok && !result.session) {
+          return { ok: false, error: result.error || "No authenticated customer session was found." };
         }
 
-        setSession(saved);
-        logAutomationEvent("session-update", `Workspace profile updated for ${saved.company}`, "Auricrux recorded a direct customer-session update and preserved it for cross-route continuity.", saved.nextHref || "/portal/platform");
-        logCommercialEvent("commercial-update", `Commercial profile updated for ${saved.company}`, "Auricrux preserved a customer commercial/profile mutation so rollout and revenue continuity remain visible.", saved.nextHref || "/portal/platform");
-        return { ok: true, session: saved };
+        setSession(result.session);
+        logAutomationEvent(
+          "session-update",
+          `Workspace profile updated for ${result.session.company}`,
+          result.warning
+            ? `Profile saved locally. ${result.warning}`
+            : `Auricrux persisted profile preferences (${result.backingSource || "server"}).`,
+          result.session.nextHref || "/portal/platform",
+        );
+        logCommercialEvent(
+          "commercial-update",
+          `Commercial profile updated for ${result.session.company}`,
+          "Auricrux preserved a customer commercial/profile mutation so rollout and revenue continuity remain visible.",
+          result.session.nextHref || "/portal/platform",
+        );
+        return {
+          ok: true,
+          session: result.session,
+          warning: result.warning || "",
+          backingSource: result.backingSource,
+        };
       },
       setProductAccess(product, enabled) {
         if (!PRODUCT_KEYS.includes(product)) {

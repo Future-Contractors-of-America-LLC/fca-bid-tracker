@@ -99,6 +99,7 @@ export default function PortalProfile() {
   const verificationStatus = resolveVerificationLabel(authState.authBoundary);
   const profile = session?.profile || {};
   const companySettings = session?.companySettings || {};
+  const brandSkin = session?.brandSkin || {};
   const [profileDraft, setProfileDraft] = useState({
     fullName: "",
     title: "",
@@ -108,8 +109,13 @@ export default function PortalProfile() {
     supportEmail: "",
     supportPhone: "",
     website: "",
+    brandCompanyName: "",
+    welcomeMessage: "",
+    accent: "#1d4ed8",
+    surface: "#eff6ff",
   });
   const [profileMessage, setProfileMessage] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setProfileDraft({
@@ -121,6 +127,10 @@ export default function PortalProfile() {
       supportEmail: companySettings.supportEmail || sessionEmail,
       supportPhone: companySettings.phone || "",
       website: companySettings.website || "",
+      brandCompanyName: brandSkin.companyName || sessionCompany,
+      welcomeMessage: brandSkin.welcomeMessage || "Welcome to your FCA workspace.",
+      accent: brandSkin.accent || "#1d4ed8",
+      surface: brandSkin.surface || "#eff6ff",
     });
   }, [
     profile.fullName,
@@ -133,6 +143,10 @@ export default function PortalProfile() {
     companySettings.phone,
     companySettings.website,
     sessionEmail,
+    brandSkin.companyName,
+    brandSkin.welcomeMessage,
+    brandSkin.accent,
+    brandSkin.surface,
   ]);
 
   function toggleProduct(productKey, enabled) {
@@ -155,10 +169,26 @@ export default function PortalProfile() {
     }));
   }
 
-  function handleProfileSave(event) {
+  async function handleProfileSave(event) {
     event.preventDefault();
+    setSaving(true);
     const normalizedCompanyName = profileDraft.companyName.trim() || sessionCompany;
-    const result = updateSession({
+    const brandPayload = {
+      companyName: profileDraft.brandCompanyName.trim() || normalizedCompanyName,
+      welcomeMessage: profileDraft.welcomeMessage.trim() || "Welcome to your FCA workspace.",
+      accent: profileDraft.accent.trim() || "#1d4ed8",
+      surface: profileDraft.surface.trim() || "#eff6ff",
+    };
+
+    try {
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem("fca_customer_brand_skin_v1", JSON.stringify(brandPayload));
+      }
+    } catch {
+      // best-effort brand skin mirror for pages that still read the legacy key
+    }
+
+    const result = await updateSession({
       company: normalizedCompanyName,
       workspaceLabel: profileDraft.workspaceLabel.trim() || `${normalizedCompanyName} Workspace`,
       role: profileDraft.title.trim() || workspaceRole,
@@ -172,9 +202,17 @@ export default function PortalProfile() {
         phone: profileDraft.supportPhone.trim(),
         website: profileDraft.website.trim(),
       },
+      brandSkin: brandPayload,
     });
 
-    setProfileMessage(result.ok ? "Profile and company settings saved." : result.error || "Unable to save profile settings.");
+    if (!result.ok) {
+      setProfileMessage(result.error || "Unable to save profile settings.");
+    } else if (result.warning) {
+      setProfileMessage(`Saved on this device. ${result.warning}`);
+    } else {
+      setProfileMessage(`Profile, company, and look settings saved (${result.backingSource || "server"}).`);
+    }
+    setSaving(false);
   }
 
   const productCards = [
@@ -206,13 +244,13 @@ export default function PortalProfile() {
 
   return (
     <PortalShell
-      title="Profile"
-      subtitle="Account identity, plan access, and communication preferences."
+      title="Profile & look"
+      subtitle="Account identity, workspace brand look, plan access, and communication preferences."
       activeHref="/portal/profile"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}
-      primaryHref="/portal/platform"
-      primaryLabel="Open Platform Dashboard"
+      primaryHref="/portal/projects"
+      primaryLabel="Open projects"
     >
       <PortalSliceAuricrux
         title="Auricrux Profile Intelligence"
@@ -273,9 +311,10 @@ export default function PortalProfile() {
 
       <div style={{ marginTop: 16 }}>
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Profile and company settings</div>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Profile, company, and page look</div>
           <div style={{ color: "#475569", lineHeight: 1.8, marginBottom: 14 }}>
-            Update your profile identity and company contact settings. These settings stay active for your authenticated workspace on this device.
+            Update identity and brand look. Saves to the live customer preference store when your session token is present; otherwise this device keeps a local copy.
+            {!session?.sessionToken ? " Sign out and sign in again once to enable server-backed preference sync." : ""}
           </div>
           <form onSubmit={handleProfileSave} style={{ display: "grid", gap: 12 }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
@@ -312,9 +351,32 @@ export default function PortalProfile() {
                 <input name="website" value={profileDraft.website} onChange={handleProfileFieldChange} style={formInputStyle} />
               </label>
             </div>
+
+            <div style={{ marginTop: 4, padding: 14, borderRadius: 12, border: "1px solid #cbd5e1", background: profileDraft.surface || "#eff6ff" }}>
+              <div style={{ color: profileDraft.accent || "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>Workspace look</div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
+                <label style={{ display: "grid", gap: 6 }}>
+                  <span style={{ color: "#334155", fontWeight: 600 }}>Brand name</span>
+                  <input name="brandCompanyName" value={profileDraft.brandCompanyName} onChange={handleProfileFieldChange} style={formInputStyle} />
+                </label>
+                <label style={{ display: "grid", gap: 6 }}>
+                  <span style={{ color: "#334155", fontWeight: 600 }}>Welcome message</span>
+                  <input name="welcomeMessage" value={profileDraft.welcomeMessage} onChange={handleProfileFieldChange} style={formInputStyle} />
+                </label>
+                <label style={{ display: "grid", gap: 6 }}>
+                  <span style={{ color: "#334155", fontWeight: 600 }}>Accent color</span>
+                  <input name="accent" value={profileDraft.accent} onChange={handleProfileFieldChange} style={formInputStyle} placeholder="#1d4ed8" />
+                </label>
+                <label style={{ display: "grid", gap: 6 }}>
+                  <span style={{ color: "#334155", fontWeight: 600 }}>Surface color</span>
+                  <input name="surface" value={profileDraft.surface} onChange={handleProfileFieldChange} style={formInputStyle} placeholder="#eff6ff" />
+                </label>
+              </div>
+            </div>
+
             <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-              <button type="submit" style={{ ...toggleButtonStyle, background: "#2563eb", borderColor: "#1d4ed8", color: "#fff" }}>
-                Save profile settings
+              <button type="submit" disabled={saving} style={{ ...toggleButtonStyle, background: "#2563eb", borderColor: "#1d4ed8", color: "#fff", opacity: saving ? 0.7 : 1 }}>
+                {saving ? "Saving..." : "Save profile and look"}
               </button>
               <span style={{ color: "#475569", fontSize: 14 }}>{profileMessage}</span>
             </div>
