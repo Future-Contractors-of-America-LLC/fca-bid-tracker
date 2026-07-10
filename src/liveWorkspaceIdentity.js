@@ -19,6 +19,7 @@ export function resolveLiveTenantIdentity(tenant) {
 export function resolveLiveProjectIdentity(project) {
   const session = readCustomerSession();
   if (!session?.authenticated || !project) return project;
+  if (!project.id) return project;
 
   return {
     ...project,

@@ -7,13 +7,13 @@ export const publicActionCatalog = {
     variant: "primary",
   },
   liveTestLogin: {
-    label: "Open Live Test Login",
-    href: "/login?seeded=1",
+    label: "Sign in to workspace",
+    href: "/login?next=/portal/proof",
     variant: "secondary",
   },
   instantTestWorkspace: {
-    label: "Instant Test Workspace",
-    href: "/login?seeded=1&autologin=1&next=/portal/platform",
+    label: "Open Founder Proof Path",
+    href: "/login?next=/portal/proof",
     variant: "secondary",
   },
   platform: {
@@ -504,8 +504,7 @@ export const shellPrimaryNav = [
 
 export const shellWorkspaceRoutes = [
   { label: "Enter Workspace", href: "/login" },
-  { label: "Live Test Login", href: "/login?seeded=1" },
-  { label: "Instant Test Workspace", href: "/login?seeded=1&autologin=1&next=/portal/platform" },
+  { label: "Founder Proof Path", href: "/login?next=/portal/proof" },
   { label: "Unified Platform Dashboard", href: "/portal/platform" },
   { label: "Commercial Pipeline", href: "/portal/pipeline" },
   { label: "Workspace", href: "/portal/platform" },

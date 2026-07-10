@@ -41,7 +41,23 @@ export default function ProjectSpineBar({ tenant, project, compact = false }) {
 
   const liveTenant = resolveLiveTenantIdentity(tenant);
   const liveProject = resolveLiveProjectIdentity(activeProject || project);
-  const projectId = liveProject.id;
+  const projectId = liveProject?.id || "";
+
+  if (!projectId) {
+    return (
+      <div style={{ ...cardStyle, marginBottom: compact ? 16 : 24, padding: compact ? 14 : 18 }}>
+        <div style={{ color: "#2563eb", fontWeight: 700, fontSize: 12, marginBottom: 6 }}>Project / Job Spine</div>
+        <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 6 }}>No active live project</div>
+        <div style={{ color: "#64748b", lineHeight: 1.6, marginBottom: 12 }}>
+          Bind a live project root before files, takeoff, RFI, and invoice lanes share one id.
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <a href="/portal/proof" style={quickLinkStyle}>Founder Proof Path</a>
+          <a href="/portal/projects" style={quickLinkStyle}>Projects</a>
+        </div>
+      </div>
+    );
+  }
 
   async function handleProjectChange(event) {
     const nextId = event.target.value;
@@ -51,6 +67,7 @@ export default function ProjectSpineBar({ tenant, project, compact = false }) {
   }
 
   const quickLinks = [
+    { label: "Proof path", href: "/portal/proof" },
     { label: "Project hub", href: `/portal/projects/${encodeURIComponent(projectId)}` },
     { label: "Files", href: `/portal/files?projectId=${encodeURIComponent(projectId)}` },
     { label: "Field", href: `/portal/field-supervision?projectId=${encodeURIComponent(projectId)}` },

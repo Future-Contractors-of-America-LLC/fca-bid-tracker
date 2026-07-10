@@ -555,6 +555,11 @@ export const portalModules = [
     description: "Unified executive and customer shell summary",
   },
   {
+    href: "/portal/proof",
+    label: "Proof Path",
+    description: "One live job spine: project → files → takeoff → RFI → invoice → Auricrux",
+  },
+  {
     href: "/portal",
     label: "Overview",
     description: "Customer account summary and next actions",
@@ -786,6 +791,7 @@ export const portalNavGroups = [
 
 /** Curated hub tiles on workspace dashboard — full directory via portalModules. */
 export const portalHubModules = [
+  { href: "/portal/proof", label: "Proof Path", description: "Live job spine" },
   { href: "/portal/auricrux", label: "Auricrux", description: "What to do next" },
   { href: "/portal/leads", label: "Leads", description: "Intake and qualification" },
   { href: "/portal/pipeline", label: "Pipeline", description: "Bid through payment" },

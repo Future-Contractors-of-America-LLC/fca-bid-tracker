@@ -1,7 +1,52 @@
 import { useEffect, useMemo, useState } from "react";
 import { readCustomerSession } from "../customerSession";
 import { readActiveProjectWorkspace } from "../projectWorkspaceStore";
+import { allowDemoFallbacks } from "../config/productionMode";
 import { defaultWorkspaceState, STORAGE_KEY } from "../systemState";
+
+const LIVE_EMPTY_PROJECT = {
+  id: null,
+  name: "No active project",
+  customer: "Select a live project",
+  stage: "Awaiting project context",
+  fileSetLabel: "No files until a live project is selected",
+  fileSpineStatus: "File, audit, and Auricrux continuity attach after you select a live project root.",
+  auditLabel: "Audit spine idle",
+  auditStatus: "Project-stage changes will write here once a live project is active.",
+  auricruxMode: "Waiting for project context",
+  auricruxSummary: "Auricrux will bind guidance to the active live project once one is selected.",
+  nextAction: "Open Founder Proof Path and select PRJ-BID-1",
+  owner: "Unassigned",
+  due: "—",
+  superintendent: "—",
+  permitStatus: "No permit context",
+  siteStatus: "No site context",
+  commercialFocus: "Select live project spine",
+  actionHistory: [],
+  lastActionAt: null,
+};
+
+function productionSafeBaseState() {
+  if (allowDemoFallbacks()) return defaultWorkspaceState;
+  return {
+    ...defaultWorkspaceState,
+    project: LIVE_EMPTY_PROJECT,
+    workspace: {
+      ...defaultWorkspaceState.workspace,
+      currentNextAction: "Select live project PRJ-BID-1 and walk the Founder Proof Path",
+      nextActionOwner: "Workspace operator",
+      auditSummary: "No seeded project narrative on production — live API spine only.",
+    },
+    auricrux: {
+      ...defaultWorkspaceState.auricrux,
+      nextRecommendedAction: "Open /portal/proof and bind PRJ-BID-1",
+      recommendationReason: "Production must not present Package A-117 as localStorage theater.",
+      currentBlocker: "No active live project selected",
+      blockerImpact: "Files, takeoff, RFI, and invoice lanes stay empty until a live project is bound.",
+      lastActionResult: "Demo fallbacks disabled on this host.",
+    },
+  };
+}
 
 function buildProjectContext(baseProject, activeProject) {
   if (!activeProject) return baseProject;
@@ -40,7 +85,9 @@ function buildProjectContext(baseProject, activeProject) {
 
 function applyActiveProject(baseState, projectOverride = null) {
   const activeProject = projectOverride || readActiveProjectWorkspace();
-  if (!activeProject) return baseState;
+  if (!activeProject?.id) {
+    return allowDemoFallbacks() ? baseState : { ...baseState, project: LIVE_EMPTY_PROJECT };
+  }
 
   const resolvedProject = buildProjectContext(baseState.project, activeProject);
 
@@ -118,19 +165,23 @@ function readStoredWorkspaceState() {
 }
 
 export default function useWorkspaceState() {
-  const [state, setState] = useState(() => hydrateWorkspaceState(defaultWorkspaceState));
+  const [state, setState] = useState(() => hydrateWorkspaceState(productionSafeBaseState()));
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const stored = readStoredWorkspaceState();
+    const base = productionSafeBaseState();
 
-    if (!stored) {
+    if (!stored || (!allowDemoFallbacks() && stored?.project?.id === "PRJ-A117" && !readActiveProjectWorkspace()?.id)) {
       const seeded = hydrateWorkspaceState({
-        ...defaultWorkspaceState,
+        ...base,
         meta: {
-          ...defaultWorkspaceState.meta,
+          ...base.meta,
           lastSyncedAt: new Date().toISOString(),
+          persistenceState: allowDemoFallbacks()
+            ? "Persisted workspace state active"
+            : "Live workspace — seeded project narrative suppressed",
         },
       });
 

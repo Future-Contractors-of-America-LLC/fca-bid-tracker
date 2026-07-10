@@ -38,6 +38,7 @@ export const routes = {
   "/portal": lazyPage(() => import("./pages/portal/PortalWorkspaceRedirect")),
   "/portal/legal": lazyPage(() => import("./pages/portal/PortalLegal")),
   "/portal/platform": lazyPage(() => import("./pages/portal/PlatformDashboard")),
+  "/portal/proof": lazyPage(() => import("./pages/portal/PortalProof")),
   "/portal/operations": lazyPage(() => import("./pages/portal/PortalOperations")),
   "/portal/pipeline": lazyPage(() => import("./pages/portal/PortalPipeline")),
   "/portal/leads": lazyPage(() => import("./pages/portal/PortalLeads")),

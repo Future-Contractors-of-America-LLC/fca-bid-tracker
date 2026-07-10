@@ -4,7 +4,7 @@ export const CUSTOMER_SESSION_KEY = "fca_customer_session_v1";
 export const CUSTOMER_SESSION_EVENT = "fca-customer-session-updated";
 export const CUSTOMER_SESSION_EXPIRED_EVENT = "fca-customer-session-expired";
 
-const DEFAULT_POST_LOGIN_HREF = "/portal/platform";
+const DEFAULT_POST_LOGIN_HREF = "/portal/proof";
 
 let hydrateSessionPromise = null;
 
@@ -332,7 +332,13 @@ export function isFounderSession(session = readCustomerSession()) {
   return session?.role === "Founder / Owner" || email === "michael@futurecontractorsofamerica.com";
 }
 
-export function resolveFounderAutologinHref(next = "/portal/platform", accountKey = "test") {
+export function resolveFounderAutologinHref(next = "/portal/proof", accountKey = "test") {
+  // Production: managed login only. Seeded autologin remains local-dev convenience.
+  const host = typeof window !== "undefined" ? (window.location.hostname || "").toLowerCase() : "";
+  const isLocal = !host || host.includes("localhost") || host.includes("127.0.0.1");
+  if (!isLocal) {
+    return `/login?next=${encodeURIComponent(next)}`;
+  }
   const params = new URLSearchParams({
     seeded: "1",
     autologin: "1",
@@ -345,7 +351,12 @@ export function resolveFounderAutologinHref(next = "/portal/platform", accountKe
   return `/login?${params.toString()}`;
 }
 
-export function resolveSandboxLoginHref(next = "/portal/platform") {
+export function resolveSandboxLoginHref(next = "/portal/proof") {
+  const host = typeof window !== "undefined" ? (window.location.hostname || "").toLowerCase() : "";
+  const isLocal = !host || host.includes("localhost") || host.includes("127.0.0.1");
+  if (!isLocal) {
+    return `/login?next=${encodeURIComponent(next)}`;
+  }
   return `/login?seeded=1&next=${encodeURIComponent(next)}`;
 }
 
