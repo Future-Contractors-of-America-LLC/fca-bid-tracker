@@ -18,7 +18,7 @@ Target Packet: `060A`
 | project/job object exists beyond placeholder/stub status | `api/projects/index.js` and `api/projects/[projectId].js` are still stub-oriented runtime packet routes; additional `api/projects-workspace.js` exists for read model, but canonical packet routes remain stub-bound | FAIL |
 | file/document ingestion exists beyond placeholder/stub status | `api/files.js` exists with create/list/mutate behavior backed by workflow store | PASS (bounded) |
 | audit trail exists beyond placeholder/stub status | `api/audit-events-summary.js` exists and resolves audit summaries from workspace read models | PASS (bounded) |
-| takeoff path exists beyond placeholder/stub status | `api/projects/[projectId]/takeoffs/index.js` remains packet-052K stub route with `notYetImplemented: true` | FAIL |
+| takeoff path exists beyond placeholder/stub status | `api/projects/[projectId]/takeoffs/index.js` proxies to Central `field_ops` takeoffs; `takeoff-quantity` registry active | PASS |
 | RFI/change-order continuity exists beyond placeholder/stub status | `api/projects/[projectId]/rfis/index.js` remains packet-052K stub route with `notYetImplemented: true`; no repo-proven change-order endpoint found in inspected API root | FAIL |
 | billing/job-cost/pay-app continuity exists beyond placeholder/stub status | no repo-proven dedicated billing, pay-app, or job-cost API endpoints found in inspected API root | FAIL |
 
