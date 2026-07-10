@@ -5,6 +5,7 @@ export async function fetchEntraAuthStatus() {
   const payload = await response.json();
   return {
     configured: Boolean(payload?.configured),
+    enabled: Boolean(payload?.enabled),
     authBoundary: payload?.authBoundary || null,
   };
 }

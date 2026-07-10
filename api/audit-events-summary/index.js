@@ -1,4 +1,4 @@
 const { createCentralProxy } = require("../_lib/proxyToCentral");
 const { withSwaSessionAuth } = require("../_lib/swaSessionAuth.cjs");
 
-module.exports = withSwaSessionAuth(createCentralProxy("/audit-events-summary"));
+module.exports = withSwaSessionAuth(createCentralProxy("/audit-events/summary"));

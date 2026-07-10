@@ -7,7 +7,7 @@ import ProductIllustration from "../../components/ProductIllustration";
 import { auricruxPersona } from "../../config/auricruxPersona";
 import LoginActionCenter from "../../components/LoginActionCenter";
 import { centralFetch } from "../../api/backendBase";
-import { verifyCustomerLogin } from "../../api/authClient";
+import { verifyCustomerLogin, fetchCustomerAuthState } from "../../api/authClient";
 import {
   clearEntraExchangeFromLocation,
   exchangeEntraSession,
@@ -68,8 +68,8 @@ function resolveLocalFallbackAccount(email, password) {
   };
 }
 
-async function authenticateWorkspaceAccount(email, password) {
-  const localFallback = resolveLocalFallbackAccount(email, password);
+async function authenticateWorkspaceAccount(email, password, allowSeededFallback = true) {
+  const localFallback = allowSeededFallback ? resolveLocalFallbackAccount(email, password) : null;
   try {
     const response = await centralFetch("/api/customer-login", {
       method: "POST",
@@ -115,7 +115,8 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
   const [pendingChallenge, setPendingChallenge] = useState(null);
   const [error, setError] = useState("");
   const [authStatus, setAuthStatus] = useState("idle");
-  const [entraConfigured, setEntraConfigured] = useState(false);
+  const [entraEnabled, setEntraEnabled] = useState(false);
+  const [productionAuthReady, setProductionAuthReady] = useState(false);
   const autologinAttemptedRef = useRef(false);
   const redirectAttemptedRef = useRef(false);
   const sessionResetRef = useRef(false);
@@ -132,13 +133,14 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
   useEffect(() => {
     let active = true;
-    fetchEntraAuthStatus()
-      .then((status) => {
-        if (active) setEntraConfigured(status.configured);
-      })
-      .catch(() => {
-        if (active) setEntraConfigured(false);
-      });
+    Promise.all([
+      fetchEntraAuthStatus().catch(() => ({ enabled: false })),
+      fetchCustomerAuthState().catch(() => null),
+    ]).then(([entraStatus, authState]) => {
+      if (!active) return;
+      setEntraEnabled(Boolean(entraStatus?.enabled));
+      setProductionAuthReady(Boolean(authState?.authBoundary?.productionAuthReady));
+    });
     return () => {
       active = false;
     };
@@ -222,7 +224,11 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     autologinAttemptedRef.current = true;
     async function runAutologin() {
       try {
-        const authenticatedAccount = await authenticateWorkspaceAccount(seededAccount.email, seededAccount.password);
+        const authenticatedAccount = await authenticateWorkspaceAccount(
+          seededAccount.email,
+          seededAccount.password,
+          !productionAuthReady
+        );
         const result = login({
           email: authenticatedAccount.email || seededAccount.email,
           company: authenticatedAccount.company || seededAccount.company,
@@ -246,7 +252,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       }
     }
     runAutologin();
-  }, [login, nextHref, queryState.autologin, queryState.seeded, seededAccount]);
+  }, [login, nextHref, productionAuthReady, queryState.autologin, queryState.seeded, seededAccount]);
 
   function completeLogin(authenticatedAccount) {
     const result = login({
@@ -283,7 +289,11 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
     }
     setAuthStatus("authenticating");
     try {
-      const authenticatedAccount = await authenticateWorkspaceAccount(form.email, form.password);
+      const authenticatedAccount = await authenticateWorkspaceAccount(
+        form.email,
+        form.password,
+        !productionAuthReady
+      );
       if (authenticatedAccount?.requiresVerification) {
         setPendingChallenge(authenticatedAccount);
         setVerificationCode("");
@@ -438,7 +448,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
             <button type="submit" style={{ ...portalButtonPrimary, border: "none", cursor: "pointer" }}>
               {authStatus === "awaiting-verification" ? "Verify and continue" : internalMode ? "Open workspace" : "Sign in"}
             </button>
-            {entraConfigured && authStatus !== "awaiting-verification" ? (
+            {entraEnabled && authStatus !== "awaiting-verification" ? (
               <button
                 type="button"
                 onClick={handleMicrosoftSignIn}
