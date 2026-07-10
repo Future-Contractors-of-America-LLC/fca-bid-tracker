@@ -106,6 +106,11 @@ export const routeMetadata = {
     description:
       "View the unified FCA platform dashboard across projects, academy progress, support posture, and administrative status.",
   },
+  "/portal/proof": {
+    title: "Founder Proof Path | Future Contractors of America",
+    description:
+      "Walk one live project spine from login through files, takeoff, RFI, invoice, and Auricrux using the same project ids.",
+  },
   "/portal/operations": {
     title: "Operations Pipeline | Future Contractors of America",
     description:

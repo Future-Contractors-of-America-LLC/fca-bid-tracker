@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import PortalShell from "../../components/PortalShell";
 import FounderRevenueCockpit from "../../components/portal/FounderRevenueCockpit";
+import FounderProofPath from "../../components/portal/FounderProofPath";
 import PortalSliceAuricrux from "../../components/portal/PortalSliceAuricrux";
 import PortalWorkspaceGuide from "../../components/PortalWorkspaceGuide";
 import CustomerProductLaunchpad from "../../components/CustomerProductLaunchpad";
@@ -16,6 +17,7 @@ import useCustomerSession from "../../hooks/useCustomerSession";
 import usePortalApiLoad from "../../hooks/usePortalApiLoad";
 import { fetchPortalMessages } from "../../api/portalClient";
 import { openAuricruxAssistant } from "../../auricruxAssistant";
+import { isFounderSession } from "../../customerSession";
 import { portalButtonPrimary, portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
 
 export default function PlatformDashboard() {
@@ -23,6 +25,7 @@ export default function PlatformDashboard() {
   const { session } = useCustomerSession();
   const messagesLoad = usePortalApiLoad(() => fetchPortalMessages(), []);
   const recentMessages = (messagesLoad.data?.items || []).slice(0, 3);
+  const founder = isFounderSession(session);
 
   useEffect(() => {
     refreshSyncStamp("Live workspace dashboard active");
@@ -35,11 +38,12 @@ export default function PlatformDashboard() {
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
-      primaryHref="/portal/auricrux"
-      primaryLabel="Ask Auricrux"
+      primaryHref="/portal/proof"
+      primaryLabel="Founder Proof Path"
       navDensity="full"
       showRouteOverlay={false}
     >
+      {founder ? <FounderProofPath session={session} /> : null}
       <FounderRevenueCockpit session={session} />
       <PortalSliceAuricrux
         title="Auricrux Workspace Intelligence"

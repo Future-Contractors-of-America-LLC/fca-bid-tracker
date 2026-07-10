@@ -1,3 +1,4 @@
+import { allowDemoFallbacks } from "./config/productionMode";
 import { portalProjects } from "./systemState";
 
 export const PROJECT_WORKSPACE_KEY = "fca_project_workspace_v1";
@@ -41,6 +42,7 @@ function normalizeProjectRecord(project = {}, index = 0) {
 }
 
 function seedProjectWorkspace() {
+  if (!allowDemoFallbacks()) return [];
   return portalProjects.map((project, index) => normalizeProjectRecord(project, index));
 }
 

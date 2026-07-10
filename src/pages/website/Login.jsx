@@ -21,6 +21,7 @@ import useCustomerSession from "../../hooks/useCustomerSession";
 import { resolveSeededCustomerAccount, resolveSeededAccountByKey } from "../../customerAccounts";
 import { pageShellStyle, cardStyle } from "../../publicShellStyles";
 import { portalButtonPrimary, portalInputStyle } from "../../portalDesignTokens";
+import { allowSeededLogin, FOUNDER_PROOF_PATH } from "../../config/productionMode";
 
 const LOCAL_FALLBACK_AUTH_BOUNDARY = {
   productionAuthReady: false,
@@ -48,9 +49,11 @@ function readLoginQueryState() {
   const params = new URLSearchParams(window.location.search);
   const accountParam = params.get("account");
   const accountKey = accountParam || "test";
-  const seeded = params.get("seeded") === "1" || Boolean(accountParam);
+  const seededRequested = params.get("seeded") === "1" || Boolean(accountParam);
+  // Production ignores seeded/autologin theater — managed credentials only.
+  const seeded = seededRequested && allowSeededLogin();
   const autologin = params.get("autologin") === "1" && seeded;
-  const internal = params.get("mode") === "internal" || seeded;
+  const internal = (params.get("mode") === "internal" || seeded) && allowSeededLogin();
   const nextHref = params.get("next");
   const sessionExpired = params.get("session") === "expired";
   const resetRequested = params.get("reset") === "1";
@@ -108,7 +111,7 @@ async function authenticateWorkspaceAccount(email, password, allowSeededFallback
   }
 }
 
-export default function Login({ requestedPath = "/portal/platform", accessMode = "direct" }) {
+export default function Login({ requestedPath = FOUNDER_PROOF_PATH, accessMode = "direct" }) {
   const { session, isAuthenticated, login, logout } = useCustomerSession();
   const [form, setForm] = useState(EMPTY_FORM);
   const [verificationCode, setVerificationCode] = useState("");
@@ -126,10 +129,10 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
 
   const requestedWorkspaceHref = accessMode === "protected"
     ? requestedPath
-    : queryState.nextHref || "/portal/platform";
+    : queryState.nextHref || FOUNDER_PROOF_PATH;
   const nextHref = isAllowedPostLoginHref(requestedWorkspaceHref)
     ? requestedWorkspaceHref
-    : "/portal/platform";
+    : FOUNDER_PROOF_PATH;
 
   useEffect(() => {
     let active = true;
@@ -227,7 +230,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
         const authenticatedAccount = await authenticateWorkspaceAccount(
           seededAccount.email,
           seededAccount.password,
-          !productionAuthReady
+          allowSeededLogin() && !productionAuthReady
         );
         const result = login({
           email: authenticatedAccount.email || seededAccount.email,
@@ -292,7 +295,7 @@ export default function Login({ requestedPath = "/portal/platform", accessMode =
       const authenticatedAccount = await authenticateWorkspaceAccount(
         form.email,
         form.password,
-        !productionAuthReady
+        allowSeededLogin() && !productionAuthReady
       );
       if (authenticatedAccount?.requiresVerification) {
         setPendingChallenge(authenticatedAccount);
