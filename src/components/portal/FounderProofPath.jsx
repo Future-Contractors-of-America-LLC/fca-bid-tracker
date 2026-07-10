@@ -6,13 +6,8 @@ import {
 } from "../../config/productionMode";
 import { isFounderSession } from "../../customerSession";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
-import {
-  fetchPortalInvoices,
-  fetchWorkflowFiles,
-  fetchProjectTakeoffs,
-  fetchProjectRfis,
-} from "../../api/workflowClient";
-import { fetchPortalInvoices as fetchInvoicesFromPortal } from "../../api/portalClient";
+import { fetchWorkflowFiles, fetchProjectTakeoffs, fetchProjectRfis } from "../../api/workflowClient";
+import { fetchPortalInvoices } from "../../api/portalClient";
 import {
   portalButtonPrimary,
   portalButtonSecondary,
@@ -72,19 +67,6 @@ function statusTone(status) {
   return { color: portalTokens.muted, bg: portalTokens.surface, border: portalTokens.border };
 }
 
-async function probeInvoices() {
-  try {
-    if (typeof fetchPortalInvoices === "function") {
-      const payload = await fetchPortalInvoices();
-      return Array.isArray(payload?.items) ? payload.items : [];
-    }
-  } catch {
-    // fall through to portal client
-  }
-  const payload = await fetchInvoicesFromPortal();
-  return Array.isArray(payload?.items) ? payload.items : Array.isArray(payload) ? payload : [];
-}
-
 export default function FounderProofPath({ session = null, compact = false }) {
   const founder = isFounderSession(session);
   const { projects, activeProject, meta, selectActiveProject, reloadProjects } = useProjectWorkspace();
@@ -118,17 +100,17 @@ export default function FounderProofPath({ session = null, compact = false }) {
       error: "",
     };
     try {
-      const [filesPayload, takeoffsPayload, rfisPayload, invoices] = await Promise.all([
+      const [filesPayload, takeoffsPayload, rfisPayload, invoicesPayload] = await Promise.all([
         fetchWorkflowFiles({ projectId }).catch((err) => ({ error: err.message })),
         fetchProjectTakeoffs(projectId).catch((err) => ({ error: err.message })),
         fetchProjectRfis(projectId).catch((err) => ({ error: err.message })),
-        probeInvoices().catch((err) => ({ error: err.message })),
+        fetchPortalInvoices().catch((err) => ({ error: err.message })),
       ]);
 
       next.project = {
         status: liveProject ? "pass" : meta.backingSource === "api-error" ? "fail" : "warn",
         detail: liveProject
-          ? `${liveProject.id} · ${liveProject.name || FOUNDER_PROOF_PROJECT_LABEL}`
+          ? `${liveProject.id} | ${liveProject.name || FOUNDER_PROOF_PROJECT_LABEL}`
           : meta.loadError || "PRJ-BID-1 not returned by /api/projects",
         count: liveProject ? 1 : 0,
       };
@@ -146,16 +128,10 @@ export default function FounderProofPath({ session = null, compact = false }) {
             detail: `${(takeoffsPayload?.items || []).length} takeoff(s) on ${projectId}`,
             count: (takeoffsPayload?.items || []).length,
           };
-      const rfiItems = takeoffsPayload?.error
-        ? []
-        : rfisPayload?.items || (Array.isArray(rfisPayload) ? rfisPayload : rfisPayload?.data?.items) || [];
-      // fetchProjectRfis from workflowClient returns payload; construction client returns array.
-      // Prefer workflow shape; fall back if array.
-      let rfiList = [];
       if (rfisPayload?.error) {
         next.rfis = { status: "fail", detail: rfisPayload.error, count: 0 };
       } else {
-        rfiList = Array.isArray(rfisPayload?.items)
+        const rfiList = Array.isArray(rfisPayload?.items)
           ? rfisPayload.items
           : Array.isArray(rfisPayload)
             ? rfisPayload
@@ -166,10 +142,14 @@ export default function FounderProofPath({ session = null, compact = false }) {
           count: rfiList.length,
         };
       }
-      if (invoices?.error) {
-        next.invoices = { status: "fail", detail: invoices.error, count: 0 };
+      if (invoicesPayload?.error) {
+        next.invoices = { status: "fail", detail: invoicesPayload.error, count: 0 };
       } else {
-        const list = Array.isArray(invoices) ? invoices : [];
+        const list = Array.isArray(invoicesPayload?.items)
+          ? invoicesPayload.items
+          : Array.isArray(invoicesPayload)
+            ? invoicesPayload
+            : [];
         next.invoices = {
           status: list.length ? "pass" : "warn",
           detail: `${list.length} invoice(s) in workspace billing`,
@@ -216,7 +196,7 @@ export default function FounderProofPath({ session = null, compact = false }) {
           activeProject?.id === FOUNDER_PROOF_PROJECT_ID
             ? `Auricrux context = ${activeProject.id}`
             : activeProject?.id
-              ? `Active project is ${activeProject.id} — bind PRJ-BID-1`
+              ? `Active project is ${activeProject.id} - bind PRJ-BID-1`
               : "No active project for Auricrux context",
         count: activeProject?.id === FOUNDER_PROOF_PROJECT_ID ? 1 : 0,
       },
@@ -233,7 +213,7 @@ export default function FounderProofPath({ session = null, compact = false }) {
         padding: compact ? "18px 18px 16px" : "22px 22px 18px",
         border: `1px solid ${portalTokens.borderStrong}`,
         borderRadius: portalTokens.radiusLg,
-        background: `linear-gradient(160deg, #f8fafc 0%, #ffffff 42%, #f1f5f9 100%)`,
+        background: "linear-gradient(160deg, #f8fafc 0%, #ffffff 42%, #f1f5f9 100%)",
         boxShadow: portalTokens.shadowSm,
       }}
     >
@@ -244,7 +224,7 @@ export default function FounderProofPath({ session = null, compact = false }) {
             One live job spine
           </h2>
           <p style={{ margin: 0, color: portalTokens.body, lineHeight: 1.6, maxWidth: 560 }}>
-            Login ? {FOUNDER_PROOF_PROJECT_ID} ({FOUNDER_PROOF_PROJECT_LABEL}) ? files ? takeoff ? RFI ? invoice ? Auricrux.
+            Login to {FOUNDER_PROOF_PROJECT_ID} ({FOUNDER_PROOF_PROJECT_LABEL}) to files to takeoff to RFI to invoice to Auricrux.
             Same ids end to end. No seeded theater.
           </p>
         </div>
@@ -255,7 +235,7 @@ export default function FounderProofPath({ session = null, compact = false }) {
             disabled={binding || meta.backingSource === "loading"}
             style={{ ...portalButtonPrimary, border: "none", opacity: binding ? 0.7 : 1 }}
           >
-            {binding ? "Binding…" : activeProject?.id === FOUNDER_PROOF_PROJECT_ID ? "Re-bind PRJ-BID-1" : "Bind PRJ-BID-1"}
+            {binding ? "Binding..." : activeProject?.id === FOUNDER_PROOF_PROJECT_ID ? "Re-bind PRJ-BID-1" : "Bind PRJ-BID-1"}
           </button>
           <button type="button" onClick={refreshProbe} style={{ ...portalButtonSecondary, cursor: "pointer" }}>
             Refresh live status
@@ -282,11 +262,11 @@ export default function FounderProofPath({ session = null, compact = false }) {
       >
         Active project:{" "}
         <strong style={{ color: portalTokens.ink }}>{activeProject?.id || "none"}</strong>
-        {activeProject?.name ? ` · ${activeProject.name}` : ""}
-        {" · "}
+        {activeProject?.name ? ` | ${activeProject.name}` : ""}
+        {" | "}
         API: {meta.backingSource}
-        {bindError ? <span style={{ color: "#991b1b" }}> · {bindError}</span> : null}
-        {probe.error ? <span style={{ color: "#991b1b" }}> · {probe.error}</span> : null}
+        {bindError ? <span style={{ color: "#991b1b" }}> | {bindError}</span> : null}
+        {probe.error ? <span style={{ color: "#991b1b" }}> | {probe.error}</span> : null}
       </div>
 
       <ol style={{ listStyle: "none", margin: "16px 0 0", padding: 0, display: "grid", gap: 10 }}>
@@ -329,7 +309,7 @@ export default function FounderProofPath({ session = null, compact = false }) {
                   {step.detail}
                 </div>
                 <div style={{ color: tone.color, fontSize: 12, fontWeight: 700, marginTop: 4 }}>
-                  {probe.loading ? "Checking live API…" : status.detail}
+                  {probe.loading ? "Checking live API..." : status.detail}
                 </div>
               </div>
               <a href={step.href} style={{ ...portalButtonSecondary, whiteSpace: "nowrap", fontSize: 13, padding: "8px 12px" }}>

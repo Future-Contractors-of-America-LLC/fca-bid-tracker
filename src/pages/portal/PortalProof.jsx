@@ -12,7 +12,7 @@ export default function PortalProof() {
   return (
     <PortalShell
       title="Founder Proof Path"
-      subtitle={`${FOUNDER_PROOF_PROJECT_ID} · ${FOUNDER_PROOF_PROJECT_LABEL} — one live spine across project, files, takeoff, RFI, invoice, and Auricrux.`}
+      subtitle={`${FOUNDER_PROOF_PROJECT_ID} | ${FOUNDER_PROOF_PROJECT_LABEL} - one live spine across project, files, takeoff, RFI, invoice, and Auricrux.`}
       activeHref="/portal/proof"
       currentJourney="job"
       primaryHref="/portal/projects"
@@ -30,7 +30,7 @@ export default function PortalProof() {
           </p>
           <p style={{ margin: "12px 0 0" }}>
             <a href="/login?next=/portal/proof" style={{ color: portalTokens.primaryInk, fontWeight: 700 }}>
-              Sign in ?
+              Sign in
             </a>
           </p>
         </div>
@@ -39,10 +39,10 @@ export default function PortalProof() {
       <div style={{ ...portalCardStyle, marginTop: 16 }}>
         <div style={portalEyebrowStyle}>How to verify</div>
         <ol style={{ margin: "10px 0 0", paddingLeft: 18, color: portalTokens.body, lineHeight: 1.7 }}>
-          <li>Sign in with managed credentials (no <code>?seeded=1</code>).</li>
+          <li>Sign in with managed credentials (no seeded query params).</li>
           <li>Bind {FOUNDER_PROOF_PROJECT_ID} so every lane shares that id.</li>
-          <li>Walk files ? design/takeoff ? RFIs ? billing ? Auricrux using the step links.</li>
-          <li>Empty counts are honest — create or mutate via the live APIs, not localStorage theater.</li>
+          <li>Walk files, design/takeoff, RFIs, billing, then Auricrux using the step links.</li>
+          <li>Empty counts are honest - create or mutate via the live APIs, not localStorage theater.</li>
         </ol>
       </div>
     </PortalShell>

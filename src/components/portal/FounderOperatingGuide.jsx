@@ -20,13 +20,13 @@ export default function FounderOperatingGuide({ bidsCount = 0, companyName = "Yo
         </p>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           <a href={FOUNDER_PROOF_PATH} style={{ color: portalTokens.primaryInk, fontWeight: 700, textDecoration: "none" }}>
-            Proof path →
+            Proof path
           </a>
           <a href="/academy/store" style={{ color: portalTokens.primaryInk, fontWeight: 700, textDecoration: "none" }}>
-            Academy store →
+            Academy store
           </a>
           <a href="/pricing" style={{ color: portalTokens.primaryInk, fontWeight: 700, textDecoration: "none" }}>
-            Pricing →
+            Pricing
           </a>
         </div>
       </div>
