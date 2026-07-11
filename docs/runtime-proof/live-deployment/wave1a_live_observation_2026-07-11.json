@@ -1,0 +1,134 @@
+﻿{
+    "packet":  "WAVE1A",
+    "generatedAt":  "2026-07-11T22:19:31.9180341Z",
+    "provenance":  "agent_live_observation",
+    "observerHeadSha":  "16d0edd39644c01e2ee0b69d2310074bbe7a4ee0",
+    "liveShellChecks":  [
+                            {
+                                "host":  "https://app.futurecontractorsofamerica.com",
+                                "route":  "/",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://app.futurecontractorsofamerica.com",
+                                "route":  "/deployment-status.json",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://app.futurecontractorsofamerica.com",
+                                "route":  "/live-shell-verification.html",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://app.futurecontractorsofamerica.com",
+                                "route":  "/portal",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://app.futurecontractorsofamerica.com",
+                                "route":  "/academy",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://app.futurecontractorsofamerica.com",
+                                "route":  "/warranty",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://www.futurecontractorsofamerica.com",
+                                "route":  "/",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://www.futurecontractorsofamerica.com",
+                                "route":  "/deployment-status.json",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://www.futurecontractorsofamerica.com",
+                                "route":  "/live-shell-verification.html",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://www.futurecontractorsofamerica.com",
+                                "route":  "/portal",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://www.futurecontractorsofamerica.com",
+                                "route":  "/academy",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://www.futurecontractorsofamerica.com",
+                                "route":  "/warranty",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://futurecontractorsofamerica.com",
+                                "route":  "/",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://futurecontractorsofamerica.com",
+                                "route":  "/deployment-status.json",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://futurecontractorsofamerica.com",
+                                "route":  "/live-shell-verification.html",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://futurecontractorsofamerica.com",
+                                "route":  "/portal",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://futurecontractorsofamerica.com",
+                                "route":  "/academy",
+                                "status":  200,
+                                "ok":  true
+                            },
+                            {
+                                "host":  "https://futurecontractorsofamerica.com",
+                                "route":  "/warranty",
+                                "status":  200,
+                                "ok":  true
+                            }
+                        ],
+    "apiChecks":  [
+                      {
+                          "url":  "https://auricrux-central.azurewebsites.net/api/health",
+                          "ok":  false,
+                          "error":  "The remote server returned an error: (403) Forbidden."
+                      },
+                      {
+                          "url":  "https://api.futurecontractorsofamerica.com/api/health",
+                          "ok":  false,
+                          "error":  "The remote server returned an error: (403) Forbidden."
+                      },
+                      {
+                          "url":  "https://auricrux-central.azurewebsites.net/api/status",
+                          "ok":  false,
+                          "error":  "The remote server returned an error: (403) Forbidden."
+                      }
+                  ],
+    "staleProofNote":  "docs/runtime-proof/live-deployment metadata still references ciCommitSha 57a499a / packet 062Y — current-head CI proof still required"
+}
