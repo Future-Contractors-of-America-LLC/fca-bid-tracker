@@ -22,6 +22,6 @@ Branch: `wave1a-current-head-proof`
 ## Residual
 
 - Apex/www hosts may timeout from some networks; app + SWA prove current head
-- Controlling continuity packet identity remains `062Y` until packet ledger advance
+- Controlling program continuity is **Ecosystem100 PASS** (2026-07-12) — see `docs/FCA_CONTINUITY_LEDGER.md` (not packet `062Y`)
 - Deep auth/Academy/commercial lanes closed 2026-07-12 — see `docs/FCA_LOCK_1A_CANONICAL.md`
 - Residual only: SWA same-origin `/api/customer-*` 404 (canonical plane is `api.*`)

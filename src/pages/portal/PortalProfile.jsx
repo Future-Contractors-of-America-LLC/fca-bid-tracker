@@ -113,6 +113,9 @@ export default function PortalProfile() {
     welcomeMessage: "",
     accent: "#1d4ed8",
     surface: "#eff6ff",
+    primaryColor: "#1d4ed8",
+    secondaryColor: "#eff6ff",
+    dashboardLayout: "balanced",
   });
   const [profileMessage, setProfileMessage] = useState("");
   const [saving, setSaving] = useState(false);
@@ -131,6 +134,9 @@ export default function PortalProfile() {
       welcomeMessage: brandSkin.welcomeMessage || "Welcome to your FCA workspace.",
       accent: brandSkin.accent || "#1d4ed8",
       surface: brandSkin.surface || "#eff6ff",
+      primaryColor: brandSkin.primaryColor || brandSkin.accent || "#1d4ed8",
+      secondaryColor: brandSkin.secondaryColor || brandSkin.surface || "#eff6ff",
+      dashboardLayout: brandSkin.dashboardLayout || "balanced",
     });
   }, [
     profile.fullName,
@@ -147,6 +153,9 @@ export default function PortalProfile() {
     brandSkin.welcomeMessage,
     brandSkin.accent,
     brandSkin.surface,
+    brandSkin.primaryColor,
+    brandSkin.secondaryColor,
+    brandSkin.dashboardLayout,
   ]);
 
   function toggleProduct(productKey, enabled) {
@@ -178,6 +187,9 @@ export default function PortalProfile() {
       welcomeMessage: profileDraft.welcomeMessage.trim() || "Welcome to your FCA workspace.",
       accent: profileDraft.accent.trim() || "#1d4ed8",
       surface: profileDraft.surface.trim() || "#eff6ff",
+      primaryColor: profileDraft.primaryColor.trim() || profileDraft.accent.trim() || "#1d4ed8",
+      secondaryColor: profileDraft.secondaryColor.trim() || profileDraft.surface.trim() || "#eff6ff",
+      dashboardLayout: profileDraft.dashboardLayout.trim() || "balanced",
     };
 
     try {
@@ -370,6 +382,22 @@ export default function PortalProfile() {
                 <label style={{ display: "grid", gap: 6 }}>
                   <span style={{ color: "#334155", fontWeight: 600 }}>Surface color</span>
                   <input name="surface" value={profileDraft.surface} onChange={handleProfileFieldChange} style={formInputStyle} placeholder="#eff6ff" />
+                </label>
+                <label style={{ display: "grid", gap: 6 }}>
+                  <span style={{ color: "#334155", fontWeight: 600 }}>Primary color</span>
+                  <input name="primaryColor" value={profileDraft.primaryColor} onChange={handleProfileFieldChange} style={formInputStyle} placeholder="#1d4ed8" />
+                </label>
+                <label style={{ display: "grid", gap: 6 }}>
+                  <span style={{ color: "#334155", fontWeight: 600 }}>Secondary color</span>
+                  <input name="secondaryColor" value={profileDraft.secondaryColor} onChange={handleProfileFieldChange} style={formInputStyle} placeholder="#eff6ff" />
+                </label>
+                <label style={{ display: "grid", gap: 6 }}>
+                  <span style={{ color: "#334155", fontWeight: 600 }}>Dashboard layout</span>
+                  <select name="dashboardLayout" value={profileDraft.dashboardLayout} onChange={handleProfileFieldChange} style={formInputStyle}>
+                    <option value="balanced">Balanced</option>
+                    <option value="compact">Compact</option>
+                    <option value="dense">Dense</option>
+                  </select>
                 </label>
               </div>
             </div>
