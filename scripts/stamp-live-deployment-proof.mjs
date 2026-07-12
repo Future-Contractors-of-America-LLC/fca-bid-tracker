@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
 function readContinuityPacket(repoRoot) {
   const ledgerPath = path.join(repoRoot, 'docs', 'FCA_EXECUTION_CONTINUITY_LEDGER.md')
@@ -11,7 +12,7 @@ function readContinuityPacket(repoRoot) {
 }
 
 function main() {
-  const repoRoot = path.join(path.dirname(new URL(import.meta.url).pathname), '..')
+  const repoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
   const packet = readContinuityPacket(repoRoot)
   const workspaceDir = path.join(repoRoot, 'workspace')
   const proofDir = path.join(repoRoot, 'docs', 'runtime-proof', 'live-deployment')

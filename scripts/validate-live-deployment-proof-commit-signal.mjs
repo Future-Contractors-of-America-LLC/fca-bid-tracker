@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 import { execSync } from 'child_process'
 
 function readContinuityPacket(repoRoot) {
@@ -35,7 +36,7 @@ function readLatestMatchingCommit(repoRoot, pattern) {
 }
 
 function main() {
-  const repoRoot = path.join(path.dirname(new URL(import.meta.url).pathname), '..')
+  const repoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
   const packet = readContinuityPacket(repoRoot)
   const generatedDir = path.join(repoRoot, 'generated')
   fs.mkdirSync(generatedDir, { recursive: true })

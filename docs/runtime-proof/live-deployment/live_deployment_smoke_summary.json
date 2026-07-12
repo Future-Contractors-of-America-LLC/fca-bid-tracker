@@ -1,261 +1,13 @@
 [
   {
-    "attempt": 13,
+    "attempt": 1,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "host": "futurecontractorsofamerica.com",
-    "deploymentGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "runtimeGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "commitWitnessRoute": "/commit-witness-57a499a505beac85d77166359116f9ca0bf34fca.txt",
-    "expectedHosts": [
-      "futurecontractorsofamerica.com",
-      "www.futurecontractorsofamerica.com",
-      "app.futurecontractorsofamerica.com",
-      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
-    ],
-    "routeChecks": [
-      {
-        "route": "/deployment-status.json",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/domain-continuity.json",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/runtime-fingerprint.txt",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/live-shell-verification.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/host-binding-audit.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/api-continuity-audit.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/warranty",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/referrals",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/leads/index.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/leads/new.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/config/auricrux-central.js",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/bids/detail.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/bids/status.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/bids/edit.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/bids/bid-checklist.js",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/legal",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/legal/contractor-resources",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/contact",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/portal/legal",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/commit-witness-57a499a505beac85d77166359116f9ca0bf34fca.txt",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/index.html",
-        "status": 200,
-        "ok": true
-      }
-    ],
-    "failures": []
-  },
-  {
-    "attempt": 13,
-    "targetSwaName": "fca-frontend",
-    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "host": "www.futurecontractorsofamerica.com",
-    "deploymentGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "runtimeGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "commitWitnessRoute": "/commit-witness-57a499a505beac85d77166359116f9ca0bf34fca.txt",
-    "expectedHosts": [
-      "futurecontractorsofamerica.com",
-      "www.futurecontractorsofamerica.com",
-      "app.futurecontractorsofamerica.com",
-      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
-    ],
-    "routeChecks": [
-      {
-        "route": "/deployment-status.json",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/domain-continuity.json",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/runtime-fingerprint.txt",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/live-shell-verification.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/host-binding-audit.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/api-continuity-audit.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/warranty",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/referrals",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/leads/index.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/leads/new.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/config/auricrux-central.js",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/bids/detail.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/bids/status.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/bids/edit.html",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/bids/bid-checklist.js",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/legal",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/legal/contractor-resources",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/contact",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/portal/legal",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/commit-witness-57a499a505beac85d77166359116f9ca0bf34fca.txt",
-        "status": 200,
-        "ok": true
-      },
-      {
-        "route": "/index.html",
-        "status": 200,
-        "ok": true
-      }
-    ],
-    "failures": []
-  },
-  {
-    "attempt": 13,
-    "targetSwaName": "fca-frontend",
-    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
+    "targetGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
     "host": "app.futurecontractorsofamerica.com",
-    "deploymentGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "runtimeGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "commitWitnessRoute": "/commit-witness-57a499a505beac85d77166359116f9ca0bf34fca.txt",
+    "deploymentGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "runtimeGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "commitWitnessRoute": "/commit-witness-9b53956c6c3af8f593f2883c76688ea1e3bd1db1.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -359,7 +111,7 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-57a499a505beac85d77166359116f9ca0bf34fca.txt",
+        "route": "/commit-witness-9b53956c6c3af8f593f2883c76688ea1e3bd1db1.txt",
         "status": 200,
         "ok": true
       },
@@ -372,14 +124,14 @@
     "failures": []
   },
   {
-    "attempt": 13,
+    "attempt": 1,
     "targetSwaName": "fca-frontend",
     "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "targetGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
+    "targetGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
     "host": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
-    "deploymentGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "runtimeGitSha": "57a499a505beac85d77166359116f9ca0bf34fca",
-    "commitWitnessRoute": "/commit-witness-57a499a505beac85d77166359116f9ca0bf34fca.txt",
+    "deploymentGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "runtimeGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "commitWitnessRoute": "/commit-witness-9b53956c6c3af8f593f2883c76688ea1e3bd1db1.txt",
     "expectedHosts": [
       "futurecontractorsofamerica.com",
       "www.futurecontractorsofamerica.com",
@@ -483,7 +235,255 @@
         "ok": true
       },
       {
-        "route": "/commit-witness-57a499a505beac85d77166359116f9ca0bf34fca.txt",
+        "route": "/commit-witness-9b53956c6c3af8f593f2883c76688ea1e3bd1db1.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/index.html",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "failures": []
+  },
+  {
+    "attempt": 1,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+    "targetGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "host": "futurecontractorsofamerica.com",
+    "deploymentGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "runtimeGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "commitWitnessRoute": "/commit-witness-9b53956c6c3af8f593f2883c76688ea1e3bd1db1.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "app.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/index.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/new.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/config/auricrux-central.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/detail.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/status.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/edit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/bid-checklist.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal/contractor-resources",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/contact",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/portal/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-9b53956c6c3af8f593f2883c76688ea1e3bd1db1.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/index.html",
+        "status": 200,
+        "ok": true
+      }
+    ],
+    "failures": []
+  },
+  {
+    "attempt": 1,
+    "targetSwaName": "fca-frontend",
+    "targetDefaultHost": "delightful-mushroom-0de67860f.7.azurestaticapps.net",
+    "targetGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "host": "www.futurecontractorsofamerica.com",
+    "deploymentGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "runtimeGitSha": "9b53956c6c3af8f593f2883c76688ea1e3bd1db1",
+    "commitWitnessRoute": "/commit-witness-9b53956c6c3af8f593f2883c76688ea1e3bd1db1.txt",
+    "expectedHosts": [
+      "futurecontractorsofamerica.com",
+      "www.futurecontractorsofamerica.com",
+      "app.futurecontractorsofamerica.com",
+      "delightful-mushroom-0de67860f.7.azurestaticapps.net"
+    ],
+    "routeChecks": [
+      {
+        "route": "/deployment-status.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/domain-continuity.json",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/runtime-fingerprint.txt",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/live-shell-verification.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/host-binding-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/api-continuity-audit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/warranty",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/referrals",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/index.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/leads/new.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/config/auricrux-central.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/detail.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/status.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/edit.html",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/bids/bid-checklist.js",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/legal/contractor-resources",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/contact",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/portal/legal",
+        "status": 200,
+        "ok": true
+      },
+      {
+        "route": "/commit-witness-9b53956c6c3af8f593f2883c76688ea1e3bd1db1.txt",
         "status": 200,
         "ok": true
       },
