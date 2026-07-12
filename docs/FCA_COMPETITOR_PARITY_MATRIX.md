@@ -42,7 +42,7 @@ Grade: `0` missing · `50` stub · `80` usable · `97+` lock-ready · `N/A` acce
 | CTE Auricrux preloaded text+audio+video every scenario | — | 45 | 90 | Wave5 corpus scaffold 831/831 (100% IDs) | Media files may be placeholders; **no live LLM** |
 | Mobile / PWA field | Procore mobile | 70 | 82 | Wave6 PWA shell + field-tasks→WorkOrders | |
 | Auricrux embedded SaaS/Academy | — | 80 | 80 | LOCK0 sovereignty | No Foundry/AOAI |
-| M365 connectors | ACC | 40 | N/A | Wave6 **Track A planned** | B stays Graph-free |
+| M365 connectors | ACC | 70 | N/A | Wave6 **Track A active** (zero-LLM bridge) | B stays Graph-free; live Graph probe unauthorized |
 | Horizontal scale | enterprise SaaS | 70 | 82 | Wave6 `infra/k8s` replicas=2 | Compose/k8s smoke docs |
 | Field execution / work orders | ServiceTitan, Procore | 65 | 85 | Wave3 build-to-beat: `portal/field-tasks` → WorkOrders API | |
 
