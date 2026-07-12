@@ -1,6 +1,6 @@
 {
   "packet": "062Y",
-  "generatedAt": "2026-07-12T01:57:38.424Z",
+  "generatedAt": "2026-07-12T01:58:20.958Z",
   "requiredFiles": [
     "live-deployment-current-head-verifier-validation.json",
     "live-deployment-current-head-verifier-report.json",
@@ -13,11 +13,6 @@
     "live-proof-stamp-coverage-validation.json",
     "live-proof-stamp-coverage-report.json"
   ],
-  "missing": [
-    "build-validation-live-proof-coverage-validation.json",
-    "build-validation-live-proof-coverage-report.json",
-    "live-proof-stamp-coverage-validation.json",
-    "live-proof-stamp-coverage-report.json"
-  ],
-  "success": false
+  "missing": [],
+  "success": true
 }
