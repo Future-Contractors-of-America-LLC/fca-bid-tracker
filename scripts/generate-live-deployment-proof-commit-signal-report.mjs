@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
 function readJson(file) {
   if (!fs.existsSync(file)) return null
@@ -20,7 +21,7 @@ function readContinuityPacket(repoRoot) {
 }
 
 function main() {
-  const repoRoot = path.join(path.dirname(new URL(import.meta.url).pathname), '..')
+  const repoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
   const packet = readContinuityPacket(repoRoot)
   const generatedDir = path.join(repoRoot, 'generated')
   fs.mkdirSync(generatedDir, { recursive: true })
