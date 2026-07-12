@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-07-12T10:29:11.255Z",
+  "banFoundryAoai": "1",
+  "apiBase": "https://api.futurecontractorsofamerica.com",
+  "swaOrigin": "https://www.futurecontractorsofamerica.com",
+  "complete": true,
+  "failed": 0,
+  "findings": [
+    {
+      "status": "pass",
+      "name": "live customer-auth-state",
+      "detail": "HTTP 200",
+      "at": "2026-07-12T10:29:01.861Z"
+    },
+    {
+      "status": "pass",
+      "name": "live authBoundary.productionAuthReady",
+      "detail": "managed-server-session",
+      "at": "2026-07-12T10:29:01.862Z"
+    },
+    {
+      "status": "pass",
+      "name": "live customer-session",
+      "detail": "HTTP 200",
+      "at": "2026-07-12T10:29:02.151Z"
+    },
+    {
+      "status": "pass",
+      "name": "live customer-session shape",
+      "detail": "authenticated=false",
+      "at": "2026-07-12T10:29:02.151Z"
+    },
+    {
+      "status": "pass",
+      "name": "live commercial-pipeline",
+      "detail": "HTTP 200",
+      "at": "2026-07-12T10:29:02.982Z"
+    },
+    {
+      "status": "pass",
+      "name": "live fca-payments/status",
+      "detail": "HTTP 200",
+      "at": "2026-07-12T10:29:03.096Z"
+    },
+    {
+      "status": "pass",
+      "name": "live payments primaryRail",
+      "detail": "fca-native",
+      "at": "2026-07-12T10:29:03.096Z"
+    },
+    {
+      "status": "pass",
+      "name": "live fca-payments/intake",
+      "detail": "HTTP 201",
+      "at": "2026-07-12T10:29:09.580Z"
+    },
+    {
+      "status": "pass",
+      "name": "live commercial intake id",
+      "detail": "INTAKE-1783852149587",
+      "at": "2026-07-12T10:29:09.580Z"
+    },
+    {
+      "status": "pass",
+      "name": "live academy-commerce catalog",
+      "detail": "HTTP 200",
+      "at": "2026-07-12T10:29:10.357Z"
+    },
+    {
+      "status": "pass",
+      "name": "live academy-commerce courses",
+      "detail": "1 item(s)",
+      "at": "2026-07-12T10:29:10.357Z"
+    },
+    {
+      "status": "pass",
+      "name": "swa same-origin customer-auth-state residual",
+      "detail": "HTTP 404; canonical auth plane is https://api.futurecontractorsofamerica.com",
+      "at": "2026-07-12T10:29:11.255Z"
+    }
+  ]
+}
