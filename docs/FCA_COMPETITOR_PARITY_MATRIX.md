@@ -2,14 +2,13 @@
 
 Status: Active  
 Program: FCA Ecosystem 100% dual-track  
-Updated: 2026-07-11  
-Owners: Track A `auricrux-central` + `fca-bid-tracker`; Track B `Auricrux/fca-ecosystem`
+Updated: 2026-07-12  
+Canonical twin: `Future-Contractors-of-America-LLC/auricrux-central/docs/FCA_COMPETITOR_PARITY_MATRIX.md`  
+Also mirrored in: `fca-bid-tracker/docs/FCA_COMPETITOR_PARITY_MATRIX.md`
 
 ## Purpose
 
-Single shared capability matrix for competitor parity. Keep this file and the copy in `Auricrux/fca-ecosystem/docs/FCA_COMPETITOR_PARITY_MATRIX.md` in sync after every wave LOCK.
-
-Columns: capability | competitor examples | Track A grade | Track B grade | proof | notes
+Shared competitor capability matrix. Sync grades after every wave LOCK.
 
 Grade: `0` missing · `50` stub · `80` usable · `97+` lock-ready · `N/A` accepted gap
 
@@ -17,35 +16,40 @@ Grade: `0` missing · `50` stub · `80` usable · `97+` lock-ready · `N/A` acce
 
 | Gap | Status |
 |-----|--------|
-| UHD 3840×2160 AI generative render pipeline | Deferred (accepted) |
-| Custom Auricrux live model | Wave M timed (~8h from 2026-07-11 17:36 ET) — Llama-3.2-3B-Instruct 4-bit |
+| UHD 3840×2160 AI generative render pipeline | **Sole open accepted gap** — deferred; not a cutover gate |
+| Custom Auricrux live model (finetuned weights) | Wave M — **NOT READY**; stock `llama3.2:3b` Ollama fallback only |
 
-## Capability rows (Wave 0 scaffold)
+## Capability rows (post Waves 2–5 Track B)
 
 | Capability | Competitors | Track A | Track B | Proof | Notes |
 |------------|-------------|---------|---------|-------|-------|
-| Auth / session | Procore, ACC | 80 | 80 | LOCK0 | Seeded login banned on live hosts |
-| Project / job spine | Procore, Buildertrend | 90 | 90 | #224+#227 / blitz D4 | |
-| Files / evidence | Procore, ACC | 80 | 80 | | |
-| Bid / estimate / proposal | BidNet, BuildingConnected | 85 | 90 | | |
-| Takeoff | Bluebeam, PlanSwift | 85 | 80 | takeoff-quantity active | |
-| RFI / CO / schedule / punch | Procore | 85 | 95 | blitz D5 | |
-| Billing / pay apps / SOV | Procore Financials | 50 | 85 | A planned→Wave2 | |
-| Job cost / accounting | QuickBooks, Foundation | 50 | 90 | A planned→Wave2 | |
-| Warranty / recurring | ServiceTitan | 50 | 50 | Wave2 | |
-| CRM / network / leads | JobNimbus, CoConstruct | 70 | 70 | | |
-| Customer portal | CoConstruct | 85 | 85 | | |
+| Auth / session | Procore, ACC | 80 | 80 | LOCK0 / Keycloak path | Seeded login banned on live hosts |
+| Project / job spine | Procore, Buildertrend | 90 | 90 | blitz D4 / Projects API | |
+| Files / evidence | Procore, ACC | 80 | 80 | Files portal | |
+| Bid / estimate / proposal | BidNet, BuildingConnected | 85 | 90 | Bids/Estimates/Proposals pages | |
+| Takeoff | Bluebeam, PlanSwift | 85 | 80 | Quantity path on A; B usable | |
+| RFI / CO / schedule / punch | Procore | 85 | 95 | blitz D5 / portal pages | |
+| Billing / pay apps / SOV | Procore Financials | 55 | 88 | Wave2 B recurring + payments | A Wave2 DoTeach in flight |
+| Job cost / accounting | QuickBooks, Foundation | 55 | 92 | JobCost API+portal on B | A planned Wave2 |
+| Warranty / recurring | ServiceTitan | 60 | 88 | Wave2 B CRUD+advance+run; A warranty DoTeach PR | Closeout portal lists open warranty |
+| CRM / network / leads | JobNimbus, CoConstruct | 70 | 72 | Leads page | |
+| Customer portal | CoConstruct | 85 | 88 | Portal shell + closeout | |
 | Comms / notifications | Procore | 80 | 80 | | |
-| Admin / roles / multi-company | Procore | 70 | 70 | Wave4 | |
-| Tenant customization / brand | Buildertrend | 75 | 60 | Wave4 | |
-| Academy LMS | industry LMS | 85 | 95 | 1212 + compliance | |
-| CTE mirror + insulation | VDOE CTE peers | 70 | 90 | Wave5 corpus | |
-| CTE Auricrux preloaded text+audio+video every scenario | — | 40 | 50 | Wave5 LOCK | Full corpus required |
-| Mobile / PWA field | Procore mobile | 70 | 80 | Wave6 | |
-| Auricrux embedded SaaS/Academy | — | 80 | 80 | Wave0 ban + Wave M | Cloud Foundry/AOAI banned |
-| M365 connectors | ACC | 40 | N/A | Wave6 A only if zero AI cost | B stays Graph-free |
-| Horizontal scale | enterprise SaaS | 70 | 80 | Wave6 | B k8s/compose |
+| Admin / roles / multi-company | Procore | 70 | 72 | Wave4 partial | Role headers on customization |
+| Tenant customization / brand | Buildertrend | 75 | 85 | Wave4 B API+console UI + integration tests | A branding still largely docs/session prefs |
+| Academy LMS | industry LMS | 85 | 95 | Compliance matrix 100% items | |
+| CTE mirror + insulation | VDOE CTE | 70 | 92 | VA CTE catalog + originality policy | |
+| CTE Auricrux preloaded text+audio+video every scenario | — | 45 | 90 | Wave5 corpus scaffold 831/831 (100% IDs) | Media files may be placeholders; **no live LLM** |
+| Mobile / PWA field | Procore mobile | 70 | 82 | Wave6 PWA shell + field-tasks→WorkOrders | |
+| Auricrux embedded SaaS/Academy | — | 80 | 80 | LOCK0 sovereignty | No Foundry/AOAI |
+| M365 connectors | ACC | 40 | N/A | Wave6 **Track A planned** | B stays Graph-free |
+| Horizontal scale | enterprise SaaS | 70 | 82 | Wave6 `infra/k8s` replicas=2 | Compose/k8s smoke docs |
+| Field execution / work orders | ServiceTitan, Procore | 65 | 85 | Wave3 build-to-beat: `portal/field-tasks` → WorkOrders API | |
+
+## Sole open product gap (non-UHD)
+
+None beyond accepted UHD + Wave M weights. Everything else is shipped at stub/usable depth or explicitly Track-A-planned (M365).
 
 ## Sync rule
 
-After each wave LOCK, update grades + proof links in **both** repos in the same work session.
+After every wave LOCK, copy this file to Track A twins (`auricrux-central`, `fca-bid-tracker`) in a separate PR when practical.
