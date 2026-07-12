@@ -33,7 +33,7 @@ Purpose: Durable handoff so any agent/IDE can resume the FCA Ecosystem 100% dual
 | 2 Spine | **PASS** (central warranty-recurring) | central LOCK2 |
 | 3 Field / CTE spine | **PASS** | ecosystem LOCK3 |
 | 4 Customization / branding | **PASS** (Track A brandSkin + session API) | `docs/FCA_LOCK_4_CANONICAL.md` |
-| 5 CTE corpus | **PASS** (CTE 831/831 IDs; preloaded only — no live LLM) | ecosystem LOCK5 |
+| 5 CTE corpus | **PASS** (CTE 974/974 IDs; preloaded only — no live LLM) | ecosystem LOCK5 |
 | 6 Mobile/M365 | **PASS** (Track A m365 zero-LLM bridge) | central `FCA_LOCK_6_PROGRESS.md` |
 | 7 Dual 100 + cutover | **PASS** (engineering); registrar DNS founder-gated | Track B LOCK7 / ECOSYSTEM_100 |
 
