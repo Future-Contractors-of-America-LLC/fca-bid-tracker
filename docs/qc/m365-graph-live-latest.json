@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2026-07-12T23:22:32.353Z",
+  "banFoundryAoai": "1",
+  "apiBase": "https://api.futurecontractorsofamerica.com",
+  "swaOrigin": "https://www.futurecontractorsofamerica.com",
+  "scope": "read",
+  "complete": true,
+  "failed": 0,
+  "findings": [
+    {
+      "status": "pass",
+      "name": "live m365/status",
+      "detail": "HTTP 200",
+      "at": "2026-07-12T23:22:29.015Z"
+    },
+    {
+      "status": "pass",
+      "name": "live m365/status shape",
+      "detail": "microsoft-365-graph",
+      "at": "2026-07-12T23:22:29.016Z"
+    },
+    {
+      "status": "pass",
+      "name": "live m365/sharepoint/status",
+      "detail": "HTTP 200",
+      "at": "2026-07-12T23:22:29.322Z"
+    },
+    {
+      "status": "pass",
+      "name": "live m365/sharepoint/status shape",
+      "detail": "sharepoint_configuration_mapped",
+      "at": "2026-07-12T23:22:29.322Z"
+    },
+    {
+      "status": "pass",
+      "name": "live m365/sharepoint/folder (read)",
+      "detail": "HTTP 200",
+      "at": "2026-07-12T23:22:29.417Z"
+    },
+    {
+      "status": "pass",
+      "name": "live sharepoint folder read",
+      "detail": "HTTP 200",
+      "at": "2026-07-12T23:22:29.417Z"
+    },
+    {
+      "status": "pass",
+      "name": "swa same-origin m365/status residual",
+      "detail": "HTTP 404; canonical m365 plane is https://api.futurecontractorsofamerica.com",
+      "at": "2026-07-12T23:22:32.352Z"
+    }
+  ]
+}

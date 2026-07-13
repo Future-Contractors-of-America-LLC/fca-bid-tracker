@@ -62,12 +62,24 @@ function normalizeCompanySettings(companySettings, session = {}) {
   };
 }
 
+const DASHBOARD_LAYOUTS = new Set(["balanced", "compact", "dense"]);
+
+function normalizeDashboardLayout(value) {
+  const layout = String(value || "balanced").trim().toLowerCase();
+  return DASHBOARD_LAYOUTS.has(layout) ? layout : "balanced";
+}
+
 function normalizeBrandSkin(brandSkin = {}, session = {}) {
+  const accent = (brandSkin?.accent || "#1d4ed8").trim() || "#1d4ed8";
+  const surface = (brandSkin?.surface || "#eff6ff").trim() || "#eff6ff";
   return {
     companyName: (brandSkin?.companyName || session?.company || "").trim(),
     welcomeMessage: (brandSkin?.welcomeMessage || "").trim(),
-    accent: (brandSkin?.accent || "#1d4ed8").trim() || "#1d4ed8",
-    surface: (brandSkin?.surface || "#eff6ff").trim() || "#eff6ff",
+    accent,
+    surface,
+    primaryColor: (brandSkin?.primaryColor || accent).trim() || accent,
+    secondaryColor: (brandSkin?.secondaryColor || surface).trim() || surface,
+    dashboardLayout: normalizeDashboardLayout(brandSkin?.dashboardLayout),
   };
 }
 

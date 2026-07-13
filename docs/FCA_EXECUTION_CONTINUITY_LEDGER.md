@@ -1,9 +1,11 @@
 # FCA Execution Continuity Ledger
 
-Status: Active
-Owner: Auricrux Exec
-Repository: `Future-Contractors-of-America-LLC/fca-bid-tracker`
-Last Updated: 2026-06-17
+Status: **Superseded for wave program** — use `docs/FCA_CONTINUITY_LEDGER.md`  
+Owner: Auricrux Exec  
+Repository: `Future-Contractors-of-America-LLC/fca-bid-tracker`  
+Last Updated: 2026-07-12  
+
+> **Wave-program handoff:** Ecosystem100 **PASS** (2026-07-12). Controlling wave continuity, LOCK artifacts, and next actions live in [`docs/FCA_CONTINUITY_LEDGER.md`](./FCA_CONTINUITY_LEDGER.md). This file remains historical packet-sequence truth for the `060`–`062Y` deployment-proof stream only.
 
 ---
 
