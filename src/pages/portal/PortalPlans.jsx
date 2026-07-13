@@ -74,6 +74,32 @@ export default function PortalPlans() {
     [],
   );
 
+  function exportManifest() {
+    const lines = [
+      "FCA Plan Room Manifest",
+      `Company: ${session?.company || "Workspace"}`,
+      `Project: ${projectLabel}`,
+      `Exported: ${new Date().toISOString()}`,
+      "",
+      ...sets.map((set, index) => [
+        `${index + 1}. ${set.name}`,
+        `   Revision: ${set.revision || "n/a"}`,
+        `   Format: ${set.format || "n/a"}`,
+        `   Discipline: ${set.discipline || "n/a"}`,
+        `   Status: ${set.status || "n/a"}`,
+        `   Updated: ${set.updatedAt || "n/a"}`,
+        set.notes ? `   Notes: ${set.notes}` : "",
+      ].filter(Boolean).join("\n")),
+    ];
+    const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `fca-plan-room-${Date.now()}.txt`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
   function addSet(event) {
     event.preventDefault();
     if (!draft.name.trim()) return;
@@ -113,14 +139,16 @@ export default function PortalPlans() {
       />
 
       <div style={{ ...portalCardStyle, marginBottom: 16 }}>
-        <div style={portalEyebrowStyle}>Formats FCA handles in the plan spine</div>
+        <div style={portalEyebrowStyle}>Create · export · open</div>
         <p style={{ color: portalTokens.body, lineHeight: 1.55 }}>
-          PDF / image sheets for markup and takeoff · IFC & RVT via published views or exported sheets · DWG plot sheets ·
-          SharePoint-hosted packages · photo overlays from Field Supervision. Native Revit/Navisworks authoring still happens
-          in those tools; FCA is the contractor OS that owns versions, briefings, RFIs, and field proof.
+          Add a plan set below, download the plan list, open Design for markups, or keep evidence in Files.
+          Supported formats: PDF / image sheets, IFC & RVT published views, DWG plot sheets, and SharePoint packages.
         </p>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <a href="/portal/design" style={portalButtonPrimary}>Design & takeoff</a>
+          <button type="button" onClick={exportManifest} style={{ ...portalButtonPrimary, border: "none", cursor: "pointer" }}>
+            Download plan list
+          </button>
+          <a href="/portal/design" style={portalButtonSecondary}>Design & takeoff</a>
           <a href="/portal/files" style={portalButtonSecondary}>Document control</a>
           <a href="/portal/immersive" style={portalButtonSecondary}>Immersive / VR review</a>
           <button

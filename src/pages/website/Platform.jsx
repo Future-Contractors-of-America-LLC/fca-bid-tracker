@@ -24,7 +24,7 @@ const platformConstructionProof = [
   },
   {
     title: "Project and document control",
-    detail: "Projects, files, audit, and support in one operating spine.",
+    detail: "Projects, files, audit, and support in one connected workspace.",
     href: "/platform",
     label: "See project command",
   },
@@ -40,28 +40,26 @@ export default function Platform() {
   return (
     <MarketingPageShell
       eyebrow="FCA Platform"
-      title="One contractor lifecycle operating system"
-      subtitle="One operating system for the full contractor lifecycle - from first lead through closeout, billing, and workforce training."
-      primaryHref="/login"
-      primaryLabel="Sign in"
-      secondaryHref="/intake"
-      secondaryLabel="Get started"
+      title="One platform for the full contractor lifecycle"
+      subtitle="From first lead through closeout, billing, and workforce training — sign in to do the work, not just read about it."
+      primaryHref="/intake"
+      primaryLabel="Get started"
+      secondaryHref="/login"
+      secondaryLabel="Sign in to workspace"
       illustrationKey="platform"
     >
       <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
-          <div style={{ color: "#2563eb", fontWeight: 700 }}>Platform overview</div>
+          <div style={{ color: "#2563eb", fontWeight: 700 }}>Public site vs live workspace</div>
           <FcaBrandMark compact />
         </div>
         <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 12 }}>
-          FCA helps contractor teams move from opportunity to delivery with real workflows for bids, estimates, proposals, projects, files, billing, support, Academy, and Auricrux guidance.
-        </p>
-        <p style={{ color: "#475569", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
-          Doctrine: if construction software, AI, or computers can beneficially do it, FCA claims it, makes it searchable in the capability directory, and Auricrux teaches, advises, and automates it. Customize how your account acts on Profile.
+          This page sells the product. Your signed-in workspace is where you create bids, upload files, schedule crews, send invoices, and assign Academy courses.
         </p>
         <div style={{ marginTop: 14, display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <a href="/login?next=/portal/capabilities" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Sign in → all capabilities</a>
-          <a href="/login?next=/portal/profile" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Sign in → how account acts</a>
+          <a href="/login?next=/portal/platform" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Sign in → open workspace</a>
+          <a href="/login?next=/portal/billing" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Sign in → create an invoice</a>
+          <a href="/login?next=/portal/files" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Sign in → manage files</a>
         </div>
       </div>
 

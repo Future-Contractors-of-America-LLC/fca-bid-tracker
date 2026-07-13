@@ -8,47 +8,34 @@ import {
   auricruxWalkthroughPath,
   publicRouteCtas,
 } from "../../websiteShell";
-import { buildAuricruxCapabilityBrief } from "../../capabilityCatalog";
 import { cardStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
-  "Knows your live bids, projects, training progress, and the full construction OS capability map.",
-  "Teaches, advises, and automates every capability — and how your account acts.",
+  "Knows your live bids, projects, and training progress — not generic FAQ answers.",
+  "Tells your team exactly what to do next on every job.",
   "Works across estimating, delivery, billing, Academy, and support.",
   "Available on every page — click Ask Auricrux to start.",
 ];
 
 export default function AuricruxPage() {
-  const brief = buildAuricruxCapabilityBrief();
-
   return (
     <MarketingPageShell
       eyebrow="Auricrux AI Operator"
-      title="Your AI operator for every construction capability"
-      subtitle="Auricrux answers questions, recommends next steps, teaches procedures, and automates work across Contractor Command and Academy — including how your account acts."
+      title="Your AI operator for bids, jobs, billing, and training"
+      subtitle="Auricrux answers questions, recommends next steps, and keeps your team moving — inside Contractor Command and Academy."
       primaryHref={publicRouteCtas.auricrux.primaryHref}
       primaryLabel={publicRouteCtas.auricrux.primaryLabel}
-      secondaryHref="/login?next=/portal/capabilities"
-      secondaryLabel="See capability map"
+      secondaryHref={publicRouteCtas.auricrux.secondaryHref}
+      secondaryLabel={publicRouteCtas.auricrux.secondaryLabel}
       illustrationKey="auricrux"
     >
-      <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
-        <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Coverage doctrine</div>
-        <h2 style={{ marginTop: 0, marginBottom: 8 }}>
-          {brief.total} capabilities · {brief.domains} domains
-        </h2>
-        <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-          {brief.doctrine}
-        </p>
-      </div>
-
       <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
         <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: 20, alignItems: "center", flexWrap: "wrap", marginBottom: 16 }}>
           <div>
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Always on, always in context</div>
             <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux works inside your live workspace</h2>
             <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-              Ask Auricrux what to do next on any bid, project, or training module. It reads your tenant state and the capability map, then teaches or automates the move.
+              Ask Auricrux what to do next on any bid, project, or training module. It reads your company workspace and gives actionable guidance — not marketing copy.
             </p>
           </div>
           <AuricruxAvatar state="idle" size={128} compact />
@@ -131,7 +118,7 @@ export default function AuricruxPage() {
 
       <PublicPackageRouteGroupsPanel
         eyebrow="Intelligence coverage"
-        title="Auricrux reads every governed route group"
+        title="Auricrux reads every workspace route group"
         detail="Insight panels attach to projects, files, finance, field, academy, and admin surfaces across the FCA portal."
       />
     </MarketingPageShell>

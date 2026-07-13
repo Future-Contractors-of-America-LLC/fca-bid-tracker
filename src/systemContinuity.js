@@ -3,7 +3,7 @@ export const publicHomeMessaging = {
     eyebrow: "FCA Contractor Command",
     title: "Win more work, run every job, and train your workforce in one platform.",
     subtitle:
-      "If construction software, AI, or computers can beneficially do it — FCA claims it, makes it obvious, and Auricrux teaches, advises, and automates it. Leads, bids, plans, field, finance, Academy, and how your account acts live in one workspace.",
+      "Future Contractors of America connects leads, bids, projects, plan rooms, field operations, finance, billing, customer communication, and Academy training in one contractor workspace — with Auricrux guiding what to do next.",
   },
   journey: {
     title: "Start with the path that fits your team",
@@ -20,7 +20,7 @@ export const publicHomeMessaging = {
   snapshot: {
     title: "See your operating picture in one place",
     detail:
-      "The platform dashboard opens every construction capability, how your account acts, active jobs, documents, billing, and Academy under one company workspace.",
+      "Your workspace dashboard connects leads, active jobs, documents, billing, and Academy progress under one company account.",
     ctaLabel: "Open your workspace",
   },
   actionRail: {

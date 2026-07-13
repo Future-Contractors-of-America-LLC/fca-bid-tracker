@@ -16,9 +16,10 @@ const headerStyle = {
   position: "sticky",
   top: 0,
   zIndex: 1000,
-  background: "#ffffff",
-  borderBottom: "1px solid #e2e8f0",
-  boxShadow: "0 1px 3px rgba(15, 23, 42, 0.06)",
+  background: "rgba(12, 35, 64, 0.96)",
+  borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+  boxShadow: "0 8px 28px rgba(15, 23, 42, 0.18)",
+  backdropFilter: "blur(12px)",
 };
 
 const innerStyle = {
@@ -33,10 +34,10 @@ const innerStyle = {
 };
 
 const brandTextStyle = {
-  fontWeight: 800,
-  color: "#0f172a",
-  fontSize: 14,
-  letterSpacing: "-0.01em",
+  fontWeight: 700,
+  color: "#f8fafc",
+  fontSize: 15,
+  letterSpacing: "-0.02em",
 };
 
 const desktopNavStyle = {
@@ -62,22 +63,22 @@ const mobileActionsStyle = {
 const menuButtonStyle = {
   border: "none",
   background: "transparent",
-  color: "#0f172a",
+  color: "#e2e8f0",
   fontWeight: 600,
   fontSize: 14,
-  padding: "8px 10px",
-  borderRadius: 6,
+  padding: "8px 12px",
+  borderRadius: 8,
   cursor: "pointer",
   fontFamily: "inherit",
 };
 
 const linkStyle = {
   textDecoration: "none",
-  color: "#334155",
+  color: "#cbd5e1",
   fontWeight: 600,
   fontSize: 14,
-  padding: "8px 10px",
-  borderRadius: 6,
+  padding: "8px 12px",
+  borderRadius: 8,
   display: "block",
 };
 
@@ -96,38 +97,39 @@ const dropdownStyle = {
 
 const signInStyle = {
   textDecoration: "none",
-  color: "#1d4ed8",
+  color: "#e2e8f0",
   fontWeight: 700,
   fontSize: 13,
-  padding: "8px 12px",
-  borderRadius: 6,
+  padding: "9px 12px",
+  borderRadius: 8,
   whiteSpace: "nowrap",
+  border: "1px solid rgba(255,255,255,0.18)",
 };
 
 const primaryCtaStyle = {
   textDecoration: "none",
-  background: "#1d4ed8",
-  color: "#fff",
-  fontWeight: 700,
+  background: "#c4a052",
+  color: "#0c2340",
+  fontWeight: 800,
   fontSize: 13,
-  padding: "8px 14px",
-  borderRadius: 6,
+  padding: "9px 16px",
+  borderRadius: 8,
   whiteSpace: "nowrap",
 };
 
 const hamburgerStyle = {
-  border: "1px solid #e2e8f0",
-  background: "#fff",
-  borderRadius: 8,
-  width: 40,
-  height: 40,
+  border: "1px solid rgba(255,255,255,0.18)",
+  background: "transparent",
+  borderRadius: 10,
+  width: 42,
+  height: 42,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   cursor: "pointer",
   fontFamily: "inherit",
   fontSize: 18,
-  color: "#0f172a",
+  color: "#f8fafc",
 };
 
 const mobileDrawerStyle = {
@@ -233,13 +235,13 @@ function NavDropdown({ menu, currentPath, onNavigate }) {
         type="button"
         style={{
           ...menuButtonStyle,
-          background: active ? "#eff6ff" : open ? "#f8fafc" : "transparent",
-          color: active ? "#1d4ed8" : "#0f172a",
+          background: active || open ? "rgba(255,255,255,0.1)" : "transparent",
+          color: "#f8fafc",
         }}
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
       >
-        {menu.label} <span aria-hidden style={{ fontSize: 10, marginLeft: 2 }}>v</span>
+        {menu.label} <span aria-hidden style={{ fontSize: 10, marginLeft: 4, opacity: 0.75 }}>▾</span>
       </button>
       {open ? (
         <div style={dropdownStyle}>
@@ -314,18 +316,40 @@ export default function PublicTopNav({ mode = "public" }) {
     setMobileOpen(false);
   }
 
+  const isPortal = mode === "portal";
+  const activeHeaderStyle = isPortal
+    ? {
+        ...headerStyle,
+        background: "#ffffff",
+        borderBottom: "1px solid #e2e8f0",
+        boxShadow: "0 1px 3px rgba(15, 23, 42, 0.06)",
+        backdropFilter: "none",
+      }
+    : headerStyle;
+  const activeBrandTextStyle = isPortal ? { ...brandTextStyle, color: "#0f172a" } : brandTextStyle;
+  const activeLinkColor = (active) => (isPortal
+    ? { color: active ? "#1d4ed8" : "#334155", background: active ? "#eff6ff" : "transparent" }
+    : { color: active ? "#fff" : "#cbd5e1", background: active ? "rgba(255,255,255,0.12)" : "transparent" });
+  const activeSignInStyle = isPortal
+    ? { ...signInStyle, color: "#1d4ed8", border: "1px solid #cbd5e1" }
+    : signInStyle;
+  const activePrimaryCtaStyle = isPortal
+    ? { ...primaryCtaStyle, background: "#1d4ed8", color: "#fff" }
+    : primaryCtaStyle;
+  const activeHamburgerStyle = isPortal
+    ? { ...hamburgerStyle, border: "1px solid #e2e8f0", color: "#0f172a" }
+    : hamburgerStyle;
+
   const authActions = session?.authenticated ? (
     <>
-      <AuricruxAssistantButton />
-      <a href={profileHref} style={signInStyle} onClick={closeMobile}>Profile</a>
-      <a href={workspaceHref} style={signInStyle} onClick={closeMobile}>Workspace</a>
-      <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>
+      <a href={profileHref} style={activeSignInStyle} onClick={closeMobile}>Account</a>
+      <a href={workspaceHref} style={activePrimaryCtaStyle} onClick={closeMobile}>Workspace</a>
+      <a href={loginHref} onClick={handleLogout} style={activeSignInStyle}>Sign out</a>
     </>
   ) : (
     <>
-      <AuricruxAssistantButton />
-      <a href={loginHref} style={signInStyle} onClick={closeMobile}>Sign in</a>
-      <a href="/intake" style={primaryCtaStyle} onClick={closeMobile}>Get started</a>
+      <a href={loginHref} style={activeSignInStyle} onClick={closeMobile}>Sign in</a>
+      <a href="/intake" style={activePrimaryCtaStyle} onClick={closeMobile}>Get started</a>
     </>
   );
 
@@ -346,14 +370,14 @@ export default function PublicTopNav({ mode = "public" }) {
         }
       `}</style>
 
-      <header style={headerStyle} className="fca-topnav-blur">
+      <header style={activeHeaderStyle} className="fca-topnav-blur">
         <div style={innerStyle}>
           <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
             <FcaBrandMark compact showTagline={false} />
-            <span className="fca-brand-long" style={brandTextStyle}>Future Contractors of America</span>
+            <span className="fca-brand-long" style={activeBrandTextStyle}>Future Contractors of America</span>
           </a>
 
-          {mode === "portal" ? (
+          {isPortal ? (
             <nav className="fca-nav-desktop" style={{ ...desktopNavStyle, display: isDesktop ? "flex" : "none" }} aria-label="Portal navigation">
               {portalNavPrimary.map((item) => (
                 <a
@@ -362,8 +386,7 @@ export default function PublicTopNav({ mode = "public" }) {
                   style={{
                     ...linkStyle,
                     display: "inline-block",
-                    color: isNavActive(currentPath, item.href) ? "#1d4ed8" : "#334155",
-                    background: isNavActive(currentPath, item.href) ? "#eff6ff" : "transparent",
+                    ...activeLinkColor(isNavActive(currentPath, item.href)),
                   }}
                 >
                   {item.label}
@@ -377,8 +400,8 @@ export default function PublicTopNav({ mode = "public" }) {
                 style={{
                   ...linkStyle,
                   display: "inline-block",
-                  color: currentPath === "/" ? "#1d4ed8" : "#334155",
-                  background: currentPath === "/" ? "#eff6ff" : "transparent",
+                  color: currentPath === "/" ? "#fff" : "#cbd5e1",
+                  background: currentPath === "/" ? "rgba(255,255,255,0.12)" : "transparent",
                 }}
               >
                 Home
@@ -388,11 +411,22 @@ export default function PublicTopNav({ mode = "public" }) {
                 style={{
                   ...linkStyle,
                   display: "inline-block",
-                  color: currentPath === "/platform" ? "#1d4ed8" : "#334155",
-                  background: currentPath === "/platform" ? "#eff6ff" : "transparent",
+                  color: currentPath === "/platform" ? "#fff" : "#cbd5e1",
+                  background: currentPath === "/platform" ? "rgba(255,255,255,0.12)" : "transparent",
                 }}
               >
                 Platform
+              </a>
+              <a
+                href="/features"
+                style={{
+                  ...linkStyle,
+                  display: "inline-block",
+                  color: currentPath === "/features" ? "#fff" : "#cbd5e1",
+                  background: currentPath === "/features" ? "rgba(255,255,255,0.12)" : "transparent",
+                }}
+              >
+                Features
               </a>
               {NAV_MENUS.map((menu) => (
                 <NavDropdown key={menu.label} menu={menu} currentPath={currentPath} onNavigate={closeMobile} />
@@ -402,8 +436,8 @@ export default function PublicTopNav({ mode = "public" }) {
                 style={{
                   ...linkStyle,
                   display: "inline-block",
-                  color: currentPath === "/contact" ? "#1d4ed8" : "#334155",
-                  background: currentPath === "/contact" ? "#eff6ff" : "transparent",
+                  color: currentPath === "/contact" ? "#fff" : "#cbd5e1",
+                  background: currentPath === "/contact" ? "rgba(255,255,255,0.12)" : "transparent",
                 }}
               >
                 Contact
@@ -413,8 +447,8 @@ export default function PublicTopNav({ mode = "public" }) {
                 style={{
                   ...linkStyle,
                   display: "inline-block",
-                  color: currentPath === "/pricing" ? "#1d4ed8" : "#334155",
-                  background: currentPath === "/pricing" ? "#eff6ff" : "transparent",
+                  color: currentPath === "/pricing" ? "#fff" : "#cbd5e1",
+                  background: currentPath === "/pricing" ? "rgba(255,255,255,0.12)" : "transparent",
                 }}
               >
                 Pricing
@@ -428,12 +462,16 @@ export default function PublicTopNav({ mode = "public" }) {
 
           <div className="fca-nav-mobile-actions" style={mobileActionsStyle}>
             {!session?.authenticated ? (
-              <a href={loginHref} style={{ ...primaryCtaStyle, padding: "8px 12px" }}>Sign in</a>
+              <a href="/intake" style={{ ...activePrimaryCtaStyle, padding: "8px 12px" }}>Get started</a>
             ) : (
-              <a href={workspaceHref} style={{ ...primaryCtaStyle, padding: "8px 12px" }}>Workspace</a>
+              <a href={workspaceHref} style={{ ...activePrimaryCtaStyle, padding: "8px 12px" }}>Workspace</a>
             )}
-            <button type="button" style={hamburgerStyle} onClick={() => setMobileOpen(true)} aria-label="Open menu">
-              Menu
+            <button type="button" style={activeHamburgerStyle} onClick={() => setMobileOpen(true)} aria-label="Open menu">
+              <span aria-hidden style={{ display: "grid", gap: 4 }}>
+                <span style={{ width: 16, height: 2, background: isPortal ? "#0f172a" : "#f8fafc", display: "block" }} />
+                <span style={{ width: 16, height: 2, background: isPortal ? "#0f172a" : "#f8fafc", display: "block" }} />
+                <span style={{ width: 16, height: 2, background: isPortal ? "#0f172a" : "#f8fafc", display: "block" }} />
+              </span>
             </button>
           </div>
         </div>
@@ -448,17 +486,15 @@ export default function PublicTopNav({ mode = "public" }) {
         <div style={{ padding: "12px 16px", display: "grid", gap: 8, borderBottom: "1px solid #e2e8f0" }}>
           {session?.authenticated ? (
             <>
-              <AuricruxAssistantButton onNavigate={closeMobile} />
-              <a href={profileHref} style={signInStyle} onClick={closeMobile}>Profile</a>
               <a href={workspaceHref} style={primaryCtaStyle} onClick={closeMobile}>Open workspace</a>
-              <a href={adminWorkspaceHref} style={signInStyle} onClick={closeMobile}>Admin workspace</a>
+              <a href={profileHref} style={signInStyle} onClick={closeMobile}>Account</a>
+              <a href={adminWorkspaceHref} style={signInStyle} onClick={closeMobile}>Admin</a>
               <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>
             </>
           ) : (
             <>
-              <AuricruxAssistantButton onNavigate={closeMobile} />
-              <a href={loginHref} style={primaryCtaStyle} onClick={closeMobile}>Sign in</a>
-              <a href="/intake" style={signInStyle} onClick={closeMobile}>Get started</a>
+              <a href="/intake" style={primaryCtaStyle} onClick={closeMobile}>Get started</a>
+              <a href={loginHref} style={signInStyle} onClick={closeMobile}>Sign in</a>
             </>
           )}
         </div>
@@ -472,6 +508,7 @@ export default function PublicTopNav({ mode = "public" }) {
                   items: [
                     { label: "Home", href: "/" },
                     { label: "Platform", href: "/platform" },
+                    { label: "Features", href: "/features" },
                     { label: "Pricing", href: "/pricing" },
                     { label: "Contact", href: "/contact" },
                   ],

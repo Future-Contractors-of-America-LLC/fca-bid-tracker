@@ -52,7 +52,7 @@ const buyerProfiles = {
     key: "operations",
     label: "Operations Director",
     headline: "Resource leveling, project velocity, and workflow governance",
-    proof: "Unify precon, project controls, field tasks, and closeout from one command spine.",
+    proof: "Unify precon, project controls, field tasks, and closeout in one connected workspace.",
     kpiLabel: "Coordination cycle-time reduction",
     kpiValue: "22-41%",
     ctaLabel: "Open operations path",
@@ -62,7 +62,7 @@ const buyerProfiles = {
     key: "field",
     label: "Field Superintendent",
     headline: "Real-time logs, automated punch, and mobile readiness",
-    proof: "Turn fragmented site updates into clear action packets with governed follow-through.",
+    proof: "Turn fragmented site updates into clear action packets with reliable follow-through.",
     kpiLabel: "Issue closure acceleration",
     kpiValue: "1.7x",
     ctaLabel: "Open field path",
@@ -83,8 +83,8 @@ const industryCampaigns = {
   },
   mechanical: {
     label: "Mechanical contractors",
-    headline: "Mechanical systems delivery with governed handoffs",
-    detail: "Align procurement, install progression, startup checklists, and commissioning evidence under one operating spine.",
+    headline: "Mechanical systems delivery with clear handoffs",
+    detail: "Align procurement, install progression, startup checklists, and commissioning evidence in one job workspace.",
   },
 };
 
@@ -324,6 +324,7 @@ export default function Home() {
               ) : null}
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 28 }}>
                 <a href="/intake" style={heroCtaOnDark}>Get started</a>
+                <a href="/login" style={heroCtaSecondaryOnDark}>Sign in to workspace</a>
                 <a href="/contact" style={heroCtaSecondaryOnDark}>Talk to our team</a>
               </div>
             </div>
@@ -333,32 +334,10 @@ export default function Home() {
               </div>
               <div style={{ height: 1, background: "rgba(255,255,255,0.15)" }} />
               <AuricruxBrandMark compact />
-              <div style={{ marginTop: 6, border: "1px solid rgba(147, 197, 253, 0.35)", borderRadius: 12, background: "rgba(2, 6, 23, 0.55)", padding: 10, width: "min(420px, 80vw)" }}>
-                <div style={{ fontSize: 11, color: "#93c5fd", letterSpacing: "0.08em", textTransform: "uppercase", fontWeight: 800, marginBottom: 6 }}>
-                  Auricrux Terminal
-                </div>
-                <div style={{ fontFamily: "Consolas, Menlo, monospace", color: "#e2e8f0", fontSize: 12, lineHeight: 1.45, maxHeight: 98, overflow: "auto", marginBottom: 8 }}>
-                  {terminalLog.map((row, index) => (
-                    <div key={`${row}-${index}`}>{row}</div>
-                  ))}
-                </div>
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    runTerminalCommand(terminalInput);
-                    setTerminalInput("");
-                  }}
-                  style={{ display: "flex", gap: 6 }}
-                >
-                  <input
-                    value={terminalInput}
-                    onChange={(event) => setTerminalInput(event.target.value)}
-                    placeholder="Type a mission command"
-                    style={{ flex: 1, borderRadius: 8, border: "1px solid rgba(148, 163, 184, 0.4)", background: "rgba(15, 23, 42, 0.85)", color: "#f8fafc", padding: "8px 10px", fontSize: 12 }}
-                  />
-                  <button type="submit" style={{ ...heroCtaOnDark, padding: "8px 10px", minHeight: "auto" }}>Run</button>
-                </form>
-              </div>
+              <p style={{ color: "#cbd5e1", fontSize: 14, lineHeight: 1.55, margin: 0, maxWidth: 360 }}>
+                Public pages explain the offer. Your signed-in workspace is where you create jobs, files, schedules, invoices, and training progress.
+              </p>
+              <a href="/login?next=/portal/platform" style={{ ...heroCtaOnDark, textAlign: "center" }}>Open live workspace</a>
             </div>
           </div>
         </div>
@@ -371,7 +350,7 @@ export default function Home() {
           <div style={{ color: "#1e3a8a", fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
             Decision Path
           </div>
-          <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: "clamp(1.3rem, 2.2vw, 1.7rem)" }}>Choose your mission lane</h2>
+          <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: "clamp(1.3rem, 2.2vw, 1.7rem)" }}>Choose your path</h2>
           <p style={{ color: "#475569", marginTop: 0, lineHeight: 1.6, maxWidth: 760 }}>
             FCA adapts the experience by stakeholder role so each buyer sees outcome-first evidence before deep module detail.
           </p>
@@ -421,7 +400,7 @@ export default function Home() {
               <div style={{ color: "#155e75", fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>With FCA Workflow</div>
               <h3 style={{ marginTop: 8, marginBottom: 10, fontSize: 19 }}>Governed coordination at speed</h3>
               <ul style={{ margin: 0, paddingLeft: 18, color: "#0f4c5c", lineHeight: 1.8 }}>
-                <li>Auricrux centralizes signals into one decision spine</li>
+                <li>Auricrux centralizes signals into one clear next action</li>
                 <li>Risk events become tasked actions with owners and due dates</li>
                 <li>Payment trust improves through proactive transparency and audit trails</li>
               </ul>
@@ -636,7 +615,7 @@ export default function Home() {
 
         <PublicPackageRouteGroupsPanel
           eyebrow="Platform depth"
-          title="Every module on one governed spine"
+          title="Every module connected in one workspace"
           detail="Route groups behind bids, projects, field execution, finance, academy, and Auricrux intelligence."
         />
 

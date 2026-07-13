@@ -239,20 +239,20 @@ export const portalEntryCtaSets = {
 
 export const platformDashboardCtaSets = {
   quickActions: [
-    { label: "Capabilities", href: "/portal/capabilities", variant: "primary" },
-    { label: "Auricrux", href: "/portal/auricrux", variant: "secondary" },
-    { label: "Account acts", href: "/portal/profile", variant: "secondary" },
-    { label: "Pipeline", href: "/portal/pipeline", variant: "secondary" },
+    { label: "Create invoice", href: "/portal/billing", variant: "primary" },
+    { label: "Files", href: "/portal/files", variant: "secondary" },
+    { label: "Plan room", href: "/portal/plans", variant: "secondary" },
+    { label: "Scheduling", href: "/portal/scheduling", variant: "secondary" },
     { label: "Projects", href: "/portal/projects", variant: "secondary" },
     { label: "Academy", href: "/portal/academy", variant: "secondary" },
   ],
   operationalCards: [
-    { title: "All capabilities", detail: "Searchable construction OS map — every tool Auricrux can teach and automate.", href: "/portal/capabilities", label: "Open capability directory" },
-    { title: "How account acts", detail: "Branding, entitlements, communications, and session posture.", href: "/portal/profile", label: "Customize account" },
-    { title: "Auricrux guidance", detail: "Ask what to do next, see blockers, and jump to the right lane.", href: "/portal/auricrux", label: "Open Auricrux" },
-    { title: "Commercial pipeline", detail: "Qualify bids through award, invoice, and payment.", href: "/portal/pipeline", label: "Open Pipeline" },
+    { title: "Create and send invoices", detail: "Build an invoice, issue it, deliver it, and take payment.", href: "/portal/billing", label: "Open Billing" },
+    { title: "Files and documents", detail: "Create file records, brief packages, and keep evidence with the job.", href: "/portal/files", label: "Open Files" },
+    { title: "Plan room", detail: "Add plan sets, export a plan list, and open design markups.", href: "/portal/plans", label: "Open Plans" },
+    { title: "Scheduling", detail: "Create crew mobilization and inspection events tied to jobs.", href: "/portal/scheduling", label: "Open Scheduling" },
     { title: "Projects and field", detail: "Jobs, photos, plans, and redlines.", href: "/portal/projects", label: "Open Projects" },
-    { title: "Academy training", detail: "Onboarding, safety, certifications, and field skills.", href: "/portal/academy", label: "Open Academy" },
+    { title: "Academy training", detail: "Open courses with real modules, lessons, and progress.", href: "/portal/academy", label: "Open Academy" },
   ],
 };
 
@@ -460,11 +460,10 @@ export const pricingTiers = [
 ];
 
 export const auricruxCapabilities = [
-  "Teaches, advises, and automates every capability in the FCA construction OS map",
-  "Knows how your account acts — branding, entitlements, communications, and security",
-  "Surfaces next actions across estimating, delivery, billing, Academy, and support",
-  "Opens the live route for any construction workflow so customers never hunt for tools",
-  "Maintains continuity between portal operations, communication, and academy readiness",
+  "Surfaces next actions across estimating, delivery, and customer-facing workflows",
+  "Explains blockers so teams know what should happen next before delay risk grows",
+  "Keeps continuity between portal operations, communication, and academy readiness",
+  "Acts as a visible operating layer inside the signed-in workspace",
 ];
 
 export const publicSurfaceLinks = [
