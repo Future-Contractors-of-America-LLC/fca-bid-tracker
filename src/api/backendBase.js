@@ -42,16 +42,20 @@ export function centralFetch(path, options = {}) {
     ...(options.headers || {}),
   };
 
-  // Cross-origin SWA -> Central cannot rely on HttpOnly cookies; send bearer token when present.
+  // Cross-origin SWA -> Central cannot rely on HttpOnly cookies; send tab-scoped bearer when present.
   if (typeof window !== "undefined" && !headers.Authorization && !headers.authorization) {
     try {
-      const raw = window.localStorage.getItem("fca_customer_session_v1");
+      const raw = window.sessionStorage.getItem("fca_customer_session_v1")
+        || window.localStorage.getItem("fca_customer_session_v1");
+      if (raw && window.localStorage.getItem("fca_customer_session_v1")) {
+        window.localStorage.removeItem("fca_customer_session_v1");
+      }
       const parsed = raw ? JSON.parse(raw) : null;
       if (parsed?.sessionToken) {
         headers.Authorization = `Bearer ${parsed.sessionToken}`;
       }
     } catch {
-      // ignore malformed local session
+      // ignore malformed session mirror
     }
   }
 

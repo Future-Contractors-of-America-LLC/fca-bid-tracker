@@ -308,10 +308,10 @@ export default function Home() {
                 {publicHomeMessaging.header.eyebrow}
               </div>
               <h1 style={{ marginTop: 0, fontSize: "clamp(2.25rem, 4.5vw, 3.25rem)", lineHeight: 1.1, fontWeight: 800, maxWidth: 720, color: "#f8fafc" }}>
-                The industry's first self-driving construction operating system.
+                {publicHomeMessaging.header.title}
               </h1>
               <p style={{ color: "#cbd5e1", lineHeight: 1.75, maxWidth: 560, marginTop: 18, fontSize: 18 }}>
-                Auricrux operates as your AI workforce: interpreting signals, routing decisions, and preserving compliance while your team focuses on strategy and exceptions.
+                {publicHomeMessaging.header.subtitle}
               </p>
               {campaign ? (
                 <div style={{ marginTop: 14, borderLeft: "3px solid #60a5fa", paddingLeft: 12, maxWidth: 620 }}>

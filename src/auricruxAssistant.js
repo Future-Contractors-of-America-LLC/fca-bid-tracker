@@ -8,9 +8,12 @@ export function toggleAuricruxAssistant() {
   window.dispatchEvent(new CustomEvent(AURICRUX_ASSISTANT_TOGGLE));
 }
 
-export function openAuricruxAssistant() {
+export function openAuricruxAssistant(prompt = "") {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent(AURICRUX_ASSISTANT_OPEN));
+  const detail = typeof prompt === "string" && prompt.trim()
+    ? { prompt: prompt.trim() }
+    : undefined;
+  window.dispatchEvent(new CustomEvent(AURICRUX_ASSISTANT_OPEN, detail ? { detail } : undefined));
 }
 
 export function closeAuricruxAssistant() {

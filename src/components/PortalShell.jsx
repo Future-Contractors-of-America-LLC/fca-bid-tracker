@@ -8,8 +8,7 @@ import CustomerSessionBar from "./CustomerSessionBar";
 import RouteReadinessOverlay from "./RouteReadinessOverlay";
 import useCustomerSession from "../hooks/useCustomerSession";
 import useWorkspaceState from "../hooks/useWorkspaceState";
-import { portalShellCtas } from "../websiteShell";
-import { portalHubModules, portalJourney, portalModules } from "../systemState";
+import { portalJourney, portalHubModules, portalModules } from "../systemState";
 import { portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
 
 const shellStyle = {
@@ -89,10 +88,10 @@ export default function PortalShell({
           eyebrow={isHubPage ? "FCA Workspace" : "FCA Portal"}
           title={title}
           subtitle={subtitle}
-          primaryHref={primaryHref}
-          primaryLabel={primaryLabel}
-          secondaryHref={portalShellCtas.headerSecondary.href}
-          secondaryLabel={portalShellCtas.headerSecondary.label}
+          primaryHref={isHubPage ? "/portal/profile" : undefined}
+          primaryLabel={isHubPage ? "Customize branding" : undefined}
+          secondaryHref={undefined}
+          secondaryLabel={undefined}
           journey={portalJourney}
           currentJourney={currentJourney}
           showTopNav
@@ -101,7 +100,7 @@ export default function PortalShell({
           showJourney={isHubPage}
         />
 
-        <CustomerSessionBar requestedPath={activeHref} compact={!isHubPage} />
+        <CustomerSessionBar compact={!isHubPage} />
 
         {!isHubPage ? (
           <ProjectSpineBar tenant={resolvedState.tenant} project={resolvedState.project} compact />

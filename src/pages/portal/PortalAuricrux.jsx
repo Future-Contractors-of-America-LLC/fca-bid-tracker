@@ -94,12 +94,12 @@ export default function PortalAuricrux() {
   return (
     <PortalShell
       title="Auricrux"
-      subtitle="Your guide for what to do next — blockers, priorities, and the right product to open."
+      subtitle="Teach, advise, and automate every construction capability — plus how your account acts."
       activeHref="/portal/auricrux"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.auricrux}
-      primaryHref="/portal/platform"
-      primaryLabel="Back to workspace"
+      primaryHref="/portal/capabilities"
+      primaryLabel="All capabilities"
     >
       <PortalApiStatusBanner
         status={actionsLoad.status}
@@ -107,6 +107,22 @@ export default function PortalAuricrux() {
         onRetry={actionsLoad.reload}
         label="Auricrux actions"
       />
+
+      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: "4px solid #7c5313", background: "linear-gradient(135deg, #fffbeb 0%, #ffffff 100%)" }}>
+        <div style={{ ...portalEyebrowStyle, color: "#7c5313" }}>Doctrine</div>
+        <h2 style={{ marginTop: 8, marginBottom: 8 }}>If construction software or AI can do it, Auricrux teaches and automates it</h2>
+        <p style={{ color: portalTokens.body, lineHeight: 1.6, marginTop: 0 }}>
+          Open the full capability directory, customize how your account acts, or ask Auricrux to explain and run the next move on any tool.
+        </p>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button type="button" onClick={() => openAuricruxAssistant("Walk the full construction OS capability map. Teach and automate whatever I name.")} style={{ ...portalButtonPrimary, border: "none", cursor: "pointer", background: "#7c5313" }}>
+            Ask Auricrux now
+          </button>
+          <a href="/portal/capabilities" style={{ ...portalButtonPrimary, background: "#1d4ed8" }}>Capability directory</a>
+          <a href="/portal/profile" style={{ ...portalButtonPrimary, background: "#0f172a" }}>How my account acts</a>
+        </div>
+      </div>
+
       <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${usingLiveActions ? "#16a34a" : "#d97706"}`, background: usingLiveActions ? "#f0fdf4" : "#fffbeb" }}>
         <div style={{ ...portalEyebrowStyle, color: usingLiveActions ? "#166534" : "#92400e" }}>
           {usingLiveActions ? "Live recommendations" : "Guidance mode"}

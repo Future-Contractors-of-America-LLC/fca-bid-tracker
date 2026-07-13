@@ -2,16 +2,20 @@ export const publicPackageRouteGroups = [
   {
     key: "saas-workspace",
     title: "FCA SaaS Workspace",
-    detail: "Real contractor workflow routes for qualification, estimating, project delivery, files, billing, and operations.",
+    detail: "Real contractor workflow routes for qualification, estimating, project delivery, field ops, scheduling, finance, immersive review, files, and billing.",
     routes: [
       { href: "/portal/bids", label: "Qualification Board" },
       { href: "/portal/pipeline", label: "Commercial Pipeline" },
       { href: "/portal/estimates", label: "Estimate Workspace" },
       { href: "/portal/projects", label: "Project Flow" },
-      { href: "/portal/files", label: "File Spine" },
+      { href: "/portal/field-tasks", label: "Field Tasks" },
+      { href: "/portal/scheduling", label: "Scheduling" },
+      { href: "/portal/plans", label: "Plan Room" },
       { href: "/portal/design", label: "Design Workspace" },
+      { href: "/portal/immersive", label: "Immersive / VR Review" },
+      { href: "/portal/finance", label: "Finance / FCA Books" },
+      { href: "/portal/files", label: "File Spine" },
       { href: "/portal/billing", label: "Billing Command" },
-      { href: "/portal/pipeline", label: "Commercial Pipeline" },
       { href: "/portal/legal", label: "Contractor Legal Command" }
     ]
   },

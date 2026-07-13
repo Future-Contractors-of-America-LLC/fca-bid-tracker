@@ -53,9 +53,16 @@ export default function Platform() {
           <div style={{ color: "#2563eb", fontWeight: 700 }}>Platform overview</div>
           <FcaBrandMark compact />
         </div>
-        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
+        <p style={{ color: "#334155", lineHeight: 1.7, maxWidth: 860, marginBottom: 12 }}>
           FCA helps contractor teams move from opportunity to delivery with real workflows for bids, estimates, proposals, projects, files, billing, support, Academy, and Auricrux guidance.
         </p>
+        <p style={{ color: "#475569", lineHeight: 1.7, maxWidth: 860, marginBottom: 0 }}>
+          Doctrine: if construction software, AI, or computers can beneficially do it, FCA claims it, makes it searchable in the capability directory, and Auricrux teaches, advises, and automates it. Customize how your account acts on Profile.
+        </p>
+        <div style={{ marginTop: 14, display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <a href="/login?next=/portal/capabilities" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Sign in → all capabilities</a>
+          <a href="/login?next=/portal/profile" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Sign in → how account acts</a>
+        </div>
       </div>
 
       <ProductProofSection

@@ -162,9 +162,14 @@ export const routeMetadata = {
       "Review tenant controls, permissions, and executive administration across the FCA operating surface.",
   },
   "/portal/profile": {
-    title: "Profile | Future Contractors of America",
+    title: "How Your Account Acts | Future Contractors of America",
     description:
-      "Review account identity, workspace access, and customer profile continuity inside the FCA portal.",
+      "Customize identity, branding, entitlements, and communications — how your FCA account acts across the construction OS.",
+  },
+  "/portal/capabilities": {
+    title: "Construction OS Capabilities | Future Contractors of America",
+    description:
+      "Searchable directory of every FCA construction capability. If software or AI can beneficially do it, FCA claims it and Auricrux can teach, advise, and automate it.",
   },
   "/portal/auricrux": {
     title: "Portal Auricrux | Future Contractors of America",
@@ -338,12 +343,12 @@ export const routeMetadata = {
     description: "Student portal for FCA Academy classroom entry, pathway progress, and credential tracking.",
   },
   "/cte/portal": {
-    title: "CTE Program Portal | Future Contractors of America",
-    description: "CTE Program Portal with dedicated access paths for teacher, administrator, substitute, and student roles.",
+    title: "CTE Programs | Future Contractors of America",
+    description: "VDOE-aligned CTE construction programs in the FCA Academy catalog, with contact paths for school and district rollout.",
   },
   "/cte/program": {
-    title: "CTE Program | Future Contractors of America",
-    description: "CTE Program pathway with role-specific login routes and student progression visibility.",
+    title: "CTE Programs | Future Contractors of America",
+    description: "CTE programs redirect to the Academy CTE pathway and contact options for implementation support.",
   },
 };
 

@@ -1,3 +1,5 @@
+import { getPortalDirectoryModules } from "./capabilityCatalog.js";
+
 export const portalTenant = {
   id: "TEN-FCA-001",
   name: "FCA Pilot Customer",
@@ -548,6 +550,7 @@ export const auricruxActions = [
   "Follow up on one open RFI blocking subcontractor pricing.",
 ];
 
+/** Full OS module directory — sourced from capabilityCatalog so marketing/portal/Auricrux stay aligned. */
 export const portalModules = [
   {
     href: "/portal/platform",
@@ -555,150 +558,16 @@ export const portalModules = [
     description: "Unified executive and customer shell summary",
   },
   {
+    href: "/portal/capabilities",
+    label: "All capabilities",
+    description: "Everything FCA can do — searchable OS directory",
+  },
+  {
     href: "/portal/proof",
     label: "Proof Path",
     description: "One live job spine: project → files → takeoff → RFI → invoice → Auricrux",
   },
-  {
-    href: "/portal/profile",
-    label: "Profile & look",
-    description: "Account settings, brand look, and communications preferences",
-  },
-  {
-    href: "/portal/projects",
-    label: "Projects",
-    description: "Execution visibility and stage tracking",
-  },
-  {
-    href: "/portal/bids",
-    label: "Bids",
-    description: "Pipeline, approvals, and conversion readiness",
-  },
-  {
-    href: "/portal/pipeline",
-    label: "Commercial Pipeline",
-    description: "Guided bid-to-billing workflow in one place",
-  },
-  {
-    href: "/portal/files",
-    label: "Files",
-    description: "Bid packages, permits, legal docs, and onboarding artifacts",
-  },
-  {
-    href: "/portal/legal",
-    label: "Legal",
-    description: "Entity, licenses, agreements, lien waivers, and compliance",
-  },
-  {
-    href: "/portal/audit",
-    label: "Audit",
-    description: "Continuity timeline, evidence linkage, and Auricrux traceability",
-  },
-  {
-    href: "/portal/messages",
-    label: "Messages",
-    description: "Customer communications and Auricrux updates",
-  },
-  {
-    href: "/portal/notifications",
-    label: "Notifications",
-    description: "Alert stream for messages, audits, and continuity signals",
-  },
-  {
-    href: "/portal/billing",
-    label: "Billing",
-    description: "Invoices, review queue, and account follow-through",
-  },
-  {
-    href: "/portal/estimates",
-    label: "Estimates",
-    description: "Estimate studio, pricing review, and proposal packaging",
-  },
-  {
-    href: "/portal/proposals",
-    label: "Proposals",
-    description: "Customer-ready proposal handoff and delivery",
-  },
-  {
-    href: "/portal/plans",
-    label: "Plans",
-    description: "Commercial plan review and upgrade paths",
-  },
-  {
-    href: "/portal/finance",
-    label: "Finance",
-    description: "Revenue posture, invoicing context, and financial continuity",
-  },
-  {
-    href: "/portal/scheduling",
-    label: "Scheduling",
-    description: "Mobilization, milestone, and field scheduling",
-  },
-  {
-    href: "/portal/field-tasks",
-    label: "Field tasks",
-    description: "Customer-visible field work and task execution",
-  },
-  {
-    href: "/portal/field-supervision",
-    label: "Field supervision",
-    description: "Site photos, plan compare, annotations, and redlines",
-  },
-  {
-    href: "/portal/design",
-    label: "Design",
-    description: "Design workspace, markups, sheets, and redline continuity",
-  },
-  {
-    href: "/portal/immersive",
-    label: "Immersive & VR",
-    description: "Field overlay labs, WebXR sessions, and construction simulation",
-  },
-  {
-    href: "/portal/rfis",
-    label: "RFIs",
-    description: "Requests for information tied to sheets and field conditions",
-  },
-  {
-    href: "/portal/change-orders",
-    label: "Change orders",
-    description: "Scope changes, pricing, and approval workflow",
-  },
-  {
-    href: "/portal/warranty",
-    label: "Warranty",
-    description: "Post-handover service, retention, and recurring work",
-  },
-  {
-    href: "/portal/closeout",
-    label: "Closeout",
-    description: "Turnover binders, artifact tracking, and handoff readiness",
-  },
-  {
-    href: "/portal/auricrux",
-    label: "Auricrux",
-    description: "Guided next actions and continuity intelligence",
-  },
-  {
-    href: "/portal/profile",
-    label: "Profile",
-    description: "Account settings, access, and communications preferences",
-  },
-  {
-    href: "/portal/academy",
-    label: "Academy",
-    description: "Training continuity tied to the same customer journey",
-  },
-  {
-    href: "/portal/support",
-    label: "Support",
-    description: "Escalation, recovery, and continuity support",
-  },
-  {
-    href: "/portal/admin",
-    label: "Admin",
-    description: "Tenant control, rollout status, and governance visibility",
-  },
+  ...getPortalDirectoryModules().filter((module) => !["/portal/platform", "/portal/capabilities", "/portal/proof"].includes(module.href)),
 ];
 
 export const portalJourney = [
@@ -746,6 +615,8 @@ export const portalNavGroups = [
       { label: "Field supervision", href: "/portal/field-supervision" },
       { label: "Scheduling", href: "/portal/scheduling" },
       { label: "Field tasks", href: "/portal/field-tasks" },
+      { label: "Punch", href: "/portal/punch" },
+      { label: "Job cost", href: "/portal/job-cost" },
       { label: "RFIs", href: "/portal/rfis" },
       { label: "Change orders", href: "/portal/change-orders" },
       { label: "Closeout", href: "/portal/closeout" },
@@ -757,7 +628,9 @@ export const portalNavGroups = [
     items: [
       { label: "Auricrux", href: "/portal/auricrux" },
       { label: "Files", href: "/portal/files" },
+      { label: "Plans", href: "/portal/plans" },
       { label: "Design workspace", href: "/portal/design" },
+      { label: "Immersive / VR", href: "/portal/immersive" },
       { label: "Legal", href: "/portal/legal" },
       { label: "Messages", href: "/portal/messages" },
       { label: "Notifications", href: "/portal/notifications" },
@@ -768,21 +641,22 @@ export const portalNavGroups = [
     items: [
       { label: "Finance", href: "/portal/finance" },
       { label: "Billing", href: "/portal/billing" },
-      { label: "Plans", href: "/portal/plans" },
     ],
   },
   {
     label: "Training",
     items: [
-      { label: "Academy", href: "/portal/academy" },
-      { label: "Course catalog", href: "/portal/academy" },
-      { label: "Credentials", href: "/portal/academy" },
+      { label: "Academy hub", href: "/portal/academy" },
+      { label: "Course catalog", href: "/academy/catalog" },
+      { label: "Credentials", href: "/academy/credentials" },
+      { label: "CTE programs", href: "/cte/portal" },
     ],
   },
   {
     label: "Account",
     items: [
-      { label: "Profile", href: "/portal/profile" },
+      { label: "Profile & branding", href: "/portal/profile" },
+      { label: "All capabilities", href: "/portal/capabilities" },
       { label: "Audit", href: "/portal/audit" },
       { label: "Support", href: "/portal/support" },
     ],
@@ -791,17 +665,23 @@ export const portalNavGroups = [
 
 /** Curated hub tiles on workspace dashboard — full directory via portalModules. */
 export const portalHubModules = [
+  { href: "/portal/capabilities", label: "All capabilities", description: "Full construction OS map" },
   { href: "/portal/proof", label: "Proof Path", description: "Live job spine" },
-  { href: "/portal/auricrux", label: "Auricrux", description: "What to do next" },
+  { href: "/portal/auricrux", label: "Auricrux", description: "Teach · advise · automate" },
+  { href: "/portal/profile", label: "Account acts", description: "Branding & entitlements" },
   { href: "/portal/leads", label: "Leads", description: "Intake and qualification" },
   { href: "/portal/pipeline", label: "Pipeline", description: "Bid through payment" },
   { href: "/portal/bids", label: "Bids", description: "Qualify and award" },
   { href: "/portal/projects", label: "Projects", description: "Job execution" },
+  { href: "/portal/plans", label: "Plan room", description: "PDF / IFC / sheets" },
+  { href: "/portal/design", label: "Design", description: "Markups & takeoff" },
+  { href: "/portal/immersive", label: "Immersive", description: "VR / WebXR review" },
   { href: "/portal/field-supervision", label: "Field", description: "Photos and redlines" },
-  { href: "/portal/files", label: "Files", description: "Document control" },
+  { href: "/portal/scheduling", label: "Scheduling", description: "Crew and calendar" },
+  { href: "/portal/finance", label: "Finance", description: "FCA Books" },
   { href: "/portal/billing", label: "Billing", description: "Invoices and collections" },
-  { href: "/portal/messages", label: "Messages", description: "Team coordination" },
-  { href: "/portal/academy", label: "Academy", description: "Training and certs" },
+  { href: "/portal/files", label: "Files", description: "Document control" },
+  { href: "/academy/catalog", label: "Academy", description: "1,245 programs" },
   { href: "/portal/admin", label: "Setup", description: "Admin and rollout" },
 ];
 

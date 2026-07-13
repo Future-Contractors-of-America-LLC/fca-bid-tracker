@@ -1,17 +1,15 @@
-import RouteExperienceShell from "../../components/RouteExperienceShell";
+import { navigateTo } from "../../navigation";
+import { useEffect } from "react";
 
+/** Legacy /cte/program → honest CTE entry at /cte/portal */
 export default function CteProgram() {
+  useEffect(() => {
+    navigateTo("/cte/portal");
+  }, []);
+
   return (
-    <RouteExperienceShell
-      eyebrow="CTE Program Redirect"
-      title="CTE Program has moved to a single portal route"
-      lead="Use the CTE Program Portal as the single CTE entrypoint. Role-based teacher, administrator, substitute, and student logins now live there."
-      primaryCta={{ href: "/cte/portal", label: "Open CTE Program Portal" }}
-      secondaryCta={{ href: "/contact?topic=cte", label: "Contact CTE Team" }}
-      proofPoints={[
-        { value: "Single route", label: "CTE now starts at /cte/portal" },
-        { value: "Role-based", label: "Teacher/admin/substitute/student login lanes" },
-      ]}
-    />
+    <div style={{ minHeight: "40vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#475569", fontFamily: "system-ui, sans-serif" }}>
+      Opening CTE programs…
+    </div>
   );
 }

@@ -4,7 +4,7 @@ export const CUSTOMER_SESSION_KEY = "fca_customer_session_v1";
 export const CUSTOMER_SESSION_EVENT = "fca-customer-session-updated";
 export const CUSTOMER_SESSION_EXPIRED_EVENT = "fca-customer-session-expired";
 
-const DEFAULT_POST_LOGIN_HREF = "/portal/proof";
+const DEFAULT_POST_LOGIN_HREF = "/portal/platform";
 
 let hydrateSessionPromise = null;
 
@@ -13,9 +13,22 @@ const DEFAULT_AUTH_BOUNDARY = {
   activeMode: "server-session",
   identityProvider: "fca-native-auth",
   tenantIsolation: "single-repo-account-store",
-  sessionValidation: "signed-http-only-cookie",
+  sessionValidation: "signed-http-only-cookie+tab-scoped-bearer",
   nextBuildStep: "Move customer accounts and session secret into managed identity-backed storage.",
 };
+
+/** Auth mirror is tab-scoped (sessionStorage). Closing the browser clears client auth. */
+function authSessionStore() {
+  return window.sessionStorage;
+}
+
+function purgeLegacyPersistentAuth() {
+  try {
+    window.localStorage.removeItem(CUSTOMER_SESSION_KEY);
+  } catch {
+    // best-effort purge of pre-hardening localStorage sessions
+  }
+}
 
 function normalizeEnabledProducts(enabledProducts) {
   return {
@@ -104,7 +117,8 @@ export function readCustomerSession() {
   if (typeof window === "undefined") return null;
 
   try {
-    const raw = window.localStorage.getItem(CUSTOMER_SESSION_KEY);
+    purgeLegacyPersistentAuth();
+    const raw = authSessionStore().getItem(CUSTOMER_SESSION_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed?.authenticated) return null;
@@ -154,7 +168,8 @@ export function writeCustomerSession(session) {
   };
 
   try {
-    window.localStorage.setItem(CUSTOMER_SESSION_KEY, JSON.stringify(payload));
+    purgeLegacyPersistentAuth();
+    authSessionStore().setItem(CUSTOMER_SESSION_KEY, JSON.stringify(payload));
     broadcastCustomerSessionUpdate();
   } catch {
     // keep login best-effort during shell hardening phase
@@ -211,7 +226,7 @@ export async function syncCustomerSessionFromServer() {
       return null;
     }
 
-    // Cross-origin API cannot read browser session cookies from the SWA domain — keep local session.
+    // Cross-origin API cannot read HttpOnly cookies from the SWA domain — keep tab-scoped bearer session.
     return localSession;
   } catch {
     return localSession;
@@ -338,7 +353,8 @@ export async function persistCustomerPreferences(updates = {}) {
 export async function clearCustomerSession({ server = false } = {}) {
   if (typeof window !== "undefined") {
     try {
-      window.localStorage.removeItem(CUSTOMER_SESSION_KEY);
+      purgeLegacyPersistentAuth();
+      authSessionStore().removeItem(CUSTOMER_SESSION_KEY);
       broadcastCustomerSessionUpdate();
     } catch {
       // best-effort logout only

@@ -5,6 +5,7 @@ import useWorkspaceState from "../hooks/useWorkspaceState";
 import useCustomerSession from "../hooks/useCustomerSession";
 import useProjectWorkspace from "../hooks/useProjectWorkspace";
 import { publishPortalPageContext } from "../portalPageContext";
+import CapabilityModuleBanner from "./CapabilityModuleBanner";
 import {
   portalButtonPrimary,
   portalButtonSecondary,
@@ -198,6 +199,7 @@ export function createOperationalPortalPage({
         navDensity="compact"
       >
         {beforeContent}
+        <CapabilityModuleBanner href={activeHref} />
         <PortalSliceAuricrux
           title={`Auricrux ${title}`}
           targetObjectId={selectedProjectId || state?.project?.id || state?.tenant?.name}

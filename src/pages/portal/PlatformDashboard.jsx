@@ -18,6 +18,7 @@ import usePortalApiLoad from "../../hooks/usePortalApiLoad";
 import { fetchPortalMessages } from "../../api/portalClient";
 import { openAuricruxAssistant } from "../../auricruxAssistant";
 import { isFounderSession } from "../../customerSession";
+import { CAPABILITY_DOMAINS, buildAuricruxCapabilityBrief } from "../../capabilityCatalog";
 import { portalButtonPrimary, portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
 
 export default function PlatformDashboard() {
@@ -26,6 +27,7 @@ export default function PlatformDashboard() {
   const messagesLoad = usePortalApiLoad(() => fetchPortalMessages(), []);
   const recentMessages = (messagesLoad.data?.items || []).slice(0, 3);
   const founder = isFounderSession(session);
+  const capabilityBrief = buildAuricruxCapabilityBrief();
 
   useEffect(() => {
     refreshSyncStamp("Live workspace dashboard active");
@@ -38,8 +40,8 @@ export default function PlatformDashboard() {
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
-      primaryHref="/portal/proof"
-      primaryLabel="Founder Proof Path"
+      primaryHref="/portal/capabilities"
+      primaryLabel="All capabilities"
       navDensity="full"
       showRouteOverlay={false}
     >
@@ -56,6 +58,38 @@ export default function PlatformDashboard() {
         liveRecommend
       />
       <CustomerProductLaunchpad session={session} />
+
+      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${portalTokens.primary}` }}>
+        <div style={portalEyebrowStyle}>Construction OS · obvious & automatable</div>
+        <div style={{ fontWeight: 800, fontSize: 20, marginTop: 6 }}>
+          {capabilityBrief.total} capabilities · {capabilityBrief.domains} domains
+        </div>
+        <p style={{ color: portalTokens.body, lineHeight: 1.55, marginBottom: 12 }}>
+          {capabilityBrief.doctrine}
+        </p>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
+          {CAPABILITY_DOMAINS.map((domain) => (
+            <a
+              key={domain.id}
+              href={`/portal/capabilities#${domain.id}`}
+              style={{ ...portalButtonSecondary, fontSize: 12, padding: "6px 10px" }}
+            >
+              {domain.label}
+            </a>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <a href="/portal/capabilities" style={portalButtonPrimary}>Browse all capabilities</a>
+          <a href="/portal/profile" style={portalButtonSecondary}>How my account acts</a>
+          <button
+            type="button"
+            onClick={() => openAuricruxAssistant("Walk the full construction OS capability map. Teach and automate whatever I name.")}
+            style={{ ...portalButtonSecondary, cursor: "pointer", border: "1px solid #cbd5e1" }}
+          >
+            Ask Auricrux to teach any tool
+          </button>
+        </div>
+      </div>
 
       <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid #d4a32a`, background: "linear-gradient(135deg, #fffbeb 0%, #fff 100%)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "flex-start" }}>

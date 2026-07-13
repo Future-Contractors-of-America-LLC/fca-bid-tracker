@@ -239,18 +239,20 @@ export const portalEntryCtaSets = {
 
 export const platformDashboardCtaSets = {
   quickActions: [
-    { label: "Auricrux", href: "/portal/auricrux", variant: "primary" },
+    { label: "Capabilities", href: "/portal/capabilities", variant: "primary" },
+    { label: "Auricrux", href: "/portal/auricrux", variant: "secondary" },
+    { label: "Account acts", href: "/portal/profile", variant: "secondary" },
     { label: "Pipeline", href: "/portal/pipeline", variant: "secondary" },
     { label: "Projects", href: "/portal/projects", variant: "secondary" },
     { label: "Academy", href: "/portal/academy", variant: "secondary" },
-    { label: "Files", href: "/portal/files", variant: "secondary" },
   ],
   operationalCards: [
+    { title: "All capabilities", detail: "Searchable construction OS map — every tool Auricrux can teach and automate.", href: "/portal/capabilities", label: "Open capability directory" },
+    { title: "How account acts", detail: "Branding, entitlements, communications, and session posture.", href: "/portal/profile", label: "Customize account" },
     { title: "Auricrux guidance", detail: "Ask what to do next, see blockers, and jump to the right lane.", href: "/portal/auricrux", label: "Open Auricrux" },
     { title: "Commercial pipeline", detail: "Qualify bids through award, invoice, and payment.", href: "/portal/pipeline", label: "Open Pipeline" },
     { title: "Projects and field", detail: "Jobs, photos, plans, and redlines.", href: "/portal/projects", label: "Open Projects" },
     { title: "Academy training", detail: "Onboarding, safety, certifications, and field skills.", href: "/portal/academy", label: "Open Academy" },
-    { title: "Files and design", detail: "Plan room, sheets, and document control.", href: "/portal/files", label: "Open Files" },
   ],
 };
 
@@ -458,17 +460,18 @@ export const pricingTiers = [
 ];
 
 export const auricruxCapabilities = [
-  "Surfaces next actions across estimating, delivery, and customer-facing workflows",
+  "Teaches, advises, and automates every capability in the FCA construction OS map",
+  "Knows how your account acts — branding, entitlements, communications, and security",
+  "Surfaces next actions across estimating, delivery, billing, Academy, and support",
+  "Opens the live route for any construction workflow so customers never hunt for tools",
   "Maintains continuity between portal operations, communication, and academy readiness",
-  "Acts as a visible operating layer inside the shell",
-  "Explains blockers so teams know what should happen next before delay risk grows",
 ];
 
 export const publicSurfaceLinks = [
   { key: "platform", title: "Platform Overview", detail: "How bids, projects, files, billing, and training connect in one system.", href: "/platform", ctaLabel: "Platform Overview" },
   { key: "job-board", title: "Job & Contractor Board", detail: "Browse upcoming work and connect with qualified contractors in the FCA network.", href: "/job-board", ctaLabel: "Open job board" },
   { key: "auricrux", title: "Auricrux Intelligence", detail: "The embedded operating layer for next steps and execution continuity.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
-  { key: "features", title: "Features", detail: "Structured onboarding, unified operations, field supervision, and Academy.", href: "/features", ctaLabel: "See Features" },
+  { key: "features", title: "Features", detail: "Full construction OS coverage — searchable capabilities Auricrux can teach and automate.", href: "/features", ctaLabel: "See Features" },
   { key: "solutions", title: "Solutions", detail: "Paths for electrical, GC, and specialty contractor teams.", href: "/solutions", ctaLabel: "View Solutions" },
   { key: "academy", title: "FCA Academy", detail: "Apprenticeship, certification, safety, and supervisor training.", href: "/academy", ctaLabel: "Open Academy" },
   { key: "pricing", title: "Plans and Rollout", detail: "Move from interest into rollout planning, guided setup, and next implementation steps.", href: "/pricing", ctaLabel: "Plans and Rollout" },

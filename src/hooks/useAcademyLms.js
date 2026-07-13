@@ -9,7 +9,13 @@ function buildFallbackState() {
     enrollments: [],
     certificates: [],
     catalog: { programs: [], totalPrograms: 0, lanes: [], pathways: [] },
-    catalogIntegrity: { aligned: false, expectedTotalPrograms: 1212, actualTotalPrograms: 0 },
+    catalogIntegrity: {
+      aligned: false,
+      expectedTotalPrograms: 1245,
+      actualTotalPrograms: 0,
+      version: "2026.07.1",
+      laneProgramCounts: {},
+    },
     summary: {
       learnerCount: 0,
       activeEnrollmentCount: 0,
@@ -18,6 +24,38 @@ function buildFallbackState() {
       updatedAt: null,
     },
     backingSource: "unavailable",
+  };
+}
+
+function normalizeLmsPayload(payload) {
+  const programs = Array.isArray(payload?.catalog?.programs)
+    ? payload.catalog.programs
+    : Array.isArray(payload?.programs)
+      ? payload.programs
+      : [];
+  const integrity = payload?.catalogIntegrity || {};
+  const actual = integrity.actualTotalPrograms ?? programs.length;
+  return {
+    ...buildFallbackState(),
+    ...payload,
+    catalog: {
+      programs,
+      totalPrograms: payload?.catalog?.totalPrograms ?? actual,
+      lanes: payload?.catalog?.lanes || [],
+      pathways: payload?.catalog?.pathways || [],
+    },
+    catalogIntegrity: {
+      version: integrity.version || "2026.07.1",
+      expectedTotalPrograms: integrity.expectedTotalPrograms || 1245,
+      actualTotalPrograms: actual,
+      aligned: integrity.aligned ?? actual === 1245,
+      laneProgramCounts: integrity.laneProgramCounts || payload?.summary?.laneProgramCounts || {},
+    },
+    summary: {
+      ...buildFallbackState().summary,
+      ...(payload?.summary || {}),
+    },
+    backingSource: payload?.backingSource || "api-academy-store",
   };
 }
 
@@ -34,12 +72,13 @@ export default function useAcademyLms() {
 
     async function hydrate() {
       try {
-        const payload = await fetchAcademyLms();
+        // Prefer full catalog so pathway/syllabus UI is populated (summary may omit module detail).
+        const payload = normalizeLmsPayload(await fetchAcademyLms({ view: "full", limit: 2500 }));
         if (!active) return;
         setAcademyState(payload);
         setMeta({
           backingSource: payload.backingSource || "api-academy-store",
-          persistenceState: "API academy LMS spine active",
+          persistenceState: `API academy LMS active (${payload.catalog.totalPrograms} programs)`,
           lastSyncedAt: new Date().toISOString(),
         });
       } catch {
@@ -64,7 +103,7 @@ export default function useAcademyLms() {
     academyState,
     meta,
     async assignProgram(learnerId, programKey, coach = "Auricrux", assignedProjectId = "", profile = {}) {
-      const payload = await mutateAcademyLms("assign-program", {
+      const payload = normalizeLmsPayload(await mutateAcademyLms("assign-program", {
         learnerId,
         programKey,
         coach,
@@ -72,7 +111,7 @@ export default function useAcademyLms() {
         email: profile.email || (String(learnerId).includes("@") ? learnerId : undefined),
         fullName: profile.fullName,
         role: profile.role,
-      });
+      }));
       setAcademyState(payload);
       setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy assignment active", lastSyncedAt: new Date().toISOString() });
       appendAutomationLog({ type: "academy-assignment", title: `${learnerId} assigned to ${programKey}`, detail: `Auricrux assigned ${learnerId} into ${programKey} and preserved workforce continuity.`, route: "/academy" });
@@ -80,7 +119,7 @@ export default function useAcademyLms() {
       return payload;
     },
     async advanceProgress(enrollmentId, progressDelta = 20, nextLesson = "Advance next module") {
-      const payload = await mutateAcademyLms("advance-progress", { enrollmentId, progressDelta, nextLesson });
+      const payload = normalizeLmsPayload(await mutateAcademyLms("advance-progress", { enrollmentId, progressDelta, nextLesson }));
       setAcademyState(payload);
       setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy progress active", lastSyncedAt: new Date().toISOString() });
       appendAutomationLog({ type: "academy-progress", title: `${enrollmentId} progressed`, detail: `Auricrux advanced academy progress for ${enrollmentId}.`, route: "/academy" });
@@ -88,21 +127,21 @@ export default function useAcademyLms() {
       return payload;
     },
     async completeModule(enrollmentId, { moduleNumber, moduleTitle, nextLesson, knowledgeCheckScore, instructorOverride } = {}) {
-      const payload = await mutateAcademyLms("complete-module", {
+      const payload = normalizeLmsPayload(await mutateAcademyLms("complete-module", {
         enrollmentId,
         moduleNumber,
         moduleTitle,
         nextLesson,
         knowledgeCheckScore,
         instructorOverride,
-      });
+      }));
       setAcademyState(payload);
       setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy module completion active", lastSyncedAt: new Date().toISOString() });
       appendAutomationLog({ type: "academy-module", title: `${enrollmentId} completed module ${moduleNumber}`, detail: moduleTitle || `Module ${moduleNumber} marked complete.`, route: "/academy" });
       return payload;
     },
     async issueCertificate(enrollmentId) {
-      const payload = await mutateAcademyLms("issue-certificate", { enrollmentId });
+      const payload = normalizeLmsPayload(await mutateAcademyLms("issue-certificate", { enrollmentId }));
       setAcademyState(payload);
       setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy certificate issuance active", lastSyncedAt: new Date().toISOString() });
       appendAutomationLog({ type: "academy-certificate", title: `${enrollmentId} certificate issued`, detail: `Auricrux issued the completion credential for ${enrollmentId}.`, route: "/academy" });
@@ -110,7 +149,7 @@ export default function useAcademyLms() {
       return payload;
     },
     async exportTranscript(learnerId) {
-      const payload = await exportAcademyTranscript(learnerId);
+      const payload = normalizeLmsPayload(await exportAcademyTranscript(learnerId));
       setAcademyState(payload);
       setMeta({ backingSource: payload.backingSource || "api-academy-store", persistenceState: "API academy transcript export active", lastSyncedAt: new Date().toISOString() });
       return payload;
