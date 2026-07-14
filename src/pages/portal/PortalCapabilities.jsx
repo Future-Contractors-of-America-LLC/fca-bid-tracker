@@ -44,7 +44,7 @@ export default function PortalCapabilities() {
   return (
     <PortalShell
       title="Construction OS capabilities"
-      subtitle="If construction software, AI, or computers can beneficially do it — FCA claims it, shows it, and Auricrux can teach, advise, and automate it."
+      subtitle="FCA shows every construction capability we claim, and Auricrux can teach, advise, and automate it."
       activeHref="/portal/capabilities"
       currentJourney="lead"
       navDensity="full"
