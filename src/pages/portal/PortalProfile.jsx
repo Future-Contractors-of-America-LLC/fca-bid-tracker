@@ -259,7 +259,7 @@ export default function PortalProfile() {
   return (
     <PortalShell
       title="How your account acts"
-      subtitle="Identity, branding, product entitlements, communications, and security - this profile is how FCA behaves for your company."
+      subtitle="Identity, entitlements, communications, and security - this profile defines how FCA behaves for your company."
       activeHref="/portal/profile"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}
