@@ -239,18 +239,20 @@ export const portalEntryCtaSets = {
 
 export const platformDashboardCtaSets = {
   quickActions: [
-    { label: "Auricrux", href: "/portal/auricrux", variant: "primary" },
-    { label: "Pipeline", href: "/portal/pipeline", variant: "secondary" },
+    { label: "Create invoice", href: "/portal/billing", variant: "primary" },
+    { label: "Files", href: "/portal/files", variant: "secondary" },
+    { label: "Plan room", href: "/portal/plans", variant: "secondary" },
+    { label: "Scheduling", href: "/portal/scheduling", variant: "secondary" },
     { label: "Projects", href: "/portal/projects", variant: "secondary" },
     { label: "Academy", href: "/portal/academy", variant: "secondary" },
-    { label: "Files", href: "/portal/files", variant: "secondary" },
   ],
   operationalCards: [
-    { title: "Auricrux guidance", detail: "Ask what to do next, see blockers, and jump to the right lane.", href: "/portal/auricrux", label: "Open Auricrux" },
-    { title: "Commercial pipeline", detail: "Qualify bids through award, invoice, and payment.", href: "/portal/pipeline", label: "Open Pipeline" },
+    { title: "Create and send invoices", detail: "Build an invoice, issue it, deliver it, and take payment.", href: "/portal/billing", label: "Open Billing" },
+    { title: "Files and documents", detail: "Create file records, brief packages, and keep evidence with the job.", href: "/portal/files", label: "Open Files" },
+    { title: "Plan room", detail: "Add plan sets, export a plan list, and open design markups.", href: "/portal/plans", label: "Open Plans" },
+    { title: "Scheduling", detail: "Create crew mobilization and inspection events tied to jobs.", href: "/portal/scheduling", label: "Open Scheduling" },
     { title: "Projects and field", detail: "Jobs, photos, plans, and redlines.", href: "/portal/projects", label: "Open Projects" },
-    { title: "Academy training", detail: "Onboarding, safety, certifications, and field skills.", href: "/portal/academy", label: "Open Academy" },
-    { title: "Files and design", detail: "Plan room, sheets, and document control.", href: "/portal/files", label: "Open Files" },
+    { title: "Academy training", detail: "Open courses with real modules, lessons, and progress.", href: "/portal/academy", label: "Open Academy" },
   ],
 };
 
@@ -459,16 +461,16 @@ export const pricingTiers = [
 
 export const auricruxCapabilities = [
   "Surfaces next actions across estimating, delivery, and customer-facing workflows",
-  "Maintains continuity between portal operations, communication, and academy readiness",
-  "Acts as a visible operating layer inside the shell",
   "Explains blockers so teams know what should happen next before delay risk grows",
+  "Keeps continuity between portal operations, communication, and academy readiness",
+  "Acts as a visible operating layer inside the signed-in workspace",
 ];
 
 export const publicSurfaceLinks = [
   { key: "platform", title: "Platform Overview", detail: "How bids, projects, files, billing, and training connect in one system.", href: "/platform", ctaLabel: "Platform Overview" },
   { key: "job-board", title: "Job & Contractor Board", detail: "Browse upcoming work and connect with qualified contractors in the FCA network.", href: "/job-board", ctaLabel: "Open job board" },
   { key: "auricrux", title: "Auricrux Intelligence", detail: "The embedded operating layer for next steps and execution continuity.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
-  { key: "features", title: "Features", detail: "Structured onboarding, unified operations, field supervision, and Academy.", href: "/features", ctaLabel: "See Features" },
+  { key: "features", title: "Features", detail: "Full construction OS coverage — searchable capabilities Auricrux can teach and automate.", href: "/features", ctaLabel: "See Features" },
   { key: "solutions", title: "Solutions", detail: "Paths for electrical, GC, and specialty contractor teams.", href: "/solutions", ctaLabel: "View Solutions" },
   { key: "academy", title: "FCA Academy", detail: "Apprenticeship, certification, safety, and supervisor training.", href: "/academy", ctaLabel: "Open Academy" },
   { key: "pricing", title: "Plans and Rollout", detail: "Move from interest into rollout planning, guided setup, and next implementation steps.", href: "/pricing", ctaLabel: "Plans and Rollout" },

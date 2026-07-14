@@ -38,8 +38,8 @@ export default function PlatformDashboard() {
       activeHref="/portal/platform"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.platform}
-      primaryHref="/portal/proof"
-      primaryLabel="Founder Proof Path"
+      primaryHref="/portal/billing"
+      primaryLabel="Create invoice"
       navDensity="full"
       showRouteOverlay={false}
     >
@@ -56,6 +56,23 @@ export default function PlatformDashboard() {
         liveRecommend
       />
       <CustomerProductLaunchpad session={session} />
+
+      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${portalTokens.primary}` }}>
+        <div style={portalEyebrowStyle}>Do real work in this workspace</div>
+        <div style={{ fontWeight: 800, fontSize: 20, marginTop: 6 }}>
+          Create invoices, files, schedules, and plan sets — then prove progress
+        </div>
+        <p style={{ color: portalTokens.body, lineHeight: 1.55, marginBottom: 12 }}>
+          This is your live company workspace (not the public marketing site). Open a tool below, create something, and download or deliver the result.
+        </p>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <a href="/portal/billing" style={portalButtonPrimary}>Create invoice</a>
+          <a href="/portal/files" style={portalButtonSecondary}>Manage files</a>
+          <a href="/portal/plans" style={portalButtonSecondary}>Add plan set</a>
+          <a href="/portal/scheduling" style={portalButtonSecondary}>Schedule work</a>
+          <a href="/academy/catalog" style={portalButtonSecondary}>Open a course</a>
+        </div>
+      </div>
 
       <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid #d4a32a`, background: "linear-gradient(135deg, #fffbeb 0%, #fff 100%)" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "flex-start" }}>

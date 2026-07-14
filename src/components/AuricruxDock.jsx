@@ -20,24 +20,31 @@ import {
   AURICRUX_ASSISTANT_OPEN,
   AURICRUX_ASSISTANT_TOGGLE,
 } from "../auricruxAssistant";
+import { getAuricruxCapabilityDoctrineContext } from "../capabilityCatalog";
 import { portalTokens } from "../portalDesignTokens";
 
 const quickPrompts = [
   "What should I do next?",
-  "Run Package A-117 with Auricrux",
-  "What is blocking my project?",
+  "Show me everything FCA can do for construction",
+  "Teach and automate the next capability I need",
 ];
 
 const bidQuickPrompts = [
   "Run bid intake on this package",
-  "Run Package A-117 with Auricrux",
   "Teach me the plan briefing gaps",
+  "Automate invite-to-bid coverage on this package",
 ];
 
 const academyQuickPrompts = [
   "Explain this module objective.",
   "What should I focus on in the lab?",
   "How do I pass the knowledge check?",
+];
+
+const capabilityQuickPrompts = [
+  "Walk the full construction OS capability map",
+  "How does my account act — branding, entitlements, communications?",
+  "Teach and automate a capability I name",
 ];
 
 const auricruxColors = brandIdentity.auricrux.colors;
@@ -196,6 +203,8 @@ function buildChatContext({
   pageProjectId,
   recentTurns,
 }) {
+  const capabilityMap = getAuricruxCapabilityDoctrineContext();
+
   if (!route.startsWith("/portal")) {
     return {
       company: "Future Contractors of America",
@@ -208,6 +217,7 @@ function buildChatContext({
       pageSurface: route === "/" ? "marketing-home" : "public-site",
       academyContext: academyContext || null,
       recentTurns: recentTurns || [],
+      capabilityMap,
     };
   }
 
@@ -225,6 +235,7 @@ function buildChatContext({
     pageSurface: portalPageContext?.surface || null,
     academyContext: academyContext || null,
     recentTurns: recentTurns || [],
+    capabilityMap,
     designContext: route.includes("/portal/design")
       ? {
           fileId: designParams.get("fileId") || "",
@@ -281,9 +292,11 @@ export default function AuricruxDock() {
   const routePath = typeof window !== "undefined" ? window.location.pathname : "";
   const activeQuickPrompts = academyContext
     ? academyQuickPrompts
-    : routePath.startsWith("/portal/bids")
-      ? bidQuickPrompts
-      : quickPrompts;
+    : routePath.startsWith("/portal/capabilities") || routePath.startsWith("/portal/profile")
+      ? capabilityQuickPrompts
+      : routePath.startsWith("/portal/bids")
+        ? bidQuickPrompts
+        : quickPrompts;
 
   useEffect(() => subscribeAcademyContext(setAcademyContext), []);
   useEffect(() => subscribePortalPageContext(setPortalPageContext), []);
@@ -294,8 +307,12 @@ export default function AuricruxDock() {
     function onToggle() {
       setOpen((value) => !value);
     }
-    function onOpen() {
+    function onOpen(event) {
       setOpen(true);
+      const seed = event?.detail?.prompt;
+      if (typeof seed === "string" && seed.trim()) {
+        setText(seed.trim());
+      }
     }
     function onClose() {
       setOpen(false);

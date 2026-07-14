@@ -3,7 +3,7 @@ export const publicHomeMessaging = {
     eyebrow: "FCA Contractor Command",
     title: "Win more work, run every job, and train your workforce in one platform.",
     subtitle:
-      "Future Contractors of America gives commercial contractors a unified operating system for leads, bids, projects, plan rooms, billing, customer communication, and Academy training.",
+      "Future Contractors of America connects leads, bids, projects, plan rooms, field operations, finance, billing, customer communication, and Academy training in one contractor workspace — with Auricrux guiding what to do next.",
   },
   journey: {
     title: "Start with the path that fits your team",
@@ -20,7 +20,7 @@ export const publicHomeMessaging = {
   snapshot: {
     title: "See your operating picture in one place",
     detail:
-      "The platform dashboard connects leads, active jobs, documents, billing, and Academy progress under one company workspace.",
+      "Your workspace dashboard connects leads, active jobs, documents, billing, and Academy progress under one company account.",
     ctaLabel: "Open your workspace",
   },
   actionRail: {

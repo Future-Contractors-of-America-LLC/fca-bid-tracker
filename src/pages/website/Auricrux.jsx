@@ -35,7 +35,7 @@ export default function AuricruxPage() {
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Always on, always in context</div>
             <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux works inside your live workspace</h2>
             <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-              Ask Auricrux what to do next on any bid, project, or training module. It reads your tenant state and gives actionable guidance — not generic marketing copy.
+              Ask Auricrux what to do next on any bid, project, or training module. It reads your company workspace and gives actionable guidance — not marketing copy.
             </p>
           </div>
           <AuricruxAvatar state="idle" size={128} compact />
@@ -118,7 +118,7 @@ export default function AuricruxPage() {
 
       <PublicPackageRouteGroupsPanel
         eyebrow="Intelligence coverage"
-        title="Auricrux reads every governed route group"
+        title="Auricrux reads every workspace route group"
         detail="Insight panels attach to projects, files, finance, field, academy, and admin surfaces across the FCA portal."
       />
     </MarketingPageShell>

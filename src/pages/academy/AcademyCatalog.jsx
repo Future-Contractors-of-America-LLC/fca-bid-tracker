@@ -7,7 +7,7 @@ import useAcademyLms from "../../hooks/useAcademyLms";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { findCatalogPlacement, organizeCatalogHierarchy } from "../../academyOfferings";
 import { hasAcademySubscription, shouldShowMemberOnlyPathway } from "../../academySubscriptionAccess";
-import { getCatalogIntegrity } from "../../academyCatalogIntegrity";
+import { getCatalogIntegrity, formatLaneCounts } from "../../academyCatalogIntegrity";
 import { getPathwayLmsConfig } from "../../academyPathwayLms";
 import { getCertificationAgencyAlignment, getApprenticeshipCompliance, getDegreeAccreditationFootnote } from "../../academyCatalogTaxonomy";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
@@ -331,12 +331,12 @@ export default function AcademyCatalog() {
       <main style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
         <Breadcrumb pathway={placement?.pathway || selectedPathway} topic={placement?.topic || selectedTopic} />
 
-        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #ddd6fe", background: "#f5f3ff" }}>
-          <strong style={{ color: "#6d28d9" }}>Academy Store</strong>
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #dbe3f0", background: "#fff" }}>
+          <strong style={{ color: "#0c2340" }}>Academy Store</strong>
           <span style={{ color: "#475569", marginLeft: 8 }}>
             Purchase individual courses or pathway bundles without a Contractor Command subscription.
           </span>
-          <a href="/academy/store" style={{ display: "inline-block", marginLeft: 12, color: "#7c3aed", fontWeight: 700, textDecoration: "none" }}>
+          <a href="/academy/store" style={{ display: "inline-block", marginLeft: 12, color: "#0c2340", fontWeight: 700, textDecoration: "none" }}>
             Open store
           </a>
         </div>
@@ -360,14 +360,24 @@ export default function AcademyCatalog() {
             <strong style={{ color: catalogIntegrity.aligned ? "#15803d" : "#b45309" }}>
               {catalogIntegrity.aligned ? "Live catalog aligned" : "Catalog sync in progress"}
             </strong>
-            <span style={{ color: "#475569", marginLeft: 8 }}>
-              {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs in your library
+            <div style={{ color: "#475569", marginTop: 8, lineHeight: 1.6 }}>
+              {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs
               {catalogIntegrity.aligned ? "" : " — deploy may still be propagating; refresh shortly."}
-            </span>
+            </div>
+            {formatLaneCounts(catalogIntegrity.laneProgramCounts) ? (
+              <div style={{ color: "#64748b", marginTop: 6, fontSize: 13 }}>
+                {formatLaneCounts(catalogIntegrity.laneProgramCounts)}
+              </div>
+            ) : null}
+            <div style={{ color: "#64748b", marginTop: 8, fontSize: 13 }}>
+              Open any course card → <strong>View syllabus</strong> for curriculum modules and labs.
+              Source: {meta?.backingSource || academyState?.backingSource || "api"} · {meta?.persistenceState || ""}
+            </div>
           </div>
         ) : (
           <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #fde68a", background: "#fffbeb", color: "#92400e" }}>
-            Backend catalog unavailable. Showing FCA syllabus catalog — enrollment gates still apply when you sign in.
+            Catalog programs did not load from the Academy API. Expected {catalogIntegrity.expectedTotal} programs
+            (including 33 VDOE CTE). Refresh, or sign in and retry. Status: {meta?.persistenceState || "unavailable"}.
           </div>
         )}
 

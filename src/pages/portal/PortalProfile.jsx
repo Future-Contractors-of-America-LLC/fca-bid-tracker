@@ -9,6 +9,8 @@ import useWorkspaceState from "../../hooks/useWorkspaceState";
 import { routeStateOverlays } from "../../systemState";
 import { pricingPlanOptions } from "../../pricingPlans";
 import { isDemoAccountSource } from "../../config/authSources";
+import { ACCOUNT_ACTS } from "../../capabilityCatalog";
+import { openAuricruxAssistant } from "../../auricruxAssistant";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -256,24 +258,52 @@ export default function PortalProfile() {
 
   return (
     <PortalShell
-      title="Profile & look"
-      subtitle="Account identity, workspace brand look, plan access, and communication preferences."
+      title="How your account acts"
+      subtitle="Identity, entitlements, communications, and security - this profile defines how FCA behaves for your company."
       activeHref="/portal/profile"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}
-      primaryHref="/portal/projects"
-      primaryLabel="Open projects"
+      primaryHref="/portal/capabilities"
+      primaryLabel="All capabilities"
     >
       <PortalSliceAuricrux
         title="Auricrux Profile Intelligence"
         targetObjectType="User"
         targetObjectId={session?.email || state?.project?.id || "PROFILE"}
         sourceRoute="/portal/profile"
-        rationale="Account identity and entitlements must align with governed workspace posture."
-        nextAction="Confirm plan access matches active rollout requirements."
-        actionHref="/portal/admin"
-        actionLabel="Open admin"
+        rationale="Account identity and entitlements must align with governed workspace posture. Auricrux teaches and automates customization here."
+        nextAction="Confirm branding, product access, and communications match how this account should act."
+        actionHref="/portal/capabilities"
+        actionLabel="Open capability map"
       />
+
+      <div style={{ ...cardStyle, marginBottom: 16, borderLeft: "4px solid #1d4ed8", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
+        <div style={{ color: "#1d4ed8", fontWeight: 700, marginBottom: 8 }}>How this account acts</div>
+        <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>
+          Everything below controls how FCA looks, what products open, how you communicate, and which construction capabilities Auricrux can teach and automate for you.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 10, marginBottom: 12 }}>
+          {ACCOUNT_ACTS.map((act) => (
+            <a key={act.title} href={act.href} style={{ ...cardStyle, marginBottom: 0, textDecoration: "none", color: "inherit", padding: 14 }}>
+              <div style={{ fontWeight: 800, marginBottom: 6 }}>{act.title}</div>
+              <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.5 }}>{act.detail}</div>
+            </a>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <a href="/portal/capabilities" style={{ ...toggleButtonStyle, background: "#1d4ed8", color: "#fff", borderColor: "#1d4ed8", textDecoration: "none" }}>
+            Open full capability directory
+          </a>
+          <button
+            type="button"
+            onClick={() => openAuricruxAssistant("Explain how my account acts - branding, entitlements, communications - then teach me how to customize and automate it.")}
+            style={{ ...toggleButtonStyle, cursor: "pointer" }}
+          >
+            Ask Auricrux to guide customization
+          </button>
+        </div>
+      </div>
+
       <CustomerProductLaunchpad session={session} title="Product access" />
       <CustomerCommsLaunchpad session={session} title="Communications access" />
 
@@ -285,7 +315,7 @@ export default function PortalProfile() {
           <div><strong>Session:</strong> {isAuthenticated ? "Active on this device" : "Not signed in"}</div>
         </div>
         <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginBottom: 0, marginTop: 12 }}>
-          Sign out from shared devices using the Sign out button on the login page. Enterprise SSO is available on request for multi-user teams.
+          Web auth is tab-scoped (sessionStorage + httpOnly cookie). Closing the browser clears client auth. Sign out from shared devices using Sign out on the login page. Enterprise SSO is available on request for multi-user teams.
         </p>
       </div>
 
@@ -316,7 +346,7 @@ export default function PortalProfile() {
             <div><strong>Next action:</strong> {state.workspace.currentNextAction}</div>
             <div><strong>Current blocker:</strong> {state.auricrux.currentBlocker}</div>
             <div><strong>Recommended move:</strong> {state.auricrux.nextRecommendedAction}</div>
-            <div><strong>Project spine:</strong> {state.project.id} · {state.project.stage}</div>
+            <div><strong>Project spine:</strong> {state.project.id} -+ {state.project.stage}</div>
           </div>
         </div>
       </div>
@@ -430,7 +460,7 @@ export default function PortalProfile() {
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Product access</div>
           <div style={{ color: "#475569", lineHeight: 1.8 }}>
-            Choose which products and channels are on for your team — workspace, Academy, Auricrux guidance, and messages. Changes apply to your signed-in session immediately.
+            Choose which products and channels are on for your team - workspace, Academy, Auricrux guidance, and messages. Changes apply to your signed-in session immediately.
           </div>
         </div>
 
@@ -500,3 +530,4 @@ export default function PortalProfile() {
     </PortalShell>
   );
 }
+

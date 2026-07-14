@@ -4,13 +4,14 @@ export function getCatalogIntegrity(academyState) {
   const integrity = academyState?.catalogIntegrity;
   const total = academyState?.catalog?.totalPrograms ?? academyState?.catalog?.programs?.length ?? 0;
   const laneCounts = integrity?.laneProgramCounts || academyState?.summary?.laneProgramCounts || {};
+  const actual = integrity?.actualTotalPrograms ?? total;
   return {
     version: integrity?.version || ACADEMY_CATALOG_VERSION,
     expectedTotal: integrity?.expectedTotalPrograms || ACADEMY_CATALOG_EXPECTED_TOTAL,
-    actualTotal: integrity?.actualTotalPrograms ?? total,
-    aligned: integrity?.aligned ?? (total === ACADEMY_CATALOG_EXPECTED_TOTAL),
+    actualTotal: actual,
+    aligned: integrity?.aligned ?? (actual === ACADEMY_CATALOG_EXPECTED_TOTAL),
     laneProgramCounts: laneCounts,
-    apiConnected: total > 0 && academyState?.backingSource !== "unavailable",
+    apiConnected: academyState?.backingSource !== "unavailable" && actual > 0,
   };
 }
 

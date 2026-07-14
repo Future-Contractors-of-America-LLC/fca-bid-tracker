@@ -399,21 +399,34 @@ export function organizeCatalogHierarchy(apiPrograms = [], options = {}) {
 
   return CATALOG_PATHWAYS.filter((pathway) => includeOperatorGuides || pathway.key !== "fca-how-to")
     .map((pathway) => {
-    const topics = getTopicsForPathway(pathway.key)
+    const knownTopics = getTopicsForPathway(pathway.key);
+    const topics = knownTopics
       .map((topic) => ({
         ...topic,
         courses: (courseBuckets[pathway.key][topic.key] || []).sort((a, b) => (a.level || 0) - (b.level || 0)),
       }))
       .filter((topic) => topic.courses.length > 0 || topic.alwaysShow);
 
-    const courseCount = topics.reduce((sum, topic) => sum + topic.courses.length, 0);
+    const knownTopicKeys = new Set(knownTopics.map((topic) => topic.key));
+    const orphanTopics = Object.entries(courseBuckets[pathway.key] || {})
+      .filter(([topicKey, courses]) => !knownTopicKeys.has(topicKey) && courses.length > 0)
+      .map(([topicKey, courses]) => ({
+        key: topicKey,
+        label: topicKey.replace(/^vdoe-cte-/, "").replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+        description: `${pathway.label} programs`,
+        pathwayKey: pathway.key,
+        courses: courses.sort((a, b) => (a.level || 0) - (b.level || 0)),
+      }));
+
+    const mergedTopics = [...topics, ...orphanTopics];
+    const courseCount = mergedTopics.reduce((sum, topic) => sum + topic.courses.length, 0);
 
     return {
       ...pathway,
-      topics,
+      topics: mergedTopics,
       courseCount,
     };
-  }).filter((pathway) => pathway.courseCount > 0 || pathway.key === "licensure" || (includeOperatorGuides && pathway.key === "fca-how-to"));
+  }).filter((pathway) => pathway.courseCount > 0 || pathway.key === "licensure" || pathway.key === "vdoe-cte" || (includeOperatorGuides && pathway.key === "fca-how-to"));
 }
 
 export function findCatalogPlacement(pathwayKey, topicKey, programKey) {

@@ -94,6 +94,24 @@ export const CATALOG_PATHWAYS = [
     operatedBy: "Auricrux",
     miniLms: true,
   },
+  {
+    key: "vdoe-cte",
+    label: "VDOE CTE",
+    description: "Virginia Department of Education Career & Technical Education construction pathways for schools and workforce partners.",
+    credentialType: "CTE Pathway Certificate",
+  },
+];
+
+const VDOE_CTE_TOPICS = [
+  { key: "vdoe-cte-building-trades", label: "Building Trades", description: "VDOE CTE Building Trades sequence." },
+  { key: "vdoe-cte-carpentry", label: "Carpentry", description: "VDOE CTE Carpentry sequence." },
+  { key: "vdoe-cte-electrical", label: "Electrical", description: "VDOE CTE Electrical sequence." },
+  { key: "vdoe-cte-hvac", label: "HVAC", description: "VDOE CTE HVAC sequence." },
+  { key: "vdoe-cte-plumbing", label: "Plumbing", description: "VDOE CTE Plumbing sequence." },
+  { key: "vdoe-cte-welding", label: "Welding", description: "VDOE CTE Welding sequence." },
+  { key: "vdoe-cte-masonry", label: "Masonry", description: "VDOE CTE Masonry sequence." },
+  { key: "vdoe-cte-construction", label: "Construction Technology", description: "VDOE CTE Construction Technology sequence." },
+  { key: "vdoe-cte-general", label: "General CTE", description: "Additional VDOE CTE construction programs.", alwaysShow: true },
 ];
 
 const APPRENTICESHIP_TOPICS = [
@@ -299,6 +317,7 @@ export const CATALOG_TOPICS = [
   ...buildLicensureStateTopics(),
   ...PROFESSIONAL_TOPICS.map((topic) => ({ ...topic, pathwayKey: "professional" })),
   ...FCA_HOWTO_TOPICS.map((topic) => ({ ...topic, pathwayKey: "fca-how-to" })),
+  ...VDOE_CTE_TOPICS.map((topic) => ({ ...topic, pathwayKey: "vdoe-cte" })),
 ];
 
 /** Static program placement and enrollment gates (syllabus always public). */

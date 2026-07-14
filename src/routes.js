@@ -57,6 +57,7 @@ export const routes = {
   "/portal/auricrux": lazyPage(() => import("./pages/portal/PortalAuricrux")),
   "/portal/academy": lazyPage(() => import("./pages/academy/AcademyHome")),
   "/portal/plans": lazyPage(() => import("./pages/portal/PortalPlans")),
+  "/portal/capabilities": lazyPage(() => import("./pages/portal/PortalCapabilities")),
   "/portal/finance": lazyPage(() => import("./pages/portal/PortalFinance")),
   "/portal/design": lazyPage(() => import("./pages/portal/PortalDesignWorkspace")),
   "/portal/immersive": lazyPage(() => import("./pages/portal/PortalImmersive")),
