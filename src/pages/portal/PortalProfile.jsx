@@ -259,7 +259,7 @@ export default function PortalProfile() {
   return (
     <PortalShell
       title="How your account acts"
-      subtitle="Identity, branding, product entitlements, communications, and security â€” this profile is how FCA behaves for your company."
+      subtitle="Identity, branding, product entitlements, communications, and security GÇö this profile is how FCA behaves for your company."
       activeHref="/portal/profile"
       currentJourney="lead"
       routeOverlay={routeStateOverlays.overview}
@@ -296,7 +296,7 @@ export default function PortalProfile() {
           </a>
           <button
             type="button"
-            onClick={() => openAuricruxAssistant("Explain how my account acts â€” branding, entitlements, communications â€” then teach me how to customize and automate it.")}
+            onClick={() => openAuricruxAssistant("Explain how my account acts GÇö branding, entitlements, communications GÇö then teach me how to customize and automate it.")}
             style={{ ...toggleButtonStyle, cursor: "pointer" }}
           >
             Ask Auricrux to guide customization
@@ -346,7 +346,7 @@ export default function PortalProfile() {
             <div><strong>Next action:</strong> {state.workspace.currentNextAction}</div>
             <div><strong>Current blocker:</strong> {state.auricrux.currentBlocker}</div>
             <div><strong>Recommended move:</strong> {state.auricrux.nextRecommendedAction}</div>
-            <div><strong>Project spine:</strong> {state.project.id} Â· {state.project.stage}</div>
+            <div><strong>Project spine:</strong> {state.project.id} -+ {state.project.stage}</div>
           </div>
         </div>
       </div>
@@ -460,7 +460,7 @@ export default function PortalProfile() {
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #f8fbff 0%, #ffffff 100%)" }}>
           <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Product access</div>
           <div style={{ color: "#475569", lineHeight: 1.8 }}>
-            Choose which products and channels are on for your team â€” workspace, Academy, Auricrux guidance, and messages. Changes apply to your signed-in session immediately.
+            Choose which products and channels are on for your team GÇö workspace, Academy, Auricrux guidance, and messages. Changes apply to your signed-in session immediately.
           </div>
         </div>
 
@@ -530,3 +530,4 @@ export default function PortalProfile() {
     </PortalShell>
   );
 }
+
