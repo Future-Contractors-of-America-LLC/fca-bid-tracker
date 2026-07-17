@@ -3,10 +3,18 @@ import {
   buildAuthBoundary,
   buildServerSession,
   createSessionCookie,
-  readSessionTokenFromCookieHeader,
+  readSessionTokenFromRequest,
   validateSessionToken,
 } from "./auth-boundary.js";
 import { loadCustomerPreferences, saveCustomerPreferences } from "./customer-preferences-store.js";
+
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, PATCH, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization",
+  "Access-Control-Max-Age": "86400",
+  "Cache-Control": "no-store",
+};
 
 function buildAccountFromPayload(payload, preferences = null) {
   const prefs = preferences || {};
@@ -32,17 +40,16 @@ app.http("customer-session", {
   route: "customer-session",
   handler: async (request) => {
     if (request.method === "OPTIONS") {
-      return { status: 204, headers: { "Cache-Control": "no-store" } };
+      return { status: 204, headers: CORS_HEADERS };
     }
 
-    const cookieHeader = request.headers.get("cookie") || "";
-    const token = readSessionTokenFromCookieHeader(cookieHeader);
+    const token = readSessionTokenFromRequest(request);
     const payload = validateSessionToken(token);
 
     if (!payload) {
       return {
         status: 200,
-        headers: { "Cache-Control": "no-store" },
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: true,
           authenticated: false,
@@ -57,12 +64,13 @@ app.http("customer-session", {
       const account = buildAccountFromPayload(payload, preferences);
       return {
         status: 200,
-        headers: { "Cache-Control": "no-store" },
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: true,
           authenticated: true,
           account,
           session: buildServerSession(account),
+          sessionToken: token,
           authBoundary: buildAuthBoundary(),
           preferencesBackingSource: preferences ? "customer-preferences-store" : "session-cookie",
         },
@@ -97,7 +105,7 @@ app.http("customer-session", {
       );
 
       // Refresh cookie claims so company/role/workspace survive reloads.
-      const { cookie } = createSessionCookie({
+      const { token: refreshedToken, cookie } = createSessionCookie({
         ...payload,
         company: account.company,
         workspaceLabel: account.workspaceLabel,
@@ -107,7 +115,7 @@ app.http("customer-session", {
       return {
         status: 200,
         headers: {
-          "Cache-Control": "no-store",
+          ...CORS_HEADERS,
           "Set-Cookie": cookie,
         },
         jsonBody: {
@@ -115,6 +123,7 @@ app.http("customer-session", {
           authenticated: true,
           account,
           session: buildServerSession(account),
+          sessionToken: refreshedToken,
           authBoundary: buildAuthBoundary(),
           backingSource: saved.backingSource,
         },
@@ -122,7 +131,7 @@ app.http("customer-session", {
     } catch (error) {
       return {
         status: 400,
-        headers: { "Cache-Control": "no-store" },
+        headers: CORS_HEADERS,
         jsonBody: {
           ok: false,
           error: error?.message || "Unable to save customer preferences.",

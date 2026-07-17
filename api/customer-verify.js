@@ -5,7 +5,7 @@ import { verifyLoginChallenge } from "./verification-challenges.js";
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Accept",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization",
   "Access-Control-Max-Age": "86400",
 };
 
@@ -64,7 +64,7 @@ app.http("customer-verify", {
       };
     }
 
-    const { cookie } = createSessionCookie(account);
+    const { token, cookie } = createSessionCookie(account);
     return {
       status: 200,
       headers: {
@@ -76,6 +76,7 @@ app.http("customer-verify", {
         ok: true,
         account,
         session: buildServerSession(account),
+        sessionToken: token,
         authBoundary: buildAuthBoundary(),
         authenticationMode: account.authenticationMode || "server-session",
         timestamp: new Date().toISOString(),
