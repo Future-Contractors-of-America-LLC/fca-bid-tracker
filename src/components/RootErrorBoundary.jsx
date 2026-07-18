@@ -20,12 +20,23 @@ const cardStyle = {
   padding: 24,
 };
 
+function isChunkLoadMessage(message) {
+  const text = String(message || "").toLowerCase();
+  return (
+    text.includes("failed to fetch dynamically imported module") ||
+    text.includes("error loading dynamically imported module") ||
+    text.includes("loading chunk") ||
+    text.includes("importing a module script failed")
+  );
+}
+
 export default class RootErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       hasError: false,
       message: "",
+      reloading: false,
     };
   }
 
@@ -39,6 +50,14 @@ export default class RootErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     try {
       console.error("FCA root startup error", error, errorInfo);
+      if (isChunkLoadMessage(error?.message || error) && typeof window !== "undefined") {
+        const key = "fca_chunk_reload_boundary_v1";
+        if (window.sessionStorage.getItem(key) !== "1") {
+          window.sessionStorage.setItem(key, "1");
+          this.setState({ reloading: true });
+          window.location.reload();
+        }
+      }
     } catch {
       // Avoid secondary failures while reporting startup faults.
     }
@@ -46,17 +65,35 @@ export default class RootErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
+      if (this.state.reloading) {
+        return (
+          <div style={panelStyle}>
+            <div style={cardStyle}>
+              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "#2563eb" }}>
+                Future Contractors of America
+              </div>
+              <h1 style={{ marginTop: 12, marginBottom: 12, fontSize: 28 }}>Refreshing workspace assets…</h1>
+              <p style={{ marginTop: 0, color: "#475569", lineHeight: 1.6 }}>
+                A newer site build is loading. This usually clears after one refresh.
+              </p>
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div style={panelStyle}>
           <div style={cardStyle}>
             <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", color: "#2563eb" }}>
-              FCA startup recovery
+              Future Contractors of America
             </div>
             <h1 style={{ marginTop: 12, marginBottom: 12, fontSize: 28 }}>
-              Something went wrong loading this page.
+              This page needs a quick refresh.
             </h1>
             <p style={{ marginTop: 0, color: "#475569", lineHeight: 1.6 }}>
-              Return home or open your workspace. If this keeps happening, contact FCA support with the details below.
+              FCA is building an AI-powered operating system for construction that combines contractor workflows,
+              project execution, billing, workforce training, and Auricrux operating intelligence.
+              Use the company pages below while we recover this workspace view.
             </p>
             <div
               style={{
@@ -85,10 +122,10 @@ export default class RootErrorBoundary extends React.Component {
                   fontWeight: 700,
                 }}
               >
-                Reload home
+                Company homepage
               </a>
               <a
-                href="/portal/platform"
+                href="/platform"
                 style={{
                   textDecoration: "none",
                   background: "#eff6ff",
@@ -99,7 +136,35 @@ export default class RootErrorBoundary extends React.Component {
                   fontWeight: 700,
                 }}
               >
-                Open workspace
+                Platform
+              </a>
+              <a
+                href="/pricing"
+                style={{
+                  textDecoration: "none",
+                  background: "#eff6ff",
+                  color: "#1d4ed8",
+                  border: "1px solid #bfdbfe",
+                  borderRadius: 12,
+                  padding: "10px 14px",
+                  fontWeight: 700,
+                }}
+              >
+                Pricing
+              </a>
+              <a
+                href="/contact"
+                style={{
+                  textDecoration: "none",
+                  background: "#eff6ff",
+                  color: "#1d4ed8",
+                  border: "1px solid #bfdbfe",
+                  borderRadius: 12,
+                  padding: "10px 14px",
+                  fontWeight: 700,
+                }}
+              >
+                Contact
               </a>
             </div>
           </div>
