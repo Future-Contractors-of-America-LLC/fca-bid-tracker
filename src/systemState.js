@@ -585,14 +585,13 @@ export const portalHubHrefs = ["/portal/platform"];
 /** Portal page subtitles must stay concise — max character count for professional UX. */
 export const PORTAL_SUBTITLE_MAX = 120;
 
-/** Always-visible portal shortcuts: workspace, products entry, setup, Auricrux. */
+/** Always-visible portal shortcuts (Workspace CTA lives in auth actions — do not duplicate here). */
 export const portalNavPrimary = [
-  { label: "Workspace", href: "/portal/platform" },
   { label: "Leads", href: "/portal/leads" },
   { label: "Pipeline", href: "/portal/pipeline" },
   { label: "Projects", href: "/portal/projects" },
   { label: "Files", href: "/portal/files" },
-  { label: "Setup", href: "/portal/admin" },
+  { label: "Finance", href: "/portal/finance" },
   { label: "Auricrux", href: "/portal/auricrux" },
 ];
 

@@ -183,7 +183,8 @@ export default function AcademyStore() {
           <h1 style={{ margin: "8px 0 12px", fontSize: 34 }}>Courses and pathways without Contractor Command</h1>
           <p style={{ color: "#475569", lineHeight: 1.7, maxWidth: 760 }}>
             Purchase individual academy courses or full pathway bundles for your team. This storefront is separate from
-            Contractor Command SaaS billing - buy only the training you need.
+            Contractor Command SaaS billing - buy only the training you need. VDOE CTE programs are not sold here —
+            schools enroll through the <a href="/cte/portal" style={{ color: "#0c2340", fontWeight: 700 }}>CTE portal</a>.
           </p>
         </div>
 

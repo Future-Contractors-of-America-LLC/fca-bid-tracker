@@ -26,11 +26,11 @@ const audiences = [
 const proofCards = [
   {
     title: `${ACADEMY_CATALOG_CTE_TOTAL} VDOE CTE programs`,
-    detail: "Aligned Career & Technical Education pathways inside the same Academy catalog contractors already use.",
+    detail: "School CTE pathways live here — isolated from the commercial Academy catalog and store.",
   },
   {
     title: "Same FCA brand experience",
-    detail: "CTE sits beside Contractor Command and Academy — not a disconnected school portal with different branding.",
+    detail: "CTE uses FCA Academy quality with a dedicated school entry — not mixed into contractor storefront pricing.",
   },
   {
     title: "From classroom to jobsite",

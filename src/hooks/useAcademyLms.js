@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchAcademyLms, mutateAcademyLms, exportAcademyTranscript } from "../api/academyClient";
 import { appendAutomationLog } from "../sessionAutomationLog";
 import { appendCommercialLog } from "../sessionCommercialLog";
+import { ACADEMY_CATALOG_EXPECTED_TOTAL, ACADEMY_CATALOG_VERSION } from "../academyDesignSystem";
 
 function buildFallbackState() {
   return {
@@ -11,9 +12,9 @@ function buildFallbackState() {
     catalog: { programs: [], totalPrograms: 0, lanes: [], pathways: [] },
     catalogIntegrity: {
       aligned: false,
-      expectedTotalPrograms: 1245,
+      expectedTotalPrograms: ACADEMY_CATALOG_EXPECTED_TOTAL,
       actualTotalPrograms: 0,
-      version: "2026.07.1",
+      version: ACADEMY_CATALOG_VERSION,
       laneProgramCounts: {},
     },
     summary: {
@@ -45,10 +46,10 @@ function normalizeLmsPayload(payload) {
       pathways: payload?.catalog?.pathways || [],
     },
     catalogIntegrity: {
-      version: integrity.version || "2026.07.1",
-      expectedTotalPrograms: integrity.expectedTotalPrograms || 1245,
+      version: integrity.version || ACADEMY_CATALOG_VERSION,
+      expectedTotalPrograms: integrity.expectedTotalPrograms || ACADEMY_CATALOG_EXPECTED_TOTAL,
       actualTotalPrograms: actual,
-      aligned: integrity.aligned ?? actual === 1245,
+      aligned: integrity.aligned ?? actual === ACADEMY_CATALOG_EXPECTED_TOTAL,
       laneProgramCounts: integrity.laneProgramCounts || payload?.summary?.laneProgramCounts || {},
     },
     summary: {

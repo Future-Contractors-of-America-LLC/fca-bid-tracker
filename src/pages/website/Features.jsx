@@ -20,7 +20,7 @@ const pillars = [
   },
   {
     title: "Academy-ready workforce",
-    detail: "1,245 apprenticeship, certification, degree, licensure, and CTE programs live inside the same product your team uses on jobs.",
+    detail: "1,212 FCA Academy pathways (apprenticeship, certification, degree, licensure, professional) live inside Contractor Command. VDOE CTE is a separate school portal.",
   },
   {
     title: "Mobile companion",
@@ -43,7 +43,7 @@ const buyerBenefits = [
   },
   {
     title: "Train the same workforce",
-    detail: "Academy and CTE sit beside the work — not in a disconnected LMS.",
+    detail: "FCA Academy sits beside the work. CTE for schools stays on its own portal — not mixed into the commercial catalog.",
   },
 ];
 
