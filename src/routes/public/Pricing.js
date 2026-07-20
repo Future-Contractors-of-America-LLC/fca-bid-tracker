@@ -20,7 +20,7 @@ export default function Pricing() {
         },
         {
           title: 'Enterprise posture',
-          detail: 'Supports broader adoption of FCA as the unified contractor lifecycle operating system rather than a one-off bid tool.',
+          detail: 'Supports broader adoption of FCA as the unified contractor lifecycle platform rather than a one-off bid tool.',
         },
       ]}
     />

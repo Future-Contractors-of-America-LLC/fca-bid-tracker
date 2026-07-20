@@ -42,7 +42,7 @@ export default function Messages() {
           items: [
             'Customers judge operational maturity by how clearly communication ties to work progress.',
             'A fragmented message surface makes the platform feel small and unreliable.',
-            'A strong message flow makes FCA feel closer to a serious operating system category player.'
+            'A strong message flow makes FCA feel closer to a serious platform category player.'
           ],
         },
       ]}

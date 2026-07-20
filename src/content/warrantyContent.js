@@ -2,7 +2,7 @@ export const warrantyItems = [
   {
     label: "Lifecycle continuity",
     value: "Post-handover support stays inside FCA",
-    detail: "Warranty requests, service coordination, and resolution history belong to the same operating system as bids, projects, billing, and support.",
+    detail: "Warranty requests, service coordination, and resolution history belong to the same platform as bids, projects, billing, and support.",
   },
   {
     label: "Revenue protection",
