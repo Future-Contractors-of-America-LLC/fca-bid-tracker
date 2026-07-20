@@ -42,7 +42,7 @@ export default function Auricrux() {
           items: [
             'It should reduce founder load, not create another system to supervise.',
             'It should produce visible operating guidance on the public shell and inside authenticated routes.',
-            'It should unify FCA into one construction operating system experience.'
+            'It should unify FCA into one construction platform experience.'
           ],
         },
       ]}

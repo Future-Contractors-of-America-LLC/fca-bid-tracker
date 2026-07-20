@@ -60,7 +60,7 @@ export const operationsPipeline = {
       key: "document-control",
       title: "Document Control",
       owner: "Project controls",
-      outcome: "Keep files, revisions, RFIs, and submittals coordinated inside a single operating system.",
+      outcome: "Keep files, revisions, RFIs, and submittals coordinated inside a single contractor platform.",
       primaryRoute: "/portal/files",
       primaryLabel: "Open Files Workspace",
       artifacts: [

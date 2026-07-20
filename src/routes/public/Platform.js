@@ -5,7 +5,7 @@ export default function Platform() {
   return (
     <RouteExperienceShell
       eyebrow="Platform Overview"
-      title="The FCA platform is being built as one operating system for estimating, project delivery, customer visibility, workforce enablement, and Auricrux-guided execution."
+      title="The FCA platform is being built as one platform for estimating, project delivery, customer visibility, workforce enablement, and Auricrux-guided execution."
       lead="This surface should read like a real product architecture page: how the website converts demand, how the workspace runs contractor operations, how the Academy accelerates rollout, and how Auricrux keeps every surface coordinated around production outcomes."
       primaryCta={{ href: '/portal', label: 'Open Operational Workspace' }}
       secondaryCta={{ href: '/academy', label: 'View Academy Pathways' }}

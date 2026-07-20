@@ -47,7 +47,7 @@ const referralProof = [
   },
   {
     title: "Show platform readiness",
-    detail: "Use the platform dashboard to prove that referral-driven growth feeds into a real operating system rather than a disconnected sales promise.",
+    detail: "Use the platform dashboard to prove that referral-driven growth feeds into a real contractor platform rather than a disconnected sales promise.",
     href: "/portal/platform",
     label: "Open Platform Dashboard",
   },
@@ -106,7 +106,7 @@ export default function Referrals() {
           <li>Review and testimonial capture tied to real project outcomes</li>
           <li>Direct conversion of customer advocacy into guided walkthrough motion</li>
           <li>Message continuity for follow-up, thank-you, and referral handling</li>
-          <li>Visibility into how new opportunities re-enter the FCA operating system</li>
+          <li>Visibility into how new opportunities re-enter the FCA platform lifecycle</li>
         </ul>
         <a href="/portal/messages" style={{ ...ctaPrimaryStyle, marginTop: 16, display: "inline-flex" }}>Open Message Continuity</a>
       </div>

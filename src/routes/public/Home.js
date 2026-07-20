@@ -4,9 +4,9 @@ import RouteExperienceShell from '../../components/RouteExperienceShell';
 export default function Home() {
   return (
     <RouteExperienceShell
-      eyebrow="FCA Construction Operating System"
+      eyebrow="FCA Construction platform"
       title="Win more work, coordinate delivery, and train your workforce inside one contractor platform with Auricrux embedded from first touch to field execution."
-      lead="Future Contractors of America is being shaped as a unified operating system for commercial contractors: customer-ready website motion, real SaaS pathways for bids and projects, Academy classrooms that improve production readiness, and Auricrux guidance that turns scattered activity into next-action clarity."
+      lead="Future Contractors of America is being shaped as a unified platform for commercial contractors: customer-ready website motion, real SaaS pathways for bids and projects, Academy classrooms that improve production readiness, and Auricrux guidance that turns scattered activity into next-action clarity."
       primaryCta={{ href: '/login', label: 'Open FCA Workspace' }}
       secondaryCta={{ href: '/platform', label: 'Explore Platform Modules' }}
       proofPoints={[
@@ -33,7 +33,7 @@ export default function Home() {
           title: 'Compete like an enterprise platform',
           lead: 'The website has to feel credible next to Autodesk, Intuit, and Procore. That means a stronger platform story, stronger navigation, and stronger proof of operational depth.',
           items: [
-            'Position FCA as a unified construction operating system instead of a single-purpose bid tool.',
+            'Position FCA as a unified construction platform instead of a single-purpose bid tool.',
             'Show how workspace, Academy, and Auricrux reinforce each other instead of behaving like separate products.',
             'Turn every public CTA into a route toward real product interaction.'
           ],
