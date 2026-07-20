@@ -1,6 +1,21 @@
 {
   "routes": [
     {
+      "route": "/bids",
+      "redirect": "/login?next=/portal/bids",
+      "statusCode": 302
+    },
+    {
+      "route": "/bids/",
+      "redirect": "/login?next=/portal/bids",
+      "statusCode": 302
+    },
+    {
+      "route": "/bid",
+      "redirect": "/login?next=/portal/bids",
+      "statusCode": 302
+    },
+    {
       "route": "/assets/*",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
@@ -16,6 +31,13 @@
       "route": "/api/*",
       "headers": {
         "Cache-Control": "no-store, no-cache, must-revalidate"
+      }
+    },
+    {
+      "route": "/company.html",
+      "headers": {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Content-Type": "text/html; charset=utf-8"
       }
     },
     {
@@ -102,12 +124,7 @@
       "/*.html",
       "/favicon.ico",
       "/config/*",
-      "/leads/*",
-      "/pipeline/*",
-      "/onboarding/*",
-      "/offers/*",
-      "/intake/*",
-      "/bids/*",
+      "/company.html",
       "/deployment-status.json",
       "/domain-continuity.json",
       "/runtime-fingerprint.txt",

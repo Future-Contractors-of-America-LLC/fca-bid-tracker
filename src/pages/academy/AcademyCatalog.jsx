@@ -375,9 +375,18 @@ export default function AcademyCatalog() {
             </div>
           </div>
         ) : (
-          <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #fde68a", background: "#fffbeb", color: "#92400e" }}>
-            Catalog programs did not load from the Academy API. Expected {catalogIntegrity.expectedTotal} programs
-            (including 33 VDOE CTE). Refresh, or sign in and retry. Status: {meta?.persistenceState || "unavailable"}.
+          <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #dbe3ef", background: "#f8fafc", color: "#334155" }}>
+            <strong style={{ color: "#0f172a" }}>Academy catalog is loading</strong>
+            <div style={{ marginTop: 8, lineHeight: 1.6 }}>
+              Live program listings sync from the Academy API ({catalogIntegrity.expectedTotal} programs expected, including 33 VDOE CTE).
+              Curriculum pathways and course pages remain available while the catalog refreshes.
+              Status: {meta?.persistenceState || "syncing"}.
+            </div>
+            <div style={{ marginTop: 12 }}>
+              <a href="/platform" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none", marginRight: 14 }}>Explore platform</a>
+              <a href="/pricing" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none", marginRight: 14 }}>View pricing</a>
+              <a href="/contact" style={{ color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Contact FCA</a>
+            </div>
           </div>
         )}
 
