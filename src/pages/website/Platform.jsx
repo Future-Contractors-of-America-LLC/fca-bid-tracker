@@ -13,20 +13,20 @@ const platformConstructionProof = [
   {
     title: "Opportunity qualification",
     detail: "Qualification board, estimate routing, and award-to-project handoff.",
-    href: "/job-board",
-    label: "Open job board",
+    href: "/login?next=/portal/bids",
+    label: "Open bids workspace",
   },
   {
     title: "Estimate and proposal progression",
     detail: "Pricing workflow from estimate through customer-ready proposal.",
-    href: "/features",
-    label: "See estimate workflow",
+    href: "/login?next=/portal/estimates",
+    label: "Open estimates workspace",
   },
   {
     title: "Project and document control",
     detail: "Projects, files, audit, and support in one connected workspace.",
-    href: "/platform",
-    label: "See project command",
+    href: "/login?next=/portal/projects",
+    label: "Open projects workspace",
   },
   {
     title: "Academy depth",
@@ -41,7 +41,7 @@ export default function Platform() {
     <MarketingPageShell
       eyebrow="FCA Platform"
       title="One platform for the full contractor lifecycle"
-      subtitle="From first lead through closeout, billing, and workforce training — sign in to do the work, not just read about it."
+      subtitle="Built to carry a contractor from first opportunity through delivery, billing, closeout, warranty, and workforce training — sign in to do the work, not just read about it."
       primaryHref="/intake"
       primaryLabel="Get started"
       secondaryHref="/login"

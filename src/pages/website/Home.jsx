@@ -161,7 +161,7 @@ function BrandArtBand() {
         <AuricruxBrandMark />
       </div>
       <p style={{ position: "relative", marginTop: 20, marginBottom: 0, maxWidth: 640, color: "#475569", lineHeight: 1.7, fontSize: 17 }}>
-        FCA is an AI-native contractor platform. Auricrux is the intelligence layer inside it — recommending next actions across leads, bids, delivery, billing, and Academy training.
+        FCA is an AI-native contractor platform built for the full job lifecycle. Auricrux is the intelligence layer inside it — able to recommend the next step or carry the action across leads, bids, delivery, billing, and Academy training.
       </p>
     </div>
   );
@@ -211,7 +211,6 @@ export default function Home() {
 
   const activeProfile = buyerProfiles[activeBuyer] || buyerProfiles.executive;
   const monthlyWaste = Math.round((Number(projectCount) * Number(weeklyAdminHours) * 4.33 * 82) || 0);
-  const savedWithAuricrux = Math.round(monthlyWaste * 0.34);
 
   const walkthroughPrompts = {
     "/portal/scheduling": "Want to see how Auricrux mitigates a two-week delay in under 60 seconds?",
@@ -467,8 +466,9 @@ export default function Home() {
           </div>
           <div style={{ marginTop: 12, display: "grid", gap: 8 }}>
             <div style={{ color: "#334155" }}>Illustrative monthly admin friction cost: <strong style={{ color: "#0f172a" }}>${monthlyWaste.toLocaleString()}</strong></div>
-            <div style={{ color: "#14532d" }}>Planning estimate if ~34% of that friction is recovered through guided workflows: <strong>${savedWithAuricrux.toLocaleString()}</strong></div>
-            <div style={{ color: "#64748b", fontSize: 13 }}>Illustrative only — not a measured customer savings claim.</div>
+            <div style={{ color: "#64748b", fontSize: 13 }}>
+              Planning input only (projects × weekly admin hours × $82/hr). Use it to size the coordination problem FCA and Auricrux are built to reduce — not a measured customer savings claim.
+            </div>
           </div>
         </section>
 
