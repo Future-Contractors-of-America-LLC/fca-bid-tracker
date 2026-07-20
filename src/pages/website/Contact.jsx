@@ -125,7 +125,7 @@ export default function Contact() {
       <PublicPackageRouteGroupsPanel
         eyebrow="Product depth"
         title="What we walk through together"
-        detail="Platform modules and route groups behind the FCA operating system."
+        detail="Platform modules and route groups behind the FCA contractor platform."
       />
 
       <ShellFooter />

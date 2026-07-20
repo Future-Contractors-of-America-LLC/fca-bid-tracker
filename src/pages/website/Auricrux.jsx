@@ -11,18 +11,18 @@ import {
 import { cardStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
-  "Knows your live bids, projects, and training progress — not generic FAQ answers.",
-  "Tells your team exactly what to do next on every job.",
+  "Uses live bid, project, and training context — not generic FAQ answers.",
+  "Recommends the next action for the route and job you are on.",
   "Works across estimating, delivery, billing, Academy, and support.",
-  "Available on every page — click Ask Auricrux to start.",
+  "Available across the workspace — click Ask Auricrux to start.",
 ];
 
 export default function AuricruxPage() {
   return (
     <MarketingPageShell
-      eyebrow="Auricrux AI Operator"
-      title="Your AI operator for bids, jobs, billing, and training"
-      subtitle="Auricrux answers questions, recommends next steps, and keeps your team moving — inside Contractor Command and Academy."
+      eyebrow="Auricrux Construction Intelligence"
+      title="AI guidance for bids, jobs, billing, and training"
+      subtitle="Auricrux recommends next steps inside Contractor Command and Academy — built on a continuous training and promotion spine so construction accuracy keeps improving."
       primaryHref={publicRouteCtas.auricrux.primaryHref}
       primaryLabel={publicRouteCtas.auricrux.primaryLabel}
       secondaryHref={publicRouteCtas.auricrux.secondaryHref}
@@ -32,10 +32,10 @@ export default function AuricruxPage() {
       <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
         <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: 20, alignItems: "center", flexWrap: "wrap", marginBottom: 16 }}>
           <div>
-            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Always on, always in context</div>
+            <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Always in context</div>
             <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux works inside your live workspace</h2>
             <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-              Ask Auricrux what to do next on any bid, project, or training module. It reads your company workspace and gives actionable guidance — not marketing copy.
+              Ask Auricrux what to do next on a bid, project, or training module. It uses route and job context to recommend actionable next steps. When the live model is briefly unavailable, guided workspace rules keep answers useful.
             </p>
           </div>
           <AuricruxAvatar state="idle" size={128} compact />

@@ -23,7 +23,7 @@ export default function ShellFooter() {
         <div style={{ minWidth: 200 }}>
           <FcaBrandMark compact />
           <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6, marginTop: 12, maxWidth: 320 }}>
-            Future Contractors of America - commercial contractor operating system for lead flow, job control, and workforce readiness.
+            Future Contractors of America — AI-native contractor platform for lead flow, job control, and workforce readiness.
           </p>
         </div>
 
@@ -31,7 +31,7 @@ export default function ShellFooter() {
           <div style={{ fontWeight: 700, marginBottom: 8, fontSize: 14 }}>Trust & Governance</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, fontSize: 14, marginBottom: 14 }}>
             <a href="/login?next=/portal/admin" style={{ color: "#334155", textDecoration: "none", fontWeight: 600 }}>Trust workspace</a>
-            <a href="/portal/audit" style={{ color: "#334155", textDecoration: "none" }}>Immutable audit trail</a>
+            <a href="/portal/audit" style={{ color: "#334155", textDecoration: "none" }}>Activity history</a>
             <a href="/security" style={{ color: "#334155", textDecoration: "none" }}>Security and compliance</a>
             <a href="/privacy" style={{ color: "#334155", textDecoration: "none" }}>Data privacy posture</a>
           </div>

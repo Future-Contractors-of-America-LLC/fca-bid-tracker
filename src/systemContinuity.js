@@ -3,7 +3,7 @@ export const publicHomeMessaging = {
     eyebrow: "FCA Contractor Command",
     title: "Win more work, run every job, and train your workforce in one platform.",
     subtitle:
-      "Future Contractors of America connects leads, bids, projects, plan rooms, field operations, finance, billing, customer communication, and Academy training in one contractor workspace — with Auricrux guiding what to do next.",
+      "Future Contractors of America connects leads, bids, projects, plan rooms, field operations, finance, billing, customer communication, and Academy training in one AI-native contractor workspace — with Auricrux recommending what to do next.",
   },
   journey: {
     title: "Start with the path that fits your team",
@@ -40,7 +40,7 @@ export const publicPricingMessaging = {
   hero: {
     title: "Pick the plan that matches your growth stage",
     detail:
-      "Every tier includes core bid-to-bill workflows, customer visibility, and workforce training. Higher tiers add deeper Academy catalogs, priority support, and expanded Auricrux automation.",
+      "Every tier includes core bid-to-bill workflows, customer visibility, and workforce training. Higher tiers add deeper Academy catalogs, priority support, and richer Auricrux guidance context.",
   },
   journey: {
     title: "From pricing to live rollout in days, not months",
@@ -110,7 +110,7 @@ export const academyContinuityMessaging = {
       "Onboard crews, track certifications, and tie training to the jobs running in your Contractor Command workspace.",
   },
   expansion: {
-    title: "Training built into your operating system",
+    title: "Training built into your contractor platform",
     detail:
       "Academy progress lives next to bids, projects, and billing — so owners see who is certified before crews hit the field.",
   },
