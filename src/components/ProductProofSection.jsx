@@ -34,7 +34,7 @@ const defaultHighlights = [
 export default function ProductProofSection({
   eyebrow = "Product proof",
   title = "The public site now proves the product instead of only describing it",
-  detail = "These routes keep live product movement visible so buyers can validate FCA as an operating system, not a brochure.",
+  detail = "These routes keep live product movement visible so buyers can validate FCA as a working platform, not a brochure.",
   highlights = defaultHighlights,
 }) {
   return (
