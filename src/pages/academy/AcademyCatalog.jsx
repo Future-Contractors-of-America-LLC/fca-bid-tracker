@@ -508,7 +508,12 @@ export default function AcademyCatalog() {
                   <h3 style={{ marginTop: 0, marginBottom: 8 }}>{pathway.label}</h3>
                   <p style={{ color: "#475569", lineHeight: 1.65, marginTop: 0 }}>{pathway.description}</p>
                   <div style={{ color: "#64748b", fontSize: 14, marginTop: 12 }}>
-                    {pathway.topics.length} topics · {pathway.courseCount} courses · <span style={{ color: lms?.accent || "#64748b" }}>Auricrux-led mini-LMS</span>
+                    {pathway.topics.length} topics · {pathway.courseCount} courses
+                    {lms ? (
+                      <span style={{ color: lms.accent }}> · Auricrux-led mini-LMS</span>
+                    ) : (
+                      <span> · Syllabus public</span>
+                    )}
                   </div>
                 </a>
               );})}

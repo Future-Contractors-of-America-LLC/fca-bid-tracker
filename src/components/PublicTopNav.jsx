@@ -198,14 +198,36 @@ const NAV_MENUS = [
     items: [
       { label: "Course catalog", href: "/academy/catalog" },
       { label: "Academy store", href: "/academy/store" },
-      { label: "FCA Academy Student Portal", href: "/academy/student-portal" },
-      { label: "CTE Program Portal", href: "/cte/portal" },
+      { label: "Student login", href: "/academy/student-portal" },
+    ],
+  },
+  {
+    label: "CTE",
+    items: [
+      { label: "CTE school portal", href: "/cte/portal" },
+      { label: "Browse CTE courses", href: "/academy/catalog?pathway=vdoe-cte" },
+      { label: "Contact CTE team", href: "/contact?topic=cte" },
     ],
   },
 ];
 
 function isNavActive(currentPath, href) {
-  return currentPath === href || (href !== "/portal" && currentPath.startsWith(`${href}/`));
+  if (!href) return false;
+  const [path, query] = href.split("?");
+  const pathMatch = currentPath === path || (path !== "/portal" && currentPath.startsWith(`${path}/`));
+  if (!pathMatch) return false;
+  if (typeof window === "undefined") return !query;
+  const have = new URLSearchParams(window.location.search);
+  if (!query) {
+    // Keep commercial catalog inactive while browsing the isolated CTE pathway.
+    if (path === "/academy/catalog" && have.get("pathway") === "vdoe-cte") return false;
+    return true;
+  }
+  const want = new URLSearchParams(query);
+  for (const [key, value] of want.entries()) {
+    if (have.get(key) !== value) return false;
+  }
+  return true;
 }
 
 const assistantButtonStyle = {

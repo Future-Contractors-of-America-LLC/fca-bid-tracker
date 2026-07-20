@@ -164,8 +164,19 @@ export default function AcademyStore() {
     loadCatalog({ laneFilter: lane, offset: 0, append: false });
   }, [lane, loadCatalog]);
 
-  const visiblePathways = useMemo(() => pathways || [], [pathways]);
-  const courseSummary = pagination.totalCourses || courses.length;
+  const visibleLanes = useMemo(
+    () => (lanes || []).filter((item) => item.key !== "vdoe-cte" && item.key !== "fca-how-to"),
+    [lanes],
+  );
+  const visiblePathways = useMemo(
+    () => (pathways || []).filter((item) => item.lane !== "vdoe-cte" && item.lane !== "fca-how-to"),
+    [pathways],
+  );
+  const visibleCourses = useMemo(
+    () => (courses || []).filter((item) => item.lane !== "vdoe-cte" && item.lane !== "fca-how-to"),
+    [courses],
+  );
+  const courseSummary = pagination.totalCourses || visibleCourses.length;
 
   function handleLoadMore() {
     if (!pagination.hasMore || loadingMore) return;
@@ -177,10 +188,10 @@ export default function AcademyStore() {
       <ShellHeader compact eyebrow="FCA Academy Store" />
       <main style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 20px 48px" }}>
         <div style={{ marginBottom: 24 }}>
-          <div style={{ color: "#1d4ed8", fontWeight: 700, fontSize: 13, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+      <div style={{ color: "#0c2340", fontWeight: 700, fontSize: 13, letterSpacing: "0.04em", textTransform: "uppercase" }}>
             FCA Academy Store
           </div>
-          <h1 style={{ margin: "8px 0 12px", fontSize: 34 }}>Courses and pathways without Contractor Command</h1>
+          <h1 style={{ margin: "8px 0 12px", fontSize: "clamp(1.75rem, 3vw, 2.15rem)", color: "#0c2340" }}>Buy training without a full SaaS subscription</h1>
           <p style={{ color: "#475569", lineHeight: 1.7, maxWidth: 760 }}>
             Purchase individual academy courses or full pathway bundles for your team. This storefront is separate from
             Contractor Command SaaS billing - buy only the training you need. VDOE CTE programs are not sold here —
@@ -188,19 +199,22 @@ export default function AcademyStore() {
           </p>
         </div>
 
-        <div style={{ ...cardStyle, background: "#f8fafc", marginBottom: 24 }}>
+        <div style={{ ...cardStyle, background: "#f8fafc", marginBottom: 24, borderLeft: "4px solid #0c2340" }}>
           <strong>Contractor Command SaaS</strong> covers the full operating platform.
           <span style={{ color: "#475569" }}> This store is for academy-only buyers who want standalone courses and pathways.</span>
           <div style={{ marginTop: 10, color: "#475569", fontSize: 14 }}>
-            FCA How-To and Operator Guides are included with every Contractor Command subscription and are not sold here.
+            FCA How-To / Operator Guides are subscription-included. VDOE CTE is school-only via the{" "}
+            <a href="/cte/portal" style={{ color: "#0c2340", fontWeight: 700 }}>CTE portal</a> — never listed for purchase here.
           </div>
           {!stripeConfigured ? (
             <div style={{ marginTop: 10, color: "#b45309", fontWeight: 600 }}>
-              {stripeConfigured
-                ? "Checkout routes through the shared FCA secure payment flow."
-                : "Online checkout uses contact-sales fallback until Stripe keys are configured on Auricrux Central."}
+              Online checkout uses contact-sales fallback until Stripe keys are configured on Auricrux Central.
             </div>
-          ) : null}
+          ) : (
+            <div style={{ marginTop: 10, color: "#15803d", fontWeight: 600 }}>
+              Checkout routes through the shared FCA secure payment flow.
+            </div>
+          )}
         </div>
 
         <StoreTabs active={tab} onChange={setTab} />
@@ -219,7 +233,7 @@ export default function AcademyStore() {
           >
             All lanes
           </button>
-          {(lanes || []).map((item) => (
+          {(visibleLanes || []).map((item) => (
             <button
               key={item.key}
               type="button"
@@ -247,7 +261,7 @@ export default function AcademyStore() {
               {lane ? ` in ${laneLabels[lane] || lane}` : " across apprenticeship, certification, degree, licensure, and professional development"}.
             </p>
             <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
-              {courses.map((course) => (
+              {visibleCourses.map((course) => (
                 <CourseCard key={course.programKey} course={course} />
               ))}
             </div>
