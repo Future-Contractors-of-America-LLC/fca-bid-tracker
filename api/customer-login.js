@@ -7,7 +7,7 @@ import { writeAuthAuditEvent } from "./auth-audit.js";
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Accept",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization",
   "Access-Control-Max-Age": "86400",
 };
 
@@ -167,6 +167,7 @@ app.http("customer-login", {
         ok: true,
         account,
         session: buildServerSession(account),
+        sessionToken: token,
         authBoundary: buildAuthBoundary(),
         authenticationMode: account.authenticationMode || "server-session",
         timestamp: new Date().toISOString(),

@@ -47,7 +47,7 @@ export function buildAuthBoundary(overrides = {}) {
     activeMode: productionAuthReady ? "managed-server-session" : managedAccountsReady ? "managed-server-session-with-fallback-secret" : "seeded-server-session",
     identityProvider: "fca-native-auth",
     tenantIsolation: managedAccountsReady ? "managed-customer-account-store" : "single-repo-account-store",
-    sessionValidation: "signed-http-only-cookie",
+    sessionValidation: "signed-http-only-cookie-or-bearer",
     usingFallbackSecret: !managedSecretReady,
     seededFallbackEnabled: allowSeededCustomerFallback(),
     nextBuildStep: productionAuthReady
@@ -124,6 +124,22 @@ export function readSessionTokenFromCookieHeader(cookieHeader = "") {
   return match ? match.slice(SESSION_COOKIE_NAME.length + 1) : null;
 }
 
+export function readSessionTokenFromAuthorizationHeader(authHeader = "") {
+  const value = String(authHeader || "").trim();
+  if (!value.toLowerCase().startsWith("bearer ")) return null;
+  const token = value.slice(7).trim();
+  return token || null;
+}
+
+export function readSessionTokenFromRequest(request) {
+  const cookieHeader = request?.headers?.get?.("cookie") || "";
+  const cookieToken = readSessionTokenFromCookieHeader(cookieHeader);
+  if (cookieToken) return cookieToken;
+
+  const authHeader = request?.headers?.get?.("authorization") || request?.headers?.get?.("Authorization") || "";
+  return readSessionTokenFromAuthorizationHeader(authHeader);
+}
+
 export function validateSessionToken(token) {
   if (!token || !token.includes(".")) return null;
 
@@ -179,13 +195,12 @@ function isStudentRole(role) {
 }
 
 /**
- * Validates authentication from the request cookie.
+ * Validates authentication from the request cookie or Authorization bearer token.
  * Returns { ok: true, session, tenantId, refreshCookie } on success.
  * Returns { ok: false, response } on failure — routes must return response immediately.
  */
 export function requireAuth(request, now = Date.now()) {
-  const cookieHeader = request.headers.get("cookie") || "";
-  const token = readSessionTokenFromCookieHeader(cookieHeader);
+  const token = readSessionTokenFromRequest(request);
   const session = validateSessionToken(token);
 
   if (!session) {

@@ -6,7 +6,7 @@ const corsHeaders = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, HEAD, POST, PATCH, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Accept",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization",
 };
 
 function buildQuery(req) {
@@ -41,9 +41,30 @@ async function runCentralProxy(context, req, resourcePath) {
   const upstreamMethod = requestMethod === "HEAD" ? "GET" : requestMethod;
 
   try {
+    const incomingHeaders = req.headers || {};
+    const authorization =
+      incomingHeaders.authorization ||
+      incomingHeaders.Authorization ||
+      (typeof incomingHeaders.get === "function"
+        ? incomingHeaders.get("authorization") || incomingHeaders.get("Authorization")
+        : null);
+    const cookie =
+      incomingHeaders.cookie ||
+      incomingHeaders.Cookie ||
+      (typeof incomingHeaders.get === "function"
+        ? incomingHeaders.get("cookie") || incomingHeaders.get("Cookie")
+        : null);
+
+    const headers = {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    };
+    if (authorization) headers.Authorization = authorization;
+    if (cookie) headers.Cookie = cookie;
+
     const init = {
       method: upstreamMethod,
-      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      headers,
     };
 
     if (!["GET", "HEAD"].includes(requestMethod)) {
