@@ -462,14 +462,15 @@ export const pricingTiers = [
 export const auricruxCapabilities = [
   "Surfaces next actions across estimating, delivery, and customer-facing workflows",
   "Explains blockers so teams know what should happen next before delay risk grows",
+  "Can take authorized next actions when you choose Do it for me — not only explain the path",
   "Keeps continuity between portal operations, communication, and academy readiness",
-  "Runs as an AI guidance layer inside the signed-in workspace, continuously improved via construction training",
+  "Runs inside the signed-in workspace and improves through continuous construction training",
 ];
 
 export const publicSurfaceLinks = [
   { key: "platform", title: "Platform Overview", detail: "How bids, projects, files, billing, and training connect in one system.", href: "/platform", ctaLabel: "Platform Overview" },
   { key: "job-board", title: "Job & Contractor Board", detail: "Capture opportunities and move them into your FCA pipeline.", href: "/job-board", ctaLabel: "Open job board" },
-  { key: "auricrux", title: "Auricrux Intelligence", detail: "AI guidance for next steps and execution continuity across the workspace.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
+  { key: "auricrux", title: "Auricrux Intelligence", detail: "AI that can guide or take the next action across bids, jobs, billing, and training.", href: "/auricrux", ctaLabel: "Meet Auricrux" },
   { key: "features", title: "Features", detail: "Construction workflow coverage — searchable capabilities Auricrux can teach and guide.", href: "/features", ctaLabel: "See Features" },
   { key: "solutions", title: "Solutions", detail: "Paths for electrical, GC, and specialty contractor teams.", href: "/solutions", ctaLabel: "View Solutions" },
   { key: "academy", title: "FCA Academy", detail: "Apprenticeship, certification, safety, and supervisor training.", href: "/academy", ctaLabel: "Open Academy" },

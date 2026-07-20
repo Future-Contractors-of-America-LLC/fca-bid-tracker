@@ -12,7 +12,7 @@ import { cardStyle, twoColumnGridStyle } from "../../publicShellStyles";
 
 const operatingSteps = [
   "Uses live bid, project, and training context — not generic FAQ answers.",
-  "Recommends the next action for the route and job you are on.",
+  "Can guide you through the next step, or take the action when you choose Do it for me.",
   "Works across estimating, delivery, billing, Academy, and support.",
   "Available across the workspace — click Ask Auricrux to start.",
 ];
@@ -21,8 +21,8 @@ export default function AuricruxPage() {
   return (
     <MarketingPageShell
       eyebrow="Auricrux Construction Intelligence"
-      title="AI guidance for bids, jobs, billing, and training"
-      subtitle="Auricrux recommends next steps inside Contractor Command and Academy — built on a continuous training and promotion spine so construction accuracy keeps improving."
+      title="AI that can carry contractor work, not just describe it"
+      subtitle="Auricrux sits inside Contractor Command and Academy to clarify blockers, advance next actions, and execute the steps you authorize — on a continuous construction training spine that keeps improving."
       primaryHref={publicRouteCtas.auricrux.primaryHref}
       primaryLabel={publicRouteCtas.auricrux.primaryLabel}
       secondaryHref={publicRouteCtas.auricrux.secondaryHref}
@@ -35,7 +35,7 @@ export default function AuricruxPage() {
             <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Always in context</div>
             <h2 style={{ marginTop: 0, marginBottom: 10 }}>Auricrux works inside your live workspace</h2>
             <p style={{ color: "#334155", lineHeight: 1.7, marginBottom: 0 }}>
-              Ask Auricrux what to do next on a bid, project, or training module. It uses route and job context to recommend actionable next steps. When the live model is briefly unavailable, guided workspace rules keep answers useful.
+              Ask Auricrux what to do next on a bid, project, or training module — or tell it to do the work for you. It uses route and job context so answers and actions stay tied to the real workspace. When the live model is briefly unavailable, guided workspace rules keep the flow useful.
             </p>
           </div>
           <AuricruxAvatar state="idle" size={128} compact />

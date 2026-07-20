@@ -3,7 +3,7 @@ export const publicHomeMessaging = {
     eyebrow: "FCA Contractor Command",
     title: "Win more work, run every job, and train your workforce in one platform.",
     subtitle:
-      "Future Contractors of America connects leads, bids, projects, plan rooms, field operations, finance, billing, customer communication, and Academy training in one AI-native contractor workspace — with Auricrux recommending what to do next.",
+      "Future Contractors of America is built so a contractor can move from first opportunity through estimate, award, delivery, billing, closeout, warranty, and workforce training in one AI-native workspace — with Auricrux able to guide the work or take the next action for you.",
   },
   journey: {
     title: "Start with the path that fits your team",
@@ -15,7 +15,7 @@ export const publicHomeMessaging = {
   trust: {
     title: "Built for contractors competing at enterprise scale",
     detail:
-      "FCA helps teams keep customers informed, organize delivery, and make the next step clear across sales, field operations, billing, and training.",
+      "FCA is designed to keep customers informed, organize delivery, and advance the next step across sales, field operations, billing, and training — without scattering the job across disconnected tools.",
   },
   snapshot: {
     title: "See your operating picture in one place",
