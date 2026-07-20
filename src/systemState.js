@@ -680,7 +680,7 @@ export const portalHubModules = [
   { href: "/portal/finance", label: "Finance", description: "FCA Books" },
   { href: "/portal/billing", label: "Billing", description: "Invoices and collections" },
   { href: "/portal/files", label: "Files", description: "Document control" },
-  { href: "/academy/catalog", label: "Academy", description: "1,245 programs" },
+  { href: "/academy/catalog", label: "Academy", description: "1,212 + CTE programs" },
   { href: "/portal/admin", label: "Setup", description: "Admin and rollout" },
 ];
 

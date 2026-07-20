@@ -1,10 +1,10 @@
 /** Shared visual language - Ivy League academic identity + Canvas operational LMS. */
 
-/** Full LMS catalog: 1212 FCA Academy + 33 FCA CTE (VDOE) = 1245. */
-export const ACADEMY_CATALOG_EXPECTED_TOTAL = 1245;
+/** Full LMS catalog: 1212 FCA Academy + 39 FCA CTE (VDOE) = 1251. */
+export const ACADEMY_CATALOG_EXPECTED_TOTAL = 1251;
 export const ACADEMY_CATALOG_ACADEMY_TOTAL = 1212;
-export const ACADEMY_CATALOG_CTE_TOTAL = 33;
-export const ACADEMY_CATALOG_VERSION = "2026.07.1";
+export const ACADEMY_CATALOG_CTE_TOTAL = 39;
+export const ACADEMY_CATALOG_VERSION = "2026.07.2";
 
 export const academyTheme = {
   serif: "Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif",
