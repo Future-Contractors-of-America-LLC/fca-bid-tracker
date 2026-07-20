@@ -6,11 +6,6 @@
       "statusCode": 302
     },
     {
-      "route": "/bids/",
-      "redirect": "/login?next=/portal/bids",
-      "statusCode": 302
-    },
-    {
       "route": "/bid",
       "redirect": "/login?next=/portal/bids",
       "statusCode": 302
