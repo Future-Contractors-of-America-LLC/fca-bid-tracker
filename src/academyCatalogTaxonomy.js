@@ -110,7 +110,12 @@ const VDOE_CTE_TOPICS = [
   { key: "vdoe-cte-plumbing", label: "Plumbing", description: "VDOE CTE Plumbing sequence." },
   { key: "vdoe-cte-welding", label: "Welding", description: "VDOE CTE Welding sequence." },
   { key: "vdoe-cte-masonry", label: "Masonry", description: "VDOE CTE Masonry sequence." },
-  { key: "vdoe-cte-construction", label: "Construction Technology", description: "VDOE CTE Construction Technology sequence." },
+  { key: "vdoe-cte-sheet-metal", label: "Sheet Metal", description: "VDOE CTE Sheet Metal sequence." },
+  { key: "vdoe-cte-pipefitting", label: "Pipefitting", description: "VDOE CTE Pipefitting sequence." },
+  { key: "vdoe-cte-fire-protection", label: "Fire Protection", description: "VDOE CTE Fire Protection sequence." },
+  { key: "vdoe-cte-construction-management", label: "Construction Management", description: "VDOE CTE Construction Management sequence." },
+  { key: "vdoe-cte-architectural-drafting", label: "Architectural Drafting & Design", description: "VDOE CTE architectural drawing, CAD/BIM, and design package sequence." },
+  { key: "vdoe-cte-engineering-technology", label: "Engineering Technology", description: "VDOE CTE civil/structural engineering technology, surveying, and documentation sequence." },
   { key: "vdoe-cte-general", label: "General CTE", description: "Additional VDOE CTE construction programs.", alwaysShow: true },
 ];
 
@@ -685,8 +690,9 @@ export function resolveTopicKeyFromProgram(program) {
   if (program.topicKey) return program.topicKey;
 
   if (key.startsWith("vdoe-cte-") || program.pathwayKey === "vdoe-cte" || program.lane === "vdoe-cte") {
-    const match = key.match(/^vdoe-cte-([a-z0-9-]+?)(?:-\d|$)/);
-    if (match) return `vdoe-cte-${match[1]}`;
+    const levelMatch = key.match(/^(vdoe-cte-.+)-(i{1,3})$/);
+    if (levelMatch) return levelMatch[1];
+    if (key.startsWith("vdoe-cte-") && !key.match(/-(i{1,3})$/)) return key;
     return "vdoe-cte-general";
   }
 

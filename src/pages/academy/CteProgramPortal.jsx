@@ -13,7 +13,7 @@ const audiences = [
   },
   {
     title: "CTE teachers",
-    detail: "Browse the 33-program CTE catalog, assign learning, and keep progress tied to jobsite-ready skills.",
+    detail: "Browse the 39-program CTE catalog (including architectural drafting and engineering technology), assign learning, and keep progress tied to jobsite-ready skills.",
     href: "/academy/catalog?pathway=vdoe-cte",
     label: "Browse CTE courses",
     tone: "gold",

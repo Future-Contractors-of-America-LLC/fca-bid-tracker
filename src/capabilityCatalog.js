@@ -479,7 +479,7 @@ export const CAPABILITIES = [
   {
     id: "academy",
     domain: "workforce",
-    label: "FCA Academy (1,245 programs)",
+    label: "FCA Academy (1,212 + CTE)",
     customerPromise: "Apprenticeship, certification, degree, licensure, and operator training.",
     href: "/academy/catalog",
     depth: "live",
@@ -490,7 +490,7 @@ export const CAPABILITIES = [
     id: "cte",
     domain: "workforce",
     label: "VDOE CTE programs",
-    customerPromise: "33 CTE pathways for schools and workforce partners.",
+    customerPromise: "39 CTE programs across 13 pathways — including architectural drafting and engineering technology — for schools and workforce partners.",
     href: "/cte/portal",
     depth: "live",
     competitorsCovered: ["CTE LMS portals"],
