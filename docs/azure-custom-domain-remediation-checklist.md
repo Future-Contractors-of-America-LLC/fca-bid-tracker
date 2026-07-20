@@ -1,5 +1,36 @@
 # Azure Custom Domain Remediation Checklist
 
+## Apex DNS remediation (Porkbun) — current live blocker
+
+As of 2026-07-20, **www** and **app** resolve correctly to SWA `delightful-mushroom-0de67860f.7.azurestaticapps.net`, but the naked apex `futurecontractorsofamerica.com` still returns **403** because Porkbun A records point at:
+
+- `75.2.70.75`
+- `99.83.190.102`
+
+Azure already has custom domain `futurecontractorsofamerica.com` on `fca-frontend` with status **Ready**.
+
+### Fix at Porkbun (registrar)
+
+1. Open DNS for `futurecontractorsofamerica.com`
+2. Delete apex **A** records `75.2.70.75` and `99.83.190.102`
+3. Add **ALIAS / ANAME** for `@` → `delightful-mushroom-0de67860f.7.azurestaticapps.net`
+4. Keep `www` CNAME → `delightful-mushroom-0de67860f.7.azurestaticapps.net` (already correct)
+5. Wait for TTL (~10 minutes), then verify:
+   - `https://futurecontractorsofamerica.com/deployment-status.json` → 200
+   - Same `gitSha` as `https://www.futurecontractorsofamerica.com/deployment-status.json`
+
+### Optional automation
+
+Set `PORKBUN_API_KEY` + `PORKBUN_SECRET_API_KEY`, then run:
+
+```bash
+node scripts/fix-apex-dns-to-swa.mjs
+```
+
+Until apex is fixed, use **www** / **app** for funding and diligence links.
+
+---
+
 ## Current bounded finding
 
 Repository `main` contains the current FCA shell route inventory, deployment verification surfaces, seeded login flow, a host-aware domain continuity witness, a raw host-binding audit page, a raw API continuity audit page, a plain-text runtime fingerprint artifact, and the lifecycle revenue routes `/warranty` and `/referrals`, but the public custom domain is still not reflecting those changes. This indicates the remaining blocker is likely outside normal repository mutation and inside Azure domain/resource binding or deployment connection state.
