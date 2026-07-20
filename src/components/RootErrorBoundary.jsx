@@ -91,8 +91,8 @@ export default class RootErrorBoundary extends React.Component {
               This page needs a quick refresh.
             </h1>
             <p style={{ marginTop: 0, color: "#475569", lineHeight: 1.6 }}>
-              FCA is building an AI-powered operating system for construction that combines contractor workflows,
-              project execution, billing, workforce training, and Auricrux operating intelligence.
+              FCA is an AI-native contractor platform that combines contractor workflows,
+              project execution, billing, workforce training, and Auricrux construction intelligence.
               Use the company pages below while we recover this workspace view.
             </p>
             <div

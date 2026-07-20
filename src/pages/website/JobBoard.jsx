@@ -83,7 +83,7 @@ export default function JobBoard() {
     <MarketingPageShell
       eyebrow="FCA Network"
       title="Job board and contractor marketplace"
-      subtitle="Discover upcoming work, connect with qualified contractors, and move opportunities into your FCA pipeline — similar to PlanHub and Bluebook, built into your operating system."
+      subtitle="Capture upcoming work, connect with contractors, and move opportunities into your FCA pipeline — opportunity board built into the platform."
       primaryHref="/intake"
       primaryLabel="Join the network"
       secondaryHref="/login"

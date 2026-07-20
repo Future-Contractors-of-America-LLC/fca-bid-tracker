@@ -121,7 +121,7 @@ function renderStartupRecovery(error) {
         <div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#2563eb;">Future Contractors of America</div>
         <h1 style="margin:12px 0;font-size:28px;line-height:1.2;">This workspace page needs a refresh.</h1>
         <p style="margin:0;color:#475569;line-height:1.6;">
-          FCA is the AI-powered operating system for construction — bids, projects, billing, Academy training, and Auricrux guidance in one contractor workspace.
+          FCA is an AI-native contractor platform for construction — bids, projects, billing, Academy training, and Auricrux guidance in one live workspace.
           ${standalone ? " If you use the installed app, close it fully and reopen after updates finish." : ""}
         </p>
         <div style="margin-top:16px;border:1px solid #dbe3ef;border-radius:14px;padding:14px;background:#f8fafc;font-family:monospace;font-size:12px;white-space:pre-wrap;word-break:break-word;">${escapeHtml(message)}</div>
