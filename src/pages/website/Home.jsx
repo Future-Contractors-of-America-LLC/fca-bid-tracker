@@ -323,8 +323,7 @@ export default function Home() {
               ) : null}
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 28 }}>
                 <a href="/intake" style={heroCtaOnDark}>Get started</a>
-                <a href="/login" style={heroCtaSecondaryOnDark}>Sign in to workspace</a>
-                <a href="/contact" style={heroCtaSecondaryOnDark}>Talk to our team</a>
+                <a href="/login" style={heroCtaSecondaryOnDark}>Sign in</a>
               </div>
             </div>
             <div style={{ flex: "0 1 auto", display: "grid", gap: 16, padding: 20, borderRadius: 18, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)" }}>
@@ -336,7 +335,7 @@ export default function Home() {
               <p style={{ color: "#cbd5e1", fontSize: 14, lineHeight: 1.55, margin: 0, maxWidth: 360 }}>
                 Public pages explain the offer. Your signed-in workspace is where you create jobs, files, schedules, invoices, and training progress.
               </p>
-              <a href="/login?next=/portal/platform" style={{ ...heroCtaOnDark, textAlign: "center" }}>Open live workspace</a>
+              <a href="/login?next=/portal/platform" style={{ ...heroCtaOnDark, textAlign: "center" }}>Sign in to workspace</a>
             </div>
           </div>
         </div>

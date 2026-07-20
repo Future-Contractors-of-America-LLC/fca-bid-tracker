@@ -648,7 +648,7 @@ export const portalNavGroups = [
       { label: "Academy hub", href: "/portal/academy" },
       { label: "Course catalog", href: "/academy/catalog" },
       { label: "Credentials", href: "/academy/credentials" },
-      { label: "CTE programs", href: "/cte/portal" },
+      { label: "CTE school portal", href: "/cte/portal" },
     ],
   },
   {

@@ -3,6 +3,7 @@ import MarketingPageShell from "../../components/MarketingPageShell";
 import CustomerTrustPanel from "../../components/CustomerTrustPanel";
 import PublicPackageRouteGroupsPanel from "../../components/PublicPackageRouteGroupsPanel";
 import ProductProofSection from "../../components/ProductProofSection";
+import ProductIllustration from "../../components/ProductIllustration";
 import {
   platformModules,
 } from "../../websiteShell";
@@ -30,7 +31,7 @@ const platformConstructionProof = [
   },
   {
     title: "Academy depth",
-    detail: "Training tracks tied to live portal routes.",
+    detail: "1,212 commercial training pathways tied to live portal routes. CTE for schools is separate.",
     href: "/academy/catalog",
     label: "Open Academy Catalog",
   },
@@ -48,6 +49,30 @@ export default function Platform() {
       secondaryLabel="Sign in to workspace"
       illustrationKey="platform"
     >
+      <section style={{ marginBottom: 28 }}>
+        <div style={{ color: "#1e3a8a", fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
+          Product surfaces
+        </div>
+        <h2 style={{ marginTop: 0, marginBottom: 8 }}>How the work actually looks</h2>
+        <p style={{ color: "#475569", lineHeight: 1.65, maxWidth: 720, marginTop: 0, marginBottom: 18 }}>
+          Estimating takeoff, plan creation, and financials — the same surfaces your team opens after sign-in.
+        </p>
+        <div style={responsiveGrid(260)}>
+          <div>
+            <ProductIllustration variant="takeoff" compact />
+            <a href="/login?next=/portal/estimates" style={{ display: "inline-block", marginTop: 10, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open estimating →</a>
+          </div>
+          <div>
+            <ProductIllustration variant="plans" compact />
+            <a href="/login?next=/portal/plans" style={{ display: "inline-block", marginTop: 10, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open plan room →</a>
+          </div>
+          <div>
+            <ProductIllustration variant="finance" compact />
+            <a href="/login?next=/portal/finance" style={{ display: "inline-block", marginTop: 10, color: "#1d4ed8", fontWeight: 700, textDecoration: "none" }}>Open financials →</a>
+          </div>
+        </div>
+      </section>
+
       <div style={{ ...cardStyle, marginBottom: 24, borderTop: "3px solid #2563eb" }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", alignItems: "center", marginBottom: 8 }}>
           <div style={{ color: "#2563eb", fontWeight: 700 }}>Public site vs live workspace</div>
