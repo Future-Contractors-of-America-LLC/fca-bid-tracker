@@ -206,14 +206,17 @@ function buildChatContext({
   const capabilityMap = getAuricruxCapabilityDoctrineContext();
 
   if (!route.startsWith("/portal")) {
+    const sessionCompany = typeof window !== "undefined"
+      ? (window.__FCA_SESSION__?.company || null)
+      : null;
     return {
-      company: "Future Contractors of America",
-      tenantId: portalTenant.id,
+      company: sessionCompany || portalTenant?.name || null,
+      tenantId: portalTenant?.id || null,
       route,
       nextAction: route.startsWith("/academy")
-        ? "Browse Academy programs or assign training to your crew."
-        : "Learn how FCA unifies bids, field execution, billing, and contractor training.",
-      blocker: "None — public discovery lane.",
+        ? "Browse Academy programs or open the learner dashboard."
+        : null,
+      blocker: null,
       pageSurface: route === "/" ? "marketing-home" : "public-site",
       academyContext: academyContext || null,
       recentTurns: recentTurns || [],

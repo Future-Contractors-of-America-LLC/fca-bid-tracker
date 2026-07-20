@@ -658,6 +658,9 @@ function resolvePathwayKey(program) {
   if (program.pathwayKey) return program.pathwayKey;
 
   const key = program.key || "";
+  if (key.startsWith("vdoe-cte-") || program.pathway?.includes("CTE") || program.pathway?.includes("VDOE")) {
+    return "vdoe-cte";
+  }
   if (resolveApprenticeshipTopic(key)) return "apprenticeship";
   if (key.startsWith("deg-") || key.startsWith("degree-")) return "degree";
   if (key.startsWith("cert-") || key.endsWith("-certification") || key === "project-controls" || key === "precon-estimating" || key === "field-readiness") {
@@ -680,6 +683,12 @@ export function resolveTopicKeyFromProgram(program) {
   const key = program.key || "";
 
   if (program.topicKey) return program.topicKey;
+
+  if (key.startsWith("vdoe-cte-") || program.pathwayKey === "vdoe-cte" || program.lane === "vdoe-cte") {
+    const match = key.match(/^vdoe-cte-([a-z0-9-]+?)(?:-\d|$)/);
+    if (match) return `vdoe-cte-${match[1]}`;
+    return "vdoe-cte-general";
+  }
 
   const apprenticeshipTopic = resolveApprenticeshipTopic(key);
   if (apprenticeshipTopic) return apprenticeshipTopic;

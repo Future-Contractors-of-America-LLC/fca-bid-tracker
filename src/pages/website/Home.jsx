@@ -345,6 +345,30 @@ export default function Home() {
       <div style={{ padding: "clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px)", maxWidth: 1280, margin: "0 auto", boxSizing: "border-box" }}>
         <BrandArtBand />
 
+        <section style={{ marginBottom: 40 }}>
+          <div style={{ color: "#1e3a8a", fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
+            See the product
+          </div>
+          <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: "clamp(1.3rem, 2.2vw, 1.7rem)" }}>How Contractor Command actually works</h2>
+          <p style={{ color: "#475569", marginTop: 0, marginBottom: 22, lineHeight: 1.6, maxWidth: 720 }}>
+            Estimating takeoff, the plan creation panel, and financials — illustrated the way your team uses them on live jobs.
+          </p>
+          <div style={responsiveGrid(280)}>
+            <div>
+              <ProductIllustration variant="takeoff" />
+              <a href={mapPublicHref("/portal/estimates")} style={{ ...ctaSecondaryStyle, display: "inline-block", marginTop: 12 }}>Open estimating</a>
+            </div>
+            <div>
+              <ProductIllustration variant="plans" />
+              <a href={mapPublicHref("/portal/plans")} style={{ ...ctaSecondaryStyle, display: "inline-block", marginTop: 12 }}>Open plan room</a>
+            </div>
+            <div>
+              <ProductIllustration variant="finance" />
+              <a href={mapPublicHref("/portal/finance")} style={{ ...ctaSecondaryStyle, display: "inline-block", marginTop: 12 }}>Open financials</a>
+            </div>
+          </div>
+        </section>
+
         <section id="owner-executive" style={{ ...cardStyle, marginBottom: 26, borderTop: `3px solid ${brandIdentity.fca.colors.primary}` }}>
           <div style={{ color: "#1e3a8a", fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
             Decision Path

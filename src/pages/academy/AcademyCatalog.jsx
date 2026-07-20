@@ -12,6 +12,7 @@ import { getPathwayLmsConfig } from "../../academyPathwayLms";
 import { getCertificationAgencyAlignment, getApprenticeshipCompliance, getDegreeAccreditationFootnote } from "../../academyCatalogTaxonomy";
 import { academyCtaSets, shellHeaderCtaSets, shellJourney } from "../../websiteShell";
 import { pageShellStyle } from "../../publicShellStyles";
+import { ACADEMY_CATALOG_ACADEMY_TOTAL, ACADEMY_CATALOG_CTE_TOTAL } from "../../academyDesignSystem";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -272,12 +273,19 @@ export default function AcademyCatalog() {
   const apiPrograms = academyState?.catalog?.programs || [];
   const { pathwayKey, topicKey } = readCatalogParams();
   const includeOperatorGuides = hasAcademySubscription(session);
+  const viewingCte = pathwayKey === "vdoe-cte";
 
   const hierarchy = useMemo(
-    () => organizeCatalogHierarchy(apiPrograms, { includeOperatorGuides }),
-    [apiPrograms, includeOperatorGuides],
+    () => organizeCatalogHierarchy(apiPrograms, {
+      includeOperatorGuides,
+      includeCte: viewingCte,
+    }),
+    [apiPrograms, includeOperatorGuides, viewingCte],
   );
-  const catalogIntegrity = useMemo(() => getCatalogIntegrity(academyState), [academyState]);
+  const catalogIntegrity = useMemo(
+    () => getCatalogIntegrity(academyState, { includeCte: viewingCte, cteOnly: viewingCte }),
+    [academyState, viewingCte],
+  );
   const totalCourses = catalogIntegrity.actualTotal || hierarchy.reduce((sum, pathway) => sum + pathway.courseCount, 0);
   const selectedPathway = hierarchy.find((pathway) => pathway.key === pathwayKey) || null;
   const selectedTopic = selectedPathway?.topics.find((topic) => topic.key === topicKey) || null;
@@ -332,13 +340,54 @@ export default function AcademyCatalog() {
         <Breadcrumb pathway={placement?.pathway || selectedPathway} topic={placement?.topic || selectedTopic} />
 
         <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #dbe3f0", background: "#fff" }}>
-          <strong style={{ color: "#0c2340" }}>Academy Store</strong>
-          <span style={{ color: "#475569", marginLeft: 8 }}>
-            Purchase individual courses or pathway bundles without a Contractor Command subscription.
-          </span>
-          <a href="/academy/store" style={{ display: "inline-block", marginLeft: 12, color: "#0c2340", fontWeight: 700, textDecoration: "none" }}>
-            Open store
-          </a>
+          {viewingCte ? (
+            <>
+              <strong style={{ color: "#0c2340" }}>CTE enrollment</strong>
+              <span style={{ color: "#475569", marginLeft: 8 }}>
+                CTE pathways are contact-managed for schools and districts — not sold in the Academy Store.
+              </span>
+              <a href="/contact?topic=cte" style={{ display: "inline-block", marginLeft: 12, color: "#0c2340", fontWeight: 700, textDecoration: "none" }}>
+                Contact CTE team
+              </a>
+            </>
+          ) : (
+            <>
+              <strong style={{ color: "#0c2340" }}>Academy Store</strong>
+              <span style={{ color: "#475569", marginLeft: 8 }}>
+                Purchase individual courses or pathway bundles without a Contractor Command subscription.
+              </span>
+              <a href="/academy/store" style={{ display: "inline-block", marginLeft: 12, color: "#0c2340", fontWeight: 700, textDecoration: "none" }}>
+                Open store
+              </a>
+            </>
+          )}
+        </div>
+
+        <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #e2e8f0", background: "#f8fafc" }}>
+          {viewingCte ? (
+            <>
+              <strong style={{ color: "#0c2340" }}>VDOE CTE catalog</strong>
+              <span style={{ color: "#475569", marginLeft: 8 }}>
+                School CTE programs are isolated from the commercial Academy storefront.
+              </span>
+              <a href="/cte/portal" style={{ display: "inline-block", marginLeft: 12, color: "#0c2340", fontWeight: 700, textDecoration: "none" }}>
+                Back to CTE portal
+              </a>
+              <a href="/academy/catalog" style={{ display: "inline-block", marginLeft: 12, color: "#64748b", fontWeight: 600, textDecoration: "none" }}>
+                Commercial Academy catalog
+              </a>
+            </>
+          ) : (
+            <>
+              <strong style={{ color: "#0c2340" }}>Looking for VDOE CTE?</strong>
+              <span style={{ color: "#475569", marginLeft: 8 }}>
+                {ACADEMY_CATALOG_CTE_TOTAL} school CTE programs live on the CTE portal — not mixed into this commercial catalog or store.
+              </span>
+              <a href="/cte/portal" style={{ display: "inline-block", marginLeft: 12, color: "#0c2340", fontWeight: 700, textDecoration: "none" }}>
+                Open CTE portal
+              </a>
+            </>
+          )}
         </div>
 
         {pathwayLms && selectedPathway && !selectedTopic ? (
@@ -361,8 +410,11 @@ export default function AcademyCatalog() {
               {catalogIntegrity.aligned ? "Live catalog aligned" : "Catalog sync in progress"}
             </strong>
             <div style={{ color: "#475569", marginTop: 8, lineHeight: 1.6 }}>
-              {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} programs
+              {catalogIntegrity.actualTotal} of {catalogIntegrity.expectedTotal} {viewingCte ? "CTE" : "Academy"} programs
               {catalogIntegrity.aligned ? "" : " — deploy may still be propagating; refresh shortly."}
+              {viewingCte ? null : (
+                <span style={{ color: "#64748b" }}> · CTE ({ACADEMY_CATALOG_CTE_TOTAL}) is isolated on /cte/portal</span>
+              )}
             </div>
             {formatLaneCounts(catalogIntegrity.laneProgramCounts) ? (
               <div style={{ color: "#64748b", marginTop: 6, fontSize: 13 }}>
@@ -378,7 +430,8 @@ export default function AcademyCatalog() {
           <div style={{ ...cardStyle, marginBottom: 24, border: "1px solid #dbe3ef", background: "#f8fafc", color: "#334155" }}>
             <strong style={{ color: "#0f172a" }}>Academy catalog is loading</strong>
             <div style={{ marginTop: 8, lineHeight: 1.6 }}>
-              Live program listings sync from the Academy API ({catalogIntegrity.expectedTotal} programs expected, including 33 VDOE CTE).
+              Live program listings sync from the Academy API ({viewingCte ? ACADEMY_CATALOG_CTE_TOTAL : ACADEMY_CATALOG_ACADEMY_TOTAL} {viewingCte ? "CTE" : "Academy"} programs expected
+              {viewingCte ? "" : "; VDOE CTE is isolated on /cte/portal"}).
               Curriculum pathways and course pages remain available while the catalog refreshes.
               Status: {meta?.persistenceState || "syncing"}.
             </div>

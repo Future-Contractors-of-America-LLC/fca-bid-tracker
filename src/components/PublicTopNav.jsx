@@ -97,13 +97,14 @@ const dropdownStyle = {
 
 const signInStyle = {
   textDecoration: "none",
-  color: "#e2e8f0",
+  color: "#f8fafc",
   fontWeight: 700,
   fontSize: 13,
   padding: "9px 12px",
   borderRadius: 8,
   whiteSpace: "nowrap",
-  border: "1px solid rgba(255,255,255,0.18)",
+  border: "1px solid rgba(255,255,255,0.45)",
+  background: "rgba(255,255,255,0.08)",
 };
 
 const primaryCtaStyle = {
@@ -115,6 +116,39 @@ const primaryCtaStyle = {
   padding: "9px 16px",
   borderRadius: 8,
   whiteSpace: "nowrap",
+};
+
+/** CTAs inside the white mobile drawer — never reuse dark-header colors here. */
+const drawerSignInStyle = {
+  textDecoration: "none",
+  color: "#0c2340",
+  fontWeight: 700,
+  fontSize: 14,
+  padding: "11px 14px",
+  borderRadius: 8,
+  border: "1px solid #cbd5e1",
+  background: "#fff",
+  textAlign: "center",
+};
+
+const drawerPrimaryCtaStyle = {
+  ...primaryCtaStyle,
+  display: "block",
+  textAlign: "center",
+  padding: "12px 16px",
+  fontSize: 14,
+};
+
+const drawerCloseStyle = {
+  border: "1px solid #cbd5e1",
+  background: "#f8fafc",
+  borderRadius: 10,
+  padding: "8px 12px",
+  cursor: "pointer",
+  fontFamily: "inherit",
+  fontSize: 14,
+  fontWeight: 700,
+  color: "#0f172a",
 };
 
 const hamburgerStyle = {
@@ -396,62 +430,40 @@ export default function PublicTopNav({ mode = "public" }) {
           ) : (
             <nav className="fca-nav-desktop" style={{ ...desktopNavStyle, display: isDesktop ? "flex" : "none" }} aria-label="Site navigation">
               <a
-                href="/"
-                style={{
-                  ...linkStyle,
-                  display: "inline-block",
-                  color: currentPath === "/" ? "#fff" : "#cbd5e1",
-                  background: currentPath === "/" ? "rgba(255,255,255,0.12)" : "transparent",
-                }}
-              >
-                Home
-              </a>
-              <a
                 href="/platform"
                 style={{
                   ...linkStyle,
                   display: "inline-block",
-                  color: currentPath === "/platform" ? "#fff" : "#cbd5e1",
-                  background: currentPath === "/platform" ? "rgba(255,255,255,0.12)" : "transparent",
+                  color: currentPath === "/platform" || currentPath === "/features" ? "#fff" : "#e2e8f0",
+                  background: currentPath === "/platform" || currentPath === "/features" ? "rgba(255,255,255,0.12)" : "transparent",
                 }}
               >
                 Platform
-              </a>
-              <a
-                href="/features"
-                style={{
-                  ...linkStyle,
-                  display: "inline-block",
-                  color: currentPath === "/features" ? "#fff" : "#cbd5e1",
-                  background: currentPath === "/features" ? "rgba(255,255,255,0.12)" : "transparent",
-                }}
-              >
-                Features
               </a>
               {NAV_MENUS.map((menu) => (
                 <NavDropdown key={menu.label} menu={menu} currentPath={currentPath} onNavigate={closeMobile} />
               ))}
               <a
-                href="/contact"
-                style={{
-                  ...linkStyle,
-                  display: "inline-block",
-                  color: currentPath === "/contact" ? "#fff" : "#cbd5e1",
-                  background: currentPath === "/contact" ? "rgba(255,255,255,0.12)" : "transparent",
-                }}
-              >
-                Contact
-              </a>
-              <a
                 href="/pricing"
                 style={{
                   ...linkStyle,
                   display: "inline-block",
-                  color: currentPath === "/pricing" ? "#fff" : "#cbd5e1",
+                  color: currentPath === "/pricing" ? "#fff" : "#e2e8f0",
                   background: currentPath === "/pricing" ? "rgba(255,255,255,0.12)" : "transparent",
                 }}
               >
                 Pricing
+              </a>
+              <a
+                href="/contact"
+                style={{
+                  ...linkStyle,
+                  display: "inline-block",
+                  color: currentPath === "/contact" ? "#fff" : "#e2e8f0",
+                  background: currentPath === "/contact" ? "rgba(255,255,255,0.12)" : "transparent",
+                }}
+              >
+                Contact
               </a>
             </nav>
           )}
@@ -480,21 +492,21 @@ export default function PublicTopNav({ mode = "public" }) {
       <MobileDrawer open={mobileOpen} onClose={closeMobile}>
         <div style={{ padding: "16px 20px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <strong style={{ fontSize: 16, color: "#0f172a" }}>Menu</strong>
-          <button type="button" onClick={closeMobile} style={{ ...hamburgerStyle, fontSize: 14 }} aria-label="Close">Close</button>
+          <button type="button" onClick={closeMobile} style={drawerCloseStyle} aria-label="Close">Close</button>
         </div>
 
         <div style={{ padding: "12px 16px", display: "grid", gap: 8, borderBottom: "1px solid #e2e8f0" }}>
           {session?.authenticated ? (
             <>
-              <a href={workspaceHref} style={primaryCtaStyle} onClick={closeMobile}>Open workspace</a>
-              <a href={profileHref} style={signInStyle} onClick={closeMobile}>Account</a>
-              <a href={adminWorkspaceHref} style={signInStyle} onClick={closeMobile}>Admin</a>
-              <a href={loginHref} onClick={handleLogout} style={signInStyle}>Sign out</a>
+              <a href={workspaceHref} style={drawerPrimaryCtaStyle} onClick={closeMobile}>Open workspace</a>
+              <a href={profileHref} style={drawerSignInStyle} onClick={closeMobile}>Account</a>
+              <a href={adminWorkspaceHref} style={drawerSignInStyle} onClick={closeMobile}>Admin</a>
+              <a href={loginHref} onClick={handleLogout} style={drawerSignInStyle}>Sign out</a>
             </>
           ) : (
             <>
-              <a href="/intake" style={primaryCtaStyle} onClick={closeMobile}>Get started</a>
-              <a href={loginHref} style={signInStyle} onClick={closeMobile}>Sign in</a>
+              <a href="/intake" style={drawerPrimaryCtaStyle} onClick={closeMobile}>Get started</a>
+              <a href={loginHref} style={drawerSignInStyle} onClick={closeMobile}>Sign in</a>
             </>
           )}
         </div>
@@ -506,9 +518,7 @@ export default function PublicTopNav({ mode = "public" }) {
                 {
                   label: "Site",
                   items: [
-                    { label: "Home", href: "/" },
                     { label: "Platform", href: "/platform" },
-                    { label: "Features", href: "/features" },
                     { label: "Pricing", href: "/pricing" },
                     { label: "Contact", href: "/contact" },
                   ],

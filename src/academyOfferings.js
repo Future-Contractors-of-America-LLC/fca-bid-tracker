@@ -335,6 +335,7 @@ export function organizeApiCatalogByLane(apiPrograms = [], catalogLanes = OFFERI
 /** Pathway → topic → course hierarchy for catalog navigation. */
 export function organizeCatalogHierarchy(apiPrograms = [], options = {}) {
   const includeOperatorGuides = options.includeOperatorGuides === true;
+  const includeCte = options.includeCte === true;
   const apiKeys = new Set(apiPrograms.map((program) => program.key));
   const allPrograms = apiPrograms.length > 0
     ? [...apiPrograms]
@@ -354,6 +355,7 @@ export function organizeCatalogHierarchy(apiPrograms = [], options = {}) {
 
   for (const program of allPrograms) {
     const { pathwayKey, topicKey, enrollment } = resolveProgramCatalogMeta(program);
+    if (!includeCte && pathwayKey === "vdoe-cte") continue;
     if (!courseBuckets[pathwayKey]) continue;
     if (!courseBuckets[pathwayKey][topicKey]) {
       courseBuckets[pathwayKey][topicKey] = [];
@@ -397,7 +399,12 @@ export function organizeCatalogHierarchy(apiPrograms = [], options = {}) {
     }
   }
 
-  return CATALOG_PATHWAYS.filter((pathway) => includeOperatorGuides || pathway.key !== "fca-how-to")
+  return CATALOG_PATHWAYS
+    .filter((pathway) => {
+      if (!includeOperatorGuides && pathway.key === "fca-how-to") return false;
+      if (!includeCte && pathway.key === "vdoe-cte") return false;
+      return true;
+    })
     .map((pathway) => {
     const knownTopics = getTopicsForPathway(pathway.key);
     const topics = knownTopics
@@ -426,7 +433,7 @@ export function organizeCatalogHierarchy(apiPrograms = [], options = {}) {
       topics: mergedTopics,
       courseCount,
     };
-  }).filter((pathway) => pathway.courseCount > 0 || pathway.key === "licensure" || pathway.key === "vdoe-cte" || (includeOperatorGuides && pathway.key === "fca-how-to"));
+  }).filter((pathway) => pathway.courseCount > 0 || pathway.key === "licensure" || (includeCte && pathway.key === "vdoe-cte") || (includeOperatorGuides && pathway.key === "fca-how-to"));
 }
 
 export function findCatalogPlacement(pathwayKey, topicKey, programKey) {
