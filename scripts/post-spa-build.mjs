@@ -12,8 +12,8 @@ const defaultHost =
   process.env.AURICRUX_SWA_DEFAULT_HOST || "delightful-mushroom-0de67860f.7.azurestaticapps.net";
 const expectedHosts = FCA_EXPECTED_SWA_HOSTS_CSV;
 const commitWitnessRoute = `/commit-witness-${gitSha}.txt`;
-const buildMarkerDate = "June 18, 2026";
-const buildMarkerVersion = "React SPA v1 Portal-Routes";
+const buildMarkerDate = new Date().toISOString().slice(0, 10);
+const buildMarkerVersion = "FCA React SPA — funding-truth aligned";
 
 const expectedHostArray = expectedHosts.split(",").map((host) => host.trim()).filter(Boolean);
 

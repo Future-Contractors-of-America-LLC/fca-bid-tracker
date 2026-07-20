@@ -1,25 +1,25 @@
 const SITE_ORIGIN = "https://futurecontractorsofamerica.com";
 const SITE_NAME = "Future Contractors of America";
-const DEFAULT_TITLE = "Future Contractors of America | FCA Operating System";
+const DEFAULT_TITLE = "Future Contractors of America | AI-Native Contractor Platform";
 const DEFAULT_DESCRIPTION =
-  "Future Contractors of America is the operating system for contractor growth, bid execution, project visibility, and Auricrux-guided workflow continuity.";
+  "Future Contractors of America is an AI-native contractor platform built for the full job lifecycle — growth, bids, delivery, billing, Academy training — with Auricrux able to guide or take the next action.";
 const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/social-card.svg`;
 
 export const routeMetadata = {
   "/": {
     title: DEFAULT_TITLE,
     description:
-      "Future Contractors of America unifies contractor growth, bid coordination, project visibility, and Auricrux-guided execution in one operating system.",
+      "Future Contractors of America is built so contractors can move from opportunity through delivery, billing, and training in one live workspace — with Auricrux available to guide or execute the next step.",
   },
   "/platform": {
     title: "Platform | Future Contractors of America",
     description:
-      "See the FCA platform shell spanning portal operations, academy readiness, support continuity, and executive visibility.",
+      "Explore the FCA platform spanning bids, projects, field, finance, Academy, and Auricrux across the contractor lifecycle.",
   },
   "/auricrux": {
     title: "Auricrux | Future Contractors of America",
     description:
-      "Auricrux is the intelligence and execution layer embedded across FCA workflows, customer operations, and field continuity.",
+      "Auricrux is construction intelligence embedded across FCA — able to guide the next step or take authorized actions, continuously improved through our training spine.",
   },
   "/pricing": {
     title: "Pricing | Future Contractors of America",

@@ -114,15 +114,15 @@ export const academyClassrooms = [
 
 export const websiteEnterpriseProof = [
   {
-    title: "Construction-native operating system framing",
-    detail: "Every public route now ties back to contractor workflows: intake, estimating, document control, billing readiness, field execution, training, warranty, and referral growth.",
+    title: "Construction-native platform framing",
+    detail: "Public routes tie back to contractor workflows: intake, estimating, document control, billing readiness, field execution, training, warranty, and referral growth.",
   },
   {
     title: "Product-backed sales narrative",
     detail: "Website readers can move from positioning into live login, platform dashboard, portal workflows, academy classrooms, and rollout conversations without leaving the FCA shell.",
   },
   {
-    title: "Embedded Auricrux execution layer",
-    detail: "Auricrux remains present as the guidance and operating layer across workspace, academy, and customer-facing execution rather than being isolated as a marketing concept.",
+    title: "Embedded Auricrux intelligence",
+    detail: "Auricrux is present as the AI guidance layer across workspace, academy, and customer-facing execution — continuously improved through our training and promotion spine.",
   },
 ];

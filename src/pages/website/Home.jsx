@@ -41,10 +41,10 @@ const buyerProfiles = {
   executive: {
     key: "executive",
     label: "Owner / Executive",
-    headline: "Enterprise ROI, risk mitigation, and bonding capacity",
-    proof: "Improve visibility across margin, exposure, and audit posture before issues become claims.",
-    kpiLabel: "Financial leakage reduction",
-    kpiValue: "18-32%",
+    headline: "Margin visibility, risk mitigation, and bonding readiness",
+    proof: "See margin, exposure, and audit posture in one workspace before issues become claims.",
+    kpiLabel: "Focus area",
+    kpiValue: "Finance + risk",
     ctaLabel: "Open executive path",
     href: "/portal/finance",
   },
@@ -53,18 +53,18 @@ const buyerProfiles = {
     label: "Operations Director",
     headline: "Resource leveling, project velocity, and workflow governance",
     proof: "Unify precon, project controls, field tasks, and closeout in one connected workspace.",
-    kpiLabel: "Coordination cycle-time reduction",
-    kpiValue: "22-41%",
+    kpiLabel: "Focus area",
+    kpiValue: "Coordination",
     ctaLabel: "Open operations path",
     href: "/portal/operations",
   },
   field: {
     key: "field",
     label: "Field Superintendent",
-    headline: "Real-time logs, automated punch, and mobile readiness",
+    headline: "Field logs, punch follow-through, and mobile readiness",
     proof: "Turn fragmented site updates into clear action packets with reliable follow-through.",
-    kpiLabel: "Issue closure acceleration",
-    kpiValue: "1.7x",
+    kpiLabel: "Focus area",
+    kpiValue: "Field execution",
     ctaLabel: "Open field path",
     href: "/portal/field-tasks",
   },
@@ -88,24 +88,24 @@ const industryCampaigns = {
   },
 };
 
-const academySuccessStories = [
+const academyPathwayHighlights = [
   {
-    name: "M. Alvarez",
-    role: "Apprentice -> Foreman",
-    outcome: "Completed foundational safety and field sequencing pathways, then transitioned to site leadership within 14 months.",
-    roi: "Crew rework incidents down 27%",
+    name: "Safety & foundations",
+    role: "Apprentice → crew-ready",
+    outcome: "Self-paced safety, documentation, and field communication tracks tied to live workspace routines.",
+    roi: "Credential pathways in product",
   },
   {
-    name: "R. Bennett",
-    role: "Laborer -> Project Engineer",
-    outcome: "Advanced through qualification tracks while attached to live FCA project execution routines.",
-    roi: "Documentation lag reduced by 38%",
+    name: "Qualification tracks",
+    role: "Laborer → specialist",
+    outcome: "Role-aligned Academy modules that attach learning to bids, projects, and field execution.",
+    roi: "Training inside the job, not beside it",
   },
   {
-    name: "S. Tran",
-    role: "Coordinator -> Project Lead",
-    outcome: "Progressed through governance and communication tracks with Auricrux-guided escalation simulations.",
-    roi: "Customer response cycle-time improved 1.6x",
+    name: "Leadership readiness",
+    role: "Coordinator → Project Lead",
+    outcome: "Governance, escalation, and communication tracks with Auricrux guidance on next steps.",
+    roi: "Workforce continuity by design",
   },
 ];
 
@@ -161,7 +161,7 @@ function BrandArtBand() {
         <AuricruxBrandMark />
       </div>
       <p style={{ position: "relative", marginTop: 20, marginBottom: 0, maxWidth: 640, color: "#475569", lineHeight: 1.7, fontSize: 17 }}>
-        FCA is the contractor operating system. Auricrux is the intelligence layer inside it, guiding teams from first lead through delivery, billing, and training.
+        FCA is an AI-native contractor platform built for the full job lifecycle. Auricrux is the intelligence layer inside it — able to recommend the next step or carry the action across leads, bids, delivery, billing, and Academy training.
       </p>
     </div>
   );
@@ -181,7 +181,7 @@ export default function Home() {
   const [terminalInput, setTerminalInput] = useState("");
   const [terminalLog, setTerminalLog] = useState(() => [
     "AURICRUX TERMINAL READY",
-    "Type: role executive | role operations | role field | demo finance | industry electrical | sandbox | ask auricrux | help",
+    "Type: role executive | role operations | role field | demo finance | industry electrical | walkthrough | ask auricrux | help",
   ]);
 
   const campaign = useMemo(() => {
@@ -211,7 +211,6 @@ export default function Home() {
 
   const activeProfile = buyerProfiles[activeBuyer] || buyerProfiles.executive;
   const monthlyWaste = Math.round((Number(projectCount) * Number(weeklyAdminHours) * 4.33 * 82) || 0);
-  const savedWithAuricrux = Math.round(monthlyWaste * 0.34);
 
   const walkthroughPrompts = {
     "/portal/scheduling": "Want to see how Auricrux mitigates a two-week delay in under 60 seconds?",
@@ -226,7 +225,7 @@ export default function Home() {
     if (command === "help") {
       setTerminalLog((current) => [
         ...current,
-        "Commands: role <executive|operations|field>, demo <scheduling|finance|field>, industry <electrical|concrete|mechanical>, calc <projects> <headcount> <adminhrs>, ask auricrux, sandbox",
+        "Commands: role <executive|operations|field>, demo <scheduling|finance|field>, industry <electrical|concrete|mechanical>, calc <projects> <headcount> <adminhrs>, ask auricrux, walkthrough",
       ].slice(-12));
       return;
     }
@@ -280,9 +279,9 @@ export default function Home() {
       return;
     }
 
-    if (command === "sandbox") {
+    if (command === "walkthrough" || command === "sandbox") {
       if (typeof window !== "undefined") {
-        window.location.assign("/login?next=/portal/platform&sandbox=1");
+        window.location.assign("/contact");
       }
       return;
     }
@@ -400,9 +399,9 @@ export default function Home() {
               <div style={{ color: "#155e75", fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em" }}>With FCA Workflow</div>
               <h3 style={{ marginTop: 8, marginBottom: 10, fontSize: 19 }}>Governed coordination at speed</h3>
               <ul style={{ margin: 0, paddingLeft: 18, color: "#0f4c5c", lineHeight: 1.8 }}>
-                <li>Auricrux centralizes signals into one clear next action</li>
+                <li>Auricrux turns workspace signals into a clear recommended next action</li>
                 <li>Risk events become tasked actions with owners and due dates</li>
-                <li>Payment trust improves through proactive transparency and audit trails</li>
+                <li>Payment trust improves through proactive transparency and activity history</li>
               </ul>
             </div>
           </div>
@@ -466,24 +465,26 @@ export default function Home() {
             </label>
           </div>
           <div style={{ marginTop: 12, display: "grid", gap: 8 }}>
-            <div style={{ color: "#334155" }}>Estimated monthly admin friction cost: <strong style={{ color: "#0f172a" }}>${monthlyWaste.toLocaleString()}</strong></div>
-            <div style={{ color: "#14532d" }}>Projected monthly reclaim with Auricrux workflow governance: <strong>${savedWithAuricrux.toLocaleString()}</strong></div>
+            <div style={{ color: "#334155" }}>Illustrative monthly admin friction cost: <strong style={{ color: "#0f172a" }}>${monthlyWaste.toLocaleString()}</strong></div>
+            <div style={{ color: "#64748b", fontSize: 13 }}>
+              Planning input only (projects × weekly admin hours × $82/hr). Use it to size the coordination problem FCA and Auricrux are built to reduce — not a measured customer savings claim.
+            </div>
           </div>
         </section>
 
         <section style={{ ...cardStyle, marginBottom: 26, borderTop: "3px solid #0f766e" }}>
           <div style={{ color: "#0f766e", fontSize: 12, fontWeight: 800, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 8 }}>
-            Zero-Barrier Product Experience
+            Live Product Access
           </div>
-          <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: "clamp(1.2rem, 2.1vw, 1.55rem)" }}>Enter a sandbox before talking to sales</h2>
+          <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: "clamp(1.2rem, 2.1vw, 1.55rem)" }}>Sign in to the live workspace — or book a walkthrough</h2>
           <p style={{ color: "#475569", lineHeight: 1.65, maxWidth: 760 }}>
-            Let buyers touch the operating system first. Sales conversations then start with validated intent instead of basic qualification.
+            Buyers can open the real FCA platform today. Sales conversations start from a working product, not a deck.
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <a href="/login?next=/portal/platform&sandbox=1" style={ctaPrimaryStyle}>Open sandbox now</a>
-            <a href="/portal/platform" style={ctaSecondaryStyle}>Preview platform state</a>
-            <button type="button" onClick={() => runTerminalCommand("sandbox")} style={{ ...ctaSecondaryStyle, cursor: "pointer" }}>
-              Launch from terminal
+            <a href="/login?next=/portal/platform" style={ctaPrimaryStyle}>Sign in to workspace</a>
+            <a href="/contact" style={ctaSecondaryStyle}>Book a walkthrough</a>
+            <button type="button" onClick={() => runTerminalCommand("walkthrough")} style={{ ...ctaSecondaryStyle, cursor: "pointer" }}>
+              Request from terminal
             </button>
           </div>
         </section>
@@ -495,7 +496,7 @@ export default function Home() {
         <section style={{ marginBottom: 48 }}>
           <h2 style={{ marginTop: 0, marginBottom: 8, fontSize: "clamp(1.35rem, 2.5vw, 1.85rem)" }}>What FCA delivers</h2>
           <p style={{ color: "#64748b", marginBottom: 24, maxWidth: 620, lineHeight: 1.65 }}>
-            One operating system for bids, projects, billing, customer communication, and workforce training.
+            One AI-native platform for bids, projects, billing, customer communication, and workforce training.
           </p>
           <div style={responsiveGrid(260)}>
             {visibleSurfaceLinks.map((item) => (
@@ -545,7 +546,7 @@ export default function Home() {
         </section>
 
         <section style={{ marginBottom: 48 }}>
-          <h2 style={{ marginBottom: 20, fontSize: "clamp(1.25rem, 2.5vw, 1.65rem)" }}>Enterprise proof</h2>
+          <h2 style={{ marginBottom: 20, fontSize: "clamp(1.25rem, 2.5vw, 1.65rem)" }}>What you can open today</h2>
           <div style={responsiveGrid(280)}>
             {websiteEnterpriseProof.map((item) => (
               <article key={item.title} style={cardStyle}>
@@ -589,7 +590,7 @@ export default function Home() {
             ))}
           </div>
           <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
-            {academySuccessStories.map((story) => (
+            {academyPathwayHighlights.map((story) => (
               <article key={story.name} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: 12, background: "#f8fafc" }}>
                 <div style={{ color: "#0f172a", fontWeight: 800, fontSize: 14 }}>{story.name}</div>
                 <div style={{ color: "#1e3a8a", fontWeight: 700, fontSize: 12, marginTop: 2 }}>{story.role}</div>
@@ -603,12 +604,12 @@ export default function Home() {
         <section style={{ ...cardStyle, marginBottom: 48 }}>
           <h2 style={{ marginTop: 0, marginBottom: 10, fontSize: "clamp(1.2rem, 2.1vw, 1.55rem)" }}>Trust and governance</h2>
           <p style={{ color: "#475569", lineHeight: 1.65, maxWidth: 760 }}>
-            Enterprise rollout requires legal and procurement confidence. FCA exposes governance controls, security posture, and immutable audit continuity in one place.
+            Enterprise rollout requires legal and procurement confidence. FCA exposes governance controls, security posture, and workspace activity history in one place.
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <a href="/legal" style={ctaSecondaryStyle}>Legal center</a>
             <a href="/security" style={ctaSecondaryStyle}>Security & compliance</a>
-            <a href="/portal/audit" style={ctaSecondaryStyle}>Immutable audit trail</a>
+            <a href="/portal/audit" style={ctaSecondaryStyle}>Activity history</a>
             <a href="/login?next=/portal/admin" style={ctaPrimaryStyle}>Trust workspace</a>
           </div>
         </section>

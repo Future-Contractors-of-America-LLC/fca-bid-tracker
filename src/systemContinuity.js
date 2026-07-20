@@ -3,7 +3,7 @@ export const publicHomeMessaging = {
     eyebrow: "FCA Contractor Command",
     title: "Win more work, run every job, and train your workforce in one platform.",
     subtitle:
-      "Future Contractors of America connects leads, bids, projects, plan rooms, field operations, finance, billing, customer communication, and Academy training in one contractor workspace — with Auricrux guiding what to do next.",
+      "Future Contractors of America is built so a contractor can move from first opportunity through estimate, award, delivery, billing, closeout, warranty, and workforce training in one AI-native workspace — with Auricrux able to guide the work or take the next action for you.",
   },
   journey: {
     title: "Start with the path that fits your team",
@@ -15,7 +15,7 @@ export const publicHomeMessaging = {
   trust: {
     title: "Built for contractors competing at enterprise scale",
     detail:
-      "FCA helps teams keep customers informed, organize delivery, and make the next step clear across sales, field operations, billing, and training.",
+      "FCA is designed to keep customers informed, organize delivery, and advance the next step across sales, field operations, billing, and training — without scattering the job across disconnected tools.",
   },
   snapshot: {
     title: "See your operating picture in one place",
@@ -40,7 +40,7 @@ export const publicPricingMessaging = {
   hero: {
     title: "Pick the plan that matches your growth stage",
     detail:
-      "Every tier includes core bid-to-bill workflows, customer visibility, and workforce training. Higher tiers add deeper Academy catalogs, priority support, and expanded Auricrux automation.",
+      "Every tier includes core bid-to-bill workflows, customer visibility, and workforce training. Higher tiers add deeper Academy catalogs, priority support, and richer Auricrux guidance context.",
   },
   journey: {
     title: "From pricing to live rollout in days, not months",
@@ -110,7 +110,7 @@ export const academyContinuityMessaging = {
       "Onboard crews, track certifications, and tie training to the jobs running in your Contractor Command workspace.",
   },
   expansion: {
-    title: "Training built into your operating system",
+    title: "Training built into your contractor platform",
     detail:
       "Academy progress lives next to bids, projects, and billing — so owners see who is certified before crews hit the field.",
   },

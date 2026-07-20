@@ -6,9 +6,19 @@ const MARKETING_HOSTS = new Set([
   `www.${FCA_MARKETING_HOST}`,
 ]);
 
+/** Keep third-party website validators on the marketing host they were given. */
+function isWebsiteVerificationCrawler() {
+  if (typeof navigator === "undefined") return false;
+  const ua = String(navigator.userAgent || "").toLowerCase();
+  return /googlebot|google-inspectiontool|storebot-google|adsbot-google|bingbot|slurp|duckduckbot|yandexbot|baiduspider|facebot|facebookexternalhit|linkedinbot|twitterbot|applebot|semrushbot|ahrefsbot|bytespider|gptbot|claudebot|amazonbot|petalbot/.test(
+    ua,
+  );
+}
+
 /** Redirect login and protected workspace routes from apex/www to app.* */
 export function ensureProductHostContinuity() {
   if (typeof window === "undefined") return false;
+  if (isWebsiteVerificationCrawler()) return false;
 
   const { hostname, pathname, search, hash } = window.location;
   if (!MARKETING_HOSTS.has(hostname)) return false;
