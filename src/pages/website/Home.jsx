@@ -323,6 +323,7 @@ export default function Home() {
               ) : null}
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 28 }}>
                 <a href="/intake" style={heroCtaOnDark}>Get started</a>
+                <a href="/proof" style={heroCtaSecondaryOnDark}>See what we&apos;ve built</a>
                 <a href="/login" style={heroCtaSecondaryOnDark}>Sign in</a>
               </div>
             </div>
