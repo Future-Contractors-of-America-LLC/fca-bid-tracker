@@ -462,6 +462,17 @@ export default function PublicTopNav({ mode = "public" }) {
               >
                 Platform
               </a>
+              <a
+                href="/proof"
+                style={{
+                  ...linkStyle,
+                  display: "inline-block",
+                  color: currentPath === "/proof" ? "#fff" : "#e2e8f0",
+                  background: currentPath === "/proof" ? "rgba(255,255,255,0.12)" : "transparent",
+                }}
+              >
+                Proof
+              </a>
               {NAV_MENUS.map((menu) => (
                 <NavDropdown key={menu.label} menu={menu} currentPath={currentPath} onNavigate={closeMobile} />
               ))}
@@ -541,6 +552,7 @@ export default function PublicTopNav({ mode = "public" }) {
                   label: "Site",
                   items: [
                     { label: "Platform", href: "/platform" },
+                    { label: "Proof", href: "/proof" },
                     { label: "Pricing", href: "/pricing" },
                     { label: "Contact", href: "/contact" },
                   ],

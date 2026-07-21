@@ -16,6 +16,11 @@ export const routeMetadata = {
     description:
       "Explore the FCA platform spanning bids, projects, field, finance, Academy, and Auricrux across the contractor lifecycle.",
   },
+  "/proof": {
+    title: "Build & Scope Proof | Future Contractors of America",
+    description:
+      "See how much of the FCA platform is already built and live: 1,251 Academy courses, 39 VDOE-aligned CTE programs, three active repositories, a mobile app, and a continuously deployed web platform with live commit provenance.",
+  },
   "/auricrux": {
     title: "Auricrux | Future Contractors of America",
     description:

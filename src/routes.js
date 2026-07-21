@@ -5,6 +5,7 @@ const lazyPage = (loader) => lazy(loader);
 export const routes = {
   "/": lazyPage(() => import("./pages/website/Home")),
   "/platform": lazyPage(() => import("./pages/website/Platform")),
+  "/proof": lazyPage(() => import("./pages/website/Proof")),
   "/login": lazyPage(() => import("./pages/website/Login")),
   "/intake": lazyPage(() => import("./pages/website/Intake")),
   "/checkout": lazyPage(() => import("./pages/website/Checkout")),
