@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Slim SWA deploy: strip heavy academy binary media from dist/ before Azure upload.
- * WebM/MP3 are published to Azure Blob separately; the app resolves paths via
- * window.FCA_ACADEMY_MEDIA_CDN (see src/utils/academyMediaUrl.js).
+ * Slim SWA deploy: strip academy binary media from dist/ before Azure upload.
+ * Azure Static Web Apps rejects packages with too many static files; public/academy
+ * alone can exceed 40k files. Media is served from Azure Blob CDN instead
+ * (window.FCA_ACADEMY_MEDIA_CDN — see src/utils/academyMediaUrl.js).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -10,14 +11,24 @@ import path from "node:path";
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, "dist");
 const LIMIT_BYTES = Number(process.env.FCA_SWA_DEPLOY_LIMIT_BYTES || 480 * 1024 * 1024);
+const LIMIT_FILES = Number(process.env.FCA_SWA_DEPLOY_LIMIT_FILES || 4500);
 const CDN_BASE = (process.env.FCA_ACADEMY_MEDIA_CDN_BASE || "").replace(/\/$/, "");
-const OFFLOAD_EXTENSIONS = new Set([".webm", ".mp3"]);
-
-function isOffloadedMedia(relativePath) {
-  const normalized = relativePath.replace(/\\/g, "/");
-  if (!normalized.includes("academy/media/")) return false;
-  return OFFLOAD_EXTENSIONS.has(path.extname(normalized).toLowerCase());
-}
+const BINARY_EXTENSIONS = new Set([
+  ".webm",
+  ".mp3",
+  ".mp4",
+  ".mov",
+  ".wav",
+  ".m4a",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".gif",
+  ".webp",
+  ".svg",
+  ".pdf",
+  ".zip",
+]);
 
 function walkDir(dir, visitor) {
   if (!fs.existsSync(dir)) return;
@@ -31,25 +42,63 @@ function walkDir(dir, visitor) {
   }
 }
 
-function dirSize(dir) {
-  let total = 0;
-  walkDir(dir, (file) => {
-    total += fs.statSync(file).size;
-  });
-  return total;
+function removeEmptyDirs(dir) {
+  if (!fs.existsSync(dir)) return;
+  for (const name of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, name.name);
+    if (name.isDirectory()) removeEmptyDirs(full);
+  }
+  try {
+    if (fs.readdirSync(dir).length === 0) fs.rmdirSync(dir);
+  } catch {
+    // best effort
+  }
 }
 
-function stripOffloadedMedia() {
-  const stats = { removedFiles: 0, removedBytes: 0, removedWebm: 0, removedMp3: 0 };
-  walkDir(DIST, (file) => {
-    const rel = path.relative(DIST, file).replace(/\\/g, "/");
-    if (!isOffloadedMedia(rel)) return;
+function dirSizeAndCount(dir) {
+  let total = 0;
+  let files = 0;
+  walkDir(dir, (file) => {
+    total += fs.statSync(file).size;
+    files += 1;
+  });
+  return { total, files };
+}
+
+function stripAcademyMediaTree() {
+  const stats = { removedFiles: 0, removedBytes: 0 };
+  const mediaRoot = path.join(DIST, "academy", "media");
+  if (!fs.existsSync(mediaRoot)) return stats;
+
+  walkDir(mediaRoot, (file) => {
     const size = fs.statSync(file).size;
     fs.unlinkSync(file);
     stats.removedFiles += 1;
     stats.removedBytes += size;
-    if (rel.endsWith(".webm")) stats.removedWebm += 1;
-    if (rel.endsWith(".mp3")) stats.removedMp3 += 1;
+  });
+  removeEmptyDirs(mediaRoot);
+  return stats;
+}
+
+function stripBinaryFallbacks() {
+  const stats = { removedFiles: 0, removedBytes: 0 };
+  walkDir(DIST, (file) => {
+    const rel = path.relative(DIST, file).replace(/\\/g, "/");
+    const ext = path.extname(rel).toLowerCase();
+    if (!BINARY_EXTENSIONS.has(ext) && !rel.endsWith(".map")) return;
+    // Keep core brand/logo assets in dist root and /brand if present.
+    if (rel.startsWith("brand/") || rel.startsWith("assets/") || !rel.includes("/")) {
+      if (ext === ".map") {
+        // still drop source maps
+      } else if (!rel.includes("academy/")) {
+        return;
+      }
+    }
+    if (!rel.includes("academy/") && ext !== ".map") return;
+    const size = fs.statSync(file).size;
+    fs.unlinkSync(file);
+    stats.removedFiles += 1;
+    stats.removedBytes += size;
   });
   return stats;
 }
@@ -77,7 +126,6 @@ function injectConfigScript() {
     '<script type="module" src="/src/bootstrap.jsx"></script>',
     `${tag}\n    <script type="module" src="/src/bootstrap.jsx"></script>`,
   );
-  // Production bundle uses /assets/* entry — patch whichever bootstrap is present.
   if (!html.includes(tag)) {
     html = html.replace("</head>", `    ${tag}\n  </head>`);
   }
@@ -89,22 +137,29 @@ function main() {
     throw new Error("dist/ missing — run npm run build first.");
   }
 
-  const stats = stripOffloadedMedia();
+  const treeStats = stripAcademyMediaTree();
+  const binaryStats = stripBinaryFallbacks();
   writeMediaConfig();
   injectConfigScript();
 
-  const total = dirSize(DIST);
+  const { total, files } = dirSizeAndCount(DIST);
   console.log(
-    `SWA slim dist: ${(total / 1024 / 1024).toFixed(1)} MB ` +
-      `(removed ${stats.removedWebm} webm, ${stats.removedMp3} mp3, ` +
-      `${(stats.removedBytes / 1024 / 1024).toFixed(1)} MB offloaded)`,
+    `SWA slim dist: ${files} files, ${(total / 1024 / 1024).toFixed(1)} MB ` +
+      `(removed ${treeStats.removedFiles + binaryStats.removedFiles} academy/media or map files, ` +
+      `${((treeStats.removedBytes + binaryStats.removedBytes) / 1024 / 1024).toFixed(1)} MB offloaded)`,
   );
   if (CDN_BASE) {
     console.log(`Academy media CDN base: ${CDN_BASE}`);
   } else {
-    console.warn("FCA_ACADEMY_MEDIA_CDN_BASE unset — dist will use same-origin relative media paths.");
+    console.warn(
+      "FCA_ACADEMY_MEDIA_CDN_BASE unset — academy media was still stripped for SWA file-count limits; set CDN base for playback.",
+    );
   }
 
+  if (files > LIMIT_FILES) {
+    console.error(`dist/ still has ${files} files after slim (limit ${LIMIT_FILES}).`);
+    process.exit(1);
+  }
   if (total > LIMIT_BYTES) {
     console.error(
       `dist/ still ${(total / 1024 / 1024).toFixed(1)} MB after offload (limit ${(LIMIT_BYTES / 1024 / 1024).toFixed(0)} MB).`,
