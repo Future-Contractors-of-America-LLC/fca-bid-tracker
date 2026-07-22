@@ -3,7 +3,6 @@ import PortalShell from "../../components/PortalShell";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
-import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import CommercialContinuityFeed from "../../components/CommercialContinuityFeed";
 import { publishPortalPageContext } from "../../portalPageContext";
 import {
@@ -18,12 +17,10 @@ import {
   submitFcaNativeCheckout,
 } from "../../api/fcaPaymentClient";
 import FcaNativeCheckoutPanel from "../../components/FcaNativeCheckoutPanel";
-import { routeStateOverlays } from "../../systemState";
 import {
   PortalAlert,
   PortalEntityTable,
   PortalLoadingState,
-  PortalPageIntro,
   PortalQuickStats,
   PortalStatusBadge,
 } from "../../components/portal/PortalPrimitives";
@@ -32,7 +29,6 @@ import {
   portalButtonSecondary,
   portalCardStyle,
   portalInputStyle,
-  portalTokens,
 } from "../../portalDesignTokens";
 
 export default function PortalBilling() {
@@ -113,6 +109,7 @@ export default function PortalBilling() {
         invoiceName: draft.invoiceName,
         amount: draft.amount,
         note: draft.note,
+        projectId: activeProject?.id || state?.project?.id || "",
       });
       await reloadInvoices();
       setDraft({ invoiceName: "", amount: "", note: "" });
@@ -175,10 +172,6 @@ export default function PortalBilling() {
     }
   }
 
-  function openBillingPortal() {
-    window.location.assign("/portal/finance?view=recurring");
-  }
-
   async function deliverInvoice(invoiceId) {
     setActionError("");
     setDeliveryNotice("");
@@ -197,9 +190,6 @@ export default function PortalBilling() {
       setBusyId("");
     }
   }
-
-  const insightTargetId = activeProject?.id || invoices[0]?.id || "";
-  const insightTargetType = activeProject?.id ? "Project" : invoices[0]?.id ? "Invoice" : "Project";
 
   const stats = useMemo(() => {
     const draftCount = invoices.filter((inv) => inv.status === "Draft").length;
@@ -224,27 +214,13 @@ export default function PortalBilling() {
   return (
     <PortalShell
       title="Billing"
-      subtitle="Create customer invoices, issue them, and record payment in FCA Books."
+      subtitle={
+        activeProject?.id
+          ? `Invoices for ${activeProject.id}. Create, issue, and collect in FCA Books.`
+          : "Create customer invoices and record payment in FCA Books."
+      }
       activeHref="/portal/billing"
-      currentJourney="finance"
-      routeOverlay={routeStateOverlays.billing}
-      primaryHref="/portal/finance?view=payments"
-      primaryLabel="Record payment"
     >
-      <PortalPageIntro
-        eyebrow="Customer billing"
-        title={`${companyName} invoice workspace`}
-        detail="Create a draft, issue to the customer, collect payment in FCA Checkout, and record payment in finance without leaving FCA."
-        actions={(
-          <>
-            <button type="button" onClick={openBillingPortal} style={{ ...portalButtonSecondary, cursor: "pointer" }}>
-              Manage recurring billing
-            </button>
-            <a href="/portal/finance" style={portalButtonSecondary}>Open FCA Books</a>
-          </>
-        )}
-      />
-
       <PortalQuickStats
         items={[
           { label: "Draft", value: stats.draftCount, hint: "Ready to issue" },
@@ -253,23 +229,6 @@ export default function PortalBilling() {
           { label: "Billing records", value: billingSummary?.count ?? "—", hint: "Construction billing package" },
         ]}
       />
-
-      {insightTargetId ? (
-        <div style={{ marginBottom: 16 }}>
-          <AuricruxInsightPanel
-            title="Auricrux Billing Intelligence"
-            targetObjectType={insightTargetType}
-            targetObjectId={insightTargetId}
-            sourceRoute="/portal/billing"
-            rationale="Review open invoices, issue the next customer bill, and preserve payment continuity in FCA Books."
-            nextAction={stats.draftCount ? "Issue the next draft invoice." : "Create the next governed customer invoice."}
-            actionHref="/portal/finance?view=payments"
-            actionLabel="Open payments"
-            tone="green"
-            liveRecommend
-          />
-        </div>
-      ) : null}
 
       {loadError ? <PortalAlert tone="error" title="Unable to load billing data">{loadError}</PortalAlert> : null}
       {actionError ? <PortalAlert tone="error">{actionError}</PortalAlert> : null}

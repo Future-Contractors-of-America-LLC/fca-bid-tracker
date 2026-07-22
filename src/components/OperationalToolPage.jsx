@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import PortalShell from "./PortalShell";
-import PortalSliceAuricrux from "./portal/PortalSliceAuricrux";
 import useWorkspaceState from "../hooks/useWorkspaceState";
 import useCustomerSession from "../hooks/useCustomerSession";
 import useProjectWorkspace from "../hooks/useProjectWorkspace";
 import { publishPortalPageContext } from "../portalPageContext";
-import CapabilityModuleBanner from "./CapabilityModuleBanner";
 import {
   portalButtonPrimary,
   portalButtonSecondary,
@@ -103,43 +101,79 @@ export function createOperationalPortalPage({
       return () => publishPortalPageContext(null);
     }, [activeProject?.id, projectScoped, selectedProjectId]);
 
-    async function reloadApiItems() {
-      if (!apiHandlers?.fetchItems) return;
+    async function reloadApiItems(requestId = 0) {
+      if (!apiHandlers?.fetchItems) return null;
       const params = projectScoped && selectedProjectId ? { projectId: selectedProjectId } : {};
       const payload = await apiHandlers.fetchItems(params);
-      setApiItems(payload.items || []);
-      setBackingSource(payload.backingSource || "auricrux-central-table-store");
+      return { requestId, payload };
     }
 
     useEffect(() => {
       refreshSyncStamp(`${title} workspace active`);
       if (!apiHandlers?.fetchItems) return undefined;
       let active = true;
+      const requestId = Date.now();
       setLoadError("");
-      reloadApiItems()
+      setBackingSource("loading");
+      reloadApiItems(requestId)
+        .then((result) => {
+          if (!active || !result || result.requestId !== requestId) return;
+          const source = result.payload?.backingSource || "auricrux-central-table-store";
+          if (/(seed|stub|smoke|fallback|localStorage|demo)/i.test(source)) {
+            setApiItems([]);
+            setBackingSource(source);
+            setLoadError(`Theater source rejected: ${source}`);
+            return;
+          }
+          setApiItems(result.payload.items || []);
+          setBackingSource(source);
+        })
         .catch((error) => {
           if (!active) return;
-          setLoadError(error.message || `Unable to load ${itemLabel.toLowerCase()} data. API unreachable — local queue active.`);
-          setApiItems(localItems);
-          setBackingSource("localStorage-fallback");
+          setLoadError(
+            error.message
+              || `API unreachable for ${itemLabel.toLowerCase()}. Local queue is disabled so this page cannot fake progress.`,
+          );
+          setApiItems([]);
+          setBackingSource("api-error");
         });
       return () => {
         active = false;
       };
     }, [refreshSyncStamp, selectedProjectId]);
 
+    const theaterSource = /(seed|stub|smoke|fallback|localStorage|demo)/i.test(backingSource || "");
+    const apiLive = Boolean(apiHandlers)
+      && backingSource !== "loading"
+      && backingSource !== "api-error"
+      && !theaterSource
+      && !loadError;
+    const canMutate = apiHandlers ? apiLive && (!projectScoped || Boolean(selectedProjectId)) : true;
+
     async function addItem() {
       const required = fields.filter((f) => f.required);
       if (required.some((f) => !String(draft[f.key] || "").trim())) return;
+      if (apiHandlers && !apiLive) {
+        setActionError(`Cannot create ${itemLabel.toLowerCase()} while the API is down.`);
+        return;
+      }
+      if (projectScoped && !selectedProjectId) {
+        setActionError(`Select a project before creating ${itemLabel.toLowerCase()}.`);
+        return;
+      }
       setActionError("");
       setBusy(true);
       try {
         if (apiHandlers?.createItem) {
-          const body = projectScoped && selectedProjectId
+          const body = projectScoped
             ? { ...draft, projectId: selectedProjectId }
             : draft;
           await apiHandlers.createItem(body);
-          await reloadApiItems();
+          const result = await reloadApiItems();
+          if (result?.payload) {
+            setApiItems(result.payload.items || []);
+            setBackingSource(result.payload.backingSource || "auricrux-central-table-store");
+          }
         } else {
           setLocalItems((current) => [
             {
@@ -162,11 +196,19 @@ export function createOperationalPortalPage({
     async function completeItem(id) {
       setActionError("");
       setActionNotice("");
+      if (apiHandlers && !apiLive) {
+        setActionError(`Cannot complete ${itemLabel.toLowerCase()} while the API is down.`);
+        return;
+      }
       setBusy(true);
       try {
         if (apiHandlers?.completeItem) {
           const result = await apiHandlers.completeItem(id);
-          await reloadApiItems();
+          const refreshed = await reloadApiItems();
+          if (refreshed?.payload) {
+            setApiItems(refreshed.payload.items || []);
+            setBackingSource(refreshed.payload.backingSource || "auricrux-central-table-store");
+          }
           const posting = result?.jobCostPosting;
           if (posting?.jobCost?.actualCost) {
             setActionNotice(`Task closed. Job cost actual updated to ${posting.jobCost.actualCost}.`);
@@ -199,36 +241,19 @@ export function createOperationalPortalPage({
         navDensity="compact"
       >
         {beforeContent}
-        <CapabilityModuleBanner href={activeHref} />
-        <PortalSliceAuricrux
-          title={`Auricrux ${title}`}
-          targetObjectId={selectedProjectId || state?.project?.id || state?.tenant?.name}
-          sourceRoute={activeHref}
-          rationale={`Governed operations on ${activeHref} stay on FCA-owned surfaces with Auricrux review.`}
-          nextAction={`Update the next ${itemLabel.toLowerCase()} for ${companyName}.`}
-          actionHref={primaryHref}
-          actionLabel={primaryLabel}
-        />
         {apiHandlers ? (
-          <div style={{ marginBottom: 14, fontSize: 12, color: "#64748b" }}>
+          <div style={{ marginBottom: 14, fontSize: 12, color: apiLive ? "#166534" : "#991b1b", fontWeight: 700 }}>
             Source: {backingSource}
-            {projectScoped ? (
-              <label style={{ display: "block", marginTop: 10, fontWeight: 600, fontSize: 14, color: "#0f172a" }}>
-                Project
-                <select
-                  style={portalInputStyle}
-                  value={selectedProjectId}
-                  onChange={(e) => setSelectedProjectId(e.target.value)}
-                >
-                  {projects.length === 0 ? <option value="">No projects available</option> : null}
-                  {projects.map((project) => (
-                    <option key={project.id} value={project.id}>{project.name || project.id}</option>
-                  ))}
-                </select>
-              </label>
+            {apiLive ? " · live API" : " · not live — mutations blocked"}
+            {projectScoped && projects.length > 0 && !selectedProjectId ? (
+              <span style={{ color: "#92400e" }}> — select a project in the bar above</span>
             ) : null}
           </div>
-        ) : null}
+        ) : (
+          <div style={{ marginBottom: 14, fontSize: 12, color: "#92400e", fontWeight: 700 }}>
+            Source: localStorage only — this module is not API-backed yet.
+          </div>
+        )}
 
         {loadError ? (
           <div style={{ ...portalCardStyle, marginBottom: 18, border: "1px solid #fecaca", background: "#fef2f2", color: "#991b1b" }}>
@@ -257,6 +282,7 @@ export function createOperationalPortalPage({
                   style={portalInputStyle}
                   value={draft[field.key]}
                   onChange={(e) => setDraft((d) => ({ ...d, [field.key]: e.target.value }))}
+                  disabled={!canMutate || busy}
                 >
                   {field.options.map((opt) => (
                     <option key={opt} value={opt}>{opt}</option>
@@ -268,18 +294,23 @@ export function createOperationalPortalPage({
                   value={draft[field.key]}
                   placeholder={field.placeholder || ""}
                   onChange={(e) => setDraft((d) => ({ ...d, [field.key]: e.target.value }))}
+                  disabled={!canMutate || busy}
                 />
               )}
             </div>
           ))}
-          <button type="button" style={portalButtonPrimary} onClick={addItem} disabled={busy}>
-            {busy ? "Saving..." : `Add ${itemLabel}`}
+          <button type="button" style={portalButtonPrimary} onClick={addItem} disabled={busy || !canMutate}>
+            {busy ? "Saving..." : !canMutate ? `API down — cannot add ${itemLabel}` : `Add ${itemLabel}`}
           </button>
         </div>
 
         <div style={{ display: "grid", gap: 12 }}>
           {items.length === 0 ? (
-            <div style={portalCardStyle}>No {itemLabel.toLowerCase()} yet. Add your first item above.</div>
+            <div style={portalCardStyle}>
+              {loadError
+                ? `No ${itemLabel.toLowerCase()} loaded — fix the API before demoing this lane.`
+                : `No ${itemLabel.toLowerCase()} yet. Add your first item above.`}
+            </div>
           ) : (
             items.map((item) => (
               <div key={item.id} style={portalCardStyle}>
@@ -291,7 +322,7 @@ export function createOperationalPortalPage({
                     <strong>{item[fields[0]?.key] || itemLabel}</strong>
                   </div>
                   {item.status !== "Complete" ? (
-                    <button type="button" style={portalButtonSecondary} onClick={() => completeItem(item.id)} disabled={busy}>
+                    <button type="button" style={portalButtonSecondary} onClick={() => completeItem(item.id)} disabled={busy || !canMutate}>
                       Mark complete
                     </button>
                   ) : null}

@@ -6,12 +6,8 @@ import { PortalAlert } from "../../components/portal/PortalPrimitives";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
 import useProjectWorkspace from "../../hooks/useProjectWorkspace";
 import useWorkflowEvidence from "../../hooks/useWorkflowEvidence";
-import { fileGovernance } from "../../fileGovernance";
-import { qualificationEvidencePackets, qualificationEvidenceByProject } from "../../qualificationEvidence";
-import AuricruxInsightPanel from "../../components/auricrux/AuricruxInsightPanel";
 import { submitAuricruxAction } from "../../api/auricruxActionsClient";
 import { publishPortalPageContext } from "../../portalPageContext";
-import { fetchSharePointDriveStatus, listSharePointFolderItems, sharePointItemHref } from "../../api/m365Client";
 
 const cardStyle = {
   border: "1px solid #e5e7eb",
@@ -121,47 +117,49 @@ function readDeepLinkParams() {
 
 export default function PortalFiles() {
   const { state, refreshSyncStamp, syncActiveProject } = useWorkspaceState();
-  const { activeProject, meta: projectMeta } = useProjectWorkspace();
+  const { activeProject } = useProjectWorkspace();
   const [busyFileId, setBusyFileId] = useState(null);
   const [actionError, setActionError] = useState("");
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState(() => readLocalJson(FILE_INTAKE_DRAFTS_KEY, defaultDraft));
   const [deepLink] = useState(() => readDeepLinkParams());
-  const [sharePointStatus, setSharePointStatus] = useState(null);
-  const [sharePointItems, setSharePointItems] = useState([]);
-  const [sharePointError, setSharePointError] = useState("");
   const brandSkin = readLocalJson(BRAND_STORAGE_KEY, { companyName: "Customer Workspace", accent: "#1d4ed8", surface: "#eff6ff" });
 
   const visibleProject = activeProject || state.project;
-  const { files, auditEvents, meta: evidenceMeta, mutateFile, filters, setFilters, summary } = useWorkflowEvidence(visibleProject?.id);
-  const evidencePackets = qualificationEvidenceByProject?.[visibleProject?.id] || qualificationEvidencePackets;
+  const projectId = visibleProject?.id || "";
+  const { files, auditEvents, meta: evidenceMeta, mutateFile, filters, setFilters, summary } = useWorkflowEvidence(projectId || undefined);
   const briefingFiles = useMemo(() => files.filter((file) => isBriefingReady(file)), [files]);
   const targetedFile = useMemo(() => files.find((file) => file.fileId === deepLink.fileId) || null, [files, deepLink.fileId]);
 
   const categoryOptions = useMemo(() => ["All", ...Object.keys(summary.byCategory).sort()], [summary.byCategory]);
   const statusOptions = useMemo(() => ["All", ...Object.keys(summary.byStatus).sort()], [summary.byStatus]);
-  const apiBacked = evidenceMeta.backingSource === "api-workflow-store";
+  const apiBacked = Boolean(
+    evidenceMeta.backingSource
+    && evidenceMeta.backingSource !== "api-error"
+    && evidenceMeta.backingSource !== "api-pending"
+    && !/(seed|stub|smoke|fallback|localStorage|demo)/i.test(evidenceMeta.backingSource),
+  );
 
   useEffect(() => {
-    if (!visibleProject?.id) {
+    if (!projectId) {
       publishPortalPageContext(null);
       return undefined;
     }
     publishPortalPageContext({
       surface: "files",
-      projectId: visibleProject.id,
+      projectId,
       targetObjectType: "Project",
-      targetObjectId: visibleProject.id,
+      targetObjectId: projectId,
     });
     return () => publishPortalPageContext(null);
-  }, [visibleProject?.id]);
+  }, [projectId]);
 
   useEffect(() => {
     if (activeProject) {
       syncActiveProject(activeProject, `File spine synchronized to ${activeProject.id}`);
     }
-    refreshSyncStamp(`File spine synchronized to ${visibleProject.id}`);
-  }, [activeProject, refreshSyncStamp, syncActiveProject, visibleProject.id]);
+    if (projectId) refreshSyncStamp(`File spine synchronized to ${projectId}`);
+  }, [activeProject, refreshSyncStamp, syncActiveProject, projectId]);
 
   useEffect(() => {
     writeLocalJson(FILE_INTAKE_DRAFTS_KEY, draft);
@@ -172,27 +170,11 @@ export default function PortalFiles() {
     setFilters((current) => (current.q === targetedFile.name ? current : { ...current, q: targetedFile.name }));
   }, [deepLink.fileId, targetedFile, setFilters]);
 
-  useEffect(() => {
-    let active = true;
-    setSharePointError("");
-    Promise.all([
-      fetchSharePointDriveStatus().catch(() => null),
-      listSharePointFolderItems().catch(() => null),
-    ])
-      .then(([statusPayload, folderPayload]) => {
-        if (!active) return;
-        if (statusPayload) setSharePointStatus(statusPayload);
-        if (folderPayload?.items) setSharePointItems(folderPayload.items.slice(0, 8));
-      })
-      .catch((error) => {
-        if (active) setSharePointError(error.message || "SharePoint sync unavailable.");
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
-
   async function handleFileAction(file, action, detail, extra = {}) {
+    if (!apiBacked) {
+      setActionError("Cannot mutate files while the workflow API is down.");
+      return;
+    }
     setBusyFileId(file.fileId);
     try {
       await mutateFile(action, {
@@ -201,6 +183,8 @@ export default function PortalFiles() {
         ...extra,
       });
       refreshSyncStamp(detail);
+    } catch (error) {
+      setActionError(error.message || `Unable to ${action}.`);
     } finally {
       setBusyFileId(null);
     }
@@ -234,6 +218,10 @@ export default function PortalFiles() {
   async function handleCreateFileRecord(event) {
     event.preventDefault();
     if (!draft.name.trim()) return;
+    if (!apiBacked) {
+      setActionError("Cannot create file records while the workflow API is down.");
+      return;
+    }
     setCreating(true);
     try {
       const detail = `${draft.name.trim()} registered under governed file spine for ${visibleProject.id}.`;
@@ -258,91 +246,40 @@ export default function PortalFiles() {
 
   return (
     <PortalShell
-      title={`${companyName} File Intake and Evidence Workspace`}
-      subtitle="Register project files, link evidence, and control deliverables."
+      title="Files"
+      subtitle={projectId ? `Register and track evidence for ${projectId}.` : "Bind a project to manage files."}
       activeHref="/portal/files"
-      currentJourney="coordination"
-      routeOverlay={routeStateOverlays.files}
-      primaryHref="/portal/messages"
-      primaryLabel="Open Messages"
       workspaceState={state}
     >
-      {!apiBacked ? (
+      {!projectId ? (
+        <PortalAlert tone="warning" title="No active project">
+          Bind PRJ-BID-1 from the Proof path or Projects before creating files.
+        </PortalAlert>
+      ) : null}
+      {actionError ? <PortalAlert tone="error" title="Action failed">{actionError}</PortalAlert> : null}
+      {evidenceMeta.backingSource === "api-error" ? (
         <div style={{ marginBottom: 16 }}>
-          <PortalAlert tone="warning" title="Offline file workspace">
-            File actions use workspace continuity when the workflow API is unavailable. Connect to sync governed uploads and evidence links.
+          <PortalAlert tone="error" title="Files API down">
+            {evidenceMeta.persistenceState || "Workflow API unavailable."} Mutations are blocked until /api/files is live. Seeded/localStorage theater is disabled.
           </PortalAlert>
         </div>
-      ) : null}
-
-      {sharePointStatus || sharePointItems.length ? (
-        <div style={{ ...cardStyle, marginBottom: 16, background: "#f8fbff", border: "1px solid #dbe3ef" }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>SharePoint governed library</div>
-          <div style={{ color: "#334155", lineHeight: 1.7, marginBottom: 12 }}>
-            Project files can be opened from the FCA SharePoint site through Auricrux-Central Graph integration.
-          </div>
-          {sharePointStatus?.site?.webUrl ? (
-            <a href={sharePointStatus.site.webUrl} target="_blank" rel="noreferrer" style={{ ...secondaryButtonStyle, display: "inline-block", textDecoration: "none", marginBottom: 12 }}>
-              Open SharePoint site
-            </a>
-          ) : null}
-          {sharePointItems.length ? (
-            <div style={{ display: "grid", gap: 8 }}>
-              {sharePointItems.map((item) => (
-                <div key={item.id || item.name} style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", borderTop: "1px solid #e2e8f0", paddingTop: 8 }}>
-                  <div>
-                    <strong>{item.name}</strong>
-                    <div style={{ color: "#64748b", fontSize: 13 }}>{item.folder ? "Folder" : "File"}</div>
-                  </div>
-                  {sharePointItemHref(item) ? (
-                    <a href={sharePointItemHref(item)} target="_blank" rel="noreferrer" style={{ color: "#2563eb", fontWeight: 700 }}>
-                      Open
-                    </a>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          ) : null}
-          {sharePointError ? <div style={{ color: "#b45309", marginTop: 10 }}>{sharePointError}</div> : null}
-        </div>
-      ) : null}
-
-      {visibleProject?.id ? (
+      ) : !apiBacked ? (
         <div style={{ marginBottom: 16 }}>
-          <AuricruxInsightPanel
-            title="Auricrux File Intelligence"
-            targetObjectType="Project"
-            targetObjectId={visibleProject.id}
-            sourceRoute="/portal/files"
-            rationale="Review governed file posture, evidence links, and briefing readiness for the active project."
-            nextAction="Register missing artifacts, link evidence targets, and generate briefings before execution advances."
-            actionHref={`/portal/design?projectId=${encodeURIComponent(visibleProject.id)}`}
-            actionLabel="Open design workspace"
-            tone="blue"
-            liveRecommend
-            operateConfig={{
-              variant: "execute",
-              capabilityId: "plan-briefing",
-              mode: "execute",
-              targetObjectType: "Project",
-              targetObjectId: visibleProject.id,
-              sourceRoute: "/portal/files",
-              buttonLabel: "Generate plan briefing with Auricrux",
-              description: "Execute governed plan briefing on the active project spine — scope gaps, evidence posture, and next commercial moves.",
-            }}
-          />
+          <PortalAlert tone="warning" title="Waiting on files API">
+            Loading governed file spine from Central. Do not demo this lane until the source shows api-workflow-store.
+          </PortalAlert>
         </div>
       ) : null}
 
       {targetedFile ? (
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: `1px solid ${brandSkin.accent || "#2563eb"}` }}>
-          <div style={{ color: brandSkin.accent || "#2563eb", fontWeight: 700, marginBottom: 8 }}>Targeted file briefing focus</div>
+          <div style={{ color: brandSkin.accent || "#2563eb", fontWeight: 700, marginBottom: 8 }}>Targeted file</div>
           <AuricruxBriefingCard file={targetedFile} project={visibleProject} projectFiles={files} />
         </div>
       ) : null}
 
       <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <h2 style={{ marginTop: 0 }}>File intake and evidence registration</h2>
+        <h2 style={{ marginTop: 0 }}>Create file record</h2>
         <form onSubmit={handleCreateFileRecord} style={{ display: "grid", gap: 12 }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
             <label>
@@ -374,7 +311,7 @@ export default function PortalFiles() {
             <input style={inputStyle} value={draft.linkedEvidenceTarget} onChange={(event) => setDraft((current) => ({ ...current, linkedEvidenceTarget: event.target.value }))} placeholder={`${visibleProject.id} governed evidence chain`} />
           </label>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button type="submit" style={buttonStyle} disabled={creating || !draft.name.trim()}>{creating ? "Creating…" : apiBacked ? "Create File Record" : "Stage File Record"}</button>
+            <button type="submit" style={buttonStyle} disabled={creating || !draft.name.trim() || !apiBacked}>{creating ? "Creating…" : apiBacked ? "Create File Record" : "API down — cannot create"}</button>
             <button type="button" style={secondaryButtonStyle} disabled={creating} onClick={() => setDraft(defaultDraft)}>Reset Draft</button>
           </div>
         </form>
@@ -408,50 +345,12 @@ export default function PortalFiles() {
 
       {briefingFiles.length ? (
         <div style={{ ...cardStyle, marginBottom: 16, background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)", border: "1px solid #dbe3ef" }}>
-          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Auricrux briefing surface</div>
-          <h2 style={{ marginTop: 0, marginBottom: 10 }}>Governed briefing artifacts ready for action</h2>
+          <div style={{ color: "#2563eb", fontWeight: 700, marginBottom: 8 }}>Briefings ready</div>
           <div style={{ display: "grid", gap: 12 }}>
             {briefingFiles.map((file) => <AuricruxBriefingCard key={`briefing-${file.fileId}`} file={file} project={visibleProject} projectFiles={files} />)}
           </div>
         </div>
       ) : null}
-
-      <div style={{ ...cardStyle, marginBottom: 16 }}>
-        <h2 style={{ marginTop: 0 }}>File governance registers</h2>
-        <p style={{ lineHeight: 1.7, color: "#475569", marginTop: 0 }}>
-          Cross-project registers tie legal artifacts, drawings, RFIs, and closeout packages to governed portal routes.
-        </p>
-        <div style={{ display: "grid", gap: 14 }}>
-          {fileGovernance.registers.map((register) => (
-            <div key={register.title} style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 14, background: "#f8fafc" }}>
-              <div style={{ fontWeight: 800, color: "#0f172a" }}>{register.title}</div>
-              <div style={{ fontSize: 14, color: "#475569", marginTop: 6, lineHeight: 1.6 }}>{register.purpose}</div>
-              <div style={{ fontSize: 13, color: "#64748b", marginTop: 8 }}>
-                Artifacts: {register.artifacts.join(" · ")}
-              </div>
-              <a href={register.route} style={{ ...secondaryButtonStyle, display: "inline-block", marginTop: 10, textDecoration: "none" }}>
-                {register.label}
-              </a>
-            </div>
-          ))}
-        </div>
-        <div style={{ marginTop: 18 }}>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Closeout packages</div>
-          <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", margin: 0 }}>
-            {fileGovernance.closeoutPackages.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
-        <div style={{ marginTop: 18 }}>
-          <div style={{ fontWeight: 700, marginBottom: 8 }}>Audit signals</div>
-          <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#334155", margin: 0 }}>
-            {fileGovernance.auditSignals.map((signal) => (
-              <li key={signal}>{signal}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
 
       <ProjectFileAuditPanel
         project={visibleProject}
@@ -459,9 +358,9 @@ export default function PortalFiles() {
         auditEvents={auditEvents}
         busyFileId={busyFileId}
         targetedFileId={deepLink.fileId}
-        onRegisterReview={(file) => handleFileAction(file, "register-review", `${file.name} queued for governed review under ${visibleProject.id}.`)}
-        onClassifyFile={(file) => handleFileAction(file, "classify-file", `Auricrux classified ${file.name} for ${visibleProject.id}.`, { category: file.category, evidenceStatus: "Classification complete", status: "Classified", actionLabel: "Classification saved" })}
-        onLinkEvidence={(file) => handleFileAction(file, "link-evidence", `${file.name} linked to governed evidence target for ${visibleProject.id}.`, { linkedEvidenceTarget: `${visibleProject.id} governed evidence chain`, evidenceStatus: "Evidence linked", status: "Linked to governed object", actionLabel: "Evidence linked" })}
+        onRegisterReview={(file) => handleFileAction(file, "register-review", `${file.name} queued for review under ${visibleProject.id}.`)}
+        onClassifyFile={(file) => handleFileAction(file, "classify-file", `Classified ${file.name} for ${visibleProject.id}.`, { category: file.category, evidenceStatus: "Classification complete", status: "Classified", actionLabel: "Classification saved" })}
+        onLinkEvidence={(file) => handleFileAction(file, "link-evidence", `${file.name} linked for ${visibleProject.id}.`, { linkedEvidenceTarget: `${visibleProject.id} evidence chain`, evidenceStatus: "Evidence linked", status: "Linked", actionLabel: "Evidence linked" })}
         onCreateBriefing={handleCreateBriefing}
         onOpenDesign={(file) => {
           const href = `/portal/design?projectId=${encodeURIComponent(visibleProject.id)}&fileId=${encodeURIComponent(file.fileId)}`;

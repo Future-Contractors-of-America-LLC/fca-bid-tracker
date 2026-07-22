@@ -2,7 +2,7 @@ import PortalShell from "../../components/PortalShell";
 import FounderProofPath from "../../components/portal/FounderProofPath";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import { isFounderSession } from "../../customerSession";
-import { FOUNDER_PROOF_PROJECT_ID, FOUNDER_PROOF_PROJECT_LABEL } from "../../config/productionMode";
+import { FOUNDER_PROOF_PROJECT_ID } from "../../config/productionMode";
 import { portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
 
 export default function PortalProof() {
@@ -12,13 +12,8 @@ export default function PortalProof() {
   return (
     <PortalShell
       title="Founder Proof Path"
-      subtitle={`${FOUNDER_PROOF_PROJECT_ID} | ${FOUNDER_PROOF_PROJECT_LABEL} - one live spine across project, files, takeoff, RFI, invoice, and Auricrux.`}
+      subtitle={`Honest check for ${FOUNDER_PROOF_PROJECT_ID}: APIs up, theater rejected, empty allowed.`}
       activeHref="/portal/proof"
-      currentJourney="job"
-      primaryHref="/portal/projects"
-      primaryLabel="Projects"
-      navDensity="compact"
-      showRouteOverlay={false}
     >
       {founder ? (
         <FounderProofPath session={session} compact />
@@ -37,12 +32,12 @@ export default function PortalProof() {
       )}
 
       <div style={{ ...portalCardStyle, marginTop: 16 }}>
-        <div style={portalEyebrowStyle}>How to verify</div>
+        <div style={portalEyebrowStyle}>How to use this today</div>
         <ol style={{ margin: "10px 0 0", paddingLeft: 18, color: portalTokens.body, lineHeight: 1.7 }}>
-          <li>Sign in with managed credentials (no seeded query params).</li>
-          <li>Bind {FOUNDER_PROOF_PROJECT_ID} so every lane shares that id.</li>
-          <li>Walk files, design/takeoff, RFIs, billing, then Auricrux using the step links.</li>
-          <li>Empty counts are honest - create or mutate via the live APIs, not localStorage theater.</li>
+          <li>Sign in with managed credentials.</li>
+          <li>Click <strong>Bind PRJ-BID-1</strong>.</li>
+          <li>Click <strong>Create demo records</strong> — that writes live file, takeoff, RFI, invoice, and Auricrux action.</li>
+          <li>Walk Files → Design → RFIs → Billing → Auricrux. If a lane is red, stop and fix that API before demos.</li>
         </ol>
       </div>
     </PortalShell>

@@ -1,17 +1,24 @@
 import { brandIdentity } from "../brandIdentity";
 
 /** Canonical SVG sources: brand-assets/fca/ and brand-assets/auricrux/ (trademark registration specimens). */
-export default function FcaBrandMark({ compact = false, showTagline = true }) {
-  const iconSize = compact ? 46 : 62;
+export default function FcaBrandMark({
+  compact = false,
+  showTagline = true,
+  /** Top-nav mark: icon only (or icon + small FCA) so long brand strings are not duplicated. */
+  iconOnly = false,
+  showWordmark = true,
+}) {
+  const iconSize = iconOnly ? 32 : compact ? 46 : 62;
   const wordmarkSize = compact ? 28 : 38;
   const { colors } = brandIdentity.fca;
+  const renderWordmark = showWordmark && !iconOnly;
 
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
-        gap: compact ? 12 : 16,
+        gap: iconOnly ? 0 : compact ? 12 : 16,
         flexWrap: "wrap",
       }}
     >
@@ -42,34 +49,36 @@ export default function FcaBrandMark({ compact = false, showTagline = true }) {
         <path d="M45 55L60 46L75 55V68L60 77L45 68V55Z" fill="#091221" fillOpacity="0.96" />
       </svg>
 
-      <div>
-        <div
-          style={{
-            fontSize: wordmarkSize,
-            lineHeight: 1,
-            fontWeight: 900,
-            letterSpacing: "0.05em",
-            color: colors.ink,
-          }}
-        >
-          FCA
-        </div>
-        {showTagline ? (
+      {renderWordmark ? (
+        <div>
           <div
             style={{
-              marginTop: 6,
-              fontSize: compact ? 10 : 12,
-              letterSpacing: "0.13em",
-              textTransform: "uppercase",
-              fontWeight: 800,
-              color: "#334155",
-              lineHeight: 1.25,
+              fontSize: wordmarkSize,
+              lineHeight: 1,
+              fontWeight: 900,
+              letterSpacing: "0.05em",
+              color: colors.ink,
             }}
           >
-            Future Contractors<br />of America
+            FCA
           </div>
-        ) : null}
-      </div>
+          {showTagline ? (
+            <div
+              style={{
+                marginTop: 6,
+                fontSize: compact ? 10 : 12,
+                letterSpacing: "0.13em",
+                textTransform: "uppercase",
+                fontWeight: 800,
+                color: "#334155",
+                lineHeight: 1.25,
+              }}
+            >
+              Future Contractors<br />of America
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }
