@@ -1,0 +1,86 @@
+name: Academy Media Blob Upload
+
+# Batched upload of public/academy/media to Azure Blob CDN.
+# Keeps SWA under file-count limits while Academy lecture/skills media stays live.
+
+on:
+  workflow_dispatch:
+    inputs:
+      patterns:
+        description: "Comma-separated extensions to upload (json,html recommended in CI; add webm,mp3 when binaries are present locally)"
+        required: false
+        default: "json,html"
+      dry_run:
+        description: "If true, count only — do not upload"
+        required: false
+        default: "false"
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  FCA_ACADEMY_MEDIA_CONTAINER: fca-academy-media
+
+concurrency:
+  group: academy-media-blob-upload
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          lfs: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - name: Assert blob connection secret
+        env:
+          FCA_BLOB_STORAGE_CONNECTION: ${{ secrets.FCA_BLOB_STORAGE_CONNECTION }}
+        run: |
+          set -euo pipefail
+          test -n "$FCA_BLOB_STORAGE_CONNECTION"
+          test -d public/academy/media
+          echo "Local academy media files: $(find public/academy/media -type f | wc -l)"
+
+      - name: Upload academy media batches
+        env:
+          FCA_BLOB_STORAGE_CONNECTION: ${{ secrets.FCA_BLOB_STORAGE_CONNECTION }}
+          FCA_ACADEMY_MEDIA_CONTAINER: ${{ env.FCA_ACADEMY_MEDIA_CONTAINER }}
+        run: |
+          set -euo pipefail
+          PATTERNS="${{ github.event.inputs.patterns }}"
+          DRY="${{ github.event.inputs.dry_run }}"
+          if [ "$DRY" = "true" ]; then
+            node scripts/upload-academy-media-batches.mjs --dry-run --patterns="$PATTERNS"
+          else
+            node scripts/upload-academy-media-batches.mjs --patterns="$PATTERNS"
+          fi
+
+      - name: Verify sample CDN objects
+        if: github.event.inputs.dry_run != 'true'
+        env:
+          FCA_ACADEMY_MEDIA_CDN_BASE: ${{ vars.FCA_ACADEMY_MEDIA_CDN_BASE }}
+        run: |
+          set -euo pipefail
+          test -n "$FCA_ACADEMY_MEDIA_CDN_BASE"
+          BASE="${FCA_ACADEMY_MEDIA_CDN_BASE%/}"
+          SAMPLE_WEBM=$(find public/academy/media -name '*.webm' -print -quit)
+          SAMPLE_HTML=$(find public/academy/media -name '*.html' -print -quit)
+          SAMPLE_JSON=$(find public/academy/media -name '*.json' -print -quit)
+          for SAMPLE in "$SAMPLE_JSON" "$SAMPLE_WEBM" "$SAMPLE_HTML"; do
+            [ -n "$SAMPLE" ] || continue
+            REL="${SAMPLE#public/}"
+            URL="$BASE/$REL"
+            echo "HEAD $URL"
+            CODE=$(curl -sS -o /dev/null -w "%{http_code}" -I "$URL")
+            echo "=> HTTP $CODE"
+            if [ "$CODE" != "200" ]; then
+              echo "::error::CDN verify failed for $REL (HTTP $CODE)"
+              exit 1
+            fi
+          done
