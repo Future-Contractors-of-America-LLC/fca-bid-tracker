@@ -25,6 +25,9 @@ const DEFAULT_PATTERNS = ["json", "mp3", "webm", "html"];
 const patterns = patternsArg
   ? patternsArg.replace("--patterns=", "").split(",").map((p) => p.trim()).filter(Boolean)
   : DEFAULT_PATTERNS;
+if (patterns.length === 0) {
+  fail("--patterns= resolved to an empty list; pass extensions like json,html or omit the flag.");
+}
 
 const connection = process.env.FCA_BLOB_STORAGE_CONNECTION || "";
 const container = process.env.FCA_ACADEMY_MEDIA_CONTAINER || "fca-academy-media";

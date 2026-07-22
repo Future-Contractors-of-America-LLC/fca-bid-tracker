@@ -137,6 +137,16 @@ function main() {
     throw new Error("dist/ missing — run npm run build first.");
   }
 
+  const mediaRoot = path.join(DIST, "academy", "media");
+  const willStripMedia = fs.existsSync(mediaRoot);
+  if (willStripMedia && !CDN_BASE) {
+    console.error(
+      "FAIL: FCA_ACADEMY_MEDIA_CDN_BASE is required before stripping dist/academy/media. " +
+        "Without it, Academy lectures/skills iframes break on SWA.",
+    );
+    process.exit(1);
+  }
+
   const treeStats = stripAcademyMediaTree();
   const binaryStats = stripBinaryFallbacks();
   writeMediaConfig();
@@ -150,10 +160,6 @@ function main() {
   );
   if (CDN_BASE) {
     console.log(`Academy media CDN base: ${CDN_BASE}`);
-  } else {
-    console.warn(
-      "FCA_ACADEMY_MEDIA_CDN_BASE unset — academy media was still stripped for SWA file-count limits; set CDN base for playback.",
-    );
   }
 
   if (files > LIMIT_FILES) {

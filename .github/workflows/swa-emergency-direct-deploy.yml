@@ -58,15 +58,13 @@ jobs:
           grep -q 'rel="stylesheet"' dist/index.html
           grep -qE '/assets/main-[^"]+\.css' dist/index.html
 
-      - name: Upload academy binary media to Azure Blob CDN
+      - name: Verify academy blob CDN reachability
         env:
-          FCA_BLOB_STORAGE_CONNECTION: ${{ secrets.FCA_BLOB_STORAGE_CONNECTION }}
-          FCA_ACADEMY_MEDIA_CONTAINER: fca-academy-media
+          FCA_ACADEMY_MEDIA_CDN_BASE: ${{ vars.FCA_ACADEMY_MEDIA_CDN_BASE }}
         run: |
           set -euo pipefail
-          test -n "$FCA_BLOB_STORAGE_CONNECTION"
-          # CI has tracked json+html; webm/mp3 are gitignored and sync via local/workflow_dispatch when present.
-          node scripts/upload-academy-media-batches.mjs --patterns=json,html
+          # Full media sync: workflow "Academy Media Blob Upload". Emergency deploy fail-closes on CDN samples.
+          node scripts/verify-academy-media-cdn.mjs
 
       - name: Slim SWA dist (offload academy media tree to blob CDN)
         env:
