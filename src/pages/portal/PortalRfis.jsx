@@ -21,13 +21,13 @@ export default function PortalRfis() {
       return;
     }
     setLoading(true);
-    setError("");
     try {
       const rfis = await fetchProjectRfis(projectId);
       setItems(rfis || []);
+      setError("");
     } catch (err) {
-      setItems([]);
       setError(err.message || "Unable to load RFIs.");
+      // Keep existing items so a create/respond success is not wiped by a flaky refetch.
     } finally {
       setLoading(false);
     }

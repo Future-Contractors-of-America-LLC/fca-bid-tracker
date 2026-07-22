@@ -133,7 +133,12 @@ export default function PortalFiles() {
 
   const categoryOptions = useMemo(() => ["All", ...Object.keys(summary.byCategory).sort()], [summary.byCategory]);
   const statusOptions = useMemo(() => ["All", ...Object.keys(summary.byStatus).sort()], [summary.byStatus]);
-  const apiBacked = evidenceMeta.backingSource === "api-workflow-store";
+  const apiBacked = Boolean(
+    evidenceMeta.backingSource
+    && evidenceMeta.backingSource !== "api-error"
+    && evidenceMeta.backingSource !== "api-pending"
+    && !/(seed|stub|smoke|fallback|localStorage|demo)/i.test(evidenceMeta.backingSource),
+  );
 
   useEffect(() => {
     if (!projectId) {
@@ -166,6 +171,10 @@ export default function PortalFiles() {
   }, [deepLink.fileId, targetedFile, setFilters]);
 
   async function handleFileAction(file, action, detail, extra = {}) {
+    if (!apiBacked) {
+      setActionError("Cannot mutate files while the workflow API is down.");
+      return;
+    }
     setBusyFileId(file.fileId);
     try {
       await mutateFile(action, {
@@ -174,6 +183,8 @@ export default function PortalFiles() {
         ...extra,
       });
       refreshSyncStamp(detail);
+    } catch (error) {
+      setActionError(error.message || `Unable to ${action}.`);
     } finally {
       setBusyFileId(null);
     }

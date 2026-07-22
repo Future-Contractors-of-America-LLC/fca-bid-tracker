@@ -1,6 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { fetchWorkflowAudit, fetchWorkflowFiles, mutateWorkflowFile } from "../api/workflowClient";
 
+const THEATER_SOURCES = /(seed|stub|smoke|fallback|localStorage|demo)/i;
+
+function resolveLiveBackingSource(...payloads) {
+  for (const payload of payloads) {
+    const source = payload?.backingSource;
+    if (source && THEATER_SOURCES.test(source)) {
+      throw new Error(`Theater source rejected: ${source}`);
+    }
+  }
+  return payloads.find((payload) => payload?.backingSource)?.backingSource || "api-workflow-store";
+}
+
 /**
  * Files/audit evidence — fail closed.
  * Seeded/localStorage theater is intentionally removed so empty or red means the API is the truth.
@@ -21,11 +33,12 @@ export default function useWorkflowEvidence(projectId) {
         fetchWorkflowFiles({ projectId, ...filters }),
         fetchWorkflowAudit({ projectId }),
       ]);
+      const backingSource = resolveLiveBackingSource(filesPayload, auditPayload);
 
       setFiles(Array.isArray(filesPayload.items) ? filesPayload.items : []);
       setAuditEvents(Array.isArray(auditPayload.items) ? auditPayload.items : []);
       setMeta({
-        backingSource: "api-workflow-store",
+        backingSource,
         persistenceState: "Workflow-backed file and audit evidence active",
         lastSyncedAt: new Date().toISOString(),
       });
@@ -50,13 +63,13 @@ export default function useWorkflowEvidence(projectId) {
           fetchWorkflowFiles({ projectId, ...filters }),
           fetchWorkflowAudit({ projectId }),
         ]);
-
         if (!active) return;
+        const backingSource = resolveLiveBackingSource(filesPayload, auditPayload);
 
         setFiles(Array.isArray(filesPayload.items) ? filesPayload.items : []);
         setAuditEvents(Array.isArray(auditPayload.items) ? auditPayload.items : []);
         setMeta({
-          backingSource: "api-workflow-store",
+          backingSource,
           persistenceState: "Workflow-backed file and audit evidence active",
           lastSyncedAt: new Date().toISOString(),
         });

@@ -68,6 +68,7 @@ const THEATER_SOURCES = /(seed|stub|smoke|fallback|localStorage|demo)/i;
 function statusTone(status) {
   if (status === "live") return { color: "#166534", bg: "#f0fdf4", border: "#bbf7d0", label: "LIVE" };
   if (status === "empty") return { color: "#1d4ed8", bg: "#eff6ff", border: "#bfdbfe", label: "EMPTY" };
+  if (status === "warn") return { color: "#92400e", bg: "#fffbeb", border: "#fde68a", label: "BIND" };
   if (status === "fail") return { color: "#991b1b", bg: "#fef2f2", border: "#fecaca", label: "DOWN" };
   return { color: portalTokens.muted, bg: portalTokens.surface, border: portalTokens.border, label: "…" };
 }
@@ -172,11 +173,11 @@ export default function FounderProofPath({ session = null, compact = false }) {
         };
       } else if (liveProject) {
         next.project = {
-          status: activeProject?.id === FOUNDER_PROOF_PROJECT_ID ? "live" : "empty",
+          status: activeProject?.id === FOUNDER_PROOF_PROJECT_ID ? "live" : "warn",
           detail:
             activeProject?.id === FOUNDER_PROOF_PROJECT_ID
               ? `${liveProject.id} | ${liveProject.name || FOUNDER_PROOF_PROJECT_LABEL} bound`
-              : `${liveProject.id} exists — click Bind to activate`,
+              : `${liveProject.id} exists — click Bind to activate before demos`,
           count: 1,
           source: meta.backingSource || "api",
         };
@@ -349,11 +350,19 @@ export default function FounderProofPath({ session = null, compact = false }) {
     const down = lanes.filter((lane) => lane.status === "fail");
     const live = lanes.filter((lane) => lane.status === "live");
     const empty = lanes.filter((lane) => lane.status === "empty");
+    const needsBind = lanes.some((lane) => lane.status === "warn");
     if (down.length) {
       return {
         status: "fail",
         title: "Not demo-ready",
         detail: `${down.length} lane(s) down or theater. Do not show this to a customer until red is gone.`,
+      };
+    }
+    if (needsBind) {
+      return {
+        status: "warn",
+        title: "Bind PRJ-BID-1 to continue",
+        detail: "Project exists on the API. Bind it, then create demo records before a walkthrough.",
       };
     }
     if (live.length === 0) {

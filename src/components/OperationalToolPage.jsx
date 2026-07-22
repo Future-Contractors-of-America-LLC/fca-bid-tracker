@@ -101,21 +101,33 @@ export function createOperationalPortalPage({
       return () => publishPortalPageContext(null);
     }, [activeProject?.id, projectScoped, selectedProjectId]);
 
-    async function reloadApiItems() {
-      if (!apiHandlers?.fetchItems) return;
+    async function reloadApiItems(requestId = 0) {
+      if (!apiHandlers?.fetchItems) return null;
       const params = projectScoped && selectedProjectId ? { projectId: selectedProjectId } : {};
       const payload = await apiHandlers.fetchItems(params);
-      setApiItems(payload.items || []);
-      setBackingSource(payload.backingSource || "auricrux-central-table-store");
+      return { requestId, payload };
     }
 
     useEffect(() => {
       refreshSyncStamp(`${title} workspace active`);
       if (!apiHandlers?.fetchItems) return undefined;
       let active = true;
+      const requestId = Date.now();
       setLoadError("");
       setBackingSource("loading");
-      reloadApiItems()
+      reloadApiItems(requestId)
+        .then((result) => {
+          if (!active || !result || result.requestId !== requestId) return;
+          const source = result.payload?.backingSource || "auricrux-central-table-store";
+          if (/(seed|stub|smoke|fallback|localStorage|demo)/i.test(source)) {
+            setApiItems([]);
+            setBackingSource(source);
+            setLoadError(`Theater source rejected: ${source}`);
+            return;
+          }
+          setApiItems(result.payload.items || []);
+          setBackingSource(source);
+        })
         .catch((error) => {
           if (!active) return;
           setLoadError(
@@ -130,8 +142,13 @@ export function createOperationalPortalPage({
       };
     }, [refreshSyncStamp, selectedProjectId]);
 
-    const apiLive = Boolean(apiHandlers) && backingSource !== "loading" && backingSource !== "api-error" && !loadError;
-    const canMutate = apiHandlers ? apiLive : true;
+    const theaterSource = /(seed|stub|smoke|fallback|localStorage|demo)/i.test(backingSource || "");
+    const apiLive = Boolean(apiHandlers)
+      && backingSource !== "loading"
+      && backingSource !== "api-error"
+      && !theaterSource
+      && !loadError;
+    const canMutate = apiHandlers ? apiLive && (!projectScoped || Boolean(selectedProjectId)) : true;
 
     async function addItem() {
       const required = fields.filter((f) => f.required);
@@ -140,15 +157,23 @@ export function createOperationalPortalPage({
         setActionError(`Cannot create ${itemLabel.toLowerCase()} while the API is down.`);
         return;
       }
+      if (projectScoped && !selectedProjectId) {
+        setActionError(`Select a project before creating ${itemLabel.toLowerCase()}.`);
+        return;
+      }
       setActionError("");
       setBusy(true);
       try {
         if (apiHandlers?.createItem) {
-          const body = projectScoped && selectedProjectId
+          const body = projectScoped
             ? { ...draft, projectId: selectedProjectId }
             : draft;
           await apiHandlers.createItem(body);
-          await reloadApiItems();
+          const result = await reloadApiItems();
+          if (result?.payload) {
+            setApiItems(result.payload.items || []);
+            setBackingSource(result.payload.backingSource || "auricrux-central-table-store");
+          }
         } else {
           setLocalItems((current) => [
             {
@@ -179,7 +204,11 @@ export function createOperationalPortalPage({
       try {
         if (apiHandlers?.completeItem) {
           const result = await apiHandlers.completeItem(id);
-          await reloadApiItems();
+          const refreshed = await reloadApiItems();
+          if (refreshed?.payload) {
+            setApiItems(refreshed.payload.items || []);
+            setBackingSource(refreshed.payload.backingSource || "auricrux-central-table-store");
+          }
           const posting = result?.jobCostPosting;
           if (posting?.jobCost?.actualCost) {
             setActionNotice(`Task closed. Job cost actual updated to ${posting.jobCost.actualCost}.`);
