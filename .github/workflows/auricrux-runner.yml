@@ -1,8 +1,8 @@
 name: Auricrux Autonomous Runner
 
+# Heartbeat-only rail. Schedule disabled — it force-pushed every 6h and flooded
+# Actions with action_required / PR CI noise. Keep workflow_dispatch for intentional runs.
 on:
-  schedule:
-    - cron: "0 */6 * * *"
   workflow_dispatch:
 
 permissions:
