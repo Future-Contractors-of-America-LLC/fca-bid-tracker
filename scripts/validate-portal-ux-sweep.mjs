@@ -21,14 +21,12 @@ const topNav = read("src/components/PublicTopNav.jsx");
 const dock = read("src/components/AuricruxDock.jsx");
 const systemState = read("src/systemState.js");
 const portalShell = read("src/components/PortalShell.jsx");
-const sessionBar = read("src/components/CustomerSessionBar.jsx");
 const journeyStrip = read("src/components/JourneyStrip.jsx");
 
 if (!topNav.includes("portalNavPrimary")) fail("PublicTopNav must use portalNavPrimary");
 if (!topNav.includes("portalNavGroups")) fail("PublicTopNav must use grouped portal navigation");
-if (!topNav.includes("NavDropdown")) fail("PublicTopNav desktop portal nav must use NavDropdown groups");
-if (!topNav.includes("Ask Auricrux")) fail("PublicTopNav must expose Ask Auricrux assistant trigger");
 if (!topNav.includes("fca-topnav-blur")) fail("PublicTopNav must use premium sticky header treatment");
+if (!topNav.includes("iconOnly")) fail("PublicTopNav must use compact brand mark (iconOnly) to avoid unreadable duplicate brand text");
 
 if (dock.includes("bottom: 12") || dock.includes("bottom:12")) {
   fail("AuricruxDock must not use fixed bottom bubble positioning");
@@ -39,20 +37,43 @@ if (!systemState.includes("portalNavPrimary")) fail("systemState must export por
 if (!systemState.includes("portalNavGroups")) fail("systemState must export portalNavGroups");
 if (!systemState.includes("portalHubHrefs")) fail("systemState must export portalHubHrefs");
 if (!systemState.includes("portalHubModules")) fail("systemState must export portalHubModules");
+if (!systemState.includes("PORTAL_SUBTITLE_MAX")) fail("systemState must export PORTAL_SUBTITLE_MAX");
 
 if (!portalShell.includes("portalHubModules")) fail("PortalShell hub must use curated portalHubModules");
-if (!portalShell.includes('compact={!isHubPage}')) fail("CustomerSessionBar must compact on detail pages");
-
-if (!sessionBar.includes("compact = false")) fail("CustomerSessionBar must support compact mode");
+if (!portalShell.includes("ProjectSpineBar")) fail("PortalShell must show ProjectSpineBar as the single project context strip");
+if (!portalShell.includes("PORTAL_SUBTITLE_MAX")) fail("PortalShell must truncate subtitles with PORTAL_SUBTITLE_MAX");
+if (portalShell.includes("CustomerSessionBar")) {
+  fail("PortalShell must not stack CustomerSessionBar — Account/Workspace live in PublicTopNav");
+}
+if (portalShell.includes("WorkspaceContextBar")) {
+  fail("PortalShell must not stack WorkspaceContextBar — project context lives in ProjectSpineBar");
+}
+if (portalShell.includes("RouteStateOverlay") || portalShell.includes("RouteReadinessOverlay")) {
+  fail("PortalShell must not mount route theater overlays");
+}
+if (portalShell.includes("showJourney={true}") || portalShell.includes("showJourney\n")) {
+  fail("PortalShell must keep JourneyStrip off by default");
+}
 
 if (!journeyStrip.includes("showGuidance = false")) fail("JourneyStrip must hide verbose Auricrux guidance by default");
 
-if (!portalShell.includes("showRouteOverlay")) fail("PortalShell must support showRouteOverlay for detail pages");
-
 const designTokens = read("src/portalDesignTokens.js");
 const operationalToolPage = read("src/components/OperationalToolPage.jsx");
+const proofPath = read("src/components/portal/FounderProofPath.jsx");
+const evidenceHook = read("src/hooks/useWorkflowEvidence.js");
+
 if (!designTokens.includes("portalButtonPrimary")) fail("portalDesignTokens must export shared button styles");
 if (!operationalToolPage.includes("portalDesignTokens")) fail("OperationalToolPage must use portalDesignTokens");
+if (!operationalToolPage.includes("api-error")) fail("OperationalToolPage must fail closed with api-error (no localStorage-fallback theater)");
+if (operationalToolPage.includes("localStorage-fallback")) {
+  fail("OperationalToolPage must not silently fall back to localStorage when API handlers exist");
+}
+if (!proofPath.includes("Create demo records") && !proofPath.includes("seedDemoRecords")) {
+  fail("FounderProofPath must expose Create demo records for a live PRJ-BID-1 walk");
+}
+if (evidenceHook.includes("seeded-system-state")) {
+  fail("useWorkflowEvidence must not seed theater file/audit state");
+}
 
 const fallbackAwarePages = [
   { file: "src/pages/portal/PortalMessages.jsx", marker: 'apiBacking === "local-fallback"' },
