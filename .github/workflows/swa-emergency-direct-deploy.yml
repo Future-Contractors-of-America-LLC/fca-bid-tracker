@@ -65,21 +65,10 @@ jobs:
         run: |
           set -euo pipefail
           test -n "$FCA_BLOB_STORAGE_CONNECTION"
-          az storage container create \
-            --name "$FCA_ACADEMY_MEDIA_CONTAINER" \
-            --connection-string "$FCA_BLOB_STORAGE_CONNECTION" \
-            --public-access blob \
-            --only-show-errors
-          az storage blob upload-batch \
-            --connection-string "$FCA_BLOB_STORAGE_CONNECTION" \
-            --destination "$FCA_ACADEMY_MEDIA_CONTAINER" \
-            --source public/academy/media \
-            --pattern "*.webm" \
-            --destination-path academy/media \
-            --overwrite \
-            --only-show-errors
+          # CI has tracked json+html; webm/mp3 are gitignored and sync via local/workflow_dispatch when present.
+          node scripts/upload-academy-media-batches.mjs --patterns=json,html
 
-      - name: Slim SWA dist (offload academy WebM/MP3 to blob CDN)
+      - name: Slim SWA dist (offload academy media tree to blob CDN)
         env:
           FCA_ACADEMY_MEDIA_CDN_BASE: ${{ vars.FCA_ACADEMY_MEDIA_CDN_BASE }}
         run: npm run prepare:swa-deploy

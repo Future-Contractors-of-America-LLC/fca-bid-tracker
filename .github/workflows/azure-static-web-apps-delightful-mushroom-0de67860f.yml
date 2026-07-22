@@ -117,32 +117,12 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "$FCA_BLOB_STORAGE_CONNECTION" ]; then
-            echo "::error::FCA_BLOB_STORAGE_CONNECTION not set — academy WebM/MP3 must publish to blob before slim SWA deploy."
+            echo "::error::FCA_BLOB_STORAGE_CONNECTION not set — academy media must publish to blob before slim SWA deploy."
             exit 1
           fi
-          az storage container create \
-            --name "$FCA_ACADEMY_MEDIA_CONTAINER" \
-            --connection-string "$FCA_BLOB_STORAGE_CONNECTION" \
-            --public-access blob \
-            --only-show-errors
-          az storage blob upload-batch \
-            --connection-string "$FCA_BLOB_STORAGE_CONNECTION" \
-            --destination "$FCA_ACADEMY_MEDIA_CONTAINER" \
-            --source public/academy/media \
-            --pattern "*.webm" \
-            --destination-path academy/media \
-            --overwrite \
-            --only-show-errors
-          az storage blob upload-batch \
-            --connection-string "$FCA_BLOB_STORAGE_CONNECTION" \
-            --destination "$FCA_ACADEMY_MEDIA_CONTAINER" \
-            --source public/academy/media \
-            --pattern "*.mp3" \
-            --destination-path academy/media \
-            --overwrite \
-            --only-show-errors
-          WEBM_COUNT=$(find public/academy/media -name '*.webm' | wc -l)
-          echo "Uploaded ${WEBM_COUNT} academy WebM file(s) to ${FCA_ACADEMY_MEDIA_CONTAINER}"
+          # webm/mp3 are gitignored locally; CI uploads tracked json+html. Binary media stays on blob from prior/local sync.
+          node scripts/upload-academy-media-batches.mjs --patterns=json,html
+          echo "Academy media batches uploaded to ${FCA_ACADEMY_MEDIA_CONTAINER}"
 
       - name: Verify academy blob CDN reachability
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
@@ -154,21 +134,27 @@ jobs:
             echo "::error::FCA_ACADEMY_MEDIA_CDN_BASE repo variable not set (e.g. https://<account>.blob.core.windows.net/fca-academy-media)."
             exit 1
           fi
-          SAMPLE=$(find public/academy/media -name '*.webm' -print -quit)
-          if [ -z "$SAMPLE" ]; then
-            echo "No academy WebM samples to verify."
-            exit 0
-          fi
-          REL="${SAMPLE#public/}"
-          URL="${FCA_ACADEMY_MEDIA_CDN_BASE%/}/${REL}"
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
-          echo "HEAD $URL => HTTP $CODE"
-          if [ "$CODE" != "200" ]; then
-            echo "::error::Academy blob CDN verification failed (HTTP $CODE)"
+          BASE="${FCA_ACADEMY_MEDIA_CDN_BASE%/}"
+          failed=0
+          for SAMPLE in \
+            "$(find public/academy/media -name '*.json' -print -quit)" \
+            "$(find public/academy/media -name '*.html' -print -quit)" \
+            "$(find public/academy/media -name '*.webm' -print -quit)"; do
+            [ -n "$SAMPLE" ] || continue
+            REL="${SAMPLE#public/}"
+            URL="$BASE/$REL"
+            CODE=$(curl -sS -o /dev/null -w "%{http_code}" -I "$URL" || true)
+            echo "HEAD $URL => HTTP $CODE"
+            if [ "$CODE" != "200" ]; then
+              echo "::error::Academy blob CDN verification failed for $REL (HTTP $CODE)"
+              failed=1
+            fi
+          done
+          if [ "$failed" -ne 0 ]; then
             exit 1
           fi
 
-      - name: Slim SWA dist (offload academy WebM/MP3 to blob CDN)
+      - name: Slim SWA dist (offload academy media tree to blob CDN)
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.AZURE_STATIC_WEB_APPS_API_TOKEN != ''
         env:
           FCA_ACADEMY_MEDIA_CDN_BASE: ${{ vars.FCA_ACADEMY_MEDIA_CDN_BASE }}
