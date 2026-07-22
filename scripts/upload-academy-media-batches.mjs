@@ -54,31 +54,37 @@ function quoteForCmd(arg) {
   return `"${s.replace(/"/g, '""')}"`;
 }
 
-function runAz(azArgs) {
+function runAz(azArgs, { capture = false } = {}) {
   // Windows az is az.cmd; shell required. Quote every arg so OneDrive paths with spaces survive.
+  // Do NOT pipe huge upload-batch stdout — that triggers spawnSync ENOBUFS on Windows.
   const isWin = process.platform === "win32";
   const command = isWin ? "az.cmd" : "az";
+  const stdio = capture ? ["ignore", "pipe", "pipe"] : ["ignore", "inherit", "inherit"];
   const result = isWin
     ? spawnSync(`${command} ${azArgs.map(quoteForCmd).join(" ")}`, {
-        encoding: "utf8",
+        encoding: capture ? "utf8" : undefined,
         shell: true,
         env: process.env,
-        stdio: ["ignore", "pipe", "pipe"],
+        stdio,
         windowsHide: true,
+        maxBuffer: capture ? 16 * 1024 * 1024 : undefined,
       })
     : spawnSync(command, azArgs, {
-        encoding: "utf8",
+        encoding: capture ? "utf8" : undefined,
         shell: false,
         env: process.env,
-        stdio: ["ignore", "pipe", "pipe"],
+        stdio,
       });
   if (result.error) {
     fail(result.error.message || `az spawn failed for: ${azArgs.join(" ")}`);
   }
   if (result.status !== 0) {
-    fail(result.stderr || result.stdout || `az ${azArgs.join(" ")} failed`);
+    fail(
+      (capture ? result.stderr || result.stdout : "") ||
+        `az ${azArgs.slice(0, 4).join(" ")} ... failed (exit ${result.status})`
+    );
   }
-  return (result.stdout || "").trim();
+  return capture ? (result.stdout || "").trim() : "";
 }
 
 function main() {
@@ -93,18 +99,21 @@ function main() {
   console.log(`Mode: ${dryRun ? "dry-run" : "upload"}`);
 
   if (!dryRun) {
-    runAz([
-      "storage",
-      "container",
-      "create",
-      "--name",
-      container,
-      "--connection-string",
-      connection,
-      "--public-access",
-      "blob",
-      "--only-show-errors",
-    ]);
+    runAz(
+      [
+        "storage",
+        "container",
+        "create",
+        "--name",
+        container,
+        "--connection-string",
+        connection,
+        "--public-access",
+        "blob",
+        "--only-show-errors",
+      ],
+      { capture: true }
+    );
   }
 
   const summary = [];
