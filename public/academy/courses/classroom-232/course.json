@@ -1,0 +1,23 @@
+{
+  "course_id": "classroom-232",
+  "title": "FCA Academy Classroom 232",
+  "generated_utc": "2026-07-08T22:00:03Z",
+  "description": "A complete classroom increment created by the Auricrux production loop.",
+  "modules": [
+    {
+      "id": "m1",
+      "title": "Introduction",
+      "lessons": 1
+    },
+    {
+      "id": "m2",
+      "title": "Operational Application",
+      "lessons": 1
+    },
+    {
+      "id": "m3",
+      "title": "Assessment",
+      "lessons": 1
+    }
+  ]
+}
