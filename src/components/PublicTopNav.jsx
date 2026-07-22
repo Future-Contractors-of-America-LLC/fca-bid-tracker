@@ -428,9 +428,23 @@ export default function PublicTopNav({ mode = "public" }) {
 
       <header style={activeHeaderStyle} className="fca-topnav-blur">
         <div style={innerStyle}>
-          <a href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-            <FcaBrandMark compact showTagline={false} />
-            <span className="fca-brand-long" style={activeBrandTextStyle}>Future Contractors of America</span>
+          <a
+            href="/"
+            aria-label="Future Contractors of America"
+            style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}
+          >
+            {isPortal ? (
+              <>
+                <FcaBrandMark iconOnly showTagline={false} />
+                <span style={{ ...activeBrandTextStyle, fontSize: 16, letterSpacing: "0.04em" }}>FCA</span>
+              </>
+            ) : (
+              <>
+                <FcaBrandMark iconOnly showTagline={false} />
+                <span className="fca-brand-long" style={activeBrandTextStyle}>Future Contractors of America</span>
+                <span className="fca-brand-short" style={activeBrandTextStyle}>FCA</span>
+              </>
+            )}
           </a>
 
           {isPortal ? (

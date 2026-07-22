@@ -3,13 +3,14 @@ import PortalShell from "../../components/PortalShell";
 import AuricruxCommsPanel from "../../components/AuricruxCommsPanel";
 import useCustomerSession from "../../hooks/useCustomerSession";
 import useWorkspaceState from "../../hooks/useWorkspaceState";
-import { fetchAuricruxActions, runAuricruxCampaignSequence } from "../../api/auricruxActionsClient";
+import useProjectWorkspace from "../../hooks/useProjectWorkspace";
+import { fetchAuricruxActions, submitAuricruxAction } from "../../api/auricruxActionsClient";
 import usePortalApiLoad from "../../hooks/usePortalApiLoad";
 import PortalApiStatusBanner from "../../components/portal/PortalApiStatusBanner";
-import { auricruxCommsChannels, auricruxRail, routeStateOverlays } from "../../systemState";
+import { auricruxCommsChannels } from "../../systemState";
 import { openAuricruxAssistant } from "../../auricruxAssistant";
-import { auricruxPersona } from "../../config/auricruxPersona";
-import { portalButtonPrimary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
+import { FOUNDER_PROOF_PROJECT_ID } from "../../config/productionMode";
+import { portalButtonPrimary, portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../../portalDesignTokens";
 
 const actionRouteMap = {
   Project: "/portal/projects",
@@ -47,9 +48,10 @@ function normalizeGuidedAction(action) {
 export default function PortalAuricrux() {
   const { session } = useCustomerSession();
   const { state } = useWorkspaceState();
-  const [campaignBusy, setCampaignBusy] = useState(false);
-  const [campaignError, setCampaignError] = useState("");
-  const [campaignResult, setCampaignResult] = useState(null);
+  const { activeProject } = useProjectWorkspace();
+  const [adviseBusy, setAdviseBusy] = useState(false);
+  const [adviseError, setAdviseError] = useState("");
+  const [adviseResult, setAdviseResult] = useState("");
   const actionsLoad = usePortalApiLoad(() => fetchAuricruxActions(), []);
   const liveActions = actionsLoad.data?.items || [];
 
@@ -58,9 +60,7 @@ export default function PortalAuricrux() {
     [liveActions],
   );
 
-  const blocker = state.auricrux?.currentBlocker || auricruxRail.currentBlocker;
-  const nextAction = state.workspace?.currentNextAction || auricruxRail.nextRecommendedAction;
-
+  const projectId = activeProject?.id || state.project?.id || FOUNDER_PROOF_PROJECT_ID;
   const usingLiveActions = actionsLoad.isLive && liveActions.length > 0;
 
   const enabledComms = session?.enabledComms || { chat: true, sms: true, phone: true, email: true, teams: true, conference: true, lecture: true };
@@ -71,35 +71,35 @@ export default function PortalAuricrux() {
     ctaLabel: `Open ${item.label}`,
   }));
 
-  async function runCampaignLaunch() {
-    if (campaignBusy) return;
-    setCampaignBusy(true);
-    setCampaignError("");
-    setCampaignResult(null);
+  async function adviseActiveProject() {
+    if (adviseBusy) return;
+    setAdviseBusy(true);
+    setAdviseError("");
+    setAdviseResult("");
     try {
-      const result = await runAuricruxCampaignSequence({
+      const payload = await submitAuricruxAction({
+        mode: "recommend",
+        capabilityId: "project-next-action",
+        targetObjectType: "Project",
+        targetObjectId: projectId,
+        rationale: `Recommend the next construction action for ${projectId}.`,
         sourceRoute: "/portal/auricrux",
-        targetObjectId: session?.company || state?.tenant?.name || "fca-campaign-launch",
-        segmentKeys: ["electrical", "general-contractors", "specialty-trades"],
       });
-      setCampaignResult(result);
+      const guidance = payload?.guidance?.reply || payload?.guidance || payload?.rationale || "Auricrux action recorded.";
+      setAdviseResult(typeof guidance === "string" ? guidance : JSON.stringify(guidance));
       await actionsLoad.reload();
     } catch (error) {
-      setCampaignError(error.message || "Auricrux campaign launch execution failed.");
+      setAdviseError(error.message || "Auricrux advise failed.");
     } finally {
-      setCampaignBusy(false);
+      setAdviseBusy(false);
     }
   }
 
   return (
     <PortalShell
       title="Auricrux"
-      subtitle="Teach, advise, and automate every construction capability — plus how your account acts."
+      subtitle={`Advise and act on ${projectId}.`}
       activeHref="/portal/auricrux"
-      currentJourney="lead"
-      routeOverlay={routeStateOverlays.auricrux}
-      primaryHref="/portal/capabilities"
-      primaryLabel="All capabilities"
     >
       <PortalApiStatusBanner
         status={actionsLoad.status}
@@ -108,129 +108,49 @@ export default function PortalAuricrux() {
         label="Auricrux actions"
       />
 
-      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: "4px solid #7c5313", background: "linear-gradient(135deg, #fffbeb 0%, #ffffff 100%)" }}>
-        <div style={{ ...portalEyebrowStyle, color: "#7c5313" }}>Doctrine</div>
-        <h2 style={{ marginTop: 8, marginBottom: 8 }}>If construction software or AI can do it, Auricrux teaches and automates it</h2>
+      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: "4px solid #7c5313" }}>
+        <div style={{ ...portalEyebrowStyle, color: "#7c5313" }}>Active job</div>
+        <h2 style={{ marginTop: 8, marginBottom: 8 }}>{projectId}</h2>
         <p style={{ color: portalTokens.body, lineHeight: 1.6, marginTop: 0 }}>
-          Open the full capability directory, customize how your account acts, or ask Auricrux to explain and run the next move on any tool.
+          Ask Auricrux for the next move on this project, or open chat for a guided walkthrough.
         </p>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <button type="button" onClick={() => openAuricruxAssistant("Walk the full construction OS capability map. Teach and automate whatever I name.")} style={{ ...portalButtonPrimary, border: "none", cursor: "pointer", background: "#7c5313" }}>
-            Ask Auricrux now
+          <button
+            type="button"
+            onClick={adviseActiveProject}
+            disabled={adviseBusy}
+            style={{ ...portalButtonPrimary, border: "none", cursor: adviseBusy ? "not-allowed" : "pointer", background: "#7c5313", opacity: adviseBusy ? 0.7 : 1 }}
+          >
+            {adviseBusy ? "Asking Auricrux..." : "Advise on this project"}
           </button>
-          <a href="/portal/capabilities" style={{ ...portalButtonPrimary, background: "#1d4ed8" }}>Capability directory</a>
-          <a href="/portal/profile" style={{ ...portalButtonPrimary, background: "#0f172a" }}>How my account acts</a>
+          <button
+            type="button"
+            onClick={() => openAuricruxAssistant(`What should I do next on ${projectId}?`)}
+            style={{ ...portalButtonPrimary, border: "none", cursor: "pointer" }}
+          >
+            Open chat
+          </button>
+          <a href="/portal/proof" style={portalButtonSecondary}>Proof path</a>
         </div>
+        {adviseError ? <p style={{ color: "#b91c1c", marginTop: 10, marginBottom: 0 }}>{adviseError}</p> : null}
+        {adviseResult ? (
+          <div style={{ marginTop: 12, padding: 12, borderRadius: 10, background: "#fffbeb", border: "1px solid #fde68a", color: portalTokens.body, lineHeight: 1.6 }}>
+            {adviseResult}
+          </div>
+        ) : null}
       </div>
 
-      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${usingLiveActions ? "#16a34a" : "#d97706"}`, background: usingLiveActions ? "#f0fdf4" : "#fffbeb" }}>
+      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${usingLiveActions ? "#16a34a" : "#d97706"}` }}>
         <div style={{ ...portalEyebrowStyle, color: usingLiveActions ? "#166534" : "#92400e" }}>
-          {usingLiveActions ? "Live recommendations" : "Guidance mode"}
+          {usingLiveActions ? "Live recommendations" : "Waiting on live actions"}
         </div>
-        <p style={{ color: portalTokens.body, fontSize: 14, lineHeight: 1.55, margin: "8px 0 0" }}>
-          {usingLiveActions
-            ? "Actions below are loaded from your workspace API."
-            : "Live actions will appear here once the workspace API responds. Use Ask Auricrux in the header for immediate help."}
-        </p>
-      </div>
-
-      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: "4px solid #1d4ed8", background: "linear-gradient(135deg, #eff6ff 0%, #ffffff 100%)" }}>
-        <div style={{ ...portalEyebrowStyle, color: "#1d4ed8" }}>Campaign operator</div>
-        <h2 style={{ marginTop: 8, marginBottom: 8 }}>Run Auricrux sales and marketing launch</h2>
-        <p style={{ color: portalTokens.body, lineHeight: 1.6, marginTop: 0 }}>
-          Executes six governed steps: ICP and offer lock, conversion spine, funnel instrumentation, channel pilot launch, sales SLA playbook, and weekly optimization loop.
-        </p>
-        <button
-          type="button"
-          onClick={runCampaignLaunch}
-          disabled={campaignBusy}
-          style={{ ...portalButtonPrimary, border: "none", cursor: campaignBusy ? "not-allowed" : "pointer", opacity: campaignBusy ? 0.65 : 1 }}
-        >
-          {campaignBusy ? "Auricrux launching campaign..." : "Run campaign launch with Auricrux"}
-        </button>
-        {campaignError ? (
-          <p style={{ color: "#b91c1c", marginTop: 10, marginBottom: 0 }}>{campaignError}</p>
-        ) : null}
-        {campaignResult ? (
-          <div style={{ marginTop: 12, border: `1px solid ${portalTokens.border}`, borderRadius: 12, padding: 12, background: "#fff" }}>
-            <div style={{ color: "#0f172a", fontWeight: 700, marginBottom: 6 }}>
-              {campaignResult.ok ? "Campaign launch executed successfully" : "Campaign launch completed with issues"}
-            </div>
-            <div style={{ color: portalTokens.muted, fontSize: 13, marginBottom: 10 }}>
-              {campaignResult.campaignName} · {campaignResult.segmentKeys.join(" | ")}
-            </div>
-            <div style={{ display: "grid", gap: 8 }}>
-              {(campaignResult.results || []).map((item) => (
-                <div key={item.step} style={{ border: `1px solid ${portalTokens.border}`, borderRadius: 10, padding: 10, background: "#f8fafc" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center" }}>
-                    <div style={{ fontWeight: 700 }}>{item.capabilityId}</div>
-                    <div style={{ color: item.ok ? "#047857" : "#b91c1c", fontSize: 12, fontWeight: 700 }}>
-                      {item.ok ? "PASS" : "FAIL"}
-                    </div>
-                  </div>
-                  <div style={{ color: portalTokens.muted, fontSize: 12, marginTop: 4 }}>
-                    {item.mode.toUpperCase()} · {item.step}
-                  </div>
-                  {item.guidance ? (
-                    <p style={{ color: portalTokens.body, fontSize: 13, marginBottom: 0, marginTop: 8, lineHeight: 1.55 }}>{item.guidance}</p>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
-      </div>
-
-      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid #d4a32a`, background: "linear-gradient(135deg, #fffbeb 0%, #fff 100%)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "flex-start" }}>
-          <div style={{ flex: "1 1 280px" }}>
-            <div style={{ ...portalEyebrowStyle, color: "#92400e" }}>{auricruxPersona.title}</div>
-            <p style={{ color: portalTokens.body, lineHeight: 1.6, margin: "8px 0 0", fontSize: 14 }}>
-              {auricruxPersona.intro}
-            </p>
-          </div>
-          <button type="button" onClick={() => openAuricruxAssistant()} style={{ ...portalButtonPrimary, border: "none", cursor: "pointer", background: "#7c5313" }}>
-            Chat with Auricrux
-          </button>
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 12,
-          marginBottom: 16,
-        }}
-      >
-        <div style={portalCardStyle}>
-          <div style={portalEyebrowStyle}>What is blocked</div>
-          <div style={{ fontWeight: 700, marginTop: 8, lineHeight: 1.45, color: portalTokens.ink }}>{blocker}</div>
-        </div>
-        <div style={portalCardStyle}>
-          <div style={portalEyebrowStyle}>Do this next</div>
-          <div style={{ fontWeight: 700, marginTop: 8, lineHeight: 1.45, color: portalTokens.ink }}>{nextAction}</div>
-        </div>
-        <div style={portalCardStyle}>
-          <div style={portalEyebrowStyle}>Active project</div>
-          <div style={{ fontWeight: 700, marginTop: 8, lineHeight: 1.45, color: portalTokens.ink }}>
-            {state.project?.id || "—"} · {state.project?.stage || "—"}
-          </div>
-        </div>
-      </div>
-
-      <div style={{ ...portalCardStyle, marginBottom: 16, borderLeft: `4px solid ${portalTokens.primary}` }}>
-        <div style={portalEyebrowStyle}>Suggested actions</div>
-        <p style={{ color: portalTokens.body, fontSize: 14, lineHeight: 1.55, marginTop: 8, marginBottom: 14 }}>
-          Tap a card to open the lane Auricrux recommends. You can also use the top-nav <strong>Ask Auricrux</strong> button anytime.
-        </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 10, marginTop: 12 }}>
           {guidedActions.length === 0 ? (
             <p style={{ color: portalTokens.muted, margin: 0 }}>
-              No live recommendations yet. Open Ask Auricrux to get the next move for your workspace.
+              No recommendations yet. Use Advise on this project above.
             </p>
           ) : null}
-          {guidedActions.slice(0, 8).map((action) => (
+          {guidedActions.slice(0, 6).map((action) => (
             <article key={action.key} style={{ border: `1px solid ${portalTokens.border}`, borderRadius: 12, padding: 14, background: portalTokens.panel }}>
               <div style={{ fontWeight: 700, marginBottom: 6, lineHeight: 1.45 }}>{action.title}</div>
               <div style={{ color: portalTokens.muted, fontSize: 12, marginBottom: 10 }}>{action.detail}</div>
@@ -244,7 +164,7 @@ export default function PortalAuricrux() {
 
       <AuricruxCommsPanel
         title="Messages and channels"
-        detail="Reach your team by chat, SMS, phone, email, Teams, conference, or lecture — from one place."
+        detail="Reach your team from one place."
         statusLabel="Channels"
         statusValue={`${Object.values(enabledComms).filter(Boolean).length} enabled`}
         items={commItems}

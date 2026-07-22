@@ -2,14 +2,9 @@ import { useState } from "react";
 import ShellHeader from "./ShellHeader";
 import ShellFooter from "./ShellFooter";
 import ProjectSpineBar from "./ProjectSpineBar";
-import WorkspaceContextBar from "./WorkspaceContextBar";
-import RouteStateOverlay from "./RouteStateOverlay";
-import CustomerSessionBar from "./CustomerSessionBar";
-import RouteReadinessOverlay from "./RouteReadinessOverlay";
-import useCustomerSession from "../hooks/useCustomerSession";
 import useWorkspaceState from "../hooks/useWorkspaceState";
-import { portalJourney, portalHubModules, portalModules } from "../systemState";
-import { portalButtonSecondary, portalCardStyle, portalEyebrowStyle, portalTokens } from "../portalDesignTokens";
+import { portalHubModules, portalModules, PORTAL_SUBTITLE_MAX } from "../systemState";
+import { portalTokens } from "../portalDesignTokens";
 
 const shellStyle = {
   padding: "clamp(16px, 3vw, 28px) clamp(16px, 3vw, 24px) 48px",
@@ -58,81 +53,52 @@ const activeRouteCardStyle = {
   boxShadow: portalTokens.shadowSm,
 };
 
+function truncateSubtitle(subtitle) {
+  if (!subtitle || typeof subtitle !== "string") return subtitle;
+  const trimmed = subtitle.trim();
+  if (trimmed.length <= PORTAL_SUBTITLE_MAX) return trimmed;
+  return `${trimmed.slice(0, PORTAL_SUBTITLE_MAX - 1).trimEnd()}…`;
+}
+
+/**
+ * Portal chrome: top nav + page title + project selector.
+ * Session / journey / route-theater bars are intentionally omitted — they duplicated
+ * brand, next-action, and project state until text became unreadable.
+ */
 export default function PortalShell({
   title,
   subtitle,
   activeHref,
-  currentJourney,
-  routeOverlay,
   children,
-  primaryHref = "/portal/messages",
-  primaryLabel = "Open Messages",
   workspaceState = null,
-  navDensity = "compact",
-  showRouteOverlay: showRouteOverlayProp = null,
 }) {
-  const { session, setProductAccess, setCommsAccess, applyPlanPreset } = useCustomerSession();
   const workspaceApi = useWorkspaceState();
   const resolvedState = workspaceState || workspaceApi.state;
-  const { refreshSyncStamp } = workspaceApi;
   const [showAllModules, setShowAllModules] = useState(false);
   const isHubPage = activeHref === "/portal/platform";
   const sectionModules = showAllModules ? portalModules : portalHubModules;
-  const showRouteOverlay = showRouteOverlayProp ?? Boolean(routeOverlay && !isHubPage);
-  const activeModule = portalModules.find((module) => module.href === activeHref) || null;
 
   return (
     <div style={shellStyle}>
       <div style={pageStyle}>
         <ShellHeader
-          eyebrow={isHubPage ? "FCA Workspace" : "FCA Portal"}
+          eyebrow=""
           title={title}
-          subtitle={subtitle}
-          primaryHref={isHubPage ? "/portal/profile" : undefined}
-          primaryLabel={isHubPage ? "Customize branding" : undefined}
-          secondaryHref={undefined}
-          secondaryLabel={undefined}
-          journey={portalJourney}
-          currentJourney={currentJourney}
+          subtitle={truncateSubtitle(subtitle)}
           showTopNav
           topNavMode="portal"
-          compact={!isHubPage}
-          showJourney={isHubPage}
+          compact
+          showJourney={false}
         />
 
-        <CustomerSessionBar compact={!isHubPage} />
-
-        {!isHubPage ? (
-          <ProjectSpineBar tenant={resolvedState.tenant} project={resolvedState.project} compact />
-        ) : (
-          <ProjectSpineBar tenant={resolvedState.tenant} project={resolvedState.project} />
-        )}
-
-        {isHubPage ? (
-          <WorkspaceContextBar tenant={resolvedState.tenant} project={resolvedState.project} workspace={resolvedState.workspace} />
-        ) : null}
-
-        {showRouteOverlay && routeOverlay ? (
-          <RouteStateOverlay overlay={routeOverlay} compact />
-        ) : null}
-
-        {!isHubPage ? (
-          <RouteReadinessOverlay
-            activeHref={activeHref}
-            session={session}
-            setProductAccess={setProductAccess}
-            setCommsAccess={setCommsAccess}
-            applyPlanPreset={applyPlanPreset}
-            refreshSyncStamp={refreshSyncStamp}
-          />
-        ) : null}
+        <ProjectSpineBar tenant={resolvedState.tenant} project={resolvedState.project} compact />
 
         {isHubPage ? (
           <nav style={routeTabsWrapStyle} aria-label="Portal products">
             <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center", marginBottom: 14 }}>
               <div>
-                <div style={portalEyebrowStyle}>Products</div>
-                <div style={{ fontWeight: 800, fontSize: 18, marginTop: 4 }}>Open a lane and work</div>
+                <div style={{ fontWeight: 800, fontSize: 18 }}>Open a lane</div>
+                <div style={{ color: portalTokens.muted, fontSize: 13, marginTop: 4 }}>Pick one module and work the active project.</div>
               </div>
               <button
                 type="button"
@@ -168,19 +134,6 @@ export default function PortalShell({
               })}
             </div>
           </nav>
-        ) : null}
-
-        {!isHubPage && activeModule ? (
-          <div style={{ ...portalCardStyle, marginBottom: 16, display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-            <div>
-              <div style={portalEyebrowStyle}>Current module</div>
-              <div style={{ fontWeight: 800, fontSize: 18, marginTop: 4 }}>{activeModule.label}</div>
-              <p style={{ color: portalTokens.body, margin: "8px 0 0", lineHeight: 1.55, fontSize: 14, maxWidth: 720 }}>
-                {activeModule.description}
-              </p>
-            </div>
-            <a href="/portal/platform" style={portalButtonSecondary}>Back to workspace hub</a>
-          </div>
         ) : null}
 
         {children}

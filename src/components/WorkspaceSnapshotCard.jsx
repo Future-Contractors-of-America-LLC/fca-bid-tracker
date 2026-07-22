@@ -46,8 +46,8 @@ function resolveAvailabilityLabel(backingSource = "") {
 }
 
 export default function WorkspaceSnapshotCard({
-  title = "Live workspace snapshot",
-  detail = "This public shell now previews the same tenant, project, and guided next-step context customers see inside the platform.",
+  title = "Workspace preview",
+  detail = "Public marketing preview of tenant and project context — not proof the SaaS mutate path is live.",
   ctaHref = "/portal/platform",
   ctaLabel = "Open platform dashboard",
 }) {
@@ -56,7 +56,7 @@ export default function WorkspaceSnapshotCard({
 
   return (
     <div style={cardStyle}>
-      <div style={pillStyle}>Live workspace</div>
+      <div style={pillStyle}>{availabilityLabel}</div>
       <h2 style={{ marginTop: 14, marginBottom: 10 }}>{title}</h2>
       <p style={{ color: "#334155", lineHeight: 1.7, marginTop: 0 }}>{detail}</p>
 

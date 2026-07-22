@@ -13,8 +13,27 @@ const headerShellStyle = {
 };
 
 const compactTitleStyle = {
-  padding: "8px 0 4px",
-  marginBottom: 14,
+  padding: "12px 0 4px",
+  marginBottom: 12,
+};
+
+const titleStyle = {
+  margin: 0,
+  fontSize: "clamp(1.35rem, 2.2vw, 1.75rem)",
+  lineHeight: 1.2,
+  letterSpacing: "-0.02em",
+  color: portalTokens.ink,
+  overflowWrap: "anywhere",
+};
+
+const subtitleStyle = {
+  marginTop: 6,
+  marginBottom: 0,
+  color: portalTokens.body,
+  lineHeight: 1.5,
+  maxWidth: 640,
+  fontSize: 14,
+  overflowWrap: "anywhere",
 };
 
 export default function ShellHeader({
@@ -35,6 +54,7 @@ export default function ShellHeader({
   const renderHeaderActions = topNavMode === "portal"
     ? Boolean(primaryHref && primaryLabel)
     : !(showTopNav && topNavMode === "public") && !compact;
+  const showEyebrow = Boolean(eyebrow);
 
   return (
     <>
@@ -42,13 +62,9 @@ export default function ShellHeader({
 
       {compact ? (
         <div style={compactTitleStyle}>
-          {eyebrow ? <div style={{ ...portalEyebrowStyle, marginBottom: title || subtitle ? 6 : 0 }}>{eyebrow}</div> : null}
-          {title ? <h1 style={{ margin: 0 }}>{title}</h1> : null}
-          {subtitle ? (
-            <p style={{ marginTop: 8, marginBottom: 0, color: portalTokens.body, lineHeight: 1.55, maxWidth: 680, fontSize: 15 }}>
-              {subtitle}
-            </p>
-          ) : null}
+          {showEyebrow ? <div style={{ ...portalEyebrowStyle, marginBottom: title || subtitle ? 6 : 0 }}>{eyebrow}</div> : null}
+          {title ? <h1 style={titleStyle}>{title}</h1> : null}
+          {subtitle ? <p style={subtitleStyle}>{subtitle}</p> : null}
         </div>
       ) : (
         <div style={headerShellStyle}>
@@ -63,13 +79,9 @@ export default function ShellHeader({
             }}
           >
             <div style={{ maxWidth: 720, minWidth: 0 }}>
-              <div style={{ ...portalEyebrowStyle, marginBottom: 8 }}>{eyebrow}</div>
-              <h1 style={{ marginTop: 0, marginBottom: subtitle ? 8 : 0 }}>{title}</h1>
-              {subtitle ? (
-                <p style={{ marginTop: 0, color: portalTokens.body, lineHeight: 1.55, marginBottom: 0, fontSize: 15, maxWidth: 640 }}>
-                  {subtitle}
-                </p>
-              ) : null}
+              {showEyebrow ? <div style={{ ...portalEyebrowStyle, marginBottom: 8 }}>{eyebrow}</div> : null}
+              <h1 style={{ ...titleStyle, marginBottom: subtitle ? 8 : 0 }}>{title}</h1>
+              {subtitle ? <p style={{ ...subtitleStyle, marginTop: 0 }}>{subtitle}</p> : null}
             </div>
 
             {renderHeaderActions ? (
