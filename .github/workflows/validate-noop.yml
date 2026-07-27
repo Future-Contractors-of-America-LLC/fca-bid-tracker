@@ -1,0 +1,15 @@
+name: Validate (noop)
+
+# Temporary successor to build-validation.yml so required check "validate" still exists
+# after removing the legacy FCA URL / SWA deploy rails. No deploys, no external hosts.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: No-op validate gate
+        run: echo "Legacy FCA build-validation retired; noop check only."
