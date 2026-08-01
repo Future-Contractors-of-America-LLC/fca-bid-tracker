@@ -1,0 +1,339 @@
+From 4638f977d79762d44b26d1a38a3c2a5b5ab92faf Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 14:43:13 +0000
+Subject: [PATCH 1/3] Harden web browse against DNS-based SSRF bypasses
+
+The previous guard only string-matched the request hostname, so any name that
+resolved to a private address (127.0.0.1.nip.io, 169.254.169.254.nip.io) reached
+internal services, and a public host could redirect the fetch inward because the
+handler followed redirects itself.
+
+SsrfGuard now resolves the host and requires every returned address to be
+publicly routable, covering IPv6, IPv4-mapped IPv6, carrier-grade NAT, and
+link-local metadata ranges. Redirects are followed manually so each hop is
+revalidated, capped at 5 hops. Operators can allow specific private hosts via
+Security:Browse:AllowedPrivateHosts for intranet sources.
+---
+ Auricrux.Web/Program.cs                   |   6 +-
+ Auricrux.Web/Services/SsrfGuard.cs        | 170 ++++++++++++++++++++++
+ Auricrux.Web/Services/WebBrowseService.cs |  79 ++++++----
+ 3 files changed, 227 insertions(+), 28 deletions(-)
+ create mode 100644 Auricrux.Web/Services/SsrfGuard.cs
+
+diff --git a/Auricrux.Web/Program.cs b/Auricrux.Web/Program.cs
+index c32af64..d2e9b2b 100644
+--- a/Auricrux.Web/Program.cs
++++ b/Auricrux.Web/Program.cs
+@@ -26,7 +26,11 @@ builder.Services.AddHttpClient(nameof(WebBrowseService), client =>
+ {
+     client.Timeout = TimeSpan.FromSeconds(45);
+     client.DefaultRequestHeaders.UserAgent.ParseAdd("AuricruxWebBrowse/1.0 (+construction)");
+-});
++})
++    // Redirects are followed manually so SsrfGuard can validate every hop; letting the handler
++    // follow them would allow a public URL to bounce the fetch into the private network.
++    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
++builder.Services.AddSingleton<SsrfGuard>();
+ builder.Services.AddSingleton<ConstructionIntelligenceService>();
+ builder.Services.AddSingleton<MediaGenerationService>();
+ builder.Services.AddSingleton<WorkspaceStorageService>();
+diff --git a/Auricrux.Web/Services/SsrfGuard.cs b/Auricrux.Web/Services/SsrfGuard.cs
+new file mode 100644
+index 0000000..0b2b12c
+--- /dev/null
++++ b/Auricrux.Web/Services/SsrfGuard.cs
+@@ -0,0 +1,170 @@
++using System.Net;
++using System.Net.Sockets;
++
++namespace Auricrux.Web.Services;
++
++/// <summary>
++/// Decides whether an outbound URL is safe to fetch on behalf of a caller.
++/// </summary>
++/// <remarks>
++/// Host-name blocklists are not sufficient: any attacker-controlled DNS name can resolve to a
++/// private address (for example <c>127.0.0.1.nip.io</c>), and a public host can redirect to one.
++/// This guard therefore resolves the host and rejects the request unless <em>every</em> resolved
++/// address is publicly routable, and callers re-validate each redirect hop.
++/// </remarks>
++public sealed class SsrfGuard(IConfiguration config, ILogger<SsrfGuard> logger)
++{
++    private static readonly string[] AlwaysBlockedSuffixes = [".local", ".internal", ".localdomain"];
++
++    private static readonly string[] AlwaysBlockedHosts =
++    [
++        "localhost",
++        "metadata",
++        "metadata.google.internal",
++        "instance-data",
++        "metadata.azure.com"
++    ];
++
++    /// <summary>
++    /// Hosts an operator has explicitly allowed even though they resolve privately. Intended for
++    /// self-hosted intranet documentation sources, and empty by default.
++    /// </summary>
++    private string[] AllowedPrivateHosts =>
++        config.GetSection("Security:Browse:AllowedPrivateHosts").Get<string[]>() ?? [];
++
++    /// <summary>
++    /// Validates a URL and returns the reason it was rejected, or <see langword="null"/> when the
++    /// URL is safe to fetch.
++    /// </summary>
++    public async Task<string?> GetRejectionReasonAsync(Uri uri, CancellationToken ct)
++    {
++        if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
++        {
++            return "Only absolute http/https URLs are allowed.";
++        }
++
++        var host = uri.Host.Trim().TrimEnd('.').ToLowerInvariant();
++        if (string.IsNullOrWhiteSpace(host))
++        {
++            return "That host is blocked for SSRF safety.";
++        }
++
++        if (AllowedPrivateHosts.Any(h => h.Equals(host, StringComparison.OrdinalIgnoreCase)))
++        {
++            return null;
++        }
++
++        if (AlwaysBlockedHosts.Contains(host)
++            || AlwaysBlockedSuffixes.Any(s => host.EndsWith(s, StringComparison.Ordinal)))
++        {
++            return "That host is blocked for SSRF safety.";
++        }
++
++        IPAddress[] addresses;
++        if (IPAddress.TryParse(host.Trim('[', ']'), out var literal))
++        {
++            addresses = [literal];
++        }
++        else
++        {
++            try
++            {
++                addresses = await Dns.GetHostAddressesAsync(host, ct);
++            }
++            catch (Exception ex)
++            {
++                logger.LogInformation(ex, "SSRF guard could not resolve {Host}", host);
++                return "That host could not be resolved.";
++            }
++        }
++
++        if (addresses.Length == 0)
++        {
++            return "That host could not be resolved.";
++        }
++
++        // Reject if ANY resolved address is private: a hostile resolver can otherwise return one
++        // public and one private address and win the race between validation and connection.
++        foreach (var address in addresses)
++        {
++            if (!IsPubliclyRoutable(address))
++            {
++                logger.LogWarning("SSRF guard blocked {Host} resolving to non-public {Address}", host, address);
++                return "That host resolves to a non-public address and is blocked for SSRF safety.";
++            }
++        }
++
++        return null;
++    }
++
++    /// <summary>
++    /// Returns whether an IP address is a public, externally routable unicast address.
++    /// </summary>
++    public static bool IsPubliclyRoutable(IPAddress address)
++    {
++        if (IPAddress.IsLoopback(address) || IPAddress.Any.Equals(address) || IPAddress.IPv6Any.Equals(address))
++        {
++            return false;
++        }
++
++        if (address.IsIPv4MappedToIPv6)
++        {
++            return IsPubliclyRoutable(address.MapToIPv4());
++        }
++
++        return address.AddressFamily switch
++        {
++            AddressFamily.InterNetwork => IsPublicIPv4(address.GetAddressBytes()),
++            AddressFamily.InterNetworkV6 => IsPublicIPv6(address),
++            _ => false
++        };
++    }
++
++    private static bool IsPublicIPv4(byte[] b)
++    {
++        if (b.Length != 4) return false;
++
++        return b[0] switch
++        {
++            0 => false,                                     // 0.0.0.0/8 "this network"
++            10 => false,                                    // RFC1918 private
++            127 => false,                                   // loopback
++            100 when b[1] >= 64 && b[1] <= 127 => false,    // RFC6598 carrier-grade NAT
++            169 when b[1] == 254 => false,                  // link-local / cloud metadata
++            172 when b[1] >= 16 && b[1] <= 31 => false,     // RFC1918 private
++            192 when b[1] == 0 && b[2] == 0 => false,       // IETF protocol assignments
++            192 when b[1] == 0 && b[2] == 2 => false,       // TEST-NET-1
++            192 when b[1] == 168 => false,                  // RFC1918 private
++            198 when b[1] == 18 || b[1] == 19 => false,     // benchmarking
++            198 when b[1] == 51 && b[2] == 100 => false,    // TEST-NET-2
++            203 when b[1] == 0 && b[2] == 113 => false,     // TEST-NET-3
++            >= 224 => false,                                // multicast, reserved, broadcast
++            _ => true
++        };
++    }
++
++    private static bool IsPublicIPv6(IPAddress address)
++    {
++        if (address.IsIPv6LinkLocal || address.IsIPv6SiteLocal || address.IsIPv6Multicast
++            || address.IsIPv6UniqueLocal || address.IsIPv6Teredo)
++        {
++            return false;
++        }
++
++        var b = address.GetAddressBytes();
++
++        // ::/128 unspecified and ::1/128 loopback are covered above; also reject the
++        // IPv4-compatible ::a.b.c.d range and the NAT64 well-known prefix 64:ff9b::/96.
++        if (b.Take(12).All(x => x == 0))
++        {
++            return false;
++        }
++
++        if (b[0] == 0x00 && b[1] == 0x64 && b[2] == 0xff && b[3] == 0x9b)
++        {
++            return false;
++        }
++
++        return true;
++    }
++}
+diff --git a/Auricrux.Web/Services/WebBrowseService.cs b/Auricrux.Web/Services/WebBrowseService.cs
+index e83e902..0642f4f 100644
+--- a/Auricrux.Web/Services/WebBrowseService.cs
++++ b/Auricrux.Web/Services/WebBrowseService.cs
+@@ -13,12 +13,14 @@ namespace Auricrux.Web.Services;
+ public sealed class WebBrowseService(
+     IHttpClientFactory httpClientFactory,
+     IConfiguration config,
++    SsrfGuard ssrfGuard,
+     ILogger<WebBrowseService> logger)
+ {
+     private static readonly Regex TagStrip = new("<[^>]+>", RegexOptions.Compiled | RegexOptions.Singleline);
+     private static readonly Regex WhitespaceCollapse = new(@"\s+", RegexOptions.Compiled);
+     private const int MaxBytes = 512_000;
+     private const int MaxPlainChars = 12_000;
++    private const int MaxRedirects = 5;
+ 
+     public async Task<WebBrowseResponse> BrowseAsync(WebBrowseRequest request, CancellationToken ct)
+     {
+@@ -33,16 +35,22 @@ public sealed class WebBrowseService(
+             return Fail("Only absolute http/https URLs are allowed.");
+         }
+ 
+-        if (IsBlockedHost(uri.Host))
++        var rejection = await ssrfGuard.GetRejectionReasonAsync(uri, ct);
++        if (rejection is not null)
+         {
+-            return Fail("That host is blocked for SSRF safety.");
++            return Fail(rejection);
+         }
+ 
+         string plain;
+         try
+         {
+             var http = httpClientFactory.CreateClient(nameof(WebBrowseService));
+-            using var resp = await http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, ct);
++            using var resp = await GetFollowingValidatedRedirectsAsync(http, uri, ct);
++            if (resp is null)
++            {
++                return Fail("Redirect chain reached a non-public address and was blocked for SSRF safety.");
++            }
++
+             if (!resp.IsSuccessStatusCode)
+             {
+                 return Fail($"Upstream returned {(int)resp.StatusCode} {resp.ReasonPhrase}.");
+@@ -90,6 +98,47 @@ public sealed class WebBrowseService(
+         };
+     }
+ 
++    /// <summary>
++    /// Performs the fetch with automatic redirects disabled, re-running the SSRF guard against
++    /// every hop. Returns <see langword="null"/> when a hop points at a non-public address.
++    /// </summary>
++    private async Task<HttpResponseMessage?> GetFollowingValidatedRedirectsAsync(
++        HttpClient http,
++        Uri uri,
++        CancellationToken ct)
++    {
++        var current = uri;
++        for (var hop = 0; hop <= MaxRedirects; hop++)
++        {
++            using var message = new HttpRequestMessage(HttpMethod.Get, current);
++            var response = await http.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, ct);
++
++            if (!IsRedirect(response.StatusCode) || response.Headers.Location is null)
++            {
++                return response;
++            }
++
++            var next = response.Headers.Location.IsAbsoluteUri
++                ? response.Headers.Location
++                : new Uri(current, response.Headers.Location);
++            response.Dispose();
++
++            var rejection = await ssrfGuard.GetRejectionReasonAsync(next, ct);
++            if (rejection is not null)
++            {
++                logger.LogWarning("Blocked redirect from {From} to {To}: {Reason}", current, next, rejection);
++                return null;
++            }
++
++            current = next;
++        }
++
++        logger.LogWarning("Web browse exceeded {MaxRedirects} redirects starting at {Url}", MaxRedirects, uri);
++        return null;
++    }
++
++    private static bool IsRedirect(System.Net.HttpStatusCode status) => (int)status is 301 or 302 or 303 or 307 or 308;
++
+     private async Task<string> SummarizeAsync(string url, string plain, string question, CancellationToken ct)
+     {
+         var ollamaBase = (config["Auricrux:OllamaUrl"] ?? "http://127.0.0.1:11434").TrimEnd('/');
+@@ -145,30 +194,6 @@ public sealed class WebBrowseService(
+         return text.Length <= MaxPlainChars ? text : text[..MaxPlainChars];
+     }
+ 
+-    private static bool IsBlockedHost(string host)
+-    {
+-        if (string.IsNullOrWhiteSpace(host)) return true;
+-        var h = host.Trim().ToLowerInvariant();
+-        if (h is "localhost" or "metadata.google.internal" or "metadata") return true;
+-        if (h.EndsWith(".local", StringComparison.Ordinal) || h.EndsWith(".internal", StringComparison.Ordinal)) return true;
+-        if (IPAddress.TryParse(h, out var ip))
+-        {
+-            if (IPAddress.IsLoopback(ip)) return true;
+-            var bytes = ip.GetAddressBytes();
+-            if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork && bytes.Length == 4)
+-            {
+-                // 10/8, 172.16/12, 192.168/16, 169.254/16, 127/8
+-                if (bytes[0] == 10) return true;
+-                if (bytes[0] == 127) return true;
+-                if (bytes[0] == 169 && bytes[1] == 254) return true;
+-                if (bytes[0] == 172 && bytes[1] >= 16 && bytes[1] <= 31) return true;
+-                if (bytes[0] == 192 && bytes[1] == 168) return true;
+-            }
+-        }
+-
+-        return false;
+-    }
+-
+     private static WebBrowseResponse Fail(string error) => new() { Success = false, Error = error };
+ 
+     private sealed class LimitedReadStream(Stream inner, long maxBytes) : Stream

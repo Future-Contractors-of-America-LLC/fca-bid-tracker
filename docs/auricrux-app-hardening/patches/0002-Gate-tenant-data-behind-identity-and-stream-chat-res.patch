@@ -1,0 +1,1789 @@
+From 2f1d79c94672527caf1a5ee3aa6d7b17ce01e6a6 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 14:54:41 +0000
+Subject: [PATCH 2/3] Gate tenant data behind identity, and stream chat
+ responses
+
+Every data-bearing endpoint was anonymous, so unauthenticated callers could
+upgrade any account to the top paid tier, enumerate accounts by email, read and
+export any conversation by session id, and list, download, or delete every
+uploaded file. Entitlement checks keyed off a client-supplied X-Auricrux-Email
+header, which a caller could forge to borrow another plan or simply omit to skip
+metering and model gating altogether.
+
+AuricruxSecurityOptions resolves one posture at startup. Open mode keeps the
+historical shared-tenant behaviour for local development and the test host; it is
+off in Production unless Security:AllowInsecureProduction is set, and the posture
+is logged at boot. CallerContext derives the caller from a validated token when
+authentication is configured, honours the email header only in open mode, and
+partitions storage by a hashed tenant key. The public tenant keeps the existing
+on-disk layout so single-tenant deployments need no data migration. Plan changes
+require an administrator via a constant-time X-Auricrux-Admin-Key check or an
+admin role claim. Stateless inference stays open by default, since closing it is
+a deployment decision rather than a security fix; Security:RequireAuthForInference
+closes it.
+
+Chat also only ever returned a completed response, because every Ollama call set
+stream=false, so a Deep-mode answer showed nothing until it finished. That was the
+most visible behavioural gap against Copilot, Gemini, Grok, and Claude, which all
+render tokens as they arrive. POST /api/chat/stream emits Server-Sent Events,
+leading with a sources event so citations render immediately, then token events,
+then a done event carrying the interaction id for feedback.
+
+Enum values sent as JSON strings were rejected outright, so the wire format the
+MAUI client actually sends and the contract the README documents both returned
+400 and only the undocumented numeric form worked; JsonStringEnumConverter now
+accepts strings and numbers alike. Uploads are checked against an extension
+allow-list and a size limit enforced while copying rather than trusted from the
+declared length, with partial files removed on rejection. The workspace root
+check compares against root plus a separator so a sibling directory cannot pass
+it. The CSP drops 'unsafe-eval', which Blazor Server does not need, and adds
+object-src, base-uri, and form-action; API responses are marked no-store.
+---
+ Auricrux.Web/Controllers/AccountController.cs |  93 ++++++++++-
+ .../Controllers/AuricruxApiController.cs      | 140 +++++++++++++++-
+ Auricrux.Web/Controllers/MemoryController.cs  |  49 +++++-
+ .../Controllers/WorkspaceController.cs        | 100 ++++++++++--
+ .../Middleware/AuricruxApiMiddleware.cs       |  21 ++-
+ Auricrux.Web/Program.cs                       |  58 ++++++-
+ .../Security/AuricruxSecurityOptions.cs       | 125 +++++++++++++++
+ Auricrux.Web/Security/CallerContext.cs        | 133 ++++++++++++++++
+ Auricrux.Web/Security/TenantGuard.cs          |  79 ++++++++++
+ .../ConstructionIntelligenceService.cs        | 149 +++++++++++++++++-
+ .../Services/ConversationMemoryService.cs     |  74 +++++++--
+ .../Services/WorkspaceStorageService.cs       | 147 +++++++++++++----
+ 12 files changed, 1095 insertions(+), 73 deletions(-)
+ create mode 100644 Auricrux.Web/Security/AuricruxSecurityOptions.cs
+ create mode 100644 Auricrux.Web/Security/CallerContext.cs
+ create mode 100644 Auricrux.Web/Security/TenantGuard.cs
+
+diff --git a/Auricrux.Web/Controllers/AccountController.cs b/Auricrux.Web/Controllers/AccountController.cs
+index dcc128d..f8e1b6e 100644
+--- a/Auricrux.Web/Controllers/AccountController.cs
++++ b/Auricrux.Web/Controllers/AccountController.cs
+@@ -1,3 +1,4 @@
++using Auricrux.Web.Security;
+ using Auricrux.Web.Services;
+ using Microsoft.AspNetCore.Mvc;
+ 
+@@ -6,10 +7,19 @@ namespace Auricrux.Web.Controllers;
+ /// <summary>
+ /// Freemium + paid entitlements for standalone Auricrux App.
+ /// </summary>
++/// <remarks>
++/// Plan changes are an administrative operation. Leaving them open lets any caller grant
++/// themselves — or anyone else — the highest paid tier, so <c>upgrade</c> requires an
++/// administrator, and reads are limited to the caller's own account.
++/// </remarks>
+ [ApiController]
+ [Route("api/account")]
+-public sealed class AccountController(FreemiumAccountStore accounts) : ControllerBase
++public sealed class AccountController(
++    FreemiumAccountStore accounts,
++    TenantGuard guard,
++    ILogger<AccountController> logger) : ControllerBase
+ {
++    /// <summary>Lists the published plans and their limits.</summary>
+     [HttpGet("plans")]
+     public ActionResult<object> Plans() => Ok(new
+     {
+@@ -21,21 +31,45 @@ public sealed class AccountController(FreemiumAccountStore accounts) : Controlle
+         }
+     });
+ 
++    /// <summary>Creates (or returns) a free-tier account for an email address.</summary>
+     [HttpPost("register")]
+     public ActionResult<AuricruxAccount> Register([FromBody] RegisterRequest request)
+     {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
+         var email = (request.Email ?? string.Empty).Trim().ToLowerInvariant();
+         if (string.IsNullOrWhiteSpace(email))
+         {
+             return BadRequest(new { error = "Email is required." });
+         }
+ 
++        if (!MayActOn(caller, email))
++        {
++            return Forbid();
++        }
++
+         return Ok(accounts.Register(email));
+     }
+ 
++    /// <summary>Returns an account. Callers may only read their own unless they are an administrator.</summary>
+     [HttpGet("{email}")]
+     public ActionResult<AuricruxAccount> Get(string email)
+     {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
++        if (!MayActOn(caller, email))
++        {
++            // Deliberately indistinguishable from a missing account so this cannot be used to
++            // enumerate which email addresses are registered.
++            return NotFound();
++        }
++
+         if (!accounts.TryGet(email, out var account) || account is null)
+         {
+             return NotFound();
+@@ -44,26 +78,51 @@ public sealed class AccountController(FreemiumAccountStore accounts) : Controlle
+         return Ok(account);
+     }
+ 
++    /// <summary>
++    /// Changes an account's plan. Administrative only — this is the entitlement grant that paid
++    /// billing depends on.
++    /// </summary>
+     [HttpPost("{email}/upgrade")]
+     public ActionResult<AuricruxAccount> Upgrade(string email, [FromBody] UpgradeRequest request)
+     {
++        if (!guard.TryAuthorizeAdmin(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
+         if (!accounts.TryGet(email, out var account) || account is null)
+         {
+             return NotFound();
+         }
+ 
+-        if (!accounts.Upgrade(email, request.Plan ?? "free"))
++        var plan = request.Plan ?? "free";
++        if (!accounts.Upgrade(email, plan))
+         {
+             return NotFound();
+         }
+ 
++        logger.LogInformation(
++            "Plan change to {Plan} for {Email} authorized via {Source}",
++            plan, email, caller.Source);
++
+         accounts.TryGet(email, out account);
+         return Ok(account);
+     }
+ 
++    /// <summary>Consumes one query against the account's daily quota.</summary>
+     [HttpPost("{email}/consume")]
+     public ActionResult<object> Consume(string email)
+     {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
++        if (!MayActOn(caller, email))
++        {
++            return NotFound();
++        }
++
+         if (!accounts.TryGet(email, out var account) || account is null)
+         {
+             return NotFound();
+@@ -88,26 +147,56 @@ public sealed class AccountController(FreemiumAccountStore accounts) : Controlle
+         accounts.TryGet(email, out account);
+         return Ok(account);
+     }
++
++    /// <summary>
++    /// Whether a caller may read or meter the given account. Administrators may act on any
++    /// account; an authenticated caller may only act on the address their token asserts.
++    /// </summary>
++    private static bool MayActOn(CallerContext caller, string email)
++    {
++        if (caller.IsAdmin)
++        {
++            return true;
++        }
++
++        return caller.Email is not null
++               && caller.Email.Equals(email.Trim(), StringComparison.OrdinalIgnoreCase);
++    }
+ }
+ 
++/// <summary>Body for account registration.</summary>
+ public sealed class RegisterRequest
+ {
++    /// <summary>Email address to register.</summary>
+     public string? Email { get; set; }
+ }
+ 
++/// <summary>Body for an administrative plan change.</summary>
+ public sealed class UpgradeRequest
+ {
++    /// <summary>Target plan: <c>free</c>, <c>pro</c>, or <c>pro-plus</c>.</summary>
+     public string? Plan { get; set; }
+ }
+ 
++/// <summary>A freemium account and its current daily usage.</summary>
+ public sealed class AuricruxAccount
+ {
++    /// <summary>Normalized account email.</summary>
+     public string Email { get; set; } = string.Empty;
++
++    /// <summary>Current plan identifier.</summary>
+     public string Plan { get; set; } = "free";
++
++    /// <summary>Queries permitted per UTC day on the current plan.</summary>
+     public int DailyQueryLimit { get; set; } = 25;
++
++    /// <summary>Queries consumed during the current UTC day.</summary>
+     public int QueriesUsedToday { get; set; }
++
++    /// <summary>UTC day the usage counter applies to.</summary>
+     public DateOnly DayKey { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
+ 
++    /// <summary>Resets the usage counter when the UTC day has advanced.</summary>
+     public void RolloverDay()
+     {
+         var today = DateOnly.FromDateTime(DateTime.UtcNow);
+diff --git a/Auricrux.Web/Controllers/AuricruxApiController.cs b/Auricrux.Web/Controllers/AuricruxApiController.cs
+index b3647b3..a574543 100644
+--- a/Auricrux.Web/Controllers/AuricruxApiController.cs
++++ b/Auricrux.Web/Controllers/AuricruxApiController.cs
+@@ -1,9 +1,11 @@
+ using Auricrux.Shared.Models;
++using Auricrux.Web.Security;
+ using Auricrux.Web.Services;
+ using Microsoft.AspNetCore.Mvc;
+ 
+ namespace Auricrux.Web.Controllers;
+ 
++/// <summary>Core Auricrux inference surface: chat, thinking, search, browse, agent, calc, vision.</summary>
+ [ApiController]
+ [Route("api")]
+ public sealed class AuricruxApiController(
+@@ -15,8 +17,11 @@ public sealed class AuricruxApiController(
+     ConstructionAgentService agent,
+     ConstructionCalculatorService calculator,
+     ConstructionVisionService vision,
++    CallerContextResolver callerResolver,
++    AuricruxSecurityOptions security,
+     ILogger<AuricruxApiController> logger) : ControllerBase
+ {
++    /// <summary>Liveness and dependency health, intentionally unauthenticated for uptime probes.</summary>
+     [HttpGet("health")]
+     [HttpGet("/health")]
+     [HttpGet("/healthz")]
+@@ -33,25 +38,29 @@ public sealed class AuricruxApiController(
+         return StatusCode(statusCode, report);
+     }
+ 
++    /// <summary>Lists the models this deployment can serve.</summary>
+     [HttpGet("models")]
+     public ActionResult<object> ListModels() => Ok(new { models = intelligence.AvailableModels });
+ 
++    /// <summary>Reports the shipped-versus-planned capability matrix.</summary>
+     [HttpGet("capabilities")]
+     public ActionResult<CapabilitiesReport> GetCapabilities() => Ok(capabilities.GetReport());
+ 
++    /// <summary>Answers a construction question with corpus grounding and a thinking trace.</summary>
+     [HttpPost("chat")]
+     public async Task<ActionResult<ChatResponse>> Chat(
+         [FromBody] ChatRequest request,
+         [FromQuery] string? model,
+-        [FromHeader(Name = "X-Auricrux-Email")] string? accountEmail,
+         CancellationToken cancellationToken)
+     {
+-        if (string.IsNullOrWhiteSpace(request.Query))
++        if (ValidatePrompt(request.Query, out var promptError))
+         {
+-            return BadRequest(new { error = "Query is required." });
++            return promptError!;
+         }
+ 
+-        model = ResolveModel(model, accountEmail, out var entitlementError);
++        TrimHistory(request);
++
++        model = ResolveModel(model, out var entitlementError);
+         if (entitlementError is not null)
+         {
+             return entitlementError;
+@@ -62,6 +71,72 @@ public sealed class AuricruxApiController(
+         return Ok(response);
+     }
+ 
++    /// <summary>
++    /// Streams a chat answer as Server-Sent Events so clients can render tokens as they arrive,
++    /// matching the incremental output every major assistant provides.
++    /// </summary>
++    [HttpPost("chat/stream")]
++    public async Task StreamChat(
++        [FromBody] ChatRequest request,
++        [FromQuery] string? model,
++        CancellationToken cancellationToken)
++    {
++        Response.ContentType = "text/event-stream";
++        Response.Headers.CacheControl = "no-store";
++        Response.Headers["X-Accel-Buffering"] = "no";
++
++        if (string.IsNullOrWhiteSpace(request.Query))
++        {
++            await WriteEventAsync("error", new { error = "Query is required." }, cancellationToken);
++            return;
++        }
++
++        if (request.Query.Length > security.MaxPromptChars)
++        {
++            await WriteEventAsync("error", new { error = $"Query exceeds the {security.MaxPromptChars} character limit." }, cancellationToken);
++            return;
++        }
++
++        TrimHistory(request);
++
++        var resolved = ResolveModel(model, out var entitlementError);
++        if (entitlementError is not null)
++        {
++            await WriteEventAsync("error", new { error = "Model or quota not available on the current plan." }, cancellationToken);
++            return;
++        }
++
++        try
++        {
++            await foreach (var chunk in intelligence.StreamChatAsync(request, resolved, cancellationToken))
++            {
++                await WriteEventAsync(chunk.Event, chunk.Payload, cancellationToken);
++            }
++        }
++        catch (OperationCanceledException)
++        {
++            // Client navigated away or pressed stop; nothing further to send.
++        }
++        catch (Exception ex)
++        {
++            logger.LogError(ex, "Streaming chat failed (correlation={CorrelationId})", HttpContext.TraceIdentifier);
++            await WriteEventAsync("error", new { error = "Generation failed.", correlationId = HttpContext.TraceIdentifier }, CancellationToken.None);
++        }
++    }
++
++    private async Task WriteEventAsync(string eventName, object payload, CancellationToken ct)
++    {
++        var json = System.Text.Json.JsonSerializer.Serialize(payload, StreamJsonOptions);
++        await Response.WriteAsync($"event: {eventName}\ndata: {json}\n\n", ct);
++        await Response.Body.FlushAsync(ct);
++    }
++
++    private static readonly System.Text.Json.JsonSerializerOptions StreamJsonOptions = new()
++    {
++        PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
++    };
++
++    /// <summary>Runs the reasoning pass on its own.</summary>
+     [HttpPost("thinking")]
+     public async Task<ActionResult<ThinkingResponse>> PostThinking(
+         [FromBody] ThinkingRequest request,
+@@ -179,11 +254,66 @@ public sealed class AuricruxApiController(
+         return Accepted();
+     }
+ 
+-    private string? ResolveModel(string? model, string? accountEmail, out ActionResult? error)
++    /// <summary>
++    /// Rejects an empty or oversized prompt. Returns <see langword="true"/> when the request
++    /// should not proceed.
++    /// </summary>
++    private bool ValidatePrompt(string? query, out ActionResult? error)
+     {
++        if (string.IsNullOrWhiteSpace(query))
++        {
++            error = BadRequest(new { error = "Query is required." });
++            return true;
++        }
++
++        if (query.Length > security.MaxPromptChars)
++        {
++            error = BadRequest(new { error = $"Query exceeds the {security.MaxPromptChars} character limit." });
++            return true;
++        }
++
+         error = null;
++        return false;
++    }
++
++    /// <summary>
++    /// Caps forwarded history so a caller cannot drive unbounded upstream token cost with one
++    /// request.
++    /// </summary>
++    private void TrimHistory(ChatRequest request)
++    {
++        if (request.ConversationHistory.Count > security.MaxHistoryTurns)
++        {
++            request.ConversationHistory = request.ConversationHistory
++                .TakeLast(security.MaxHistoryTurns)
++                .ToList();
++        }
++    }
++
++    /// <summary>
++    /// Applies plan entitlements to the requested model. The account is taken from the resolved
++    /// caller rather than a request header, so a client cannot skip metering by omitting it or
++    /// borrow another account's plan by forging it.
++    /// </summary>
++    private string? ResolveModel(string? model, out ActionResult? error)
++    {
++        error = null;
++        var caller = callerResolver.Resolve();
++        var accountEmail = caller.Email;
++
+         if (string.IsNullOrWhiteSpace(accountEmail))
+         {
++            // Inference stays open unless an operator explicitly closes it. Locking tenant data is
++            // a security fix; locking inference changes who may use the product at all.
++            if (security.RequireAuthForInference && !caller.IsAuthenticated)
++            {
++                error = StatusCode(StatusCodes.Status401Unauthorized, new
++                {
++                    error = "Authentication is required to run inference on this deployment."
++                });
++                return null;
++            }
++
+             return model;
+         }
+ 
+diff --git a/Auricrux.Web/Controllers/MemoryController.cs b/Auricrux.Web/Controllers/MemoryController.cs
+index 809a39f..783f317 100644
+--- a/Auricrux.Web/Controllers/MemoryController.cs
++++ b/Auricrux.Web/Controllers/MemoryController.cs
+@@ -1,15 +1,22 @@
++using Auricrux.Web.Security;
+ using Auricrux.Web.Services;
+ using Microsoft.AspNetCore.Mvc;
+ 
+ namespace Auricrux.Web.Controllers;
+ 
++/// <summary>
++/// Conversation transcript storage. Every route is scoped to the calling tenant, so a session id
++/// guessed or leaked from another tenant resolves to a different, empty partition.
++/// </summary>
+ [ApiController]
+ [Route("api/memory")]
+-public sealed class MemoryController(ConversationMemoryService memory) : ControllerBase
++public sealed class MemoryController(ConversationMemoryService memory, TenantGuard guard) : ControllerBase
+ {
++    /// <summary>Lists the available persistence backends.</summary>
+     [HttpGet("backends")]
+     public ActionResult<object> Backends() => Ok(new { backends = memory.Backends });
+ 
++    /// <summary>Returns the most recent turns for a session owned by the caller.</summary>
+     [HttpGet("{sessionId}")]
+     public async Task<ActionResult<object>> List(
+         string sessionId,
+@@ -17,15 +24,21 @@ public sealed class MemoryController(ConversationMemoryService memory) : Control
+         [FromQuery] int take = 50,
+         CancellationToken cancellationToken = default)
+     {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
+         if (!TryParseBackend(backend, out var parsed))
+         {
+             return BadRequest(new { error = "backend must be session | file-jsonl | sqlite" });
+         }
+ 
+-        var turns = await memory.ListAsync(sessionId, parsed, take, cancellationToken);
++        var turns = await memory.ListAsync(caller.TenantKey, sessionId, parsed, take, cancellationToken);
+         return Ok(new { sessionId, backend = backend.ToLowerInvariant(), turns });
+     }
+ 
++    /// <summary>Exports a session owned by the caller as Markdown or JSON.</summary>
+     [HttpGet("{sessionId}/export")]
+     public async Task<IActionResult> Export(
+         string sessionId,
+@@ -34,6 +47,11 @@ public sealed class MemoryController(ConversationMemoryService memory) : Control
+         [FromQuery] int take = 200,
+         CancellationToken cancellationToken = default)
+     {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
+         if (!TryParseBackend(backend, out var parsed))
+         {
+             return BadRequest(new { error = "backend must be session | file-jsonl | sqlite" });
+@@ -45,7 +63,7 @@ public sealed class MemoryController(ConversationMemoryService memory) : Control
+             return BadRequest(new { error = "format must be markdown | json" });
+         }
+ 
+-        var turns = await memory.ListAsync(sessionId, parsed, take, cancellationToken);
++        var turns = await memory.ListAsync(caller.TenantKey, sessionId, parsed, take, cancellationToken);
+         if (normalizedFormat == "json")
+         {
+             return Ok(new { sessionId, backend = backend.ToLowerInvariant(), turns });
+@@ -55,23 +73,40 @@ public sealed class MemoryController(ConversationMemoryService memory) : Control
+         return Content(markdown, "text/markdown; charset=utf-8");
+     }
+ 
++    /// <summary>Appends a turn to a session owned by the caller.</summary>
+     [HttpPost("{sessionId}")]
+     public async Task<IActionResult> Append(
+         string sessionId,
+         [FromBody] MemoryAppendRequest request,
+         CancellationToken cancellationToken = default)
+     {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
+         if (string.IsNullOrWhiteSpace(request.Role) || string.IsNullOrWhiteSpace(request.Content))
+         {
+             return BadRequest(new { error = "Role and content are required." });
+         }
+ 
++        if (request.Content.Length > guard.Security.MaxPromptChars)
++        {
++            return BadRequest(new { error = $"Content exceeds the {guard.Security.MaxPromptChars} character limit." });
++        }
++
+         if (!TryParseBackend(request.Backend ?? "sqlite", out var parsed))
+         {
+             return BadRequest(new { error = "backend must be session | file-jsonl | sqlite" });
+         }
+ 
+-        await memory.AppendAsync(sessionId, parsed, request.Role.Trim(), request.Content.Trim(), cancellationToken);
++        await memory.AppendAsync(
++            caller.TenantKey,
++            sessionId,
++            parsed,
++            request.Role.Trim(),
++            request.Content.Trim(),
++            cancellationToken);
+         return Accepted();
+     }
+ 
+@@ -98,9 +133,15 @@ public sealed class MemoryController(ConversationMemoryService memory) : Control
+     }
+ }
+ 
++/// <summary>Body for appending a single conversation turn.</summary>
+ public sealed class MemoryAppendRequest
+ {
++    /// <summary>Speaker role, typically <c>user</c> or <c>assistant</c>.</summary>
+     public string? Role { get; set; }
++
++    /// <summary>Turn text.</summary>
+     public string? Content { get; set; }
++
++    /// <summary>Persistence backend: <c>session</c>, <c>file-jsonl</c>, or <c>sqlite</c>.</summary>
+     public string? Backend { get; set; }
+ }
+diff --git a/Auricrux.Web/Controllers/WorkspaceController.cs b/Auricrux.Web/Controllers/WorkspaceController.cs
+index b4241da..9054de0 100644
+--- a/Auricrux.Web/Controllers/WorkspaceController.cs
++++ b/Auricrux.Web/Controllers/WorkspaceController.cs
+@@ -1,27 +1,46 @@
++using Auricrux.Web.Security;
+ using Auricrux.Web.Services;
+ using Microsoft.AspNetCore.Mvc;
+ 
+ namespace Auricrux.Web.Controllers;
+ 
++/// <summary>
++/// Document workspace. Every route operates inside the calling tenant's own directory.
++/// </summary>
+ [ApiController]
+ [Route("api/workspace")]
+-public sealed class WorkspaceController(WorkspaceStorageService workspace) : ControllerBase
++public sealed class WorkspaceController(WorkspaceStorageService workspace, TenantGuard guard) : ControllerBase
+ {
++    /// <summary>Lists the caller's workspace contents at an optional sub-path.</summary>
+     [HttpGet]
+     public ActionResult<WorkspaceListing> List([FromQuery] string? path = null)
+-        => Ok(workspace.List(path));
++    {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
++        return Ok(workspace.List(caller.TenantKey, path));
++    }
+ 
++    /// <summary>Creates a folder in the caller's workspace.</summary>
+     [HttpPost("folders")]
+     public ActionResult<WorkspaceEntry> CreateFolder([FromBody] CreateFolderRequest request)
+     {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
+         if (string.IsNullOrWhiteSpace(request.Path))
+         {
+             return BadRequest(new { error = "Path is required." });
+         }
+ 
+-        return Ok(workspace.CreateFolder(request.Path.Trim()));
++        return Ok(workspace.CreateFolder(caller.TenantKey, request.Path.Trim()));
+     }
+ 
++    /// <summary>Uploads a file into the caller's workspace.</summary>
+     [HttpPost("files")]
+     [RequestSizeLimit(104_857_600)]
+     public async Task<ActionResult<WorkspaceEntry>> Upload(
+@@ -29,30 +48,91 @@ public sealed class WorkspaceController(WorkspaceStorageService workspace) : Con
+         [FromForm] string? folder,
+         CancellationToken cancellationToken)
+     {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
+         if (file is null || file.Length == 0)
+         {
+             return BadRequest(new { error = "File is required." });
+         }
+ 
+-        await using var stream = file.OpenReadStream();
+-        var entry = await workspace.SaveFileAsync(folder, file.FileName, stream, cancellationToken);
+-        return Created($"/api/workspace/files/{entry.Path}", entry);
++        if (file.Length > guard.Security.MaxUploadBytes)
++        {
++            return StatusCode(StatusCodes.Status413PayloadTooLarge, new
++            {
++                error = $"Upload exceeds the {guard.Security.MaxUploadBytes} byte limit."
++            });
++        }
++
++        try
++        {
++            await using var stream = file.OpenReadStream();
++            var entry = await workspace.SaveFileAsync(caller.TenantKey, folder, file.FileName, stream, cancellationToken);
++            return Created($"/api/workspace/files/{entry.Path}", entry);
++        }
++        catch (InvalidOperationException ex)
++        {
++            return BadRequest(new { error = ex.Message });
++        }
+     }
+ 
++    /// <summary>Downloads a file from the caller's workspace.</summary>
+     [HttpGet("files/{*path}")]
+     public IActionResult Download(string path)
+     {
+-        var opened = workspace.OpenFile(path);
+-        if (opened is null) return NotFound();
+-        return File(opened.Value.Stream, opened.Value.ContentType, opened.Value.FileName);
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
++        try
++        {
++            var opened = workspace.OpenFile(caller.TenantKey, path);
++            if (opened is null) return NotFound();
++
++            // Always download rather than render: an uploaded SVG or HTML file served inline would
++            // execute in the app's own origin.
++            return File(opened.Value.Stream, opened.Value.ContentType, opened.Value.FileName);
++        }
++        catch (FileNotFoundException)
++        {
++            return NotFound();
++        }
++        catch (InvalidOperationException)
++        {
++            return NotFound();
++        }
+     }
+ 
++    /// <summary>Deletes a file or folder from the caller's workspace.</summary>
+     [HttpDelete("{*path}")]
+     public IActionResult Delete(string path)
+-        => workspace.Delete(path) ? NoContent() : NotFound();
++    {
++        if (!guard.TryAuthorize(out var caller, out var denial))
++        {
++            return denial!;
++        }
++
++        try
++        {
++            return workspace.Delete(caller.TenantKey, path) ? NoContent() : NotFound();
++        }
++        catch (FileNotFoundException)
++        {
++            return NotFound();
++        }
++        catch (InvalidOperationException)
++        {
++            return NotFound();
++        }
++    }
+ }
+ 
++/// <summary>Body for creating a workspace folder.</summary>
+ public sealed class CreateFolderRequest
+ {
++    /// <summary>Folder path relative to the caller's workspace root.</summary>
+     public string? Path { get; set; }
+ }
+diff --git a/Auricrux.Web/Middleware/AuricruxApiMiddleware.cs b/Auricrux.Web/Middleware/AuricruxApiMiddleware.cs
+index 16a613a..0f9a3b6 100644
+--- a/Auricrux.Web/Middleware/AuricruxApiMiddleware.cs
++++ b/Auricrux.Web/Middleware/AuricruxApiMiddleware.cs
+@@ -1,12 +1,17 @@
+ using System.Diagnostics;
++using Auricrux.Web.Security;
+ 
+ namespace Auricrux.Web.Middleware;
+ 
+ /// <summary>
+ /// Security headers and structured request logging for API routes.
+ /// </summary>
+-public sealed class AuricruxApiMiddleware(RequestDelegate next, ILogger<AuricruxApiMiddleware> logger)
++public sealed class AuricruxApiMiddleware(
++    RequestDelegate next,
++    AuricruxSecurityOptions security,
++    ILogger<AuricruxApiMiddleware> logger)
+ {
++    /// <summary>Applies response hardening headers and logs API request outcomes.</summary>
+     public async Task InvokeAsync(HttpContext context)
+     {
+         ApplySecurityHeaders(context);
+@@ -34,7 +39,7 @@ public sealed class AuricruxApiMiddleware(RequestDelegate next, ILogger<Auricrux
+         }
+     }
+ 
+-    private static void ApplySecurityHeaders(HttpContext context)
++    private void ApplySecurityHeaders(HttpContext context)
+     {
+         var headers = context.Response.Headers;
+         headers["X-Content-Type-Options"] = "nosniff";
+@@ -42,10 +47,18 @@ public sealed class AuricruxApiMiddleware(RequestDelegate next, ILogger<Auricrux
+         headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+         headers["Permissions-Policy"] = "camera=(), microphone=(self), geolocation=()";
+         headers["X-XSS-Protection"] = "0";
++        headers["Cross-Origin-Opener-Policy"] = "same-origin";
++        headers["Cross-Origin-Resource-Policy"] = "same-origin";
++
++        // Responses that carry conversation content must never be cached by a shared proxy.
++        if (context.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase))
++        {
++            headers["Cache-Control"] = "no-store";
++        }
++
+         if (!headers.ContainsKey("Content-Security-Policy"))
+         {
+-            headers["Content-Security-Policy"] =
+-                "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' ws: wss:; frame-ancestors 'none';";
++            headers["Content-Security-Policy"] = security.ContentSecurityPolicy;
+         }
+     }
+ }
+diff --git a/Auricrux.Web/Program.cs b/Auricrux.Web/Program.cs
+index d2e9b2b..ecf3a6f 100644
+--- a/Auricrux.Web/Program.cs
++++ b/Auricrux.Web/Program.cs
+@@ -1,8 +1,11 @@
++using System.Text.Json;
++using System.Text.Json.Serialization;
+ using System.Threading.RateLimiting;
+ using Auricrux.Shared.Models;
+ using Auricrux.Shared.Services;
+ using Auricrux.Web.Components;
+ using Auricrux.Web.Middleware;
++using Auricrux.Web.Security;
+ using Auricrux.Web.Services;
+ using Microsoft.AspNetCore.Authentication;
+ using Microsoft.AspNetCore.Authentication.Cookies;
+@@ -15,9 +18,22 @@ using Microsoft.IdentityModel.Tokens;
+ var builder = WebApplication.CreateBuilder(args);
+ 
+ builder.Logging.AddConsole();
++
++var security = AuricruxSecurityOptions.Resolve(builder.Configuration, builder.Environment);
++builder.Services.AddSingleton(security);
++builder.Services.AddHttpContextAccessor();
++builder.Services.AddScoped<CallerContextResolver>();
++builder.Services.AddScoped<TenantGuard>();
++
+ builder.Services.AddRazorComponents()
+     .AddInteractiveServerComponents();
+-builder.Services.AddControllers();
++
++// Accept enums as JSON strings as well as numbers. The MAUI/Shared client and the documented API
++// contract both send "thinkingMode": "Auto"; without this converter every such request is a 400.
++builder.Services.AddControllers()
++    .AddJsonOptions(options =>
++        options.JsonSerializerOptions.Converters.Add(
++            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: true)));
+ builder.Services.AddHttpClient(nameof(ConstructionIntelligenceService));
+ builder.Services.AddHttpClient(nameof(MediaGenerationService));
+ builder.Services.AddHttpClient(nameof(FcaAccountLinkService));
+@@ -144,6 +160,8 @@ if (authEnabled && !string.IsNullOrWhiteSpace(authAuthority))
+ 
+ var app = builder.Build();
+ 
++LogSecurityPosture(app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Auricrux.Security"), security);
++
+ var mediaRoot = Path.Combine(app.Environment.ContentRootPath, "Data", "media");
+ Directory.CreateDirectory(mediaRoot);
+ var workspaceRoot = Path.Combine(app.Environment.ContentRootPath, "Data", "workspace");
+@@ -214,4 +232,42 @@ app.MapRazorComponents<App>()
+ 
+ app.Run();
+ 
++/// <summary>
++/// Records the effective security posture at startup so an operator can tell from the first lines
++/// of a log whether the deployment is serving data anonymously.
++/// </summary>
++static void LogSecurityPosture(ILogger logger, AuricruxSecurityOptions options)
++{
++    if (options.ProductionLockdown)
++    {
++        logger.LogCritical(
++            "Auricrux is running in Production with no authentication configured. Account, memory, "
++            + "and workspace endpoints are DISABLED. Set Auth:Enabled and Auth:Authority to enable "
++            + "them, or Security:AllowInsecureProduction=true to knowingly serve them anonymously.");
++        return;
++    }
++
++    if (options.IsProduction && options.OpenMode)
++    {
++        logger.LogCritical(
++            "Auricrux is running in Production with Security:AllowInsecureProduction=true. Every "
++            + "caller shares one tenant and administrative operations are UNGUARDED.");
++        return;
++    }
++
++    if (options.OpenMode)
++    {
++        logger.LogWarning(
++            "Auricrux is running in open mode: all callers share the '{Tenant}' partition and "
++            + "administrative operations are unguarded. Intended for local development only.",
++            CallerContext.PublicTenant);
++        return;
++    }
++
++    logger.LogInformation(
++        "Auricrux security posture: authenticated access required, per-caller tenant isolation "
++        + "enabled, admin key {AdminKeyState}.",
++        string.IsNullOrWhiteSpace(options.AdminApiKey) ? "not configured" : "configured");
++}
++
+ public partial class Program;
+diff --git a/Auricrux.Web/Security/AuricruxSecurityOptions.cs b/Auricrux.Web/Security/AuricruxSecurityOptions.cs
+new file mode 100644
+index 0000000..3e88334
+--- /dev/null
++++ b/Auricrux.Web/Security/AuricruxSecurityOptions.cs
+@@ -0,0 +1,125 @@
++namespace Auricrux.Web.Security;
++
++/// <summary>
++/// Effective security posture for the running host, resolved once at startup.
++/// </summary>
++/// <remarks>
++/// The single most important value here is <see cref="OpenMode"/>. Auricrux historically served
++/// every API anonymously, which is convenient for local development but means account, memory,
++/// and workspace data belong to whoever asks for them. Open mode preserves that behaviour for
++/// local development and the test host, and is off by default anywhere that looks like a real
++/// deployment.
++/// </remarks>
++public sealed class AuricruxSecurityOptions
++{
++    /// <summary>Whether the host runs in the Production environment.</summary>
++    public required bool IsProduction { get; init; }
++
++    /// <summary>Whether an authentication scheme is configured and enabled.</summary>
++    public required bool AuthEnabled { get; init; }
++
++    /// <summary>
++    /// When true, unauthenticated callers share a single public tenant and administrative
++    /// operations are unguarded. Intended for local development and integration tests only.
++    /// </summary>
++    public required bool OpenMode { get; init; }
++
++    /// <summary>
++    /// When true, the deployment is in Production without authentication and without an explicit
++    /// opt-in, so data-bearing endpoints are refused rather than served anonymously.
++    /// </summary>
++    public required bool ProductionLockdown { get; init; }
++
++    /// <summary>
++    /// Whether stateless inference (chat, thinking, search, calc, vision, browse) also requires an
++    /// authenticated caller. Off by default: locking tenant data is a security fix, whereas
++    /// locking inference changes who the product is for, which is a deployment decision.
++    /// </summary>
++    public required bool RequireAuthForInference { get; init; }
++
++    /// <summary>Shared secret accepted in <c>X-Auricrux-Admin-Key</c> for administrative calls.</summary>
++    public required string? AdminApiKey { get; init; }
++
++    /// <summary>Role claim value that grants administrative access.</summary>
++    public required string AdminRole { get; init; }
++
++    /// <summary>Email addresses granted administrative access when authenticated.</summary>
++    public required IReadOnlySet<string> AdminEmails { get; init; }
++
++    /// <summary>Maximum accepted length of a single user prompt, in characters.</summary>
++    public required int MaxPromptChars { get; init; }
++
++    /// <summary>Maximum accepted conversation-history turns forwarded to the model.</summary>
++    public required int MaxHistoryTurns { get; init; }
++
++    /// <summary>Maximum accepted workspace upload size, in bytes.</summary>
++    public required long MaxUploadBytes { get; init; }
++
++    /// <summary>File extensions accepted by the workspace uploader.</summary>
++    public required IReadOnlySet<string> AllowedUploadExtensions { get; init; }
++
++    /// <summary>Content-Security-Policy applied to responses.</summary>
++    public required string ContentSecurityPolicy { get; init; }
++
++    /// <summary>
++    /// Resolves the effective posture from configuration. Explicit <c>Security:OpenMode</c> wins;
++    /// otherwise open mode is inferred as "not production and no authentication configured".
++    /// </summary>
++    public static AuricruxSecurityOptions Resolve(IConfiguration config, IHostEnvironment env)
++    {
++        var isProduction = env.IsProduction();
++        var authEnabled = config.GetValue("Auth:Enabled", false)
++                          && !string.IsNullOrWhiteSpace(config["Auth:Authority"]);
++        var allowInsecureProduction = config.GetValue("Security:AllowInsecureProduction", false);
++
++        var explicitOpenMode = config.GetValue<bool?>("Security:OpenMode");
++        var openMode = explicitOpenMode ?? (!isProduction && !authEnabled);
++        if (isProduction && !allowInsecureProduction)
++        {
++            openMode = false;
++        }
++
++        var productionLockdown = isProduction && !authEnabled && !allowInsecureProduction;
++
++        return new AuricruxSecurityOptions
++        {
++            IsProduction = isProduction,
++            AuthEnabled = authEnabled,
++            OpenMode = openMode,
++            ProductionLockdown = productionLockdown,
++            RequireAuthForInference = config.GetValue("Security:RequireAuthForInference", false),
++            AdminApiKey = config["Security:AdminApiKey"],
++            AdminRole = config["Security:AdminRole"] ?? "auricrux-admin",
++            AdminEmails = new HashSet<string>(
++                config.GetSection("Security:AdminEmails").Get<string[]>() ?? [],
++                StringComparer.OrdinalIgnoreCase),
++            MaxPromptChars = config.GetValue("Security:MaxPromptChars", 32_000),
++            MaxHistoryTurns = config.GetValue("Security:MaxHistoryTurns", 40),
++            MaxUploadBytes = config.GetValue("Security:MaxUploadBytes", 26_214_400L),
++            AllowedUploadExtensions = new HashSet<string>(
++                config.GetSection("Security:AllowedUploadExtensions").Get<string[]>()
++                ??
++                [
++                    ".pdf", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".txt", ".md", ".csv",
++                    ".json", ".xml", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
++                    ".dwg", ".dxf", ".rvt", ".ifc", ".zip", ".mp4"
++                ],
++                StringComparer.OrdinalIgnoreCase),
++            ContentSecurityPolicy = config["Security:ContentSecurityPolicy"] ?? DefaultCsp
++        };
++    }
++
++    // Blazor Server streams rendered markup over SignalR and does not need 'unsafe-eval'; inline
++    // script remains permitted because the framework emits an inline bootstrap script.
++    private const string DefaultCsp =
++        "default-src 'self'; " +
++        "script-src 'self' 'unsafe-inline'; " +
++        "style-src 'self' 'unsafe-inline'; " +
++        "img-src 'self' data: blob:; " +
++        "font-src 'self' data:; " +
++        "connect-src 'self' ws: wss:; " +
++        "object-src 'none'; " +
++        "base-uri 'self'; " +
++        "form-action 'self'; " +
++        "frame-ancestors 'none'";
++}
+diff --git a/Auricrux.Web/Security/CallerContext.cs b/Auricrux.Web/Security/CallerContext.cs
+new file mode 100644
+index 0000000..a84b11a
+--- /dev/null
++++ b/Auricrux.Web/Security/CallerContext.cs
+@@ -0,0 +1,133 @@
++using System.Security.Claims;
++using System.Security.Cryptography;
++using System.Text;
++
++namespace Auricrux.Web.Security;
++
++/// <summary>
++/// The identity Auricrux attributes a request to, and the tenant whose data it may touch.
++/// </summary>
++/// <param name="TenantKey">
++/// Storage partition for this caller. <c>"public"</c> is the shared partition used in open mode.
++/// </param>
++/// <param name="Email">Caller email when known, used for freemium entitlement lookup.</param>
++/// <param name="IsAuthenticated">Whether the identity was proven by a validated token or cookie.</param>
++/// <param name="IsAdmin">Whether the caller may perform administrative operations.</param>
++/// <param name="Source">How the identity was established, for audit logging.</param>
++public sealed record CallerContext(
++    string TenantKey,
++    string? Email,
++    bool IsAuthenticated,
++    bool IsAdmin,
++    string Source)
++{
++    /// <summary>The shared partition used when every caller is treated as the same tenant.</summary>
++    public const string PublicTenant = "public";
++
++    /// <summary>Whether this caller may read and write tenant-scoped data at all.</summary>
++    public bool CanAccessTenantData => TenantKey.Length > 0;
++
++    /// <summary>A caller that has proven nothing and may not touch tenant data.</summary>
++    public static CallerContext Denied { get; } = new("", null, false, false, "anonymous");
++}
++
++/// <summary>
++/// Resolves the <see cref="CallerContext"/> for the current request.
++/// </summary>
++public sealed class CallerContextResolver(
++    IHttpContextAccessor httpContextAccessor,
++    AuricruxSecurityOptions security)
++{
++    /// <summary>Header carrying an unverified caller email, honoured only in open mode.</summary>
++    public const string EmailHeader = "X-Auricrux-Email";
++
++    /// <summary>Header carrying the administrative shared secret.</summary>
++    public const string AdminKeyHeader = "X-Auricrux-Admin-Key";
++
++    /// <summary>
++    /// Determines who is calling. An authenticated principal always wins; the unverified email
++    /// header is honoured only in open mode, because anyone can send it.
++    /// </summary>
++    public CallerContext Resolve()
++    {
++        var http = httpContextAccessor.HttpContext;
++        if (http is null)
++        {
++            return security.OpenMode
++                ? new CallerContext(CallerContext.PublicTenant, null, false, security.OpenMode, "open-mode")
++                : CallerContext.Denied;
++        }
++
++        var user = http.User;
++        if (user.Identity?.IsAuthenticated == true)
++        {
++            var subject = FirstClaim(user, "sub", ClaimTypes.NameIdentifier, "oid")
++                          ?? user.Identity.Name
++                          ?? "unknown";
++            var email = FirstClaim(user, "email", ClaimTypes.Email, "preferred_username", "upn");
++            return new CallerContext(
++                TenantKey: TenantKeyFor(subject),
++                Email: email?.Trim().ToLowerInvariant(),
++                IsAuthenticated: true,
++                IsAdmin: IsAdminPrincipal(user, email) || HasValidAdminKey(http),
++                Source: "token");
++        }
++
++        if (HasValidAdminKey(http))
++        {
++            return new CallerContext(CallerContext.PublicTenant, null, false, true, "admin-key");
++        }
++
++        if (security.OpenMode)
++        {
++            // Open mode keeps the historical single-tenant behaviour: an unverified header still
++            // selects a freemium account, but every caller shares one storage partition.
++            var headerEmail = http.Request.Headers[EmailHeader].ToString();
++            return new CallerContext(
++                TenantKey: CallerContext.PublicTenant,
++                Email: string.IsNullOrWhiteSpace(headerEmail) ? null : headerEmail.Trim().ToLowerInvariant(),
++                IsAuthenticated: false,
++                IsAdmin: true,
++                Source: string.IsNullOrWhiteSpace(headerEmail) ? "open-mode" : "open-mode-header");
++        }
++
++        return CallerContext.Denied;
++    }
++
++    private bool IsAdminPrincipal(ClaimsPrincipal user, string? email)
++        => user.IsInRole(security.AdminRole)
++           || user.HasClaim("roles", security.AdminRole)
++           || user.HasClaim("role", security.AdminRole)
++           || (email is not null && security.AdminEmails.Contains(email));
++
++    private bool HasValidAdminKey(HttpContext http)
++    {
++        if (string.IsNullOrWhiteSpace(security.AdminApiKey))
++        {
++            return false;
++        }
++
++        var presented = http.Request.Headers[AdminKeyHeader].ToString();
++        if (string.IsNullOrEmpty(presented))
++        {
++            return false;
++        }
++
++        return CryptographicOperations.FixedTimeEquals(
++            Encoding.UTF8.GetBytes(presented),
++            Encoding.UTF8.GetBytes(security.AdminApiKey));
++    }
++
++    private static string? FirstClaim(ClaimsPrincipal user, params string[] types)
++        => types.Select(user.FindFirst).FirstOrDefault(c => !string.IsNullOrWhiteSpace(c?.Value))?.Value;
++
++    /// <summary>
++    /// Derives a stable, opaque storage partition name from an identity subject. Hashing keeps
++    /// raw subjects and email addresses out of file paths and database keys.
++    /// </summary>
++    public static string TenantKeyFor(string subject)
++    {
++        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(subject.Trim().ToLowerInvariant()));
++        return Convert.ToHexStringLower(hash)[..32];
++    }
++}
+diff --git a/Auricrux.Web/Security/TenantGuard.cs b/Auricrux.Web/Security/TenantGuard.cs
+new file mode 100644
+index 0000000..8179911
+--- /dev/null
++++ b/Auricrux.Web/Security/TenantGuard.cs
+@@ -0,0 +1,79 @@
++using Microsoft.AspNetCore.Mvc;
++
++namespace Auricrux.Web.Security;
++
++/// <summary>
++/// Shared entry point for endpoints that read or write caller-owned data.
++/// </summary>
++public sealed class TenantGuard(CallerContextResolver resolver, AuricruxSecurityOptions security)
++{
++    /// <summary>The security posture the host resolved at startup.</summary>
++    public AuricruxSecurityOptions Security => security;
++
++    /// <summary>
++    /// Resolves the caller and, when the caller may not touch tenant data, produces the response
++    /// to return instead.
++    /// </summary>
++    public bool TryAuthorize(out CallerContext caller, out ActionResult? denial)
++    {
++        caller = resolver.Resolve();
++        if (caller.CanAccessTenantData)
++        {
++            denial = null;
++            return true;
++        }
++
++        denial = Denial();
++        return false;
++    }
++
++    /// <summary>
++    /// Resolves the caller and, when the caller is not an administrator, produces the response to
++    /// return instead.
++    /// </summary>
++    public bool TryAuthorizeAdmin(out CallerContext caller, out ActionResult? denial)
++    {
++        caller = resolver.Resolve();
++        if (caller.IsAdmin)
++        {
++            denial = null;
++            return true;
++        }
++
++        denial = new ObjectResult(new
++        {
++            error = "Administrative privileges are required for this operation.",
++            remediation = $"Send a valid {CallerContextResolver.AdminKeyHeader} header, or authenticate as a "
++                          + $"principal holding the '{security.AdminRole}' role."
++        })
++        {
++            StatusCode = StatusCodes.Status403Forbidden
++        };
++        return false;
++    }
++
++    private ObjectResult Denial()
++    {
++        // A locked-down production host has no authentication configured at all, so a 401 would
++        // invite the caller to retry with a token that can never be issued. Say what is actually
++        // wrong instead.
++        if (security.ProductionLockdown)
++        {
++            return new ObjectResult(new
++            {
++                error = "This deployment is running in Production without authentication, so "
++                        + "account, memory, and workspace endpoints are disabled.",
++                remediation = "Configure Auth:Enabled and Auth:Authority, or set "
++                              + "Security:AllowInsecureProduction=true to knowingly serve them anonymously."
++            })
++            {
++                StatusCode = StatusCodes.Status403Forbidden
++            };
++        }
++
++        return new ObjectResult(new { error = "Authentication is required for this operation." })
++        {
++            StatusCode = StatusCodes.Status401Unauthorized
++        };
++    }
++}
+diff --git a/Auricrux.Web/Services/ConstructionIntelligenceService.cs b/Auricrux.Web/Services/ConstructionIntelligenceService.cs
+index e4b5385..efffaf4 100644
+--- a/Auricrux.Web/Services/ConstructionIntelligenceService.cs
++++ b/Auricrux.Web/Services/ConstructionIntelligenceService.cs
+@@ -1,7 +1,7 @@
+ using System.Diagnostics;
+ using System.Net.Http.Json;
++using System.Runtime.CompilerServices;
+ using System.Text.Json;
+-using System.Text.Json.Serialization;
+ using Auricrux.Shared.Models;
+ 
+ namespace Auricrux.Web.Services;
+@@ -109,6 +109,147 @@ public sealed class ConstructionIntelligenceService
+         return response;
+     }
+ 
++    /// <summary>
++    /// Streams a grounded answer token-by-token. Emits a <c>sources</c> event first so the client
++    /// can render citations immediately, then <c>token</c> events, then a terminal <c>done</c>.
++    /// </summary>
++    public async IAsyncEnumerable<StreamChunk> StreamChatAsync(
++        ChatRequest request,
++        string? model,
++        [EnumeratorCancellation] CancellationToken ct)
++    {
++        var sw = Stopwatch.StartNew();
++        var sources = SearchInternal(request.Query, request.SearchScope, take: 5);
++        var interactionId = Guid.NewGuid();
++
++        yield return new StreamChunk("sources", new { interactionId, sources });
++
++        var system = BuildSystemPrompt(request.ThinkingMode, sources);
++        var builder = new System.Text.StringBuilder();
++
++        await foreach (var token in StreamCompletionAsync(system, request.Query, request.ConversationHistory, model, ct))
++        {
++            builder.Append(token);
++            yield return new StreamChunk("token", new { text = token });
++        }
++
++        sw.Stop();
++        var content = builder.ToString();
++        if (string.IsNullOrWhiteSpace(content))
++        {
++            content = ConstructionFallback(request.Query);
++            yield return new StreamChunk("token", new { text = content });
++        }
++
++        var response = new ChatResponse
++        {
++            Content = content,
++            Sources = sources,
++            Timestamp = DateTime.UtcNow,
++            ProcessingTimeMs = sw.ElapsedMilliseconds,
++            ConfidenceScore = sources.Count > 0 ? 0.86 : 0.72,
++            InteractionId = interactionId
++        };
++
++        lock (_gate)
++        {
++            _interactions[interactionId] = response;
++        }
++
++        yield return new StreamChunk("done", new
++        {
++            interactionId,
++            processingTimeMs = response.ProcessingTimeMs,
++            confidenceScore = response.ConfidenceScore
++        });
++    }
++
++    /// <summary>
++    /// Reads Ollama's newline-delimited streaming response. Falls back to a single corpus-grounded
++    /// chunk when no local model is reachable, so the stream contract holds either way.
++    /// </summary>
++    private async IAsyncEnumerable<string> StreamCompletionAsync(
++        string system,
++        string user,
++        IEnumerable<ChatMessage> history,
++        string? model,
++        [EnumeratorCancellation] CancellationToken ct)
++    {
++        var ollamaBase = (_config["Auricrux:OllamaUrl"] ?? "http://127.0.0.1:11434").TrimEnd('/');
++        var selected = string.IsNullOrWhiteSpace(model)
++            ? (_config["Auricrux:PrimaryModel"] ?? "llama3.2")
++            : model;
++
++        var messages = new List<object> { new { role = "system", content = system } };
++        foreach (var h in history.TakeLast(12))
++        {
++            messages.Add(new { role = h.Role, content = h.Content });
++        }
++        messages.Add(new { role = "user", content = user });
++
++        HttpResponseMessage? response = null;
++        try
++        {
++            var http = _httpClientFactory.CreateClient(nameof(ConstructionIntelligenceService));
++            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, $"{ollamaBase}/api/chat")
++            {
++                Content = JsonContent.Create(new { model = selected, stream = true, messages })
++            };
++            response = await http.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, ct);
++            if (!response.IsSuccessStatusCode)
++            {
++                _logger.LogWarning("Ollama {Model} returned {Status} for stream", selected, response.StatusCode);
++                response.Dispose();
++                response = null;
++            }
++        }
++        catch (Exception ex) when (ex is not OperationCanceledException)
++        {
++            _logger.LogWarning(ex, "Ollama unavailable for streaming; using corpus fallback");
++            response?.Dispose();
++            response = null;
++        }
++
++        if (response is null)
++        {
++            yield return ConstructionFallback(user);
++            yield break;
++        }
++
++        using (response)
++        {
++            await using var stream = await response.Content.ReadAsStreamAsync(ct);
++            using var reader = new StreamReader(stream);
++            while (!reader.EndOfStream)
++            {
++                ct.ThrowIfCancellationRequested();
++                var line = await reader.ReadLineAsync(ct);
++                if (string.IsNullOrWhiteSpace(line)) continue;
++
++                string? token = null;
++                try
++                {
++                    using var doc = JsonDocument.Parse(line);
++                    if (doc.RootElement.TryGetProperty("message", out var message)
++                        && message.TryGetProperty("content", out var contentElement))
++                    {
++                        token = contentElement.GetString();
++                    }
++                }
++                catch (JsonException)
++                {
++                    continue;
++                }
++
++                if (!string.IsNullOrEmpty(token))
++                {
++                    yield return token;
++                }
++            }
++        }
++    }
++
++    /// <summary>Runs the reasoning pass for a query.</summary>
+     public async Task<ThinkingResponse> ThinkAsync(ThinkingRequest request, string? model, CancellationToken ct)
+     {
+         var sw = Stopwatch.StartNew();
+@@ -382,6 +523,12 @@ public sealed class ConstructionIntelligenceService
+     private sealed record ConstructionKnowledgeEntry(string Title, string Scope, string Content, string[] Tags);
+ }
+ 
++/// <summary>One Server-Sent Event emitted while streaming a chat answer.</summary>
++/// <param name="Event">Event name: <c>sources</c>, <c>token</c>, or <c>done</c>.</param>
++/// <param name="Payload">Event body, serialized as JSON.</param>
++public sealed record StreamChunk(string Event, object Payload);
++
++/// <summary>Aggregate statistics describing the loaded construction corpus.</summary>
+ public sealed class CorpusStatsSnapshot
+ {
+     public int TotalEntries { get; set; }
+diff --git a/Auricrux.Web/Services/ConversationMemoryService.cs b/Auricrux.Web/Services/ConversationMemoryService.cs
+index bac91b4..b82997a 100644
+--- a/Auricrux.Web/Services/ConversationMemoryService.cs
++++ b/Auricrux.Web/Services/ConversationMemoryService.cs
+@@ -32,22 +32,34 @@ public sealed class ConversationMemoryService
+         EnsureSqlite();
+     }
+ 
++    /// <summary>Persistence backends this service can store turns in.</summary>
+     public IReadOnlyList<string> Backends => ["session", "file-jsonl", "sqlite"];
+ 
+-    public async Task AppendAsync(string sessionId, MemoryBackend backend, string role, string content, CancellationToken ct = default)
++    /// <summary>
++    /// Appends a turn to a session owned by <paramref name="tenantKey"/>.
++    /// </summary>
++    public async Task AppendAsync(
++        string tenantKey,
++        string sessionId,
++        MemoryBackend backend,
++        string role,
++        string content,
++        CancellationToken ct = default)
+     {
++        var storageKey = StorageKey(tenantKey, sessionId);
+         var turn = new MemoryTurn(sessionId, role, content, DateTime.UtcNow);
+         switch (backend)
+         {
+             case MemoryBackend.Session:
+-                _session.AddOrUpdate(sessionId,
++                _session.AddOrUpdate(storageKey,
+                     _ => [turn],
+-                    (_, list) => { list.Add(turn); return list; });
++                    (_, list) => { lock (list) { list.Add(turn); } return list; });
+                 break;
+             case MemoryBackend.FileJsonl:
+                 lock (_fileGate)
+                 {
+-                    File.AppendAllText(_jsonlPath, JsonSerializer.Serialize(turn) + Environment.NewLine);
++                    var record = new StoredTurn(storageKey, turn.SessionId, turn.Role, turn.Content, turn.CreatedUtc);
++                    File.AppendAllText(_jsonlPath, JsonSerializer.Serialize(record) + Environment.NewLine);
+                 }
+                 break;
+             case MemoryBackend.Sqlite:
+@@ -56,7 +68,7 @@ public sealed class ConversationMemoryService
+                     await conn.OpenAsync(ct);
+                     await using var cmd = conn.CreateCommand();
+                     cmd.CommandText = "INSERT INTO turns(session_id, role, content, created_utc) VALUES ($s, $r, $c, $t)";
+-                    cmd.Parameters.AddWithValue("$s", sessionId);
++                    cmd.Parameters.AddWithValue("$s", storageKey);
+                     cmd.Parameters.AddWithValue("$r", role);
+                     cmd.Parameters.AddWithValue("$c", content);
+                     cmd.Parameters.AddWithValue("$t", turn.CreatedUtc.ToString("O"));
+@@ -66,23 +78,35 @@ public sealed class ConversationMemoryService
+         }
+     }
+ 
+-    public async Task<IReadOnlyList<MemoryTurn>> ListAsync(string sessionId, MemoryBackend backend, int take = 50, CancellationToken ct = default)
++    /// <summary>
++    /// Returns the most recent turns of a session owned by <paramref name="tenantKey"/>. A session
++    /// id belonging to another tenant resolves to a different storage key and yields nothing.
++    /// </summary>
++    public async Task<IReadOnlyList<MemoryTurn>> ListAsync(
++        string tenantKey,
++        string sessionId,
++        MemoryBackend backend,
++        int take = 50,
++        CancellationToken ct = default)
+     {
+         take = Math.Clamp(take, 1, 500);
++        var storageKey = StorageKey(tenantKey, sessionId);
+         switch (backend)
+         {
+             case MemoryBackend.Session:
+-                return _session.TryGetValue(sessionId, out var list)
+-                    ? list.TakeLast(take).ToList()
+-                    : [];
++                if (!_session.TryGetValue(storageKey, out var list)) return [];
++                lock (list)
++                {
++                    return list.TakeLast(take).ToList();
++                }
+             case MemoryBackend.FileJsonl:
+                 if (!File.Exists(_jsonlPath)) return [];
+                 lock (_fileGate)
+                 {
+                     return File.ReadLines(_jsonlPath)
+-                        .Select(line => JsonSerializer.Deserialize<MemoryTurn>(line))
+-                        .Where(t => t is not null && string.Equals(t.SessionId, sessionId, StringComparison.OrdinalIgnoreCase))
+-                        .Cast<MemoryTurn>()
++                        .Select(line => JsonSerializer.Deserialize<StoredTurn>(line))
++                        .Where(t => t is not null && string.Equals(t.StorageKey, storageKey, StringComparison.Ordinal))
++                        .Select(t => new MemoryTurn(t!.SessionId, t.Role, t.Content, t.CreatedUtc))
+                         .TakeLast(take)
+                         .ToList();
+                 }
+@@ -99,13 +123,13 @@ public sealed class ConversationMemoryService
+                         ORDER BY id DESC
+                         LIMIT $n
+                         """;
+-                    cmd.Parameters.AddWithValue("$s", sessionId);
++                    cmd.Parameters.AddWithValue("$s", storageKey);
+                     cmd.Parameters.AddWithValue("$n", take);
+                     await using var reader = await cmd.ExecuteReaderAsync(ct);
+                     while (await reader.ReadAsync(ct))
+                     {
+                         results.Add(new MemoryTurn(
+-                            reader.GetString(0),
++                            sessionId,
+                             reader.GetString(1),
+                             reader.GetString(2),
+                             DateTime.Parse(reader.GetString(3), null, System.Globalization.DateTimeStyles.RoundtripKind)));
+@@ -119,6 +143,16 @@ public sealed class ConversationMemoryService
+         }
+     }
+ 
++    /// <summary>
++    /// Namespaces a session id by tenant. The public tenant keeps the bare session id so existing
++    /// single-tenant deployments and their stored transcripts continue to resolve unchanged.
++    /// </summary>
++    private static string StorageKey(string tenantKey, string sessionId)
++        => string.IsNullOrEmpty(tenantKey) || tenantKey == Security.CallerContext.PublicTenant
++            ? sessionId
++            : $"{tenantKey}:{sessionId}";
++
++    /// <summary>Renders a transcript as a shareable Markdown document.</summary>
+     public string ToMarkdown(string sessionId, IReadOnlyList<MemoryTurn> turns)
+     {
+         var lines = new List<string>
+@@ -170,4 +204,16 @@ public sealed class ConversationMemoryService
+     }
+ }
+ 
++/// <summary>A single conversation turn as returned to callers.</summary>
+ public sealed record MemoryTurn(string SessionId, string Role, string Content, DateTime CreatedUtc);
++
++/// <summary>
++/// JSONL on-disk shape. <c>StorageKey</c> carries the tenant-namespaced session id so reads can
++/// filter by tenant, while <c>SessionId</c> stays the caller-facing value.
++/// </summary>
++internal sealed record StoredTurn(
++    string StorageKey,
++    string SessionId,
++    string Role,
++    string Content,
++    DateTime CreatedUtc);
+diff --git a/Auricrux.Web/Services/WorkspaceStorageService.cs b/Auricrux.Web/Services/WorkspaceStorageService.cs
+index e2212b5..3be0739 100644
+--- a/Auricrux.Web/Services/WorkspaceStorageService.cs
++++ b/Auricrux.Web/Services/WorkspaceStorageService.cs
+@@ -1,45 +1,77 @@
+-using System.Text.Json;
++using Auricrux.Web.Security;
+ 
+ namespace Auricrux.Web.Services;
+ 
+ /// <summary>
+ /// Document / file / folder workspace for Auricrux (ChatGPT-class attachments + project folders).
+ /// </summary>
++/// <remarks>
++/// Every operation takes a tenant key and is confined to that tenant's directory, so one caller
++/// cannot list, read, or delete another caller's uploads.
++/// </remarks>
+ public sealed class WorkspaceStorageService
+ {
+     private readonly IWebHostEnvironment _env;
+-    private readonly object _gate = new();
++    private readonly AuricruxSecurityOptions _security;
+ 
+-    public WorkspaceStorageService(IWebHostEnvironment env)
++    /// <summary>Creates the service and ensures the shared workspace root exists.</summary>
++    public WorkspaceStorageService(IWebHostEnvironment env, AuricruxSecurityOptions security)
+     {
+         _env = env;
+-        Directory.CreateDirectory(Root);
++        _security = security;
++        Directory.CreateDirectory(BaseRoot);
+     }
+ 
+-    private string Root => Path.Combine(_env.ContentRootPath, "Data", "workspace");
++    private string BaseRoot => Path.Combine(_env.ContentRootPath, "Data", "workspace");
+ 
+-    public WorkspaceListing List(string? relativePath = null)
++    /// <summary>
++    /// Resolves the storage root for a tenant. The public tenant keeps the historical flat layout
++    /// so existing single-tenant deployments do not need a data migration.
++    /// </summary>
++    private string RootFor(string tenantKey)
+     {
+-        var dir = ResolveDir(relativePath);
++        var root = string.IsNullOrEmpty(tenantKey) || tenantKey == CallerContext.PublicTenant
++            ? BaseRoot
++            : Path.Combine(BaseRoot, "tenants", tenantKey);
++        Directory.CreateDirectory(root);
++        return root;
++    }
++
++    /// <summary>Lists folders and files under a path within the tenant's workspace.</summary>
++    public WorkspaceListing List(string tenantKey, string? relativePath = null)
++    {
++        var root = RootFor(tenantKey);
++        var dir = ResolveDir(root, relativePath);
+         var folders = Directory.GetDirectories(dir)
+-            .Select(d => new WorkspaceEntry("folder", Path.GetFileName(d)!, ToRelative(d), null, Directory.GetLastWriteTimeUtc(d)))
++            .Select(d => new WorkspaceEntry("folder", Path.GetFileName(d)!, ToRelative(root, d), null, Directory.GetLastWriteTimeUtc(d)))
+             .OrderBy(e => e.Name)
+             .ToList();
+         var files = Directory.GetFiles(dir)
+-            .Select(f => new WorkspaceEntry("file", Path.GetFileName(f)!, ToRelative(f), new FileInfo(f).Length, File.GetLastWriteTimeUtc(f)))
++            .Select(f => new WorkspaceEntry("file", Path.GetFileName(f)!, ToRelative(root, f), new FileInfo(f).Length, File.GetLastWriteTimeUtc(f)))
+             .OrderBy(e => e.Name)
+             .ToList();
+-        return new WorkspaceListing(ToRelative(dir), folders.Concat(files).ToList());
++        return new WorkspaceListing(ToRelative(root, dir), folders.Concat(files).ToList());
+     }
+ 
+-    public WorkspaceEntry CreateFolder(string relativePath)
++    /// <summary>Creates a folder within the tenant's workspace.</summary>
++    public WorkspaceEntry CreateFolder(string tenantKey, string relativePath)
+     {
+-        var full = ResolvePath(relativePath, mustExist: false);
++        var root = RootFor(tenantKey);
++        var full = ResolvePath(root, relativePath, mustExist: false);
+         Directory.CreateDirectory(full);
+-        return new WorkspaceEntry("folder", Path.GetFileName(full)!, ToRelative(full), null, DateTime.UtcNow);
++        return new WorkspaceEntry("folder", Path.GetFileName(full)!, ToRelative(root, full), null, DateTime.UtcNow);
+     }
+ 
+-    public async Task<WorkspaceEntry> SaveFileAsync(string? folder, string fileName, Stream content, CancellationToken ct = default)
++    /// <summary>
++    /// Stores an uploaded file in the tenant's workspace, rejecting disallowed extensions and
++    /// aborting once the configured size limit is exceeded.
++    /// </summary>
++    public async Task<WorkspaceEntry> SaveFileAsync(
++        string tenantKey,
++        string? folder,
++        string fileName,
++        Stream content,
++        CancellationToken ct = default)
+     {
+         var safeName = Path.GetFileName(fileName);
+         if (string.IsNullOrWhiteSpace(safeName))
+@@ -47,24 +79,47 @@ public sealed class WorkspaceStorageService
+             throw new InvalidOperationException("File name required.");
+         }
+ 
+-        var dir = ResolveDir(folder);
++        var extension = Path.GetExtension(safeName);
++        if (string.IsNullOrWhiteSpace(extension) || !_security.AllowedUploadExtensions.Contains(extension))
++        {
++            throw new InvalidOperationException(
++                $"File type '{extension}' is not accepted. Allowed: {string.Join(", ", _security.AllowedUploadExtensions.Order())}.");
++        }
++
++        var root = RootFor(tenantKey);
++        var dir = ResolveDir(root, folder);
+         var full = Path.Combine(dir, safeName);
+-        await using var fs = File.Create(full);
+-        await content.CopyToAsync(fs, ct);
+-        return new WorkspaceEntry("file", safeName, ToRelative(full), new FileInfo(full).Length, DateTime.UtcNow);
++
++        try
++        {
++            await using var fs = File.Create(full);
++            await CopyWithLimitAsync(content, fs, _security.MaxUploadBytes, ct);
++        }
++        catch
++        {
++            // Never leave a partial or oversized file behind for a later read to serve.
++            if (File.Exists(full)) File.Delete(full);
++            throw;
++        }
++
++        return new WorkspaceEntry("file", safeName, ToRelative(root, full), new FileInfo(full).Length, DateTime.UtcNow);
+     }
+ 
+-    public (Stream Stream, string ContentType, string FileName)? OpenFile(string relativePath)
++    /// <summary>Opens a file from the tenant's workspace for download.</summary>
++    public (Stream Stream, string ContentType, string FileName)? OpenFile(string tenantKey, string relativePath)
+     {
+-        var full = ResolvePath(relativePath, mustExist: true);
++        var root = RootFor(tenantKey);
++        var full = ResolvePath(root, relativePath, mustExist: true);
+         if (!File.Exists(full)) return null;
+         Stream stream = File.OpenRead(full);
+         return (stream, GuessContentType(full), Path.GetFileName(full));
+     }
+ 
+-    public bool Delete(string relativePath)
++    /// <summary>Deletes a file or folder from the tenant's workspace.</summary>
++    public bool Delete(string tenantKey, string relativePath)
+     {
+-        var full = ResolvePath(relativePath, mustExist: true);
++        var root = RootFor(tenantKey);
++        var full = ResolvePath(root, relativePath, mustExist: true);
+         if (File.Exists(full))
+         {
+             File.Delete(full);
+@@ -80,19 +135,36 @@ public sealed class WorkspaceStorageService
+         return false;
+     }
+ 
+-    private string ResolveDir(string? relativePath)
++    private static async Task CopyWithLimitAsync(Stream source, Stream destination, long maxBytes, CancellationToken ct)
++    {
++        var buffer = new byte[81_920];
++        long total = 0;
++        int read;
++        while ((read = await source.ReadAsync(buffer, ct)) > 0)
++        {
++            total += read;
++            if (total > maxBytes)
++            {
++                throw new InvalidOperationException($"Upload exceeds the {maxBytes} byte limit.");
++            }
++
++            await destination.WriteAsync(buffer.AsMemory(0, read), ct);
++        }
++    }
++
++    private static string ResolveDir(string root, string? relativePath)
+     {
+         if (string.IsNullOrWhiteSpace(relativePath) || relativePath == "/" || relativePath == ".")
+         {
+-            return Root;
++            return root;
+         }
+ 
+-        var full = ResolvePath(relativePath, mustExist: false);
++        var full = ResolvePath(root, relativePath, mustExist: false);
+         Directory.CreateDirectory(full);
+         return full;
+     }
+ 
+-    private string ResolvePath(string relativePath, bool mustExist)
++    private static string ResolvePath(string root, string relativePath, bool mustExist)
+     {
+         var cleaned = relativePath.Replace('\\', '/').TrimStart('/');
+         if (cleaned.Contains("..", StringComparison.Ordinal))
+@@ -100,8 +172,16 @@ public sealed class WorkspaceStorageService
+             throw new InvalidOperationException("Path traversal rejected.");
+         }
+ 
+-        var full = Path.GetFullPath(Path.Combine(Root, cleaned));
+-        if (!full.StartsWith(Path.GetFullPath(Root), StringComparison.OrdinalIgnoreCase))
++        var rootFull = Path.GetFullPath(root);
++        var full = Path.GetFullPath(Path.Combine(rootFull, cleaned));
++
++        // Compare against the root plus a separator so a sibling directory whose name merely
++        // starts with the root ("workspace-export" next to "workspace") cannot pass the check.
++        var rootPrefix = rootFull.EndsWith(Path.DirectorySeparatorChar)
++            ? rootFull
++            : rootFull + Path.DirectorySeparatorChar;
++        if (!full.Equals(rootFull, StringComparison.Ordinal)
++            && !full.StartsWith(rootPrefix, StringComparison.Ordinal))
+         {
+             throw new InvalidOperationException("Path escapes workspace.");
+         }
+@@ -114,13 +194,13 @@ public sealed class WorkspaceStorageService
+         return full;
+     }
+ 
+-    private string ToRelative(string fullPath)
++    private static string ToRelative(string root, string fullPath)
+     {
+-        var root = Path.GetFullPath(Root);
++        var rootFull = Path.GetFullPath(root);
+         var full = Path.GetFullPath(fullPath);
+-        return full.Equals(root, StringComparison.OrdinalIgnoreCase)
++        return full.Equals(rootFull, StringComparison.Ordinal)
+             ? ""
+-            : full[root.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Replace('\\', '/');
++            : full[rootFull.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Replace('\\', '/');
+     }
+ 
+     private static string GuessContentType(string path) => Path.GetExtension(path).ToLowerInvariant() switch
+@@ -137,5 +217,8 @@ public sealed class WorkspaceStorageService
+     };
+ }
+ 
++/// <summary>A file or folder in a tenant's workspace.</summary>
+ public sealed record WorkspaceEntry(string Kind, string Name, string Path, long? SizeBytes, DateTime ModifiedUtc);
++
++/// <summary>The contents of one workspace folder.</summary>
+ public sealed record WorkspaceListing(string Path, IReadOnlyList<WorkspaceEntry> Entries);

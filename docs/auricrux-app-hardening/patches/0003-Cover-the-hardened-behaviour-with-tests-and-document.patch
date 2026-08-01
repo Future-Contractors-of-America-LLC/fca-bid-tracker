@@ -1,0 +1,895 @@
+From 71c087e33eaf4bcba7834793ba03bcdcce912f9e Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 15:00:24 +0000
+Subject: [PATCH 3/3] Cover the hardened behaviour with tests, and document the
+ posture
+
+Adds 67 tests across four areas. SsrfGuardTests pin the address ranges that must
+never be treated as publicly routable, including the IPv6, IPv4-mapped, and
+carrier-grade NAT cases the previous hostname blocklist missed, plus boundary
+addresses either side of each private range. TenantIsolationTests prove at the
+storage layer that a session id or workspace path belonging to one tenant is
+invisible, undownloadable, and undeletable from another, across all three memory
+backends. ProductionLockdownTests boot the host the way the shipped container
+runs it and assert each previously exploitable request is now refused while
+health probes and inference still succeed. StreamingChatTests assert the
+Server-Sent Events contract and the enum wire formats.
+
+Two supporting corrections came out of writing them. The security posture is now
+resolved from the container rather than the builder, so it reflects the final
+merged configuration instead of missing sources layered on later. Enum reading
+uses LenientEnumConverter, which accepts strings and numbers but still writes
+numbers, so requests in the documented string form are fixed without changing
+the response format any existing client already parses.
+
+README now describes the three postures, classifies every endpoint as public,
+inference, tenant data, or administrative, lists the Security keys, and documents
+the streaming event contract.
+---
+ Auricrux.Tests/ProductionLockdownTests.cs     | 168 ++++++++++++++++++
+ Auricrux.Tests/SsrfGuardTests.cs              |  52 ++++++
+ Auricrux.Tests/StreamingChatTests.cs          | 160 +++++++++++++++++
+ Auricrux.Tests/TenantIsolationTests.cs        | 154 ++++++++++++++++
+ Auricrux.Web/Program.cs                       |  22 ++-
+ .../Serialization/LenientEnumConverter.cs     |  53 ++++++
+ .../Services/WorkspaceStorageService.cs       |  15 +-
+ Auricrux.Web/appsettings.json                 |  18 ++
+ README.md                                     |  90 +++++++++-
+ 9 files changed, 712 insertions(+), 20 deletions(-)
+ create mode 100644 Auricrux.Tests/ProductionLockdownTests.cs
+ create mode 100644 Auricrux.Tests/SsrfGuardTests.cs
+ create mode 100644 Auricrux.Tests/StreamingChatTests.cs
+ create mode 100644 Auricrux.Tests/TenantIsolationTests.cs
+ create mode 100644 Auricrux.Web/Serialization/LenientEnumConverter.cs
+
+diff --git a/Auricrux.Tests/ProductionLockdownTests.cs b/Auricrux.Tests/ProductionLockdownTests.cs
+new file mode 100644
+index 0000000..78cb422
+--- /dev/null
++++ b/Auricrux.Tests/ProductionLockdownTests.cs
+@@ -0,0 +1,168 @@
++using System.Net;
++using System.Net.Http.Json;
++using Microsoft.AspNetCore.Hosting;
++using Microsoft.AspNetCore.Mvc.Testing;
++using Microsoft.Extensions.Configuration;
++using Microsoft.Extensions.Hosting;
++using Xunit;
++
++namespace Auricrux.Tests;
++
++/// <summary>
++/// A host configured the way the shipped container runs it: Production, with no identity provider
++/// configured. Data-bearing endpoints must refuse rather than serve anonymously, while liveness
++/// probes and stateless inference keep working.
++/// </summary>
++public sealed class ProductionHostFactory : WebApplicationFactory<Program>
++{
++    protected override void ConfigureWebHost(IWebHostBuilder builder)
++    {
++        builder.UseEnvironment(Environments.Production);
++        builder.ConfigureAppConfiguration((_, config) =>
++            config.AddInMemoryCollection(new Dictionary<string, string?>
++            {
++                ["Security:AdminApiKey"] = AdminKey
++            }));
++    }
++
++    /// <summary>Admin secret this host accepts, used to prove the administrative path still works.</summary>
++    public const string AdminKey = "test-admin-key-for-production-host";
++}
++
++public sealed class ProductionLockdownTests(ProductionHostFactory factory)
++    : IClassFixture<ProductionHostFactory>
++{
++    private readonly HttpClient _client = factory.CreateClient();
++
++    // ---------- Endpoints that must stay available ----------
++
++    [Theory]
++    [InlineData("/api/health")]
++    [InlineData("/healthz")]
++    [InlineData("/api/capabilities")]
++    [InlineData("/api/models")]
++    [InlineData("/api/account/plans")]
++    public async Task Public_endpoints_remain_available(string path)
++    {
++        var response = await _client.GetAsync(path);
++        Assert.True(response.IsSuccessStatusCode, $"{path} returned {(int)response.StatusCode}");
++    }
++
++    [Fact]
++    public async Task Stateless_inference_remains_available()
++    {
++        var response = await _client.PostAsJsonAsync("/api/chat", new { query = "What is a sill plate?" });
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++    }
++
++    // ---------- Endpoints that must be refused ----------
++
++    [Fact]
++    public async Task Anonymous_caller_cannot_read_an_account()
++    {
++        var response = await _client.GetAsync("/api/account/victim@example.com");
++        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Anonymous_caller_cannot_grant_themselves_a_paid_plan()
++    {
++        var response = await _client.PostAsJsonAsync("/api/account/victim@example.com/upgrade", new { plan = "pro-plus" });
++        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task A_wrong_admin_key_does_not_grant_a_paid_plan()
++    {
++        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/account/victim@example.com/upgrade")
++        {
++            Content = JsonContent.Create(new { plan = "pro-plus" })
++        };
++        request.Headers.TryAddWithoutValidation("X-Auricrux-Admin-Key", "not-the-key");
++
++        var response = await _client.SendAsync(request);
++        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
++    }
++
++    [Theory]
++    [InlineData("/api/memory/some-session-id")]
++    [InlineData("/api/memory/some-session-id/export")]
++    [InlineData("/api/workspace")]
++    public async Task Anonymous_caller_cannot_read_tenant_data(string path)
++    {
++        var response = await _client.GetAsync(path);
++        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Anonymous_caller_cannot_append_to_a_conversation()
++    {
++        var response = await _client.PostAsJsonAsync("/api/memory/some-session-id", new
++        {
++            role = "user",
++            content = "leaked",
++            backend = "sqlite"
++        });
++        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Anonymous_caller_cannot_delete_workspace_content()
++    {
++        var response = await _client.DeleteAsync("/api/workspace/some-folder");
++        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Lockdown_response_explains_how_to_remediate()
++    {
++        var response = await _client.GetAsync("/api/workspace");
++        var body = await response.Content.ReadAsStringAsync();
++        Assert.Contains("Auth:Enabled", body, StringComparison.OrdinalIgnoreCase);
++    }
++
++    // ---------- The administrative path still works ----------
++
++    [Fact]
++    public async Task Administrator_with_the_shared_secret_can_manage_plans()
++    {
++        var email = $"admin-managed-{Guid.NewGuid():N}@test.local";
++
++        using var register = new HttpRequestMessage(HttpMethod.Post, "/api/account/register")
++        {
++            Content = JsonContent.Create(new { email })
++        };
++        register.Headers.TryAddWithoutValidation("X-Auricrux-Admin-Key", ProductionHostFactory.AdminKey);
++        Assert.Equal(HttpStatusCode.OK, (await _client.SendAsync(register)).StatusCode);
++
++        using var upgrade = new HttpRequestMessage(HttpMethod.Post, $"/api/account/{email}/upgrade")
++        {
++            Content = JsonContent.Create(new { plan = "pro" })
++        };
++        upgrade.Headers.TryAddWithoutValidation("X-Auricrux-Admin-Key", ProductionHostFactory.AdminKey);
++
++        var response = await _client.SendAsync(upgrade);
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++        Assert.Contains("\"plan\":\"pro\"", await response.Content.ReadAsStringAsync(), StringComparison.OrdinalIgnoreCase);
++    }
++
++    // ---------- Response hardening ----------
++
++    [Fact]
++    public async Task Content_security_policy_does_not_permit_unsafe_eval()
++    {
++        var response = await _client.GetAsync("/api/health");
++        var csp = response.Headers.GetValues("Content-Security-Policy").First();
++
++        Assert.DoesNotContain("unsafe-eval", csp, StringComparison.OrdinalIgnoreCase);
++        Assert.Contains("frame-ancestors 'none'", csp, StringComparison.OrdinalIgnoreCase);
++        Assert.Contains("object-src 'none'", csp, StringComparison.OrdinalIgnoreCase);
++    }
++
++    [Fact]
++    public async Task Api_responses_are_not_cacheable()
++    {
++        var response = await _client.GetAsync("/api/health");
++        Assert.Equal("no-store", response.Headers.CacheControl?.ToString());
++    }
++}
+diff --git a/Auricrux.Tests/SsrfGuardTests.cs b/Auricrux.Tests/SsrfGuardTests.cs
+new file mode 100644
+index 0000000..5d00c45
+--- /dev/null
++++ b/Auricrux.Tests/SsrfGuardTests.cs
+@@ -0,0 +1,52 @@
++using System.Net;
++using Auricrux.Web.Services;
++using Xunit;
++
++namespace Auricrux.Tests;
++
++/// <summary>
++/// Address classification behind the web-browse SSRF guard. The original guard string-matched
++/// hostnames, so any DNS name pointing at a private address reached internal services; these
++/// cases pin the ranges that must never be considered publicly routable.
++/// </summary>
++public sealed class SsrfGuardTests
++{
++    [Theory]
++    [InlineData("127.0.0.1")]          // loopback
++    [InlineData("127.1.2.3")]          // rest of 127/8
++    [InlineData("0.0.0.0")]            // unspecified
++    [InlineData("10.0.0.1")]           // RFC1918
++    [InlineData("172.16.0.1")]         // RFC1918 lower bound
++    [InlineData("172.31.255.254")]     // RFC1918 upper bound
++    [InlineData("192.168.1.1")]        // RFC1918
++    [InlineData("169.254.169.254")]    // cloud instance metadata
++    [InlineData("100.64.0.1")]         // RFC6598 carrier-grade NAT
++    [InlineData("198.18.0.1")]         // benchmarking
++    [InlineData("224.0.0.1")]          // multicast
++    [InlineData("255.255.255.255")]    // broadcast
++    [InlineData("::1")]                // IPv6 loopback
++    [InlineData("fe80::1")]            // IPv6 link-local
++    [InlineData("fc00::1")]            // IPv6 unique local
++    [InlineData("fd12:3456::1")]       // IPv6 unique local
++    [InlineData("::ffff:127.0.0.1")]   // IPv4-mapped loopback
++    [InlineData("::ffff:10.0.0.1")]    // IPv4-mapped RFC1918
++    [InlineData("64:ff9b::7f00:1")]    // NAT64 well-known prefix
++    public void Private_and_reserved_addresses_are_not_publicly_routable(string address)
++    {
++        Assert.False(SsrfGuard.IsPubliclyRoutable(IPAddress.Parse(address)));
++    }
++
++    [Theory]
++    [InlineData("93.184.216.34")]      // example.com
++    [InlineData("8.8.8.8")]
++    [InlineData("1.1.1.1")]
++    [InlineData("172.15.0.1")]         // just below RFC1918 172.16/12
++    [InlineData("172.32.0.1")]         // just above RFC1918 172.16/12
++    [InlineData("100.63.255.255")]     // just below CGNAT 100.64/10
++    [InlineData("100.128.0.1")]        // just above CGNAT 100.64/10
++    [InlineData("2606:4700:4700::1111")]
++    public void Public_addresses_are_routable(string address)
++    {
++        Assert.True(SsrfGuard.IsPubliclyRoutable(IPAddress.Parse(address)));
++    }
++}
+diff --git a/Auricrux.Tests/StreamingChatTests.cs b/Auricrux.Tests/StreamingChatTests.cs
+new file mode 100644
+index 0000000..2a21823
+--- /dev/null
++++ b/Auricrux.Tests/StreamingChatTests.cs
+@@ -0,0 +1,160 @@
++using System.Net;
++using System.Net.Http.Json;
++using System.Text.Json;
++using Microsoft.AspNetCore.Mvc.Testing;
++using Xunit;
++
++namespace Auricrux.Tests;
++
++/// <summary>
++/// Incremental chat delivery. Peer assistants render tokens as they are produced; Auricrux
++/// previously returned only a finished response, so a long answer showed nothing until complete.
++/// These tests assert the Server-Sent Events contract holds even when no local model is reachable
++/// and the corpus fallback supplies the text.
++/// </summary>
++public sealed class StreamingChatTests(WebApplicationFactory<Program> factory)
++    : IClassFixture<WebApplicationFactory<Program>>
++{
++    private readonly HttpClient _client = factory.CreateClient();
++
++    [Fact]
++    public async Task Stream_is_served_as_server_sent_events()
++    {
++        using var response = await PostStreamAsync(new { query = "What is a sill plate?" });
++
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++        Assert.Equal("text/event-stream", response.Content.Headers.ContentType?.MediaType);
++        Assert.Equal("no-store", response.Headers.CacheControl?.ToString());
++    }
++
++    [Fact]
++    public async Task Stream_emits_sources_then_tokens_then_done()
++    {
++        var events = await ReadEventsAsync(new { query = "What is a sill plate?" });
++
++        Assert.Equal("sources", events[0].Name);
++        Assert.Equal("done", events[^1].Name);
++        Assert.Contains(events, e => e.Name == "token");
++
++        // Citations arrive before any generated text so the client can render them immediately.
++        var firstToken = events.FindIndex(e => e.Name == "token");
++        Assert.True(firstToken > 0);
++    }
++
++    [Fact]
++    public async Task Stream_reassembles_into_non_empty_answer_text()
++    {
++        var events = await ReadEventsAsync(new { query = "Explain retainage on a pay application." });
++
++        var text = string.Concat(events
++            .Where(e => e.Name == "token")
++            .Select(e => e.Data.GetProperty("text").GetString()));
++
++        Assert.False(string.IsNullOrWhiteSpace(text));
++    }
++
++    [Fact]
++    public async Task Done_event_carries_the_interaction_id_that_feedback_accepts()
++    {
++        var events = await ReadEventsAsync(new { query = "OSHA fall protection trigger height" });
++        var done = events.Single(e => e.Name == "done");
++        var interactionId = done.Data.GetProperty("interactionId").GetString();
++
++        Assert.False(string.IsNullOrWhiteSpace(interactionId));
++
++        var feedback = await _client.PostAsJsonAsync($"/api/feedback/{interactionId}", new { stars = 5 });
++        Assert.Equal(HttpStatusCode.Accepted, feedback.StatusCode);
++    }
++
++    [Fact]
++    public async Task Stream_reports_a_missing_query_as_an_error_event()
++    {
++        var events = await ReadEventsAsync(new { query = "   " });
++
++        Assert.Single(events);
++        Assert.Equal("error", events[0].Name);
++    }
++
++    [Fact]
++    public async Task Stream_rejects_an_oversized_prompt()
++    {
++        var events = await ReadEventsAsync(new { query = new string('x', 40_000) });
++
++        Assert.Equal("error", events[0].Name);
++        Assert.Contains("limit", events[0].Data.GetProperty("error").GetString()!, StringComparison.OrdinalIgnoreCase);
++    }
++
++    // ---------- Enum wire-format compatibility ----------
++
++    [Theory]
++    [InlineData("Auto", "Both")]    // the contract documented in README.md
++    [InlineData("auto", "both")]    // what AuricruxApiClient actually serializes
++    [InlineData("Deep", "Internal")]
++    public async Task Chat_accepts_enum_values_as_json_strings(string mode, string scope)
++    {
++        var response = await _client.PostAsJsonAsync("/api/chat", new
++        {
++            query = "What is a sill plate?",
++            thinkingMode = mode,
++            searchScope = scope
++        });
++
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Chat_still_accepts_enum_values_as_numbers()
++    {
++        var response = await _client.PostAsJsonAsync("/api/chat", new
++        {
++            query = "What is a sill plate?",
++            thinkingMode = 1,
++            searchScope = 2
++        });
++
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Chat_rejects_an_oversized_prompt()
++    {
++        var response = await _client.PostAsJsonAsync("/api/chat", new { query = new string('x', 40_000) });
++        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
++    }
++
++    private async Task<HttpResponseMessage> PostStreamAsync(object body)
++    {
++        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/chat/stream")
++        {
++            Content = JsonContent.Create(body)
++        };
++        return await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
++    }
++
++    private async Task<List<SseEvent>> ReadEventsAsync(object body)
++    {
++        using var response = await PostStreamAsync(body);
++        await using var stream = await response.Content.ReadAsStreamAsync();
++        using var reader = new StreamReader(stream);
++
++        var events = new List<SseEvent>();
++        string? name = null;
++        while (await reader.ReadLineAsync() is { } line)
++        {
++            if (line.StartsWith("event: ", StringComparison.Ordinal))
++            {
++                name = line["event: ".Length..];
++            }
++            else if (line.StartsWith("data: ", StringComparison.Ordinal) && name is not null)
++            {
++                using var doc = JsonDocument.Parse(line["data: ".Length..]);
++                events.Add(new SseEvent(name, doc.RootElement.Clone()));
++                name = null;
++            }
++        }
++
++        return events;
++    }
++
++    private sealed record SseEvent(string Name, JsonElement Data);
++}
+diff --git a/Auricrux.Tests/TenantIsolationTests.cs b/Auricrux.Tests/TenantIsolationTests.cs
+new file mode 100644
+index 0000000..15c4ea8
+--- /dev/null
++++ b/Auricrux.Tests/TenantIsolationTests.cs
+@@ -0,0 +1,154 @@
++using Auricrux.Web.Security;
++using Auricrux.Web.Services;
++using Microsoft.AspNetCore.Hosting;
++using Microsoft.Extensions.Configuration;
++using Microsoft.Extensions.FileProviders;
++using Microsoft.Extensions.Hosting;
++using Xunit;
++
++namespace Auricrux.Tests;
++
++/// <summary>
++/// Storage-level proof that one tenant cannot reach another tenant's conversations or files.
++/// Before tenant partitioning, a session id or workspace path was a global key: anyone who
++/// guessed or was leaked one could read, export, or delete the data behind it.
++/// </summary>
++public sealed class TenantIsolationTests : IDisposable
++{
++    private readonly string _root = Path.Combine(Path.GetTempPath(), $"auricrux-tenant-{Guid.NewGuid():N}");
++
++    private const string TenantA = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
++    private const string TenantB = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
++
++    public TenantIsolationTests() => Directory.CreateDirectory(_root);
++
++    public void Dispose()
++    {
++        try { Directory.Delete(_root, recursive: true); } catch { /* best effort */ }
++    }
++
++    [Theory]
++    [InlineData(MemoryBackend.Session)]
++    [InlineData(MemoryBackend.FileJsonl)]
++    [InlineData(MemoryBackend.Sqlite)]
++    public async Task Memory_written_by_one_tenant_is_invisible_to_another(MemoryBackend backend)
++    {
++        var memory = new ConversationMemoryService(Env());
++        const string sharedSessionId = "session-both-tenants-use-this-id";
++
++        await memory.AppendAsync(TenantA, sharedSessionId, backend, "user", "Sealed bid is 4.2M", default);
++
++        var ownerView = await memory.ListAsync(TenantA, sharedSessionId, backend, 50, default);
++        var attackerView = await memory.ListAsync(TenantB, sharedSessionId, backend, 50, default);
++
++        Assert.Single(ownerView);
++        Assert.Contains("4.2M", ownerView[0].Content);
++        Assert.Empty(attackerView);
++    }
++
++    [Fact]
++    public async Task Memory_reports_the_caller_facing_session_id_not_the_storage_key()
++    {
++        var memory = new ConversationMemoryService(Env());
++        const string sessionId = "quote-9911";
++
++        await memory.AppendAsync(TenantA, sessionId, MemoryBackend.Sqlite, "user", "Retainage question", default);
++        var turns = await memory.ListAsync(TenantA, sessionId, MemoryBackend.Sqlite, 50, default);
++
++        Assert.Single(turns);
++        Assert.Equal(sessionId, turns[0].SessionId);
++    }
++
++    [Fact]
++    public async Task Workspace_files_are_not_listable_downloadable_or_deletable_across_tenants()
++    {
++        var workspace = new WorkspaceStorageService(Env(), OpenSecurity());
++        const string fileName = "sealed-bid.txt";
++
++        await using (var content = new MemoryStream("CONFIDENTIAL"u8.ToArray()))
++        {
++            await workspace.SaveFileAsync(TenantA, "jobs", fileName, content, default);
++        }
++
++        var ownerListing = workspace.List(TenantA, "jobs");
++        Assert.Contains(ownerListing.Entries, e => e.Name == fileName);
++
++        var attackerListing = workspace.List(TenantB, "jobs");
++        Assert.DoesNotContain(attackerListing.Entries, e => e.Name == fileName);
++
++        Assert.Null(workspace.OpenFile(TenantB, $"jobs/{fileName}"));
++        Assert.False(workspace.Delete(TenantB, $"jobs/{fileName}"));
++
++        // The owner's copy survived the other tenant's delete attempt.
++        Assert.NotNull(workspace.OpenFile(TenantA, $"jobs/{fileName}"));
++    }
++
++    [Fact]
++    public async Task Workspace_rejects_disallowed_file_extensions()
++    {
++        var workspace = new WorkspaceStorageService(Env(), OpenSecurity());
++        await using var content = new MemoryStream("<script>alert(1)</script>"u8.ToArray());
++
++        var ex = await Assert.ThrowsAsync<InvalidOperationException>(
++            () => workspace.SaveFileAsync(TenantA, null, "payload.svg", content, default));
++        Assert.Contains("not accepted", ex.Message, StringComparison.OrdinalIgnoreCase);
++    }
++
++    [Fact]
++    public async Task Workspace_enforces_the_upload_size_limit_while_copying()
++    {
++        var workspace = new WorkspaceStorageService(Env(), OpenSecurity(maxUploadBytes: 1_024));
++        await using var content = new MemoryStream(new byte[4_096]);
++
++        await Assert.ThrowsAsync<InvalidOperationException>(
++            () => workspace.SaveFileAsync(TenantA, null, "big.txt", content, default));
++
++        // The rejected upload must not be left behind as a partial file.
++        Assert.DoesNotContain(workspace.List(TenantA).Entries, e => e.Name == "big.txt");
++    }
++
++    [Theory]
++    [InlineData("../../../etc/passwd")]
++    [InlineData("..\\..\\windows\\win.ini")]
++    [InlineData("jobs/../../escape.txt")]
++    public void Workspace_rejects_path_traversal(string path)
++    {
++        var workspace = new WorkspaceStorageService(Env(), OpenSecurity());
++        Assert.Throws<InvalidOperationException>(() => workspace.CreateFolder(TenantA, path));
++    }
++
++    [Fact]
++    public void Tenant_keys_are_stable_opaque_and_distinct_per_subject()
++    {
++        var first = CallerContextResolver.TenantKeyFor("user@example.com");
++        var repeat = CallerContextResolver.TenantKeyFor("USER@example.com ");
++        var other = CallerContextResolver.TenantKeyFor("someone-else@example.com");
++
++        Assert.Equal(first, repeat);
++        Assert.NotEqual(first, other);
++        Assert.Equal(32, first.Length);
++        Assert.DoesNotContain("@", first, StringComparison.Ordinal);
++    }
++
++    private IWebHostEnvironment Env() => new TestWebHostEnvironment(_root);
++
++    private static AuricruxSecurityOptions OpenSecurity(long maxUploadBytes = 26_214_400L)
++        => AuricruxSecurityOptions.Resolve(
++            new ConfigurationBuilder()
++                .AddInMemoryCollection(new Dictionary<string, string?>
++                {
++                    ["Security:MaxUploadBytes"] = maxUploadBytes.ToString()
++                })
++                .Build(),
++            new TestWebHostEnvironment(Path.GetTempPath()));
++
++    private sealed class TestWebHostEnvironment(string contentRoot) : IWebHostEnvironment
++    {
++        public string ApplicationName { get; set; } = "Auricrux.Tests";
++        public IFileProvider ContentRootFileProvider { get; set; } = new PhysicalFileProvider(contentRoot);
++        public string ContentRootPath { get; set; } = contentRoot;
++        public string EnvironmentName { get; set; } = Environments.Development;
++        public IFileProvider WebRootFileProvider { get; set; } = new PhysicalFileProvider(contentRoot);
++        public string WebRootPath { get; set; } = contentRoot;
++    }
++}
+diff --git a/Auricrux.Web/Program.cs b/Auricrux.Web/Program.cs
+index ecf3a6f..8699b43 100644
+--- a/Auricrux.Web/Program.cs
++++ b/Auricrux.Web/Program.cs
+@@ -1,11 +1,10 @@
+-using System.Text.Json;
+-using System.Text.Json.Serialization;
+ using System.Threading.RateLimiting;
+ using Auricrux.Shared.Models;
+ using Auricrux.Shared.Services;
+ using Auricrux.Web.Components;
+ using Auricrux.Web.Middleware;
+ using Auricrux.Web.Security;
++using Auricrux.Web.Serialization;
+ using Auricrux.Web.Services;
+ using Microsoft.AspNetCore.Authentication;
+ using Microsoft.AspNetCore.Authentication.Cookies;
+@@ -19,8 +18,11 @@ var builder = WebApplication.CreateBuilder(args);
+ 
+ builder.Logging.AddConsole();
+ 
+-var security = AuricruxSecurityOptions.Resolve(builder.Configuration, builder.Environment);
+-builder.Services.AddSingleton(security);
++// Resolved from the container rather than the builder so the posture reflects the final merged
++// configuration, including sources layered on after the host is built.
++builder.Services.AddSingleton(sp => AuricruxSecurityOptions.Resolve(
++    sp.GetRequiredService<IConfiguration>(),
++    sp.GetRequiredService<IHostEnvironment>()));
+ builder.Services.AddHttpContextAccessor();
+ builder.Services.AddScoped<CallerContextResolver>();
+ builder.Services.AddScoped<TenantGuard>();
+@@ -29,11 +31,13 @@ builder.Services.AddRazorComponents()
+     .AddInteractiveServerComponents();
+ 
+ // Accept enums as JSON strings as well as numbers. The MAUI/Shared client and the documented API
+-// contract both send "thinkingMode": "Auto"; without this converter every such request is a 400.
++// contract both send "thinkingMode": "Auto"; without these converters every such request is a 400.
+ builder.Services.AddControllers()
+     .AddJsonOptions(options =>
+-        options.JsonSerializerOptions.Converters.Add(
+-            new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: true)));
++    {
++        options.JsonSerializerOptions.Converters.Add(new LenientEnumConverter<ThinkingMode>());
++        options.JsonSerializerOptions.Converters.Add(new LenientEnumConverter<SearchScope>());
++    });
+ builder.Services.AddHttpClient(nameof(ConstructionIntelligenceService));
+ builder.Services.AddHttpClient(nameof(MediaGenerationService));
+ builder.Services.AddHttpClient(nameof(FcaAccountLinkService));
+@@ -160,7 +164,9 @@ if (authEnabled && !string.IsNullOrWhiteSpace(authAuthority))
+ 
+ var app = builder.Build();
+ 
+-LogSecurityPosture(app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Auricrux.Security"), security);
++LogSecurityPosture(
++    app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Auricrux.Security"),
++    app.Services.GetRequiredService<AuricruxSecurityOptions>());
+ 
+ var mediaRoot = Path.Combine(app.Environment.ContentRootPath, "Data", "media");
+ Directory.CreateDirectory(mediaRoot);
+diff --git a/Auricrux.Web/Serialization/LenientEnumConverter.cs b/Auricrux.Web/Serialization/LenientEnumConverter.cs
+new file mode 100644
+index 0000000..7ec31e7
+--- /dev/null
++++ b/Auricrux.Web/Serialization/LenientEnumConverter.cs
+@@ -0,0 +1,53 @@
++using System.Text.Json;
++using System.Text.Json.Serialization;
++
++namespace Auricrux.Web.Serialization;
++
++/// <summary>
++/// Accepts enum values written as JSON strings or numbers, and always writes them back as numbers.
++/// </summary>
++/// <remarks>
++/// The API previously accepted only the numeric form, so requests using the string form documented
++/// in README.md — and the camelCase strings <c>AuricruxApiClient</c> actually serializes — were
++/// rejected with HTTP 400. Reading leniently fixes that. Writing numbers keeps the response wire
++/// format byte-identical for clients already parsing it, so the fix introduces no breaking change.
++/// </remarks>
++public sealed class LenientEnumConverter<TEnum> : JsonConverter<TEnum> where TEnum : struct, Enum
++{
++    /// <inheritdoc />
++    public override TEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
++    {
++        switch (reader.TokenType)
++        {
++            case JsonTokenType.String:
++            {
++                var value = reader.GetString();
++                if (Enum.TryParse<TEnum>(value, ignoreCase: true, out var parsed))
++                {
++                    return parsed;
++                }
++
++                throw new JsonException(
++                    $"'{value}' is not a valid {typeof(TEnum).Name}. Expected one of: {string.Join(", ", Enum.GetNames<TEnum>())}.");
++            }
++
++            case JsonTokenType.Number when reader.TryGetInt32(out var number):
++            {
++                var candidate = (TEnum)Enum.ToObject(typeof(TEnum), number);
++                if (Enum.IsDefined(candidate))
++                {
++                    return candidate;
++                }
++
++                throw new JsonException($"{number} is not a defined {typeof(TEnum).Name} value.");
++            }
++
++            default:
++                throw new JsonException($"Expected a string or number for {typeof(TEnum).Name}.");
++        }
++    }
++
++    /// <inheritdoc />
++    public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
++        => writer.WriteNumberValue(Convert.ToInt32(value));
++}
+diff --git a/Auricrux.Web/Services/WorkspaceStorageService.cs b/Auricrux.Web/Services/WorkspaceStorageService.cs
+index 3be0739..8b160ac 100644
+--- a/Auricrux.Web/Services/WorkspaceStorageService.cs
++++ b/Auricrux.Web/Services/WorkspaceStorageService.cs
+@@ -105,21 +105,28 @@ public sealed class WorkspaceStorageService
+         return new WorkspaceEntry("file", safeName, ToRelative(root, full), new FileInfo(full).Length, DateTime.UtcNow);
+     }
+ 
+-    /// <summary>Opens a file from the tenant's workspace for download.</summary>
++    /// <summary>
++    /// Opens a file from the tenant's workspace for download, or returns <see langword="null"/>
++    /// when the tenant has no such file. A path belonging to another tenant resolves under a
++    /// different root and is therefore simply absent.
++    /// </summary>
+     public (Stream Stream, string ContentType, string FileName)? OpenFile(string tenantKey, string relativePath)
+     {
+         var root = RootFor(tenantKey);
+-        var full = ResolvePath(root, relativePath, mustExist: true);
++        var full = ResolvePath(root, relativePath, mustExist: false);
+         if (!File.Exists(full)) return null;
+         Stream stream = File.OpenRead(full);
+         return (stream, GuessContentType(full), Path.GetFileName(full));
+     }
+ 
+-    /// <summary>Deletes a file or folder from the tenant's workspace.</summary>
++    /// <summary>
++    /// Deletes a file or folder from the tenant's workspace, returning whether anything was
++    /// removed.
++    /// </summary>
+     public bool Delete(string tenantKey, string relativePath)
+     {
+         var root = RootFor(tenantKey);
+-        var full = ResolvePath(root, relativePath, mustExist: true);
++        var full = ResolvePath(root, relativePath, mustExist: false);
+         if (File.Exists(full))
+         {
+             File.Delete(full);
+diff --git a/Auricrux.Web/appsettings.json b/Auricrux.Web/appsettings.json
+index e3faabc..adfdf09 100644
+--- a/Auricrux.Web/appsettings.json
++++ b/Auricrux.Web/appsettings.json
+@@ -18,6 +18,24 @@
+       "https://auricrux.futurecontractorsofamerica.com"
+     ]
+   },
++  "Security": {
++    "//OpenMode": "Share one tenant and leave admin operations unguarded. Defaults to true only outside Production when Auth is disabled. Forced off in Production unless AllowInsecureProduction is set.",
++    "//AllowInsecureProduction": "Serve account, memory, and workspace data anonymously in Production. Off by default; every boot logs a critical warning when on.",
++    "//RequireAuthForInference": "Also require an authenticated caller for chat, thinking, search, calc, vision, and browse.",
++    "//AdminApiKey": "Shared secret accepted in X-Auricrux-Admin-Key for plan changes. Supply via environment or a secret store, never in this file.",
++    "//AdminRole": "Role claim value that grants administrative access.",
++    "//AdminEmails": "Authenticated email addresses granted administrative access.",
++    "//Browse-AllowedPrivateHosts": "Hosts the SSRF guard permits despite resolving to private addresses, for intranet documentation sources.",
++    "RequireAuthForInference": false,
++    "AdminRole": "auricrux-admin",
++    "AdminEmails": [],
++    "MaxPromptChars": 32000,
++    "MaxHistoryTurns": 40,
++    "MaxUploadBytes": 26214400,
++    "Browse": {
++      "AllowedPrivateHosts": []
++    }
++  },
+   "RateLimit": {
+     "PermitLimit": 120
+   },
+diff --git a/README.md b/README.md
+index 18a6ca5..a09924e 100644
+--- a/README.md
++++ b/README.md
+@@ -125,8 +125,34 @@ The app supports three thinking modes:
+ 
+ The backend must provide these endpoints:
+ 
++### POST /api/chat/stream
++Send a chat query and receive the answer incrementally as Server-Sent Events, the same way
++Copilot, Gemini, Grok, and Claude render output. The request body matches `POST /api/chat`.
++
++**Response** (`text/event-stream`):
++
++```
++event: sources
++data: {"interactionId":"...","sources":[{"title":"...","url":"...","relevanceScore":0.86}]}
++
++event: token
++data: {"text":"Sill plates are "}
++
++event: token
++data: {"text":"the horizontal members "}
++
++event: done
++data: {"interactionId":"...","processingTimeMs":1234,"confidenceScore":0.86}
++```
++
++Citations arrive in the leading `sources` event so a client can render them before any text. The
++terminal `done` event carries the `interactionId` accepted by `POST /api/feedback/{interactionId}`.
++An `error` event is emitted instead when the request is rejected or generation fails.
++
+ ### POST /api/chat
+-Send a chat query and receive an AI-generated response.
++Send a chat query and receive a single completed AI-generated response.
++
++Enum fields accept either the string form shown below or their numeric equivalents.
+ 
+ **Request**:
+ ```json
+@@ -303,13 +329,61 @@ Log level can be configured in `appsettings.json`.
+ - Razor components for composable UI
+ - Real-time interactivity
+ 
+-## Security Considerations
+-
+-1. **API Communication**: Use HTTPS in production
+-2. **Authentication**: Implement OAuth2/OpenID Connect as needed
+-3. **Data Validation**: All inputs validated before sending to backend
+-4. **Sensitive Data**: Avoid storing tokens in app.config/appsettings
+-5. **CORS**: Configure backend CORS policies appropriately
++## Security model
++
++Auricrux resolves one security posture at startup and logs it on the first lines of the log.
++
++| Posture | When it applies | Behaviour |
++|---|---|---|
++| **Open mode** | Not Production and `Auth:Enabled` is false | All callers share the `public` tenant; administrative operations are unguarded. Local development and tests only. |
++| **Authenticated** | `Auth:Enabled` is true with an `Auth:Authority` | Callers are identified from a validated token; each gets an isolated tenant partition. |
++| **Production lockdown** | Production with no authentication configured | Account, memory, and workspace endpoints return `403` with remediation text. Health and stateless inference keep working. |
++
++Set `Security:AllowInsecureProduction=true` to knowingly serve data anonymously in Production; the
++host logs a critical warning on every boot while it is on.
++
++### Endpoint classes
++
++- **Public** — `/api/health`, `/healthz`, `/api/capabilities`, `/api/models`, `/api/account/plans`.
++- **Inference** — `/api/chat`, `/api/chat/stream`, `/api/thinking`, `/api/search`, `/api/browse`,
++  `/api/agent`, `/api/calc`, `/api/vision`. Open by default; set
++  `Security:RequireAuthForInference=true` to require a token.
++- **Tenant data** — `/api/memory/*`, `/api/workspace/*`, `/api/account/{email}`. Scoped to the
++  calling tenant. A session id or file path from another tenant resolves to a different partition
++  and is simply absent.
++- **Administrative** — `/api/account/{email}/upgrade`. Requires a constant-time match on
++  `X-Auricrux-Admin-Key`, or an authenticated principal holding the `Security:AdminRole` claim or
++  listed in `Security:AdminEmails`. Plan changes are the entitlement grant paid billing depends on,
++  so they are never self-serve.
++
++### Configuration
++
++| Key | Default | Purpose |
++|---|---|---|
++| `Security:OpenMode` | inferred | Force shared-tenant mode on or off. |
++| `Security:AllowInsecureProduction` | `false` | Permit anonymous data access in Production. |
++| `Security:RequireAuthForInference` | `false` | Require a token for chat and other inference. |
++| `Security:AdminApiKey` | unset | Shared secret for administrative calls. Supply via environment or a secret store. |
++| `Security:AdminRole` | `auricrux-admin` | Role claim granting administrative access. |
++| `Security:MaxPromptChars` | `32000` | Largest accepted prompt. |
++| `Security:MaxUploadBytes` | `26214400` | Largest accepted workspace upload. |
++| `Security:AllowedUploadExtensions` | document/image/CAD set | Upload allow-list. |
++| `Security:Browse:AllowedPrivateHosts` | empty | Intranet hosts the SSRF guard may fetch. |
++
++### Outbound fetch safety
++
++`/api/browse` resolves the target host and refuses unless every resolved address is publicly
++routable, covering IPv6, IPv4-mapped IPv6, RFC1918, carrier-grade NAT, and link-local metadata
++ranges. Redirects are followed manually so each hop is revalidated. A hostname alone is never
++trusted, because any DNS name can be pointed at a private address.
++
++### Operator checklist
++
++1. Serve over HTTPS and keep `UseHsts` enabled.
++2. Configure `Auth:Enabled`, `Auth:Authority`, and `Auth:ClientId` before exposing the app.
++3. Set `Security:AdminApiKey` from a secret store, never from `appsettings.json`.
++4. Narrow `Cors:AllowedOrigins` to the origins you actually serve.
++5. Confirm the startup log does not report open mode or insecure production.
+ 
+ ## Performance Optimization
+ 
