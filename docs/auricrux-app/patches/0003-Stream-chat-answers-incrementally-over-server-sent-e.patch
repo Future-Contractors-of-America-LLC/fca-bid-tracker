@@ -1,0 +1,548 @@
+From 7d996e64e3d922ed13d4d3dcfcb4c9c05b0ea114 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 14:44:17 +0000
+Subject: [PATCH 3/6] Stream chat answers incrementally over server-sent events
+
+Adds POST /api/chat/stream. Every model this app is benchmarked against streams
+its answer; serving only completed responses made a deep-mode answer
+indistinguishable from a hang for its entire duration, which was the most visible
+behavioural gap in the parity matrix.
+
+The stream emits grounding sources first so the UI can show provenance before the
+first token, then content deltas, then one terminal event carrying timings and the
+interaction id that feedback is posted against. When no model is reachable the
+corpus fallback is chunked into the same event shape, so a client never branches on
+which path served the answer.
+
+Ollama is called with stream=true and read with ResponseHeadersRead so deltas
+surface as they arrive rather than after the full body. Entitlement refusals travel
+as an error event because the response has already committed a 200 and an SSE
+content type by the time the plan is checked.
+
+Tests: 133 passing. Coverage asserts event ordering, that concatenated deltas
+reconstruct the final answer exactly, that one interaction id spans the stream and
+resolves for feedback, and that an empty query yields an error event.
+---
+ Auricrux.Tests/ChatStreamingTests.cs          | 126 ++++++++++++
+ .../Controllers/AuricruxApiController.cs      |  78 +++++++
+ Auricrux.Web/Services/ChatStreamEvent.cs      |  77 +++++++
+ .../ConstructionIntelligenceService.cs        | 194 ++++++++++++++++++
+ 4 files changed, 475 insertions(+)
+ create mode 100644 Auricrux.Tests/ChatStreamingTests.cs
+ create mode 100644 Auricrux.Web/Services/ChatStreamEvent.cs
+
+diff --git a/Auricrux.Tests/ChatStreamingTests.cs b/Auricrux.Tests/ChatStreamingTests.cs
+new file mode 100644
+index 0000000..ba8e843
+--- /dev/null
++++ b/Auricrux.Tests/ChatStreamingTests.cs
+@@ -0,0 +1,126 @@
++using System.Net;
++using System.Net.Http.Json;
++using System.Text.Json;
++using Auricrux.Shared.Models;
++using Microsoft.AspNetCore.Mvc.Testing;
++using Xunit;
++
++namespace Auricrux.Tests;
++
++/// <summary>
++/// Covers incremental delivery of chat answers. These run without a reachable model, so they also
++/// prove the corpus fallback streams the same event shape as a live model — a client must not need
++/// to know which path served the answer.
++/// </summary>
++public sealed class ChatStreamingTests : IClassFixture<WebApplicationFactory<Program>>
++{
++    private readonly HttpClient _client;
++
++    public ChatStreamingTests(WebApplicationFactory<Program> factory)
++    {
++        _client = factory.CreateClient();
++    }
++
++    private async Task<List<(string Event, JsonElement Data)>> ReadStreamAsync(string query)
++    {
++        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/chat/stream")
++        {
++            Content = JsonContent.Create(new ChatRequest { Query = query })
++        };
++
++        using var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++        Assert.Equal("text/event-stream", response.Content.Headers.ContentType?.MediaType);
++
++        var events = new List<(string, JsonElement)>();
++        await using var stream = await response.Content.ReadAsStreamAsync();
++        using var reader = new StreamReader(stream);
++
++        string? currentEvent = null;
++        while (await reader.ReadLineAsync() is { } line)
++        {
++            if (line.StartsWith("event: ", StringComparison.Ordinal))
++            {
++                currentEvent = line["event: ".Length..];
++            }
++            else if (line.StartsWith("data: ", StringComparison.Ordinal))
++            {
++                var json = JsonDocument.Parse(line["data: ".Length..]).RootElement.Clone();
++                events.Add((currentEvent ?? "message", json));
++            }
++        }
++
++        return events;
++    }
++
++    [Fact]
++    public async Task Stream_emits_sources_then_deltas_then_a_terminal_event()
++    {
++        var events = await ReadStreamAsync("What are concrete formwork stripping requirements?");
++
++        Assert.NotEmpty(events);
++        Assert.Equal("sources", events[0].Event);
++        Assert.Equal("done", events[^1].Event);
++        Assert.Contains(events, e => e.Event == "delta");
++
++        var sourcesIndex = events.FindIndex(e => e.Event == "sources");
++        var firstDeltaIndex = events.FindIndex(e => e.Event == "delta");
++        Assert.True(sourcesIndex < firstDeltaIndex, "Sources must arrive before any content delta.");
++    }
++
++    [Fact]
++    public async Task Concatenated_deltas_reconstruct_the_final_answer()
++    {
++        var events = await ReadStreamAsync("What is the OSHA fall protection trigger height?");
++
++        var assembled = string.Concat(events
++            .Where(e => e.Event == "delta")
++            .Select(e => e.Data.GetProperty("delta").GetString()));
++
++        var done = events.Single(e => e.Event == "done").Data;
++        var final = done.GetProperty("response").GetProperty("content").GetString();
++
++        Assert.False(string.IsNullOrWhiteSpace(assembled));
++        Assert.Equal(final, assembled);
++    }
++
++    [Fact]
++    public async Task Every_event_on_a_stream_shares_one_interaction_id()
++    {
++        var events = await ReadStreamAsync("How do I level subcontractor bids?");
++
++        var ids = events
++            .Select(e => e.Data.GetProperty("interactionId").GetGuid())
++            .Distinct()
++            .ToList();
++
++        Assert.Single(ids);
++        Assert.NotEqual(Guid.Empty, ids[0]);
++    }
++
++    [Fact]
++    public async Task Terminal_event_carries_metadata_for_the_feedback_path()
++    {
++        var events = await ReadStreamAsync("What belongs in an RFI?");
++        var done = events.Single(e => e.Event == "done").Data;
++        var response = done.GetProperty("response");
++
++        Assert.True(response.GetProperty("confidenceScore").GetDouble() > 0);
++        Assert.True(response.GetProperty("processingTimeMs").GetInt64() >= 0);
++
++        // The id from the stream must address a real interaction, or feedback cannot be attached.
++        var interactionId = done.GetProperty("interactionId").GetGuid();
++        var feedback = await _client.PostAsJsonAsync($"/api/feedback/{interactionId}", new StarRating { Stars = 5 });
++        Assert.Equal(HttpStatusCode.Accepted, feedback.StatusCode);
++    }
++
++    [Fact]
++    public async Task Empty_query_is_reported_as_a_stream_error_event()
++    {
++        var events = await ReadStreamAsync("   ");
++
++        var error = Assert.Single(events);
++        Assert.Equal("error", error.Event);
++        Assert.Contains("Query is required", error.Data.GetProperty("error").GetString());
++    }
++}
+diff --git a/Auricrux.Web/Controllers/AuricruxApiController.cs b/Auricrux.Web/Controllers/AuricruxApiController.cs
+index d926b90..610f8b4 100644
+--- a/Auricrux.Web/Controllers/AuricruxApiController.cs
++++ b/Auricrux.Web/Controllers/AuricruxApiController.cs
+@@ -74,6 +74,84 @@ public sealed class AuricruxApiController(
+         return Ok(response);
+     }
+ 
++    /// <summary>
++    /// Answers a construction question as a server-sent event stream, emitting grounding sources,
++    /// then incremental content, then a terminal event carrying timings and the interaction id.
++    /// </summary>
++    [HttpPost("chat/stream")]
++    public async Task ChatStream(
++        [FromBody] ChatRequest request,
++        [FromQuery] string? model,
++        CancellationToken cancellationToken)
++    {
++        Response.ContentType = "text/event-stream";
++        Response.Headers.CacheControl = "no-cache";
++        Response.Headers.Connection = "keep-alive";
++        // Proxies that buffer will defeat streaming entirely; this is the conventional opt-out.
++        Response.Headers["X-Accel-Buffering"] = "no";
++
++        if (string.IsNullOrWhiteSpace(request.Query))
++        {
++            await WriteEventAsync(ChatStreamEvent.ForError(Guid.Empty, "Query is required."), cancellationToken);
++            return;
++        }
++
++        var resolved = ResolveModel(model, out var entitlementError);
++        if (entitlementError is not null)
++        {
++            await WriteEventAsync(
++                ChatStreamEvent.ForError(Guid.Empty, DescribeEntitlementError(entitlementError)),
++                cancellationToken);
++            return;
++        }
++
++        logger.LogInformation(
++            "Chat stream mode={Mode} scope={Scope} model={Model}",
++            request.ThinkingMode, request.SearchScope, resolved);
++
++        try
++        {
++            await foreach (var streamEvent in intelligence.StreamChatAsync(request, resolved, cancellationToken))
++            {
++                await WriteEventAsync(streamEvent, cancellationToken);
++            }
++        }
++        catch (OperationCanceledException)
++        {
++            // The client hung up; nothing to report and nothing to log as a fault.
++        }
++        catch (Exception ex)
++        {
++            logger.LogError(ex, "Chat stream failed (correlation={CorrelationId})", HttpContext.TraceIdentifier);
++            await WriteEventAsync(
++                ChatStreamEvent.ForError(Guid.Empty, "The stream ended unexpectedly."),
++                CancellationToken.None);
++        }
++    }
++
++    private async Task WriteEventAsync(ChatStreamEvent streamEvent, CancellationToken ct)
++    {
++        var json = System.Text.Json.JsonSerializer.Serialize(streamEvent, StreamJsonOptions);
++        await Response.WriteAsync($"event: {streamEvent.Type}\ndata: {json}\n\n", ct);
++        await Response.Body.FlushAsync(ct);
++    }
++
++    private static readonly System.Text.Json.JsonSerializerOptions StreamJsonOptions = new(System.Text.Json.JsonSerializerDefaults.Web)
++    {
++        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
++    };
++
++    // The stream has already committed a 200 and an SSE content type by the time entitlement is
++    // known, so the refusal has to travel as an error event rather than a status code.
++    private static string DescribeEntitlementError(ActionResult error) => error switch
++    {
++        ObjectResult { StatusCode: StatusCodes.Status402PaymentRequired } => "Daily query limit reached. Upgrade to continue.",
++        ObjectResult { StatusCode: StatusCodes.Status403Forbidden } => "Model not included in current plan.",
++        UnauthorizedObjectResult => "An identified account is required for this deployment.",
++        NotFoundObjectResult => "Account not registered.",
++        _ => "Request refused."
++    };
++
+     /// <summary>Returns the reasoning trace for a query without a final answer.</summary>
+     [HttpPost("thinking")]
+     public async Task<ActionResult<ThinkingResponse>> PostThinking(
+diff --git a/Auricrux.Web/Services/ChatStreamEvent.cs b/Auricrux.Web/Services/ChatStreamEvent.cs
+new file mode 100644
+index 0000000..72b7a73
+--- /dev/null
++++ b/Auricrux.Web/Services/ChatStreamEvent.cs
+@@ -0,0 +1,77 @@
++using Auricrux.Shared.Models;
++
++namespace Auricrux.Web.Services;
++
++/// <summary>The kind of event carried on a streaming chat response.</summary>
++public enum ChatStreamEventType
++{
++    /// <summary>Grounding sources, sent once before the first content delta.</summary>
++    Sources = 0,
++
++    /// <summary>An incremental piece of the answer.</summary>
++    Delta = 1,
++
++    /// <summary>Terminal event carrying the assembled answer and its metadata.</summary>
++    Done = 2,
++
++    /// <summary>The stream ended early because of a fault.</summary>
++    Error = 3
++}
++
++/// <summary>
++/// One event on a server-sent chat stream. Sources arrive first so a client can render
++/// provenance before any tokens, deltas carry the answer as it is produced, and a single
++/// terminal event carries timings and the interaction id used for feedback.
++/// </summary>
++public sealed class ChatStreamEvent
++{
++    /// <summary>Which kind of event this is.</summary>
++    public required string Type { get; init; }
++
++    /// <summary>Identifier tying every event on this stream to one interaction.</summary>
++    public Guid InteractionId { get; init; }
++
++    /// <summary>Incremental answer text, present on delta events.</summary>
++    public string? Delta { get; init; }
++
++    /// <summary>Grounding sources, present on the sources event.</summary>
++    public List<Source>? Sources { get; init; }
++
++    /// <summary>Assembled response and metadata, present on the terminal event.</summary>
++    public ChatResponse? Response { get; init; }
++
++    /// <summary>Failure description, present on an error event.</summary>
++    public string? Error { get; init; }
++
++    /// <summary>Creates the leading sources event.</summary>
++    public static ChatStreamEvent ForSources(Guid interactionId, List<Source> sources) => new()
++    {
++        Type = "sources",
++        InteractionId = interactionId,
++        Sources = sources
++    };
++
++    /// <summary>Creates an incremental content event.</summary>
++    public static ChatStreamEvent ForDelta(Guid interactionId, string delta) => new()
++    {
++        Type = "delta",
++        InteractionId = interactionId,
++        Delta = delta
++    };
++
++    /// <summary>Creates the terminal event.</summary>
++    public static ChatStreamEvent ForDone(Guid interactionId, ChatResponse response) => new()
++    {
++        Type = "done",
++        InteractionId = interactionId,
++        Response = response
++    };
++
++    /// <summary>Creates an error event for a stream that ended early.</summary>
++    public static ChatStreamEvent ForError(Guid interactionId, string error) => new()
++    {
++        Type = "error",
++        InteractionId = interactionId,
++        Error = error
++    };
++}
+diff --git a/Auricrux.Web/Services/ConstructionIntelligenceService.cs b/Auricrux.Web/Services/ConstructionIntelligenceService.cs
+index a41f2fd..061578b 100644
+--- a/Auricrux.Web/Services/ConstructionIntelligenceService.cs
++++ b/Auricrux.Web/Services/ConstructionIntelligenceService.cs
+@@ -1,5 +1,7 @@
+ using System.Diagnostics;
+ using System.Net.Http.Json;
++using System.Runtime.CompilerServices;
++using System.Text;
+ using System.Text.Json;
+ using System.Text.Json.Serialization;
+ using Auricrux.Shared.Models;
+@@ -121,6 +123,198 @@ public sealed class ConstructionIntelligenceService
+         return response;
+     }
+ 
++    /// <summary>
++    /// Streams an answer incrementally as the model produces it.
++    ///
++    /// Non-streaming completion makes a deep-mode answer look like a hang for its whole duration,
++    /// which is the most visible behavioural gap against every general-purpose assistant this app
++    /// is measured against. Grounding sources are emitted first so the UI can show provenance
++    /// before the first token, and the corpus fallback streams the same shape when no model is
++    /// reachable, so a client never needs a second code path.
++    /// </summary>
++    public async IAsyncEnumerable<ChatStreamEvent> StreamChatAsync(
++        ChatRequest request,
++        string? model,
++        [EnumeratorCancellation] CancellationToken ct)
++    {
++        var sw = Stopwatch.StartNew();
++        var interactionId = Guid.NewGuid();
++        var sources = SearchInternal(request.Query, request.SearchScope, take: 5);
++
++        yield return ChatStreamEvent.ForSources(interactionId, sources);
++
++        var system = BuildSystemPrompt(request.ThinkingMode, sources);
++        var content = new StringBuilder();
++
++        await foreach (var delta in StreamCompletionAsync(system, request.Query, request.ConversationHistory, model, ct))
++        {
++            content.Append(delta);
++            yield return ChatStreamEvent.ForDelta(interactionId, delta);
++        }
++
++        sw.Stop();
++        var response = new ChatResponse
++        {
++            Content = content.ToString(),
++            Sources = sources,
++            Timestamp = DateTime.UtcNow,
++            ProcessingTimeMs = sw.ElapsedMilliseconds,
++            ConfidenceScore = sources.Count > 0 ? 0.86 : 0.72,
++            InteractionId = interactionId
++        };
++
++        lock (_gate)
++        {
++            _interactions[interactionId] = response;
++            _interactionOrder.Enqueue(interactionId);
++            while (_interactionOrder.Count > MaxRetainedInteractions)
++            {
++                _interactions.Remove(_interactionOrder.Dequeue());
++            }
++        }
++
++        yield return ChatStreamEvent.ForDone(interactionId, response);
++    }
++
++    /// <summary>
++    /// Yields content deltas from Ollama's newline-delimited streaming response, falling back to
++    /// the corpus answer chunked into deltas when the model is unreachable.
++    /// </summary>
++    private async IAsyncEnumerable<string> StreamCompletionAsync(
++        string system,
++        string user,
++        IEnumerable<ChatMessage> history,
++        string? model,
++        [EnumeratorCancellation] CancellationToken ct)
++    {
++        var ollamaBase = (_config["Auricrux:OllamaUrl"] ?? "http://127.0.0.1:11434").TrimEnd('/');
++        var selected = string.IsNullOrWhiteSpace(model)
++            ? (_config["Auricrux:PrimaryModel"] ?? "llama3.2")
++            : model;
++
++        var messages = new List<object> { new { role = "system", content = system } };
++        foreach (var h in history.TakeLast(12))
++        {
++            messages.Add(new { role = h.Role, content = h.Content });
++        }
++        messages.Add(new { role = "user", content = user });
++
++        HttpResponseMessage? response = null;
++        Stream? stream = null;
++        StreamReader? reader = null;
++        try
++        {
++            try
++            {
++                var http = _httpClientFactory.CreateClient(nameof(ConstructionIntelligenceService));
++                using var httpRequest = new HttpRequestMessage(HttpMethod.Post, $"{ollamaBase}/api/chat")
++                {
++                    Content = new StringContent(
++                        JsonSerializer.Serialize(new { model = selected, stream = true, messages }),
++                        Encoding.UTF8,
++                        "application/json")
++                };
++
++                // Headers-read so deltas surface as they arrive rather than after the full body.
++                response = await http.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, ct);
++                if (!response.IsSuccessStatusCode)
++                {
++                    _logger.LogWarning("Ollama stream {Model} returned {Status}", selected, response.StatusCode);
++                    response.Dispose();
++                    response = null;
++                }
++                else
++                {
++                    stream = await response.Content.ReadAsStreamAsync(ct);
++                    reader = new StreamReader(stream, Encoding.UTF8);
++                }
++            }
++            catch (Exception ex) when (ex is not OperationCanceledException)
++            {
++                _logger.LogWarning(ex, "Ollama stream unavailable; using construction corpus fallback");
++            }
++
++            if (reader is null)
++            {
++                foreach (var chunk in ChunkForStreaming(ConstructionFallback(user)))
++                {
++                    ct.ThrowIfCancellationRequested();
++                    yield return chunk;
++                }
++
++                yield break;
++            }
++
++            while (!reader.EndOfStream)
++            {
++                ct.ThrowIfCancellationRequested();
++
++                var line = await reader.ReadLineAsync(ct);
++                if (string.IsNullOrWhiteSpace(line))
++                {
++                    continue;
++                }
++
++                if (!TryReadDelta(line, out var delta, out var done))
++                {
++                    continue;
++                }
++
++                if (!string.IsNullOrEmpty(delta))
++                {
++                    yield return delta;
++                }
++
++                if (done)
++                {
++                    yield break;
++                }
++            }
++        }
++        finally
++        {
++            reader?.Dispose();
++            stream?.Dispose();
++            response?.Dispose();
++        }
++    }
++
++    private bool TryReadDelta(string line, out string delta, out bool done)
++    {
++        delta = string.Empty;
++        done = false;
++
++        try
++        {
++            using var doc = JsonDocument.Parse(line);
++            if (doc.RootElement.TryGetProperty("message", out var message)
++                && message.TryGetProperty("content", out var contentElement))
++            {
++                delta = contentElement.GetString() ?? string.Empty;
++            }
++
++            done = doc.RootElement.TryGetProperty("done", out var doneElement)
++                   && doneElement.ValueKind == JsonValueKind.True;
++            return true;
++        }
++        catch (JsonException)
++        {
++            _logger.LogDebug("Skipped unparsable Ollama stream line");
++            return false;
++        }
++    }
++
++    // The corpus fallback arrives as one string; chunking it keeps the wire shape identical to a
++    // live model stream so clients do not branch on which path served the answer.
++    private static IEnumerable<string> ChunkForStreaming(string text)
++    {
++        const int chunkSize = 48;
++        for (var i = 0; i < text.Length; i += chunkSize)
++        {
++            yield return text.Substring(i, Math.Min(chunkSize, text.Length - i));
++        }
++    }
++
+     public async Task<ThinkingResponse> ThinkAsync(ThinkingRequest request, string? model, CancellationToken ct)
+     {
+         var sw = Stopwatch.StartNew();

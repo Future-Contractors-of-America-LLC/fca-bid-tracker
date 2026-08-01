@@ -1,0 +1,228 @@
+From f197ba32b76c415e2a8fc9794478699320df4263 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 14:49:21 +0000
+Subject: [PATCH 5/6] Clear dependency advisories and add security scanning to
+ CI
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Remediates two High-severity transitive advisories that the build was shipping:
+
+- SQLitePCLRaw.lib.e_sqlite3 (GHSA-2m69-gcr7-jv3q), reached through
+  Microsoft.Data.Sqlite 8.0.11 — a .NET 8 package on a .NET 10 target. Bumped to
+  Microsoft.Data.Sqlite 10.0.10 with SQLitePCLRaw.bundle_e_sqlite3 pinned to 3.0.5,
+  which also removes the framework version skew.
+- Microsoft.OpenApi (GHSA-v5pm-xwqc-g5wc), pinned to the patched 2.11.0. The 3.x
+  line is not usable here: it makes IOpenApiMediaType.Example read-only, which the
+  ASP.NET OpenAPI source generator cannot compile against.
+
+Remaining ASP.NET and Extensions packages moved from 10.0.0 to 10.0.10 for current
+patch level. MAUI is deliberately left at 10.0.20 to match Directory.Build.props,
+since the mobile head cannot be built or tested from this environment.
+
+Adds a Security Scan workflow: a dependency audit that fails the build on Moderate
+or higher advisories, CodeQL with security-and-quality queries, gitleaks over full
+history, and a job that runs the boundary suites by name so deleting or renaming
+one fails CI instead of quietly reducing coverage. It runs weekly as well as on
+push, because a merged dependency can become vulnerable after the fact.
+
+dotnet list package --vulnerable now reports clean across all four projects.
+Tests: 143 passing.
+---
+ .github/workflows/security-scan.yml    | 106 +++++++++++++++++++++++++
+ Auricrux.Eval/Auricrux.Eval.csproj     |   8 +-
+ Auricrux.Shared/Auricrux.Shared.csproj |   6 +-
+ Auricrux.Tests/Auricrux.Tests.csproj   |   4 +-
+ Auricrux.Web/Auricrux.Web.csproj       |  12 +--
+ 5 files changed, 124 insertions(+), 12 deletions(-)
+ create mode 100644 .github/workflows/security-scan.yml
+
+diff --git a/.github/workflows/security-scan.yml b/.github/workflows/security-scan.yml
+new file mode 100644
+index 0000000..63c43a0
+--- /dev/null
++++ b/.github/workflows/security-scan.yml
+@@ -0,0 +1,106 @@
++name: Security Scan
++
++on:
++  push:
++    branches: [main]
++  pull_request:
++    branches: [main]
++  schedule:
++    # Advisories are published against dependencies that are already merged, so a scan that only
++    # runs on push would not notice a package becoming vulnerable after the fact.
++    - cron: '0 6 * * 1'
++  workflow_dispatch:
++
++permissions:
++  contents: read
++  security-events: write
++
++jobs:
++  dependency-audit:
++    name: Dependency audit
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v4
++
++      - name: Setup .NET
++        uses: actions/setup-dotnet@v4
++        with:
++          dotnet-version: '10.0.x'
++
++      - name: Restore
++        run: dotnet restore AuricruxApp.sln
++
++      - name: Fail on vulnerable packages
++        run: |
++          dotnet list AuricruxApp.sln package --vulnerable --include-transitive 2>&1 | tee audit.log
++          if grep -qE '\|\s+(Critical|High|Moderate)' audit.log; then
++            echo "::error::Vulnerable NuGet packages detected. Review audit.log output above."
++            exit 1
++          fi
++          echo "No vulnerable packages at Moderate or above."
++
++      - name: Report deprecated packages
++        continue-on-error: true
++        run: dotnet list AuricruxApp.sln package --deprecated
++
++  codeql:
++    name: CodeQL
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v4
++
++      - name: Setup .NET
++        uses: actions/setup-dotnet@v4
++        with:
++          dotnet-version: '10.0.x'
++
++      - name: Initialize CodeQL
++        uses: github/codeql-action/init@v3
++        with:
++          languages: csharp
++          queries: security-and-quality
++
++      # Built explicitly rather than by autobuild: the solution excludes the MAUI project, and
++      # autobuild would try to restore workloads this runner does not have.
++      - name: Build
++        run: dotnet build AuricruxApp.sln -c Release
++
++      - name: Analyze
++        uses: github/codeql-action/analyze@v3
++        with:
++          category: /language:csharp
++
++  secret-scan:
++    name: Secret scan
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          fetch-depth: 0
++
++      - name: Scan history for committed credentials
++        uses: gitleaks/gitleaks-action@v2
++        env:
++          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
++
++  security-tests:
++    name: Security regression tests
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v4
++
++      - name: Setup .NET
++        uses: actions/setup-dotnet@v4
++        with:
++          dotnet-version: '10.0.x'
++
++      - name: Build
++        run: dotnet build AuricruxApp.sln -c Release
++
++      # Run the boundary suites by name so a rename or accidental deletion fails the job rather
++      # than silently reducing coverage of the controls they protect.
++      - name: Run boundary suites
++        run: |
++          dotnet test Auricrux.Tests/Auricrux.Tests.csproj -c Release --no-build \
++            --filter "FullyQualifiedName~OutboundUrlGuardTests|FullyQualifiedName~UntrustedContentTests|FullyQualifiedName~TenantIsolationTests|FullyQualifiedName~AuthEnabledTests|FullyQualifiedName~BillingProvisioningTests" \
++            --logger "console;verbosity=normal"
+diff --git a/Auricrux.Eval/Auricrux.Eval.csproj b/Auricrux.Eval/Auricrux.Eval.csproj
+index 8efd520..163cc74 100644
+--- a/Auricrux.Eval/Auricrux.Eval.csproj
++++ b/Auricrux.Eval/Auricrux.Eval.csproj
+@@ -12,9 +12,11 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
+-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
++    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
++    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
++    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.10" />
++    <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
++    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+diff --git a/Auricrux.Shared/Auricrux.Shared.csproj b/Auricrux.Shared/Auricrux.Shared.csproj
+index 07f4d0a..b309872 100644
+--- a/Auricrux.Shared/Auricrux.Shared.csproj
++++ b/Auricrux.Shared/Auricrux.Shared.csproj
+@@ -10,9 +10,9 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
+-    <PackageReference Include="System.Net.Http.Json" Version="10.0.0" />
++    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
++    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
++    <PackageReference Include="System.Net.Http.Json" Version="10.0.10" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/Auricrux.Tests/Auricrux.Tests.csproj b/Auricrux.Tests/Auricrux.Tests.csproj
+index f6af5ea..2116064 100644
+--- a/Auricrux.Tests/Auricrux.Tests.csproj
++++ b/Auricrux.Tests/Auricrux.Tests.csproj
+@@ -9,8 +9,10 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0" />
++    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.10" />
+     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
++    <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
++    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
+     <PackageReference Include="xunit" Version="2.9.3" />
+     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.1">
+       <PrivateAssets>all</PrivateAssets>
+diff --git a/Auricrux.Web/Auricrux.Web.csproj b/Auricrux.Web/Auricrux.Web.csproj
+index bfc172d..82f84e1 100644
+--- a/Auricrux.Web/Auricrux.Web.csproj
++++ b/Auricrux.Web/Auricrux.Web.csproj
+@@ -10,12 +10,14 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
+-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.0" />
+-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
++    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
++    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10" />
++    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.10" />
+     <PackageReference Include="Bootstrap" Version="5.3.3" />
+-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.11" />
++    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
++    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.10" />
++    <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
++    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
+   </ItemGroup>
+ 
+   <ItemGroup>

@@ -1,0 +1,415 @@
+From 0bef038a0d06d5d35be4ac4678653f8b4df2e161 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 14:50:35 +0000
+Subject: [PATCH 6/6] Document the security model, configuration, and streaming
+ contract
+
+Adds docs/SECURITY_HARDENING.md covering each boundary and why it is drawn where
+it is, a full configuration reference, a worked multi-tenant example, and how to
+verify a deployment from /api/capabilities. Adds SECURITY.md with a private
+disclosure path and the deployment responsibilities that are configuration rather
+than code.
+
+Updates the README, which described behaviour the app no longer has. It now
+documents the streaming endpoint with its event sequence, the OpenAPI contract, the
+split health probes, and the configuration a multi-tenant deployment requires. The
+security section previously offered generic advice such as "implement OAuth2 as
+needed"; it now states what is enforced and what the operator must still set. The
+roadmap drops items that have since shipped.
+---
+ README.md                  |  84 +++++++++++++--
+ SECURITY.md                |  43 ++++++++
+ docs/SECURITY_HARDENING.md | 203 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 319 insertions(+), 11 deletions(-)
+ create mode 100644 SECURITY.md
+ create mode 100644 docs/SECURITY_HARDENING.md
+
+diff --git a/README.md b/README.md
+index 18a6ca5..b743bb8 100644
+--- a/README.md
++++ b/README.md
+@@ -8,12 +8,22 @@ A complete, enterprise-grade AI assistant application built with .NET 10, featur
+ - **Web deployment**: Blazor Server for browser-based access
+ - **AI integration**: Seamless communication with Auricrux backend API
+ - **Advanced chat interface**:
++  - Streaming responses over server-sent events (`POST /api/chat/stream`)
+   - Multiple thinking modes (Quick, Auto, Deep) for flexible AI responses
+   - Configurable search scopes (Internal, Public, Both)
+   - Auto-speak/TTS support for accessibility
+   - Real-time conversation history
+   - Star rating feedback system for response quality
++- **Enterprise security**:
++  - Default-deny API authorization with OIDC/JWT
++  - Per-account isolation of workspace files and conversation memory
++  - SSRF-guarded web retrieval validated against resolved addresses
++  - Prompt-injection isolation for retrieved content
++  - Fail-closed plan changes and per-account rate limiting
++  - See [docs/SECURITY_HARDENING.md](docs/SECURITY_HARDENING.md)
+ - **Production-ready code**:
++  - Published OpenAPI contract at `/openapi/v1.json`
++  - Separate `/livez` and `/readyz` probes
+   - Full error handling and logging
+   - Async/await patterns throughout
+   - Dependency injection and IoC containers
+@@ -125,8 +135,30 @@ The app supports three thinking modes:
+ 
+ The backend must provide these endpoints:
+ 
++### POST /api/chat/stream
++Send a chat query and receive the answer incrementally as server-sent events.
++
++Events arrive in order: one `sources` event carrying grounding references, then `delta` events
++carrying incremental content, then one `done` event carrying the assembled response and its
++metadata. Concatenating every `delta` reproduces the final content exactly. Every event on a
++stream shares one `interactionId`, which is what feedback is posted against.
++
++```
++event: sources
++data: {"type":"sources","interactionId":"…","sources":[{"title":"OSHA Fall Protection",…}]}
++
++event: delta
++data: {"type":"delta","interactionId":"…","delta":"Fall protection triggers at 6 ft"}
++
++event: done
++data: {"type":"done","interactionId":"…","response":{"content":"…","processingTimeMs":842,…}}
++```
++
++An `error` event ends the stream when a request is refused after headers are committed — an
++exhausted quota, for example.
++
+ ### POST /api/chat
+-Send a chat query and receive an AI-generated response.
++Send a chat query and receive a complete AI-generated response.
+ 
+ **Request**:
+ ```json
+@@ -157,8 +189,15 @@ Send a chat query and receive an AI-generated response.
+ }
+ ```
+ 
+-### GET /health
+-Health check endpoint to verify backend availability.
++### GET /openapi/v1.json
++The full OpenAPI contract for every route, for typed client generation.
++
++### GET /livez, GET /readyz, GET /health
++Liveness, readiness, and the detailed operator report respectively.
++
++Use `/livez` for liveness probes: it does not touch upstreams, so a model backend outage degrades
++answers rather than restarting every replica. `/readyz` and `/api/health` do check upstreams and
++report `degraded` or `unhealthy` accordingly.
+ 
+ **Response**:
+ ```json
+@@ -305,11 +344,33 @@ Log level can be configured in `appsettings.json`.
+ 
+ ## Security Considerations
+ 
++Full reference: **[docs/SECURITY_HARDENING.md](docs/SECURITY_HARDENING.md)**. Disclosure policy:
++[SECURITY.md](SECURITY.md).
++
++`Auth:Enabled` is `false` by default. In that mode every caller is anonymous and shares one storage
++partition — supportable for a single-tenant self-hosted install, unsafe for anything serving more
++than one customer. A multi-tenant deployment needs at minimum:
++
++```jsonc
++{
++  "Auth": { "Enabled": true, "Authority": "https://your-idp/", "Audience": "auricrux" },
++  "Billing": { "ProvisioningKey": "<from secret store>", "RequireIdentity": true },
++  "Network": { "KnownProxies": ["<load balancer address>"] },
++  "AllowedHosts": "your-hostname"
++}
++```
++
++`GET /api/capabilities` reports the posture actually in effect and warns about each setting that
++leaves the deployment more open than recommended; the same warnings are logged at startup.
++
++Other points:
++
+ 1. **API Communication**: Use HTTPS in production
+-2. **Authentication**: Implement OAuth2/OpenID Connect as needed
+-3. **Data Validation**: All inputs validated before sending to backend
+-4. **Sensitive Data**: Avoid storing tokens in app.config/appsettings
+-5. **CORS**: Configure backend CORS policies appropriately
++2. **Sensitive Data**: Keep `Billing:ProvisioningKey` and `Auth:ClientSecret` in the platform
++   secret store, never in `appsettings.json`
++3. **CORS**: Set `Cors:AllowedOrigins` to the origins that actually need access
++4. **Forwarded headers**: Behind a load balancer, set `Network:KnownProxies` or per-caller rate
++   limiting collapses into one shared bucket
+ 
+ ## Performance Optimization
+ 
+@@ -321,10 +382,11 @@ Log level can be configured in `appsettings.json`.
+ 
+ ## Future Enhancements
+ 
+-- [ ] Message persistence (local SQLite database)
+-- [ ] Conversation export (PDF/TXT)
+-- [ ] Image/file upload support
+-- [ ] Voice input transcription
++- [ ] Distributed tracing and metrics (OpenTelemetry)
++- [ ] Shared-cache rate limiting and quotas for multi-replica deployments
++- [ ] Content safety classification on model output
++- [ ] Structured tool-calling in place of the text-JSON agent planner
++- [ ] Fine-tuned construction weights (AUX-017, checkpoint-70000 export)
+ - [ ] Advanced analytics dashboard
+ - [ ] Multi-language support
+ - [ ] Offline mode with sync
+diff --git a/SECURITY.md b/SECURITY.md
+new file mode 100644
+index 0000000..c11f739
+--- /dev/null
++++ b/SECURITY.md
+@@ -0,0 +1,43 @@
++# Security policy
++
++## Reporting a vulnerability
++
++Report suspected vulnerabilities privately to **security@futurecontractorsofamerica.com**, or
++through GitHub's private vulnerability reporting on this repository. Please do not open a public
++issue for an unfixed vulnerability.
++
++A useful report includes the affected endpoint or component, the impact, and enough detail to
++reproduce it. We will acknowledge receipt, confirm or dispute the finding, and tell you when a fix
++ships.
++
++## Supported versions
++
++Fixes are issued against `main`. There are no maintained release branches.
++
++## Deployment responsibilities
++
++Some of the security properties of a deployment depend on how it is configured rather than on the
++code. Before treating an installation as production, read
++[docs/SECURITY_HARDENING.md](docs/SECURITY_HARDENING.md) — in particular:
++
++- `Auth:Enabled` is `false` by default. In that mode every caller is anonymous and shares one
++  storage partition, which is safe only for a single-tenant install.
++- Plan changes require `Billing:ProvisioningKey` or `Auth:AdminEmails`. Without either, upgrades
++  are refused rather than granted.
++- `X-Forwarded-For` is trusted only from proxies listed in `Network:KnownProxies`. Behind a load
++  balancer, per-caller rate limiting depends on configuring these.
++
++`GET /api/capabilities` reports the posture in effect and warns about each setting that leaves the
++deployment more open than recommended.
++
++## What is enforced in code
++
++- Default-deny authorization across the API when authentication is enabled.
++- Per-account partitioning of workspace files and conversation memory.
++- SSRF protection that validates resolved addresses on every redirect hop.
++- Isolation of retrieved web content before it reaches a tool-calling model.
++- Rate limiting partitioned per account, with a global backstop.
++- Fail-closed plan changes.
++
++Each has regression coverage in `Auricrux.Tests`, run on every push by the Security Scan workflow
++alongside a dependency audit, CodeQL, and secret scanning.
+diff --git a/docs/SECURITY_HARDENING.md b/docs/SECURITY_HARDENING.md
+new file mode 100644
+index 0000000..ba90c3b
+--- /dev/null
++++ b/docs/SECURITY_HARDENING.md
+@@ -0,0 +1,203 @@
++# Auricrux security hardening and deployment reference
++
++How Auricrux enforces its security boundaries, and the configuration required to run it safely.
++
++The single most important thing on this page: **`Auth:Enabled` is `false` by default.** In that
++mode every caller is anonymous and shares one storage partition. That is a supportable
++configuration for a single-tenant self-hosted install, and an unsafe one for anything serving more
++than one customer. See [Running multi-tenant](#running-multi-tenant).
++
++---
++
++## Boundaries
++
++### Caller identity
++
++`AuricruxPrincipalResolver` resolves every request to an `AuricruxPrincipal`: a subject, how
++strongly that subject is known (`Authenticated`, `ClientAsserted`, or `Anonymous`), and whether
++the caller is an administrator.
++
++The rule that matters is that the `X-Auricrux-Email` header is **only** honoured while
++`Auth:Enabled` is off. Once authentication is on, the header is ignored outright and identity comes
++only from a validated token. Without that rule, a caller could name someone else's account and
++inherit its plan, quota, and stored data.
++
++`TenantKey` — a truncated SHA-256 of the subject — is the partition key for stored data. Anonymous
++callers all resolve to the single `anonymous` partition.
++
++### API authorization
++
++`AuricruxAuthorizationFilter` is registered as a global MVC filter, so an endpoint is protected
++unless it opts out with `[AuricruxPublic]`. A newly added endpoint is therefore protected by
++omission rather than exposed by it.
++
++It is a filter rather than per-action `[Authorize]` for two reasons: endpoints stay reachable in
++hosts that register no authentication scheme (instead of failing with "No authenticationScheme was
++specified"), and the decision reads live configuration, so configuration layered on after the host
++is built — as the integration tests do — is honoured.
++
++Endpoints that stay public: `/api/health`, `/livez`, `/readyz`, `/api/models`,
++`/api/capabilities`, `/api/account/plans`, `/api/account/register`, `/api/memory/backends`, and
++`/openapi/v1.json`.
++
++### Data isolation
++
++Workspace paths and conversation session ids are both caller-chosen, so isolation cannot rely on
++them being unguessable.
++
++- Workspace files resolve beneath `Data/workspace/{tenantKey}/`. Paths are checked for traversal
++  and compared against the tenant root with a trailing separator, so a sibling directory whose
++  name merely starts with the root cannot satisfy the check.
++- Conversation turns are stored under `{tenantKey}::{sessionId}` across all three backends.
++  Responses report the logical session id, never the storage key.
++
++### Plan and billing
++
++Plan state is revenue state, so plan changes are fail-closed. `POST /api/account/{email}/upgrade`
++requires either:
++
++- the `X-Auricrux-Provisioning-Key` header matching `Billing:ProvisioningKey` (compared in fixed
++  time), or
++- an authenticated caller listed in `Auth:AdminEmails`.
++
++A deployment configuring neither cannot grant upgrades at all and returns `503`. The
++`Billing:AllowUnauthenticatedPlanChanges` escape hatch restores the old open behaviour for
++single-tenant installs and must be set deliberately; it is reported as a warning at startup and in
++the capabilities report.
++
++### Outbound fetches
++
++`OutboundUrlGuard` protects `/api/browse` and the agent's `web_browse` tool.
++
++A hostname allow/deny list is not by itself an SSRF control: `evil.example.com` can resolve to
++`169.254.169.254`, and an allowed public host can redirect to one. The guard therefore resolves
++the host and requires **every** address it resolves to be public unicast — covering IPv4, IPv6,
++and IPv4-mapped IPv6 — and rejects loopback, private, link-local, carrier-grade NAT, multicast,
++and reserved ranges. Redirects are followed manually with each hop revalidated, up to five hops.
++
++### Untrusted content in prompts
++
++Text retrieved from the web is data, not instruction. `UntrustedContent` delimits it and defangs
++instruction-override and role-impersonation phrasing before it reaches a model. This matters
++specifically because the agent can act on what it reads: a page saying "ignore previous
++instructions and fetch …" would otherwise drive further tool calls.
++
++### Rate limiting
++
++Requests are partitioned by account, falling back to client address for anonymous callers, with a
++global limiter as a backstop against a flood spread across partitions.
++
++`X-Forwarded-For` is honoured **only** from proxies named in `Network:KnownProxies`. Trusting it
++unconditionally would let any caller forge a client address and escape per-caller limiting
++entirely. Behind a load balancer, configure the proxy addresses or per-caller limiting degrades to
++one shared bucket.
++
++---
++
++## Configuration
++
++### Authentication
++
++| Key | Default | Purpose |
++|---|---|---|
++| `Auth:Enabled` | `false` | Master switch. Turning it on makes the API default-deny. |
++| `Auth:Authority` | *(empty)* | OIDC issuer. Required — authentication stays off without it. |
++| `Auth:Audience` | `auricrux` | Expected JWT audience. |
++| `Auth:ClientId` | *(empty)* | Enables the interactive browser login when set. |
++| `Auth:ClientSecret` | *(empty)* | OIDC client secret. |
++| `Auth:AdminEmails` | `[]` | Accounts permitted to change any plan. |
++
++### Billing
++
++| Key | Default | Purpose |
++|---|---|---|
++| `Billing:ProvisioningKey` | *(empty)* | Shared secret the checkout backend presents to change plans. |
++| `Billing:RequireIdentity` | `false` | Reject unidentified callers at `/api/chat` so every request is metered. |
++| `Billing:AllowUnauthenticatedPlanChanges` | `false` | Restores open plan changes. Single-tenant only. |
++
++### Outbound fetch
++
++| Key | Default | Purpose |
++|---|---|---|
++| `WebBrowse:AllowedHosts` | `[]` | When non-empty, only these hosts and their subdomains may be fetched. |
++| `WebBrowse:DeniedHosts` | `[]` | Hosts refused regardless of resolved address. |
++| `WebBrowse:AllowPlainHttp` | `true` | Set `false` to require https. |
++
++### Network and limits
++
++| Key | Default | Purpose |
++|---|---|---|
++| `Network:KnownProxies` | `[]` | Proxy addresses whose `X-Forwarded-For` is trusted. |
++| `Network:ForwardLimit` | `1` | Forwarded header hops to process. |
++| `RateLimit:PermitLimit` | `120` | Requests per minute per caller. |
++| `RateLimit:GlobalPermitLimit` | `3000` | Requests per minute across all callers. |
++| `Limits:MaxUploadBytes` | `104857600` | Maximum request body, including uploads. |
++| `AllowedHosts` | `*` | Set to the deployment's hostnames to reject host-header spoofing. |
++| `Cors:AllowedOrigins` | localhost + production origin | Browser origins permitted to call the API. |
++
++---
++
++## Running multi-tenant
++
++Anything serving more than one customer needs all of the following:
++
++```jsonc
++{
++  "Auth": {
++    "Enabled": true,
++    "Authority": "https://login.microsoftonline.com/<tenant>/v2.0",
++    "Audience": "auricrux",
++    "ClientId": "<client-id>",
++    "AdminEmails": ["ops@futurecontractorsofamerica.com"]
++  },
++  "Billing": {
++    "ProvisioningKey": "<from secret store, not source control>",
++    "RequireIdentity": true
++  },
++  "Network": {
++    "KnownProxies": ["10.0.0.4"]
++  },
++  "AllowedHosts": "auricrux.futurecontractorsofamerica.com"
++}
++```
++
++`Billing:ProvisioningKey` and `Auth:ClientSecret` belong in the platform secret store — Azure Key
++Vault, Kubernetes secrets, or environment variables — never in `appsettings.json`.
++
++### Verifying a deployment
++
++`GET /api/capabilities` reports the posture actually in effect:
++
++```json
++{
++  "securityPosture": {
++    "authenticationEnabled": true,
++    "defaultDenyApi": true,
++    "tenantIsolation": "per-account",
++    "planChangesRequireCredential": true,
++    "warnings": []
++  }
++}
++```
++
++An empty `warnings` array is the goal. Every warning names a setting that leaves the deployment
++more open than recommended, and the same warnings are logged at startup.
++
++---
++
++## Health probes
++
++| Endpoint | Use | Depends on upstreams |
++|---|---|---|
++| `/livez` | Liveness / restart decisions | No |
++| `/readyz` | Readiness / traffic admission | Yes |
++| `/api/health` | Detailed operator report | Yes |
++
++Use `/livez` for liveness. Pointing a liveness probe at anything that checks upstreams means a
++model backend outage restarts every replica instead of degrading answers.
++
++---
++
++## Reporting a vulnerability
++
++See [SECURITY.md](../SECURITY.md).

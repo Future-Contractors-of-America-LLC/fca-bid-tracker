@@ -1,0 +1,393 @@
+From 29dd7eee468a90806cb81c90a880ada34da382b6 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 14:46:52 +0000
+Subject: [PATCH 4/6] Publish an OpenAPI contract and report deployment
+ security posture
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- GET /openapi/v1.json describes all 35 routes, so integrators can generate typed
+  clients and CI can diff the surface for unreviewed breaking changes.
+- /livez and /readyz split liveness from readiness. The existing /health probes
+  upstreams, which makes it wrong for a liveness check: a model backend outage
+  would restart every replica instead of degrading answers.
+- The capabilities report gains a securityPosture block describing what is actually
+  in effect — authentication, tenant isolation, plan-change credentials, SSRF
+  validation, rate-limit partitioning — plus warnings naming each setting that
+  leaves the deployment open. Matching warnings are logged at startup, so an open
+  production deployment announces itself rather than being found during an incident.
+- The parity matrix gains the rows this work shipped: streaming, default-deny
+  authorization, per-account isolation, SSRF-safe retrieval, prompt-injection
+  isolation, and the published contract.
+
+Verified against a running Production-mode instance: startup warnings fire, the
+contract serves, liveness and readiness answer, the stream delivers incrementally,
+an anonymous plan upgrade is refused with 503, and both the metadata IP and a DNS
+name resolving to loopback are blocked — the latter being the bypass the previous
+hostname blocklist allowed.
+
+Tests: 143 passing.
+---
+ Auricrux.Tests/PlatformSurfaceTests.cs       | 153 +++++++++++++++++++
+ Auricrux.Web/Auricrux.Web.csproj             |   1 +
+ Auricrux.Web/Program.cs                      |   8 +
+ Auricrux.Web/Services/CapabilitiesService.cs | 107 ++++++++++++-
+ 4 files changed, 268 insertions(+), 1 deletion(-)
+ create mode 100644 Auricrux.Tests/PlatformSurfaceTests.cs
+
+diff --git a/Auricrux.Tests/PlatformSurfaceTests.cs b/Auricrux.Tests/PlatformSurfaceTests.cs
+new file mode 100644
+index 0000000..ecf89f5
+--- /dev/null
++++ b/Auricrux.Tests/PlatformSurfaceTests.cs
+@@ -0,0 +1,153 @@
++using System.Net;
++using System.Net.Http.Json;
++using System.Text.Json;
++using Microsoft.AspNetCore.Mvc.Testing;
++using Xunit;
++
++namespace Auricrux.Tests;
++
++/// <summary>
++/// Covers the surfaces an operator or integrator relies on: the published contract, the split
++/// health probes, and the deployment's self-reported security posture.
++/// </summary>
++public sealed class PlatformSurfaceTests : IClassFixture<WebApplicationFactory<Program>>
++{
++    private readonly HttpClient _client;
++
++    public PlatformSurfaceTests(WebApplicationFactory<Program> factory)
++    {
++        _client = factory.CreateClient();
++    }
++
++    [Fact]
++    public async Task OpenApi_document_is_served_and_describes_the_api()
++    {
++        var response = await _client.GetAsync("/openapi/v1.json");
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++
++        using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
++        var paths = document.RootElement.GetProperty("paths");
++
++        Assert.True(paths.TryGetProperty("/api/chat", out _), "Contract should describe /api/chat.");
++        Assert.True(paths.TryGetProperty("/api/chat/stream", out _), "Contract should describe the streaming route.");
++        Assert.True(paths.TryGetProperty("/api/agent", out _), "Contract should describe /api/agent.");
++    }
++
++    /// <summary>
++    /// Liveness must not depend on upstreams. If it did, a model backend outage would restart every
++    /// replica instead of degrading answers.
++    /// </summary>
++    [Fact]
++    public async Task Liveness_is_independent_of_upstream_reachability()
++    {
++        var response = await _client.GetAsync("/livez");
++
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++        var body = await response.Content.ReadAsStringAsync();
++        Assert.Contains("alive", body, StringComparison.OrdinalIgnoreCase);
++    }
++
++    [Fact]
++    public async Task Readiness_reports_a_status()
++    {
++        var response = await _client.GetAsync("/readyz");
++
++        // Degraded is expected here: these tests run with no model backend reachable.
++        Assert.True(
++            response.StatusCode is HttpStatusCode.OK or HttpStatusCode.ServiceUnavailable,
++            $"Unexpected readiness status {(int)response.StatusCode}.");
++    }
++
++    [Fact]
++    public async Task Capabilities_report_declares_streaming_as_shipped()
++    {
++        var response = await _client.GetAsync("/api/capabilities");
++        using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
++
++        var streaming = document.RootElement
++            .GetProperty("competitiveMatrix")
++            .EnumerateArray()
++            .Single(row => row.GetProperty("feature").GetString() == "Streaming responses");
++
++        Assert.Equal("shipped", streaming.GetProperty("auricrux").GetString());
++    }
++
++    /// <summary>
++    /// The posture block exists so an open deployment is visible from the API. These tests run
++    /// without authentication configured, so it must say so rather than reporting a clean bill.
++    /// </summary>
++    [Fact]
++    public async Task Capabilities_report_admits_an_open_deployment()
++    {
++        var response = await _client.GetAsync("/api/capabilities");
++        using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
++
++        var posture = document.RootElement.GetProperty("securityPosture");
++
++        Assert.False(posture.GetProperty("authenticationEnabled").GetBoolean());
++        Assert.False(posture.GetProperty("defaultDenyApi").GetBoolean());
++        Assert.True(posture.GetProperty("planChangesRequireCredential").GetBoolean());
++        Assert.True(posture.GetProperty("promptInjectionIsolation").GetBoolean());
++
++        var warnings = posture.GetProperty("warnings").EnumerateArray().Select(w => w.GetString()!).ToList();
++        Assert.Contains(warnings, w => w.Contains("Auth:Enabled is off", StringComparison.OrdinalIgnoreCase));
++    }
++
++    [Fact]
++    public async Task Correlation_id_from_a_client_is_sanitized_before_being_echoed()
++    {
++        using var request = new HttpRequestMessage(HttpMethod.Get, "/api/health");
++        request.Headers.TryAddWithoutValidation("X-Correlation-Id", "abc\r\nInjected-Header: evil");
++
++        var response = await _client.SendAsync(request);
++        var echoed = response.Headers.GetValues("X-Correlation-Id").Single();
++
++        Assert.DoesNotContain('\r', echoed);
++        Assert.DoesNotContain('\n', echoed);
++        Assert.DoesNotContain(' ', echoed);
++        Assert.False(response.Headers.Contains("Injected-Header"));
++    }
++
++    [Fact]
++    public async Task Correlation_id_is_generated_when_the_client_supplies_none()
++    {
++        var response = await _client.GetAsync("/api/health");
++        var correlationId = response.Headers.GetValues("X-Correlation-Id").Single();
++
++        Assert.False(string.IsNullOrWhiteSpace(correlationId));
++    }
++
++    [Fact]
++    public async Task Browse_refuses_a_cloud_metadata_target()
++    {
++        var response = await _client.PostAsJsonAsync("/api/browse", new
++        {
++            url = "http://169.254.169.254/latest/meta-data/iam/security-credentials/"
++        });
++
++        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
++        var body = await response.Content.ReadAsStringAsync();
++        Assert.Contains("non-public", body, StringComparison.OrdinalIgnoreCase);
++    }
++
++    [Fact]
++    public async Task Browse_refuses_a_loopback_target_named_by_hostname()
++    {
++        var response = await _client.PostAsJsonAsync("/api/browse", new
++        {
++            url = "http://localhost:11434/api/tags"
++        });
++
++        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Security_headers_are_applied_to_api_responses()
++    {
++        var response = await _client.GetAsync("/api/health");
++
++        Assert.Equal("nosniff", response.Headers.GetValues("X-Content-Type-Options").Single());
++        Assert.Equal("DENY", response.Headers.GetValues("X-Frame-Options").Single());
++        Assert.Contains("frame-ancestors 'none'", response.Headers.GetValues("Content-Security-Policy").Single());
++    }
++}
+diff --git a/Auricrux.Web/Auricrux.Web.csproj b/Auricrux.Web/Auricrux.Web.csproj
+index 65d9f95..bfc172d 100644
+--- a/Auricrux.Web/Auricrux.Web.csproj
++++ b/Auricrux.Web/Auricrux.Web.csproj
+@@ -14,6 +14,7 @@
+     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.0" />
+     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+     <PackageReference Include="Bootstrap" Version="5.3.3" />
++    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.11" />
+   </ItemGroup>
+ 
+diff --git a/Auricrux.Web/Program.cs b/Auricrux.Web/Program.cs
+index c30fdfd..abd430d 100644
+--- a/Auricrux.Web/Program.cs
++++ b/Auricrux.Web/Program.cs
+@@ -20,6 +20,10 @@ builder.Logging.AddConsole();
+ builder.Services.AddRazorComponents()
+     .AddInteractiveServerComponents();
+ 
++// A published contract is part of being consumable by enterprise clients: it lets integrators
++// generate typed clients and lets CI diff the surface for unreviewed breaking changes.
++builder.Services.AddOpenApi();
++
+ builder.Services.AddSingleton<AuricruxPrincipalResolver>();
+ builder.Services.AddSingleton<OutboundUrlGuard>();
+ builder.Services.AddSingleton<PlanChangeAuthorizer>();
+@@ -316,6 +320,10 @@ app.MapGet("/account/auth-status", (IConfiguration liveConfig) =>
+     });
+ });
+ 
++// Served in every environment: the contract is how integrators consume the API, and it describes
++// only routes that are already reachable.
++app.MapOpenApi("/openapi/v1.json");
++
+ // Liveness answers "is this process healthy enough to keep" and must not depend on upstreams:
+ // a model backend outage should degrade answers, not cause the orchestrator to restart every
+ // replica. Readiness is where upstream reachability belongs.
+diff --git a/Auricrux.Web/Services/CapabilitiesService.cs b/Auricrux.Web/Services/CapabilitiesService.cs
+index a9226d8..3c3eb01 100644
+--- a/Auricrux.Web/Services/CapabilitiesService.cs
++++ b/Auricrux.Web/Services/CapabilitiesService.cs
+@@ -1,13 +1,19 @@
++using Auricrux.Web.Security;
++
+ namespace Auricrux.Web.Services;
+ 
+ /// <summary>
+ /// Competitive feature matrix for major-player parity tracking (AUX-001 / AUX-002).
+ /// Each row is a capability area with honest shipped vs. planned status and per-peer comparison.
+ /// </summary>
+-public sealed class CapabilitiesService(ConstructionIntelligenceService intelligence, IConfiguration config)
++public sealed class CapabilitiesService(
++    ConstructionIntelligenceService intelligence,
++    PlanChangeAuthorizer planChangeAuthorizer,
++    IConfiguration config)
+ {
+     private static readonly string[] CompetitorNames = ["ChatGPT", "Claude", "Gemini", "Copilot", "Grok"];
+ 
++    /// <summary>Builds the capability, parity, and security-posture report.</summary>
+     public CapabilitiesReport GetReport()
+     {
+         var primaryModel = config["Auricrux:PrimaryModel"] ?? "auricrux-fca";
+@@ -38,6 +44,7 @@ public sealed class CapabilitiesService(ConstructionIntelligenceService intellig
+             Features = features,
+             Competitors = CompetitorNames,
+             CompetitiveMatrix = matrix,
++            SecurityPosture = BuildSecurityPosture(),
+             ParityScore = new ParityScoreSummary
+             {
+                 ShippedCore = shipped,
+@@ -53,9 +60,60 @@ public sealed class CapabilitiesService(ConstructionIntelligenceService intellig
+         };
+     }
+ 
++    /// <summary>
++    /// Reports the security-relevant configuration of this running deployment. An operator should
++    /// be able to see that they are running open from the API rather than discovering it during an
++    /// incident, so these values describe what is actually in effect, not what is recommended.
++    /// </summary>
++    private SecurityPostureSummary BuildSecurityPosture()
++    {
++        var authEnabled = config.GetValue("Auth:Enabled", false)
++                          && !string.IsNullOrWhiteSpace(config["Auth:Authority"]);
++        var allowUnauthenticatedPlanChanges = config.GetValue("Billing:AllowUnauthenticatedPlanChanges", false);
++
++        var warnings = new List<string>();
++        if (!authEnabled)
++        {
++            warnings.Add("Auth:Enabled is off — all callers are anonymous and share one storage partition. Treat as single-tenant.");
++        }
++
++        if (allowUnauthenticatedPlanChanges)
++        {
++            warnings.Add("Billing:AllowUnauthenticatedPlanChanges is on — any caller can change any account's plan.");
++        }
++
++        if (!planChangeAuthorizer.IsConfigured)
++        {
++            warnings.Add("No Billing:ProvisioningKey or Auth:AdminEmails — plan upgrades are refused.");
++        }
++
++        if (string.Equals(config["AllowedHosts"], "*", StringComparison.Ordinal))
++        {
++            warnings.Add("AllowedHosts is '*' — set explicit hostnames to reject host-header spoofing.");
++        }
++
++        if (!authEnabled && !config.GetValue("Billing:RequireIdentity", false))
++        {
++            warnings.Add("Billing:RequireIdentity is off — anonymous callers are not metered against any quota.");
++        }
++
++        return new SecurityPostureSummary
++        {
++            AuthenticationEnabled = authEnabled,
++            DefaultDenyApi = authEnabled,
++            TenantIsolation = authEnabled ? "per-account" : "single-tenant (anonymous partition)",
++            PlanChangesRequireCredential = !allowUnauthenticatedPlanChanges,
++            SsrfGuard = "resolved-address validation, IPv4/IPv6, per-redirect-hop",
++            PromptInjectionIsolation = true,
++            RateLimiting = "per-account with client-address fallback, plus a global backstop",
++            Warnings = warnings
++        };
++    }
++
+     private static List<CapabilityFeature> BuildFeatureList(int corpusEntries) =>
+     [
+         Feature("Multi-model chat", "shipped", "User-selectable models with freemium gating"),
++        Feature("Streaming responses", "shipped", "POST /api/chat/stream server-sent events: sources, incremental deltas, terminal metadata"),
+         Feature("Thinking modes (Quick/Auto/Deep)", "shipped", "Real model/corpus-backed reasoning"),
+         Feature("Search scopes (Internal/Public/Both)", "shipped", "Corpus retrieval, not hardcoded arrays"),
+         Feature("Speech-to-text", "shipped", "Browser Web Speech API + MAUI native STT"),
+@@ -80,6 +138,18 @@ public sealed class CapabilitiesService(ConstructionIntelligenceService intellig
+     [
+         Matrix("Multi-model chat", "shipped", yes, yes, yes, yes, yes,
+             "All major players offer model selection; Auricrux gates premium models behind freemium tiers."),
++        Matrix("Streaming responses", "shipped", yes, yes, yes, yes, yes,
++            "POST /api/chat/stream emits sources, then token deltas, then terminal metadata; corpus fallback streams the same shape."),
++        Matrix("Default-deny API authorization", "shipped", yes, yes, yes, yes, yes,
++            "Global filter denies anonymous callers on every non-public route when Auth:Enabled; endpoints opt out explicitly."),
++        Matrix("Per-account data isolation", "shipped", yes, yes, yes, yes, partial,
++            "Workspace files and conversation memory are partitioned per account, so a guessed path or session id cannot cross accounts."),
++        Matrix("SSRF-safe retrieval", "shipped", yes, yes, yes, yes, partial,
++            "Fetch targets are validated against resolved addresses (IPv4/IPv6, mapped) on every redirect hop, not by hostname string."),
++        Matrix("Prompt-injection isolation", "shipped", partial, yes, partial, partial, partial,
++            "Retrieved page text is delimited and instruction phrasing defanged before it reaches a tool-calling model."),
++        Matrix("Published OpenAPI contract", "shipped", yes, yes, yes, yes, partial,
++            "GET /openapi/v1.json for typed client generation and CI surface diffing."),
+         Matrix("Construction specialist corpus", "shipped", no, no, no, no, no,
+             "Auricrux moat: grounded internal/public construction knowledge base with scoped search — not generic web training."),
+         Matrix("Thinking / reasoning modes", "shipped", yes, yes, yes, partial, yes,
+@@ -158,9 +228,44 @@ public sealed class CapabilitiesReport
+     public IReadOnlyList<CapabilityFeature> Features { get; set; } = [];
+     public IReadOnlyList<string> Competitors { get; set; } = [];
+     public IReadOnlyList<CompetitiveMatrixRow> CompetitiveMatrix { get; set; } = [];
++
++    /// <summary>Security-relevant configuration actually in effect on this deployment.</summary>
++    public SecurityPostureSummary SecurityPosture { get; set; } = new();
++
+     public ParityScoreSummary ParityScore { get; set; } = new();
+ }
+ 
++/// <summary>
++/// The security posture of the running deployment, including warnings about settings that leave
++/// it open.
++/// </summary>
++public sealed class SecurityPostureSummary
++{
++    /// <summary>Whether token authentication is enabled and an authority is configured.</summary>
++    public bool AuthenticationEnabled { get; set; }
++
++    /// <summary>Whether non-public API routes refuse anonymous callers.</summary>
++    public bool DefaultDenyApi { get; set; }
++
++    /// <summary>How stored data is partitioned between callers.</summary>
++    public string TenantIsolation { get; set; } = string.Empty;
++
++    /// <summary>Whether changing a plan requires a provisioning key or administrator identity.</summary>
++    public bool PlanChangesRequireCredential { get; set; }
++
++    /// <summary>How outbound fetch targets are validated.</summary>
++    public string SsrfGuard { get; set; } = string.Empty;
++
++    /// <summary>Whether retrieved content is isolated before entering a prompt.</summary>
++    public bool PromptInjectionIsolation { get; set; }
++
++    /// <summary>How request rate limiting is partitioned.</summary>
++    public string RateLimiting { get; set; } = string.Empty;
++
++    /// <summary>Configuration that leaves this deployment more open than recommended.</summary>
++    public IReadOnlyList<string> Warnings { get; set; } = [];
++}
++
+ public sealed class CompetitiveMatrixRow
+ {
+     public string Feature { get; set; } = string.Empty;
