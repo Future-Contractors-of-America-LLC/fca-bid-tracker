@@ -1,0 +1,810 @@
+From 6eec5f4a0450148c3028c60df39e954f70857159 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 14:56:28 +0000
+Subject: [PATCH 2/3] Enterprise security hardening: deny-by-default API auth,
+ billing-gated upgrades, durable stores
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- ApiAuthGuardMiddleware: every /api endpoint denies unauthenticated requests
+  when Auth:Enabled (live-config, fail-closed); [AllowAnonymous] on health/
+  models/capabilities/plans keeps probes and pricing public. Builder-time
+  RequireAuthorization() kept as defense in depth.
+- Plan upgrades now require X-Auricrux-Billing-Key matching Billing:UpgradeApiKey
+  (constant-time compare); disabled entirely when unset — closes the
+  honor-system self-upgrade hole.
+- FCA account links persisted to SQLite (fca_links.db); star-rating feedback
+  persisted to SQLite (feedback.db) — both survive restarts.
+- CSP: drop unsafe-eval, add object-src/base-uri/form-action; Kestrel body cap
+  16MB; Microsoft.Data.Sqlite 8.0.11 -> 10.0.10 and SQLitePCLRaw bundle 3.0.5
+  (clears GHSA-2m69-gcr7-jv3q); vulnerable-package sweep clean.
+- Tests: auth gating (5 new), billing key (3), durable stores (3).
+---
+ Auricrux.Tests/AuricruxApiIntegrationTests.cs |  61 +++++++++-
+ Auricrux.Tests/AuthEnabledTests.cs            |  37 +++++-
+ Auricrux.Tests/DurableStoresTests.cs          |  87 ++++++++++++++
+ Auricrux.Web/Auricrux.Web.csproj              |   3 +-
+ Auricrux.Web/Controllers/AccountController.cs |  39 +++++-
+ .../Middleware/ApiAuthGuardMiddleware.cs      |  57 +++++++++
+ .../Middleware/AuricruxApiMiddleware.cs       |   6 +-
+ Auricrux.Web/Program.cs                       |  27 ++++-
+ .../Services/FcaAccountLinkService.cs         | 111 +++++++++++++++++-
+ Auricrux.Web/Services/FeedbackStore.cs        |  91 ++++++++++++++
+ Auricrux.Web/appsettings.json                 |  15 ++-
+ 11 files changed, 519 insertions(+), 15 deletions(-)
+ create mode 100644 Auricrux.Tests/DurableStoresTests.cs
+ create mode 100644 Auricrux.Web/Middleware/ApiAuthGuardMiddleware.cs
+ create mode 100644 Auricrux.Web/Services/FeedbackStore.cs
+
+diff --git a/Auricrux.Tests/AuricruxApiIntegrationTests.cs b/Auricrux.Tests/AuricruxApiIntegrationTests.cs
+index d8af2a4..4db147f 100644
+--- a/Auricrux.Tests/AuricruxApiIntegrationTests.cs
++++ b/Auricrux.Tests/AuricruxApiIntegrationTests.cs
+@@ -1,7 +1,9 @@
+ using System.Net;
+ using System.Net.Http.Json;
+ using Auricrux.Shared.Models;
++using Microsoft.AspNetCore.Hosting;
+ using Microsoft.AspNetCore.Mvc.Testing;
++using Microsoft.Extensions.Configuration;
+ using Xunit;
+ 
+ namespace Auricrux.Tests;
+@@ -16,10 +18,12 @@ namespace Auricrux.Tests;
+ /// </summary>
+ public sealed class AuricruxApiIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+ {
++    private readonly WebApplicationFactory<Program> _factory;
+     private readonly HttpClient _client;
+ 
+     public AuricruxApiIntegrationTests(WebApplicationFactory<Program> factory)
+     {
++        _factory = factory;
+         _client = factory.WithWebHostBuilder(_ => { }).CreateClient();
+     }
+ 
+@@ -454,18 +458,33 @@ public sealed class AuricruxApiIntegrationTests : IClassFixture<WebApplicationFa
+     [Fact]
+     public async Task Freemium_upgrade_to_pro_unlocks_higher_limit_and_models()
+     {
++        // Plan changes now require the billing verification key; run the whole flow on a
++        // host configured with the key so its account cache stays consistent.
++        const string billingKey = "test-billing-key";
++        using var billingClient = _factory.WithWebHostBuilder(builder =>
++            builder.ConfigureAppConfiguration((_, config) =>
++                config.AddInMemoryCollection(new Dictionary<string, string?>
++                {
++                    ["Billing:UpgradeApiKey"] = billingKey
++                }))).CreateClient();
++
+         var email = $"freemium-upgrade-{Guid.NewGuid():N}@test.local";
+-        await _client.PostAsJsonAsync("/api/account/register", new { email });
++        await billingClient.PostAsJsonAsync("/api/account/register", new { email });
+ 
+         using var beforeUpgrade = new HttpRequestMessage(HttpMethod.Post, "/api/chat?model=mistral")
+         {
+             Content = JsonContent.Create(new ChatRequest { Query = "What is a sill plate?" })
+         };
+         beforeUpgrade.Headers.TryAddWithoutValidation("X-Auricrux-Email", email);
+-        var forbidden = await _client.SendAsync(beforeUpgrade);
++        var forbidden = await billingClient.SendAsync(beforeUpgrade);
+         Assert.Equal(HttpStatusCode.Forbidden, forbidden.StatusCode);
+ 
+-        var upgrade = await _client.PostAsJsonAsync($"/api/account/{email}/upgrade", new { plan = "pro" });
++        using var upgradeRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/account/{email}/upgrade")
++        {
++            Content = JsonContent.Create(new { plan = "pro" })
++        };
++        upgradeRequest.Headers.TryAddWithoutValidation("X-Auricrux-Billing-Key", billingKey);
++        var upgrade = await billingClient.SendAsync(upgradeRequest);
+         Assert.Equal(HttpStatusCode.OK, upgrade.StatusCode);
+         var upgraded = await upgrade.Content.ReadFromJsonAsync<AccountPayload>();
+         Assert.NotNull(upgraded);
+@@ -477,10 +496,44 @@ public sealed class AuricruxApiIntegrationTests : IClassFixture<WebApplicationFa
+             Content = JsonContent.Create(new ChatRequest { Query = "What is a sill plate?" })
+         };
+         afterUpgrade.Headers.TryAddWithoutValidation("X-Auricrux-Email", email);
+-        var allowed = await _client.SendAsync(afterUpgrade);
++        var allowed = await billingClient.SendAsync(afterUpgrade);
+         Assert.Equal(HttpStatusCode.OK, allowed.StatusCode);
+     }
+ 
++    [Fact]
++    public async Task Freemium_upgrade_without_billing_key_is_denied()
++    {
++        var email = $"freemium-nokey-{Guid.NewGuid():N}@test.local";
++        await _client.PostAsJsonAsync("/api/account/register", new { email });
++
++        // Default config has no Billing:UpgradeApiKey — self-service upgrades must be off.
++        var upgrade = await _client.PostAsJsonAsync($"/api/account/{email}/upgrade", new { plan = "pro" });
++        Assert.Equal(HttpStatusCode.Forbidden, upgrade.StatusCode);
++    }
++
++    [Fact]
++    public async Task Freemium_upgrade_with_wrong_billing_key_is_denied()
++    {
++        const string billingKey = "test-billing-key";
++        using var billingClient = _factory.WithWebHostBuilder(builder =>
++            builder.ConfigureAppConfiguration((_, config) =>
++                config.AddInMemoryCollection(new Dictionary<string, string?>
++                {
++                    ["Billing:UpgradeApiKey"] = billingKey
++                }))).CreateClient();
++
++        var email = $"freemium-wrongkey-{Guid.NewGuid():N}@test.local";
++        await billingClient.PostAsJsonAsync("/api/account/register", new { email });
++
++        using var upgradeRequest = new HttpRequestMessage(HttpMethod.Post, $"/api/account/{email}/upgrade")
++        {
++            Content = JsonContent.Create(new { plan = "pro" })
++        };
++        upgradeRequest.Headers.TryAddWithoutValidation("X-Auricrux-Billing-Key", "wrong-key");
++        var upgrade = await billingClient.SendAsync(upgradeRequest);
++        Assert.Equal(HttpStatusCode.Forbidden, upgrade.StatusCode);
++    }
++
+     [Fact]
+     public async Task Account_plans_endpoint_lists_three_tiers()
+     {
+diff --git a/Auricrux.Tests/AuthEnabledTests.cs b/Auricrux.Tests/AuthEnabledTests.cs
+index 3c03afd..7f87606 100644
+--- a/Auricrux.Tests/AuthEnabledTests.cs
++++ b/Auricrux.Tests/AuthEnabledTests.cs
+@@ -1,4 +1,5 @@
+ using System.Net;
++using System.Net.Http.Json;
+ using Microsoft.AspNetCore.Hosting;
+ using Microsoft.AspNetCore.Mvc.Testing;
+ using Microsoft.Extensions.Configuration;
+@@ -58,11 +59,45 @@ public sealed class AuthEnabledTests : IClassFixture<AuthEnabledWebApplicationFa
+     [Fact]
+     public async Task Public_health_endpoint_still_works_when_auth_enabled()
+     {
+-        // Health is intentionally not [Authorize]-gated so uptime probes keep working.
++        // Health is intentionally [AllowAnonymous] so uptime probes keep working.
+         var response = await _client.GetAsync("/api/health");
+         Assert.True(response.IsSuccessStatusCode);
+     }
+ 
++    [Fact]
++    public async Task Chat_endpoint_denies_anonymous_requests_when_auth_enabled()
++    {
++        // Enterprise posture: API controllers are deny-by-default when auth is on,
++        // not just /api/secure/ping.
++        var response = await _client.PostAsJsonAsync("/api/chat", new { query = "What is a footing?" });
++        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Chat_stream_endpoint_denies_anonymous_requests_when_auth_enabled()
++    {
++        var response = await _client.PostAsJsonAsync("/api/chat/stream", new { query = "What is a footing?" });
++        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Workspace_and_memory_endpoints_deny_anonymous_when_auth_enabled()
++    {
++        var workspace = await _client.GetAsync("/api/workspace");
++        Assert.Equal(HttpStatusCode.Unauthorized, workspace.StatusCode);
++
++        var memory = await _client.GetAsync("/api/memory/some-session");
++        Assert.Equal(HttpStatusCode.Unauthorized, memory.StatusCode);
++    }
++
++    [Fact]
++    public async Task Public_models_capabilities_and_plans_stay_anonymous_when_auth_enabled()
++    {
++        Assert.True((await _client.GetAsync("/api/models")).IsSuccessStatusCode);
++        Assert.True((await _client.GetAsync("/api/capabilities")).IsSuccessStatusCode);
++        Assert.True((await _client.GetAsync("/api/account/plans")).IsSuccessStatusCode);
++    }
++
+     [Fact]
+     public async Task Auth_status_endpoint_reports_enabled_without_oidc_client_configured()
+     {
+diff --git a/Auricrux.Tests/DurableStoresTests.cs b/Auricrux.Tests/DurableStoresTests.cs
+new file mode 100644
+index 0000000..885ae26
+--- /dev/null
++++ b/Auricrux.Tests/DurableStoresTests.cs
+@@ -0,0 +1,87 @@
++using Auricrux.Web.Services;
++using Microsoft.Extensions.Configuration;
++using Xunit;
++
++namespace Auricrux.Tests;
++
++/// <summary>
++/// Durability proofs for the stores that previously lived only in process memory:
++/// FCA account links and star-rating feedback must survive a simulated process restart
++/// (a second store instance pointed at the same SQLite file).
++/// </summary>
++public sealed class DurableStoresTests : IDisposable
++{
++    private readonly string _tempDir = Path.Combine(Path.GetTempPath(), $"auricrux-durable-{Guid.NewGuid():N}");
++
++    [Fact]
++    public void Fca_link_persists_across_simulated_process_restart()
++    {
++        var dbPath = Path.Combine(_tempDir, "fca_links.db");
++        var record = new FcaLinkRecord(
++            AuricruxEmail: "linked@test.local",
++            LinkedAtUtc: DateTime.UtcNow,
++            Plan: "academy-pro",
++            HasAcademy: true,
++            HasCte: false,
++            HasEmbeddedAuricrux: true,
++            Status: "active");
++
++        var firstProcess = new FcaAccountLinkService(new StubHttpClientFactory(), EmptyConfig(), dbPath);
++        firstProcess.Save(record);
++
++        var secondProcess = new FcaAccountLinkService(new StubHttpClientFactory(), EmptyConfig(), dbPath);
++        var restored = secondProcess.Get("linked@test.local");
++
++        Assert.NotNull(restored);
++        Assert.Equal("academy-pro", restored!.Plan);
++        Assert.True(restored.HasAcademy);
++        Assert.True(restored.HasEmbeddedAuricrux);
++        Assert.Equal("active", restored.Status);
++    }
++
++    [Fact]
++    public void Fca_unlink_removes_row_durably()
++    {
++        var dbPath = Path.Combine(_tempDir, "fca_links_unlink.db");
++        var record = new FcaLinkRecord("gone@test.local", DateTime.UtcNow, "free", false, false, false, "active");
++
++        var firstProcess = new FcaAccountLinkService(new StubHttpClientFactory(), EmptyConfig(), dbPath);
++        firstProcess.Save(record);
++        Assert.True(firstProcess.Unlink("gone@test.local"));
++
++        var secondProcess = new FcaAccountLinkService(new StubHttpClientFactory(), EmptyConfig(), dbPath);
++        Assert.Null(secondProcess.Get("gone@test.local"));
++    }
++
++    [Fact]
++    public void Feedback_persists_across_simulated_process_restart()
++    {
++        var dbPath = Path.Combine(_tempDir, "feedback.db");
++        var interactionId = Guid.NewGuid();
++
++        var firstProcess = new FeedbackStore(dbPath);
++        firstProcess.Record(interactionId, 4, "solid field answer");
++
++        var secondProcess = new FeedbackStore(dbPath);
++        var restored = secondProcess.Get(interactionId);
++
++        Assert.NotNull(restored);
++        Assert.Equal(4, restored!.Stars);
++        Assert.Equal("solid field answer", restored.Comment);
++    }
++
++    public void Dispose()
++    {
++        if (Directory.Exists(_tempDir))
++        {
++            Directory.Delete(_tempDir, recursive: true);
++        }
++    }
++
++    private static IConfiguration EmptyConfig() => new ConfigurationBuilder().Build();
++
++    private sealed class StubHttpClientFactory : IHttpClientFactory
++    {
++        public HttpClient CreateClient(string name) => new();
++    }
++}
+diff --git a/Auricrux.Web/Auricrux.Web.csproj b/Auricrux.Web/Auricrux.Web.csproj
+index 65d9f95..68a152e 100644
+--- a/Auricrux.Web/Auricrux.Web.csproj
++++ b/Auricrux.Web/Auricrux.Web.csproj
+@@ -14,7 +14,8 @@
+     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.0" />
+     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+     <PackageReference Include="Bootstrap" Version="5.3.3" />
+-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.11" />
++    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.10" />
++    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+diff --git a/Auricrux.Web/Controllers/AccountController.cs b/Auricrux.Web/Controllers/AccountController.cs
+index dcc128d..6bb30de 100644
+--- a/Auricrux.Web/Controllers/AccountController.cs
++++ b/Auricrux.Web/Controllers/AccountController.cs
+@@ -1,4 +1,7 @@
++using System.Security.Cryptography;
++using System.Text;
+ using Auricrux.Web.Services;
++using Microsoft.AspNetCore.Authorization;
+ using Microsoft.AspNetCore.Mvc;
+ 
+ namespace Auricrux.Web.Controllers;
+@@ -8,8 +11,9 @@ namespace Auricrux.Web.Controllers;
+ /// </summary>
+ [ApiController]
+ [Route("api/account")]
+-public sealed class AccountController(FreemiumAccountStore accounts) : ControllerBase
++public sealed class AccountController(FreemiumAccountStore accounts, IConfiguration config) : ControllerBase
+ {
++    [AllowAnonymous]
+     [HttpGet("plans")]
+     public ActionResult<object> Plans() => Ok(new
+     {
+@@ -44,9 +48,35 @@ public sealed class AccountController(FreemiumAccountStore accounts) : Controlle
+         return Ok(account);
+     }
+ 
++    /// <summary>
++    /// Plan changes require the billing verification key (X-Auricrux-Billing-Key header
++    /// matching Billing:UpgradeApiKey config). This closes the honor-system hole where any
++    /// anonymous client could self-upgrade to a paid plan; the key is meant to be presented
++    /// only by the payment webhook / back office after real payment verification.
++    /// </summary>
+     [HttpPost("{email}/upgrade")]
+-    public ActionResult<AuricruxAccount> Upgrade(string email, [FromBody] UpgradeRequest request)
++    public ActionResult<AuricruxAccount> Upgrade(
++        string email,
++        [FromBody] UpgradeRequest request,
++        [FromHeader(Name = "X-Auricrux-Billing-Key")] string? billingKey)
+     {
++        var expectedKey = config["Billing:UpgradeApiKey"];
++        if (string.IsNullOrWhiteSpace(expectedKey))
++        {
++            return StatusCode(StatusCodes.Status403Forbidden, new
++            {
++                error = "Plan changes are disabled: configure Billing:UpgradeApiKey and verify payment before upgrading accounts."
++            });
++        }
++
++        if (billingKey is null || !FixedTimeEquals(expectedKey, billingKey))
++        {
++            return StatusCode(StatusCodes.Status403Forbidden, new
++            {
++                error = "Invalid billing verification key."
++            });
++        }
++
+         if (!accounts.TryGet(email, out var account) || account is null)
+         {
+             return NotFound();
+@@ -88,6 +118,11 @@ public sealed class AccountController(FreemiumAccountStore accounts) : Controlle
+         accounts.TryGet(email, out account);
+         return Ok(account);
+     }
++
++    private static bool FixedTimeEquals(string expected, string provided)
++        => CryptographicOperations.FixedTimeEquals(
++            Encoding.UTF8.GetBytes(expected),
++            Encoding.UTF8.GetBytes(provided.Trim()));
+ }
+ 
+ public sealed class RegisterRequest
+diff --git a/Auricrux.Web/Middleware/ApiAuthGuardMiddleware.cs b/Auricrux.Web/Middleware/ApiAuthGuardMiddleware.cs
+new file mode 100644
+index 0000000..e4d5c6a
+--- /dev/null
++++ b/Auricrux.Web/Middleware/ApiAuthGuardMiddleware.cs
+@@ -0,0 +1,57 @@
++using Microsoft.AspNetCore.Authorization;
++
++namespace Auricrux.Web.Middleware;
++
++/// <summary>
++/// Deny-by-default guard for every /api endpoint when Auth:Enabled is true.
++///
++/// Like <c>SecureController</c>, this checks the live <see cref="IConfiguration"/> at request
++/// time (not builder-time locals) so it reflects the actual effective configuration — including
++/// configuration layered on after the app builder ran, as WebApplicationFactory-based
++/// integration tests do. It fails closed: if auth is enabled but no authentication middleware
++/// ever authenticated the request, the request is rejected.
++///
++/// Endpoints marked [AllowAnonymous] (health, models, capabilities, plans) stay public so
++/// uptime probes and pricing surfaces keep working.
++/// </summary>
++public sealed class ApiAuthGuardMiddleware(RequestDelegate next, IConfiguration config)
++{
++    public async Task InvokeAsync(HttpContext context)
++    {
++        if (ShouldDeny(context))
++        {
++            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
++            await context.Response.WriteAsJsonAsync(new { error = "Authentication required." });
++            return;
++        }
++
++        await next(context);
++    }
++
++    private bool ShouldDeny(HttpContext context)
++    {
++        if (!context.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase))
++        {
++            return false;
++        }
++
++        if (!config.GetValue("Auth:Enabled", false))
++        {
++            return false;
++        }
++
++        var endpoint = context.GetEndpoint();
++        if (endpoint?.Metadata.GetMetadata<IAllowAnonymous>() is not null)
++        {
++            return false;
++        }
++
++        return !(context.User.Identity?.IsAuthenticated ?? false);
++    }
++}
++
++public static class ApiAuthGuardMiddlewareExtensions
++{
++    public static IApplicationBuilder UseApiAuthGuard(this IApplicationBuilder builder)
++        => builder.UseMiddleware<ApiAuthGuardMiddleware>();
++}
+diff --git a/Auricrux.Web/Middleware/AuricruxApiMiddleware.cs b/Auricrux.Web/Middleware/AuricruxApiMiddleware.cs
+index 16a613a..7850de8 100644
+--- a/Auricrux.Web/Middleware/AuricruxApiMiddleware.cs
++++ b/Auricrux.Web/Middleware/AuricruxApiMiddleware.cs
+@@ -44,8 +44,12 @@ public sealed class AuricruxApiMiddleware(RequestDelegate next, ILogger<Auricrux
+         headers["X-XSS-Protection"] = "0";
+         if (!headers.ContainsKey("Content-Security-Policy"))
+         {
++            // 'unsafe-inline' for scripts is required by Blazor's rendered importmap;
++            // 'unsafe-eval' is NOT needed by Blazor Server and stays disallowed.
+             headers["Content-Security-Policy"] =
+-                "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' ws: wss:; frame-ancestors 'none';";
++                "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; " +
++                "img-src 'self' data: blob:; connect-src 'self' ws: wss:; frame-ancestors 'none'; " +
++                "object-src 'none'; base-uri 'self'; form-action 'self';";
+         }
+     }
+ }
+diff --git a/Auricrux.Web/Program.cs b/Auricrux.Web/Program.cs
+index c32af64..b030ef5 100644
+--- a/Auricrux.Web/Program.cs
++++ b/Auricrux.Web/Program.cs
+@@ -15,10 +15,20 @@ using Microsoft.IdentityModel.Tokens;
+ var builder = WebApplication.CreateBuilder(args);
+ 
+ builder.Logging.AddConsole();
++
++// Cap request bodies well above the largest legitimate payload (8 MB base64 vision images)
++// so oversized uploads are rejected at the transport instead of buffering in memory.
++builder.WebHost.ConfigureKestrel(options =>
++    options.Limits.MaxRequestBodySize = builder.Configuration.GetValue("RequestLimits:MaxBodyBytes", 16L * 1024 * 1024));
++
+ builder.Services.AddRazorComponents()
+     .AddInteractiveServerComponents();
+ builder.Services.AddControllers();
+ builder.Services.AddHttpClient(nameof(ConstructionIntelligenceService));
++builder.Services.AddHttpClient(nameof(CloudModelGateway), client =>
++{
++    client.Timeout = TimeSpan.FromSeconds(180);
++});
+ builder.Services.AddHttpClient(nameof(MediaGenerationService));
+ builder.Services.AddHttpClient(nameof(FcaAccountLinkService));
+ builder.Services.AddHttpClient(nameof(BackendHealthService));
+@@ -27,6 +37,8 @@ builder.Services.AddHttpClient(nameof(WebBrowseService), client =>
+     client.Timeout = TimeSpan.FromSeconds(45);
+     client.DefaultRequestHeaders.UserAgent.ParseAdd("AuricruxWebBrowse/1.0 (+construction)");
+ });
++builder.Services.AddSingleton<CloudModelGateway>();
++builder.Services.AddSingleton<FeedbackStore>();
+ builder.Services.AddSingleton<ConstructionIntelligenceService>();
+ builder.Services.AddSingleton<MediaGenerationService>();
+ builder.Services.AddSingleton<WorkspaceStorageService>();
+@@ -184,6 +196,11 @@ if (authEnabled && !string.IsNullOrWhiteSpace(authAuthority))
+     }
+ }
+ 
++// Deny-by-default for all /api endpoints (except [AllowAnonymous]) whenever Auth:Enabled is
++// true. Runs after UseAuthentication (when registered) so valid bearer tokens pass; checks the
++// live IConfiguration so it fails closed even when configuration is layered on late.
++app.UseApiAuthGuard();
++
+ // Reads Auth:* live from IConfiguration (not the builder-time-captured locals above) so this
+ // endpoint — and integration tests that layer configuration on after the host is built — always
+ // see the actual effective configuration.
+@@ -204,7 +221,15 @@ app.MapGet("/account/auth-status", (IConfiguration liveConfig) =>
+ });
+ 
+ app.MapStaticAssets();
+-app.MapControllers().RequireRateLimiting("api");
++var controllerEndpoints = app.MapControllers().RequireRateLimiting("api");
++if (authEnabled && !string.IsNullOrWhiteSpace(authAuthority))
++{
++    // Enterprise posture: when auth is on, every API controller is deny-by-default.
++    // Public read-only surfaces (health, models, capabilities, plans) opt out via
++    // [AllowAnonymous] so uptime probes and pricing pages keep working.
++    controllerEndpoints.RequireAuthorization();
++}
++
+ app.MapRazorComponents<App>()
+     .AddInteractiveServerRenderMode();
+ 
+diff --git a/Auricrux.Web/Services/FcaAccountLinkService.cs b/Auricrux.Web/Services/FcaAccountLinkService.cs
+index 42ccef1..7d074a8 100644
+--- a/Auricrux.Web/Services/FcaAccountLinkService.cs
++++ b/Auricrux.Web/Services/FcaAccountLinkService.cs
+@@ -1,21 +1,36 @@
+ using System.Collections.Concurrent;
+ using System.Net.Http.Json;
++using Microsoft.Data.Sqlite;
+ 
+ namespace Auricrux.Web.Services;
+ 
+ /// <summary>
+-/// Optional FCA Ecosystem account attachment for Auricrux App users who already have FCA entitlements.
++/// Optional FCA Ecosystem account attachment for Auricrux App users who already have FCA
++/// entitlements. Links are written through to SQLite (Data/accounts/fca_links.db) so they
++/// survive an app restart; the dictionary is a hot in-process cache loaded at startup.
+ /// </summary>
+ public sealed class FcaAccountLinkService
+ {
+     private readonly IHttpClientFactory _httpClientFactory;
+     private readonly IConfiguration _config;
++    private readonly string _dbPath;
++    private readonly object _writeGate = new();
+     private readonly ConcurrentDictionary<string, FcaLinkRecord> _links = new(StringComparer.OrdinalIgnoreCase);
+ 
+-    public FcaAccountLinkService(IHttpClientFactory httpClientFactory, IConfiguration config)
++    public FcaAccountLinkService(IHttpClientFactory httpClientFactory, IConfiguration config, IWebHostEnvironment env)
++        : this(httpClientFactory, config, Path.Combine(env.ContentRootPath, "Data", "accounts", "fca_links.db"))
++    {
++    }
++
++    /// <summary>Testable constructor that points directly at a SQLite file path.</summary>
++    public FcaAccountLinkService(IHttpClientFactory httpClientFactory, IConfiguration config, string databasePath)
+     {
+         _httpClientFactory = httpClientFactory;
+         _config = config;
++        _dbPath = databasePath;
++        Directory.CreateDirectory(Path.GetDirectoryName(_dbPath)!);
++        EnsureSchema();
++        LoadCache();
+     }
+ 
+     public async Task<FcaLinkRecord> LinkAsync(string auricruxEmail, string fcaBearerToken, CancellationToken ct = default)
+@@ -41,15 +56,103 @@ public sealed class FcaAccountLinkService
+             HasCte: snapshot.HasCte,
+             HasEmbeddedAuricrux: snapshot.HasEmbeddedAuricrux,
+             Status: snapshot.Status);
+-        _links[record.AuricruxEmail] = record;
++        Save(record);
+         return record;
+     }
+ 
++    /// <summary>Persists a link record (used by LinkAsync and by durability tests).</summary>
++    public void Save(FcaLinkRecord record)
++    {
++        _links[record.AuricruxEmail] = record;
++        lock (_writeGate)
++        {
++            using var conn = new SqliteConnection($"Data Source={_dbPath}");
++            conn.Open();
++            using var cmd = conn.CreateCommand();
++            cmd.CommandText = """
++                INSERT INTO fca_links(email, linked_at_utc, plan, has_academy, has_cte, has_embedded_auricrux, status)
++                VALUES ($email, $linked, $plan, $academy, $cte, $embedded, $status)
++                ON CONFLICT(email) DO UPDATE SET
++                    linked_at_utc = excluded.linked_at_utc,
++                    plan = excluded.plan,
++                    has_academy = excluded.has_academy,
++                    has_cte = excluded.has_cte,
++                    has_embedded_auricrux = excluded.has_embedded_auricrux,
++                    status = excluded.status
++                """;
++            cmd.Parameters.AddWithValue("$email", record.AuricruxEmail);
++            cmd.Parameters.AddWithValue("$linked", record.LinkedAtUtc.ToString("O"));
++            cmd.Parameters.AddWithValue("$plan", record.Plan);
++            cmd.Parameters.AddWithValue("$academy", record.HasAcademy ? 1 : 0);
++            cmd.Parameters.AddWithValue("$cte", record.HasCte ? 1 : 0);
++            cmd.Parameters.AddWithValue("$embedded", record.HasEmbeddedAuricrux ? 1 : 0);
++            cmd.Parameters.AddWithValue("$status", record.Status);
++            cmd.ExecuteNonQuery();
++        }
++    }
++
+     public FcaLinkRecord? Get(string auricruxEmail)
+         => _links.TryGetValue(auricruxEmail.Trim().ToLowerInvariant(), out var link) ? link : null;
+ 
+     public bool Unlink(string auricruxEmail)
+-        => _links.TryRemove(auricruxEmail.Trim().ToLowerInvariant(), out _);
++    {
++        var key = auricruxEmail.Trim().ToLowerInvariant();
++        var removed = _links.TryRemove(key, out _);
++        lock (_writeGate)
++        {
++            using var conn = new SqliteConnection($"Data Source={_dbPath}");
++            conn.Open();
++            using var cmd = conn.CreateCommand();
++            cmd.CommandText = "DELETE FROM fca_links WHERE email = $email";
++            cmd.Parameters.AddWithValue("$email", key);
++            removed |= cmd.ExecuteNonQuery() > 0;
++        }
++
++        return removed;
++    }
++
++    private void LoadCache()
++    {
++        lock (_writeGate)
++        {
++            using var conn = new SqliteConnection($"Data Source={_dbPath}");
++            conn.Open();
++            using var cmd = conn.CreateCommand();
++            cmd.CommandText = "SELECT email, linked_at_utc, plan, has_academy, has_cte, has_embedded_auricrux, status FROM fca_links";
++            using var reader = cmd.ExecuteReader();
++            while (reader.Read())
++            {
++                var record = new FcaLinkRecord(
++                    AuricruxEmail: reader.GetString(0),
++                    LinkedAtUtc: DateTime.Parse(reader.GetString(1), null, System.Globalization.DateTimeStyles.RoundtripKind),
++                    Plan: reader.GetString(2),
++                    HasAcademy: reader.GetInt32(3) == 1,
++                    HasCte: reader.GetInt32(4) == 1,
++                    HasEmbeddedAuricrux: reader.GetInt32(5) == 1,
++                    Status: reader.GetString(6));
++                _links[record.AuricruxEmail] = record;
++            }
++        }
++    }
++
++    private void EnsureSchema()
++    {
++        using var conn = new SqliteConnection($"Data Source={_dbPath}");
++        conn.Open();
++        using var cmd = conn.CreateCommand();
++        cmd.CommandText = """
++            CREATE TABLE IF NOT EXISTS fca_links (
++              email TEXT PRIMARY KEY,
++              linked_at_utc TEXT NOT NULL,
++              plan TEXT NOT NULL,
++              has_academy INTEGER NOT NULL,
++              has_cte INTEGER NOT NULL,
++              has_embedded_auricrux INTEGER NOT NULL,
++              status TEXT NOT NULL
++            );
++            """;
++        cmd.ExecuteNonQuery();
++    }
+ }
+ 
+ public sealed record FcaEntitlementSnapshot(
+diff --git a/Auricrux.Web/Services/FeedbackStore.cs b/Auricrux.Web/Services/FeedbackStore.cs
+new file mode 100644
+index 0000000..2a5af96
+--- /dev/null
++++ b/Auricrux.Web/Services/FeedbackStore.cs
+@@ -0,0 +1,91 @@
++using Microsoft.Data.Sqlite;
++
++namespace Auricrux.Web.Services;
++
++/// <summary>
++/// Durable star-rating feedback store (SQLite under Data/memory/feedback.db) so quality
++/// signals survive restarts instead of living only in process logs.
++/// </summary>
++public sealed class FeedbackStore
++{
++    private readonly string _dbPath;
++    private readonly object _gate = new();
++
++    public FeedbackStore(IWebHostEnvironment env)
++        : this(Path.Combine(env.ContentRootPath, "Data", "memory", "feedback.db"))
++    {
++    }
++
++    /// <summary>Testable constructor pointing at an explicit SQLite file path.</summary>
++    public FeedbackStore(string databasePath)
++    {
++        _dbPath = databasePath;
++        Directory.CreateDirectory(Path.GetDirectoryName(_dbPath)!);
++        EnsureSchema();
++    }
++
++    public void Record(Guid interactionId, int stars, string? comment)
++    {
++        lock (_gate)
++        {
++            using var conn = new SqliteConnection($"Data Source={_dbPath}");
++            conn.Open();
++            using var cmd = conn.CreateCommand();
++            cmd.CommandText = """
++                INSERT INTO feedback(interaction_id, stars, comment, created_utc)
++                VALUES ($id, $stars, $comment, $created)
++                ON CONFLICT(interaction_id) DO UPDATE SET
++                    stars = excluded.stars,
++                    comment = excluded.comment,
++                    created_utc = excluded.created_utc
++                """;
++            cmd.Parameters.AddWithValue("$id", interactionId.ToString("D"));
++            cmd.Parameters.AddWithValue("$stars", stars);
++            cmd.Parameters.AddWithValue("$comment", (object?)comment ?? DBNull.Value);
++            cmd.Parameters.AddWithValue("$created", DateTime.UtcNow.ToString("O"));
++            cmd.ExecuteNonQuery();
++        }
++    }
++
++    public FeedbackRecord? Get(Guid interactionId)
++    {
++        lock (_gate)
++        {
++            using var conn = new SqliteConnection($"Data Source={_dbPath}");
++            conn.Open();
++            using var cmd = conn.CreateCommand();
++            cmd.CommandText = "SELECT interaction_id, stars, comment, created_utc FROM feedback WHERE interaction_id = $id";
++            cmd.Parameters.AddWithValue("$id", interactionId.ToString("D"));
++            using var reader = cmd.ExecuteReader();
++            if (!reader.Read())
++            {
++                return null;
++            }
++
++            return new FeedbackRecord(
++                Guid.Parse(reader.GetString(0)),
++                reader.GetInt32(1),
++                reader.IsDBNull(2) ? null : reader.GetString(2),
++                DateTime.Parse(reader.GetString(3), null, System.Globalization.DateTimeStyles.RoundtripKind));
++        }
++    }
++
++    private void EnsureSchema()
++    {
++        using var conn = new SqliteConnection($"Data Source={_dbPath}");
++        conn.Open();
++        using var cmd = conn.CreateCommand();
++        cmd.CommandText = """
++            CREATE TABLE IF NOT EXISTS feedback (
++              interaction_id TEXT PRIMARY KEY,
++              stars INTEGER NOT NULL,
++              comment TEXT NULL,
++              created_utc TEXT NOT NULL
++            );
++            """;
++        cmd.ExecuteNonQuery();
++    }
++}
++
++/// <summary>Persisted feedback row.</summary>
++public sealed record FeedbackRecord(Guid InteractionId, int Stars, string? Comment, DateTime CreatedUtc);
+diff --git a/Auricrux.Web/appsettings.json b/Auricrux.Web/appsettings.json
+index e3faabc..ffdaf03 100644
+--- a/Auricrux.Web/appsettings.json
++++ b/Auricrux.Web/appsettings.json
+@@ -21,6 +21,12 @@
+   "RateLimit": {
+     "PermitLimit": 120
+   },
++  "RequestLimits": {
++    "MaxBodyBytes": 16777216
++  },
++  "Billing": {
++    "UpgradeApiKey": ""
++  },
+   "Auricrux": {
+     "ApiEndpoint": "http://localhost:5080",
+     "PublicBaseUrl": "http://localhost:5080/",
+@@ -30,6 +36,13 @@
+     "TertiaryModel": "mistral",
+     "VisionModel": "llava",
+     "StableDiffusionUrl": "",
+-    "FcaEcosystemApiBase": "http://localhost:5000"
++    "FcaEcosystemApiBase": "http://localhost:5000",
++    "Providers": {
++      "OpenAI": { "ApiKey": "", "BaseUrl": "", "Models": [] },
++      "Anthropic": { "ApiKey": "", "BaseUrl": "", "Models": [] },
++      "Gemini": { "ApiKey": "", "BaseUrl": "", "Models": [] },
++      "XAI": { "ApiKey": "", "BaseUrl": "", "Models": [] },
++      "AzureOpenAI": { "ApiKey": "", "BaseUrl": "", "Models": [] }
++    }
+   }
+ }
+-- 
+2.43.0
+

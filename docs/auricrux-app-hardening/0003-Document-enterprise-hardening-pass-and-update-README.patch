@@ -1,0 +1,142 @@
+From 1c7d9befe3d807f07b01841cc0daccda80e049ed Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 14:56:28 +0000
+Subject: [PATCH 3/3] Document enterprise hardening pass and update README
+ feature list
+
+---
+ README.md                               | 11 ++-
+ docs/ENTERPRISE_HARDENING_2026-08-01.md | 96 +++++++++++++++++++++++++
+ 2 files changed, 105 insertions(+), 2 deletions(-)
+ create mode 100644 docs/ENTERPRISE_HARDENING_2026-08-01.md
+
+diff --git a/README.md b/README.md
+index 18a6ca5..d9d05d9 100644
+--- a/README.md
++++ b/README.md
+@@ -8,11 +8,18 @@ A complete, enterprise-grade AI assistant application built with .NET 10, featur
+ - **Web deployment**: Blazor Server for browser-based access
+ - **AI integration**: Seamless communication with Auricrux backend API
+ - **Advanced chat interface**:
++  - Streamed responses (SSE) with incremental rendering, like ChatGPT/Claude/Gemini
+   - Multiple thinking modes (Quick, Auto, Deep) for flexible AI responses
+   - Configurable search scopes (Internal, Public, Both)
+   - Auto-speak/TTS support for accessibility
+-  - Real-time conversation history
+-  - Star rating feedback system for response quality
++  - Real-time conversation history (chronological user/assistant turns)
++  - Star rating feedback system for response quality (SQLite-persisted)
++- **Model routing**: local Ollama by default, plus optional cloud frontier models
++  (OpenAI, Anthropic/Claude, Google Gemini, xAI/Grok, Azure OpenAI) via provider-prefixed
++  model names — enabled only when API keys are configured (see
++  `docs/ENTERPRISE_HARDENING_2026-08-01.md`)
++- **Enterprise security**: deny-by-default API authorization when `Auth:Enabled`,
++  billing-key-gated plan upgrades, hardened CSP, request body caps, rate limiting
+ - **Production-ready code**:
+   - Full error handling and logging
+   - Async/await patterns throughout
+diff --git a/docs/ENTERPRISE_HARDENING_2026-08-01.md b/docs/ENTERPRISE_HARDENING_2026-08-01.md
+new file mode 100644
+index 0000000..063253c
+--- /dev/null
++++ b/docs/ENTERPRISE_HARDENING_2026-08-01.md
+@@ -0,0 +1,96 @@
++# Enterprise hardening & peer-parity upgrade — 2026-08-01
++
++Goal: close the highest-impact gaps between Auricrux App and the flagship assistants
++(ChatGPT, Claude, Gemini, Copilot, Grok) and harden the service to an enterprise posture.
++Every change below ships with tests; the suite went from 57 to 77+ passing tests.
++
++## 1. Streaming responses (SSE) — peer-parity gap closed
++
++Every major assistant streams tokens; Auricrux previously buffered the entire completion.
++
++- `POST /api/chat/stream` emits `data:` server-sent events — content deltas as the model
++  generates them, then a terminal `done=true` event carrying the full `ChatResponse`
++  (sources, interaction id, timing). Same freemium/entitlement gating as `/api/chat`.
++- Ollama is now called with `stream: true` (NDJSON parsing) on this path; corpus fallback
++  still streams when no model is reachable.
++- `AuricruxApiClient.SendChatStreamAsync` + `AuricruxService.ProcessQueryStreamAsync`
++  consume the stream; the Blazor chat page renders the assistant bubble incrementally with
++  a one-shot non-streaming retry on transport failure.
++
++## 2. Cloud frontier-model connectors — peer-parity gap closed
++
++Local Ollama remains the default runtime; the app can now also route to hosted frontier
++models when (and only when) API keys are configured. No key, no provider — nothing is
++hardcoded and nothing dials out by default.
++
++- `CloudModelGateway` supports **OpenAI**, **Anthropic (Claude)**, **Google Gemini**,
++  **xAI (Grok)**, and **Azure OpenAI** using raw HTTPS (no SDK dependencies), including
++  SSE streaming for all five.
++- Model names are provider-prefixed: `openai:gpt-4o-mini`, `anthropic:claude-sonnet-4-5`,
++  `gemini:gemini-2.0-flash`, `xai:grok-3`, `azure:<deployment>`. Unprefixed names route to
++  Ollama exactly as before.
++- Keys resolve from `Auricrux:Providers:{Name}:ApiKey` or conventional env vars
++  (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`/`GOOGLE_API_KEY`, `XAI_API_KEY`,
++  `AZURE_OPENAI_API_KEY` + `AZURE_OPENAI_ENDPOINT`). `GET /api/models` lists cloud models
++  only for providers with a resolvable key.
++
++## 3. Deny-by-default API authorization — security gap closed
++
++Previously only `/api/secure/ping` honored `Auth:Enabled`; chat, workspace, memory, media,
++account, and agent APIs stayed public even with auth on.
++
++- `ApiAuthGuardMiddleware` denies every unauthenticated `/api/*` request when
++  `Auth:Enabled` is true, reading live configuration at request time (fail-closed, same
++  pattern as `SecureController`). Endpoints marked `[AllowAnonymous]` — health, models,
++  capabilities, plans — stay public for uptime probes and pricing surfaces.
++- `MapControllers().RequireAuthorization()` is additionally applied at builder time as
++  defense in depth when auth is configured.
++
++## 4. Monetization integrity — honor-system upgrade closed
++
++`POST /api/account/{email}/upgrade` previously let any anonymous client self-upgrade to a
++paid plan. Plan changes now require the `X-Auricrux-Billing-Key` header matching
++`Billing:UpgradeApiKey` (constant-time comparison). With no key configured, upgrades are
++disabled entirely — the key belongs to the payment webhook / back office, not clients.
++
++## 5. Durable state — restart-loss bugs closed
++
++- **FCA account links** moved from an in-memory dictionary to SQLite
++  (`Data/accounts/fca_links.db`) with write-through caching; links and unlinks survive
++  restarts.
++- **Star-rating feedback** moved from log-only to SQLite (`Data/memory/feedback.db`).
++
++## 6. Conversation-history correctness
++
++The client previously sent only *assistant* turns (newest-first) as conversation history,
++so models never saw the user's earlier questions. History is now proper chronological
++user/assistant pairs (last 6 turns) on both streaming and non-streaming paths.
++
++## 7. Security hardening
++
++- **CSP**: dropped `unsafe-eval` from `script-src` (Blazor Server does not need it); added
++  `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`.
++- **Request body cap**: Kestrel `MaxRequestBodySize` set to 16 MB
++  (`RequestLimits:MaxBodyBytes`) so oversized uploads die at the transport.
++- **Dependencies**: `Microsoft.Data.Sqlite` 8.0.11 → 10.0.10; pinned
++  `SQLitePCLRaw.bundle_e_sqlite3` 3.0.5 to clear the GHSA-2m69-gcr7-jv3q (high) advisory.
++  `dotnet list package --vulnerable --include-transitive` is clean across all projects.
++
++## Test coverage added
++
++| Area | Tests |
++|------|-------|
++| SSE streaming (`StreamingChatTests`) | content-type + delta/terminal-event contract, empty-query 400, freemium gating on stream, feedback on streamed interaction |
++| Auth gating (`AuthEnabledTests`) | chat/stream/workspace/memory 401 when auth on; health/models/capabilities/plans stay public |
++| Cloud gateway (`CloudModelGatewayTests`) | dark-until-keyed, prefix routing, five-provider resolution, Azure endpoint requirement, model-list override, `/api/models` surfacing |
++| Durability (`DurableStoresTests`) | FCA link save/unlink and feedback across simulated restarts |
++| Billing (`AuricruxApiIntegrationTests`) | upgrade denied without/with-wrong key; full upgrade flow with key |
++
++## Honest remaining gaps vs peers (unchanged by this pass)
++
++- `auricrux-fca` is still a system-prompt alias over a llama3.2-class base — the
++  checkpoint-70000 fine-tune export (AUX-017/018) remains the top model-quality gap.
++- Retrieval is keyword scoring over the 80-entry corpus, not embeddings/vector search.
++- No sandboxed code interpreter (deterministic construction calculator only).
++- Web browsing is operator-supplied-URL fetch, not autonomous search.
++- Video generation is storyboard/ffmpeg, not generative video.
+-- 
+2.43.0
+

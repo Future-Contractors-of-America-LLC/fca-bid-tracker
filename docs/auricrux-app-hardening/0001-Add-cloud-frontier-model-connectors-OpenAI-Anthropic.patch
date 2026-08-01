@@ -1,0 +1,1462 @@
+From 2603f2aae9364e1a1852983c2424211932a0d82a Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Sat, 1 Aug 2026 14:56:14 +0000
+Subject: [PATCH 1/3] Add cloud frontier-model connectors
+ (OpenAI/Anthropic/Gemini/xAI/Azure) and SSE streaming chat
+
+- CloudModelGateway routes provider-prefixed model names (openai:, anthropic:,
+  gemini:, xai:, azure:) to configured providers; dark until API keys are set
+  via config or conventional env vars. Local Ollama stays the default.
+- POST /api/chat/stream emits SSE content deltas + terminal done event with
+  full response metadata; Ollama called with stream:true (NDJSON), corpus
+  fallback still streams when no model is reachable.
+- AuricruxApiClient.SendChatStreamAsync + AuricruxService.ProcessQueryStreamAsync;
+  Blazor chat renders assistant bubble incrementally with non-streaming retry.
+- Fix conversation history: send chronological user/assistant pairs instead of
+  assistant-only newest-first turns.
+- Capabilities report updated with streaming + cloud connector rows.
+- Tests: CloudModelGatewayTests (7), StreamingChatTests (4).
+---
+ Auricrux.Shared/Models.cs                     |  20 +
+ Auricrux.Shared/Services.cs                   | 209 +++++++++-
+ Auricrux.Tests/CloudModelGatewayTests.cs      | 142 +++++++
+ Auricrux.Tests/StreamingChatTests.cs          | 115 ++++++
+ Auricrux.Web/Components/Pages/Chat.razor      |  49 ++-
+ .../Controllers/AuricruxApiController.cs      |  46 +++
+ Auricrux.Web/Services/CapabilitiesService.cs  |   8 +-
+ Auricrux.Web/Services/CloudModelGateway.cs    | 382 ++++++++++++++++++
+ .../ConstructionIntelligenceService.cs        | 250 +++++++++++-
+ 9 files changed, 1190 insertions(+), 31 deletions(-)
+ create mode 100644 Auricrux.Tests/CloudModelGatewayTests.cs
+ create mode 100644 Auricrux.Tests/StreamingChatTests.cs
+ create mode 100644 Auricrux.Web/Services/CloudModelGateway.cs
+
+diff --git a/Auricrux.Shared/Models.cs b/Auricrux.Shared/Models.cs
+index 36564a1..06e8ef3 100644
+--- a/Auricrux.Shared/Models.cs
++++ b/Auricrux.Shared/Models.cs
+@@ -93,6 +93,26 @@ public class ChatResponse
+     public Guid? InteractionId { get; set; }
+ }
+ 
++/// <summary>
++/// One server-sent event from the streaming chat endpoint (/api/chat/stream).
++/// Delta events carry incremental content; the terminal event has Done=true and the
++/// complete ChatResponse (sources, interaction id, timing).
++/// </summary>
++public class ChatStreamEvent
++{
++    /// <summary>Incremental content chunk (null on the terminal event)</summary>
++    public string? Delta { get; set; }
++
++    /// <summary>True on the terminal event of the stream</summary>
++    public bool Done { get; set; }
++
++    /// <summary>Full response metadata, present when Done=true</summary>
++    public ChatResponse? Response { get; set; }
++
++    /// <summary>Error description when the stream failed</summary>
++    public string? Error { get; set; }
++}
++
+ /// <summary>
+ /// Single message in conversation history
+ /// </summary>
+diff --git a/Auricrux.Shared/Services.cs b/Auricrux.Shared/Services.cs
+index a7d0736..600bb06 100644
+--- a/Auricrux.Shared/Services.cs
++++ b/Auricrux.Shared/Services.cs
+@@ -106,6 +106,116 @@ public class AuricruxApiClient
+         }
+     }
+ 
++    /// <summary>
++    /// Send a chat query to the streaming endpoint (/api/chat/stream) and yield events
++    /// as they arrive: content deltas first, then a terminal event (Done=true) with the
++    /// full ChatResponse metadata. Transport errors yield a single Error event so callers
++    /// can fall back to the non-streaming path.
++    /// </summary>
++    public async IAsyncEnumerable<ChatStreamEvent> SendChatStreamAsync(
++        ChatRequest request,
++        string? model = null,
++        string? accountEmail = null,
++        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
++    {
++        var options = CreateJsonOptions();
++        var path = string.IsNullOrWhiteSpace(model)
++            ? "api/chat/stream"
++            : $"api/chat/stream?model={Uri.EscapeDataString(model.Trim())}";
++
++        HttpResponseMessage? response = null;
++        string? transportError = null;
++        try
++        {
++            using var httpRequest = new HttpRequestMessage(HttpMethod.Post, path)
++            {
++                Content = JsonContent.Create(request, options: options)
++            };
++            if (!string.IsNullOrWhiteSpace(accountEmail))
++            {
++                httpRequest.Headers.TryAddWithoutValidation("X-Auricrux-Email", accountEmail.Trim());
++            }
++
++            response = await _httpClient.SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
++            if (!response.IsSuccessStatusCode)
++            {
++                var body = await response.Content.ReadAsStringAsync(cancellationToken);
++                _logger.LogError($"Streaming API error: {response.StatusCode} - {body}");
++                transportError = $"API error {(int)response.StatusCode}";
++                response.Dispose();
++                response = null;
++            }
++        }
++        catch (Exception ex)
++        {
++            _logger.LogError($"Streaming request failed: {ex.Message}");
++            transportError = ex.Message;
++            response?.Dispose();
++            response = null;
++        }
++
++        if (response is null)
++        {
++            yield return new ChatStreamEvent { Done = true, Error = transportError ?? "Streaming request failed." };
++            yield break;
++        }
++
++        using (response)
++        {
++            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
++            using var reader = new StreamReader(stream);
++            while (true)
++            {
++                ChatStreamEvent? evt = null;
++                string? readError = null;
++                var endOfStream = false;
++                try
++                {
++                    var line = await reader.ReadLineAsync(cancellationToken);
++                    if (line is null)
++                    {
++                        endOfStream = true;
++                    }
++                    else if (line.StartsWith("data:", StringComparison.Ordinal))
++                    {
++                        var data = line[5..].Trim();
++                        if (data.Length > 0)
++                        {
++                            evt = JsonSerializer.Deserialize<ChatStreamEvent>(data, options);
++                        }
++                    }
++                }
++                catch (Exception ex)
++                {
++                    _logger.LogError($"Streaming read failed: {ex.Message}");
++                    readError = ex.Message;
++                }
++
++                if (readError is not null)
++                {
++                    yield return new ChatStreamEvent { Done = true, Error = readError };
++                    yield break;
++                }
++
++                if (endOfStream)
++                {
++                    break;
++                }
++
++                if (evt is null)
++                {
++                    continue;
++                }
++
++                yield return evt;
++                if (evt.Done)
++                {
++                    yield break;
++                }
++            }
++        }
++    }
++
+     /// <summary>
+     /// Check if the backend is available (prefers /healthz on the public Auricrux edge).
+     /// </summary>
+@@ -562,10 +672,16 @@ public class AuricruxService
+                 ThinkingMode = thinkingMode,
+                 SearchScope = searchScope,
+                 SessionId = SessionId,
++                // Send the last turns in chronological order as alternating user/assistant
++                // messages so the model sees real dialogue context, not assistant-only echoes.
+                 ConversationHistory = _interactionHistory
+-                    .OrderByDescending(x => x.Timestamp)
+-                    .Take(10)
+-                    .Select(x => new ChatMessage { Role = "assistant", Content = x.Response })
++                    .OrderBy(x => x.Timestamp)
++                    .TakeLast(6)
++                    .SelectMany(x => new[]
++                    {
++                        new ChatMessage { Role = "user", Content = x.Query, Timestamp = x.Timestamp },
++                        new ChatMessage { Role = "assistant", Content = x.Response, Timestamp = x.Timestamp }
++                    })
+                     .ToList()
+             };
+ 
+@@ -601,6 +717,93 @@ public class AuricruxService
+         }
+     }
+ 
++    /// <summary>
++    /// Streaming variant of ProcessQueryAsync: invokes <paramref name="onDelta"/> for each
++    /// content chunk as the model produces it, then records the interaction and returns the
++    /// full response. Returns (null, null) when the stream fails before producing content.
++    /// </summary>
++    public async Task<(ChatResponse? response, AuricruxInteraction? interaction)> ProcessQueryStreamAsync(
++        string query,
++        Func<string, Task> onDelta,
++        ThinkingMode thinkingMode = ThinkingMode.Auto,
++        SearchScope searchScope = SearchScope.Both,
++        string? model = null,
++        string? accountEmail = null,
++        CancellationToken cancellationToken = default)
++    {
++        try
++        {
++            var startTime = DateTime.UtcNow;
++
++            var chatRequest = new ChatRequest
++            {
++                Query = query,
++                ThinkingMode = thinkingMode,
++                SearchScope = searchScope,
++                SessionId = SessionId,
++                ConversationHistory = _interactionHistory
++                    .OrderBy(x => x.Timestamp)
++                    .TakeLast(6)
++                    .SelectMany(x => new[]
++                    {
++                        new ChatMessage { Role = "user", Content = x.Query, Timestamp = x.Timestamp },
++                        new ChatMessage { Role = "assistant", Content = x.Response, Timestamp = x.Timestamp }
++                    })
++                    .ToList()
++            };
++
++            ChatResponse? response = null;
++            var buffer = new System.Text.StringBuilder();
++            await foreach (var evt in _apiClient.SendChatStreamAsync(chatRequest, model, accountEmail, cancellationToken))
++            {
++                if (!string.IsNullOrEmpty(evt.Delta))
++                {
++                    buffer.Append(evt.Delta);
++                    await onDelta(evt.Delta);
++                }
++
++                if (evt.Done)
++                {
++                    if (evt.Error is not null)
++                    {
++                        _logger.LogError($"Streaming chat failed: {evt.Error}");
++                        return (null, null);
++                    }
++
++                    response = evt.Response;
++                    break;
++                }
++            }
++
++            response ??= buffer.Length > 0
++                ? new ChatResponse { Content = buffer.ToString() }
++                : null;
++            if (response is null)
++            {
++                return (null, null);
++            }
++
++            var interaction = new AuricruxInteraction
++            {
++                SessionId = SessionId,
++                Query = query,
++                Response = response.Content,
++                ThinkingMode = thinkingMode,
++                SearchScope = searchScope,
++                ProcessingTimeMs = response.ProcessingTimeMs,
++                Timestamp = startTime
++            };
++
++            _interactionHistory.Add(interaction);
++            return (response, interaction);
++        }
++        catch (Exception ex)
++        {
++            _logger.LogError($"Error processing streaming query: {ex.Message}");
++            return (null, null);
++        }
++    }
++
+     /// <summary>
+     /// Submit feedback for an interaction
+     /// </summary>
+diff --git a/Auricrux.Tests/CloudModelGatewayTests.cs b/Auricrux.Tests/CloudModelGatewayTests.cs
+new file mode 100644
+index 0000000..7436054
+--- /dev/null
++++ b/Auricrux.Tests/CloudModelGatewayTests.cs
+@@ -0,0 +1,142 @@
++using System.Net;
++using System.Net.Http.Json;
++using Auricrux.Web.Services;
++using Microsoft.AspNetCore.Hosting;
++using Microsoft.AspNetCore.Mvc.Testing;
++using Microsoft.Extensions.Configuration;
++using Microsoft.Extensions.Logging.Abstractions;
++using Xunit;
++
++namespace Auricrux.Tests;
++
++/// <summary>
++/// Cloud frontier-model connectors: providers stay dark until an API key is configured,
++/// provider-prefixed model names resolve to the right endpoint, and /api/models surfaces
++/// configured cloud models next to the local Ollama models. No network calls are made —
++/// these tests cover routing/config only, never live provider traffic.
++/// </summary>
++public sealed class CloudModelGatewayTests
++{
++    [Fact]
++    public void No_configured_keys_means_no_cloud_models_and_no_routing()
++    {
++        var gateway = CreateGateway(new Dictionary<string, string?>());
++
++        Assert.Empty(gateway.ListModels());
++        Assert.False(gateway.TryResolve("openai:gpt-4o-mini", out _));
++        Assert.False(gateway.TryResolve("anthropic:claude-sonnet-4-5", out _));
++    }
++
++    [Fact]
++    public void Unprefixed_model_names_never_route_to_cloud()
++    {
++        var gateway = CreateGateway(new Dictionary<string, string?>
++        {
++            ["Auricrux:Providers:OpenAI:ApiKey"] = "sk-test"
++        });
++
++        Assert.False(gateway.TryResolve("llama3.2", out _));
++        Assert.False(gateway.TryResolve("auricrux-fca", out _));
++        Assert.False(gateway.TryResolve(null, out _));
++    }
++
++    [Fact]
++    public void Configured_openai_key_lists_models_and_resolves_route()
++    {
++        var gateway = CreateGateway(new Dictionary<string, string?>
++        {
++            ["Auricrux:Providers:OpenAI:ApiKey"] = "sk-test"
++        });
++
++        Assert.Contains("openai:gpt-4o-mini", gateway.ListModels());
++        Assert.True(gateway.TryResolve("openai:gpt-4o-mini", out var route));
++        Assert.Equal("openai", route.Provider);
++        Assert.Equal("gpt-4o-mini", route.Model);
++        Assert.Equal("https://api.openai.com/v1", route.BaseUrl);
++        Assert.Equal("sk-test", route.ApiKey);
++    }
++
++    [Fact]
++    public void All_five_providers_resolve_with_keys_configured()
++    {
++        var gateway = CreateGateway(new Dictionary<string, string?>
++        {
++            ["Auricrux:Providers:OpenAI:ApiKey"] = "sk-openai",
++            ["Auricrux:Providers:Anthropic:ApiKey"] = "sk-anthropic",
++            ["Auricrux:Providers:Gemini:ApiKey"] = "sk-gemini",
++            ["Auricrux:Providers:XAI:ApiKey"] = "sk-xai",
++            ["Auricrux:Providers:AzureOpenAI:ApiKey"] = "sk-azure",
++            ["Auricrux:Providers:AzureOpenAI:BaseUrl"] = "https://myresource.openai.azure.com/openai/v1"
++        });
++
++        Assert.True(gateway.TryResolve("openai:gpt-4o", out _));
++        Assert.True(gateway.TryResolve("anthropic:claude-sonnet-4-5", out var anthropic));
++        Assert.Equal("https://api.anthropic.com/v1", anthropic.BaseUrl);
++        Assert.True(gateway.TryResolve("gemini:gemini-2.0-flash", out var gemini));
++        Assert.Equal("https://generativelanguage.googleapis.com/v1beta", gemini.BaseUrl);
++        Assert.True(gateway.TryResolve("xai:grok-3", out var xai));
++        Assert.Equal("https://api.x.ai/v1", xai.BaseUrl);
++        Assert.True(gateway.TryResolve("azure:my-deployment", out var azure));
++        Assert.Equal("https://myresource.openai.azure.com/openai/v1", azure.BaseUrl);
++    }
++
++    [Fact]
++    public void Azure_without_endpoint_stays_dark_even_with_key()
++    {
++        var gateway = CreateGateway(new Dictionary<string, string?>
++        {
++            ["Auricrux:Providers:AzureOpenAI:ApiKey"] = "sk-azure"
++        });
++
++        Assert.False(gateway.TryResolve("azure:my-deployment", out _));
++    }
++
++    [Fact]
++    public void Custom_model_list_overrides_defaults()
++    {
++        var gateway = CreateGateway(new Dictionary<string, string?>
++        {
++            ["Auricrux:Providers:Anthropic:ApiKey"] = "sk-test",
++            ["Auricrux:Providers:Anthropic:Models:0"] = "claude-opus-4-6"
++        });
++
++        var models = gateway.ListModels();
++        Assert.Contains("anthropic:claude-opus-4-6", models);
++        Assert.DoesNotContain("anthropic:claude-sonnet-4-5", models);
++    }
++
++    [Fact]
++    public async Task Models_endpoint_surfaces_configured_cloud_models()
++    {
++        using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
++            builder.ConfigureAppConfiguration((_, config) =>
++                config.AddInMemoryCollection(new Dictionary<string, string?>
++                {
++                    ["Auricrux:Providers:OpenAI:ApiKey"] = "sk-test"
++                })));
++        using var client = factory.CreateClient();
++
++        var response = await client.GetAsync("/api/models");
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++        var payload = await response.Content.ReadFromJsonAsync<ModelsPayload>();
++        Assert.NotNull(payload);
++        Assert.Contains("openai:gpt-4o-mini", payload!.Models);
++        Assert.Contains(payload.Models, m => !m.Contains(':'));
++    }
++
++    private static CloudModelGateway CreateGateway(Dictionary<string, string?> settings)
++    {
++        var config = new ConfigurationBuilder().AddInMemoryCollection(settings).Build();
++        return new CloudModelGateway(new StubHttpClientFactory(), config, NullLogger<CloudModelGateway>.Instance);
++    }
++
++    private sealed class StubHttpClientFactory : IHttpClientFactory
++    {
++        public HttpClient CreateClient(string name) => new();
++    }
++
++    private sealed class ModelsPayload
++    {
++        public List<string> Models { get; set; } = [];
++    }
++}
+diff --git a/Auricrux.Tests/StreamingChatTests.cs b/Auricrux.Tests/StreamingChatTests.cs
+new file mode 100644
+index 0000000..3c6bb2b
+--- /dev/null
++++ b/Auricrux.Tests/StreamingChatTests.cs
+@@ -0,0 +1,115 @@
++using System.Net;
++using System.Net.Http.Json;
++using System.Text.Json;
++using Auricrux.Shared.Models;
++using Microsoft.AspNetCore.Mvc.Testing;
++using Xunit;
++
++namespace Auricrux.Tests;
++
++/// <summary>
++/// Streaming chat parity (SSE): /api/chat/stream must emit data: events ending in a
++/// terminal done event carrying the full response metadata. Works with or without a live
++/// Ollama — when the model is unreachable the corpus fallback still streams as content.
++/// </summary>
++public sealed class StreamingChatTests : IClassFixture<WebApplicationFactory<Program>>
++{
++    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
++    private readonly HttpClient _client;
++
++    public StreamingChatTests(WebApplicationFactory<Program> factory)
++    {
++        _client = factory.CreateClient();
++    }
++
++    [Fact]
++    public async Task Chat_stream_emits_sse_deltas_and_terminal_done_event()
++    {
++        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/chat/stream")
++        {
++            Content = JsonContent.Create(new ChatRequest { Query = "What triggers fall protection on a roof?" })
++        };
++
++        using var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
++        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
++        Assert.Equal("text/event-stream", response.Content.Headers.ContentType?.MediaType);
++
++        var events = await ReadEventsAsync(response);
++        Assert.NotEmpty(events);
++
++        var terminal = events.Last();
++        Assert.True(terminal.Done, "Last SSE event must have done=true.");
++        Assert.NotNull(terminal.Response);
++        Assert.False(string.IsNullOrWhiteSpace(terminal.Response!.Content));
++        Assert.NotNull(terminal.Response.InteractionId);
++
++        var streamedContent = string.Concat(events.Where(e => !e.Done).Select(e => e.Delta));
++        Assert.Equal(streamedContent, terminal.Response.Content);
++    }
++
++    [Fact]
++    public async Task Chat_stream_rejects_empty_query()
++    {
++        var response = await _client.PostAsJsonAsync("/api/chat/stream", new { query = "" });
++        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Chat_stream_enforces_freemium_model_gating()
++    {
++        var email = $"stream-gate-{Guid.NewGuid():N}@test.local";
++        await _client.PostAsJsonAsync("/api/account/register", new { email });
++
++        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/chat/stream?model=mistral")
++        {
++            Content = JsonContent.Create(new ChatRequest { Query = "What is a sill plate?" })
++        };
++        request.Headers.TryAddWithoutValidation("X-Auricrux-Email", email);
++
++        var response = await _client.SendAsync(request);
++        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
++    }
++
++    [Fact]
++    public async Task Chat_stream_interaction_accepts_feedback()
++    {
++        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/chat/stream")
++        {
++            Content = JsonContent.Create(new ChatRequest { Query = "How long should concrete cure before stripping forms?" })
++        };
++        using var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
++        var events = await ReadEventsAsync(response);
++        var interactionId = events.Last().Response!.InteractionId!.Value;
++
++        var feedback = await _client.PostAsJsonAsync($"/api/feedback/{interactionId}", new { stars = 5, comment = "streamed" });
++        Assert.Equal(HttpStatusCode.Accepted, feedback.StatusCode);
++    }
++
++    private static async Task<List<ChatStreamEvent>> ReadEventsAsync(HttpResponseMessage response)
++    {
++        var events = new List<ChatStreamEvent>();
++        await using var stream = await response.Content.ReadAsStreamAsync();
++        using var reader = new StreamReader(stream);
++        while (await reader.ReadLineAsync() is { } line)
++        {
++            if (!line.StartsWith("data:", StringComparison.Ordinal))
++            {
++                continue;
++            }
++
++            var data = line[5..].Trim();
++            if (data.Length == 0)
++            {
++                continue;
++            }
++
++            var evt = JsonSerializer.Deserialize<ChatStreamEvent>(data, JsonOptions);
++            if (evt is not null)
++            {
++                events.Add(evt);
++            }
++        }
++
++        return events;
++    }
++}
+diff --git a/Auricrux.Web/Components/Pages/Chat.razor b/Auricrux.Web/Components/Pages/Chat.razor
+index 2bec568..918f3e4 100644
+--- a/Auricrux.Web/Components/Pages/Chat.razor
++++ b/Auricrux.Web/Components/Pages/Chat.razor
+@@ -549,21 +549,40 @@
+             await ApiClient.AppendMemoryAsync(AuricruxService.SessionId, "user", query, MemoryBackend);
+             await InvokeAsync(StateHasChanged);
+ 
+-            var (response, interaction) = await AuricruxService.ProcessQueryAsync(
+-                query, SelectedThinkingMode, SelectedSearchScope, SelectedModel, AccountEmail.Trim());
++            // Stream the answer token-by-token (ChatGPT/Claude-style); the placeholder
++            // assistant bubble fills in as deltas arrive from /api/chat/stream.
++            var assistantMessage = new ChatMessageViewModel
++            {
++                Role = "assistant",
++                Content = string.Empty,
++                IsUser = false,
++                Timestamp = DateTime.Now
++            };
++            Messages.Add(assistantMessage);
++            StatusMessage = "Streaming…";
++
++            var (response, interaction) = await AuricruxService.ProcessQueryStreamAsync(
++                query,
++                async delta =>
++                {
++                    assistantMessage.Content += delta;
++                    await InvokeAsync(StateHasChanged);
++                },
++                SelectedThinkingMode, SelectedSearchScope, SelectedModel, AccountEmail.Trim());
++
++            if (response == null)
++            {
++                // Streaming failed before content arrived — retry once non-streaming.
++                (response, interaction) = await AuricruxService.ProcessQueryAsync(
++                    query, SelectedThinkingMode, SelectedSearchScope, SelectedModel, AccountEmail.Trim());
++            }
+ 
+             if (response != null)
+             {
+                 Account = await ApiClient.GetAccountAsync(AccountEmail.Trim()) ?? Account;
+-                Messages.Add(new ChatMessageViewModel
+-                {
+-                    Role = "assistant",
+-                    Content = response.Content,
+-                    IsUser = false,
+-                    Timestamp = DateTime.Now,
+-                    InteractionId = interaction?.Id,
+-                    ProcessingTimeMs = response.ProcessingTimeMs
+-                });
++                assistantMessage.Content = response.Content;
++                assistantMessage.InteractionId = interaction?.Id;
++                assistantMessage.ProcessingTimeMs = response.ProcessingTimeMs;
+                 await ApiClient.AppendMemoryAsync(AuricruxService.SessionId, "assistant", response.Content, MemoryBackend);
+                 StatusMessage = $"Completed in {response.ProcessingTimeMs}ms";
+                 if (AutoSpeakEnabled)
+@@ -573,13 +592,7 @@
+             }
+             else
+             {
+-                Messages.Add(new ChatMessageViewModel
+-                {
+-                    Role = "assistant",
+-                    Content = "Error processing request. Check Ollama / API health.",
+-                    IsUser = false,
+-                    Timestamp = DateTime.Now
+-                });
++                assistantMessage.Content = "Error processing request. Check Ollama / API health.";
+                 StatusMessage = "Error";
+             }
+         }
+diff --git a/Auricrux.Web/Controllers/AuricruxApiController.cs b/Auricrux.Web/Controllers/AuricruxApiController.cs
+index b3647b3..1732863 100644
+--- a/Auricrux.Web/Controllers/AuricruxApiController.cs
++++ b/Auricrux.Web/Controllers/AuricruxApiController.cs
+@@ -1,5 +1,7 @@
++using System.Text.Json;
+ using Auricrux.Shared.Models;
+ using Auricrux.Web.Services;
++using Microsoft.AspNetCore.Authorization;
+ using Microsoft.AspNetCore.Mvc;
+ 
+ namespace Auricrux.Web.Controllers;
+@@ -17,6 +19,7 @@ public sealed class AuricruxApiController(
+     ConstructionVisionService vision,
+     ILogger<AuricruxApiController> logger) : ControllerBase
+ {
++    [AllowAnonymous]
+     [HttpGet("health")]
+     [HttpGet("/health")]
+     [HttpGet("/healthz")]
+@@ -33,9 +36,11 @@ public sealed class AuricruxApiController(
+         return StatusCode(statusCode, report);
+     }
+ 
++    [AllowAnonymous]
+     [HttpGet("models")]
+     public ActionResult<object> ListModels() => Ok(new { models = intelligence.AvailableModels });
+ 
++    [AllowAnonymous]
+     [HttpGet("capabilities")]
+     public ActionResult<CapabilitiesReport> GetCapabilities() => Ok(capabilities.GetReport());
+ 
+@@ -62,6 +67,47 @@ public sealed class AuricruxApiController(
+         return Ok(response);
+     }
+ 
++    /// <summary>
++    /// Streaming chat over server-sent events: emits <c>data:</c> JSON lines with content
++    /// deltas as the model generates them, then a terminal event with <c>done=true</c> and
++    /// the full response metadata (sources, interaction id, timing).
++    /// </summary>
++    [HttpPost("chat/stream")]
++    public async Task ChatStream(
++        [FromBody] ChatRequest request,
++        [FromQuery] string? model,
++        [FromHeader(Name = "X-Auricrux-Email")] string? accountEmail,
++        CancellationToken cancellationToken)
++    {
++        if (string.IsNullOrWhiteSpace(request.Query))
++        {
++            Response.StatusCode = StatusCodes.Status400BadRequest;
++            await Response.WriteAsJsonAsync(new { error = "Query is required." }, cancellationToken);
++            return;
++        }
++
++        model = ResolveModel(model, accountEmail, out var entitlementError);
++        if (entitlementError is not null)
++        {
++            await entitlementError.ExecuteResultAsync(ControllerContext);
++            return;
++        }
++
++        logger.LogInformation("Chat stream mode={Mode} scope={Scope} model={Model}", request.ThinkingMode, request.SearchScope, model);
++
++        Response.StatusCode = StatusCodes.Status200OK;
++        Response.ContentType = "text/event-stream";
++        Response.Headers.CacheControl = "no-cache";
++        Response.Headers["X-Accel-Buffering"] = "no";
++
++        var jsonOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
++        await foreach (var evt in intelligence.StreamChatAsync(request, model, cancellationToken))
++        {
++            await Response.WriteAsync($"data: {JsonSerializer.Serialize(evt, jsonOptions)}\n\n", cancellationToken);
++            await Response.Body.FlushAsync(cancellationToken);
++        }
++    }
++
+     [HttpPost("thinking")]
+     public async Task<ActionResult<ThinkingResponse>> PostThinking(
+         [FromBody] ThinkingRequest request,
+diff --git a/Auricrux.Web/Services/CapabilitiesService.cs b/Auricrux.Web/Services/CapabilitiesService.cs
+index a9226d8..395c013 100644
+--- a/Auricrux.Web/Services/CapabilitiesService.cs
++++ b/Auricrux.Web/Services/CapabilitiesService.cs
+@@ -56,6 +56,8 @@ public sealed class CapabilitiesService(ConstructionIntelligenceService intellig
+     private static List<CapabilityFeature> BuildFeatureList(int corpusEntries) =>
+     [
+         Feature("Multi-model chat", "shipped", "User-selectable models with freemium gating"),
++        Feature("Streaming responses (SSE)", "shipped", "POST /api/chat/stream emits token deltas + terminal metadata event; web UI renders incrementally"),
++        Feature("Cloud frontier model connectors", "shipped", "OpenAI/Anthropic/Gemini/xAI/Azure OpenAI via provider-prefixed model names; enabled only when API keys are configured (env or Auricrux:Providers)"),
+         Feature("Thinking modes (Quick/Auto/Deep)", "shipped", "Real model/corpus-backed reasoning"),
+         Feature("Search scopes (Internal/Public/Both)", "shipped", "Corpus retrieval, not hardcoded arrays"),
+         Feature("Speech-to-text", "shipped", "Browser Web Speech API + MAUI native STT"),
+@@ -80,6 +82,10 @@ public sealed class CapabilitiesService(ConstructionIntelligenceService intellig
+     [
+         Matrix("Multi-model chat", "shipped", yes, yes, yes, yes, yes,
+             "All major players offer model selection; Auricrux gates premium models behind freemium tiers."),
++        Matrix("Streaming responses", "shipped", yes, yes, yes, yes, yes,
++            "SSE token streaming on /api/chat/stream with incremental web UI rendering, matching peer streaming UX."),
++        Matrix("Frontier cloud models", "shipped", yes, yes, yes, yes, yes,
++            "Optional connectors route openai:/anthropic:/gemini:/xai:/azure: model names to configured providers; local Ollama remains the default runtime."),
+         Matrix("Construction specialist corpus", "shipped", no, no, no, no, no,
+             "Auricrux moat: grounded internal/public construction knowledge base with scoped search — not generic web training."),
+         Matrix("Thinking / reasoning modes", "shipped", yes, yes, yes, partial, yes,
+@@ -99,7 +105,7 @@ public sealed class CapabilitiesService(ConstructionIntelligenceService intellig
+         Matrix("Video generation", "shipped", partial, no, partial, partial, no,
+             "Storyboard frame pack + ffmpeg stitch; not generative video like Sora/Veo."),
+         Matrix("Enterprise OAuth/OIDC", "shipped", yes, yes, yes, yes, partial,
+-            "JWT + cookie/OIDC when Auth:Enabled; dev mode stays open by default."),
++            "JWT + cookie/OIDC when Auth:Enabled; all API controllers deny-by-default when auth is on (health/models/capabilities/plans stay public); dev mode stays open by default."),
+         Matrix("Freemium monetization", "shipped", yes, yes, yes, partial, partial,
+             "SQLite-backed plans, daily quotas, and model allow-lists enforced server-side."),
+         Matrix("Agentic plugins / tool-use", "shipped", yes, yes, yes, yes, partial,
+diff --git a/Auricrux.Web/Services/CloudModelGateway.cs b/Auricrux.Web/Services/CloudModelGateway.cs
+new file mode 100644
+index 0000000..c201cf9
+--- /dev/null
++++ b/Auricrux.Web/Services/CloudModelGateway.cs
+@@ -0,0 +1,382 @@
++using System.Runtime.CompilerServices;
++using System.Text;
++using System.Text.Json;
++
++namespace Auricrux.Web.Services;
++
++/// <summary>
++/// Optional cloud frontier-model connectors (OpenAI, Anthropic/Claude, Google Gemini,
++/// xAI/Grok, Azure OpenAI) alongside the default local Ollama runtime.
++///
++/// Providers are enabled purely by configuration/environment — no key is ever stored in the
++/// repo. Keys resolve from <c>Auricrux:Providers:{Name}:ApiKey</c> or the conventional
++/// environment variables (OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY / GOOGLE_API_KEY,
++/// XAI_API_KEY, AZURE_OPENAI_API_KEY). Cloud models are addressed with a provider prefix,
++/// e.g. <c>openai:gpt-4o-mini</c>, <c>anthropic:claude-sonnet-4-5</c>,
++/// <c>gemini:gemini-2.0-flash</c>, <c>xai:grok-3</c>, <c>azure:my-deployment</c>.
++/// Unprefixed model names continue to route to Ollama unchanged.
++/// </summary>
++public sealed class CloudModelGateway(
++    IHttpClientFactory httpClientFactory,
++    IConfiguration config,
++    ILogger<CloudModelGateway> logger)
++{
++    private static readonly (string Prefix, string ConfigName, string[] EnvKeys, string DefaultBaseUrl, string[] DefaultModels)[] ProviderTable =
++    [
++        ("openai", "OpenAI", ["OPENAI_API_KEY"], "https://api.openai.com/v1", ["gpt-4o-mini", "gpt-4o"]),
++        ("anthropic", "Anthropic", ["ANTHROPIC_API_KEY"], "https://api.anthropic.com/v1", ["claude-sonnet-4-5", "claude-haiku-4-5"]),
++        ("gemini", "Gemini", ["GEMINI_API_KEY", "GOOGLE_API_KEY"], "https://generativelanguage.googleapis.com/v1beta", ["gemini-2.0-flash", "gemini-2.5-pro"]),
++        ("xai", "XAI", ["XAI_API_KEY"], "https://api.x.ai/v1", ["grok-3", "grok-3-mini"]),
++        ("azure", "AzureOpenAI", ["AZURE_OPENAI_API_KEY"], "", [])
++    ];
++
++    /// <summary>Cloud models currently usable (providers with a resolvable API key), prefixed per provider.</summary>
++    public IReadOnlyList<string> ListModels()
++    {
++        var models = new List<string>();
++        foreach (var provider in ProviderTable)
++        {
++            if (ResolveKey(provider.ConfigName, provider.EnvKeys) is null)
++            {
++                continue;
++            }
++
++            var configured = config.GetSection($"Auricrux:Providers:{provider.ConfigName}:Models").Get<string[]>();
++            var names = configured is { Length: > 0 } ? configured : provider.DefaultModels;
++            models.AddRange(names.Select(m => $"{provider.Prefix}:{m}"));
++        }
++
++        return models;
++    }
++
++    /// <summary>True when the model name targets a configured cloud provider.</summary>
++    public bool TryResolve(string? model, out CloudModelRoute route)
++    {
++        route = default;
++        if (string.IsNullOrWhiteSpace(model))
++        {
++            return false;
++        }
++
++        var separator = model.IndexOf(':');
++        if (separator <= 0)
++        {
++            return false;
++        }
++
++        var prefix = model[..separator].Trim().ToLowerInvariant();
++        var name = model[(separator + 1)..].Trim();
++        var provider = ProviderTable.FirstOrDefault(p => p.Prefix == prefix);
++        if (provider.Prefix is null || string.IsNullOrWhiteSpace(name))
++        {
++            return false;
++        }
++
++        var key = ResolveKey(provider.ConfigName, provider.EnvKeys);
++        if (key is null)
++        {
++            return false;
++        }
++
++        var baseUrl = config[$"Auricrux:Providers:{provider.ConfigName}:BaseUrl"];
++        if (string.IsNullOrWhiteSpace(baseUrl))
++        {
++            baseUrl = provider.Prefix == "azure"
++                ? Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT")
++                : provider.DefaultBaseUrl;
++        }
++
++        if (string.IsNullOrWhiteSpace(baseUrl))
++        {
++            logger.LogWarning("Cloud provider {Provider} has a key but no BaseUrl/endpoint configured", provider.ConfigName);
++            return false;
++        }
++
++        route = new CloudModelRoute(provider.Prefix, provider.ConfigName, name, baseUrl.TrimEnd('/'), key);
++        return true;
++    }
++
++    /// <summary>Non-streaming completion via the resolved cloud provider.</summary>
++    public async Task<string> CompleteAsync(
++        CloudModelRoute route,
++        string system,
++        IReadOnlyList<(string Role, string Content)> messages,
++        CancellationToken ct)
++    {
++        var buffer = new StringBuilder();
++        await foreach (var delta in StreamAsync(route, system, messages, stream: false, ct))
++        {
++            buffer.Append(delta);
++        }
++
++        return buffer.ToString();
++    }
++
++    /// <summary>Streaming completion (SSE) via the resolved cloud provider.</summary>
++    public IAsyncEnumerable<string> StreamAsync(
++        CloudModelRoute route,
++        string system,
++        IReadOnlyList<(string Role, string Content)> messages,
++        CancellationToken ct)
++        => StreamAsync(route, system, messages, stream: true, ct);
++
++    private async IAsyncEnumerable<string> StreamAsync(
++        CloudModelRoute route,
++        string system,
++        IReadOnlyList<(string Role, string Content)> messages,
++        bool stream,
++        [EnumeratorCancellation] CancellationToken ct)
++    {
++        using var request = route.Provider switch
++        {
++            "anthropic" => BuildAnthropicRequest(route, system, messages, stream),
++            "gemini" => BuildGeminiRequest(route, system, messages, stream),
++            _ => BuildOpenAiCompatibleRequest(route, system, messages, stream)
++        };
++
++        var http = httpClientFactory.CreateClient(nameof(CloudModelGateway));
++        using var response = await http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct);
++        if (!response.IsSuccessStatusCode)
++        {
++            var body = await response.Content.ReadAsStringAsync(ct);
++            logger.LogWarning("Cloud provider {Provider} model {Model} returned {Status}: {Body}",
++                route.ProviderName, route.Model, (int)response.StatusCode, Truncate(body, 400));
++            throw new CloudModelException(
++                $"{route.ProviderName} returned {(int)response.StatusCode} for model '{route.Model}'.");
++        }
++
++        if (!stream)
++        {
++            var payload = await response.Content.ReadAsStringAsync(ct);
++            yield return ParseNonStreamingContent(route.Provider, payload);
++            yield break;
++        }
++
++        await using var bodyStream = await response.Content.ReadAsStreamAsync(ct);
++        using var reader = new StreamReader(bodyStream);
++        while (await reader.ReadLineAsync(ct) is { } line)
++        {
++            if (!line.StartsWith("data:", StringComparison.Ordinal))
++            {
++                continue;
++            }
++
++            var data = line[5..].Trim();
++            if (data.Length == 0 || data == "[DONE]")
++            {
++                continue;
++            }
++
++            var delta = ParseStreamDelta(route.Provider, data);
++            if (!string.IsNullOrEmpty(delta))
++            {
++                yield return delta;
++            }
++        }
++    }
++
++    private static HttpRequestMessage BuildOpenAiCompatibleRequest(
++        CloudModelRoute route,
++        string system,
++        IReadOnlyList<(string Role, string Content)> messages,
++        bool stream)
++    {
++        var payload = new
++        {
++            model = route.Model,
++            stream,
++            messages = BuildOpenAiMessages(system, messages)
++        };
++
++        var request = new HttpRequestMessage(HttpMethod.Post, $"{route.BaseUrl}/chat/completions")
++        {
++            Content = JsonBody(payload)
++        };
++
++        if (route.Provider == "azure")
++        {
++            // Azure OpenAI accepts the key via the api-key header on its OpenAI-compatible v1 surface.
++            request.Headers.TryAddWithoutValidation("api-key", route.ApiKey);
++        }
++        else
++        {
++            request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {route.ApiKey}");
++        }
++
++        return request;
++    }
++
++    private static HttpRequestMessage BuildAnthropicRequest(
++        CloudModelRoute route,
++        string system,
++        IReadOnlyList<(string Role, string Content)> messages,
++        bool stream)
++    {
++        var payload = new
++        {
++            model = route.Model,
++            max_tokens = 4096,
++            stream,
++            system,
++            messages = messages
++                .Where(m => m.Role is "user" or "assistant")
++                .Select(m => new { role = m.Role, content = m.Content })
++                .ToArray()
++        };
++
++        var request = new HttpRequestMessage(HttpMethod.Post, $"{route.BaseUrl}/messages")
++        {
++            Content = JsonBody(payload)
++        };
++        request.Headers.TryAddWithoutValidation("x-api-key", route.ApiKey);
++        request.Headers.TryAddWithoutValidation("anthropic-version", "2023-06-01");
++        return request;
++    }
++
++    private static HttpRequestMessage BuildGeminiRequest(
++        CloudModelRoute route,
++        string system,
++        IReadOnlyList<(string Role, string Content)> messages,
++        bool stream)
++    {
++        var payload = new
++        {
++            system_instruction = new { parts = new[] { new { text = system } } },
++            contents = messages
++                .Where(m => m.Role is "user" or "assistant")
++                .Select(m => new
++                {
++                    role = m.Role == "assistant" ? "model" : "user",
++                    parts = new[] { new { text = m.Content } }
++                })
++                .ToArray()
++        };
++
++        var verb = stream ? "streamGenerateContent?alt=sse" : "generateContent";
++        var request = new HttpRequestMessage(
++            HttpMethod.Post,
++            $"{route.BaseUrl}/models/{Uri.EscapeDataString(route.Model)}:{verb}")
++        {
++            Content = JsonBody(payload)
++        };
++        request.Headers.TryAddWithoutValidation("x-goog-api-key", route.ApiKey);
++        return request;
++    }
++
++    private static object[] BuildOpenAiMessages(string system, IReadOnlyList<(string Role, string Content)> messages)
++    {
++        var list = new List<object> { new { role = "system", content = system } };
++        list.AddRange(messages
++            .Where(m => m.Role is "user" or "assistant")
++            .Select(m => (object)new { role = m.Role, content = m.Content }));
++        return [.. list];
++    }
++
++    private static string ParseNonStreamingContent(string provider, string payload)
++    {
++        using var doc = JsonDocument.Parse(payload);
++        var root = doc.RootElement;
++        return provider switch
++        {
++            "anthropic" => root.TryGetProperty("content", out var content) && content.ValueKind == JsonValueKind.Array
++                ? string.Concat(content.EnumerateArray()
++                    .Where(b => b.TryGetProperty("type", out var t) && t.GetString() == "text")
++                    .Select(b => b.GetProperty("text").GetString()))
++                : string.Empty,
++            "gemini" => root.TryGetProperty("candidates", out var candidates)
++                        && candidates.ValueKind == JsonValueKind.Array
++                        && candidates.GetArrayLength() > 0
++                ? string.Concat(candidates[0].GetProperty("content").GetProperty("parts").EnumerateArray()
++                    .Select(p => p.TryGetProperty("text", out var t) ? t.GetString() : null))
++                : string.Empty,
++            _ => root.TryGetProperty("choices", out var choices)
++                 && choices.ValueKind == JsonValueKind.Array
++                 && choices.GetArrayLength() > 0
++                 && choices[0].GetProperty("message").TryGetProperty("content", out var msg)
++                ? msg.GetString() ?? string.Empty
++                : string.Empty
++        };
++    }
++
++    private static string? ParseStreamDelta(string provider, string data)
++    {
++        using var doc = JsonDocument.Parse(data);
++        var root = doc.RootElement;
++        switch (provider)
++        {
++            case "anthropic":
++                if (root.TryGetProperty("type", out var type)
++                    && type.GetString() == "content_block_delta"
++                    && root.TryGetProperty("delta", out var anthDelta)
++                    && anthDelta.TryGetProperty("text", out var anthText))
++                {
++                    return anthText.GetString();
++                }
++
++                return null;
++
++            case "gemini":
++                if (root.TryGetProperty("candidates", out var candidates)
++                    && candidates.ValueKind == JsonValueKind.Array
++                    && candidates.GetArrayLength() > 0
++                    && candidates[0].TryGetProperty("content", out var content)
++                    && content.TryGetProperty("parts", out var parts)
++                    && parts.ValueKind == JsonValueKind.Array)
++                {
++                    return string.Concat(parts.EnumerateArray()
++                        .Select(p => p.TryGetProperty("text", out var t) ? t.GetString() : null));
++                }
++
++                return null;
++
++            default:
++                if (root.TryGetProperty("choices", out var choices)
++                    && choices.ValueKind == JsonValueKind.Array
++                    && choices.GetArrayLength() > 0
++                    && choices[0].TryGetProperty("delta", out var delta)
++                    && delta.TryGetProperty("content", out var text))
++                {
++                    return text.GetString();
++                }
++
++                return null;
++        }
++    }
++
++    private string? ResolveKey(string configName, string[] envKeys)
++    {
++        var configured = config[$"Auricrux:Providers:{configName}:ApiKey"];
++        if (!string.IsNullOrWhiteSpace(configured))
++        {
++            return configured.Trim();
++        }
++
++        foreach (var env in envKeys)
++        {
++            var value = Environment.GetEnvironmentVariable(env);
++            if (!string.IsNullOrWhiteSpace(value))
++            {
++                return value.Trim();
++            }
++        }
++
++        return null;
++    }
++
++    private static StringContent JsonBody(object payload)
++        => new(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
++
++    private static string Truncate(string value, int max)
++        => value.Length <= max ? value : value[..max];
++}
++
++/// <summary>Resolved routing target for a provider-prefixed cloud model name.</summary>
++public readonly record struct CloudModelRoute(
++    string Provider,
++    string ProviderName,
++    string Model,
++    string BaseUrl,
++    string ApiKey);
++
++/// <summary>Raised when a cloud provider rejects a request; callers fall back to corpus mode.</summary>
++public sealed class CloudModelException(string message) : Exception(message);
+diff --git a/Auricrux.Web/Services/ConstructionIntelligenceService.cs b/Auricrux.Web/Services/ConstructionIntelligenceService.cs
+index e4b5385..085800a 100644
+--- a/Auricrux.Web/Services/ConstructionIntelligenceService.cs
++++ b/Auricrux.Web/Services/ConstructionIntelligenceService.cs
+@@ -1,5 +1,7 @@
+ using System.Diagnostics;
+ using System.Net.Http.Json;
++using System.Runtime.CompilerServices;
++using System.Text;
+ using System.Text.Json;
+ using System.Text.Json.Serialization;
+ using Auricrux.Shared.Models;
+@@ -7,14 +9,17 @@ using Auricrux.Shared.Models;
+ namespace Auricrux.Web.Services;
+ 
+ /// <summary>
+-/// Multi-model construction AI backend. Primary model is Auricrux specialist;
+-/// additional Ollama models satisfy multi-model selection.
++/// Multi-model construction AI backend. Primary model is Auricrux specialist via local
++/// Ollama; provider-prefixed names (openai:/anthropic:/gemini:/xai:/azure:) route to
++/// configured cloud frontier models through <see cref="CloudModelGateway"/>.
+ /// </summary>
+ public sealed class ConstructionIntelligenceService
+ {
+     private readonly IHttpClientFactory _httpClientFactory;
+     private readonly IConfiguration _config;
+     private readonly ILogger<ConstructionIntelligenceService> _logger;
++    private readonly CloudModelGateway _cloudGateway;
++    private readonly FeedbackStore _feedbackStore;
+     private readonly List<ConstructionKnowledgeEntry> _corpus;
+     private readonly Dictionary<Guid, ChatResponse> _interactions = new();
+     private readonly object _gate = new();
+@@ -23,11 +28,15 @@ public sealed class ConstructionIntelligenceService
+         IHttpClientFactory httpClientFactory,
+         IConfiguration config,
+         ILogger<ConstructionIntelligenceService> logger,
+-        IHostEnvironment env)
++        IHostEnvironment env,
++        CloudModelGateway cloudGateway,
++        FeedbackStore feedbackStore)
+     {
+         _httpClientFactory = httpClientFactory;
+         _config = config;
+         _logger = logger;
++        _cloudGateway = cloudGateway;
++        _feedbackStore = feedbackStore;
+         _corpus = LoadCorpus(env.ContentRootPath);
+     }
+ 
+@@ -78,7 +87,8 @@ public sealed class ConstructionIntelligenceService
+     [
+         _config["Auricrux:PrimaryModel"] ?? "auricrux",
+         _config["Auricrux:SecondaryModel"] ?? "llama3.2",
+-        _config["Auricrux:TertiaryModel"] ?? "mistral"
++        _config["Auricrux:TertiaryModel"] ?? "mistral",
++        .. _cloudGateway.ListModels()
+     ];
+ 
+     public async Task<ChatResponse> ChatAsync(ChatRequest request, string? model, CancellationToken ct)
+@@ -109,6 +119,47 @@ public sealed class ConstructionIntelligenceService
+         return response;
+     }
+ 
++    /// <summary>
++    /// Streaming variant of <see cref="ChatAsync"/>: yields token deltas as the model
++    /// produces them, then a terminal event carrying the full <see cref="ChatResponse"/>
++    /// (sources, interaction id, timing). Skips the separate thinking pass to keep
++    /// first-token latency low, matching how major assistants stream primary answers.
++    /// </summary>
++    public async IAsyncEnumerable<ChatStreamEvent> StreamChatAsync(
++        ChatRequest request,
++        string? model,
++        [EnumeratorCancellation] CancellationToken ct)
++    {
++        var sw = Stopwatch.StartNew();
++        var sources = SearchInternal(request.Query, request.SearchScope, take: 5);
++        var system = BuildSystemPrompt(request.ThinkingMode, sources);
++        var content = new StringBuilder();
++
++        await foreach (var delta in StreamCompleteAsync(system, request.Query, request.ConversationHistory, model, ct))
++        {
++            content.Append(delta);
++            yield return new ChatStreamEvent { Delta = delta };
++        }
++
++        sw.Stop();
++        var response = new ChatResponse
++        {
++            Content = content.ToString(),
++            Sources = sources,
++            Timestamp = DateTime.UtcNow,
++            ProcessingTimeMs = sw.ElapsedMilliseconds,
++            ConfidenceScore = sources.Count > 0 ? 0.86 : 0.72,
++            InteractionId = Guid.NewGuid()
++        };
++
++        lock (_gate)
++        {
++            _interactions[response.InteractionId!.Value] = response;
++        }
++
++        yield return new ChatStreamEvent { Done = true, Response = response };
++    }
++
+     public async Task<ThinkingResponse> ThinkAsync(ThinkingRequest request, string? model, CancellationToken ct)
+     {
+         var sw = Stopwatch.StartNew();
+@@ -166,11 +217,8 @@ public sealed class ConstructionIntelligenceService
+ 
+     public void RecordFeedback(Guid interactionId, StarRating rating)
+     {
+-        lock (_gate)
+-        {
+-            // Feedback retained in-process for freemium metering / later persistence.
+-            _logger.LogInformation("Feedback {Stars} for {Id}: {Comment}", rating.Stars, interactionId, rating.Comment);
+-        }
++        _feedbackStore.Record(interactionId, rating.Stars, rating.Comment);
++        _logger.LogInformation("Feedback {Stars} for {Id}: {Comment}", rating.Stars, interactionId, rating.Comment);
+     }
+ 
+     private async Task<string> CompleteAsync(
+@@ -180,6 +228,24 @@ public sealed class ConstructionIntelligenceService
+         string? model,
+         CancellationToken ct)
+     {
++        if (_cloudGateway.TryResolve(model, out var route))
++        {
++            try
++            {
++                var cloud = await _cloudGateway.CompleteAsync(route, system, BuildHistoryTuples(history, user), ct);
++                if (!string.IsNullOrWhiteSpace(cloud))
++                {
++                    return cloud;
++                }
++            }
++            catch (Exception ex) when (ex is not OperationCanceledException)
++            {
++                _logger.LogWarning(ex, "Cloud model {Model} failed; using construction corpus fallback", model);
++            }
++
++            return ConstructionFallback(user);
++        }
++
+         var ollamaBase = (_config["Auricrux:OllamaUrl"] ?? "http://127.0.0.1:11434").TrimEnd('/');
+         var selected = string.IsNullOrWhiteSpace(model)
+             ? (_config["Auricrux:PrimaryModel"] ?? "llama3.2")
+@@ -217,6 +283,172 @@ public sealed class ConstructionIntelligenceService
+         }
+     }
+ 
++    private async IAsyncEnumerable<string> StreamCompleteAsync(
++        string system,
++        string user,
++        IEnumerable<ChatMessage> history,
++        string? model,
++        [EnumeratorCancellation] CancellationToken ct)
++    {
++        if (_cloudGateway.TryResolve(model, out var route))
++        {
++            var streamed = false;
++            IAsyncEnumerator<string>? enumerator = null;
++            try
++            {
++                enumerator = _cloudGateway
++                    .StreamAsync(route, system, BuildHistoryTuples(history, user), ct)
++                    .GetAsyncEnumerator(ct);
++            }
++            catch (Exception ex) when (ex is not OperationCanceledException)
++            {
++                _logger.LogWarning(ex, "Cloud model {Model} stream failed to start", model);
++            }
++
++            if (enumerator is not null)
++            {
++                while (true)
++                {
++                    string delta;
++                    try
++                    {
++                        if (!await enumerator.MoveNextAsync())
++                        {
++                            break;
++                        }
++
++                        delta = enumerator.Current;
++                    }
++                    catch (Exception ex) when (ex is not OperationCanceledException)
++                    {
++                        _logger.LogWarning(ex, "Cloud model {Model} stream interrupted", model);
++                        break;
++                    }
++
++                    streamed = true;
++                    yield return delta;
++                }
++
++                await enumerator.DisposeAsync();
++            }
++
++            if (!streamed)
++            {
++                yield return ConstructionFallback(user);
++            }
++
++            yield break;
++        }
++
++        var ollamaBase = (_config["Auricrux:OllamaUrl"] ?? "http://127.0.0.1:11434").TrimEnd('/');
++        var selected = string.IsNullOrWhiteSpace(model)
++            ? (_config["Auricrux:PrimaryModel"] ?? "llama3.2")
++            : model;
++
++        var messages = new List<object> { new { role = "system", content = system } };
++        foreach (var h in history.TakeLast(12))
++        {
++            messages.Add(new { role = h.Role, content = h.Content });
++        }
++        messages.Add(new { role = "user", content = user });
++
++        HttpResponseMessage? response = null;
++        try
++        {
++            var http = _httpClientFactory.CreateClient(nameof(ConstructionIntelligenceService));
++            using var request = new HttpRequestMessage(HttpMethod.Post, $"{ollamaBase}/api/chat")
++            {
++                Content = JsonContent.Create(new { model = selected, stream = true, messages })
++            };
++            response = await http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct);
++            if (!response.IsSuccessStatusCode)
++            {
++                _logger.LogWarning("Ollama {Model} returned {Status}", selected, response.StatusCode);
++                response.Dispose();
++                response = null;
++            }
++        }
++        catch (Exception ex) when (ex is not OperationCanceledException)
++        {
++            _logger.LogWarning(ex, "Ollama unavailable; using construction corpus fallback");
++            response?.Dispose();
++            response = null;
++        }
++
++        if (response is null)
++        {
++            yield return ConstructionFallback(user);
++            yield break;
++        }
++
++        using (response)
++        {
++            // Ollama streams NDJSON: one JSON object per line with message.content deltas.
++            await using var body = await response.Content.ReadAsStreamAsync(ct);
++            using var reader = new StreamReader(body);
++            var streamedAny = false;
++            while (true)
++            {
++                string? delta = null;
++                var finished = false;
++                try
++                {
++                    var line = await reader.ReadLineAsync(ct);
++                    if (line is null)
++                    {
++                        finished = true;
++                    }
++                    else if (line.Length > 0)
++                    {
++                        using var doc = JsonDocument.Parse(line);
++                        if (doc.RootElement.TryGetProperty("message", out var message)
++                            && message.TryGetProperty("content", out var content))
++                        {
++                            delta = content.GetString();
++                        }
++
++                        if (doc.RootElement.TryGetProperty("done", out var done) && done.GetBoolean())
++                        {
++                            finished = true;
++                        }
++                    }
++                }
++                catch (Exception ex) when (ex is not OperationCanceledException)
++                {
++                    _logger.LogWarning(ex, "Ollama stream interrupted; ending stream");
++                    finished = true;
++                    delta = null;
++                }
++
++                if (!string.IsNullOrEmpty(delta))
++                {
++                    streamedAny = true;
++                    yield return delta;
++                }
++
++                if (finished)
++                {
++                    break;
++                }
++            }
++
++            if (!streamedAny)
++            {
++                yield return ConstructionFallback(user);
++            }
++        }
++    }
++
++    private static List<(string Role, string Content)> BuildHistoryTuples(IEnumerable<ChatMessage> history, string user)
++    {
++        var tuples = history
++            .TakeLast(12)
++            .Select(h => (h.Role, h.Content))
++            .ToList();
++        tuples.Add(("user", user));
++        return tuples;
++    }
++
+     private string ConstructionFallback(string query)
+     {
+         var hits = SearchInternal(query, SearchScope.Both, 3);
+-- 
+2.43.0
+
